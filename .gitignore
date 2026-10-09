@@ -1,0 +1,35 @@
+/.gradle/
+/.idea/
+/.kotlin/
+/.shots/
+/.tools/
+/build/
+/**/build/
+/local.properties
+*.iml
+/captures/
+/.externalNativeBuild/
+/.cxx/
+
+# Keep the auditable JSON export, but do not publish supplied APKs, decoded
+# resources, decompiled dependencies, or local emulator captures.
+/reference/
+
+# Contact sheets rendered by tools/preview_animations.py (development aid only)
+/generated/animation_previews/
+__pycache__/
+
+# Local coaching and emulator review artifacts
+/generated/animation_audit/
+/generated/class_ui.xml
+
+# Never package or commit Firebase server credentials.
+*firebase-adminsdk*.json
+*service-account*.json
+
+# Optional per-developer Firebase client configuration (see README "Optional sign-in").
+app/src/*/res/values/firebase.xml
+google-services.json
+
+# Locally built packages and distribution bundles (tools/package_dist.ps1).
+/dist/
