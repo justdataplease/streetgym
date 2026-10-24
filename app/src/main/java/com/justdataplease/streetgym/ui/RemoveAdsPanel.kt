@@ -10,15 +10,15 @@ class RemoveAdsPanel(private val activity: Activity, private val billing: Remove
     private val note = activity.bodyText("One payment. No subscription.", 14f)
     private val message = activity.bodyText("", 13f)
     private val buy = activity.primaryButton("Remove ads · 9.99") {
-        if (!billing.buy(activity)) message.text = "Google Play purchases are unavailable. Try again later."
+        if (!billing.buy(activity)) showMessage("Google Play purchases are unavailable. Try again later.")
     }
     private val restore = activity.secondaryButton("Restore purchase") {
-        message.text = "Checking purchase…"
-        billing.restore { result -> message.text = when (result) {
+        showMessage("Checking purchase…")
+        billing.restore { result -> showMessage(when (result) {
             RemoveAdsBilling.Restore.Restored -> "Purchase restored. Ads are off."
             RemoveAdsBilling.Restore.NotOwned -> "No purchase found for this Google account."
             RemoveAdsBilling.Restore.Unavailable -> "Couldn’t reach Google Play. Try again later."
-        } }
+        }) }
     }
     private val changed: () -> Unit = { render() }
     init {
@@ -31,6 +31,10 @@ class RemoveAdsPanel(private val activity: Activity, private val billing: Remove
     }
     override fun onAttachedToWindow() { super.onAttachedToWindow(); billing.listeners += changed; billing.connect(); render() }
     override fun onDetachedFromWindow() { billing.listeners -= changed; super.onDetachedFromWindow() }
+    private fun showMessage(value: String) {
+        message.text = value
+        message.visibility = if (value.isEmpty()) View.GONE else View.VISIBLE
+    }
     private fun render() {
         heading.text = if (billing.owned) "Ads removed" else "Remove ads"
         note.text = if (billing.owned) "Enjoy every workout without ads." else "One payment. No subscription."
