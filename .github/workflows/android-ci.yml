@@ -31,8 +31,8 @@ jobs:
           set -euo pipefail
           sdk_root="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
           "$sdk_root/cmdline-tools/latest/bin/sdkmanager" "--sdk_root=$sdk_root" 'platforms;android-35' 'build-tools;35.0.0' 'platform-tools'
-      - name: Build and lint
-        run: bash ./gradlew :app:assembleDebug :app:assembleDebugAndroidTest :app:lintDebug --no-daemon --console=plain
+      - name: Build, unit tests and lint
+        run: bash ./gradlew :app:assembleDebug :app:assembleDebugAndroidTest :app:testDebugUnitTest :app:lintDebug --no-daemon --console=plain
       - name: Preserve debug APKs and reports
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9

@@ -6,6 +6,7 @@ data class WorkoutSession(
     val completedAtEpochMillis: Long,
     val durationSeconds: Long,
     val effortRating: Int? = null,
+    val manuallyCompleted: Boolean = false,
 )
 
 data class ActiveWorkout(

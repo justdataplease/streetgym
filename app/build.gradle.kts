@@ -13,6 +13,12 @@ fun nativeAdId(kind: String, release: Boolean): String {
         .orElse(providers.gradleProperty("admob.$kind")).getOrElse(demo) else demo
 }
 
+// Optional separate native placement ID for the immediately dismissible full-screen format.
+fun fullScreenNativeId(release: Boolean): String = if (release)
+    providers.gradleProperty("admob.streetgymnastics.fullscreenNativeId")
+        .orElse(providers.gradleProperty("admob.fullscreenNativeId")).getOrElse(nativeAdId("nativeId", true))
+    else nativeAdId("nativeId", false)
+
 android {
     namespace = "com.justdataplease.streetgym"
     compileSdk = 35
@@ -21,8 +27,8 @@ android {
         applicationId = "com.justdataplease.streetgym"
         minSdk = 23
         targetSdk = 35
-        versionCode = 6
-        versionName = "2.1.0"
+        versionCode = 7
+        versionName = "2.2.0"
         testInstrumentationRunner = "com.justdataplease.streetgym.TrainingInstrumentation"
 
         vectorDrawables.useSupportLibrary = false
@@ -32,12 +38,14 @@ android {
         debug {
             manifestPlaceholders["admobAppId"] = nativeAdId("appId", false)
             buildConfigField("String", "ADMOB_NATIVE_ID", "\"${nativeAdId("nativeId", false)}\"")
+            buildConfigField("String", "ADMOB_FULLSCREEN_NATIVE_ID", "\"${fullScreenNativeId(false)}\"")
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-debug"
         }
         release {
             manifestPlaceholders["admobAppId"] = nativeAdId("appId", true)
             buildConfigField("String", "ADMOB_NATIVE_ID", "\"${nativeAdId("nativeId", true)}\"")
+            buildConfigField("String", "ADMOB_FULLSCREEN_NATIVE_ID", "\"${fullScreenNativeId(true)}\"")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -71,6 +79,8 @@ android {
 }
 
 dependencies {
+    implementation("com.android.billingclient:billing:8.3.0")
+    testImplementation("junit:junit:4.13.2")
     implementation("com.google.android.gms:play-services-ads:25.4.0")
     implementation("com.google.android.ump:user-messaging-platform:3.2.0")
     implementation(platform("com.google.firebase:firebase-bom:34.2.0"))

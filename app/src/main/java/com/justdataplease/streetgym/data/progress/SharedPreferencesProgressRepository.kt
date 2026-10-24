@@ -36,14 +36,18 @@ class SharedPreferencesProgressRepository(
         preferences.edit().putString(KEY_ACTIVE_WORKOUT, encode(workout).toString()).apply()
     }
 
-    override fun setCompleted(setId: String, completed: Boolean) = synchronized(lock) {
-        require(setId.isNotBlank()) { "setId cannot be blank" }
+    override fun setCompleted(setId: String, completed: Boolean) =
+        setCompleted(listOf(setId), completed)
+
+    /** Update a whole section in one saved snapshot. Other sections stay untouched. */
+    fun setCompleted(setIds: Collection<String>, completed: Boolean) = synchronized(lock) {
+        require(setIds.all(String::isNotBlank)) { "setId cannot be blank" }
         val active = activeWorkout() ?: return@synchronized
-        val setIds = active.completedSetIds.toMutableSet().apply {
-            if (completed) add(setId) else remove(setId)
+        val updated = active.completedSetIds.toMutableSet().apply {
+            if (completed) addAll(setIds) else removeAll(setIds.toSet())
         }
         preferences.edit()
-            .putString(KEY_ACTIVE_WORKOUT, encode(active.copy(completedSetIds = setIds)).toString())
+            .putString(KEY_ACTIVE_WORKOUT, encode(active.copy(completedSetIds = updated)).toString())
             .apply()
     }
 
@@ -72,6 +76,22 @@ class SharedPreferencesProgressRepository(
             .remove(KEY_ACTIVE_WORKOUT)
             .apply()
         session
+    }
+
+    /** Explicit bulk completion: no invented effort or workout duration. */
+    fun completePrograms(programIds: Collection<String>, at: Long = System.currentTimeMillis()) = synchronized(lock) {
+        require(programIds.all(String::isNotBlank))
+        val completed = completedProgramIds().toMutableSet()
+        val newIds = programIds.filter { it !in completed }.distinct()
+        val active = activeWorkout()
+        val sessions = sessionHistory() + newIds.map { id ->
+            WorkoutSession(id, at, at, 0L, manuallyCompleted = true)
+        }
+        completed.addAll(newIds)
+        val edit = preferences.edit().putStringSet(KEY_COMPLETED_PROGRAM_IDS, completed)
+            .putString(KEY_SESSION_HISTORY, encodeSessions(sessions).toString())
+        if (active?.programId in programIds) edit.remove(KEY_ACTIVE_WORKOUT)
+        edit.apply()
     }
 
     override fun abandonWorkout() {
@@ -110,6 +130,7 @@ class SharedPreferencesProgressRepository(
                         startedAtEpochMillis = json.getLong("started_at_epoch_millis"),
                         completedAtEpochMillis = json.getLong("completed_at_epoch_millis"),
                         durationSeconds = json.optLong("duration_seconds", 0L),
+                        manuallyCompleted = json.optBoolean("manually_completed", false),
                         effortRating = if (json.isNull("effort_rating")) {
                             null
                         } else {
@@ -134,6 +155,7 @@ class SharedPreferencesProgressRepository(
                     .put("started_at_epoch_millis", session.startedAtEpochMillis)
                     .put("completed_at_epoch_millis", session.completedAtEpochMillis)
                     .put("duration_seconds", session.durationSeconds)
+                    .put("manually_completed", session.manuallyCompleted)
                     .put("effort_rating", session.effortRating ?: JSONObject.NULL),
             )
         }

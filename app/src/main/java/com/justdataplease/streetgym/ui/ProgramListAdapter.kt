@@ -28,6 +28,7 @@ class ProgramListAdapter(
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val program = getItem(position)
         val title = context.displayName(program, locale)
+        val unlocked = program.id in completedIds || program.id == assignedProgramId
         val row = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
@@ -38,7 +39,7 @@ class ProgramListAdapter(
             contentDescription = buildString {
                 append(title)
                 val meta = context.programMeta(program)
-                if (meta.isNotBlank()) append(", ").append(meta)
+                if (unlocked && meta.isNotBlank()) append(", ").append(meta)
                 if (program.id in completedIds) append(", ").append(context.getString(R.string.completed))
                 else if (program.id == assignedProgramId) append(", ").append(context.getString(R.string.assigned_next))
                 else append(", ").append(context.getString(R.string.locked_later))
@@ -63,7 +64,7 @@ class ProgramListAdapter(
                     context.getString(R.string.empty_description)
                 }
             }
-            addView(context.bodyText(meta, 13f).apply { maxLines = 2 })
+            if (unlocked) addView(context.bodyText(meta, 13f).apply { maxLines = 2 })
         }
         row.addView(copy, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
 

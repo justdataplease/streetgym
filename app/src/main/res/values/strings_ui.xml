@@ -9,7 +9,7 @@
     <string name="nav_levels">Training</string>
     <string name="nav_progress">Progress</string>
     <string name="nav_settings">Settings</string>
-    <string name="dashboard_title">StreetGym</string>
+    <string name="dashboard_title">Street Gymnastics</string>
     <string name="today_section">Today</string>
     <string name="resume_workout">Resume</string>
     <string name="start_today">Start workout</string>
@@ -33,11 +33,6 @@
     <string name="assigned_next">Next</string>
     <string name="locked_later">Later</string>
     <string name="workout_overview">Workout</string>
-    <string name="animation_pause">Pause</string>
-    <string name="animation_play">Play</string>
-    <string name="animation_slow">Slow motion</string>
-    <string name="animation_normal">Normal speed</string>
-    <string name="animation_tempo_note">Movement guide. Follow the written tempo and hold time.</string>
     <string name="animation_variation">Preview %1$d/%2$d: %3$s - tap to change</string>
     <string name="class_guidance_title">Your morning class</string>
     <string name="class_guidance_summary">A varied mix of calisthenics, skill practice and flexibility. Build control as the levels progress, keep a few good repetitions in reserve, and use an easier variation when needed. Follow the easy recovery mornings too.</string>
@@ -96,12 +91,14 @@
     <string name="sound_cues">Rest timer sound</string>
     <string name="safety_title">Train safely</string>
     <string name="safety_body">Warm up before loading skills. Perform the prescribed variation only with clean control; otherwise use its displayed regression. If no lower rung is listed, reduce range, repetitions or sets, or add support and assistance. Leave repetitions in reserve and do not force German-hang or shoulder range. Stop for sharp pain, numbness, dizziness, or loss of control. Persistent symptoms need qualified medical advice.</string>
-    <string name="about_title">About StreetGym</string>
+    <string name="about_title">About Street Gymnastics</string>
     <string name="about_body">600 guided calisthenics workouts, movement guides and local progress. Train at your own pace through six levels.</string>
     <string name="version_format">Version %1$s</string>
     <string name="empty_description">A balanced session of skill practice, fundamentals, and mobility.</string>
     <string name="appearance">Appearance</string>
     <string name="dark_mode">Dark mode</string>
-    <string name="brand_kicker">YOUR BODY. YOUR PROGRESS.</string>
-    <string name="brand_line">Build your strength.</string>
+    <string name="brand_kicker">DAILY CALISTHENICS</string>
+    <string name="brand_line">We choose the workout. You just train.</string>
+    <string name="section_check_description">Complete all %1$s sets</string>
+    <string name="nav_timer">Timer</string>
 </resources>
