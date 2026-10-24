@@ -33,4 +33,10 @@ Firebase is optional. Put Android client resources in ignored `app/src/debug/res
 
 ## Source and checks
 
-Synced from suite commit `cc5d76941edbfbac706564df33dcf09ff84628a4`. The suite passed both apps' build/lint and eight Android training/theme scenarios each, restoring test preferences afterwards. The original training assets are retained unchanged. CI builds the standalone app and test APK and runs lint; it does not run an emulator or sign a production release. See `SOURCE-SYNC.json` for source provenance.
+Synced from suite commit `9033a445a37580f8d6fa48dc8f4cdbb942081661`. The suite passed both apps' build/lint and eight Android training/theme scenarios each, restoring test preferences afterwards. The original training assets are retained unchanged. CI builds the standalone app and test APK and runs lint; it does not run an emulator or sign a production release. See `SOURCE-SYNC.json` for source provenance.
+
+## Downloads
+
+Install the signed development APK from [Latest](https://github.com/justdataplease/streetgym/releases/latest). These GitHub builds use the `.debug` package and Google demo ad IDs. They are for sideloading and are not production/Google Play builds.
+
+Version 2.1.0 (code 6) follows the existing v2.0.0 GitHub release, whose APK reported 1.3.0-debug (code 5). The new GitHub APK retains that package and certificate for an in-place update; gymnastics progress keys remain unchanged. Basketball now has its own app.
