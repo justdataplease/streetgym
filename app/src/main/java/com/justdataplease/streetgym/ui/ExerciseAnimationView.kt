@@ -54,42 +54,42 @@ class ExerciseAnimationView @JvmOverloads constructor(
 
     private val backgroundPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
-        color = library.palette.background
+        color = AppColors.SURFACE
     }
     private val borderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeWidth = dp(1f)
-        color = library.palette.border
+        color = AppColors.DIVIDER
     }
     private val figurePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeCap = Paint.Cap.ROUND
         strokeJoin = Paint.Join.ROUND
-        color = library.palette.figure
+        color = AppColors.TEXT
     }
     private val farLimbPaint = Paint(figurePaint).apply {
-        color = blend(library.palette.figure, library.palette.background, 0.42f)
+        color = blend(AppColors.TEXT, AppColors.SURFACE, 0.42f)
     }
     private val headPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
-        color = library.palette.figure
+        color = AppColors.TEXT
     }
     private val handPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
-        color = library.palette.accent
+        color = AppColors.PRIMARY
     }
     private val apparatusPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeCap = Paint.Cap.ROUND
         strokeJoin = Paint.Join.ROUND
-        color = library.palette.apparatus
+        color = AppColors.TEXT_SECONDARY
     }
     private val apparatusFillPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
-        color = blend(library.palette.apparatus, library.palette.background, 0.85f)
+        color = blend(AppColors.TEXT_SECONDARY, AppColors.SURFACE, 0.85f)
     }
-    private val floorPaint = Paint(apparatusPaint).apply { color = library.palette.floor }
-    private val accentPaint = Paint(apparatusPaint).apply { color = library.palette.accent }
+    private val floorPaint = Paint(apparatusPaint).apply { color = AppColors.DIVIDER }
+    private val accentPaint = Paint(apparatusPaint).apply { color = AppColors.PRIMARY }
     private val torsoPath = Path()
     private val primitivePath = Path()
     private val joints = FloatArray(Rig.JOINT_COUNT * 2)

@@ -5,6 +5,7 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.RippleDrawable
 import android.text.TextUtils
 import android.util.TypedValue
 import android.view.Gravity
@@ -18,20 +19,25 @@ import android.widget.Space
 import android.widget.TextView
 
 object AppColors {
-    const val PRIMARY = 0xFF2196F3.toInt()
-    const val PRIMARY_DARK = 0xFF1976D2.toInt()
-    const val NUMBER = 0xFF1565C0.toInt()
-    const val NUMBER_DARK = 0xFF0D47A1.toInt()
-    const val ACTION = 0xFFB71C1C.toInt()
-    const val ACTION_LIGHT = 0xFFEF5350.toInt()
-    const val BACKGROUND = 0xFFF3F3F3.toInt()
-    const val SURFACE = Color.WHITE
-    const val TEXT = 0xFF212121.toInt()
-    const val TEXT_SECONDARY = 0xFF666666.toInt()
-    const val DIVIDER = 0xFFE0E0E0.toInt()
-    const val SUCCESS = 0xFF2E7D32.toInt()
-    const val WARNING_SURFACE = 0xFFFFF3E0.toInt()
-    const val INFO_SURFACE = 0xFFE3F2FD.toInt()
+    var darkMode = false
+        private set
+    fun configure(dark: Boolean) { darkMode = dark }
+    val PRIMARY: Int get() = if (darkMode) 0xFF8AF3BD.toInt() else 0xFF1E7056.toInt()
+    val PRIMARY_DARK: Int get() = if (darkMode) 0xFF2A3E30.toInt() else 0xFF193F31.toInt()
+    val BACKGROUND: Int get() = if (darkMode) 0xFF121917.toInt() else 0xFFF4F7F3.toInt()
+    val SURFACE: Int get() = if (darkMode) 0xFF202B25.toInt() else 0xFFFFFFFF.toInt()
+    val TEXT: Int get() = if (darkMode) 0xFFF4F8F2.toInt() else 0xFF182A22.toInt()
+    val TEXT_SECONDARY: Int get() = if (darkMode) 0xFFA5B3A8.toInt() else 0xFF66756C.toInt()
+    val DIVIDER: Int get() = if (darkMode) 0xFF39483E.toInt() else 0xFFE0E7E0.toInt()
+    val INFO_SURFACE: Int get() = if (darkMode) 0xFF2F4035.toInt() else 0xFFE3F2E9.toInt()
+    val ACCENT: Int get() = if (darkMode) 0xFF8AF3BD.toInt() else 0xFF69DFB4.toInt()
+    val NUMBER get() = PRIMARY
+    val NUMBER_DARK get() = PRIMARY
+    val ACTION get() = PRIMARY
+    val ACTION_LIGHT get() = ACCENT
+    val ON_ACCENT get() = if (darkMode) BACKGROUND else Color.WHITE
+    val SUCCESS get() = if (darkMode) 0xFF8AF3BD.toInt() else 0xFF1E7056.toInt()
+    val WARNING_SURFACE get() = if (darkMode) 0xFF3B3023.toInt() else 0xFFFFF0D9.toInt()
 }
 
 fun Context.dp(value: Int): Int = (value * resources.displayMetrics.density + 0.5f).toInt()
@@ -50,14 +56,15 @@ fun roundedDrawable(
 
 fun Context.verticalPage(): LinearLayout = LinearLayout(this).apply {
     orientation = LinearLayout.VERTICAL
-    setPadding(dp(16), dp(16), dp(16), dp(28))
+    setPadding(dp(20), dp(20), dp(20), dp(28))
 }
 
 fun Context.card(clickable: Boolean = false): LinearLayout = LinearLayout(this).apply {
     orientation = LinearLayout.VERTICAL
     setPadding(dp(16), dp(16), dp(16), dp(16))
-    background = roundedDrawable(AppColors.SURFACE, dp(10).toFloat())
-    elevation = dp(2).toFloat()
+    background = roundedDrawable(AppColors.SURFACE, dp(24).toFloat(), AppColors.DIVIDER, dp(1))
+    clipToOutline = true
+    elevation = 0f
     if (clickable) {
         isClickable = true
         isFocusable = true
@@ -91,7 +98,7 @@ fun Context.sectionLabel(text: CharSequence): TextView = TextView(this).apply {
 fun Context.numberCircle(number: String, contentDescriptionText: String): TextView = TextView(this).apply {
     text = number
     gravity = Gravity.CENTER
-    setTextColor(Color.WHITE)
+    setTextColor(AppColors.ON_ACCENT)
     textSize = 16f
     typeface = Typeface.DEFAULT_BOLD
     background = roundedDrawable(AppColors.NUMBER, dp(22).toFloat())
@@ -101,7 +108,7 @@ fun Context.numberCircle(number: String, contentDescriptionText: String): TextVi
 
 fun Context.badge(text: CharSequence, color: Int = AppColors.NUMBER): TextView = TextView(this).apply {
     this.text = text.toString().uppercase()
-    setTextColor(Color.WHITE)
+    setTextColor(AppColors.ON_ACCENT)
     textSize = 11f
     typeface = Typeface.DEFAULT_BOLD
     gravity = Gravity.CENTER
@@ -116,12 +123,14 @@ fun Context.primaryButton(
     onClick: () -> Unit,
 ): Button = Button(this).apply {
     this.text = text
-    setTextColor(Color.WHITE)
+    setTextColor(AppColors.ON_ACCENT)
     textSize = 14f
     typeface = Typeface.DEFAULT_BOLD
     isAllCaps = false
-    minHeight = dp(48)
-    backgroundTintList = ColorStateList.valueOf(color)
+    minHeight = dp(52)
+    setPadding(dp(18), dp(12), dp(18), dp(12))
+    stateListAnimator = null
+    background = RippleDrawable(ColorStateList.valueOf(0x22FFFFFF), roundedDrawable(color, dp(16).toFloat()), null)
     setOnClickListener { onClick() }
 }
 
@@ -131,8 +140,10 @@ fun Context.secondaryButton(text: CharSequence, onClick: () -> Unit): Button = B
     textSize = 14f
     typeface = Typeface.DEFAULT_BOLD
     isAllCaps = false
-    minHeight = dp(48)
-    backgroundTintList = ColorStateList.valueOf(Color.WHITE)
+    minHeight = dp(52)
+    setPadding(dp(18), dp(12), dp(18), dp(12))
+    stateListAnimator = null
+    background = RippleDrawable(ColorStateList.valueOf(0x22000000), roundedDrawable(AppColors.INFO_SURFACE, dp(16).toFloat()), null)
     setOnClickListener { onClick() }
 }
 
@@ -159,7 +170,7 @@ fun Context.horizontalProgress(percent: Int): ProgressBar = ProgressBar(
     max = 100
     progress = percent.coerceIn(0, 100)
     progressTintList = ColorStateList.valueOf(AppColors.PRIMARY)
-    progressBackgroundTintList = ColorStateList.valueOf(0xFFDCEAF5.toInt())
+    progressBackgroundTintList = ColorStateList.valueOf(AppColors.INFO_SURFACE)
     minimumHeight = dp(8)
 }
 

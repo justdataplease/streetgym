@@ -1,12 +1,30 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.StreetGym" parent="android:style/Theme.Material.Light.NoActionBar">
         <item name="android:fontFamily">sans</item>
         <item name="android:windowActionModeOverlay">true</item>
-        <item name="android:windowBackground">@drawable/launch_screen</item>
-        <item name="android:colorAccent">@color/fab</item>
-        <item name="android:statusBarColor">@color/color_primary_dark</item>
-        <item name="android:navigationBarColor">@color/color_primary_dark</item>
+        <item name="android:windowBackground">@color/street_light_background</item>
+        <item name="android:colorAccent">@color/street_light_primary</item>
+        <item name="android:statusBarColor">@color/street_light_background</item>
+        <item name="android:navigationBarColor">@color/street_light_background</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:alertDialogTheme">@style/StreetDialog.light</item>
+    </style>
+    <style name="StreetDialog.light" parent="android:style/Theme.Material.Light.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/dialog_light</item>
+        <item name="android:colorAccent">@color/street_light_primary</item>
+    </style>
+    <style name="Theme.StreetNight" parent="android:style/Theme.Material.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:windowBackground">@color/street_dark_background</item>
+        <item name="android:colorAccent">@color/street_dark_primary</item>
+        <item name="android:statusBarColor">@color/street_dark_background</item>
+        <item name="android:navigationBarColor">@color/street_dark_background</item>
         <item name="android:windowLightStatusBar">false</item>
+        <item name="android:alertDialogTheme">@style/StreetDialog.dark</item>
+    </style>
+    <style name="StreetDialog.dark" parent="android:style/Theme.Material.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/dialog_dark</item>
+        <item name="android:colorAccent">@color/street_dark_primary</item>
     </style>
 </resources>

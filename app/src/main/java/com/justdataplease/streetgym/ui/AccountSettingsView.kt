@@ -35,7 +35,7 @@ class AccountSettingsView(private val activity: Activity) : LinearLayout(activit
     init {
         orientation = VERTICAL
         setPadding(context.dp(16), context.dp(16), context.dp(16), context.dp(16))
-        background = roundedDrawable(AppColors.SURFACE, context.dp(10).toFloat())
+        background = roundedDrawable(AppColors.SURFACE, context.dp(24).toFloat())
         elevation = context.dp(2).toFloat()
         render()
     }

@@ -32,7 +32,7 @@ class ProgramListAdapter(
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
             setPadding(context.dp(14), context.dp(14), context.dp(14), context.dp(14))
-            background = roundedDrawable(AppColors.SURFACE, context.dp(9).toFloat())
+            background = roundedDrawable(AppColors.SURFACE, context.dp(24).toFloat())
             elevation = context.dp(1).toFloat()
             isFocusable = false
             contentDescription = buildString {

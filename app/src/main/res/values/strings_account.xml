@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="settings_subtitle">Your account, training preferences and court focus.</string>
-    <string name="settings_subtitle_offline">Your training preferences and court focus.</string>
+    <string name="settings_subtitle">Your account and training preferences.</string>
+    <string name="settings_subtitle_offline">Your training preferences.</string>
     <string name="account_section">Account</string>
     <string name="account_title">Make yourself at home</string>
     <string name="account_signed_in">Signed in</string>
@@ -32,7 +32,4 @@
     <string name="account_generic_error">Could not complete that request. Please try again.</string>
     <string name="training_preferences">During your workout</string>
     <string name="training_preferences_note">Keep the display on while a workout is open, and play a sound when your rest timer ends. These preferences are saved on this device.</string>
-    <string name="settings_focus_title">Built for your one-on-one game</string>
-    <string name="settings_focus_body">Build a reliable handle with either hand, change pace, attack an open lane and recover between short court runs. Keep developing your shot, finishing and defense alongside calisthenics.</string>
-    <string name="settings_open_court">Open basketball training</string>
 </resources>

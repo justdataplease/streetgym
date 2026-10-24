@@ -1,0 +1,20 @@
+<resources>
+    <color name="street_light_primary">#1E7056</color>
+    <color name="street_light_primary_dark">#193F31</color>
+    <color name="street_light_background">#F4F7F3</color>
+    <color name="street_light_surface">#FFFFFF</color>
+    <color name="street_light_text">#182A22</color>
+    <color name="street_light_text_secondary">#66756C</color>
+    <color name="street_light_divider">#E0E7E0</color>
+    <color name="street_light_info_surface">#E3F2E9</color>
+    <color name="street_light_accent">#69DFB4</color>
+    <color name="street_dark_primary">#8AF3BD</color>
+    <color name="street_dark_primary_dark">#2A3E30</color>
+    <color name="street_dark_background">#121917</color>
+    <color name="street_dark_surface">#202B25</color>
+    <color name="street_dark_text">#F4F8F2</color>
+    <color name="street_dark_text_secondary">#A5B3A8</color>
+    <color name="street_dark_divider">#39483E</color>
+    <color name="street_dark_info_surface">#2F4035</color>
+    <color name="street_dark_accent">#8AF3BD</color>
+</resources>

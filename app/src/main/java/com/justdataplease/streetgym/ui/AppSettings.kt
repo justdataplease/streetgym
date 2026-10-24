@@ -6,6 +6,10 @@ import java.util.Locale
 class AppSettings(context: Context) {
     private val preferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
 
+    var darkMode: Boolean
+        get() = preferences.getBoolean("dark_mode", false)
+        set(value) = preferences.edit().putBoolean("dark_mode", value).apply()
+
     var keepScreenAwake: Boolean
         get() = preferences.getBoolean(KEY_KEEP_SCREEN_AWAKE, true)
         set(value) = preferences.edit().putBoolean(KEY_KEEP_SCREEN_AWAKE, value).apply()

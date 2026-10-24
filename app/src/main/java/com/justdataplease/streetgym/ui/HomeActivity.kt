@@ -1,5 +1,10 @@
 package com.justdataplease.streetgym.ui
 
+import com.justdataplease.streetgym.BuildConfig
+import com.justdataplease.monetization.AdPalette
+import com.justdataplease.monetization.NativeAds
+import com.justdataplease.monetization.NativeAdSlot
+
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
@@ -31,8 +36,6 @@ import android.widget.TextView
 import android.widget.Toast
 import com.justdataplease.streetgym.R
 import com.justdataplease.streetgym.data.AssetCurriculumRepository
-import com.justdataplease.streetgym.data.BasketballPlanMigration
-import com.justdataplease.streetgym.data.BasketballSkills
 import com.justdataplease.streetgym.data.model.CurriculumCatalog
 import com.justdataplease.streetgym.data.model.TrainingExercise
 import com.justdataplease.streetgym.data.model.TrainingLevel
@@ -54,9 +57,7 @@ open class HomeActivity : Activity() {
     private sealed interface Screen {
         data object Dashboard : Screen
         data object Levels : Screen
-        data object Basketball : Screen
-        data object BasketballProgress : Screen
-        data class Workouts(val levelNumber: Int, val basketball: Boolean = false) : Screen
+        data class Workouts(val levelNumber: Int) : Screen
         data class Overview(val programId: String) : Screen
         data class Active(val programId: String) : Screen
         data object Progress : Screen
@@ -70,21 +71,18 @@ open class HomeActivity : Activity() {
     )
 
     private lateinit var settings: AppSettings
-    private lateinit var gymnasticsProgress: SharedPreferencesProgressRepository
-    private lateinit var basketballProgress: SharedPreferencesProgressRepository
-    private val progressRepository get() = repositoryFor(currentScreen)
+    private lateinit var progressRepository: SharedPreferencesProgressRepository
     private lateinit var appRoot: LinearLayout
     private lateinit var toolbar: LinearLayout
     private lateinit var toolbarBack: TextView
+    private lateinit var toolbarMark: ImageView
     private lateinit var toolbarTitle: TextView
     private lateinit var bodyContainer: FrameLayout
     private lateinit var bottomNavigation: LinearLayout
 
     private val worker = Executors.newSingleThreadExecutor()
     private val backStack = ArrayDeque<Screen>()
-    private var gymnasticsCatalog: CurriculumCatalog? = null
-    private var basketballCatalog: CurriculumCatalog? = null
-    private val catalog get() = catalogFor(currentScreen)
+    private var catalog: CurriculumCatalog? = null
     private var currentScreen: Screen? = null
     private var restTimer: CountDownTimer? = null
     private var restEndsAtEpochMillis: Long? = null
@@ -101,11 +99,11 @@ open class HomeActivity : Activity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         settings = AppSettings(this)
-        gymnasticsProgress = SharedPreferencesProgressRepository(this)
-        basketballProgress = SharedPreferencesProgressRepository(this, "street_basketball_progress")
-        BasketballPlanMigration.apply(this, basketballProgress)
+        AppColors.configure(settings.darkMode)
+        setTheme(if (settings.darkMode) R.style.Theme_StreetNight else R.style.Theme_StreetGym)
+        super.onCreate(savedInstanceState)
+        progressRepository = SharedPreferencesProgressRepository(this)
         restoredScreen = savedInstanceState?.let(::screenFromBundle)
         restEndsAtEpochMillis = savedInstanceState?.getLong(STATE_REST_END)
             ?.takeIf { it > System.currentTimeMillis() }
@@ -124,7 +122,6 @@ open class HomeActivity : Activity() {
             when (screen) {
                 is Screen.Workouts -> {
                     outState.putInt(STATE_LEVEL, screen.levelNumber)
-                    outState.putBoolean(STATE_BASKETBALL, screen.basketball)
                 }
                 is Screen.Overview -> outState.putString(STATE_PROGRAM, screen.programId)
                 is Screen.Active -> outState.putString(STATE_PROGRAM, screen.programId)
@@ -147,8 +144,6 @@ open class HomeActivity : Activity() {
         when (val screen = currentScreen) {
             Screen.Dashboard, null -> super.onBackPressed()
             Screen.Levels, Screen.Progress, Screen.Settings -> openRoot(Screen.Dashboard)
-            Screen.Basketball -> openRoot(Screen.Dashboard)
-            Screen.BasketballProgress -> openRoot(Screen.Basketball)
             else -> {
                 val prior = backStack.pollLast()
                 if (prior != null) showScreen(prior, pushCurrent = false) else openRoot(Screen.Dashboard)
@@ -156,9 +151,12 @@ open class HomeActivity : Activity() {
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun configureWindow() {
-        window.statusBarColor = AppColors.PRIMARY_DARK
-        window.navigationBarColor = AppColors.PRIMARY_DARK
+        window.statusBarColor = AppColors.BACKGROUND
+        window.navigationBarColor = AppColors.BACKGROUND
+        window.decorView.systemUiVisibility = if (settings.darkMode) 0 else View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or
+            (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR else 0)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             window.isStatusBarContrastEnforced = false
             window.isNavigationBarContrastEnforced = false
@@ -175,7 +173,7 @@ open class HomeActivity : Activity() {
             text = "‹"
             gravity = Gravity.CENTER
             textSize = 38f
-            setTextColor(Color.WHITE)
+            setTextColor(AppColors.TEXT)
             contentDescription = getString(R.string.back)
             isClickable = true
             isFocusable = true
@@ -184,15 +182,22 @@ open class HomeActivity : Activity() {
         toolbarTitle = TextView(this).apply {
             gravity = Gravity.CENTER_VERTICAL
             textSize = 20f
-            setTextColor(Color.WHITE)
+            setTextColor(AppColors.TEXT)
             typeface = Typeface.DEFAULT_BOLD
             maxLines = 1
+        }
+        toolbarMark = ImageView(this).apply {
+            setImageResource(R.drawable.ic_brand_mark)
+            imageTintList = ColorStateList.valueOf(AppColors.ACTION)
+            setPadding(dp(14), dp(12), dp(10), dp(12))
+            importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
         }
         toolbar = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
-            setBackgroundColor(AppColors.PRIMARY)
-            elevation = dp(4).toFloat()
+            setBackgroundColor(AppColors.BACKGROUND)
+            elevation = 0f
+            addView(toolbarMark, LinearLayout.LayoutParams(dp(56), dp(56)))
             addView(toolbarBack, LinearLayout.LayoutParams(dp(56), dp(56)))
             addView(toolbarTitle, LinearLayout.LayoutParams(0, dp(56), 1f))
             addView(View(context), LinearLayout.LayoutParams(dp(16), dp(56)))
@@ -204,15 +209,20 @@ open class HomeActivity : Activity() {
         bottomNavigation = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER
-            setBackgroundColor(Color.WHITE)
-            elevation = dp(8).toFloat()
+            setBackgroundColor(AppColors.SURFACE)
+            elevation = 0f
+            background = roundedDrawable(AppColors.SURFACE, dp(24).toFloat(), AppColors.DIVIDER, dp(1))
+            clipToOutline = true
+            setPadding(dp(8), dp(8), dp(8), dp(8))
         }
 
         appRoot.addView(toolbar, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(56)))
         appRoot.addView(bodyContainer, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
         appRoot.addView(
             bottomNavigation,
-            LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(58)),
+            LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(74)).apply {
+                setMargins(dp(16), dp(8), dp(16), dp(12))
+            },
         )
         setContentView(appRoot)
         applySystemBarInsets()
@@ -222,24 +232,33 @@ open class HomeActivity : Activity() {
         appRoot.setOnApplyWindowInsetsListener { _, insets ->
             val top: Int
             val bottom: Int
+            val left: Int
+            val right: Int
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                val bars = insets.getInsets(WindowInsets.Type.systemBars())
+                val bars = insets.getInsets(WindowInsets.Type.systemBars() or WindowInsets.Type.displayCutout())
                 top = bars.top
                 bottom = bars.bottom
+                left = bars.left
+                right = bars.right
             } else {
                 @Suppress("DEPRECATION")
                 top = insets.systemWindowInsetTop
                 @Suppress("DEPRECATION")
                 bottom = insets.systemWindowInsetBottom
+                @Suppress("DEPRECATION")
+                left = insets.systemWindowInsetLeft
+                @Suppress("DEPRECATION")
+                right = insets.systemWindowInsetRight
             }
             toolbar.setPadding(0, top, 0, 0)
             toolbar.layoutParams = (toolbar.layoutParams as LinearLayout.LayoutParams).apply {
                 height = dp(56) + top
             }
-            bottomNavigation.setPadding(0, 0, 0, bottom)
+            bottomNavigation.setPadding(dp(8), dp(8), dp(8), dp(8))
+            appRoot.setPadding(left, 0, right, bottom)
             bottomNavigation.layoutParams =
                 (bottomNavigation.layoutParams as LinearLayout.LayoutParams).apply {
-                    height = dp(58) + bottom
+                    height = dp(74)
                 }
             insets
         }
@@ -251,22 +270,15 @@ open class HomeActivity : Activity() {
         bottomNavigation.visibility = View.GONE
         renderLoading()
         worker.execute {
-            val result = runCatching {
-                AssetCurriculumRepository(this).load().getOrThrow() to
-                    AssetCurriculumRepository(this, "basketball_curriculum.json").load().getOrThrow()
-            }
+            val result = AssetCurriculumRepository(this).load()
             runOnUiThread {
                 if (isFinishing || isDestroyed) return@runOnUiThread
-                result.fold(
-                    onSuccess = {
-                        gymnasticsCatalog = it.first
-                        basketballCatalog = it.second
-                        val destination = restoredScreen?.takeIf(::isValidScreen) ?: Screen.Dashboard
-                        restoredScreen = null
-                        showScreen(destination, pushCurrent = false)
-                    },
-                    onFailure = { renderLoadError() },
-                )
+                result.fold(onSuccess = {
+                    catalog = it
+                    val destination = restoredScreen?.takeIf(::isValidScreen) ?: Screen.Dashboard
+                    restoredScreen = null
+                    showScreen(destination, pushCurrent = false)
+                }, onFailure = { renderLoadError() })
             }
         }
     }
@@ -305,7 +317,8 @@ open class HomeActivity : Activity() {
     private fun renderLoadError() {
         toolbar.visibility = View.VISIBLE
         bottomNavigation.visibility = View.GONE
-        toolbarBack.visibility = View.INVISIBLE
+        toolbarBack.visibility = View.GONE
+        toolbarMark.visibility = View.VISIBLE
         toolbarTitle.text = getString(R.string.app_name)
         bodyContainer.removeAllViews()
         val page = verticalPage().apply {
@@ -337,7 +350,8 @@ open class HomeActivity : Activity() {
         currentScreen = screen
         toolbar.visibility = View.VISIBLE
         bottomNavigation.visibility = View.VISIBLE
-        toolbarBack.visibility = if (isNested(screen)) View.VISIBLE else View.INVISIBLE
+        toolbarBack.visibility = if (isNested(screen)) View.VISIBLE else View.GONE
+        toolbarMark.visibility = if (isNested(screen)) View.GONE else View.VISIBLE
         toolbarTitle.text = screenTitle(screen)
         rebuildBottomNavigation(screen)
 
@@ -355,8 +369,6 @@ open class HomeActivity : Activity() {
         when (screen) {
             Screen.Dashboard -> renderDashboard()
             Screen.Levels -> renderLevels()
-            Screen.Basketball -> renderBasketball()
-            Screen.BasketballProgress -> renderProgress()
             is Screen.Workouts -> renderWorkouts(screen.levelNumber)
             is Screen.Overview -> renderOverview(screen.programId)
             is Screen.Active -> renderActive(screen.programId)
@@ -376,12 +388,11 @@ open class HomeActivity : Activity() {
         bottomNavigation.removeAllViews()
         val selected = rootFor(screen)
         listOf(
-            Triple(Screen.Dashboard, R.string.nav_today, "●"),
-            Triple(Screen.Levels, R.string.nav_levels, "▦"),
-            Triple(Screen.Basketball, R.string.nav_basketball, ""),
-            Triple(Screen.Progress, R.string.nav_progress, "↗"),
-            Triple(Screen.Settings, R.string.nav_settings, "⚙"),
-        ).forEach { (destination, labelRes, glyph) ->
+            Triple(Screen.Dashboard, R.string.nav_today, R.drawable.ic_nav_today),
+            Triple(Screen.Levels, R.string.nav_levels, R.drawable.ic_nav_training),
+            Triple(Screen.Progress, R.string.nav_progress, R.drawable.ic_nav_progress),
+            Triple(Screen.Settings, R.string.nav_settings, R.drawable.ic_nav_settings),
+        ).forEach { (destination, labelRes, icon) ->
             val isSelected = selected == destination
             val item = LinearLayout(this).apply {
                 orientation = LinearLayout.VERTICAL
@@ -389,195 +400,75 @@ open class HomeActivity : Activity() {
                 isClickable = true
                 isFocusable = true
                 contentDescription = getString(labelRes)
+                background = roundedDrawable(if (isSelected) AppColors.INFO_SURFACE else AppColors.SURFACE, dp(16).toFloat())
                 setOnClickListener { openRoot(destination) }
-                if (destination == Screen.Basketball) addView(ImageView(context).apply {
-                    setImageResource(R.drawable.ic_basketball)
-                    imageTintList = ColorStateList.valueOf(
-                        if (isSelected) AppColors.PRIMARY_DARK else AppColors.TEXT_SECONDARY,
-                    )
+                addView(ImageView(context).apply {
+                    setImageResource(icon)
+                    imageTintList = ColorStateList.valueOf(if (isSelected) AppColors.PRIMARY else AppColors.TEXT_SECONDARY)
                     importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
                 }, LinearLayout.LayoutParams(dp(22), dp(22)))
-                else addView(TextView(context).apply {
-                    text = glyph
-                    gravity = Gravity.CENTER
-                    textSize = 17f
-                    setTextColor(if (isSelected) AppColors.PRIMARY_DARK else AppColors.TEXT_SECONDARY)
-                    importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
-                })
                 addView(TextView(context).apply {
                     text = getString(labelRes)
                     gravity = Gravity.CENTER
-                    textSize = if (destination == Screen.Basketball) 11f else 12f
+                    textSize = 11f
+                    setPadding(0, dp(4), 0, 0)
                     maxLines = 1
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        setAutoSizeTextTypeUniformWithConfiguration(9, 12, 1,
-                            android.util.TypedValue.COMPLEX_UNIT_SP)
-                    }
                     typeface = if (isSelected) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
-                    setTextColor(if (isSelected) AppColors.PRIMARY_DARK else AppColors.TEXT_SECONDARY)
+                    setTextColor(if (isSelected) AppColors.PRIMARY else AppColors.TEXT_SECONDARY)
                     importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
                 })
             }
-            bottomNavigation.addView(item, LinearLayout.LayoutParams(0, dp(58), 1f))
+            bottomNavigation.addView(item, LinearLayout.LayoutParams(0, dp(58), 1f).apply {
+                setMargins(dp(3), 0, dp(3), 0)
+            })
         }
     }
 
     private fun renderDashboard() {
-        val catalog = catalog ?: return
-        val locale = uiLocale()
-        val allPrograms = allPrograms(catalog)
-        val completedIds = progressRepository.completedProgramIds()
-        val active = progressRepository.activeWorkout()
-        val nextProgram = assignedProgram()
-
-        val page = verticalPage()
-        page.addView(
-            ImageView(this).apply {
-                setImageResource(R.drawable.logo)
-                adjustViewBounds = true
-                scaleType = ImageView.ScaleType.CENTER_INSIDE
-                contentDescription = getString(R.string.logo_content_description)
-            },
-            LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(72)),
-        )
-        page.addView(sectionLabel(getString(R.string.today_section)))
-
-        val todayCard = card(clickable = nextProgram != null)
-        if (nextProgram == null) {
-            todayCard.addView(titleText(getString(R.string.all_complete_title), 20f))
-            todayCard.addWithMargins(bodyText(getString(R.string.all_complete_body)), topDp = 8)
-        } else {
-            val isResume = active?.programId == nextProgram.id
-            todayCard.addView(titleText(displayName(nextProgram, locale), 22f))
-            val level = catalog.levels.firstOrNull { it.number == nextProgram.levelNumber }
-            val meta = buildList {
-                add(level?.let { displayName(it, locale) } ?: getString(R.string.level_number, nextProgram.levelNumber))
-                programMeta(nextProgram).takeIf(String::isNotBlank)?.let(::add)
-            }.joinToString(" • ")
-            todayCard.addWithMargins(bodyText(meta, 14f), topDp = 4)
-            todayCard.addWithMargins(
-                bodyText(
-                    nextProgram.description.resolve(locale)
-                        .ifBlank { getString(R.string.empty_description) },
-                ),
-                topDp = 10,
-            )
-            val action = primaryButton(
-                getString(if (isResume) R.string.resume_workout else R.string.start_today),
-            ) { requestStart(nextProgram) }
-            action.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_play_arrow_white_24dp, 0, 0, 0)
-            action.compoundDrawablePadding = dp(8)
-            todayCard.addWithMargins(action, topDp = 16)
-            todayCard.setOnClickListener { navigate(Screen.Overview(nextProgram.id)) }
-        }
-        page.addWithMargins(todayCard, bottomDp = 18)
-
-        page.addView(sectionLabel(getString(R.string.overall_progress)))
-        val progressCard = card()
-        val total = allPrograms.size
-        val complete = allPrograms.count { it.id in completedIds }
-        val percent = percentage(complete, total)
-        progressCard.addView(titleText("$percent%", 30f))
-        progressCard.addWithMargins(
-            bodyText(getString(R.string.workouts_completed_format, complete, total)),
-            topDp = 2,
-        )
-        progressCard.addWithMargins(horizontalProgress(percent), topDp = 12, height = dp(10))
-        page.addWithMargins(progressCard, bottomDp = 18)
-
-        page.addView(sectionLabel(getString(R.string.latest_completion)))
-        val latestCard = card()
-        val latest = progressRepository.sessionHistory().firstOrNull()
-        if (latest == null) {
-            latestCard.addView(bodyText(getString(R.string.no_completion)))
-        } else {
-            val program = programById(latest.programId)
-            latestCard.addView(
-                titleText(
-                    program?.let { displayName(it, locale) }
-                        ?: getString(R.string.workout_overview),
-                    18f,
-                ),
-            )
-            latestCard.addWithMargins(
-                bodyText(
-                    getString(
-                        R.string.completed_on,
-                        DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, locale)
-                            .format(Date(latest.completedAtEpochMillis)),
-                        latest.durationSeconds / 60L,
-                    ),
-                    13f,
-                ),
-                topDp = 4,
-            )
-        }
-        page.addWithMargins(latestCard, bottomDp = 18)
-
-        page.addView(sectionLabel(getString(R.string.levels_title)))
-        catalog.levels.sortedBy { it.number }.forEach { level ->
-            page.addWithMargins(levelCard(level, locale, completedIds), bottomDp = 10)
-        }
-        val browseButton = primaryButton(getString(R.string.browse_levels), AppColors.PRIMARY) {
-                openRoot(Screen.Levels)
-            }
-        browseButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_list_white_24dp, 0, 0, 0)
-        browseButton.compoundDrawablePadding = dp(8)
-        page.addWithMargins(browseButton, topDp = 4)
-
-        setBody(scroll(page))
-    }
-
-    private fun renderBasketball() {
-        val plan = basketballCatalog ?: return
-        val completed = basketballProgress.completedProgramIds()
-        val active = basketballProgress.activeWorkout()
-        val next = active?.programId?.let(::programById)?.takeIf { canStart(it.id) }
-            ?: assignedProgram()
-        val page = verticalPage()
-        page.addView(titleText(getString(R.string.basketball_title), 26f))
-        page.addWithMargins(bodyText(getString(R.string.basketball_subtitle)), topDp = 4)
-        page.addWithMargins(BasketballCourtView(this, "overview"),
-            height = dp(128), topDp = 12, bottomDp = 8)
-        page.addView(sectionLabel(getString(R.string.basketball_next)))
-        if (next != null) {
-            page.addView(titleText(displayName(next, uiLocale()), 21f))
-            page.addWithMargins(bodyText(programMeta(next), 13f), topDp = 4)
-            page.addWithMargins(bodyText(next.description.resolve()), topDp = 8)
-            val start = primaryButton(getString(
-                if (active?.programId == next.id) R.string.resume_workout else R.string.basketball_start,
-            )) { requestStart(next) }
-            start.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_play_arrow_white_24dp, 0, 0, 0)
-            start.compoundDrawablePadding = dp(8)
-            page.addWithMargins(start, topDp = 12)
-            page.addView(secondaryButton(getString(R.string.basketball_session_details)) {
-                navigate(Screen.Overview(next.id))
-            })
-        } else {
-            page.addView(titleText(getString(R.string.basketball_complete), 20f))
-            page.addWithMargins(bodyText(getString(R.string.basketball_keep_practicing)), topDp = 6)
-        }
+        val plan = catalog ?: return
         val all = allPrograms(plan)
-        page.addWithMargins(bodyText(getString(
-            R.string.workouts_completed_format, all.count { it.id in completed }, all.size,
-        )), topDp = 14)
-        page.addWithMargins(horizontalProgress(percentage(all.count { it.id in completed }, all.size)),
-            height = dp(8), topDp = 7)
-        page.addWithMargins(secondaryButton(getString(R.string.basketball_progress)) {
-            navigate(Screen.BasketballProgress)
-        }, topDp = 6)
-        page.addView(sectionLabel(getString(R.string.basketball_levels)))
-        plan.levels.forEach { level ->
-            page.addWithMargins(levelCard(level, uiLocale(), completed), bottomDp = 10)
+        val completed = progressRepository.completedProgramIds()
+        val active = progressRepository.activeWorkout()
+        val next = active?.programId?.let(::programById)?.takeIf { canStart(it.id) } ?: assignedProgram()
+        val compact = resources.configuration.screenHeightDp < 480
+        val page = verticalPage()
+        val hero = card().apply {
+            background = roundedDrawable(AppColors.PRIMARY_DARK, dp(24).toFloat())
+            addView(bodyText(getString(R.string.brand_kicker), 12f).apply { setTextColor(AppColors.ACCENT) })
+            addWithMargins(titleText(getString(R.string.brand_line), 30f).apply { setTextColor(Color.WHITE) }, topDp = 8)
+            addWithMargins(ImageView(context).apply {
+                setImageResource(R.drawable.ic_brand_mark)
+                imageTintList = ColorStateList.valueOf(AppColors.ACCENT)
+                contentDescription = getString(R.string.logo_content_description)
+                scaleType = ImageView.ScaleType.CENTER_INSIDE
+            }, height = dp(108), topDp = 4)
         }
-        page.addView(sectionLabel(getString(R.string.basketball_rhythm_title)))
-        page.addView(bodyText(getString(R.string.basketball_rhythm)))
-        page.addWithMargins(secondaryButton(getString(R.string.basketball_court_rules)) {
-            AlertDialog.Builder(this)
-                .setTitle(R.string.basketball_court_rules)
-                .setMessage(R.string.basketball_rules)
-                .setPositiveButton(android.R.string.ok, null).show()
-        }, topDp = 8)
+        if (!compact) page.addWithMargins(hero, bottomDp = 20)
+        if (!compact) page.addView(sectionLabel(getString(R.string.today_section)))
+        val today = card(clickable = next != null)
+        if (next != null) {
+            today.addView(titleText(displayName(next, uiLocale()), if (compact) 20f else 23f))
+            today.addWithMargins(bodyText(programMeta(next), 13f), topDp = 6)
+            today.addWithMargins(primaryButton(getString(if (active?.programId == next.id) R.string.resume_workout else R.string.start_today)) {
+                requestStart(next)
+            }, topDp = 16)
+            today.setOnClickListener { navigate(Screen.Overview(next.id)) }
+        } else {
+            today.addView(titleText(getString(R.string.all_complete_title), 22f))
+            today.addWithMargins(bodyText(getString(R.string.all_complete_body)), topDp = 8)
+        }
+        page.addWithMargins(today, bottomDp = 16)
+        val done = all.count { it.id in completed }
+        page.addWithMargins(card(clickable = true).apply {
+            addView(titleText(getString(R.string.progress_title), 18f))
+            addWithMargins(bodyText(getString(R.string.workouts_completed_format, done, all.size), 14f), topDp = 6)
+            addWithMargins(horizontalProgress(percentage(done, all.size)), height = dp(8), topDp = 14)
+            setOnClickListener { openRoot(Screen.Progress) }
+        }, bottomDp = 12)
+        page.addView(NativeAdSlot(this, BuildConfig.ADMOB_NATIVE_ID,
+            AdPalette(AppColors.SURFACE, AppColors.TEXT, AppColors.TEXT_SECONDARY,
+                AppColors.ACTION, AppColors.ON_ACCENT, AppColors.DIVIDER)),
+            LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
         setBody(scroll(page))
     }
 
@@ -624,7 +515,7 @@ open class HomeActivity : Activity() {
         )
         addWithMargins(horizontalProgress(percent), topDp = 7, height = dp(8))
         contentDescription = "${displayName(level, locale)}, ${getString(R.string.level_progress_format, complete, level.programs.size)}"
-        setOnClickListener { navigate(Screen.Workouts(level.number, isBasketball(currentScreen))) }
+        setOnClickListener { navigate(Screen.Workouts(level.number)) }
     }
 
     private fun renderWorkouts(levelNumber: Int) {
@@ -705,7 +596,6 @@ open class HomeActivity : Activity() {
                 val start = primaryButton(
                     getString(when {
                         isResume -> R.string.resume_workout
-                        canReplay(program.id) -> R.string.basketball_repeat
                         else -> R.string.start_workout
                     }),
                 ) { requestStart(program) }
@@ -787,7 +677,7 @@ open class HomeActivity : Activity() {
                             text = NumberFormat.getIntegerInstance(locale).format(set.number)
                             gravity = Gravity.CENTER
                             textSize = 12f
-                            setTextColor(Color.WHITE)
+                            setTextColor(AppColors.ON_ACCENT)
                             background = roundedDrawable(AppColors.NUMBER_DARK, dp(13).toFloat())
                             importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
                         },
@@ -853,7 +743,7 @@ open class HomeActivity : Activity() {
 
         val page = verticalPage()
         val status = card().apply {
-            background = roundedDrawable(AppColors.INFO_SURFACE, dp(10).toFloat())
+            background = roundedDrawable(AppColors.INFO_SURFACE, dp(24).toFloat())
             addView(titleText(displayName(program, locale), 22f))
             val minutes = ((System.currentTimeMillis() - active.startedAtEpochMillis) / 60_000L)
                 .coerceAtLeast(0L)
@@ -874,7 +764,7 @@ open class HomeActivity : Activity() {
                 gravity = Gravity.CENTER
                 setTextColor(AppColors.ACTION)
                 typeface = Typeface.DEFAULT_BOLD
-                background = roundedDrawable(Color.WHITE, dp(8).toFloat())
+                background = roundedDrawable(AppColors.SURFACE, dp(16).toFloat())
                 setPadding(dp(10), dp(10), dp(10), dp(10))
             }
             addWithMargins(restStatusView!!, topDp = 12)
@@ -992,7 +882,7 @@ open class HomeActivity : Activity() {
                 Toast.makeText(this, R.string.workout_saved, Toast.LENGTH_SHORT).show()
                 backStack.clear()
                 showScreen(
-                    if (program.id.startsWith("bb:")) Screen.BasketballProgress else Screen.Progress,
+                    Screen.Progress,
                     pushCurrent = false,
                 )
             }
@@ -1069,7 +959,7 @@ open class HomeActivity : Activity() {
         val percent = percentage(complete, all.size)
         val page = verticalPage()
         page.addView(titleText(getString(
-            if (isBasketball(currentScreen)) R.string.basketball_progress else R.string.progress_title,
+            R.string.progress_title,
         ), 26f))
 
         val overall = card().apply {
@@ -1099,12 +989,12 @@ open class HomeActivity : Activity() {
                     topDp = 7,
                     height = dp(7),
                 )
-                setOnClickListener { navigate(Screen.Workouts(level.number, isBasketball(currentScreen))) }
+                setOnClickListener { navigate(Screen.Workouts(level.number)) }
             }
             page.addWithMargins(row, bottomDp = 8)
         }
 
-        if (isBasketball(currentScreen)) addBasketballChecks(page)
+
         page.addView(sectionLabel(getString(R.string.history)))
         val history = progressRepository.sessionHistory()
         if (history.isEmpty()) {
@@ -1141,44 +1031,18 @@ open class HomeActivity : Activity() {
         setBody(scroll(page))
     }
 
-    private fun addBasketballChecks(page: LinearLayout) {
-        val preferences = getSharedPreferences("street_basketball_skills", Context.MODE_PRIVATE)
-        val passed = preferences.getStringSet("passed", emptySet()).orEmpty().toMutableSet()
-        page.addView(sectionLabel(getString(R.string.basketball_checkpoints)))
-        page.addView(bodyText(getString(R.string.basketball_checkpoint_note), 14f))
-        BasketballSkills.checkpoints.forEachIndexed { levelIndex, checks ->
-            val level = basketballCatalog?.levels?.getOrNull(levelIndex) ?: return@forEachIndexed
-            page.addWithMargins(titleText(level.name.resolve(), 18f), topDp = 16, bottomDp = 4)
-            checks.forEachIndexed { checkIndex, label ->
-                val key = "l${levelIndex + 1}:c${checkIndex + 1}"
-                page.addView(CheckBox(this).apply {
-                    text = label
-                    textSize = 14f
-                    setTextColor(AppColors.TEXT)
-                    minHeight = dp(52)
-                    setPadding(0, dp(6), 0, dp(6))
-                    isChecked = key in passed
-                    buttonTintList = ColorStateList.valueOf(AppColors.SUCCESS)
-                    setOnCheckedChangeListener { _, checked ->
-                        if (checked) passed.add(key) else passed.remove(key)
-                        preferences.edit().putStringSet("passed", passed.toSet()).apply()
-                    }
-                })
-            }
-        }
-    }
-
     @Suppress("DEPRECATION")
     private fun renderSettings() {
         val page = verticalPage()
-        page.addView(titleText(getString(R.string.settings_title), 26f))
 
+        page.addView(sectionLabel(getString(R.string.appearance)))
+        page.addWithMargins(card().apply {
+            addView(settingSwitch(getString(R.string.dark_mode), settings.darkMode) { enabled ->
+                settings.darkMode = enabled
+                recreate()
+            })
+        }, bottomDp = 18)
         val accountsAvailable = AccountSettingsView.isAvailable(this)
-        page.addWithMargins(
-            bodyText(getString(if (accountsAvailable) R.string.settings_subtitle else R.string.settings_subtitle_offline)),
-            topDp = 4,
-            bottomDp = 18,
-        )
         if (accountsAvailable) {
             page.addView(sectionLabel(getString(R.string.account_section)))
             page.addWithMargins(AccountSettingsView(this), bottomDp = 16)
@@ -1193,20 +1057,9 @@ open class HomeActivity : Activity() {
             getString(R.string.sound_cues),
             settings.soundCues,
         ) { settings.soundCues = it })
-        preferencesCard.addWithMargins(bodyText(getString(R.string.training_preferences_note), 13f), topDp = 6)
         page.addWithMargins(preferencesCard, bottomDp = 16)
-        val focus = card().apply {
-            addView(titleText(getString(R.string.settings_focus_title), 19f))
-            addWithMargins(bodyText(getString(R.string.settings_focus_body), 14f), topDp = 7)
-            addWithMargins(secondaryButton(getString(R.string.settings_open_court)) {
-                openRoot(Screen.Basketball)
-            }, topDp = 8)
-        }
-        page.addWithMargins(focus, bottomDp = 16)
-
-        page.addView(sectionLabel(getString(R.string.safety_title)))
         val safety = card().apply {
-            background = roundedDrawable(AppColors.WARNING_SURFACE, dp(10).toFloat())
+            background = roundedDrawable(AppColors.WARNING_SURFACE, dp(24).toFloat())
             addView(titleText(getString(R.string.safety_title), 19f))
             addWithMargins(bodyText(getString(R.string.safety_body), 14f), topDp = 7)
         }
@@ -1218,6 +1071,7 @@ open class HomeActivity : Activity() {
             addWithMargins(bodyText(getString(R.string.about_body), 14f), topDp = 7)
             addWithMargins(bodyText(getString(R.string.version_format, version), 12f), topDp = 10)
         }
+        about.addWithMargins(secondaryButton("Ad privacy") { NativeAds.showPrivacy(this, BuildConfig.ADMOB_NATIVE_ID) }, topDp = 12)
         page.addView(about)
         setBody(scroll(page))
     }
@@ -1237,7 +1091,7 @@ open class HomeActivity : Activity() {
         ExerciseSection("warmup", R.string.warm_up, program.warmup),
         ExerciseSection("practice", R.string.skill_practice, program.practice),
         ExerciseSection("main",
-            if (program.id.startsWith("bb:")) R.string.basketball_drills else R.string.main_training,
+            R.string.main_training,
             program.exercises),
         ExerciseSection("cooldown", R.string.cool_down, program.cooldown),
     )
@@ -1248,11 +1102,6 @@ open class HomeActivity : Activity() {
         locale: Locale,
     ): LinearLayout = LinearLayout(this).apply {
         orientation = LinearLayout.VERTICAL
-        if (exercise.movementId?.startsWith("bb_") == true) {
-            addView(BasketballCourtView(context, exercise.category ?: "footwork"),
-                LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(152)))
-            return@apply
-        }
         val preview = ExerciseAnimationView(context)
         val variations = exercise.sets.map { it.name.resolve(locale) }
             .filter(String::isNotBlank).distinct()
@@ -1299,17 +1148,6 @@ open class HomeActivity : Activity() {
     }
 
     private fun workoutSafetyCard(program: TrainingProgram): LinearLayout = card().apply {
-        if (program.id.startsWith("bb:")) {
-            addView(titleText(getString(R.string.basketball_session_focus), 18f))
-            addWithMargins(bodyText(program.readiness.resolve(), 14f), topDp = 7)
-            addWithMargins(secondaryButton(getString(R.string.class_guidance_details)) {
-                AlertDialog.Builder(this@HomeActivity)
-                    .setTitle(R.string.class_guidance_details)
-                    .setMessage(getString(R.string.basketball_rhythm) + "\n\n" + program.safety.resolve())
-                    .setPositiveButton(android.R.string.ok, null).show()
-            }, topDp = 4)
-            return@apply
-        }
         addView(titleText(getString(R.string.class_guidance_title), 18f))
         addWithMargins(bodyText(getString(R.string.class_guidance_summary), 14f), topDp = 7)
         addWithMargins(secondaryButton(getString(R.string.class_guidance_details)) {
@@ -1341,38 +1179,19 @@ open class HomeActivity : Activity() {
         append(set.id).append('-').append(setIndex)
     }
 
-    private fun isBasketball(screen: Screen?): Boolean = when (screen) {
-        Screen.Basketball, Screen.BasketballProgress -> true
-        is Screen.Workouts -> screen.basketball
-        is Screen.Overview -> screen.programId.startsWith("bb:")
-        is Screen.Active -> screen.programId.startsWith("bb:")
-        else -> false
-    }
-
-    private fun catalogFor(screen: Screen?): CurriculumCatalog? =
-        if (isBasketball(screen)) basketballCatalog else gymnasticsCatalog
-
-    private fun repositoryFor(screen: Screen?): SharedPreferencesProgressRepository =
-        if (isBasketball(screen)) basketballProgress else gymnasticsProgress
-
     private fun programById(id: String): TrainingProgram? =
-        (if (id.startsWith("bb:")) basketballCatalog else gymnasticsCatalog)
-            ?.levels?.asSequence()?.flatMap { it.programs.asSequence() }?.firstOrNull { it.id == id }
+        catalog?.levels?.asSequence()?.flatMap { it.programs.asSequence() }?.firstOrNull { it.id == id }
 
-    private fun canReplay(id: String): Boolean =
-        id.startsWith("bb:") && basketballProgress.isProgramCompleted(id)
+    private fun canReplay(id: String): Boolean = false
 
-    private fun canStart(id: String, screen: Screen? = currentScreen): Boolean =
-        assignedProgram(screen)?.id == id || canReplay(id)
+    private fun canStart(id: String): Boolean = assignedProgram()?.id == id || canReplay(id)
 
     private fun allPrograms(catalog: CurriculumCatalog): List<TrainingProgram> =
         catalog.levels.sortedBy { it.number }.flatMap { level -> level.programs.sortedBy { it.number } }
 
-    private fun assignedProgram(screen: Screen? = currentScreen): TrainingProgram? {
-        val loadedCatalog = catalogFor(screen) ?: return null
-        val completed = repositoryFor(screen).completedProgramIds()
-        // The assignment is derived only from ordered completion state. An active session may
-        // come from an older build, so it must never promote a later workout past an incomplete one.
+    private fun assignedProgram(): TrainingProgram? {
+        val loadedCatalog = catalog ?: return null
+        val completed = progressRepository.completedProgramIds()
         return allPrograms(loadedCatalog).firstOrNull { it.id !in completed }
     }
 
@@ -1404,8 +1223,6 @@ open class HomeActivity : Activity() {
     private fun screenTitle(screen: Screen): String = when (screen) {
         Screen.Dashboard -> getString(R.string.dashboard_title)
         Screen.Levels -> getString(R.string.levels_title)
-        Screen.Basketball -> getString(R.string.basketball_title)
-        Screen.BasketballProgress -> getString(R.string.basketball_progress)
         is Screen.Workouts -> getString(R.string.workouts_title, screen.levelNumber)
         is Screen.Overview -> getString(R.string.workout_overview)
         is Screen.Active -> getString(R.string.active_workout)
@@ -1414,32 +1231,29 @@ open class HomeActivity : Activity() {
     }
 
     private fun isNested(screen: Screen): Boolean =
-        screen is Screen.Workouts || screen is Screen.Overview || screen is Screen.Active ||
-            screen == Screen.BasketballProgress
+        screen is Screen.Workouts || screen is Screen.Overview || screen is Screen.Active
 
-    private fun rootFor(screen: Screen): Screen = if (isBasketball(screen)) Screen.Basketball else when (screen) {
+    private fun rootFor(screen: Screen): Screen = when (screen) {
         is Screen.Workouts, is Screen.Overview, is Screen.Active -> Screen.Levels
         else -> screen
     }
 
     private fun isValidScreen(screen: Screen): Boolean = when (screen) {
-        is Screen.Workouts -> catalogFor(screen)?.levels?.any { it.number == screen.levelNumber } == true
+        is Screen.Workouts -> catalog?.levels?.any { it.number == screen.levelNumber } == true
         is Screen.Overview -> programById(screen.programId) != null
         is Screen.Active -> programById(screen.programId) != null &&
-            repositoryFor(screen).activeWorkout()?.programId == screen.programId &&
-            canStart(screen.programId, screen)
+            progressRepository.activeWorkout()?.programId == screen.programId &&
+            canStart(screen.programId)
         else -> true
     }
 
     private fun screenFromBundle(bundle: Bundle): Screen? = when (bundle.getString(STATE_SCREEN)) {
         Screen.Dashboard.javaClass.simpleName -> Screen.Dashboard
         Screen.Levels.javaClass.simpleName -> Screen.Levels
-        Screen.Basketball.javaClass.simpleName -> Screen.Basketball
-        Screen.BasketballProgress.javaClass.simpleName -> Screen.BasketballProgress
         Screen.Progress.javaClass.simpleName -> Screen.Progress
         Screen.Settings.javaClass.simpleName -> Screen.Settings
         Screen.Workouts::class.java.simpleName -> Screen.Workouts(
-            bundle.getInt(STATE_LEVEL, -1), bundle.getBoolean(STATE_BASKETBALL),
+            bundle.getInt(STATE_LEVEL, -1),
         )
         Screen.Overview::class.java.simpleName -> bundle.getString(STATE_PROGRAM)?.let(Screen::Overview)
         Screen.Active::class.java.simpleName -> bundle.getString(STATE_PROGRAM)?.let(Screen::Active)
@@ -1452,6 +1266,5 @@ open class HomeActivity : Activity() {
         private const val STATE_PROGRAM = "program"
         private const val STATE_REST_END = "rest_end_epoch_millis"
         private const val STATE_REST_PROGRAM = "rest_program"
-        private const val STATE_BASKETBALL = "basketball"
     }
 }
