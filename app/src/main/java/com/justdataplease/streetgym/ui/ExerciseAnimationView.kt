@@ -4,23 +4,29 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.DashPathEffect
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.Rect
+import android.graphics.Typeface
 import android.os.Build
 import android.provider.Settings
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewTreeObserver
 import android.view.animation.LinearInterpolator
+import com.justdataplease.streetgym.R
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.Locale
+import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.hypot
+import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.math.sin
+import kotlin.math.sqrt
 
 /**
  * Offline line-figure movement guides backed by exercise_animations.json (schema 2).
@@ -29,6 +35,11 @@ import kotlin.math.sin
  * absolute joint angles plus one pinned joint (hands on the bar, feet on the floor), so
  * limbs never stretch and contact points stay put while the body moves between keyframes.
  * The canvas is scaled uniformly, so proportions are identical on every screen size.
+ *
+ * Poses are joined by a monotone spline (see [MotionCurve]), so the figure only slows where a
+ * joint reverses or holds. Ping-pong templates play as a coached rep: a quick effort phase, a
+ * short hold, a slower lowering and a reset, with a phase label, a progress strip and a range
+ * marker that lights up when the key joint reaches the end of the movement.
  *
  * These illustrations are movement cues, not a substitute for the written coaching and
  * safety notes. The JSON owns poses, timing, and mappings so the artwork can be reviewed
@@ -41,7 +52,7 @@ class ExerciseAnimationView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
     private val library = AnimationLibrary.load(context.applicationContext)
     private var resolved = library.fallback
-    private var animationPhase = resolved.template.reducedMotionFrame
+    private var animationPhase = resolved.template.startPhase
     private var animator: ValueAnimator? = null
     private var reducedMotionRequested = false
     private var playbackPaused = false
@@ -90,12 +101,39 @@ class ExerciseAnimationView @JvmOverloads constructor(
     }
     private val floorPaint = Paint(apparatusPaint).apply { color = AppColors.DIVIDER }
     private val accentPaint = Paint(apparatusPaint).apply { color = AppColors.PRIMARY }
+    private val phaseTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = AppColors.PRIMARY
+        textSize = dp(11f)
+        typeface = Typeface.DEFAULT_BOLD
+        letterSpacing = 0.08f
+    }
+    private val stripPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeCap = Paint.Cap.ROUND
+        strokeWidth = dp(3f)
+    }
+    private val markerPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE }
+    private val markerTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        textSize = dp(10f)
+        typeface = Typeface.DEFAULT_BOLD
+    }
+    private var markerDash: DashPathEffect? = null
+    private var markerDashScale = 0f
     private val torsoPath = Path()
     private val primitivePath = Path()
     private val joints = FloatArray(Rig.JOINT_COUNT * 2)
-    private val hipScratchA = FloatArray(Rig.JOINT_COUNT * 2)
-    private val hipScratchB = FloatArray(Rig.JOINT_COUNT * 2)
     private val blendedPose = Pose()
+
+    private var badge: BadgeStyle? = null
+    private val badgeClip = Path()
+
+    // Playback frame, resolved once per draw.
+    private var frameTimeline = 0f
+    private var frameSegment = -1
+    private var frameProgress = 0f
+    private var phaseLabels = emptyArray<String>()
+    private var markerLabel = ""
+    private var markerLabelReached = ""
 
     init {
         minimumWidth = dp(220f).roundToInt()
@@ -105,6 +143,7 @@ class ExerciseAnimationView @JvmOverloads constructor(
         isClickable = false
         isFocusable = false
         contentDescription = "Line-figure exercise movement guide"
+        updateCoachingText()
     }
 
     /**
@@ -128,10 +167,35 @@ class ExerciseAnimationView @JvmOverloads constructor(
             equipment = equipment,
         )
         contentDescription = "Line-figure movement guide for $readableName. Follow the written instructions for exact technique."
-        animationPhase = resolved.template.reducedMotionFrame
+        updateCoachingText()
+        animationPhase = resolved.template.startPhase
         restartAnimationIfNeeded()
         invalidate()
         return this
+    }
+
+    /** Colours for the static skill-badge rendering. */
+    class BadgeStyle(val background: Int, val figure: Int, val farFigure: Int, val apparatus: Int)
+
+    /**
+     * Turns the view into a static skill badge: a flat rounded tile with the movement's end pose
+     * scaled to fill it, heavier strokes and no panel, overlays or animation.
+     */
+    fun setBadgeStyle(style: BadgeStyle) {
+        badge = style
+        backgroundPaint.color = style.background
+        figurePaint.color = style.figure
+        headPaint.color = style.figure
+        handPaint.color = style.figure
+        farLimbPaint.color = style.farFigure
+        apparatusPaint.color = style.apparatus
+        floorPaint.color = style.apparatus
+        apparatusFillPaint.color = blend(style.apparatus, style.background, 0.6f)
+        setPadding(0, 0, 0, 0)
+        minimumWidth = 0
+        minimumHeight = 0
+        stopAnimator()
+        invalidate()
     }
 
     fun setPlaybackPaused(paused: Boolean) {
@@ -150,7 +214,7 @@ class ExerciseAnimationView @JvmOverloads constructor(
     fun setReducedMotion(enabled: Boolean) {
         if (reducedMotionRequested == enabled) return
         reducedMotionRequested = enabled
-        animationPhase = resolved.template.reducedMotionFrame
+        animationPhase = resolved.template.startPhase
         restartAnimationIfNeeded()
         invalidate()
     }
@@ -198,6 +262,10 @@ class ExerciseAnimationView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        badge?.let {
+            drawBadge(canvas)
+            return
+        }
         val left = paddingLeft.toFloat()
         val top = paddingTop.toFloat()
         val right = (width - paddingRight).toFloat()
@@ -215,6 +283,10 @@ class ExerciseAnimationView @JvmOverloads constructor(
         val originX = left + (right - left - library.canvasWidth * scale) * 0.5f
         val originY = top + (bottom - top - library.canvasHeight * scale) * 0.5f
 
+        val running = isAnimationRunning()
+        resolveFrame(running)
+        resolved.template.curve.evaluate(frameTimeline, blendedPose, joints)
+
         canvas.save()
         canvas.clipRect(left, top, right, bottom)
         resolved.apparatus.forEach { name ->
@@ -222,8 +294,143 @@ class ExerciseAnimationView @JvmOverloads constructor(
                 drawPrimitive(canvas, primitive, originX, originY, scale)
             }
         }
+        drawRangeMarker(canvas, originX, originY, scale, right - dp(6f))
         drawFigure(canvas, originX, originY, scale)
         canvas.restore()
+        if (running) drawPhase(canvas, left, top, right, bottom)
+    }
+
+    private fun drawBadge(canvas: Canvas) {
+        val w = width.toFloat()
+        val h = height.toFloat()
+        if (w <= 0f || h <= 0f) return
+        val radius = min(w, h) * 0.22f
+        badgeClip.rewind()
+        badgeClip.addRoundRect(0f, 0f, w, h, radius, radius, Path.Direction.CW)
+        canvas.drawPath(badgeClip, backgroundPaint)
+
+        resolveFrame(false)
+        resolved.template.curve.evaluate(frameTimeline, blendedPose, joints)
+        var minX = Float.MAX_VALUE
+        var minY = Float.MAX_VALUE
+        var maxX = -Float.MAX_VALUE
+        var maxY = -Float.MAX_VALUE
+        for (joint in 0 until BADGE_JOINTS) {
+            minX = min(minX, joints[joint * 2])
+            maxX = max(maxX, joints[joint * 2])
+            minY = min(minY, joints[joint * 2 + 1])
+            maxY = max(maxY, joints[joint * 2 + 1])
+        }
+        val head = library.rig.headRadius
+        val span = max(maxX - minX, maxY - minY) + head * 2f
+        val scale = min(w, h) * 0.64f / span.coerceAtLeast(1f)
+        val ox = w * 0.5f - (minX + maxX) * 0.5f * scale
+        val oy = h * 0.5f - (minY + maxY) * 0.5f * scale
+
+        canvas.save()
+        canvas.clipPath(badgeClip)
+        resolved.apparatus.forEach { name ->
+            library.apparatus[name]?.forEach { primitive -> drawPrimitive(canvas, primitive, ox, oy, scale) }
+        }
+        drawFigure(canvas, ox, oy, scale, BADGE_STROKE)
+        canvas.restore()
+    }
+
+    /** Maps the animator phase to a pose timeline; ping-pong templates play as a tempo rep. */
+    private fun resolveFrame(running: Boolean) {
+        val template = resolved.template
+        if (!running) {
+            frameTimeline = template.timeline(template.reducedMotionFrame)
+            frameSegment = -1
+            return
+        }
+        if (!template.usesTempo) {
+            frameTimeline = template.timeline(animationPhase)
+            frameSegment = 0
+            frameProgress = animationPhase
+            return
+        }
+        val units = template.tempoUnits
+        var start = 0f
+        for (index in units.indices) {
+            val end = start + units[index] / MotionTemplate.TEMPO_TOTAL
+            if (animationPhase < end || index == units.lastIndex) {
+                frameSegment = index
+                frameProgress = ((animationPhase - start) / (end - start).coerceAtLeast(0.0001f)).coerceIn(0f, 1f)
+                break
+            }
+            start = end
+        }
+        frameTimeline = when (frameSegment) {
+            0 -> frameProgress
+            1 -> 1f
+            2 -> 1f - frameProgress
+            else -> 0f
+        }
+    }
+
+    private fun updateCoachingText() {
+        val template = resolved.template
+        val locale = Locale.getDefault()
+        phaseLabels = template.phaseLabels.labels.map { resources.getString(it).uppercase(locale) }.toTypedArray()
+        markerLabel = resources.getString(template.markerLabel)
+        markerLabelReached = "✓ $markerLabel"
+    }
+
+    /** A faint line at the end of the range that turns to the accent colour when the key joint reaches it. */
+    private fun drawRangeMarker(canvas: Canvas, ox: Float, oy: Float, scale: Float, limit: Float) {
+        val template = resolved.template
+        val joint = template.markerJoint
+        if (joint < 0) return
+        val reached = abs(joints[joint * 2 + 1] - template.markerY) < 1.2f
+        val y = oy + template.markerY * scale
+        val centerX = ox + template.markerX * scale
+        val x0 = max(ox + 10f * scale, centerX - 30f * scale)
+        val x1 = min(ox + 190f * scale, centerX + 30f * scale)
+        if (markerDashScale != scale) {
+            markerDash = DashPathEffect(floatArrayOf(2.2f * scale, 2.2f * scale), 0f)
+            markerDashScale = scale
+        }
+        markerPaint.pathEffect = if (reached) null else markerDash
+        markerPaint.strokeWidth = (if (reached) 1.3f else 0.9f) * scale
+        markerPaint.color = if (reached) AppColors.PRIMARY else withAlpha(AppColors.TEXT_SECONDARY, 140)
+        canvas.drawLine(x0, y, x1, y, markerPaint)
+        val label = if (reached) markerLabelReached else markerLabel
+        markerTextPaint.color = if (reached) AppColors.PRIMARY else AppColors.TEXT_SECONDARY
+        val textX = if (x1 + 3f * scale + markerTextPaint.measureText(label) <= limit) x1 + 3f * scale else x0
+        canvas.drawText(label, textX, y - 1.5f * scale, markerTextPaint)
+    }
+
+    /** Corner label for the current phase and a segmented progress strip along the bottom. */
+    private fun drawPhase(canvas: Canvas, left: Float, top: Float, right: Float, bottom: Float) {
+        val template = resolved.template
+        // Neutral movements (stretches, mobility) show the strip only; "Move / Return" adds nothing.
+        if (template.usesTempo && template.phaseLabels != PhaseLabels.MOVE && frameSegment in phaseLabels.indices) {
+            canvas.drawText(phaseLabels[frameSegment], left + dp(12f), top + dp(10f) - phaseTextPaint.ascent(), phaseTextPaint)
+        }
+        val units = if (template.usesTempo) template.tempoUnits else LOOP_UNITS
+        val total = units.sum()
+        val startX = left + dp(14f)
+        val width = right - left - dp(28f)
+        val y = bottom - dp(7f)
+        val gap = dp(3f)
+        var accumulated = 0f
+        units.forEachIndexed { index, unit ->
+            val a = startX + width * accumulated / total + if (index > 0) gap / 2 else 0f
+            val b = startX + width * (accumulated + unit) / total - if (index < units.lastIndex) gap / 2 else 0f
+            stripPaint.color = AppColors.DIVIDER
+            canvas.drawLine(a, y, b, y, stripPaint)
+            val filled = when {
+                index < frameSegment -> b
+                index == frameSegment -> a + (b - a) * frameProgress
+                else -> a
+            }
+            if (filled > a + 0.5f) {
+                stripPaint.color = if (index == frameSegment) AppColors.PRIMARY else withAlpha(AppColors.PRIMARY, 115)
+                canvas.drawLine(a, y, filled, y, stripPaint)
+            }
+            accumulated += unit
+        }
     }
 
     private fun drawPrimitive(canvas: Canvas, primitive: ApparatusPrimitive, ox: Float, oy: Float, scale: Float) {
@@ -257,41 +464,14 @@ class ExerciseAnimationView @JvmOverloads constructor(
         }
     }
 
-    private fun drawFigure(canvas: Canvas, ox: Float, oy: Float, scale: Float) {
-        val template = resolved.template
-        val timeline = if (isAnimationRunning()) template.timeline(animationPhase) else template.reducedMotionFrame
-        val frames = template.keyframes
-        var first = frames.first()
-        var second = frames.last()
-        for (index in 0 until frames.lastIndex) {
-            if (timeline <= frames[index + 1].at) {
-                first = frames[index]
-                second = frames[index + 1]
-                break
-            }
-        }
-        val span = (second.at - first.at).coerceAtLeast(0.0001f)
-        val raw = ((timeline - first.at) / span).coerceIn(0f, 1f)
-        val fraction = if (template.easing == "linear") raw else raw * raw * (3f - 2f * raw)
-
+    private fun drawFigure(canvas: Canvas, ox: Float, oy: Float, scale: Float, strokeBoost: Float = 1f) {
         val rig = library.rig
-        blendedPose.setInterpolated(first.pose, second.pose, fraction)
-        if (first.pose.pinJoint == second.pose.pinJoint) {
-            rig.solve(blendedPose, joints, null)
-        } else {
-            rig.solve(first.pose, hipScratchA, null)
-            rig.solve(second.pose, hipScratchB, null)
-            val hipX = lerp(hipScratchA[Rig.HIP * 2], hipScratchB[Rig.HIP * 2], fraction)
-            val hipY = lerp(hipScratchA[Rig.HIP * 2 + 1], hipScratchB[Rig.HIP * 2 + 1], fraction)
-            rig.solve(blendedPose, joints, floatArrayOf(hipX, hipY))
-        }
-
         fun x(joint: Int): Float = ox + joints[joint * 2] * scale
         fun y(joint: Int): Float = oy + joints[joint * 2 + 1] * scale
         fun bone(from: Int, to: Int, paint: Paint) = canvas.drawLine(x(from), y(from), x(to), y(to), paint)
 
-        figurePaint.strokeWidth = 2.6f * scale
-        farLimbPaint.strokeWidth = 2.2f * scale
+        figurePaint.strokeWidth = 2.6f * scale * strokeBoost
+        farLimbPaint.strokeWidth = 2.2f * scale * strokeBoost
 
         // Far-side limbs are lighter so the small figure keeps its depth and stays legible.
         bone(Rig.HIP, Rig.KNEE_FAR, farLimbPaint)
@@ -320,7 +500,7 @@ class ExerciseAnimationView @JvmOverloads constructor(
         )
         canvas.drawPath(torsoPath, figurePaint)
         bone(Rig.NECK, Rig.HEAD, figurePaint)
-        canvas.drawCircle(x(Rig.HEAD), y(Rig.HEAD), rig.headRadius * scale, headPaint)
+        canvas.drawCircle(x(Rig.HEAD), y(Rig.HEAD), rig.headRadius * scale * (1f + (strokeBoost - 1f) * 0.4f), headPaint)
 
         bone(Rig.HIP, Rig.KNEE_NEAR, figurePaint)
         bone(Rig.KNEE_NEAR, Rig.FOOT_NEAR, figurePaint)
@@ -335,7 +515,7 @@ class ExerciseAnimationView @JvmOverloads constructor(
 
     private fun restartAnimationIfNeeded() {
         stopAnimator()
-        animationPhase = resolved.template.reducedMotionFrame
+        animationPhase = resolved.template.startPhase
         updateAnimationState()
         invalidate()
     }
@@ -344,14 +524,14 @@ class ExerciseAnimationView @JvmOverloads constructor(
         if (!shouldAnimate()) {
             if (animator != null) {
                 stopAnimator()
-                animationPhase = resolved.template.reducedMotionFrame
+                animationPhase = resolved.template.startPhase
                 invalidate()
             }
             return
         }
         if (animator != null) return
         animator = ValueAnimator.ofFloat(animationPhase, animationPhase + 1f).apply {
-            duration = resolved.template.durationMs * if (slowPlayback) 2L else 1L
+            duration = resolved.template.cycleDurationMs * if (slowPlayback) 2L else 1L
             interpolator = LinearInterpolator()
             repeatCount = ValueAnimator.INFINITE
             repeatMode = ValueAnimator.RESTART
@@ -364,7 +544,8 @@ class ExerciseAnimationView @JvmOverloads constructor(
     }
 
     private fun shouldAnimate(): Boolean =
-        isAttachedToWindow &&
+        badge == null &&
+            isAttachedToWindow &&
             windowVisibility == VISIBLE &&
             visibility == VISIBLE &&
             isShown &&
@@ -400,6 +581,8 @@ class ExerciseAnimationView @JvmOverloads constructor(
 
     private fun dp(value: Float): Float = value * resources.displayMetrics.density
 
+    private fun withAlpha(color: Int, alpha: Int): Int = Color.argb(alpha, Color.red(color), Color.green(color), Color.blue(color))
+
     private fun blend(color: Int, towards: Int, amount: Float): Int {
         val keep = 1f - amount
         return Color.argb(
@@ -413,13 +596,19 @@ class ExerciseAnimationView @JvmOverloads constructor(
 
 private fun lerp(start: Float, end: Float, fraction: Float): Float = start + (end - start) * fraction
 
-/** Shortest-arc interpolation between two absolute angles in degrees. */
-private fun lerpAngle(start: Float, end: Float, fraction: Float): Float {
+/** Shortest signed arc from one absolute angle to another, in degrees. */
+private fun angleDelta(start: Float, end: Float): Float {
     var delta = (end - start) % 360f
     if (delta > 180f) delta -= 360f
     if (delta < -180f) delta += 360f
-    return start + delta * fraction
+    return delta
 }
+
+private val LOOP_UNITS = floatArrayOf(1f)
+
+/** Joints that bound the body for badge framing (the averaged hands/feet points are skipped). */
+private const val BADGE_JOINTS = 14
+private const val BADGE_STROKE = 1.6f
 
 private data class Palette(
     val background: Int,
@@ -483,26 +672,6 @@ internal class Pose {
         if (!explicit.isNaN()) return explicit
         val shin = if (near) legNear[1] else legFar[1]
         return shin - 90f * facing
-    }
-
-    fun setInterpolated(a: Pose, b: Pose, t: Float) {
-        facing = if (t < 0.5f) a.facing else b.facing
-        torso = lerpAngle(a.torso, b.torso, t)
-        head = lerpAngle(a.headAngle(), b.headAngle(), t)
-        spine = lerp(a.spine, b.spine, t)
-        shrug = lerp(a.shrug, b.shrug, t)
-        protract = lerp(a.protract, b.protract, t)
-        for (index in 0..1) {
-            armNear[index] = lerpAngle(a.armNear[index], b.armNear[index], t)
-            armFar[index] = lerpAngle(a.armFar[index], b.armFar[index], t)
-            legNear[index] = lerpAngle(a.legNear[index], b.legNear[index], t)
-            legFar[index] = lerpAngle(a.legFar[index], b.legFar[index], t)
-        }
-        footNear = lerpAngle(a.footAngle(true), b.footAngle(true), t)
-        footFar = lerpAngle(a.footAngle(false), b.footAngle(false), t)
-        pinJoint = a.pinJoint
-        pinX = lerp(a.pinX, b.pinX, t)
-        pinY = lerp(a.pinY, b.pinY, t)
     }
 
     /** Applies JSON fields on top of the current values (used for both poses and keyframe overrides). */
@@ -649,6 +818,179 @@ internal class Rig(
 
 private class PoseKeyframe(val at: Float, val pose: Pose)
 
+/**
+ * Monotone cubic (Fritsch-Butland) interpolation of every pose channel through the keyframes.
+ * Joints only come to rest where they reverse or hold, so the figure no longer stops at every
+ * in-between keyframe; with two keyframes the result equals the previous smoothstep. For
+ * "smooth" templates the in-between keyframes of one continuous movement are re-spaced by how
+ * far the body travels, so uneven authored timing does not create a slow patch mid-rep.
+ */
+private class MotionCurve(
+    private val keys: List<PoseKeyframe>,
+    retime: Boolean,
+    loop: Boolean,
+    private val rig: Rig,
+) {
+    private val count = keys.size
+    private val times = FloatArray(count) { keys[it].at }
+    private val values = Array(CHANNELS) { FloatArray(count) }
+    private val tangents = Array(CHANNELS) { FloatArray(count) }
+    private val hipOverride = FloatArray(2)
+
+    init {
+        val solved = Array(count) { index -> FloatArray(Rig.JOINT_COUNT * 2).also { rig.solve(keys[index].pose, it, null) } }
+        if (retime && count > 2) respace(solved)
+        for (k in 0 until count) {
+            val pose = keys[k].pose
+            val raw = floatArrayOf(
+                pose.torso, pose.headAngle(), pose.spine, pose.shrug, pose.protract,
+                pose.armNear[0], pose.armNear[1], pose.armFar[0], pose.armFar[1],
+                pose.legNear[0], pose.legNear[1], pose.legFar[0], pose.legFar[1],
+                pose.footAngle(true), pose.footAngle(false),
+                solved[k][Rig.HIP * 2], solved[k][Rig.HIP * 2 + 1],
+            )
+            for (channel in 0 until CHANNELS) {
+                values[channel][k] = if (k > 0 && isAngle(channel)) {
+                    values[channel][k - 1] + angleDelta(values[channel][k - 1], raw[channel])
+                } else {
+                    raw[channel]
+                }
+            }
+        }
+        val cyclic = loop && (0 until CHANNELS).all { channel ->
+            val first = values[channel][0]
+            val last = values[channel][count - 1]
+            if (isAngle(channel)) abs(angleDelta(first, last)) < 1f else abs(first - last) < 0.5f
+        }
+        for (channel in 0 until CHANNELS) fillTangents(values[channel], tangents[channel], cyclic)
+    }
+
+    fun evaluate(timeline: Float, out: Pose, joints: FloatArray) {
+        var k = count - 2
+        for (index in 0 until count - 1) {
+            if (timeline <= times[index + 1]) {
+                k = index
+                break
+            }
+        }
+        val h = (times[k + 1] - times[k]).coerceAtLeast(MIN_SPAN)
+        val s = ((timeline - times[k]) / h).coerceIn(0f, 1f)
+        val s2 = s * s
+        val s3 = s2 * s
+        val h00 = 2f * s3 - 3f * s2 + 1f
+        val h10 = s3 - 2f * s2 + s
+        val h01 = -2f * s3 + 3f * s2
+        val h11 = s3 - s2
+        fun value(channel: Int): Float {
+            val v = values[channel]
+            val m = tangents[channel]
+            return h00 * v[k] + h10 * h * m[k] + h01 * v[k + 1] + h11 * h * m[k + 1]
+        }
+        val a = keys[k].pose
+        val b = keys[k + 1].pose
+        out.torso = value(0)
+        out.head = value(1)
+        out.spine = value(2)
+        out.shrug = value(3)
+        out.protract = value(4)
+        out.armNear[0] = value(5)
+        out.armNear[1] = value(6)
+        out.armFar[0] = value(7)
+        out.armFar[1] = value(8)
+        out.legNear[0] = value(9)
+        out.legNear[1] = value(10)
+        out.legFar[0] = value(11)
+        out.legFar[1] = value(12)
+        out.footNear = value(13)
+        out.footFar = value(14)
+        out.facing = if (s < 0.5f) a.facing else b.facing
+        if (a.pinJoint == b.pinJoint) {
+            out.pinJoint = a.pinJoint
+            out.pinX = lerp(a.pinX, b.pinX, s)
+            out.pinY = lerp(a.pinY, b.pinY, s)
+            rig.solve(out, joints, null)
+        } else {
+            hipOverride[0] = value(15)
+            hipOverride[1] = value(16)
+            rig.solve(out, joints, hipOverride)
+        }
+    }
+
+    /** Within each run bounded by holds, reversals or the ends, place keyframes by distance travelled. */
+    private fun respace(solved: Array<FloatArray>) {
+        val distance = FloatArray(count - 1) { k ->
+            var sum = 0f
+            for (joint in 0 until BODY_JOINTS) {
+                sum += hypot(solved[k + 1][joint * 2] - solved[k][joint * 2], solved[k + 1][joint * 2 + 1] - solved[k][joint * 2 + 1])
+            }
+            sum
+        }
+        fun hold(k: Int) = distance[k] < 0.5f
+        fun reversal(k: Int): Boolean {
+            var dot = 0f
+            var before = 0f
+            var after = 0f
+            for (i in 0 until BODY_JOINTS * 2) {
+                val d0 = solved[k][i] - solved[k - 1][i]
+                val d1 = solved[k + 1][i] - solved[k][i]
+                dot += d0 * d1
+                before += d0 * d0
+                after += d1 * d1
+            }
+            val norm = sqrt(before * after)
+            return norm > 0f && dot / norm < -0.3f
+        }
+        val bounds = ArrayList<Int>().apply { add(0) }
+        for (k in 1 until count - 1) if (hold(k - 1) || hold(k) || reversal(k)) bounds.add(k)
+        bounds.add(count - 1)
+        for (b in 0 until bounds.lastIndex) {
+            val i = bounds[b]
+            val j = bounds[b + 1]
+            if (j - i < 2) continue
+            var total = 0f
+            for (k in i until j) total += distance[k]
+            if (total < 1e-3f) continue
+            val t0 = keys[i].at
+            val t1 = keys[j].at
+            var travelled = 0f
+            for (k in i + 1 until j) {
+                travelled += distance[k - 1]
+                times[k] = t0 + (t1 - t0) * travelled / total
+            }
+        }
+    }
+
+    private fun fillTangents(v: FloatArray, m: FloatArray, cyclic: Boolean) {
+        fun span(i: Int) = (times[i + 1] - times[i]).coerceAtLeast(MIN_SPAN)
+        fun secant(i: Int) = (v[i + 1] - v[i]) / span(i)
+        fun butland(d0: Float, d1: Float, h0: Float, h1: Float): Float =
+            if (d0 * d1 <= 0f) 0f else 3f * (h0 + h1) / ((2f * h1 + h0) / d0 + (h1 + 2f * h0) / d1)
+        for (i in 1 until count - 1) m[i] = butland(secant(i - 1), secant(i), span(i - 1), span(i))
+        if (cyclic && count > 2) {
+            val edge = butland(secant(count - 2), secant(0), span(count - 2), span(0))
+            m[0] = edge
+            m[count - 1] = edge
+        }
+    }
+
+    private companion object {
+        const val CHANNELS = 17
+        const val BODY_JOINTS = 14
+        const val MIN_SPAN = 0.0001f
+        fun isAngle(channel: Int) = channel == 0 || channel == 1 || channel in 5..14
+    }
+}
+
+/** Phase names for a tempo rep: effort, hold, return, reset. */
+private enum class PhaseLabels(val labels: IntArray) {
+    PULL(intArrayOf(R.string.motion_phase_pull, R.string.motion_phase_hold, R.string.motion_phase_lower, R.string.motion_phase_hang)),
+    PRESS(intArrayOf(R.string.motion_phase_lower, R.string.motion_phase_pause, R.string.motion_phase_press, R.string.motion_phase_reset)),
+    SQUAT(intArrayOf(R.string.motion_phase_lower, R.string.motion_phase_pause, R.string.motion_phase_stand, R.string.motion_phase_reset)),
+    RISE(intArrayOf(R.string.motion_phase_up, R.string.motion_phase_hold, R.string.motion_phase_down, R.string.motion_phase_reset)),
+    SINK(intArrayOf(R.string.motion_phase_down, R.string.motion_phase_pause, R.string.motion_phase_up, R.string.motion_phase_reset)),
+    MOVE(intArrayOf(R.string.motion_phase_move, R.string.motion_phase_hold, R.string.motion_phase_return, R.string.motion_phase_reset)),
+}
+
 private class MotionTemplate(
     val name: String,
     val durationMs: Long,
@@ -658,10 +1000,108 @@ private class MotionTemplate(
     val apparatus: List<String>,
     val keyframes: List<PoseKeyframe>,
 ) {
+    lateinit var curve: MotionCurve
+        private set
+
+    /** +1 when the body rises from the first to the last keyframe (that half is the effort), -1 when it sinks. */
+    var effort = 0
+        private set
+    var markerJoint = -1
+        private set
+    var markerX = 0f
+        private set
+    var markerY = 0f
+        private set
+    var phaseLabels = PhaseLabels.MOVE
+        private set
+    var markerLabel = R.string.motion_marker_range
+        private set
+
+    val usesTempo: Boolean get() = mode == "ping_pong"
+
+    /** Effort 1 count, hold 1/2, return 2 counts (the slow lowering), reset 1/2. */
+    val tempoUnits: FloatArray by lazy {
+        when {
+            effort > 0 -> floatArrayOf(1f, 0.5f, 2f, 0.5f)
+            effort < 0 -> floatArrayOf(2f, 0.5f, 1f, 0.5f)
+            else -> floatArrayOf(1.5f, 0.5f, 1.5f, 0.5f)
+        }
+    }
+
+    /** The authored duration covers one even out-and-back; the tempo rep takes 1.6 times as long. */
+    val cycleDurationMs: Long get() = if (usesTempo) (durationMs * TEMPO_TOTAL / 2.5f).toLong() else durationMs
+
+    /** Starts the loop at the end of the movement, matching the static reduced-motion frame. */
+    val startPhase: Float get() = if (usesTempo) tempoUnits[0] / TEMPO_TOTAL else reducedMotionFrame
+
+    fun prepare(rig: Rig) {
+        curve = MotionCurve(keyframes, easing == "smooth", mode == "loop", rig)
+        val pose = Pose()
+        val start = FloatArray(Rig.JOINT_COUNT * 2)
+        val end = FloatArray(Rig.JOINT_COUNT * 2)
+        curve.evaluate(0f, pose, start)
+        curve.evaluate(1f, pose, end)
+        fun bodyY(joints: FloatArray) = (joints[Rig.HEAD * 2 + 1] + joints[Rig.HIP * 2 + 1]) * 0.5f
+        effort = when {
+            bodyY(end) < bodyY(start) - 3f -> 1
+            bodyY(end) > bodyY(start) + 3f -> -1
+            else -> 0
+        }
+        phaseLabels = when {
+            effort > 0 && PULL_NAMES.any { name.contains(it) } -> PhaseLabels.PULL
+            effort < 0 && PRESS_NAMES.any { name.contains(it) } -> PhaseLabels.PRESS
+            effort < 0 && SQUAT_NAMES.any { name.contains(it) } -> PhaseLabels.SQUAT
+            effort > 0 -> PhaseLabels.RISE
+            effort < 0 -> PhaseLabels.SINK
+            else -> PhaseLabels.MOVE
+        }
+        if (usesTempo) {
+            fun travel(joint: Int) = abs(end[joint * 2 + 1] - start[joint * 2 + 1])
+            // The joint coaches look at: chin on pulls, shoulders on presses, hips on squats.
+            val preferred = when (phaseLabels) {
+                PhaseLabels.PULL -> Rig.HEAD
+                PhaseLabels.PRESS -> Rig.SHOULDER
+                PhaseLabels.SQUAT -> Rig.HIP
+                else -> -1
+            }
+            var best = 0f
+            if (preferred >= 0 && travel(preferred) >= 6f) {
+                markerJoint = preferred
+                best = travel(preferred)
+            } else {
+                for (joint in MARKER_JOINTS) {
+                    if (travel(joint) > best) {
+                        best = travel(joint)
+                        markerJoint = joint
+                    }
+                }
+            }
+            if (best < 6f) {
+                markerJoint = -1
+            } else {
+                markerX = end[markerJoint * 2]
+                markerY = end[markerJoint * 2 + 1]
+            }
+        }
+        markerLabel = if (markerJoint == Rig.HEAD && phaseLabels == PhaseLabels.PULL) {
+            R.string.motion_marker_chin
+        } else {
+            R.string.motion_marker_range
+        }
+    }
+
     fun timeline(rawPhase: Float): Float = when (mode) {
         "ping_pong" -> if (rawPhase <= 0.5f) rawPhase * 2f else (1f - rawPhase) * 2f
         else -> rawPhase
     }.coerceIn(0f, 1f)
+
+    companion object {
+        const val TEMPO_TOTAL = 4f
+        private val MARKER_JOINTS = intArrayOf(Rig.HEAD, Rig.HIP, Rig.SHOULDER, Rig.FEET, Rig.HANDS)
+        private val PULL_NAMES = listOf("pullup", "chest_to_bar", "chinup", "row")
+        private val PRESS_NAMES = listOf("dip", "pushup")
+        private val SQUAT_NAMES = listOf("squat", "pistol", "lunge")
+    }
 }
 
 private data class MotionReference(
@@ -694,7 +1134,7 @@ private class AnimationLibrary(
     fallbackName: String,
 ) {
     val fallback: ResolvedMotion = resolveReference(MotionReference(fallbackName, null))
-        ?: ResolvedMotion(emergencyTemplate(), listOf("floor"))
+        ?: ResolvedMotion(emergencyTemplate().also { it.prepare(rig) }, listOf("floor"))
 
     fun resolve(
         movementId: String?,
@@ -845,6 +1285,7 @@ private class AnimationLibrary(
                 )
             }
             require(templates.isNotEmpty()) { "No animation templates" }
+            templates.values.forEach { it.prepare(rig) }
             return AnimationLibrary(
                 palette = palette,
                 canvasWidth = canvas.optDouble("width", 200.0).toFloat().coerceIn(50f, 1000f),
@@ -865,7 +1306,7 @@ private class AnimationLibrary(
         }
 
         private fun fallbackLibrary(): AnimationLibrary {
-            val template = emergencyTemplate()
+            val template = emergencyTemplate().also { it.prepare(Rig.DEFAULT) }
             return AnimationLibrary(
                 palette = Palette(
                     AppColors.INFO_SURFACE,

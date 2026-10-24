@@ -49,6 +49,15 @@
           "march"
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "arm_swings",
           1,
           12,
@@ -65,6 +74,15 @@
           75,
           "easy_power",
           "pullup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -105,13 +123,13 @@
           "straight_bar_support"
         ],
         [
-          "dead_bug",
+          "tuck_lsit",
           2,
-          "7/side",
           null,
-          30,
-          "slow",
-          null
+          20,
+          60,
+          "isometric",
+          "support_hold"
         ]
       ],
       "cooldown": [
@@ -179,6 +197,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           1,
           6,
@@ -195,6 +222,15 @@
           30,
           "quiet",
           "foot_assisted_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -235,13 +271,13 @@
           "assisted_pullup"
         ],
         [
-          "reverse_lunge",
+          "sliding_leg_curl",
           3,
-          "10/side",
+          8,
           null,
           60,
-          "3010",
-          "split_squat"
+          "3011",
+          "glute_bridge"
         ]
       ],
       "cooldown": [
@@ -347,22 +383,22 @@
           "pushup"
         ],
         [
-          "parallel_dip",
+          "pike_pushup",
           3,
-          9,
+          8,
           null,
           90,
-          "2111",
-          "assisted_dip"
+          "2011",
+          "incline_pushup"
         ],
         [
-          "step_up",
+          "sliding_leg_curl",
           3,
-          "10/side",
+          8,
           null,
           60,
-          "3010",
-          "box_squat"
+          "3011",
+          "glute_bridge"
         ],
         [
           "hollow_hold",
@@ -579,6 +615,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "leg_swings",
           1,
           "8/side",
@@ -595,6 +640,15 @@
           10,
           "controlled",
           "shoulder_cars"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -850,6 +904,15 @@
           "march"
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "arm_swings",
           1,
           14,
@@ -906,13 +969,13 @@
           "assisted_pullup"
         ],
         [
-          "split_squat",
+          "sliding_leg_curl",
           3,
-          "10/side",
+          8,
           null,
           60,
-          "3010",
-          "box_squat"
+          "3011",
+          "glute_bridge"
         ]
       ],
       "cooldown": [
@@ -980,6 +1043,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           1,
           6,
@@ -996,6 +1068,15 @@
           30,
           "2111",
           "active_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -1036,13 +1117,13 @@
           "inverted_row"
         ],
         [
-          "knee_raise",
+          "tuck_lsit",
           3,
-          11,
           null,
-          55,
-          "2020",
-          "lying_knee_raise"
+          20,
+          60,
+          "isometric",
+          "support_hold"
         ]
       ],
       "cooldown": [
@@ -1126,6 +1207,15 @@
           25,
           "2111",
           "elevated_scapular_pushup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -1157,22 +1247,22 @@
           "pushup"
         ],
         [
-          "parallel_dip",
+          "pike_pushup",
           3,
-          10,
+          8,
           null,
           90,
-          "2111",
-          "assisted_dip"
+          "2011",
+          "incline_pushup"
         ],
         [
-          "reverse_lunge",
+          "sliding_leg_curl",
           3,
-          "11/side",
+          8,
           null,
           60,
-          "3010",
-          "split_squat"
+          "3011",
+          "glute_bridge"
         ]
       ],
       "cooldown": [
@@ -1370,6 +1460,15 @@
           "march"
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "arm_swings",
           1,
           14,
@@ -1500,6 +1599,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           1,
           7,
@@ -1516,6 +1624,15 @@
           30,
           "quiet",
           "foot_assisted_hang"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -1631,6 +1748,15 @@
           "march"
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "leg_swings",
           1,
           "9/side",
@@ -1647,6 +1773,15 @@
           10,
           "controlled",
           "shoulder_cars"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -1759,6 +1894,15 @@
           0,
           "easy",
           null
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
         ],
         [
           "shoulder_cars",
@@ -1907,17 +2051,26 @@
           25,
           "2111",
           "elevated_scapular_pushup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
         [
-          "elevated_plank",
+          "pike_pushup",
           3,
+          8,
           null,
-          25,
-          45,
-          "isometric",
-          "incline_plank"
+          90,
+          "2011",
+          "incline_pushup"
         ],
         [
           "frog_stand",
@@ -1947,13 +2100,13 @@
           "pushup"
         ],
         [
-          "split_squat",
+          "sliding_leg_curl",
           3,
-          "12/side",
+          8,
           null,
           60,
-          "3010",
-          "box_squat"
+          "3011",
+          "glute_bridge"
         ]
       ],
       "cooldown": [
@@ -2022,6 +2175,15 @@
           "march"
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "arm_swings",
           1,
           15,
@@ -2038,6 +2200,15 @@
           40,
           "small",
           "active_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -2078,13 +2249,13 @@
           "straight_bar_support"
         ],
         [
-          "knee_raise",
+          "tuck_lsit",
           3,
-          12,
           null,
-          55,
-          "2020",
-          "lying_knee_raise"
+          20,
+          60,
+          "isometric",
+          "support_hold"
         ]
       ],
       "cooldown": [
@@ -2253,10 +2424,10 @@
       "level": 3,
       "number": 88,
       "title": {
-        "en": "One-Leg Back Control"
+        "en": "Advanced-Tuck Back Control"
       },
       "description": {
-        "en": "Build one-leg back-lever control through measured partial skin-the-cat work, advanced-tuck holds, and brief one-leg shapes, taking the listed regression at the first loss of shoulder position."
+        "en": "Build back-lever control through measured partial skin-the-cat work, advanced-tuck holds and tuck entries, taking the listed regression at the first loss of shoulder position."
       },
       "schedule": {
         "week": 10,
@@ -2279,6 +2450,15 @@
           0,
           "easy",
           null
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
         ],
         [
           "shoulder_cars",
@@ -2319,13 +2499,13 @@
           "tuck_back_hold"
         ],
         [
-          "one_leg_back",
+          "tuck_back_entry",
           3,
+          2,
           null,
-          "3/side",
-          120,
-          "isometric",
-          "advanced_tuck_back"
+          90,
+          "controlled",
+          "skin_cat_partial"
         ],
         [
           "chinup",
@@ -2337,13 +2517,13 @@
           "assisted_pullup"
         ],
         [
-          "reverse_lunge",
+          "sliding_leg_curl",
           3,
-          "11/side",
+          8,
           null,
           60,
-          "controlled",
-          "split_squat"
+          "3011",
+          "glute_bridge"
         ]
       ],
       "cooldown": [
@@ -2411,6 +2591,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "leg_swings",
           1,
           "9/side",
@@ -2427,6 +2616,15 @@
           15,
           "slow",
           null
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -2561,6 +2759,15 @@
           10,
           "slow",
           null
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -2702,6 +2909,15 @@
           "march"
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "arm_swings",
           1,
           15,
@@ -2758,13 +2974,13 @@
           "straight_bar_support"
         ],
         [
-          "split_squat",
+          "sliding_leg_curl",
           3,
-          "10/side",
+          8,
           null,
           60,
-          "controlled",
-          "box_squat"
+          "3011",
+          "glute_bridge"
         ]
       ],
       "cooldown": [
@@ -2832,6 +3048,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           1,
           "7/side",
@@ -2848,6 +3073,24 @@
           30,
           "controlled",
           "foot_assisted_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -2879,13 +3122,13 @@
           "tuck_back_hold"
         ],
         [
-          "one_leg_back",
+          "tuck_back_entry",
+          2,
           2,
           null,
-          3,
-          120,
-          "isometric",
-          "advanced_tuck_back"
+          90,
+          "controlled",
+          "skin_cat_partial"
         ],
         [
           "tuck_front_row",
@@ -2996,6 +3239,15 @@
           30,
           "controlled",
           "elevated_scapular_pushup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -3027,22 +3279,22 @@
           "pushup"
         ],
         [
-          "parallel_dip",
+          "pike_pushup",
           4,
-          10,
+          8,
           null,
           90,
-          "controlled",
-          "assisted_dip"
+          "2011",
+          "incline_pushup"
         ],
         [
-          "reverse_lunge",
+          "sliding_leg_curl",
           3,
-          "12/side",
+          8,
           null,
           60,
-          "controlled",
-          "split_squat"
+          "3011",
+          "glute_bridge"
         ]
       ],
       "cooldown": [
@@ -3240,6 +3492,15 @@
           "march"
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "arm_swings",
           1,
           16,
@@ -3371,6 +3632,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           1,
           "8/side",
@@ -3400,13 +3670,13 @@
           "advanced_tuck_front"
         ],
         [
-          "one_leg_back",
+          "advanced_tuck_back",
           3,
           null,
-          "4/side",
+          6,
           135,
           "isometric",
-          "advanced_tuck_back"
+          "tuck_back_hold"
         ],
         [
           "one_leg_dragon_negative",
@@ -3502,6 +3772,15 @@
           "march"
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "leg_swings",
           1,
           "10/side",
@@ -3518,6 +3797,15 @@
           10,
           "controlled",
           null
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -3629,6 +3917,15 @@
           0,
           "easy",
           null
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
         ],
         [
           "shoulder_cars",
@@ -3778,6 +4075,24 @@
           15,
           "slow",
           null
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -3892,6 +4207,15 @@
           "march"
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "arm_swings",
           1,
           16,
@@ -3908,6 +4232,15 @@
           30,
           "controlled",
           "hollow_hold"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [

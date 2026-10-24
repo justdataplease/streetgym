@@ -388,6 +388,10 @@ function Validate-Step($Step, [string]$Location, $MovementById) {
         "reverse_lunge",
         "single_leg_bridge",
         "split_squat",
+        "bulgarian_split_squat",
+        "single_leg_rdl",
+        "archer_pullup",
+        "archer_pushup",
         "thoracic_rotation"
     )
     if ($movementId -in $explicitPerSideRepMovements -and $hasReps -and
@@ -1072,10 +1076,10 @@ foreach ($level in $levels) {
                 Add-Error "Level $levelNumber authored week $($weekGroup.Name) does not contain days 1 through 7 exactly once"
             }
             $tokenText = Get-ProgramTokenText $weekPrograms $movementById
-            if ($tokenText -notmatch '(?:^|\s)(?:assisted_pullup|eccentric_pullup|pullup|chinup|inverted_row|high_inverted_row|feet_elevated_row)(?:\s|$)') {
+            if ($tokenText -notmatch '(?:^|\s)(?:assisted_pullup|eccentric_pullup|pullup|chinup|archer_pullup|inverted_row|high_inverted_row|feet_elevated_row)(?:\s|$)') {
                 Add-Error "Level $levelNumber authored week $($weekGroup.Name) has no basic pull-up or row"
             }
-            if ($tokenText -notmatch '(?:^|\s)(?:wall_pushup|incline_pushup|pushup|pause_pushup|close_pushup|pike_pushup)(?:\s|$)') {
+            if ($tokenText -notmatch '(?:^|\s)(?:wall_pushup|incline_pushup|pushup|pause_pushup|close_pushup|archer_pushup|pike_pushup|elevated_pike_pushup|wall_hspu_negative|wall_hspu)(?:\s|$)') {
                 Add-Error "Level $levelNumber authored week $($weekGroup.Name) has no basic push-up"
             }
             if ($tokenText -notmatch '(?:^|\s)(?:assisted_dip|eccentric_dip|parallel_dip|straight_bar_dip|support_hold|foot_assisted_support|straight_bar_support)(?:\s|$)') {
@@ -1121,10 +1125,10 @@ foreach ($level in $levels) {
             $windowLabel = "Level $levelNumber authored rolling window $firstNumber-$lastNumber"
             $tokenText = Get-ProgramTokenText $windowPrograms $movementById
 
-            if ($tokenText -notmatch '(?:^|\s)(?:assisted_pullup|eccentric_pullup|pullup|chinup|inverted_row|high_inverted_row|feet_elevated_row)(?:\s|$)') {
+            if ($tokenText -notmatch '(?:^|\s)(?:assisted_pullup|eccentric_pullup|pullup|chinup|archer_pullup|inverted_row|high_inverted_row|feet_elevated_row)(?:\s|$)') {
                 Add-Error "$windowLabel has no basic pull-up or row"
             }
-            if ($tokenText -notmatch '(?:^|\s)(?:wall_pushup|incline_pushup|pushup|pause_pushup|close_pushup|pike_pushup)(?:\s|$)') {
+            if ($tokenText -notmatch '(?:^|\s)(?:wall_pushup|incline_pushup|pushup|pause_pushup|close_pushup|archer_pushup|pike_pushup|elevated_pike_pushup|wall_hspu_negative|wall_hspu)(?:\s|$)') {
                 Add-Error "$windowLabel has no basic push-up"
             }
             if ($tokenText -notmatch '(?:^|\s)(?:assisted_dip|eccentric_dip|parallel_dip|straight_bar_dip|support_hold|foot_assisted_support|straight_bar_support)(?:\s|$)') {

@@ -2,6 +2,16 @@
 
 The intended product is a shared morning calisthenics class, without goal selection or skill deadlines. The sequence builds broad strength and exposes the athlete to front lever, back lever, muscle-up, handstand and human-flag practice. A workout number never proves readiness for a harder variation.
 
+## Coaching-progression follow-up (25 October 2026)
+
+- Handstand and human flag were main goals with the smallest dose. Handstand practice now follows the warm-up in every training class and the flag comes twice a week, in short easy sets whose dose rises in three phases per level.
+- Planche, a supporting goal, had four to five times the handstand volume. From Level 4 a class holds at most five planche sets, and an overhead-pressing ladder up to wall handstand push-ups now appears weekly from Level 3.
+- Basic strength plateaued after Level 3 while the levers advanced. Archer pull-ups and push-ups, the L-sit ladder, Nordic negatives, single-leg Romanian deadlifts, Bulgarian split squats and Level 6 pistols keep strength rising.
+- Rungs now start at least 42 classes apart, back-lever holds and strict muscle-ups wait for Level 3, and candlesticks come before dragon negatives. No three consecutive classes load straight-arm holds.
+- Foundations kipping pull-ups became slow negatives. Every training class prepares the wrists, Y-T-W raises appear twice a week, and the top lever and planche shapes are single readiness checks.
+- Fourteen new movement guides bring the library to 138. The pull-up guide no longer lifts the shoulders above the bar mid-pull.
+- Still open: there is no placement test, so experienced athletes begin at Foundations, and the in-person coach review below still applies.
+
 ## Calisthenics-first follow-up (5 September 2026)
 
 - Reviewed the shared sequence as a varied calisthenics program with complementary flexibility, retaining the existing handstand ladder and scheduled easy days.

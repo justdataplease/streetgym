@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Movement guide phase labels (shown in capitals in the corner of the animation). -->
+    <string name="motion_phase_pull">Pull</string>
+    <string name="motion_phase_hold">Hold</string>
+    <string name="motion_phase_lower">Lower</string>
+    <string name="motion_phase_hang">Hang</string>
+    <string name="motion_phase_pause">Pause</string>
+    <string name="motion_phase_press">Press</string>
+    <string name="motion_phase_stand">Stand</string>
+    <string name="motion_phase_reset">Reset</string>
+    <string name="motion_phase_up">Up</string>
+    <string name="motion_phase_down">Down</string>
+    <string name="motion_phase_move">Move</string>
+    <string name="motion_phase_return">Return</string>
+    <!-- Range marker: a line at the end of the movement that lights up when reached. -->
+    <string name="motion_marker_chin">Chin over bar</string>
+    <string name="motion_marker_range">Full range</string>
+</resources>

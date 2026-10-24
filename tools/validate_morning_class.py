@@ -29,10 +29,51 @@ def dose_values(value, sets):
 new_ids = {"overhead_line", "kneeling_side_plank", "pike_handstand_hold", "wall_handstand", "handstand_toe_pull", "handstand_balance", "flag_ground_support", "assisted_tuck_flag", "tuck_flag"}
 seen = set()
 recovery_count = 0
+def phase_for(level_plan, number):
+    return next(ph for ph in level_plan["phases"] if number <= ph["through_program"])
+
+
+def weekly_practice_seconds(phase, goal):
+    total = 0
+    for day in phase["days"]:
+        for mid, sets, _, seconds, *_ in day["practice"]:
+            if goal in movements[mid]["patterns"]:
+                total += sets * int(str(seconds).split("/")[0])
+    return total
+
+
+def practice_rungs(phase, goal):
+    return {s[0] for d in phase["days"] for s in d["practice"] if goal in movements[s[0]]["patterns"]}
+
+
+def easier_chain(mid):
+    chain = []
+    while movements[mid]["regression_id"]:
+        mid = movements[mid]["regression_id"]
+        chain.append(mid)
+    return chain
+
+
+def progresses(earlier, later, goal):
+    """One variable at a time: more practice time, or a harder rung of the same ladder."""
+    harder = any(set(easier_chain(m)) & practice_rungs(earlier, goal) for m in practice_rungs(later, goal) - practice_rungs(earlier, goal))
+    return harder or weekly_practice_seconds(later, goal) >= weekly_practice_seconds(earlier, goal)
+
+
 for level in catalog["levels"]:
     limits = limits_by_level[level["number"]]
     counts = {"handstand": 0, "human_flag": 0}
-    timetable = plan["levels"][level["number"]-1]["days"]
+    level_plan = plan["levels"][level["number"]-1]
+    assert [ph["through_program"] for ph in level_plan["phases"]] == [35, 70, 100]
+    # Everyday small practice: handstand in every class (recovery classes drop it), flag twice
+    # a week, and both doses rise from phase to phase inside the level.
+    for goal, days in (("handstand", 7), ("human_flag", 2)):
+        phases = level_plan["phases"]
+        for earlier, later in zip(phases, phases[1:]):
+            assert progresses(earlier, later, goal), (level["number"], goal, later["through_program"])
+        assert weekly_practice_seconds(phases[0], goal) < weekly_practice_seconds(phases[1], goal), (level["number"], goal)
+        for ph in level_plan["phases"]:
+            assert sum(any(goal in movements[s[0]]["patterns"] for s in d["practice"]) for d in ph["days"]) == days
     for p in level["programs"]:
         assert p["title"]["en"].strip() and not p["title"]["en"].startswith("Workout "), p["id"]
         assert p["readiness"]["en"] and p["safety"]["en"], p["id"]
@@ -40,15 +81,16 @@ for level in catalog["levels"]:
             assert p["schedule"]["rpe"] <= (6 if level["number"] == 1 else 7)
         practice = p["practice"]
         day = (p["number"] - 1) % 7 + 1
-        expected = timetable[day-1]["practice"]
-        if p["schedule"]["rpe"] is not None and p["schedule"]["rpe"] <= 4:
+        expected = phase_for(level_plan, p["number"])["days"][day-1]["practice"]
+        if (p["schedule"]["rpe"] is not None and p["schedule"]["rpe"] <= 4) or p.get("morning_recovery"):
             expected = []
         assert practice == expected, p["id"]
+        assert sum(s[1] for s in practice) <= 8, p["id"]
         for step in practice:
             mid, sets, reps, seconds, rest, tempo, regression = step
             assert mid in movements and mid in asset["movements"]
-            assert sets == 1 and reps is None and rest == 60
-            assert 0 < int(str(seconds).split("/")[0]) <= 15
+            assert 1 <= sets <= 5 and reps is None and rest in (45, 60)
+            assert 0 < int(str(seconds).split("/")[0]) <= 45
             if "human_flag" in movements[mid]["patterns"]:
                 assert str(seconds).endswith("/side"), p["id"]
             fallback = regression or movements[mid]["regression_id"]
@@ -68,6 +110,8 @@ for level in catalog["levels"]:
             if p["origin"] == "apk_authentic":
                 working = p["training_content"]["exercises"]
                 assert len(working) == len(p["content"]["exercises"])
+                # Kipping comes only after strict strength, which Foundations has not built yet.
+                assert not any("kipping" in json.dumps(e).lower() for e in working), p["id"]
                 assert sum(len(e["sets"]) for e in working) + sum(s[1] for s in practice) <= limits["main_sets_including_practice"]
                 assert p["training_rpe"] == (6 if level["number"] == 1 else 7)
                 for e in working:

@@ -1,6 +1,6 @@
 # Street Gymnastics
 
-Dedicated Android app with 600 guided calisthenics workouts across six levels and 124 animated movements. Copied from the owned StreetGym source into the Android suite; the original project remains unchanged.
+Dedicated Android app with 600 guided calisthenics workouts across six levels and 138 animated movements. Copied from the owned StreetGym source into the Android suite; the original project remains unchanged.
 
 Fresh Court is the default light theme. Settings > Dark mode selects Night Session and remembers it independently in each app. Training, checked sets, timers and progress remain local. Optional Firebase account access appears only when client configuration is supplied; it does not synchronize progress.
 
@@ -41,6 +41,6 @@ Firebase is optional. Add ignored `app/src/debug/res/values/firebase.xml` or `ap
 
 ## Content checks
 
-From this folder, run `tools/validate_curriculum.ps1`, `tools/validate_animations.ps1` and `python tools/validate_morning_class.py`. Training JSON and movement keyframes are retained unchanged. See `docs/CURRICULUM_METHOD.md` for source provenance and training boundaries.
+From this folder, run `tools/assemble_curriculum.ps1`, then `tools/validate_curriculum.ps1`, `tools/validate_animations.ps1`, `python tools/validate_morning_class.py`, `python tools/validate_progressions.py` and `python tools/validate_progression_motions.py` (the Python checks need Pillow), and copy `generated/curriculum_v2.json` to `app/src/main/assets/curriculum.json`; `tools/package_dist.ps1` runs the whole chain. The October 2026 coaching revision changed the authored classes, the daily practice timetable and the movement library; see `docs/CURRICULUM_METHOD.md` for what changed, source provenance and training boundaries.
 
 Exercise cards show the animation followed directly by the exercise instructions and sets. Animations play automatically; the Pause / Slow motion toolbar and repeated movement-guide caption have been removed.

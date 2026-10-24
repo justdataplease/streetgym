@@ -289,6 +289,15 @@
           "march"
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "hip_circles",
           1,
           6,
@@ -435,6 +444,15 @@
           40,
           "2111",
           null
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -679,6 +697,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "arm_swings",
           1,
           10,
@@ -695,6 +722,15 @@
           45,
           "2111",
           "active_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -808,6 +844,15 @@
           0,
           "easy",
           "march"
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
         ],
         [
           "shoulder_cars",
@@ -1061,6 +1106,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "arm_swings",
           1,
           12,
@@ -1189,6 +1243,15 @@
           0,
           "easy",
           "march"
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
         ],
         [
           "leg_swings",
@@ -1337,6 +1400,15 @@
           40,
           "2112",
           null
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -1581,6 +1653,15 @@
           "march"
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           1,
           7,
@@ -1597,6 +1678,15 @@
           45,
           "2111",
           "active_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -1711,6 +1801,15 @@
           0,
           "easy",
           null
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
         ],
         [
           "arm_swings",
@@ -1964,6 +2063,15 @@
           "march"
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           1,
           8,
@@ -2092,6 +2200,15 @@
           0,
           "easy",
           null
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
         ],
         [
           "hip_circles",
@@ -2240,6 +2357,15 @@
           45,
           "2112",
           "elevated_scapular_pushup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -2484,6 +2610,15 @@
           "march"
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "arm_swings",
           1,
           12,
@@ -2500,6 +2635,15 @@
           45,
           "2111",
           "active_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -2613,6 +2757,15 @@
           0,
           "easy",
           null
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
         ],
         [
           "thoracic_rotation",
@@ -2866,6 +3019,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           1,
           6,
@@ -2994,6 +3156,15 @@
           0,
           "easy",
           "march"
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
         ],
         [
           "ankle_rocks",
@@ -3142,6 +3313,15 @@
           40,
           "2121",
           null
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -3377,6 +3557,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "arm_swings",
           1,
           10,
@@ -3393,6 +3582,15 @@
           45,
           "2121",
           "active_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -3505,6 +3703,15 @@
           0,
           "easy",
           "march"
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
         ],
         [
           "shoulder_cars",
@@ -3767,6 +3974,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           1,
           7,
@@ -3895,6 +4111,15 @@
           0,
           "easy",
           "march"
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
         ],
         [
           "ankle_rocks",
@@ -4043,6 +4268,15 @@
           45,
           "2112",
           "elevated_scapular_pushup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -4278,6 +4512,15 @@
           "march"
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "arm_swings",
           1,
           12,
@@ -4294,6 +4537,15 @@
           45,
           "2111",
           "active_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -4406,6 +4658,15 @@
           0,
           "easy",
           null
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
         ],
         [
           "shoulder_cars",
@@ -4668,6 +4929,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           1,
           8,
@@ -4796,6 +5066,15 @@
           0,
           "easy",
           "march"
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
         ],
         [
           "hip_circles",
@@ -4944,6 +5223,15 @@
           45,
           "2121",
           "elevated_scapular_pushup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -5188,6 +5476,15 @@
           "march"
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "arm_swings",
           1,
           12,
@@ -5204,6 +5501,15 @@
           45,
           "2121",
           "active_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -5316,6 +5622,15 @@
           0,
           "easy",
           null
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
         ],
         [
           "thoracic_rotation",
@@ -5569,6 +5884,15 @@
           "march"
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           1,
           7,
@@ -5697,6 +6021,15 @@
           0,
           "easy",
           null
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
         ],
         [
           "leg_swings",
@@ -5845,6 +6178,15 @@
           35,
           "2111",
           "elevated_scapular_pushup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -6080,6 +6422,15 @@
           "march"
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "arm_swings",
           1,
           14,
@@ -6096,6 +6447,15 @@
           35,
           "2111",
           "active_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -6208,6 +6568,15 @@
           0,
           "easy",
           null
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
         ],
         [
           "shoulder_cars",
@@ -6461,6 +6830,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           1,
           6,
@@ -6589,6 +6967,15 @@
           0,
           "easy",
           "march"
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
         ],
         [
           "ankle_rocks",
@@ -6737,6 +7124,15 @@
           40,
           "2121",
           null
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -6972,6 +7368,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "arm_swings",
           1,
           10,
@@ -6988,6 +7393,15 @@
           45,
           "2121",
           "active_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -7100,6 +7514,15 @@
           0,
           "easy",
           "march"
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
         ],
         [
           "shoulder_cars",
@@ -7362,6 +7785,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           1,
           8,
@@ -7490,6 +7922,15 @@
           0,
           "easy",
           "march"
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
         ],
         [
           "hip_circles",
@@ -7638,6 +8079,15 @@
           40,
           "2112",
           null
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [

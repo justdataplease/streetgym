@@ -54,6 +54,9 @@ import com.justdataplease.streetgym.data.model.TrainingProgram
 import com.justdataplease.streetgym.data.model.TrainingSet
 import com.justdataplease.streetgym.data.progress.ActiveWorkout
 import com.justdataplease.streetgym.data.progress.SharedPreferencesProgressRepository
+import com.justdataplease.streetgym.data.skills.SkillBook
+import com.justdataplease.streetgym.data.skills.SkillCurriculumReader
+import com.justdataplease.streetgym.data.skills.SkillGroup
 import java.text.DateFormat
 import java.text.NumberFormat
 import java.util.ArrayDeque
@@ -95,6 +98,9 @@ open class HomeActivity : Activity() {
     private val worker = Executors.newSingleThreadExecutor()
     private val backStack = ArrayDeque<Screen>()
     private var catalog: CurriculumCatalog? = null
+    private var skillBook: SkillBook? = null
+    private var showSkills = true
+    private var skillGroup: SkillGroup? = null
     private var currentScreen: Screen? = null
     private var restTimer: CountDownTimer? = null
     private var restEndsAtEpochMillis: Long? = null
@@ -356,8 +362,14 @@ open class HomeActivity : Activity() {
         renderLoading()
         worker.execute {
             val result = AssetCurriculumRepository(this).load()
+            // Skills read the same asset for the movement library and schedule; a failure only hides the Skills tab.
+            val skills = runCatching {
+                assets.open(AssetCurriculumRepository.DEFAULT_ASSET_NAME).bufferedReader(Charsets.UTF_8)
+                    .use { SkillCurriculumReader.read(it.readText()) }
+            }.getOrNull()
             runOnUiThread {
                 if (isFinishing || isDestroyed) return@runOnUiThread
+                skillBook = skills
                 result.fold(onSuccess = {
                     catalog = it
                     val destination = restoredScreen?.takeIf(::isValidScreen) ?: Screen.Dashboard
@@ -1139,6 +1151,37 @@ open class HomeActivity : Activity() {
         page.addView(titleText(getString(
             R.string.progress_title,
         ), 26f))
+
+        val skills = skillBook
+        if (skills != null) {
+            page.addWithMargins(
+                segmentedSwitch(
+                    listOf(getString(R.string.progress_tab_skills), getString(R.string.progress_tab_history)),
+                    if (showSkills) 0 else 1,
+                ) { index ->
+                    showSkills = index == 0
+                    renderProgress()
+                },
+                width = ViewGroup.LayoutParams.WRAP_CONTENT,
+                topDp = 12,
+            )
+            if (showSkills) {
+                page.addWithMargins(
+                    skillsContent(
+                        skills.progress(completedIds),
+                        skillGroup,
+                        onGroup = { group ->
+                            skillGroup = group
+                            renderProgress()
+                        },
+                        onOpen = { status, family, statuses -> showSkillSheet(status, family, statuses) },
+                    ),
+                    topDp = 14,
+                )
+                setBody(scroll(page))
+                return
+            }
+        }
 
         val overall = card().apply {
             addView(titleText("$percent%", 34f))

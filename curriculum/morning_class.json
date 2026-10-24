@@ -1,443 +1,2438 @@
 {
   "purpose": {
-    "en": "One shared morning class. Brief handstand and human-flag practice develops alongside existing pulling, pushing and lever work. These are practice opportunities, never deadlines."
+    "en": "One shared daily class. Handstand practice comes first on every training day and human-flag practice twice a week, in a few short, easy sets right after the warm-up. Doses rise in three steps inside each level. These are practice opportunities, never deadlines."
   },
   "levels": [
     {
       "level": 1,
-      "days": [
+      "phases": [
         {
-          "day": 1,
-          "practice": [
-            [
-              "kneeling_side_plank",
-              1,
-              null,
-              "12/side",
-              60,
-              "easy technique",
-              null
-            ]
+          "through_program": 35,
+          "days": [
+            {
+              "day": 1,
+              "practice": [
+                [
+                  "overhead_line",
+                  2,
+                  null,
+                  15,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "kneeling_side_plank",
+                  2,
+                  null,
+                  "12/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 2,
+              "practice": [
+                [
+                  "overhead_line",
+                  2,
+                  null,
+                  15,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 3,
+              "practice": [
+                [
+                  "overhead_line",
+                  2,
+                  null,
+                  15,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 4,
+              "practice": [
+                [
+                  "overhead_line",
+                  2,
+                  null,
+                  15,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 5,
+              "practice": [
+                [
+                  "overhead_line",
+                  2,
+                  null,
+                  15,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "kneeling_side_plank",
+                  2,
+                  null,
+                  "12/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 6,
+              "practice": [
+                [
+                  "overhead_line",
+                  2,
+                  null,
+                  15,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 7,
+              "practice": [
+                [
+                  "overhead_line",
+                  2,
+                  null,
+                  15,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            }
           ]
         },
         {
-          "day": 2,
-          "practice": []
-        },
-        {
-          "day": 3,
-          "practice": [
-            [
-              "overhead_line",
-              1,
-              null,
-              15,
-              60,
-              "easy technique",
-              null
-            ]
+          "through_program": 70,
+          "days": [
+            {
+              "day": 1,
+              "practice": [
+                [
+                  "overhead_line",
+                  2,
+                  null,
+                  20,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "kneeling_side_plank",
+                  2,
+                  null,
+                  "15/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 2,
+              "practice": [
+                [
+                  "overhead_line",
+                  2,
+                  null,
+                  20,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 3,
+              "practice": [
+                [
+                  "overhead_line",
+                  2,
+                  null,
+                  20,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 4,
+              "practice": [
+                [
+                  "overhead_line",
+                  2,
+                  null,
+                  20,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 5,
+              "practice": [
+                [
+                  "overhead_line",
+                  2,
+                  null,
+                  20,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "kneeling_side_plank",
+                  2,
+                  null,
+                  "15/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 6,
+              "practice": [
+                [
+                  "overhead_line",
+                  2,
+                  null,
+                  20,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 7,
+              "practice": [
+                [
+                  "overhead_line",
+                  2,
+                  null,
+                  20,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            }
           ]
         },
         {
-          "day": 4,
-          "practice": []
-        },
-        {
-          "day": 5,
-          "practice": [
-            [
-              "kneeling_side_plank",
-              1,
-              null,
-              "12/side",
-              60,
-              "easy technique",
-              null
-            ]
+          "through_program": 100,
+          "days": [
+            {
+              "day": 1,
+              "practice": [
+                [
+                  "overhead_line",
+                  1,
+                  null,
+                  20,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "pike_handstand_hold",
+                  1,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "kneeling_side_plank",
+                  2,
+                  null,
+                  "20/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 2,
+              "practice": [
+                [
+                  "overhead_line",
+                  1,
+                  null,
+                  20,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "pike_handstand_hold",
+                  1,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 3,
+              "practice": [
+                [
+                  "overhead_line",
+                  1,
+                  null,
+                  20,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "pike_handstand_hold",
+                  1,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 4,
+              "practice": [
+                [
+                  "overhead_line",
+                  1,
+                  null,
+                  20,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "pike_handstand_hold",
+                  1,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 5,
+              "practice": [
+                [
+                  "overhead_line",
+                  1,
+                  null,
+                  20,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "pike_handstand_hold",
+                  1,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "kneeling_side_plank",
+                  2,
+                  null,
+                  "20/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 6,
+              "practice": [
+                [
+                  "overhead_line",
+                  1,
+                  null,
+                  20,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "pike_handstand_hold",
+                  1,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 7,
+              "practice": [
+                [
+                  "overhead_line",
+                  1,
+                  null,
+                  20,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "pike_handstand_hold",
+                  1,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            }
           ]
-        },
-        {
-          "day": 6,
-          "practice": [
-            [
-              "overhead_line",
-              1,
-              null,
-              15,
-              60,
-              "easy technique",
-              null
-            ]
-          ]
-        },
-        {
-          "day": 7,
-          "practice": []
         }
       ]
     },
     {
       "level": 2,
-      "days": [
+      "phases": [
         {
-          "day": 1,
-          "practice": [
-            [
-              "flag_ground_support",
-              1,
-              null,
-              "10/side",
-              60,
-              "easy technique",
-              null
-            ]
+          "through_program": 35,
+          "days": [
+            {
+              "day": 1,
+              "practice": [
+                [
+                  "pike_handstand_hold",
+                  2,
+                  null,
+                  12,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "flag_ground_support",
+                  2,
+                  null,
+                  "10/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 2,
+              "practice": [
+                [
+                  "pike_handstand_hold",
+                  2,
+                  null,
+                  12,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 3,
+              "practice": [
+                [
+                  "pike_handstand_hold",
+                  2,
+                  null,
+                  12,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 4,
+              "practice": [
+                [
+                  "pike_handstand_hold",
+                  2,
+                  null,
+                  12,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 5,
+              "practice": [
+                [
+                  "pike_handstand_hold",
+                  2,
+                  null,
+                  12,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "flag_ground_support",
+                  2,
+                  null,
+                  "10/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 6,
+              "practice": [
+                [
+                  "pike_handstand_hold",
+                  2,
+                  null,
+                  12,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 7,
+              "practice": [
+                [
+                  "pike_handstand_hold",
+                  2,
+                  null,
+                  12,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            }
           ]
         },
         {
-          "day": 2,
-          "practice": []
-        },
-        {
-          "day": 3,
-          "practice": [
-            [
-              "pike_handstand_hold",
-              1,
-              null,
-              12,
-              60,
-              "easy technique",
-              null
-            ]
+          "through_program": 70,
+          "days": [
+            {
+              "day": 1,
+              "practice": [
+                [
+                  "pike_handstand_hold",
+                  2,
+                  null,
+                  15,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "flag_ground_support",
+                  2,
+                  null,
+                  "12/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 2,
+              "practice": [
+                [
+                  "pike_handstand_hold",
+                  2,
+                  null,
+                  15,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 3,
+              "practice": [
+                [
+                  "pike_handstand_hold",
+                  2,
+                  null,
+                  15,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 4,
+              "practice": [
+                [
+                  "pike_handstand_hold",
+                  2,
+                  null,
+                  15,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 5,
+              "practice": [
+                [
+                  "pike_handstand_hold",
+                  2,
+                  null,
+                  15,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "flag_ground_support",
+                  2,
+                  null,
+                  "12/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 6,
+              "practice": [
+                [
+                  "pike_handstand_hold",
+                  2,
+                  null,
+                  15,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 7,
+              "practice": [
+                [
+                  "pike_handstand_hold",
+                  2,
+                  null,
+                  15,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            }
           ]
         },
         {
-          "day": 4,
-          "practice": []
-        },
-        {
-          "day": 5,
-          "practice": [
-            [
-              "flag_ground_support",
-              1,
-              null,
-              "10/side",
-              60,
-              "easy technique",
-              null
-            ]
+          "through_program": 100,
+          "days": [
+            {
+              "day": 1,
+              "practice": [
+                [
+                  "pike_handstand_hold",
+                  2,
+                  null,
+                  20,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "flag_ground_support",
+                  3,
+                  null,
+                  "12/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 2,
+              "practice": [
+                [
+                  "pike_handstand_hold",
+                  2,
+                  null,
+                  20,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 3,
+              "practice": [
+                [
+                  "pike_handstand_hold",
+                  2,
+                  null,
+                  20,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 4,
+              "practice": [
+                [
+                  "pike_handstand_hold",
+                  2,
+                  null,
+                  20,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 5,
+              "practice": [
+                [
+                  "pike_handstand_hold",
+                  2,
+                  null,
+                  20,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "flag_ground_support",
+                  3,
+                  null,
+                  "12/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 6,
+              "practice": [
+                [
+                  "pike_handstand_hold",
+                  2,
+                  null,
+                  20,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 7,
+              "practice": [
+                [
+                  "pike_handstand_hold",
+                  2,
+                  null,
+                  20,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            }
           ]
-        },
-        {
-          "day": 6,
-          "practice": [
-            [
-              "pike_handstand_hold",
-              1,
-              null,
-              12,
-              60,
-              "easy technique",
-              null
-            ]
-          ]
-        },
-        {
-          "day": 7,
-          "practice": []
         }
       ]
     },
     {
       "level": 3,
-      "days": [
+      "phases": [
         {
-          "day": 1,
-          "practice": [
-            [
-              "flag_ground_support",
-              1,
-              null,
-              "12/side",
-              60,
-              "easy technique",
-              null
-            ]
+          "through_program": 35,
+          "days": [
+            {
+              "day": 1,
+              "practice": [
+                [
+                  "wall_handstand",
+                  2,
+                  null,
+                  15,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "flag_ground_support",
+                  3,
+                  null,
+                  "12/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 2,
+              "practice": [
+                [
+                  "wall_handstand",
+                  2,
+                  null,
+                  15,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 3,
+              "practice": [
+                [
+                  "wall_handstand",
+                  2,
+                  null,
+                  15,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 4,
+              "practice": [
+                [
+                  "wall_handstand",
+                  2,
+                  null,
+                  15,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 5,
+              "practice": [
+                [
+                  "wall_handstand",
+                  2,
+                  null,
+                  15,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "flag_ground_support",
+                  3,
+                  null,
+                  "12/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 6,
+              "practice": [
+                [
+                  "wall_handstand",
+                  2,
+                  null,
+                  15,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 7,
+              "practice": [
+                [
+                  "wall_handstand",
+                  2,
+                  null,
+                  15,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            }
           ]
         },
         {
-          "day": 2,
-          "practice": []
-        },
-        {
-          "day": 3,
-          "practice": [
-            [
-              "wall_handstand",
-              1,
-              null,
-              10,
-              60,
-              "easy technique",
-              null
-            ]
+          "through_program": 70,
+          "days": [
+            {
+              "day": 1,
+              "practice": [
+                [
+                  "wall_handstand",
+                  3,
+                  null,
+                  20,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "flag_ground_support",
+                  3,
+                  null,
+                  "15/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 2,
+              "practice": [
+                [
+                  "wall_handstand",
+                  3,
+                  null,
+                  20,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 3,
+              "practice": [
+                [
+                  "wall_handstand",
+                  3,
+                  null,
+                  20,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 4,
+              "practice": [
+                [
+                  "wall_handstand",
+                  3,
+                  null,
+                  20,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 5,
+              "practice": [
+                [
+                  "wall_handstand",
+                  3,
+                  null,
+                  20,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "flag_ground_support",
+                  3,
+                  null,
+                  "15/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 6,
+              "practice": [
+                [
+                  "wall_handstand",
+                  3,
+                  null,
+                  20,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 7,
+              "practice": [
+                [
+                  "wall_handstand",
+                  3,
+                  null,
+                  20,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            }
           ]
         },
         {
-          "day": 4,
-          "practice": []
-        },
-        {
-          "day": 5,
-          "practice": [
-            [
-              "flag_ground_support",
-              1,
-              null,
-              "12/side",
-              60,
-              "easy technique",
-              null
-            ]
+          "through_program": 100,
+          "days": [
+            {
+              "day": 1,
+              "practice": [
+                [
+                  "wall_handstand",
+                  3,
+                  null,
+                  30,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "flag_ground_support",
+                  2,
+                  null,
+                  "15/side",
+                  60,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "assisted_tuck_flag",
+                  1,
+                  null,
+                  "4/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 2,
+              "practice": [
+                [
+                  "wall_handstand",
+                  3,
+                  null,
+                  30,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 3,
+              "practice": [
+                [
+                  "wall_handstand",
+                  3,
+                  null,
+                  30,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 4,
+              "practice": [
+                [
+                  "wall_handstand",
+                  3,
+                  null,
+                  30,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 5,
+              "practice": [
+                [
+                  "wall_handstand",
+                  3,
+                  null,
+                  30,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "flag_ground_support",
+                  2,
+                  null,
+                  "15/side",
+                  60,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "assisted_tuck_flag",
+                  1,
+                  null,
+                  "4/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 6,
+              "practice": [
+                [
+                  "wall_handstand",
+                  3,
+                  null,
+                  30,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 7,
+              "practice": [
+                [
+                  "wall_handstand",
+                  3,
+                  null,
+                  30,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            }
           ]
-        },
-        {
-          "day": 6,
-          "practice": [
-            [
-              "wall_handstand",
-              1,
-              null,
-              10,
-              60,
-              "easy technique",
-              null
-            ]
-          ]
-        },
-        {
-          "day": 7,
-          "practice": []
         }
       ]
     },
     {
       "level": 4,
-      "days": [
+      "phases": [
         {
-          "day": 1,
-          "practice": [
-            [
-              "assisted_tuck_flag",
-              1,
-              null,
-              "5/side",
-              60,
-              "easy technique",
-              null
-            ]
+          "through_program": 35,
+          "days": [
+            {
+              "day": 1,
+              "practice": [
+                [
+                  "wall_handstand",
+                  3,
+                  null,
+                  30,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "assisted_tuck_flag",
+                  2,
+                  null,
+                  "5/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 2,
+              "practice": [
+                [
+                  "wall_handstand",
+                  3,
+                  null,
+                  30,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 3,
+              "practice": [
+                [
+                  "wall_handstand",
+                  3,
+                  null,
+                  30,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 4,
+              "practice": [
+                [
+                  "wall_handstand",
+                  3,
+                  null,
+                  30,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 5,
+              "practice": [
+                [
+                  "wall_handstand",
+                  3,
+                  null,
+                  30,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "assisted_tuck_flag",
+                  2,
+                  null,
+                  "5/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 6,
+              "practice": [
+                [
+                  "wall_handstand",
+                  3,
+                  null,
+                  30,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 7,
+              "practice": [
+                [
+                  "wall_handstand",
+                  3,
+                  null,
+                  30,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            }
           ]
         },
         {
-          "day": 2,
-          "practice": []
-        },
-        {
-          "day": 3,
-          "practice": [
-            [
-              "wall_handstand",
-              1,
-              null,
-              15,
-              60,
-              "easy technique",
-              null
-            ]
+          "through_program": 70,
+          "days": [
+            {
+              "day": 1,
+              "practice": [
+                [
+                  "wall_handstand",
+                  3,
+                  null,
+                  40,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "assisted_tuck_flag",
+                  3,
+                  null,
+                  "6/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 2,
+              "practice": [
+                [
+                  "wall_handstand",
+                  3,
+                  null,
+                  40,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 3,
+              "practice": [
+                [
+                  "wall_handstand",
+                  3,
+                  null,
+                  40,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 4,
+              "practice": [
+                [
+                  "wall_handstand",
+                  3,
+                  null,
+                  40,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 5,
+              "practice": [
+                [
+                  "wall_handstand",
+                  3,
+                  null,
+                  40,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "assisted_tuck_flag",
+                  3,
+                  null,
+                  "6/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 6,
+              "practice": [
+                [
+                  "wall_handstand",
+                  3,
+                  null,
+                  40,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 7,
+              "practice": [
+                [
+                  "wall_handstand",
+                  3,
+                  null,
+                  40,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            }
           ]
         },
         {
-          "day": 4,
-          "practice": []
-        },
-        {
-          "day": 5,
-          "practice": [
-            [
-              "assisted_tuck_flag",
-              1,
-              null,
-              "5/side",
-              60,
-              "easy technique",
-              null
-            ]
+          "through_program": 100,
+          "days": [
+            {
+              "day": 1,
+              "practice": [
+                [
+                  "wall_handstand",
+                  2,
+                  null,
+                  45,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "handstand_toe_pull",
+                  2,
+                  null,
+                  8,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "assisted_tuck_flag",
+                  3,
+                  null,
+                  "8/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 2,
+              "practice": [
+                [
+                  "wall_handstand",
+                  2,
+                  null,
+                  45,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "handstand_toe_pull",
+                  2,
+                  null,
+                  8,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 3,
+              "practice": [
+                [
+                  "wall_handstand",
+                  2,
+                  null,
+                  45,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "handstand_toe_pull",
+                  2,
+                  null,
+                  8,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 4,
+              "practice": [
+                [
+                  "wall_handstand",
+                  2,
+                  null,
+                  45,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "handstand_toe_pull",
+                  2,
+                  null,
+                  8,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 5,
+              "practice": [
+                [
+                  "wall_handstand",
+                  2,
+                  null,
+                  45,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "handstand_toe_pull",
+                  2,
+                  null,
+                  8,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "assisted_tuck_flag",
+                  3,
+                  null,
+                  "8/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 6,
+              "practice": [
+                [
+                  "wall_handstand",
+                  2,
+                  null,
+                  45,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "handstand_toe_pull",
+                  2,
+                  null,
+                  8,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 7,
+              "practice": [
+                [
+                  "wall_handstand",
+                  2,
+                  null,
+                  45,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "handstand_toe_pull",
+                  2,
+                  null,
+                  8,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            }
           ]
-        },
-        {
-          "day": 6,
-          "practice": [
-            [
-              "wall_handstand",
-              1,
-              null,
-              15,
-              60,
-              "easy technique",
-              null
-            ]
-          ]
-        },
-        {
-          "day": 7,
-          "practice": []
         }
       ]
     },
     {
       "level": 5,
-      "days": [
+      "phases": [
         {
-          "day": 1,
-          "practice": [
-            [
-              "assisted_tuck_flag",
-              1,
-              null,
-              "8/side",
-              60,
-              "easy technique",
-              null
-            ]
+          "through_program": 35,
+          "days": [
+            {
+              "day": 1,
+              "practice": [
+                [
+                  "handstand_toe_pull",
+                  3,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "assisted_tuck_flag",
+                  3,
+                  null,
+                  "8/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 2,
+              "practice": [
+                [
+                  "handstand_toe_pull",
+                  3,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 3,
+              "practice": [
+                [
+                  "handstand_toe_pull",
+                  3,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 4,
+              "practice": [
+                [
+                  "handstand_toe_pull",
+                  3,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 5,
+              "practice": [
+                [
+                  "handstand_toe_pull",
+                  3,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "assisted_tuck_flag",
+                  3,
+                  null,
+                  "8/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 6,
+              "practice": [
+                [
+                  "handstand_toe_pull",
+                  3,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 7,
+              "practice": [
+                [
+                  "handstand_toe_pull",
+                  3,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            }
           ]
         },
         {
-          "day": 2,
-          "practice": []
-        },
-        {
-          "day": 3,
-          "practice": [
-            [
-              "handstand_toe_pull",
-              1,
-              null,
-              8,
-              60,
-              "easy technique",
-              null
-            ]
+          "through_program": 70,
+          "days": [
+            {
+              "day": 1,
+              "practice": [
+                [
+                  "handstand_toe_pull",
+                  4,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "assisted_tuck_flag",
+                  3,
+                  null,
+                  "10/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 2,
+              "practice": [
+                [
+                  "handstand_toe_pull",
+                  4,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 3,
+              "practice": [
+                [
+                  "handstand_toe_pull",
+                  4,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 4,
+              "practice": [
+                [
+                  "handstand_toe_pull",
+                  4,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 5,
+              "practice": [
+                [
+                  "handstand_toe_pull",
+                  4,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "assisted_tuck_flag",
+                  3,
+                  null,
+                  "10/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 6,
+              "practice": [
+                [
+                  "handstand_toe_pull",
+                  4,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 7,
+              "practice": [
+                [
+                  "handstand_toe_pull",
+                  4,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            }
           ]
         },
         {
-          "day": 4,
-          "practice": []
-        },
-        {
-          "day": 5,
-          "practice": [
-            [
-              "assisted_tuck_flag",
-              1,
-              null,
-              "8/side",
-              60,
-              "easy technique",
-              null
-            ]
+          "through_program": 100,
+          "days": [
+            {
+              "day": 1,
+              "practice": [
+                [
+                  "handstand_toe_pull",
+                  3,
+                  null,
+                  12,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "handstand_balance",
+                  2,
+                  null,
+                  8,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "assisted_tuck_flag",
+                  2,
+                  null,
+                  "10/side",
+                  60,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "tuck_flag",
+                  1,
+                  null,
+                  "3/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 2,
+              "practice": [
+                [
+                  "handstand_toe_pull",
+                  3,
+                  null,
+                  12,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "handstand_balance",
+                  2,
+                  null,
+                  8,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 3,
+              "practice": [
+                [
+                  "handstand_toe_pull",
+                  3,
+                  null,
+                  12,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "handstand_balance",
+                  2,
+                  null,
+                  8,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 4,
+              "practice": [
+                [
+                  "handstand_toe_pull",
+                  3,
+                  null,
+                  12,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "handstand_balance",
+                  2,
+                  null,
+                  8,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 5,
+              "practice": [
+                [
+                  "handstand_toe_pull",
+                  3,
+                  null,
+                  12,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "handstand_balance",
+                  2,
+                  null,
+                  8,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "assisted_tuck_flag",
+                  2,
+                  null,
+                  "10/side",
+                  60,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "tuck_flag",
+                  1,
+                  null,
+                  "3/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 6,
+              "practice": [
+                [
+                  "handstand_toe_pull",
+                  3,
+                  null,
+                  12,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "handstand_balance",
+                  2,
+                  null,
+                  8,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 7,
+              "practice": [
+                [
+                  "handstand_toe_pull",
+                  3,
+                  null,
+                  12,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "handstand_balance",
+                  2,
+                  null,
+                  8,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            }
           ]
-        },
-        {
-          "day": 6,
-          "practice": [
-            [
-              "handstand_toe_pull",
-              1,
-              null,
-              8,
-              60,
-              "easy technique",
-              null
-            ]
-          ]
-        },
-        {
-          "day": 7,
-          "practice": []
         }
       ]
     },
     {
       "level": 6,
-      "days": [
+      "phases": [
         {
-          "day": 1,
-          "practice": [
-            [
-              "tuck_flag",
-              1,
-              null,
-              "5/side",
-              60,
-              "easy technique",
-              null
-            ]
+          "through_program": 35,
+          "days": [
+            {
+              "day": 1,
+              "practice": [
+                [
+                  "handstand_balance",
+                  4,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "tuck_flag",
+                  2,
+                  null,
+                  "4/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 2,
+              "practice": [
+                [
+                  "handstand_balance",
+                  4,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 3,
+              "practice": [
+                [
+                  "handstand_balance",
+                  4,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 4,
+              "practice": [
+                [
+                  "handstand_balance",
+                  4,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 5,
+              "practice": [
+                [
+                  "handstand_balance",
+                  4,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "tuck_flag",
+                  2,
+                  null,
+                  "4/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 6,
+              "practice": [
+                [
+                  "handstand_balance",
+                  4,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 7,
+              "practice": [
+                [
+                  "handstand_balance",
+                  4,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            }
           ]
         },
         {
-          "day": 2,
-          "practice": []
-        },
-        {
-          "day": 3,
-          "practice": [
-            [
-              "handstand_balance",
-              1,
-              null,
-              8,
-              60,
-              "easy technique",
-              null
-            ]
+          "through_program": 70,
+          "days": [
+            {
+              "day": 1,
+              "practice": [
+                [
+                  "handstand_balance",
+                  5,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "tuck_flag",
+                  3,
+                  null,
+                  "5/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 2,
+              "practice": [
+                [
+                  "handstand_balance",
+                  5,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 3,
+              "practice": [
+                [
+                  "handstand_balance",
+                  5,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 4,
+              "practice": [
+                [
+                  "handstand_balance",
+                  5,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 5,
+              "practice": [
+                [
+                  "handstand_balance",
+                  5,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "tuck_flag",
+                  3,
+                  null,
+                  "5/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 6,
+              "practice": [
+                [
+                  "handstand_balance",
+                  5,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 7,
+              "practice": [
+                [
+                  "handstand_balance",
+                  5,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            }
           ]
         },
         {
-          "day": 4,
-          "practice": []
-        },
-        {
-          "day": 5,
-          "practice": [
-            [
-              "tuck_flag",
-              1,
-              null,
-              "5/side",
-              60,
-              "easy technique",
-              null
-            ]
+          "through_program": 100,
+          "days": [
+            {
+              "day": 1,
+              "practice": [
+                [
+                  "handstand_balance",
+                  5,
+                  null,
+                  15,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "tuck_flag",
+                  3,
+                  null,
+                  "6/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 2,
+              "practice": [
+                [
+                  "handstand_balance",
+                  5,
+                  null,
+                  15,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 3,
+              "practice": [
+                [
+                  "handstand_balance",
+                  5,
+                  null,
+                  15,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 4,
+              "practice": [
+                [
+                  "handstand_balance",
+                  5,
+                  null,
+                  15,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 5,
+              "practice": [
+                [
+                  "handstand_balance",
+                  5,
+                  null,
+                  15,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "tuck_flag",
+                  3,
+                  null,
+                  "6/side",
+                  60,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 6,
+              "practice": [
+                [
+                  "handstand_balance",
+                  5,
+                  null,
+                  15,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            },
+            {
+              "day": 7,
+              "practice": [
+                [
+                  "handstand_balance",
+                  5,
+                  null,
+                  15,
+                  45,
+                  "easy technique",
+                  null
+                ]
+              ]
+            }
           ]
-        },
-        {
-          "day": 6,
-          "practice": [
-            [
-              "handstand_balance",
-              1,
-              null,
-              8,
-              60,
-              "easy technique",
-              null
-            ]
-          ]
-        },
-        {
-          "day": 7,
-          "practice": []
         }
       ]
     }
@@ -503,6 +2498,14 @@
     },
     "Windshield Wiper": {
       "movement_id": "knee_raise",
+      "reps": 6
+    },
+    "Pull Up | Shoulder Width Overhand Grip - Kipping Pull Up": {
+      "movement_id": "eccentric_pullup",
+      "reps": 2
+    },
+    "Hang | Kipping Swing": {
+      "movement_id": "hollow_arch_swing",
       "reps": 6
     }
   }

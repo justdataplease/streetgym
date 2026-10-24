@@ -20,6 +20,11 @@ try {
     & python "tools\validate_morning_class.py"
     if ($LASTEXITCODE -ne 0) { throw "Morning class or motion contact validation failed" }
 
+    & python "tools\validate_progressions.py"
+    if ($LASTEXITCODE -ne 0) { throw "Coaching progression validation failed" }
+
+    & python "tools\validate_progression_motions.py"
+    if ($LASTEXITCODE -ne 0) { throw "Progression motion contact validation failed" }
 
     New-Item -ItemType Directory -Force -Path "app\src\main\assets" | Out-Null
     Copy-Item -Force -LiteralPath "generated\curriculum_v2.json" -Destination "app\src\main\assets\curriculum.json"

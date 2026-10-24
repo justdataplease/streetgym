@@ -49,6 +49,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "arm_swings",
           1,
           12,
@@ -65,6 +74,24 @@
           30,
           "2111",
           "dead_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -195,6 +222,15 @@
           30,
           "2111",
           "elevated_scapular_pushup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -217,13 +253,13 @@
           "incline_pushup"
         ],
         [
-          "reverse_lunge",
+          "sliding_leg_curl",
           3,
-          "9/side",
+          8,
           null,
           60,
-          "3010",
-          "box_squat"
+          "3011",
+          "glute_bridge"
         ],
         [
           "support_hold",
@@ -308,6 +344,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "cat_cow",
           2,
           8,
@@ -355,13 +400,13 @@
       ],
       "main": [
         [
-          "tuck_back_hold",
+          "skin_cat_partial",
           4,
+          2,
           null,
-          6,
           75,
-          null,
-          "tuck_back_entry"
+          "controlled",
+          "straight_bar_support"
         ],
         [
           "hollow_hold",
@@ -595,6 +640,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "squat",
           1,
           10,
@@ -611,6 +665,15 @@
           30,
           "2111",
           "dead_hang"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -724,6 +787,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "hip_circles",
           1,
           10,
@@ -740,6 +812,24 @@
           10,
           "each_direction",
           null
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -983,6 +1073,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           1,
           6,
@@ -999,6 +1098,24 @@
           30,
           "2111",
           "dead_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -1239,6 +1356,15 @@
           0,
           null,
           null
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
         ],
         [
           "cat_cow",
@@ -1500,6 +1626,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "arm_swings",
           1,
           15,
@@ -1629,6 +1764,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "reverse_lunge",
           1,
           "8/side",
@@ -1645,6 +1789,24 @@
           20,
           "slow",
           null
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -1888,6 +2050,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           1,
           5,
@@ -1904,6 +2075,15 @@
           30,
           "2111",
           "dead_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -1944,13 +2124,13 @@
           "lying_knee_raise"
         ],
         [
-          "squat",
+          "sliding_leg_curl",
           2,
-          15,
+          8,
           null,
-          45,
-          "3010",
-          "box_squat"
+          60,
+          "3011",
+          "glute_bridge"
         ]
       ],
       "cooldown": [
@@ -2405,6 +2585,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "squat",
           1,
           8,
@@ -2421,6 +2610,15 @@
           25,
           "controlled",
           null
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -2534,6 +2732,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "hip_circles",
           1,
           10,
@@ -2550,6 +2757,15 @@
           10,
           "each_direction",
           null
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -2792,6 +3008,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "arm_swings",
           2,
           12,
@@ -2808,6 +3033,15 @@
           30,
           null,
           "dead_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -2848,13 +3082,13 @@
           "lying_knee_raise"
         ],
         [
-          "tempo_squat",
+          "sliding_leg_curl",
           3,
-          16,
+          8,
           null,
           60,
-          "3110",
-          "box_squat"
+          "3011",
+          "glute_bridge"
         ]
       ],
       "cooldown": [
@@ -2938,6 +3172,15 @@
           25,
           "2111",
           "elevated_scapular_pushup"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -3049,6 +3292,15 @@
           0,
           null,
           null
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
         ],
         [
           "cat_cow",
@@ -3310,6 +3562,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "thoracic_rotation",
           1,
           "8/side",
@@ -3326,6 +3587,15 @@
           20,
           "controlled",
           "box_squat"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -3439,6 +3709,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "leg_swings",
           1,
           "10/side",
@@ -3455,6 +3734,24 @@
           10,
           "controlled",
           null
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -3697,6 +3994,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "arm_swings",
           2,
           15,
@@ -3713,6 +4019,24 @@
           30,
           "21X1",
           "dead_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -3955,6 +4279,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "thoracic_rotation",
           2,
           "6/side",
@@ -3993,13 +4326,13 @@
           "straight_bar_support"
         ],
         [
-          "tuck_back_hold",
+          "tuck_back_entry",
           4,
+          2,
           null,
-          6,
           75,
-          null,
-          "tuck_back_entry"
+          "controlled",
+          "skin_cat_partial"
         ],
         [
           "hollow_hold",
@@ -4011,13 +4344,13 @@
           "dead_bug"
         ],
         [
-          "glute_bridge",
+          "sliding_leg_curl",
           3,
-          15,
+          8,
           null,
-          40,
-          "2111",
-          null
+          60,
+          "3011",
+          "glute_bridge"
         ]
       ],
       "cooldown": [
@@ -4214,6 +4547,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "squat",
           1,
           12,
@@ -4270,12 +4612,12 @@
           "box_squat"
         ],
         [
-          "lying_leg_raise",
+          "candlestick",
           3,
-          12,
+          6,
           null,
           45,
-          "2020",
+          "3010",
           "lying_knee_raise"
         ]
       ],
@@ -4359,6 +4701,24 @@
           15,
           "gentle",
           null
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -4601,6 +4961,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "arm_swings",
           1,
           12,
@@ -4617,6 +4986,15 @@
           30,
           null,
           "dead_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -4657,13 +5035,13 @@
           "lying_knee_raise"
         ],
         [
-          "pause_squat",
+          "sliding_leg_curl",
           2,
-          14,
+          8,
           null,
-          50,
-          "32X0",
-          "box_squat"
+          60,
+          "3011",
+          "glute_bridge"
         ]
       ],
       "cooldown": [
@@ -5117,6 +5495,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "squat",
           1,
           10,
@@ -5133,6 +5520,15 @@
           25,
           "slow",
           null
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -5246,6 +5642,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "leg_swings",
           1,
           "8/side",
@@ -5262,6 +5667,15 @@
           10,
           "controlled",
           null
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -5529,6 +5943,15 @@
           90,
           "controlled",
           "low_bar_transition"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -5689,13 +6112,13 @@
           "incline_pushup"
         ],
         [
-          "split_squat",
+          "sliding_leg_curl",
           4,
-          "9/side",
+          8,
           null,
           60,
-          "3010",
-          "box_squat"
+          "3011",
+          "glute_bridge"
         ],
         [
           "side_plank",
@@ -5746,7 +6169,7 @@
         "en": "Two Tucks"
       },
       "description": {
-        "en": "Front- and back-lever tucks share a calm technique session with trunk work."
+        "en": "Front-lever tuck holds and back-lever tuck entries share a calm technique session with trunk work."
       },
       "schedule": {
         "week": 7,
@@ -5769,6 +6192,15 @@
           0,
           null,
           null
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
         ],
         [
           "shoulder_cars",
@@ -5818,13 +6250,13 @@
           "skin_cat_partial"
         ],
         [
-          "tuck_back_hold",
+          "skin_cat_partial",
           4,
+          2,
           null,
-          5,
           90,
-          null,
-          "tuck_back_entry"
+          "controlled",
+          "straight_bar_support"
         ],
         [
           "tuck_lsit",
@@ -5907,6 +6339,15 @@
           20,
           "easy",
           null
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
         ],
         [
           "arm_swings",
@@ -6040,6 +6481,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "squat",
           1,
           12,
@@ -6056,6 +6506,15 @@
           30,
           "2111",
           "dead_hang"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -6185,6 +6644,24 @@
           15,
           "gentle",
           null
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -6427,6 +6904,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           2,
           5,
@@ -6443,6 +6929,15 @@
           90,
           "easy_power",
           "pullup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -6573,6 +7068,15 @@
           25,
           "2111",
           "elevated_scapular_pushup"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -6661,7 +7165,7 @@
         "en": "Lever Seesaw"
       },
       "description": {
-        "en": "Alternate front and back tuck holds so neither straight-arm pattern dominates."
+        "en": "Alternate front tuck holds with back-lever tuck entries so neither straight-arm pattern dominates."
       },
       "schedule": {
         "week": 8,
@@ -6684,6 +7188,15 @@
           0,
           null,
           null
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
         ],
         [
           "arm_swings",
@@ -6715,13 +7228,13 @@
           "tuck_front_row"
         ],
         [
-          "tuck_back_hold",
+          "tuck_back_entry",
           5,
+          2,
           null,
-          6,
           90,
-          null,
-          "tuck_back_entry"
+          "controlled",
+          "skin_cat_partial"
         ],
         [
           "tuck_front_row",
@@ -6945,6 +7458,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "thoracic_rotation",
           1,
           "8/side",
@@ -7001,12 +7523,12 @@
           "box_squat"
         ],
         [
-          "lying_leg_raise",
+          "candlestick",
           3,
-          14,
+          6,
           null,
           50,
-          "2020",
+          "3010",
           "lying_knee_raise"
         ]
       ],
@@ -7090,6 +7612,24 @@
           15,
           "gentle",
           null
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -7332,6 +7872,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "arm_swings",
           1,
           12,
@@ -7348,6 +7897,15 @@
           30,
           null,
           "dead_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -7565,7 +8123,7 @@
         "en": "Tuck Pair Review"
       },
       "description": {
-        "en": "Short front and back holds record control without testing maximum time."
+        "en": "Short front tuck holds and back-lever entries record control without testing maximum time."
       },
       "schedule": {
         "week": 9,
@@ -7619,13 +8177,13 @@
           "tuck_front_row"
         ],
         [
-          "tuck_back_hold",
+          "tuck_back_entry",
           4,
+          2,
           null,
-          5,
           90,
-          null,
-          "tuck_back_entry"
+          "controlled",
+          "skin_cat_partial"
         ],
         [
           "tuck_lsit",
@@ -7848,6 +8406,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "squat",
           1,
           10,
@@ -7864,6 +8431,15 @@
           25,
           "slow",
           null
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -7904,12 +8480,12 @@
           "box_squat"
         ],
         [
-          "lying_leg_raise",
+          "candlestick",
           3,
-          12,
+          6,
           null,
           45,
-          "2020",
+          "3010",
           "lying_knee_raise"
         ]
       ],
@@ -8210,7 +8786,7 @@
         "en": "Cleanest Band"
       },
       "description": {
-        "en": "Complete 6x2 band muscle-ups and three strict singles before the listed basics; use the jump regression for any uneven band rep and the band regression for any unclean strict attempt."
+        "en": "Complete the band muscle-ups and slow negatives before the listed basics; use the jump regression for any uneven band rep. Strict singles begin in Level 3."
       },
       "schedule": {
         "week": 10,
@@ -8235,6 +8811,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "arm_swings",
           2,
           15,
@@ -8251,6 +8836,15 @@
           90,
           "easy_power",
           "pullup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -8264,13 +8858,13 @@
           "jump_muscleup"
         ],
         [
-          "strict_muscleup",
+          "negative_muscleup",
           3,
           1,
           null,
           180,
           "quality_attempt",
-          "band_muscleup"
+          "pullover_lowbar"
         ],
         [
           "chest_to_bar",
@@ -8381,6 +8975,24 @@
           25,
           "2111",
           "elevated_scapular_pushup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -8494,6 +9106,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           2,
           6,
@@ -8523,13 +9144,13 @@
           "tuck_front_row"
         ],
         [
-          "tuck_back_hold",
+          "tuck_back_entry",
           6,
+          2,
           null,
-          6,
           90,
-          null,
-          "tuck_back_entry"
+          "controlled",
+          "skin_cat_partial"
         ],
         [
           "tuck_front_row",
@@ -8595,10 +9216,10 @@
       "level": 2,
       "number": 97,
       "title": {
-        "en": "First Clean Attempt"
+        "en": "Muscle-Up Groundwork"
       },
       "description": {
-        "en": "Try only fresh muscle-up singles; use assistance immediately if the path bends."
+        "en": "Chest-to-bar pulls, band muscle-ups and slow negatives build the transition while strict pulling stays crisp; strict singles begin in Level 3."
       },
       "schedule": {
         "week": 10,
@@ -8643,13 +9264,13 @@
       ],
       "main": [
         [
-          "strict_muscleup",
+          "chest_to_bar",
           5,
-          1,
+          3,
           null,
           180,
           "quality_attempt",
-          "band_muscleup"
+          "pullup"
         ],
         [
           "band_muscleup",
@@ -8754,6 +9375,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "squat",
           1,
           12,
@@ -8770,6 +9400,15 @@
           30,
           "2111",
           "dead_hang"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -8883,6 +9522,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "leg_swings",
           1,
           "10/side",
@@ -8899,6 +9547,24 @@
           10,
           "controlled",
           null
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -13535,6 +14201,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           2,
           6,
@@ -13551,6 +14226,15 @@
           30,
           null,
           "dead_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -13582,22 +14266,22 @@
           "assisted_pullup"
         ],
         [
-          "knee_raise",
+          "tuck_lsit",
           4,
-          13,
           null,
+          15,
           60,
-          "2020",
-          "lying_knee_raise"
+          "isometric",
+          "support_hold"
         ],
         [
-          "reverse_lunge",
+          "sliding_leg_curl",
           3,
-          "12/side",
+          8,
           null,
           60,
-          "3010",
-          "box_squat"
+          "3011",
+          "glute_bridge"
         ]
       ],
       "cooldown": [
@@ -13681,17 +14365,26 @@
           25,
           "2111",
           "elevated_scapular_pushup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
         [
-          "elevated_plank",
+          "pike_pushup",
           3,
+          8,
           null,
-          35,
-          45,
-          null,
-          "incline_plank"
+          90,
+          "2011",
+          "incline_pushup"
         ],
         [
           "planche_lean",
@@ -13721,13 +14414,13 @@
           "incline_pushup"
         ],
         [
-          "split_squat",
+          "sliding_leg_curl",
           4,
-          "11/side",
+          8,
           null,
           60,
-          "3010",
-          "box_squat"
+          "3011",
+          "glute_bridge"
         ]
       ],
       "cooldown": [
@@ -14053,6 +14746,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "cat_cow",
           2,
           8,
@@ -14069,6 +14771,15 @@
           30,
           null,
           "dead_bug"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -14180,6 +14891,15 @@
           0,
           null,
           null
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
         ],
         [
           "arm_swings",
@@ -14311,6 +15031,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "arm_swings",
           2,
           15,
@@ -14367,13 +15096,13 @@
           "straight_bar_support"
         ],
         [
-          "pause_squat",
+          "sliding_leg_curl",
           3,
-          20,
+          8,
           null,
-          55,
-          "32X0",
-          "box_squat"
+          60,
+          "3011",
+          "glute_bridge"
         ]
       ],
       "cooldown": [
@@ -14440,6 +15169,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           2,
           6,
@@ -14456,6 +15194,24 @@
           30,
           null,
           "dead_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -14586,6 +15342,24 @@
           25,
           "2111",
           "elevated_scapular_pushup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -14829,6 +15603,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "squat",
           1,
           12,
@@ -14958,6 +15741,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "cat_cow",
           2,
           8,
@@ -14996,12 +15788,12 @@
           "dead_bug"
         ],
         [
-          "single_leg_bridge",
+          "sliding_leg_curl",
           4,
-          "12/side",
+          8,
           null,
-          45,
-          "2111",
+          60,
+          "3011",
           "glute_bridge"
         ],
         [
@@ -15089,6 +15881,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "arm_swings",
           1,
           15,
@@ -15128,7 +15929,7 @@
         ],
         [
           "tuck_back_hold",
-          4,
+          2,
           null,
           7,
           25,
@@ -15145,13 +15946,13 @@
           "box_squat"
         ],
         [
-          "dead_bug",
+          "tuck_lsit",
           4,
-          "10/side",
           null,
-          90,
-          "slow",
-          null
+          15,
+          60,
+          "isometric",
+          "support_hold"
         ]
       ],
       "cooldown": [
@@ -15218,6 +16019,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           2,
           6,
@@ -15248,7 +16058,7 @@
         ],
         [
           "advanced_tuck_front",
-          4,
+          2,
           null,
           4,
           105,
@@ -15274,13 +16084,13 @@
           "assisted_pullup"
         ],
         [
-          "knee_raise",
+          "tuck_lsit",
           4,
-          14,
           null,
+          15,
           60,
-          "2020",
-          "lying_knee_raise"
+          "isometric",
+          "support_hold"
         ]
       ],
       "cooldown": [
@@ -15363,6 +16173,15 @@
           105,
           "easy_power",
           "pullup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -15403,13 +16222,13 @@
           "incline_pushup"
         ],
         [
-          "squat",
+          "sliding_leg_curl",
           3,
-          28,
+          8,
           null,
-          55,
-          "3010",
-          "box_squat"
+          60,
+          "3011",
+          "glute_bridge"
         ]
       ],
       "cooldown": [
@@ -15492,6 +16311,24 @@
           25,
           "2111",
           "elevated_scapular_pushup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -15734,6 +16571,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "arm_swings",
           2,
           15,
@@ -15863,6 +16709,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "cat_cow",
           2,
           8,
@@ -15879,6 +16734,15 @@
           30,
           null,
           "dead_bug"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -15901,12 +16765,12 @@
           "dead_bug"
         ],
         [
-          "single_leg_bridge",
+          "sliding_leg_curl",
           4,
-          "12/side",
+          8,
           null,
-          45,
-          "2111",
+          60,
+          "3011",
           "glute_bridge"
         ],
         [
@@ -16130,6 +16994,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           2,
           6,
@@ -16177,22 +17050,22 @@
           "assisted_pullup"
         ],
         [
-          "knee_raise",
+          "tuck_lsit",
           4,
-          14,
           null,
+          15,
           60,
-          "2020",
-          "lying_knee_raise"
+          "isometric",
+          "support_hold"
         ],
         [
-          "reverse_lunge",
+          "sliding_leg_curl",
           4,
-          "12/side",
+          8,
           null,
           60,
-          "3010",
-          "box_squat"
+          "3011",
+          "glute_bridge"
         ]
       ],
       "cooldown": [
@@ -16231,105 +17104,114 @@
       "level": 3,
       "number": 43,
       "title": {
-        "en": "Back-Lever Shape"
+        "en": "Submaximal Muscle-up Rehearsal"
       },
       "description": {
-        "en": "Advanced-tuck glimpses follow controlled entries, with no forced shoulder depth."
+        "en": "Perform two sets of three and three sets of two with at least two reps in reserve; use the listed band regression for any set that is not clean."
       },
       "schedule": {
         "week": 4,
         "day": 2,
-        "day_type": "back_lever_progression",
-        "minutes": 44,
+        "day_type": "muscleup_set_capacity",
+        "minutes": 51,
         "rpe": 7,
         "focus": [
-          "advanced_tuck_back",
-          "shoulder_control",
-          "basics"
+          "strict_muscle_up",
+          "set_capacity",
+          "bar_dip"
         ]
       },
       "warmup": [
         [
           "low_jack",
           1,
-          45,
+          55,
           null,
           20,
           "easy",
           null
         ],
         [
-          "arm_swings",
+          "wrist_circles",
           2,
-          15,
+          12,
           null,
           10,
-          "controlled",
+          "each_direction",
           null
         ],
         [
-          "active_hang",
+          "chest_to_bar",
           3,
+          2,
+          null,
+          105,
+          "easy_power",
+          "pullup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
           null,
           15,
-          30,
-          null,
-          "dead_hang"
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
         [
-          "skin_cat_partial",
+          "strict_muscleup",
+          2,
+          3,
+          null,
+          210,
+          "clean_set",
+          "band_muscleup"
+        ],
+        [
+          "strict_muscleup",
+          3,
+          2,
+          null,
+          180,
+          "clean_pair",
+          "band_muscleup"
+        ],
+        [
+          "chest_to_bar",
           4,
           3,
           null,
-          105,
-          "slow",
+          150,
+          "10X1",
+          "pullup"
+        ],
+        [
+          "straight_bar_dip",
+          4,
+          10,
+          null,
+          90,
+          "2111",
           "straight_bar_support"
         ],
         [
-          "tuck_back_hold",
-          4,
-          null,
-          10,
-          105,
-          null,
-          "tuck_back_entry"
-        ],
-        [
-          "advanced_tuck_back",
-          5,
-          null,
-          4,
-          120,
-          null,
-          "tuck_back_hold"
-        ],
-        [
-          "chinup",
-          4,
-          8,
-          null,
-          105,
-          "21X1",
-          "assisted_pullup"
-        ],
-        [
-          "squat",
+          "hollow_hold",
           3,
-          28,
           null,
-          55,
-          "3010",
-          "box_squat"
+          35,
+          45,
+          null,
+          "dead_bug"
         ]
       ],
       "cooldown": [
         [
-          "lat_stretch",
+          "forearm_stretch",
           2,
           null,
-          40,
+          45,
           10,
           null,
           null
@@ -16338,16 +17220,16 @@
           "chest_stretch",
           2,
           null,
-          35,
+          40,
           10,
           null,
           null
         ],
         [
-          "hip_flexor_stretch",
+          "lat_stretch",
           2,
           null,
-          35,
+          40,
           10,
           null,
           null
@@ -16405,6 +17287,15 @@
           25,
           "2111",
           "elevated_scapular_pushup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -16436,22 +17327,22 @@
           "assisted_dip"
         ],
         [
-          "pause_pushup",
+          "pike_pushup",
           4,
-          16,
+          8,
           null,
-          60,
-          "22X1",
+          90,
+          "2011",
           "incline_pushup"
         ],
         [
-          "split_squat",
+          "sliding_leg_curl",
           4,
-          "12/side",
+          8,
           null,
           60,
-          "3010",
-          "box_squat"
+          "3011",
+          "glute_bridge"
         ]
       ],
       "cooldown": [
@@ -16619,105 +17510,123 @@
       "level": 3,
       "number": 46,
       "title": {
-        "en": "Submaximal Muscle-up Rehearsal"
+        "en": "Back-Lever Shape"
       },
       "description": {
-        "en": "Perform two sets of three and three sets of two with at least two reps in reserve; use the listed band regression for any set that is not clean."
+        "en": "Tuck back-lever holds follow controlled entries, with no forced shoulder depth."
       },
       "schedule": {
         "week": 4,
         "day": 5,
-        "day_type": "muscleup_set_capacity",
-        "minutes": 51,
+        "day_type": "back_lever_progression",
+        "minutes": 44,
         "rpe": 7,
         "focus": [
-          "strict_muscle_up",
-          "set_capacity",
-          "bar_dip"
+          "advanced_tuck_back",
+          "shoulder_control",
+          "basics"
         ]
       },
       "warmup": [
         [
           "low_jack",
           1,
-          55,
+          45,
           null,
           20,
           "easy",
           null
         ],
         [
-          "wrist_circles",
-          2,
-          12,
+          "wrist_rocks",
+          1,
+          10,
           null,
           10,
-          "each_direction",
+          "slow",
+          "wrist_circles"
+        ],
+        [
+          "arm_swings",
+          2,
+          15,
+          null,
+          10,
+          "controlled",
           null
         ],
         [
-          "chest_to_bar",
+          "active_hang",
           3,
-          2,
           null,
-          105,
-          "easy_power",
-          "pullup"
+          15,
+          30,
+          null,
+          "dead_hang"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
         [
-          "strict_muscleup",
-          2,
-          3,
-          null,
-          210,
-          "clean_set",
-          "band_muscleup"
-        ],
-        [
-          "strict_muscleup",
-          3,
-          2,
-          null,
-          180,
-          "clean_pair",
-          "band_muscleup"
-        ],
-        [
-          "chest_to_bar",
+          "skin_cat_partial",
           4,
           3,
           null,
-          150,
-          "10X1",
-          "pullup"
-        ],
-        [
-          "straight_bar_dip",
-          4,
-          10,
-          null,
-          90,
-          "2111",
+          105,
+          "slow",
           "straight_bar_support"
         ],
         [
-          "hollow_hold",
+          "tuck_back_hold",
+          4,
+          null,
+          10,
+          105,
+          null,
+          "tuck_back_entry"
+        ],
+        [
+          "tuck_back_entry",
+          5,
+          2,
+          null,
+          90,
+          "controlled",
+          "skin_cat_partial"
+        ],
+        [
+          "chinup",
+          4,
+          8,
+          null,
+          105,
+          "21X1",
+          "assisted_pullup"
+        ],
+        [
+          "squat",
           3,
+          28,
           null,
-          35,
-          45,
-          null,
-          "dead_bug"
+          55,
+          "3010",
+          "box_squat"
         ]
       ],
       "cooldown": [
         [
-          "forearm_stretch",
+          "lat_stretch",
           2,
           null,
-          45,
+          40,
           10,
           null,
           null
@@ -16726,16 +17635,16 @@
           "chest_stretch",
           2,
           null,
-          40,
+          35,
           10,
           null,
           null
         ],
         [
-          "lat_stretch",
+          "hip_flexor_stretch",
           2,
           null,
-          40,
+          35,
           10,
           null,
           null
@@ -16777,6 +17686,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "cat_cow",
           2,
           8,
@@ -16793,6 +17711,15 @@
           30,
           null,
           "dead_bug"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -16935,22 +17862,22 @@
           "band_muscleup"
         ],
         [
-          "advanced_tuck_front",
+          "tuck_front_row",
           4,
+          5,
           null,
-          4,
           45,
-          null,
-          "tuck_front_hold"
+          "2111",
+          "inverted_row"
         ],
         [
-          "tuck_back_hold",
+          "tuck_back_entry",
           4,
+          2,
           null,
-          7,
           45,
-          null,
-          "tuck_back_entry"
+          "controlled",
+          "skin_cat_partial"
         ],
         [
           "frog_stand",
@@ -17007,10 +17934,10 @@
       "level": 3,
       "number": 49,
       "title": {
-        "en": "One-Leg Front Glimpse"
+        "en": "Advanced-Tuck Front Focus"
       },
       "description": {
-        "en": "Brief one-leg front-lever attempts follow strong advanced-tuck holds; return immediately if hips turn."
+        "en": "Strong advanced-tuck holds, tuck L-sits and rows build the line a one-leg lever will need later; return to the tuck if the hips turn."
       },
       "schedule": {
         "week": 5,
@@ -17033,6 +17960,15 @@
           0,
           null,
           null
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
         ],
         [
           "shoulder_cars",
@@ -17064,13 +18000,13 @@
           "tuck_front_hold"
         ],
         [
-          "one_leg_front",
+          "tuck_lsit",
           3,
           null,
-          "3/side",
-          120,
-          null,
-          "advanced_tuck_front"
+          15,
+          60,
+          "isometric",
+          "support_hold"
         ],
         [
           "tuck_front_row",
@@ -17136,10 +18072,10 @@
       "level": 3,
       "number": 50,
       "title": {
-        "en": "One-Leg Back Line"
+        "en": "Back-Lever Entry Control"
       },
       "description": {
-        "en": "Careful one-leg back-lever glimpses follow controlled entries and never force shoulder range."
+        "en": "Skin-the-cat, tuck entries and arch holds build shoulder-extension tolerance; longer back-lever shapes wait until the entries stay smooth."
       },
       "schedule": {
         "week": 5,
@@ -17164,6 +18100,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "arm_swings",
           2,
           15,
@@ -17180,6 +18125,15 @@
           30,
           null,
           "dead_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -17193,22 +18147,22 @@
           "straight_bar_support"
         ],
         [
-          "advanced_tuck_back",
+          "tuck_back_entry",
           4,
+          2,
           null,
-          7,
           120,
-          null,
-          "tuck_back_hold"
+          "controlled",
+          "skin_cat_partial"
         ],
         [
-          "one_leg_back",
+          "arch_hold",
           3,
           null,
-          "3/side",
+          30,
           135,
-          null,
-          "advanced_tuck_back"
+          "isometric",
+          "bird_dog"
         ],
         [
           "chinup",
@@ -17220,13 +18174,13 @@
           "assisted_pullup"
         ],
         [
-          "squat",
+          "sliding_leg_curl",
           4,
-          28,
+          8,
           null,
-          55,
-          "3010",
-          "box_squat"
+          60,
+          "3011",
+          "glute_bridge"
         ]
       ],
       "cooldown": [
@@ -17310,6 +18264,24 @@
           25,
           "2111",
           "elevated_scapular_pushup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -17653,10 +18625,10 @@
       "level": 3,
       "number": 54,
       "title": {
-        "en": "One-Leg Dragon Control"
+        "en": "Dragon Negative Control"
       },
       "description": {
-        "en": "Alternating one-leg descents advance the dragon flag while the trunk stays rigid."
+        "en": "Slow bent-knee descents advance the dragon flag while the trunk stays rigid."
       },
       "schedule": {
         "week": 5,
@@ -17681,6 +18653,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "cat_cow",
           2,
           8,
@@ -17697,17 +18678,26 @@
           30,
           null,
           "dead_bug"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
         [
-          "one_leg_dragon_negative",
+          "bent_dragon_negative",
           2,
-          "1/side",
+          2,
           null,
           120,
           "7000",
-          "bent_dragon_negative"
+          "candlestick"
         ],
         [
           "hollow_hold",
@@ -17719,12 +18709,12 @@
           "dead_bug"
         ],
         [
-          "single_leg_bridge",
+          "sliding_leg_curl",
           4,
-          "14/side",
+          10,
           null,
-          45,
-          "2111",
+          60,
+          "3011",
           "glute_bridge"
         ],
         [
@@ -17940,6 +18930,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           2,
           6,
@@ -17978,13 +18977,13 @@
           "inverted_row"
         ],
         [
-          "one_leg_front",
+          "tuck_lsit",
           3,
           null,
-          "4/side",
-          120,
-          null,
-          "advanced_tuck_front"
+          20,
+          60,
+          "isometric",
+          "support_hold"
         ],
         [
           "pullup",
@@ -18044,7 +19043,7 @@
         "en": "Back-Lever Lowering"
       },
       "description": {
-        "en": "Slow advanced-tuck lowering develops control; one-leg work appears only while shoulders stay comfortable."
+        "en": "Slow tuck entries and skin-the-cat lowering develop control; holds return only while the shoulders stay comfortable."
       },
       "schedule": {
         "week": 6,
@@ -18069,6 +19068,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "arm_swings",
           2,
           15,
@@ -18085,6 +19093,15 @@
           30,
           null,
           "dead_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -18098,22 +19115,22 @@
           "straight_bar_support"
         ],
         [
-          "advanced_tuck_back",
+          "tuck_back_entry",
           4,
+          2,
           null,
-          8,
           120,
-          null,
-          "tuck_back_hold"
+          "controlled",
+          "skin_cat_partial"
         ],
         [
-          "one_leg_back",
+          "arch_hold",
           3,
           null,
-          "4/side",
+          30,
           135,
-          null,
-          "advanced_tuck_back"
+          "isometric",
+          "bird_dog"
         ],
         [
           "chinup",
@@ -18125,13 +19142,13 @@
           "assisted_pullup"
         ],
         [
-          "reverse_lunge",
+          "sliding_leg_curl",
           4,
-          "12/side",
+          8,
           null,
           60,
-          "3010",
-          "box_squat"
+          "3011",
+          "glute_bridge"
         ]
       ],
       "cooldown": [
@@ -18215,6 +19232,15 @@
           25,
           "2111",
           "elevated_scapular_pushup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -18246,22 +19272,22 @@
           "pushup"
         ],
         [
-          "parallel_dip",
+          "pike_pushup",
           5,
-          13,
+          8,
           null,
           105,
-          "2111",
-          "assisted_dip"
+          "2011",
+          "incline_pushup"
         ],
         [
-          "split_squat",
+          "sliding_leg_curl",
           4,
-          "13/side",
+          8,
           null,
           60,
-          "3010",
-          "box_squat"
+          "3011",
+          "glute_bridge"
         ]
       ],
       "cooldown": [
@@ -18561,7 +19587,7 @@
         "en": "Lever-and-Flag Combination"
       },
       "description": {
-        "en": "Front-lever rows, back-lever holds, and one-leg dragon negatives share trunk work without maximal holds."
+        "en": "Front-lever rows, tuck back-lever holds and bent-knee dragon negatives share trunk work without maximal holds."
       },
       "schedule": {
         "week": 6,
@@ -18587,6 +19613,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "cat_cow",
           2,
           8,
@@ -18603,6 +19638,15 @@
           30,
           null,
           "dead_hang"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -18616,22 +19660,22 @@
           "inverted_row"
         ],
         [
-          "advanced_tuck_back",
+          "tuck_back_hold",
           4,
           null,
-          7,
+          9,
           105,
           null,
-          "tuck_back_hold"
+          "tuck_back_entry"
         ],
         [
-          "one_leg_dragon_negative",
+          "bent_dragon_negative",
           3,
-          "1/side",
+          2,
           null,
           120,
           "7000",
-          "bent_dragon_negative"
+          "candlestick"
         ],
         [
           "hollow_hold",
@@ -18845,6 +19889,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "arm_swings",
           2,
           15,
@@ -18991,6 +20044,24 @@
           25,
           "2111",
           "elevated_scapular_pushup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -19076,100 +20147,118 @@
       "level": 3,
       "number": 65,
       "title": {
-        "en": "Level 4 Lever Bridge"
+        "en": "Level 3 Pull-and-Muscle-up Readiness Check"
       },
       "description": {
-        "en": "One-leg lever glimpses and dragon negatives connect the three advanced bodyline goals."
+        "en": "Complete one set of five muscle-ups, one set of three, one set of ten pull-ups, and 2x8 bar dips with one or two reps in reserve. Use each listed regression at the first form break; this is one required part of the collective Level 3 check."
       },
       "schedule": {
         "week": 7,
         "day": 3,
-        "day_type": "lever_bridge",
-        "minutes": 50,
+        "day_type": "pull_muscleup_readiness_check",
+        "minutes": 46,
         "rpe": 7,
         "focus": [
-          "front_lever",
-          "back_lever",
-          "dragon_flag"
+          "muscle_up_readiness",
+          "pull_up_readiness",
+          "collective_level_check"
         ]
       },
       "warmup": [
         [
-          "easy_walk",
+          "low_jack",
           1,
+          45,
           null,
-          180,
-          0,
-          null,
+          20,
+          "easy",
           null
         ],
         [
-          "shoulder_cars",
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
+          "arm_swings",
           2,
+          12,
+          null,
+          10,
+          "controlled",
+          null
+        ],
+        [
+          "chest_to_bar",
+          3,
+          1,
+          null,
+          105,
+          "easy_power",
+          "pullup"
+        ],
+        [
+          "prone_ytw",
+          1,
           6,
           null,
           15,
           "slow",
-          null
-        ],
-        [
-          "active_hang",
-          3,
-          null,
-          18,
-          30,
-          null,
-          "dead_hang"
+          "wall_slide"
         ]
       ],
       "main": [
         [
-          "one_leg_front",
-          3,
+          "strict_muscleup",
+          1,
+          5,
           null,
-          "5/side",
-          120,
-          null,
-          "advanced_tuck_front"
+          240,
+          "clean",
+          "band_muscleup"
         ],
         [
-          "one_leg_back",
+          "strict_muscleup",
+          1,
           3,
           null,
-          "5/side",
-          135,
-          null,
-          "advanced_tuck_back"
+          210,
+          "clean",
+          "band_muscleup"
         ],
         [
-          "one_leg_dragon_negative",
-          3,
-          "1/side",
+          "pullup",
+          1,
+          10,
           null,
-          120,
-          "7000",
-          "bent_dragon_negative"
+          240,
+          "strict",
+          "assisted_pullup"
         ],
         [
-          "tuck_lsit",
-          4,
+          "straight_bar_dip",
+          2,
+          8,
           null,
-          25,
-          60,
-          null,
-          "support_hold"
-        ],
-        [
-          "arch_hold",
-          3,
-          null,
-          35,
-          45,
-          null,
-          "bird_dog"
+          105,
+          "2111",
+          "straight_bar_support"
         ]
       ],
       "cooldown": [
+        [
+          "forearm_stretch",
+          2,
+          null,
+          45,
+          10,
+          null,
+          null
+        ],
         [
           "lat_stretch",
           2,
@@ -19180,16 +20269,7 @@
           null
         ],
         [
-          "hamstring_stretch",
-          2,
-          null,
-          40,
-          10,
-          null,
-          null
-        ],
-        [
-          "supine_twist",
+          "chest_stretch",
           2,
           null,
           40,
@@ -19336,100 +20416,109 @@
       "level": 3,
       "number": 67,
       "title": {
-        "en": "Level 3 Pull-and-Muscle-up Readiness Check"
+        "en": "Level 4 Lever Bridge"
       },
       "description": {
-        "en": "Complete one set of five muscle-ups, one set of three, one set of ten pull-ups, and 2x8 bar dips with one or two reps in reserve. Use each listed regression at the first form break; this is one required part of the collective Level 3 check."
+        "en": "Advanced-tuck front holds, tuck back holds and dragon negatives connect the three bodyline goals before Level 4."
       },
       "schedule": {
         "week": 7,
         "day": 5,
-        "day_type": "pull_muscleup_readiness_check",
-        "minutes": 46,
+        "day_type": "lever_bridge",
+        "minutes": 50,
         "rpe": 7,
         "focus": [
-          "muscle_up_readiness",
-          "pull_up_readiness",
-          "collective_level_check"
+          "front_lever",
+          "back_lever",
+          "dragon_flag"
         ]
       },
       "warmup": [
         [
-          "low_jack",
+          "easy_walk",
           1,
-          45,
           null,
-          20,
-          "easy",
+          180,
+          0,
+          null,
           null
         ],
         [
-          "arm_swings",
-          2,
-          12,
+          "wrist_rocks",
+          1,
+          10,
           null,
           10,
-          "controlled",
+          "slow",
+          "wrist_circles"
+        ],
+        [
+          "shoulder_cars",
+          2,
+          6,
+          null,
+          15,
+          "slow",
           null
         ],
         [
-          "chest_to_bar",
+          "active_hang",
           3,
-          1,
           null,
-          105,
-          "easy_power",
-          "pullup"
+          18,
+          30,
+          null,
+          "dead_hang"
         ]
       ],
       "main": [
         [
-          "strict_muscleup",
-          1,
-          5,
-          null,
-          240,
-          "clean",
-          "band_muscleup"
-        ],
-        [
-          "strict_muscleup",
-          1,
+          "advanced_tuck_front",
           3,
           null,
-          210,
-          "clean",
-          "band_muscleup"
-        ],
-        [
-          "pullup",
-          1,
-          10,
+          7,
+          120,
           null,
-          240,
-          "strict",
-          "assisted_pullup"
+          "tuck_front_hold"
         ],
         [
-          "straight_bar_dip",
+          "tuck_back_hold",
+          3,
+          null,
+          9,
+          135,
+          null,
+          "tuck_back_entry"
+        ],
+        [
+          "bent_dragon_negative",
+          3,
           2,
-          8,
           null,
-          105,
-          "2111",
-          "straight_bar_support"
+          120,
+          "7000",
+          "candlestick"
+        ],
+        [
+          "tuck_lsit",
+          4,
+          null,
+          25,
+          60,
+          null,
+          "support_hold"
+        ],
+        [
+          "arch_hold",
+          3,
+          null,
+          35,
+          45,
+          null,
+          "bird_dog"
         ]
       ],
       "cooldown": [
-        [
-          "forearm_stretch",
-          2,
-          null,
-          45,
-          10,
-          null,
-          null
-        ],
         [
           "lat_stretch",
           2,
@@ -19440,7 +20529,16 @@
           null
         ],
         [
-          "chest_stretch",
+          "hamstring_stretch",
+          2,
+          null,
+          40,
+          10,
+          null,
+          null
+        ],
+        [
+          "supine_twist",
           2,
           null,
           40,
@@ -19500,6 +20598,15 @@
           25,
           "2111",
           "elevated_scapular_pushup"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -19588,7 +20695,7 @@
         "en": "Level 3 Lever-and-Dragon Readiness Check"
       },
       "description": {
-        "en": "Complete one ten-second advanced front tuck, one ten-second advanced back tuck, one set of three dragon negatives per side, one twenty-five-second tuck L-sit, and two thirty-five-second hollow holds. Use each listed regression if a step is not clean; this result joins the prior checks to progress the sequence."
+        "en": "Complete one ten-second advanced front tuck, one twelve-second tuck back lever, one set of three dragon negatives per side, one twenty-five-second tuck L-sit, and two thirty-five-second hollow holds. Use each listed regression if a step is not clean; this result joins the prior checks to progress the sequence."
       },
       "schedule": {
         "week": 7,
@@ -19611,6 +20718,15 @@
           0,
           null,
           null
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
         ],
         [
           "shoulder_cars",
@@ -19642,13 +20758,13 @@
           "tuck_front_hold"
         ],
         [
-          "advanced_tuck_back",
+          "tuck_back_hold",
           1,
           null,
-          10,
+          12,
           210,
           null,
-          "tuck_back_hold"
+          "tuck_back_entry"
         ],
         [
           "one_leg_dragon_negative",

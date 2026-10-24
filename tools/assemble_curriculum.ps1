@@ -289,10 +289,14 @@ foreach ($levelDefinition in $levelDefinitions) {
     if ($null -eq $progressionLimits) { throw "Missing workload limits for level $levelNumber" }
     foreach ($program in $programs) {
         $classDay = (([int]$program.number - 1) % 7) + 1
-        $classSlot = $classLevel.days | Where-Object { [int]$_.day -eq $classDay } | Select-Object -First 1
+        # Practice doses rise in phases inside each level; the first phase that covers the class applies.
+        $classPhase = @($classLevel.phases | Where-Object { [int]$program.number -le [int]$_.through_program } | Select-Object -First 1)
+        if ($classPhase.Count -ne 1) { throw "No morning-class phase covers Level $levelNumber program $($program.number)" }
+        $classSlot = $classPhase[0].days | Where-Object { [int]$_.day -eq $classDay } | Select-Object -First 1
         $program["practice"] = @($classSlot.practice)
         if ($program.origin -eq "apk_authentic" -and $classDay -in @(4, 7)) {
             $program["morning_recovery"] = $true
+            $program["practice"] = @()
             $program["main"] = $morningClass.early_recovery
             $program["title"] = Localized ("Mobility & Recovery - Session {0}" -f $program.number)
             $program["description"] = Localized "An easy morning class: gentle walking, shoulder mobility and trunk control. Finish feeling fresher for the next strength session."
@@ -303,7 +307,10 @@ foreach ($levelDefinition in $levelDefinitions) {
             $training = $program.content | ConvertTo-Json -Depth 100 | ConvertFrom-Json
             $limits = $morningClass.early_strength_limits
             foreach ($exercise in $training.exercises) {
-                $replacement = $morningClass.early_movement_overrides.PSObject.Properties[[string]$exercise.name.en].Value
+                # A "<name> | <description>" key replaces one source variation; a bare name replaces them all.
+                $overrides = $morningClass.early_movement_overrides.PSObject.Properties
+                $replacement = $overrides["{0} | {1}" -f [string]$exercise.name.en, [string]$exercise.description.en].Value
+                if ($null -eq $replacement) { $replacement = $overrides[[string]$exercise.name.en].Value }
                 if ($null -eq $replacement) { continue }
                 $movement = $movementById[[string]$replacement.movement_id]
                 $exercise | Add-Member -NotePropertyName movement_id -NotePropertyValue $movement.id -Force
@@ -318,7 +325,9 @@ foreach ($levelDefinition in $levelDefinitions) {
                     $set.duration_seconds = $replacement.seconds
                 }
             }
-            $remaining = [Math]::Min([int]$limits.main_sets_including_practice, [int]$progressionLimits.main_sets_including_practice) - @($program.practice).Count
+            $practiceSetCount = 0
+            foreach ($step in @($program.practice)) { $practiceSetCount += [int]$step[1] }
+            $remaining = [Math]::Min([int]$limits.main_sets_including_practice, [int]$progressionLimits.main_sets_including_practice) - $practiceSetCount
             if ($remaining -lt @($training.exercises).Count) { throw "The set budget must retain every source exercise" }
             $selectedByExercise = @{}
             foreach ($exercise in $training.exercises) { $selectedByExercise[[string]$exercise.id] = New-Object System.Collections.ArrayList }

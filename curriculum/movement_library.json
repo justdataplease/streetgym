@@ -1278,7 +1278,7 @@
       ],
       "regression_id": "band_muscleup",
       "safety": {
-        "en": "Attempt only with prerequisite high pull and dip strength; avoid chicken-wing transitions."
+        "en": "Attempt only with prerequisite high pull and dip strength; avoid chicken-wing transitions. Start when ten strict pull-ups, five chest-to-bar pull-ups and ten straight-bar dips are controlled."
       }
     },
     {
@@ -1341,7 +1341,7 @@
       ],
       "regression_id": "tuck_front_hold",
       "safety": {
-        "en": "Return to tuck immediately when the hips fall or elbows bend."
+        "en": "Return to tuck immediately when the hips fall or elbows bend. Start when three 10-second tuck holds stay level with the hips at shoulder height."
       }
     },
     {
@@ -1361,7 +1361,7 @@
       ],
       "regression_id": "advanced_tuck_front",
       "safety": {
-        "en": "Alternate legs evenly and regress before the back arches."
+        "en": "Alternate legs evenly and regress before the back arches. Start when three 10-second advanced-tuck holds are clean, at least six weeks after your first advanced-tuck practice."
       }
     },
     {
@@ -1381,7 +1381,7 @@
       ],
       "regression_id": "one_leg_front",
       "safety": {
-        "en": "Use short submaximal holds and avoid lumbar arching."
+        "en": "Use short submaximal holds and avoid lumbar arching. Start when three 8-second one-leg holds on each side are clean."
       }
     },
     {
@@ -1401,7 +1401,7 @@
       ],
       "regression_id": "straddle_front",
       "safety": {
-        "en": "Attempt only after consistent straddle control; stop as soon as the line breaks."
+        "en": "Attempt only after consistent straddle control; stop as soon as the line breaks. Readiness check, not a target: attempt it only after three clean 8-second straddle holds; until then, do the listed easier option."
       }
     },
     {
@@ -1467,7 +1467,7 @@
       ],
       "regression_id": "tuck_back_entry",
       "safety": {
-        "en": "Use a spotter and stop before shoulder extension feels strained."
+        "en": "Use a spotter and stop before shoulder extension feels strained. Start when skin-the-cat and tuck entries are smooth and pain-free in the shoulders and elbows."
       }
     },
     {
@@ -1488,7 +1488,7 @@
       ],
       "regression_id": "tuck_back_hold",
       "safety": {
-        "en": "Regress immediately if shoulder comfort or elbow lock changes."
+        "en": "Regress immediately if shoulder comfort or elbow lock changes. Start when three 10-second tuck holds are clean and the elbows and biceps feel nothing the next day."
       }
     },
     {
@@ -1509,7 +1509,7 @@
       ],
       "regression_id": "advanced_tuck_back",
       "safety": {
-        "en": "Alternate sides and keep holds brief with a spotter."
+        "en": "Alternate sides and keep holds brief with a spotter. Start when three 10-second advanced-tuck holds are clean."
       }
     },
     {
@@ -1530,7 +1530,7 @@
       ],
       "regression_id": "one_leg_back",
       "safety": {
-        "en": "Use submaximal holds and stop at the first loss of shoulder position."
+        "en": "Use submaximal holds and stop at the first loss of shoulder position. Start when three 8-second one-leg holds on each side are clean."
       }
     },
     {
@@ -1551,7 +1551,7 @@
       ],
       "regression_id": "straddle_back",
       "safety": {
-        "en": "Attempt only after consistent straddle control and with a safe exit."
+        "en": "Attempt only after consistent straddle control and with a safe exit. Readiness check, not a target: attempt it only after three clean 8-second straddle holds; until then, do the listed easier option."
       }
     },
     {
@@ -1595,7 +1595,7 @@
       ],
       "regression_id": "bent_dragon_negative",
       "safety": {
-        "en": "Alternate legs and stop before the hips fold or back arches."
+        "en": "Alternate legs and stop before the hips fold or back arches. Start when three sets of three bent negatives keep the hips open."
       }
     },
     {
@@ -1617,7 +1617,7 @@
       ],
       "regression_id": "one_leg_dragon_negative",
       "safety": {
-        "en": "Never place pressure on the neck; regress as soon as body line bends."
+        "en": "Never place pressure on the neck; regress as soon as body line bends. Start when three sets of two one-leg negatives per side are smooth."
       }
     },
     {
@@ -1639,7 +1639,7 @@
       ],
       "regression_id": "full_dragon_negative",
       "safety": {
-        "en": "Use low repetitions, a secure anchor, and zero neck pressure."
+        "en": "Use low repetitions, a secure anchor, and zero neck pressure. Start when three sets of two slow full negatives are smooth."
       }
     },
     {
@@ -1725,7 +1725,7 @@
       ],
       "regression_id": "frog_stand",
       "safety": {
-        "en": "Use parallettes if wrists prefer neutral grip and stop before elbow lock changes."
+        "en": "Use parallettes if wrists prefer neutral grip and stop before elbow lock changes. Start when three 20-second planche leans with pushed-away shoulders are clean."
       }
     },
     {
@@ -1747,7 +1747,7 @@
       ],
       "regression_id": "tuck_planche",
       "safety": {
-        "en": "Regress on any wrist, elbow, or anterior shoulder discomfort."
+        "en": "Regress on any wrist, elbow, or anterior shoulder discomfort. Start when three 8-second tuck planche holds are clean."
       }
     },
     {
@@ -1769,7 +1769,7 @@
       ],
       "regression_id": "advanced_tuck_planche",
       "safety": {
-        "en": "Attempt only after repeatable advanced-tuck holds; keep efforts brief and submaximal."
+        "en": "Attempt only after repeatable advanced-tuck holds; keep efforts brief and submaximal. Readiness check, not a target: attempt it only after three clean 8-second advanced-tuck holds; until then, do the listed easier option."
       }
     },
     {
@@ -1791,7 +1791,7 @@
       ],
       "regression_id": "straddle_planche",
       "safety": {
-        "en": "Attempt this only after long-term prerequisite development; otherwise perform the listed regression for the assigned sets."
+        "en": "Attempt this only after long-term prerequisite development; otherwise perform the listed regression for the assigned sets. Readiness check, not a target: attempt it only after three clean 5-second straddle holds; until then, do the listed easier option."
       }
     },
     {
@@ -2296,7 +2296,7 @@
       "equipment": [],
       "regression_id": "assisted_pistol_squat",
       "safety": {
-        "en": "Use only a depth that preserves foot pressure, knee alignment, and balance."
+        "en": "Use only a depth that preserves foot pressure, knee alignment, and balance. Start when three sets of eight assisted pistols per leg are controlled."
       }
     },
     {
@@ -2434,7 +2434,7 @@
       ],
       "regression_id": "wall_handstand",
       "safety": {
-        "en": "Use the easier variation until wrists and shoulders tolerate it comfortably. Keep elbows straight and breathe. Before inversion, rehearse a controlled exit with a qualified coach or spotter; never kick up without an exit."
+        "en": "Use the easier variation until wrists and shoulders tolerate it comfortably. Keep elbows straight and breathe. Before inversion, rehearse a controlled exit with a qualified coach or spotter; never kick up without an exit. Start when three 40-second chest-to-wall holds feel calm and you can walk down or cartwheel out at will."
       }
     },
     {
@@ -2454,7 +2454,7 @@
       ],
       "regression_id": "handstand_toe_pull",
       "safety": {
-        "en": "Use the easier variation until wrists and shoulders tolerate it comfortably. Keep elbows straight and breathe. Before inversion, rehearse a controlled exit with a qualified coach or spotter; never kick up without an exit."
+        "en": "Use the easier variation until wrists and shoulders tolerate it comfortably. Keep elbows straight and breathe. Before inversion, rehearse a controlled exit with a qualified coach or spotter; never kick up without an exit. Start when 10-second toe pulls are calm and the cartwheel exit is automatic."
       }
     },
     {
@@ -2494,7 +2494,7 @@
       ],
       "regression_id": "flag_ground_support",
       "safety": {
-        "en": "Use fixed stall bars or a rated flag pole, never a loose rail or door frame. Train both sides. Keep the lower arm straight, push with the lower hand and pull with the upper hand. Stop for elbow or shoulder discomfort; do not jump into the hold."
+        "en": "Use fixed stall bars or a rated flag pole, never a loose rail or door frame. Train both sides. Keep the lower arm straight, push with the lower hand and pull with the upper hand. Stop for elbow or shoulder discomfort; do not jump into the hold. Start when three 15-second grounded flag supports on each side are solid."
       }
     },
     {
@@ -2514,7 +2514,311 @@
       ],
       "regression_id": "assisted_tuck_flag",
       "safety": {
-        "en": "Use fixed stall bars or a rated flag pole, never a loose rail or door frame. Train both sides. Keep the lower arm straight, push with the lower hand and pull with the upper hand. Stop for elbow or shoulder discomfort; do not jump into the hold."
+        "en": "Use fixed stall bars or a rated flag pole, never a loose rail or door frame. Train both sides. Keep the lower arm straight, push with the lower hand and pull with the upper hand. Stop for elbow or shoulder discomfort; do not jump into the hold. Start when three 8-second assisted tuck flags on each side are solid."
+      }
+    },
+    {
+      "id": "archer_pullup",
+      "name": {
+        "en": "Archer Pull-Up"
+      },
+      "description": {
+        "en": "From a wide overhand hang, pull toward one hand while the other arm stays nearly straight along the bar. Lower under control, then pull to the other side; repetitions are per side."
+      },
+      "category": "advanced_strength",
+      "patterns": [
+        "vertical_pull",
+        "unilateral_pull"
+      ],
+      "equipment": [
+        "high_bar"
+      ],
+      "regression_id": "pullup",
+      "safety": {
+        "en": "Keep both shoulders packed and the straight elbow soft. Use pull-ups instead once the chin no longer clears the bar without twisting. Start only when about ten strict pull-ups feel controlled."
+      }
+    },
+    {
+      "id": "archer_pushup",
+      "name": {
+        "en": "Archer Push-Up"
+      },
+      "description": {
+        "en": "From a wide push-up, lower toward one hand while the other arm slides out nearly straight. Press back to the middle, then lower to the other side; repetitions are per side."
+      },
+      "category": "advanced_strength",
+      "patterns": [
+        "horizontal_push",
+        "unilateral_push"
+      ],
+      "equipment": [],
+      "regression_id": "pushup",
+      "safety": {
+        "en": "Keep the body in one line and the working elbow about 45 degrees from the ribs. Shorten the range or return to push-ups if the hips sag. Start only when about twenty strict push-ups feel easy."
+      }
+    },
+    {
+      "id": "elevated_pike_pushup",
+      "name": {
+        "en": "Elevated Pike Push-Up"
+      },
+      "description": {
+        "en": "With the feet on a stable box and the hips stacked high over the hands, lower the head forward of the hands toward the floor, then press back to straight arms."
+      },
+      "category": "fundamental",
+      "patterns": [
+        "vertical_push",
+        "overhead_press"
+      ],
+      "equipment": [
+        "box"
+      ],
+      "regression_id": "pike_pushup",
+      "safety": {
+        "en": "Use a box that cannot slide, let the elbows travel back rather than flare, and stop before the head touches the floor. Return to floor pike push-ups if the hips drop."
+      }
+    },
+    {
+      "id": "wall_hspu_negative",
+      "name": {
+        "en": "Wall Handstand Push-Up Negative"
+      },
+      "description": {
+        "en": "From a chest-to-wall handstand, lower slowly until the head lightly touches a folded mat, then walk the feet down the wall to exit. Reset standing instead of pressing back up."
+      },
+      "category": "advanced_strength",
+      "patterns": [
+        "vertical_push",
+        "overhead_press",
+        "inversion"
+      ],
+      "equipment": [
+        "wall",
+        "mat"
+      ],
+      "regression_id": "elevated_pike_pushup",
+      "safety": {
+        "en": "Requires a calm 30-second chest-to-wall handstand and a practised walk-down exit. Keep a folded mat under the head and never drop onto the head or neck."
+      }
+    },
+    {
+      "id": "wall_hspu",
+      "name": {
+        "en": "Wall Handstand Push-Up"
+      },
+      "description": {
+        "en": "From a chest-to-wall handstand, lower the head to a folded mat under control and press back to straight arms, then walk down the wall to exit."
+      },
+      "category": "advanced_strength",
+      "patterns": [
+        "vertical_push",
+        "overhead_press",
+        "inversion"
+      ],
+      "equipment": [
+        "wall",
+        "mat"
+      ],
+      "regression_id": "wall_hspu_negative",
+      "safety": {
+        "en": "Start only after five controlled four-second negatives. Keep the repetitions few and crisp, exit by walking down, and stop at any neck discomfort."
+      }
+    },
+    {
+      "id": "one_leg_lsit",
+      "name": {
+        "en": "One-Leg L-Sit"
+      },
+      "description": {
+        "en": "Support on straight arms on parallel bars or blocks with one leg straight forward at hip height and the other knee tucked. Hold the listed time on each leg, switching legs within the set."
+      },
+      "category": "skill_foundation",
+      "patterns": [
+        "support",
+        "core",
+        "l_sit",
+        "compression"
+      ],
+      "equipment": [
+        "parallel_bars_or_blocks"
+      ],
+      "regression_id": "tuck_lsit",
+      "safety": {
+        "en": "Keep the arms locked and the shoulders pushed down. Return to the tuck L-sit if the hips sink behind the hands. Start after three clean 15-second tuck L-sits."
+      }
+    },
+    {
+      "id": "lsit",
+      "name": {
+        "en": "L-Sit"
+      },
+      "description": {
+        "en": "Support on straight arms with both legs straight together at hip height, toes pointed and shoulders pushed down away from the ears."
+      },
+      "category": "skill",
+      "patterns": [
+        "support",
+        "core",
+        "l_sit",
+        "compression"
+      ],
+      "equipment": [
+        "parallel_bars_or_blocks"
+      ],
+      "regression_id": "one_leg_lsit",
+      "safety": {
+        "en": "Keep holds short and the shape exact; bend one knee as soon as the legs drop. Start after three clean 10-second holds on each leg in the one-leg version."
+      }
+    },
+    {
+      "id": "seated_pike_lift",
+      "name": {
+        "en": "Seated Pike Leg Lift"
+      },
+      "description": {
+        "en": "Sit tall with the legs straight together and the hands flat beside the knees. Lift both heels a few centimetres using the hip flexors and abdominals, pause, then lower slowly."
+      },
+      "category": "fundamental",
+      "patterns": [
+        "core",
+        "compression"
+      ],
+      "equipment": [
+        "mat"
+      ],
+      "regression_id": "lying_leg_raise",
+      "safety": {
+        "en": "Keep the knees straight and the chest lifted; a small lift is enough. Lift one leg at a time if the hip flexors cramp."
+      }
+    },
+    {
+      "id": "bulgarian_split_squat",
+      "name": {
+        "en": "Bulgarian Split Squat"
+      },
+      "description": {
+        "en": "With the rear foot on a knee-high bench or box behind you, lower the back knee toward the floor over the front foot and drive up through the front heel. Repetitions are per leg."
+      },
+      "category": "fundamental",
+      "patterns": [
+        "lunge",
+        "legs",
+        "single_leg"
+      ],
+      "equipment": [
+        "box"
+      ],
+      "regression_id": "split_squat",
+      "safety": {
+        "en": "Use a stable bench, keep the front knee tracking over the toes, and hold a post for balance when needed."
+      }
+    },
+    {
+      "id": "sliding_leg_curl",
+      "name": {
+        "en": "Sliding Leg Curl"
+      },
+      "description": {
+        "en": "Lie on your back with the heels on a towel or sliders and lift the hips into a bridge. Slide the heels out until the legs are nearly straight, then curl them back in while the hips stay high."
+      },
+      "category": "fundamental",
+      "patterns": [
+        "posterior_chain",
+        "knee_flexion",
+        "hip_extension"
+      ],
+      "equipment": [
+        "towel_or_sliders"
+      ],
+      "regression_id": "glute_bridge",
+      "safety": {
+        "en": "Use a smooth floor, keep the hips lifted throughout, and shorten the slide if the hamstrings cramp."
+      }
+    },
+    {
+      "id": "nordic_negative",
+      "name": {
+        "en": "Nordic Curl Negative"
+      },
+      "description": {
+        "en": "Kneel on a mat with the heels anchored under a low bar or held by a partner. Keep the hips extended and lower the torso forward as slowly as possible, catch the floor with the hands, then push back up to kneeling."
+      },
+      "category": "advanced_strength",
+      "patterns": [
+        "posterior_chain",
+        "knee_flexion",
+        "eccentric"
+      ],
+      "equipment": [
+        "secure_foot_anchor",
+        "mat"
+      ],
+      "regression_id": "sliding_leg_curl",
+      "safety": {
+        "en": "Use padding under the knees and a secure anchor, catch the floor early, and keep repetitions few. Expect hamstring soreness at first; do not add repetitions until it settles."
+      }
+    },
+    {
+      "id": "single_leg_rdl",
+      "name": {
+        "en": "Single-Leg Romanian Deadlift"
+      },
+      "description": {
+        "en": "Stand on one leg with a soft knee and hinge at the hip so the torso and free leg move together toward horizontal, then drive the hip forward to stand tall. Repetitions are per leg."
+      },
+      "category": "fundamental",
+      "patterns": [
+        "hinge",
+        "posterior_chain",
+        "single_leg",
+        "balance"
+      ],
+      "equipment": [],
+      "regression_id": "single_leg_bridge",
+      "safety": {
+        "en": "Keep the hips square and the back long. Touch a wall or post lightly for balance and hinge only as far as the back stays neutral."
+      }
+    },
+    {
+      "id": "prone_ytw",
+      "name": {
+        "en": "Prone Y-T-W Raise"
+      },
+      "description": {
+        "en": "Lie face down with the forehead on a towel. Lift straight arms into a Y, then a T, then bend them into a W, drawing the shoulder blades back and down. One repetition is one full Y-T-W sequence."
+      },
+      "category": "activation",
+      "patterns": [
+        "shoulder",
+        "scapula",
+        "rotator_cuff"
+      ],
+      "equipment": [
+        "mat"
+      ],
+      "regression_id": "wall_slide",
+      "safety": {
+        "en": "Keep the neck long, the thumbs pointing up and the lifts small and slow."
+      }
+    },
+    {
+      "id": "squat_jump",
+      "name": {
+        "en": "Squat Jump"
+      },
+      "description": {
+        "en": "From a half squat, jump straight up, land softly through the whole foot with the knees tracking over the toes, and reset before the next jump."
+      },
+      "category": "power",
+      "patterns": [
+        "squat",
+        "legs",
+        "plyometric"
+      ],
+      "equipment": [],
+      "regression_id": "squat",
+      "safety": {
+        "en": "Jump on a firm, non-slippery surface, keep the jumps submaximal and quiet, and stop when landings get loud or the knees cave in."
       }
     }
   ]

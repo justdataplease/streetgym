@@ -151,3 +151,8 @@ FALLBACK = "standing_mobility"
 
 # Explicit IDs for the shared morning-class skill ladders.
 MOVEMENTS.update({name: name for name in ["overhead_line", "kneeling_side_plank", "pike_handstand_hold", "wall_handstand", "handstand_toe_pull", "handstand_balance", "flag_ground_support", "assisted_tuck_flag", "tuck_flag"]})
+
+# Progression movements (progressions.py). "squat_jump" gets the half-squat jump; the older
+# "squat_jump" template stays behind the authentic "Squat Jump" alias and heuristic.
+MOVEMENTS.update({name: name for name in ["archer_pullup", "archer_pushup", "elevated_pike_pushup", "wall_hspu_negative", "wall_hspu", "one_leg_lsit", "lsit", "seated_pike_lift", "bulgarian_split_squat", "sliding_leg_curl", "nordic_negative", "single_leg_rdl", "prone_ytw"]})
+MOVEMENTS["squat_jump"] = "half_squat_jump"

@@ -210,6 +210,15 @@
                                                      null
                                                  ],
                                                  [
+                                                     "wrist_circles",
+                                                     1,
+                                                     10,
+                                                     null,
+                                                     0,
+                                                     "each_direction",
+                                                     null
+                                                 ],
+                                                 [
                                                      "shoulder_cars",
                                                      1,
                                                      5,
@@ -483,6 +492,15 @@
                                                      "march"
                                                  ],
                                                  [
+                                                     "wrist_circles",
+                                                     1,
+                                                     10,
+                                                     null,
+                                                     0,
+                                                     "each_direction",
+                                                     null
+                                                 ],
+                                                 [
                                                      "ankle_rocks",
                                                      1,
                                                      "10/side",
@@ -574,6 +592,15 @@
                                                      "march"
                                                  ],
                                                  [
+                                                     "wrist_circles",
+                                                     1,
+                                                     10,
+                                                     null,
+                                                     0,
+                                                     "each_direction",
+                                                     null
+                                                 ],
+                                                 [
                                                      "cat_cow",
                                                      1,
                                                      10,
@@ -662,6 +689,15 @@
                                                      90,
                                                      0,
                                                      "easy",
+                                                     null
+                                                 ],
+                                                 [
+                                                     "wrist_circles",
+                                                     1,
+                                                     10,
+                                                     null,
+                                                     0,
+                                                     "each_direction",
                                                      null
                                                  ],
                                                  [
@@ -938,6 +974,15 @@
                                                      null
                                                  ],
                                                  [
+                                                     "wrist_circles",
+                                                     1,
+                                                     10,
+                                                     null,
+                                                     0,
+                                                     "each_direction",
+                                                     null
+                                                 ],
+                                                 [
                                                      "shoulder_cars",
                                                      2,
                                                      4,
@@ -1027,6 +1072,15 @@
                                                      0,
                                                      "easy",
                                                      "march"
+                                                 ],
+                                                 [
+                                                     "wrist_circles",
+                                                     1,
+                                                     10,
+                                                     null,
+                                                     0,
+                                                     "each_direction",
+                                                     null
                                                  ],
                                                  [
                                                      "leg_swings",

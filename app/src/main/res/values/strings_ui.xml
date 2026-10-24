@@ -38,7 +38,7 @@
     <string name="class_guidance_summary">A varied mix of calisthenics, skill practice and flexibility. Build control as the levels progress, keep a few good repetitions in reserve, and use an easier variation when needed. Follow the easy recovery mornings too.</string>
     <string name="class_guidance_details">Training guidance</string>
     <string name="skill_practice">Skill practice</string>
-    <string name="skill_practice_note">Keep skill practice easy, around RPE 5 or below. The listed variation is a ceiling: use its regression until control is repeatable. One short practice set is enough today; do not add max attempts. Keep the prescribed rest before strength work.</string>
+    <string name="skill_practice_note">Practise skills fresh, right after the warm-up, and keep them easy, around RPE 5 or below. The listed variation is a ceiling: use its regression until control is repeatable. A few short, clean sets every day build skill faster than long attempts; do not add max attempts. Keep the prescribed rest before strength work.</string>
     <string name="flexibility_note">Flexibility supports your calisthenics. Warm up with controlled movement, then finish with the assigned stretches at mild tension while breathing normally. For a one-sided stretch, each timed set is for one side: alternate sides between sets. Start on the other side next time when the set count is odd. Increase comfortable range gradually; never force it.</string>
     <string name="warm_up">Warm-up</string>
     <string name="main_training">Calisthenics</string>

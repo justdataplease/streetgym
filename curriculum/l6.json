@@ -34,6 +34,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "arm_swings",
           2,
           15,
@@ -50,6 +59,15 @@
           105,
           "easy_power",
           "pullup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -72,13 +90,13 @@
           "pullup"
         ],
         [
-          "pullup",
+          "archer_pullup",
           2,
-          6,
+          "4/side",
           null,
-          90,
+          120,
           "2111",
-          "assisted_pullup"
+          "pullup"
         ],
         [
           "straight_bar_dip",
@@ -163,6 +181,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           2,
           6,
@@ -179,6 +206,24 @@
           30,
           null,
           "dead_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -309,6 +354,15 @@
           25,
           "2111",
           "elevated_scapular_pushup"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -560,6 +614,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           2,
           6,
@@ -688,6 +751,15 @@
           0,
           null,
           null
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
         ],
         [
           "cat_cow",
@@ -819,6 +891,15 @@
           0,
           null,
           null
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
         ],
         [
           "leg_swings",
@@ -966,6 +1047,15 @@
           105,
           "easy_power",
           "pullup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -988,13 +1078,13 @@
           "pullover_lowbar"
         ],
         [
-          "pullup",
+          "archer_pullup",
           3,
-          7,
+          "4/side",
           null,
-          90,
+          120,
           "2111",
-          "assisted_pullup"
+          "pullup"
         ],
         [
           "straight_bar_dip",
@@ -1006,13 +1096,13 @@
           "straight_bar_support"
         ],
         [
-          "knee_raise",
+          "lsit",
           3,
-          10,
           null,
-          50,
-          "2020",
-          "lying_knee_raise"
+          10,
+          75,
+          "isometric",
+          "one_leg_lsit"
         ]
       ],
       "cooldown": [
@@ -1079,6 +1169,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           2,
           6,
@@ -1095,6 +1194,15 @@
           30,
           null,
           "dead_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -1126,13 +1234,13 @@
           "assisted_pullup"
         ],
         [
-          "reverse_lunge",
+          "single_leg_rdl",
           4,
-          "13/side",
+          "10/side",
           null,
           60,
-          "3010",
-          "box_squat"
+          "3011",
+          "single_leg_bridge"
         ],
         [
           "hollow_hold",
@@ -1225,12 +1333,21 @@
           25,
           "2111",
           "elevated_scapular_pushup"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
         [
           "planche_lean",
-          3,
+          2,
           null,
           22,
           75,
@@ -1256,13 +1373,13 @@
           "pushup"
         ],
         [
-          "parallel_dip",
+          "wall_hspu_negative",
           3,
-          10,
+          4,
           null,
-          85,
-          "2111",
-          "assisted_dip"
+          120,
+          "4-second_lowering",
+          "elevated_pike_pushup"
         ],
         [
           "pause_squat",
@@ -1467,6 +1584,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           2,
           6,
@@ -1597,6 +1723,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "cat_cow",
           2,
           8,
@@ -1644,22 +1779,22 @@
           "dead_bug"
         ],
         [
-          "pushup",
+          "archer_pushup",
           4,
-          20,
+          "8/side",
           null,
-          60,
-          "2010",
-          "incline_pushup"
+          75,
+          "2111",
+          "pushup"
         ],
         [
-          "split_squat",
+          "single_leg_rdl",
           4,
-          "13/side",
+          "10/side",
           null,
           60,
-          "3010",
-          "box_squat"
+          "3011",
+          "single_leg_bridge"
         ]
       ],
       "cooldown": [
@@ -1728,6 +1863,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "leg_swings",
           1,
           "10/side",
@@ -1744,6 +1888,15 @@
           10,
           "controlled",
           null
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -1775,13 +1928,13 @@
           "incline_pushup"
         ],
         [
-          "squat",
+          "pistol_squat",
           4,
-          20,
+          "5/side",
           null,
-          40,
+          90,
           "3010",
-          "box_squat"
+          "assisted_pistol_squat"
         ],
         [
           "knee_raise",
@@ -1857,6 +2010,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "arm_swings",
           1,
           12,
@@ -1873,6 +2035,15 @@
           105,
           "easy_power",
           "pullup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -1913,13 +2084,13 @@
           "straight_bar_support"
         ],
         [
-          "hollow_hold",
+          "lsit",
           2,
           null,
-          35,
-          45,
-          null,
-          "dead_bug"
+          10,
+          75,
+          "isometric",
+          "one_leg_lsit"
         ]
       ],
       "cooldown": [
@@ -1986,6 +2157,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           2,
           5,
@@ -2002,6 +2182,15 @@
           30,
           null,
           "dead_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -2042,13 +2231,13 @@
           "assisted_pullup"
         ],
         [
-          "reverse_lunge",
+          "single_leg_rdl",
           3,
           "10/side",
           null,
-          55,
-          "3010",
-          "box_squat"
+          60,
+          "3011",
+          "single_leg_bridge"
         ]
       ],
       "cooldown": [
@@ -2135,17 +2324,17 @@
       ],
       "main": [
         [
-          "elevated_plank",
+          "elevated_pike_pushup",
           3,
+          6,
           null,
-          35,
-          45,
-          null,
-          "incline_plank"
+          90,
+          "2011",
+          "pike_pushup"
         ],
         [
           "planche_lean",
-          4,
+          2,
           null,
           16,
           75,
@@ -2154,7 +2343,7 @@
         ],
         [
           "tuck_planche",
-          4,
+          3,
           null,
           5,
           105,
@@ -2171,13 +2360,13 @@
           "incline_pushup"
         ],
         [
-          "squat",
+          "single_leg_rdl",
           3,
-          24,
+          "10/side",
           null,
-          55,
-          "3010",
-          "box_squat"
+          60,
+          "3011",
+          "single_leg_bridge"
         ]
       ],
       "cooldown": [
@@ -2373,6 +2562,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           2,
           5,
@@ -2500,6 +2698,15 @@
           0,
           null,
           null
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
         ],
         [
           "cat_cow",
@@ -2633,6 +2840,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "leg_swings",
           1,
           "8/side",
@@ -2689,13 +2905,13 @@
           "box_squat"
         ],
         [
-          "dead_bug",
+          "seated_pike_lift",
           4,
-          "10/side",
+          10,
           null,
           105,
-          "slow",
-          null
+          "1-second_pause",
+          "lying_leg_raise"
         ]
       ],
       "cooldown": [
@@ -2778,6 +2994,15 @@
           105,
           "easy_power",
           "pullup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -2800,13 +3025,13 @@
           "pullup"
         ],
         [
-          "pullup",
+          "archer_pullup",
           2,
-          7,
+          "4/side",
           null,
-          90,
+          120,
           "2111",
-          "assisted_pullup"
+          "pullup"
         ],
         [
           "straight_bar_dip",
@@ -2818,13 +3043,13 @@
           "straight_bar_support"
         ],
         [
-          "knee_raise",
+          "lsit",
           3,
-          10,
           null,
-          50,
-          "2020",
-          "lying_knee_raise"
+          10,
+          75,
+          "isometric",
+          "one_leg_lsit"
         ]
       ],
       "cooldown": [
@@ -2872,7 +3097,7 @@
         "week": 4,
         "day": 2,
         "day_type": "front_lever_straddle_intro",
-        "minutes": 43,
+        "minutes": 44,
         "rpe": 8,
         "focus": [
           "straddle_front",
@@ -2891,6 +3116,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           2,
           6,
@@ -2907,6 +3141,24 @@
           30,
           null,
           "dead_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -3037,12 +3289,21 @@
           25,
           "2111",
           "elevated_scapular_pushup"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
         [
           "planche_lean",
-          3,
+          2,
           null,
           20,
           70,
@@ -3279,6 +3540,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           2,
           6,
@@ -3409,6 +3679,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "cat_cow",
           2,
           8,
@@ -3447,31 +3726,31 @@
           "dead_bug"
         ],
         [
-          "single_leg_bridge",
+          "nordic_negative",
           3,
-          "12/side",
+          4,
           null,
-          40,
-          "2111",
-          "glute_bridge"
+          90,
+          "4-second_lowering",
+          "sliding_leg_curl"
         ],
         [
-          "pushup",
+          "wall_hspu_negative",
           3,
-          15,
+          4,
           null,
-          50,
-          "2010",
-          "incline_pushup"
+          120,
+          "4-second_lowering",
+          "elevated_pike_pushup"
         ],
         [
-          "split_squat",
+          "bulgarian_split_squat",
           3,
           "10/side",
           null,
-          50,
+          60,
           "3010",
-          "box_squat"
+          "split_squat"
         ]
       ],
       "cooldown": [
@@ -3540,6 +3819,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "leg_swings",
           1,
           "10/side",
@@ -3587,13 +3875,13 @@
           "pushup"
         ],
         [
-          "squat",
+          "single_leg_rdl",
           3,
-          18,
+          "10/side",
           null,
-          45,
-          "3010",
-          "box_squat"
+          60,
+          "3011",
+          "single_leg_bridge"
         ],
         [
           "knee_raise",
@@ -3685,6 +3973,15 @@
           105,
           "easy_power",
           "pullup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -3707,13 +4004,13 @@
           "pullup"
         ],
         [
-          "pullup",
+          "archer_pullup",
           2,
-          7,
+          "4/side",
           null,
-          90,
+          120,
           "2111",
-          "assisted_pullup"
+          "pullup"
         ],
         [
           "straight_bar_dip",
@@ -3725,13 +4022,13 @@
           "straight_bar_support"
         ],
         [
-          "hollow_hold",
+          "lsit",
           3,
           null,
-          30,
-          40,
-          null,
-          "dead_bug"
+          10,
+          75,
+          "isometric",
+          "one_leg_lsit"
         ]
       ],
       "cooldown": [
@@ -3798,6 +4095,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           2,
           6,
@@ -3814,6 +4120,24 @@
           30,
           null,
           "dead_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -3943,6 +4267,15 @@
           25,
           "2111",
           "elevated_scapular_pushup"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -3965,22 +4298,22 @@
           "pushup"
         ],
         [
-          "parallel_dip",
+          "wall_hspu_negative",
           3,
-          10,
+          4,
           null,
-          85,
-          "2111",
-          "assisted_dip"
+          120,
+          "4-second_lowering",
+          "elevated_pike_pushup"
         ],
         [
-          "squat",
+          "pistol_squat",
           3,
-          20,
+          "5/side",
           null,
-          50,
+          90,
           "3010",
-          "box_squat"
+          "assisted_pistol_squat"
         ],
         [
           "hollow_hold",
@@ -4185,6 +4518,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           2,
           6,
@@ -4315,6 +4657,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "cat_cow",
           2,
           8,
@@ -4353,31 +4704,31 @@
           "dead_bug"
         ],
         [
-          "pushup",
+          "archer_pushup",
           3,
-          14,
+          "8/side",
           null,
-          50,
-          "2010",
-          "incline_pushup"
+          75,
+          "2111",
+          "pushup"
         ],
         [
-          "split_squat",
+          "single_leg_rdl",
           3,
           "10/side",
           null,
-          50,
-          "3010",
-          "box_squat"
+          60,
+          "3011",
+          "single_leg_bridge"
         ],
         [
-          "dead_bug",
+          "seated_pike_lift",
           2,
-          "8/side",
+          10,
           null,
           35,
-          "slow",
-          null
+          "1-second_pause",
+          "lying_leg_raise"
         ]
       ],
       "cooldown": [
@@ -4446,6 +4797,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "leg_swings",
           1,
           "10/side",
@@ -4493,13 +4853,13 @@
           "incline_pushup"
         ],
         [
-          "cossack_squat",
+          "single_leg_rdl",
           5,
           "10/side",
           null,
-          25,
-          "3010",
-          "squat"
+          60,
+          "3011",
+          "single_leg_bridge"
         ],
         [
           "knee_raise",
@@ -4591,6 +4951,15 @@
           105,
           "easy_power",
           "pullup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -4631,13 +5000,13 @@
           "straight_bar_support"
         ],
         [
-          "hollow_hold",
+          "lsit",
           2,
           null,
-          38,
-          45,
-          null,
-          "dead_bug"
+          10,
+          75,
+          "isometric",
+          "one_leg_lsit"
         ]
       ],
       "cooldown": [
@@ -4704,6 +5073,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           2,
           5,
@@ -4720,6 +5098,15 @@
           30,
           null,
           "dead_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -4760,13 +5147,13 @@
           "assisted_pullup"
         ],
         [
-          "reverse_lunge",
+          "single_leg_rdl",
           3,
           "10/side",
           null,
-          55,
-          "3010",
-          "box_squat"
+          60,
+          "3011",
+          "single_leg_bridge"
         ]
       ],
       "cooldown": [
@@ -4863,7 +5250,7 @@
         ],
         [
           "planche_lean",
-          4,
+          2,
           null,
           18,
           75,
@@ -5091,6 +5478,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           2,
           5,
@@ -5220,6 +5616,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "cat_cow",
           2,
           7,
@@ -5258,22 +5663,22 @@
           "dead_bug"
         ],
         [
-          "single_leg_bridge",
+          "single_leg_rdl",
           3,
-          "12/side",
+          "10/side",
           null,
-          45,
-          "2111",
-          "glute_bridge"
+          60,
+          "3011",
+          "single_leg_bridge"
         ],
         [
-          "pushup",
+          "elevated_pike_pushup",
           3,
-          17,
+          6,
           null,
-          55,
-          "2111",
-          "incline_pushup"
+          90,
+          "2011",
+          "pike_pushup"
         ],
         [
           "reverse_lunge",
@@ -5351,6 +5756,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "leg_swings",
           1,
           "8/side",
@@ -5367,6 +5781,15 @@
           10,
           "controlled",
           null
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -5496,6 +5919,15 @@
           105,
           "easy_power",
           "pullup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -5609,6 +6041,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           2,
           6,
@@ -5625,6 +6066,24 @@
           30,
           null,
           "dead_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -5665,13 +6124,13 @@
           "box_squat"
         ],
         [
-          "hollow_hold",
+          "lsit",
           3,
           null,
-          36,
-          40,
-          null,
-          "dead_bug"
+          10,
+          75,
+          "isometric",
+          "one_leg_lsit"
         ]
       ],
       "cooldown": [
@@ -5755,6 +6214,15 @@
           25,
           "2111",
           "elevated_scapular_pushup"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -5795,13 +6263,13 @@
           "box_squat"
         ],
         [
-          "pushup",
+          "wall_hspu_negative",
           2,
-          12,
+          4,
           null,
-          45,
-          "2010",
-          "incline_pushup"
+          120,
+          "4-second_lowering",
+          "elevated_pike_pushup"
         ]
       ],
       "cooldown": [
@@ -5997,6 +6465,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           2,
           6,
@@ -6127,6 +6604,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "cat_cow",
           2,
           8,
@@ -6183,13 +6669,13 @@
           "box_squat"
         ],
         [
-          "dead_bug",
+          "seated_pike_lift",
           2,
-          "8/side",
+          10,
           null,
           35,
-          "slow",
-          null
+          "1-second_pause",
+          "lying_leg_raise"
         ]
       ],
       "cooldown": [
@@ -6321,13 +6807,13 @@
           "bent_dragon_negative"
         ],
         [
-          "squat",
+          "single_leg_rdl",
           2,
-          18,
+          "10/side",
           null,
-          50,
-          "3010",
-          "box_squat"
+          60,
+          "3011",
+          "single_leg_bridge"
         ]
       ],
       "cooldown": [
@@ -6410,6 +6896,15 @@
           105,
           "easy_power",
           "pullup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -6432,13 +6927,13 @@
           "pullup"
         ],
         [
-          "pullup",
+          "archer_pullup",
           2,
-          6,
+          "4/side",
           null,
-          90,
+          120,
           "2111",
-          "assisted_pullup"
+          "pullup"
         ],
         [
           "straight_bar_dip",
@@ -6450,13 +6945,13 @@
           "straight_bar_support"
         ],
         [
-          "knee_raise",
+          "lsit",
           3,
-          10,
           null,
-          50,
-          "2020",
-          "lying_knee_raise"
+          10,
+          75,
+          "isometric",
+          "one_leg_lsit"
         ]
       ],
       "cooldown": [
@@ -6498,7 +6993,7 @@
         "en": "Fresh Full-Front Glimpses"
       },
       "description": {
-        "en": "Take only two fresh full-front samples after three short straddles, regressing at the first broken line."
+        "en": "Three short straddles lead into a single full-front readiness check; use the listed straddle regression unless clean 8-second straddles came first."
       },
       "schedule": {
         "week": 8,
@@ -6524,6 +7019,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           2,
           6,
@@ -6540,6 +7044,15 @@
           30,
           null,
           "dead_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -6554,11 +7067,11 @@
         ],
         [
           "full_front",
-          2,
+          1,
           null,
-          2,
+          3,
           150,
-          null,
+          "readiness_check",
           "straddle_front"
         ],
         [
@@ -6580,13 +7093,13 @@
           "assisted_pullup"
         ],
         [
-          "reverse_lunge",
+          "single_leg_rdl",
           3,
           "10/side",
           null,
-          50,
-          "3010",
-          "box_squat"
+          60,
+          "3011",
+          "single_leg_bridge"
         ]
       ],
       "cooldown": [
@@ -6628,7 +7141,7 @@
         "en": "Brief Straddle Planche Samples"
       },
       "description": {
-        "en": "Complete three controlled advanced-tuck holds, two brief straddle holds, and the prescribed lean, dip, and squat work."
+        "en": "Complete three controlled advanced-tuck holds, one straddle readiness check with the advanced-tuck regression, and the prescribed lean, dip and squat work."
       },
       "schedule": {
         "week": 8,
@@ -6670,6 +7183,15 @@
           25,
           "2111",
           "elevated_scapular_pushup"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -6684,16 +7206,16 @@
         ],
         [
           "straddle_planche",
-          2,
+          1,
           null,
-          2,
+          3,
           135,
-          null,
+          "readiness_check",
           "advanced_tuck_planche"
         ],
         [
           "planche_lean",
-          3,
+          2,
           null,
           18,
           60,
@@ -6887,7 +7409,7 @@
         "en": "Fresh Full-Back Glimpses"
       },
       "description": {
-        "en": "Take only two fresh full-back samples after comfortable short straddles and regress before shoulder position shifts."
+        "en": "Comfortable short straddles lead into a single full-back readiness check; regress before the shoulder position shifts."
       },
       "schedule": {
         "week": 8,
@@ -6910,6 +7432,15 @@
           20,
           "easy",
           null
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
         ],
         [
           "shoulder_cars",
@@ -6951,21 +7482,21 @@
         ],
         [
           "full_back",
-          2,
+          1,
           null,
-          2,
+          3,
           150,
-          null,
+          "readiness_check",
           "straddle_back"
         ],
         [
-          "pullup",
+          "archer_pullup",
           3,
-          7,
+          "4/side",
           null,
-          105,
+          120,
           "2111",
-          "assisted_pullup"
+          "pullup"
         ],
         [
           "support_hold",
@@ -7042,6 +7573,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "cat_cow",
           2,
           8,
@@ -7080,31 +7620,31 @@
           "dead_bug"
         ],
         [
-          "pushup",
+          "wall_hspu",
           3,
-          14,
+          3,
           null,
-          50,
+          150,
           "2010",
-          "incline_pushup"
+          "wall_hspu_negative"
         ],
         [
-          "split_squat",
+          "single_leg_rdl",
           3,
           "10/side",
           null,
-          50,
-          "3010",
-          "box_squat"
+          60,
+          "3011",
+          "single_leg_bridge"
         ],
         [
-          "dead_bug",
+          "seated_pike_lift",
           2,
-          "8/side",
+          10,
           null,
           35,
-          "slow",
-          null
+          "1-second_pause",
+          "lying_leg_raise"
         ]
       ],
       "cooldown": [
@@ -7173,6 +7713,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "leg_swings",
           1,
           "10/side",
@@ -7189,6 +7738,15 @@
           10,
           "controlled",
           null
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -7211,22 +7769,22 @@
           "assisted_dip"
         ],
         [
-          "pushup",
+          "archer_pushup",
           3,
-          14,
+          "8/side",
           null,
-          50,
-          "2010",
-          "incline_pushup"
+          75,
+          "2111",
+          "pushup"
         ],
         [
-          "squat",
+          "pistol_squat",
           3,
-          20,
+          "6/side",
           null,
-          50,
+          90,
           "3010",
-          "box_squat"
+          "assisted_pistol_squat"
         ],
         [
           "knee_raise",
@@ -7318,6 +7876,15 @@
           105,
           "easy_power",
           "pullup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -7358,13 +7925,13 @@
           "straight_bar_support"
         ],
         [
-          "hollow_hold",
+          "lsit",
           2,
           null,
-          38,
-          45,
-          null,
-          "dead_bug"
+          12,
+          75,
+          "isometric",
+          "one_leg_lsit"
         ]
       ],
       "cooldown": [
@@ -7431,6 +7998,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           2,
           5,
@@ -7447,6 +8023,15 @@
           30,
           null,
           "dead_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -7818,6 +8403,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           2,
           5,
@@ -7947,6 +8541,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "cat_cow",
           2,
           7,
@@ -7985,31 +8588,31 @@
           "dead_bug"
         ],
         [
-          "single_leg_bridge",
+          "nordic_negative",
           3,
-          "12/side",
+          4,
           null,
-          45,
-          "2111",
-          "glute_bridge"
+          90,
+          "4-second_lowering",
+          "sliding_leg_curl"
         ],
         [
-          "pushup",
+          "wall_hspu_negative",
           3,
-          18,
+          3,
           null,
-          55,
-          "2111",
-          "incline_pushup"
+          120,
+          "4-second_lowering",
+          "elevated_pike_pushup"
         ],
         [
-          "split_squat",
+          "bulgarian_split_squat",
           3,
-          "11/side",
+          "10/side",
           null,
-          55,
+          60,
           "3010",
-          "box_squat"
+          "split_squat"
         ]
       ],
       "cooldown": [
@@ -8078,6 +8681,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "leg_swings",
           1,
           "8/side",
@@ -8125,22 +8737,22 @@
           "incline_pushup"
         ],
         [
-          "squat",
-          4,
-          24,
-          null,
-          25,
-          "3010",
-          "box_squat"
-        ],
-        [
-          "dead_bug",
+          "single_leg_rdl",
           4,
           "10/side",
           null,
+          60,
+          "3011",
+          "single_leg_bridge"
+        ],
+        [
+          "seated_pike_lift",
+          4,
+          10,
+          null,
           105,
-          "slow",
-          null
+          "1-second_pause",
+          "lying_leg_raise"
         ]
       ],
       "cooldown": [
@@ -8223,6 +8835,15 @@
           105,
           "easy_power",
           "pullup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -8245,13 +8866,13 @@
           "pullup"
         ],
         [
-          "pullup",
+          "archer_pullup",
           2,
-          6,
+          "4/side",
           null,
-          90,
+          120,
           "2111",
-          "assisted_pullup"
+          "pullup"
         ],
         [
           "straight_bar_dip",
@@ -8263,13 +8884,13 @@
           "straight_bar_support"
         ],
         [
-          "knee_raise",
+          "lsit",
           3,
-          10,
           null,
-          50,
-          "2020",
-          "lying_knee_raise"
+          12,
+          75,
+          "isometric",
+          "one_leg_lsit"
         ]
       ],
       "cooldown": [
@@ -8311,7 +8932,7 @@
         "en": "Front-Lever Peak Restraint"
       },
       "description": {
-        "en": "Use three short straddles and only two full-front samples, regressing immediately when the line bends."
+        "en": "Use three short straddles and a single full-front readiness check, regressing immediately when the line bends."
       },
       "schedule": {
         "week": 10,
@@ -8337,6 +8958,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           2,
           6,
@@ -8353,6 +8983,15 @@
           30,
           null,
           "dead_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -8367,11 +9006,11 @@
         ],
         [
           "full_front",
-          2,
+          1,
           null,
-          2,
+          3,
           150,
-          null,
+          "readiness_check",
           "straddle_front"
         ],
         [
@@ -8393,13 +9032,13 @@
           "assisted_pullup"
         ],
         [
-          "reverse_lunge",
+          "single_leg_rdl",
           3,
           "10/side",
           null,
-          50,
-          "3010",
-          "box_squat"
+          60,
+          "3011",
+          "single_leg_bridge"
         ]
       ],
       "cooldown": [
@@ -8438,10 +9077,10 @@
       "level": 6,
       "number": 66,
       "title": {
-        "en": "Two Fresh Planche Singles"
+        "en": "Fresh Planche Single"
       },
       "description": {
-        "en": "Complete two fresh full-planche singles with the listed straddle regression if needed, then perform the exact light back-off sequence."
+        "en": "Complete one fresh full-planche readiness check with the listed advanced-tuck regression, then perform the exact light back-off sequence."
       },
       "schedule": {
         "week": 10,
@@ -8497,12 +9136,12 @@
       "main": [
         [
           "full_planche",
-          2,
-          null,
           1,
+          null,
+          2,
           180,
-          "fresh_single",
-          "straddle_planche"
+          "readiness_check",
+          "advanced_tuck_planche"
         ],
         [
           "advanced_tuck_planche",
@@ -8514,13 +9153,13 @@
           "tuck_planche"
         ],
         [
-          "planche_lean",
+          "wall_hspu",
+          3,
           3,
           null,
-          18,
-          60,
-          "controlled",
-          "elevated_plank"
+          150,
+          "2010",
+          "wall_hspu_negative"
         ],
         [
           "parallel_dip",
@@ -8541,13 +9180,13 @@
           "incline_pushup"
         ],
         [
-          "pause_squat",
+          "single_leg_rdl",
           3,
-          18,
+          "10/side",
           null,
-          50,
-          "32X0",
-          "box_squat"
+          60,
+          "3011",
+          "single_leg_bridge"
         ]
       ],
       "cooldown": [
@@ -8718,7 +9357,7 @@
         "en": "Back-Lever Peak Restraint"
       },
       "description": {
-        "en": "Use three comfortable straddles and only two full-back samples, stopping before shoulder position changes."
+        "en": "Use three comfortable straddles and a single full-back readiness check, stopping before shoulder position changes."
       },
       "schedule": {
         "week": 10,
@@ -8741,6 +9380,15 @@
           20,
           "easy",
           null
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
         ],
         [
           "shoulder_cars",
@@ -8782,11 +9430,11 @@
         ],
         [
           "full_back",
-          2,
+          1,
           null,
-          2,
+          3,
           150,
-          null,
+          "readiness_check",
           "straddle_back"
         ],
         [
@@ -9005,6 +9653,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "leg_swings",
           1,
           "10/side",
@@ -9021,6 +9678,15 @@
           10,
           "controlled",
           null
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -9052,13 +9718,13 @@
           "incline_pushup"
         ],
         [
-          "squat",
+          "pistol_squat",
           3,
-          18,
+          "6/side",
           null,
-          45,
+          90,
           "3010",
-          "box_squat"
+          "assisted_pistol_squat"
         ],
         [
           "knee_raise",
@@ -9150,6 +9816,15 @@
           105,
           "easy_power",
           "pullup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -9172,13 +9847,13 @@
           "pullover_lowbar"
         ],
         [
-          "pullup",
+          "archer_pullup",
           3,
-          7,
+          "4/side",
           null,
-          90,
+          120,
           "2111",
-          "assisted_pullup"
+          "pullup"
         ],
         [
           "straight_bar_dip",
@@ -9264,6 +9939,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           2,
           6,
@@ -9280,6 +9964,24 @@
           30,
           null,
           "dead_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -9320,13 +10022,13 @@
           "box_squat"
         ],
         [
-          "hollow_hold",
+          "lsit",
           2,
           null,
-          30,
-          40,
-          null,
-          "dead_bug"
+          12,
+          75,
+          "isometric",
+          "one_leg_lsit"
         ]
       ],
       "cooldown": [
@@ -9410,6 +10112,15 @@
           25,
           "2111",
           "elevated_scapular_pushup"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -9652,6 +10363,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           2,
           6,
@@ -9782,6 +10502,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "cat_cow",
           2,
           8,
@@ -9838,13 +10567,13 @@
           "box_squat"
         ],
         [
-          "dead_bug",
+          "seated_pike_lift",
           2,
-          "8/side",
+          10,
           null,
           35,
-          "slow",
-          null
+          "1-second_pause",
+          "lying_leg_raise"
         ]
       ],
       "cooldown": [
@@ -9913,6 +10642,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "leg_swings",
           1,
           "8/side",
@@ -9951,22 +10689,22 @@
           "assisted_dip"
         ],
         [
-          "pushup",
+          "wall_hspu",
           3,
-          17,
+          3,
           null,
-          55,
-          "2111",
-          "incline_pushup"
+          150,
+          "2010",
+          "wall_hspu_negative"
         ],
         [
-          "squat",
+          "single_leg_rdl",
           3,
-          25,
+          "10/side",
           null,
-          50,
-          "3010",
-          "box_squat"
+          60,
+          "3011",
+          "single_leg_bridge"
         ],
         [
           "knee_raise",
@@ -10058,6 +10796,15 @@
           105,
           "easy_power",
           "pullup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
         ]
       ],
       "main": [
@@ -10171,6 +10918,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           2,
           6,
@@ -10187,6 +10943,24 @@
           30,
           null,
           "dead_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -10559,6 +11333,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           2,
           6,
@@ -10584,6 +11367,15 @@
           75,
           "easy_range",
           "straight_bar_support"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -10695,6 +11487,15 @@
           0,
           null,
           null
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
         ],
         [
           "cat_cow",
@@ -10992,6 +11793,24 @@
           40,
           "small",
           "hollow_hold"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -11032,13 +11851,13 @@
           "box_squat"
         ],
         [
-          "dead_bug",
+          "lsit",
           2,
-          "10/side",
           null,
-          40,
-          "slow",
-          null
+          12,
+          75,
+          "isometric",
+          "one_leg_lsit"
         ]
       ],
       "cooldown": [
@@ -11107,6 +11926,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           2,
           6,
@@ -11132,6 +11960,24 @@
           30,
           "braced",
           "dead_bug"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -11303,13 +12149,13 @@
           "pushup"
         ],
         [
-          "parallel_dip",
+          "wall_hspu",
           3,
-          9,
+          3,
           null,
-          75,
-          "2111",
-          "assisted_dip"
+          150,
+          "2010",
+          "wall_hspu_negative"
         ],
         [
           "pause_squat",
@@ -11534,6 +12380,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           2,
           6,
@@ -11682,6 +12537,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "cat_cow",
           2,
           8,
@@ -11738,13 +12602,13 @@
           "dead_bug"
         ],
         [
-          "pushup",
+          "archer_pushup",
           3,
-          14,
+          "8/side",
           null,
-          50,
+          75,
           "2111",
-          "incline_pushup"
+          "pushup"
         ],
         [
           "reverse_lunge",
@@ -11823,6 +12687,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "arm_swings",
           1,
           12,
@@ -11888,13 +12761,13 @@
           "box_squat"
         ],
         [
-          "step_up",
+          "single_leg_rdl",
           3,
           "10/side",
           null,
-          50,
-          "controlled",
-          "box_squat"
+          60,
+          "3011",
+          "single_leg_bridge"
         ],
         [
           "knee_raise",
@@ -11997,6 +12870,24 @@
           90,
           "easy_power",
           "pullup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -12121,6 +13012,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           2,
           6,
@@ -12146,6 +13046,24 @@
           30,
           "braced",
           "bird_dog"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -12243,7 +13161,7 @@
         "en": "Straddle Planche Touchpoints"
       },
       "description": {
-        "en": "Complete two advanced-tuck holds and two brief straddle touchpoints, then finish measured leans, planche push-ups, dips, Cossack squats, and trunk work."
+        "en": "Complete two advanced-tuck holds and one straddle readiness check, then finish measured leans, planche push-ups, wall presses, dips, Cossack squats and trunk work."
       },
       "schedule": {
         "week": 14,
@@ -12300,11 +13218,11 @@
         ],
         [
           "straddle_planche",
-          2,
+          1,
           null,
-          2,
+          3,
           150,
-          "fresh_hold",
+          "readiness_check",
           "advanced_tuck_planche"
         ],
         [
@@ -12326,13 +13244,13 @@
           "pushup"
         ],
         [
-          "parallel_dip",
+          "wall_hspu",
           2,
-          9,
+          3,
           null,
-          75,
-          "2111",
-          "assisted_dip"
+          150,
+          "2010",
+          "wall_hspu_negative"
         ],
         [
           "cossack_squat",
@@ -12344,13 +13262,13 @@
           "box_squat"
         ],
         [
-          "dead_bug",
+          "lsit",
           2,
-          "10/side",
           null,
-          40,
-          "slow",
-          null
+          12,
+          75,
+          "isometric",
+          "one_leg_lsit"
         ]
       ],
       "cooldown": [
@@ -12558,6 +13476,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "shoulder_cars",
           2,
           6,
@@ -12715,6 +13642,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "cat_cow",
           2,
           8,
@@ -12762,22 +13698,22 @@
           "knee_raise"
         ],
         [
-          "pushup",
+          "archer_pushup",
           3,
-          15,
+          "8/side",
           null,
-          55,
+          75,
           "2111",
-          "incline_pushup"
+          "pushup"
         ],
         [
-          "split_squat",
+          "bulgarian_split_squat",
           3,
           "10/side",
           null,
-          50,
+          60,
           "3010",
-          "box_squat"
+          "split_squat"
         ],
         [
           "glute_bridge",
@@ -12856,6 +13792,15 @@
           null
         ],
         [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
           "leg_swings",
           1,
           "8/side",
@@ -12921,13 +13866,13 @@
           "box_squat"
         ],
         [
-          "cossack_squat",
+          "single_leg_rdl",
           2,
-          "8/side",
+          "10/side",
           null,
-          50,
-          "controlled",
-          "box_squat"
+          60,
+          "3011",
+          "single_leg_bridge"
         ],
         [
           "hanging_leg_raise",
@@ -13040,6 +13985,24 @@
           30,
           "braced",
           "dead_bug"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
         ]
       ],
       "main": [
@@ -13116,13 +14079,13 @@
           "incline_pushup"
         ],
         [
-          "squat",
+          "pistol_squat",
           2,
-          18,
+          "6/side",
           null,
-          50,
+          90,
           "3010",
-          "box_squat"
+          "assisted_pistol_squat"
         ]
       ],
       "cooldown": [

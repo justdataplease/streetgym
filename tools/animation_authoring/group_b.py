@@ -25,9 +25,11 @@ reach_leg("hang_assisted_active", (X + 8, ANKLE), pref=RIGHT)
 template("foot_assisted_hang", 2200, [(0, "hang_assisted"), (1, "hang_assisted_active")], apparatus=("mid_bar",))
 
 # ---------- pull-ups ----------
-pose("pull_mid", base="hang_active", shrug=-1, torso=354, arms=arm(-3, 8, RIGHT), legs=[178, 196], leg_far=[181, 199])
-pose("pull_top", base="hang_active", shrug=0, torso=352, arms=arm(-2, -4, RIGHT), legs=[176, 200], leg_far=[180, 204])
-pose("pull_chest", base="hang_active", shrug=0, torso=345, arms=arm(-6, -9, RIGHT), legs=[172, 204], leg_far=[176, 208])
+# Fixed arm angles: the earlier IK targets lifted the shoulders above the bar at mid-pull
+# and pointed the elbows up over it, so the head overshot and sank back.
+pose("pull_mid", base="hang_active", shrug=-1, torso=354, arms=[80, 350], legs=[178, 196], leg_far=[181, 199])
+pose("pull_top", base="hang_active", shrug=0, torso=352, arms=[155, 8], legs=[176, 200], leg_far=[180, 204])
+pose("pull_chest", base="hang_active", shrug=0, torso=345, arms=[195, 35], legs=[172, 204], leg_far=[176, 208])
 template("pullup", 2000, [(0, "hang_active"), (0.5, "pull_mid"), (0.85, "pull_top"), (1, "pull_top")], apparatus=("high_bar",))
 template("chest_to_bar", 2000, [(0, "hang_active"), (0.5, "pull_mid"), (0.85, "pull_chest"), (1, "pull_chest")], apparatus=("high_bar",))
 template("eccentric_pullup", 3600,
