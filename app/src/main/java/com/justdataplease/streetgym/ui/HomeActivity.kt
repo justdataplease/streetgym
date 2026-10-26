@@ -1254,15 +1254,8 @@ open class HomeActivity : Activity() {
             override fun getCount() = shown.size
             override fun getItem(position: Int) = shown[position]
             override fun getItemId(position: Int) = position.toLong()
-            override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View = LinearLayout(this@HomeActivity).apply {
-                orientation = LinearLayout.VERTICAL
-                setPadding(dp(4), dp(10), dp(4), dp(10))
-                val movement = shown[position]
-                addView(oneLineText(movement.name, bold = true))
-                listOfNotNull(movement.category?.let(::humanize), movement.equipment.joinToString(", ", transform = ::humanize).ifBlank { null })
-                    .joinToString(" · ")
-                    .takeIf(String::isNotBlank)?.let { addView(bodyText(it, 13f).apply { maxLines = 1 }) }
-            }
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View =
+                ((convertView as? PickerRow) ?: PickerRow()).apply { show(shown[position]) }
         }
         val list = ListView(this).apply { this.adapter = adapter; divider = ColorDrawable(AppColors.DIVIDER); dividerHeight = 1 }
         val search = EditText(this).apply {
@@ -1290,6 +1283,41 @@ open class HomeActivity : Activity() {
         val dialog = AlertDialog.Builder(this).setTitle(R.string.picker_title).setView(content)
             .setNegativeButton(R.string.cancel, null).show()
         list.setOnItemClickListener { _, _, position, _ -> dialog.dismiss(); onPick(shown[position]) }
+    }
+
+    /** A picker row: the movement playing in a small tile beside its name and details. The list reuses rows as it scrolls. */
+    private inner class PickerRow : LinearLayout(this@HomeActivity) {
+        private val thumb = ExerciseAnimationView(context).apply {
+            setBadgeStyle(ExerciseAnimationView.BadgeStyle(
+                AppColors.INFO_SURFACE, AppColors.PRIMARY, blendColor(AppColors.PRIMARY, AppColors.INFO_SURFACE, 0.5f),
+                blendColor(AppColors.TEXT_SECONDARY, AppColors.INFO_SURFACE, 0.4f)), moving = true)
+            importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+        }
+        private val name = oneLineText("", bold = true)
+        private val details = bodyText("", 13f).apply { maxLines = 1 }
+        private var movement: LibraryMovement? = null
+
+        init {
+            orientation = HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            setPadding(dp(4), dp(10), dp(4), dp(10))
+            addView(thumb, LayoutParams(dp(52), dp(52)).apply { marginEnd = dp(12) })
+            addView(LinearLayout(context).apply {
+                orientation = VERTICAL
+                addView(name)
+                addView(details)
+            }, LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+        }
+
+        fun show(movement: LibraryMovement) {
+            if (movement == this.movement) return
+            this.movement = movement
+            thumb.bind(movement.movementId, movement.name, movement.category, movement.equipment)
+            name.text = movement.name
+            details.text = listOfNotNull(movement.category?.let(::humanize), movement.equipment.joinToString(", ", transform = ::humanize).ifBlank { null })
+                .joinToString(" · ")
+            details.visibility = if (details.text.isBlank()) View.GONE else View.VISIBLE
+        }
     }
 
     /** The same dose for every set: how many, reps or seconds, and rest. */

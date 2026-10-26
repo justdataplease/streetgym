@@ -122,6 +122,11 @@ class ExerciseAnimationView @JvmOverloads constructor(
 
     private var badge: BadgeStyle? = null
     private val badgeClip = Path()
+    /** A moving badge plays the clip in its tile, framed on the whole cycle so the figure doesn't zoom. */
+    private var badgeMoves = false
+    private var badgeBounds: FloatArray? = null
+    /** A list keeps scrapped rows attached; their clips stop until the row is reused. */
+    private var parked = false
 
     /** Hangs and pull-ups are drawn from the front ([FrontPull]) so the grip and any shift along the bar show. */
     private var front: FrontPull.Variant? = null
@@ -169,6 +174,7 @@ class ExerciseAnimationView @JvmOverloads constructor(
             equipment = equipment,
         )
         front = FrontPull.variant(movementId, resolved.template.name)
+        badgeBounds = null
         contentDescription = "Line-figure movement guide for $readableName. Follow the written instructions for exact technique."
         updateCoachingText()
         animationPhase = resolved.template.startPhase
@@ -181,10 +187,10 @@ class ExerciseAnimationView @JvmOverloads constructor(
     class BadgeStyle(val background: Int, val figure: Int, val farFigure: Int, val apparatus: Int)
 
     /**
-     * Turns the view into a static skill badge: a flat rounded tile with the movement's end pose
-     * scaled to fill it, heavier strokes and no panel, overlays or animation.
+     * Turns the view into a skill badge: a flat rounded tile with the movement scaled to fill it, heavier strokes
+     * and no panel or overlays. A static badge holds the end pose; a [moving] one (the exercise picker) plays it.
      */
-    fun setBadgeStyle(style: BadgeStyle) {
+    fun setBadgeStyle(style: BadgeStyle, moving: Boolean = false) {
         badge = style
         backgroundPaint.color = style.background
         figurePaint.color = style.figure
@@ -197,7 +203,9 @@ class ExerciseAnimationView @JvmOverloads constructor(
         setPadding(0, 0, 0, 0)
         minimumWidth = 0
         minimumHeight = 0
-        stopAnimator()
+        badgeMoves = moving
+        badgeBounds = null
+        if (moving) restartAnimationIfNeeded() else stopAnimator()
         invalidate()
     }
 
@@ -230,6 +238,18 @@ class ExerciseAnimationView @JvmOverloads constructor(
         }
         stopAnimator()
         super.onDetachedFromWindow()
+    }
+
+    override fun onStartTemporaryDetach() {
+        super.onStartTemporaryDetach()
+        parked = true
+        stopAnimator()
+    }
+
+    override fun onFinishTemporaryDetach() {
+        super.onFinishTemporaryDetach()
+        parked = false
+        updateAnimationState()
     }
 
     override fun onWindowVisibilityChanged(visibility: Int) {
@@ -296,17 +316,21 @@ class ExerciseAnimationView @JvmOverloads constructor(
         badgeClip.rewind()
         badgeClip.addRoundRect(0f, 0f, w, h, radius, radius, Path.Direction.CW)
         canvas.drawPath(badgeClip, backgroundPaint)
+        val running = badgeMoves && isAnimationRunning()
         front?.let { variant ->
-            resolveFrame(false)
+            resolveFrame(running)
             frontRect.set(0f, 0f, w, h)
             canvas.save()
             canvas.clipPath(badgeClip)
-            FrontPull.draw(canvas, variant, frameTimeline, frontRect, FrontPull.BADGE_WINDOW, frontInk, BADGE_STROKE, false, frontFrame)
+            // A moving badge frames down to the floor, where the standing starts begin.
+            val window = if (badgeMoves) FrontPull.LOADING_WINDOW else FrontPull.BADGE_WINDOW
+            FrontPull.draw(canvas, variant, frameTimeline, frontRect, window, frontInk, BADGE_STROKE, false, frontFrame)
             canvas.restore()
             return
         }
 
-        resolveFrame(false)
+        val cycle = if (badgeMoves) cycleBounds() else null
+        resolveFrame(running)
         resolved.template.curve.evaluate(frameTimeline, blendedPose, joints)
         var minX = Float.MAX_VALUE
         var minY = Float.MAX_VALUE
@@ -318,6 +342,7 @@ class ExerciseAnimationView @JvmOverloads constructor(
             minY = min(minY, joints[joint * 2 + 1])
             maxY = max(maxY, joints[joint * 2 + 1])
         }
+        if (cycle != null) { minX = cycle[0]; minY = cycle[1]; maxX = cycle[2]; maxY = cycle[3] }
         val head = library.rig.headRadius
         val span = max(maxX - minX, maxY - minY) + head * 2f
         val scale = min(w, h) * 0.64f / span.coerceAtLeast(1f)
@@ -329,6 +354,18 @@ class ExerciseAnimationView @JvmOverloads constructor(
         drawApparatus(canvas, ox, oy, scale)
         drawFigure(canvas, ox, oy, scale, BADGE_STROKE)
         canvas.restore()
+    }
+
+    /** The body's bounds over the whole clip (minX, minY, maxX, maxY), sampled once per binding. Uses the pose scratch. */
+    private fun cycleBounds(): FloatArray = badgeBounds ?: floatArrayOf(Float.MAX_VALUE, Float.MAX_VALUE, -Float.MAX_VALUE, -Float.MAX_VALUE).also { b ->
+        for (step in 0..CYCLE_SAMPLES) {
+            resolved.template.curve.evaluate(step / CYCLE_SAMPLES.toFloat(), blendedPose, joints)
+            for (joint in 0 until BADGE_JOINTS) {
+                b[0] = min(b[0], joints[joint * 2]); b[2] = max(b[2], joints[joint * 2])
+                b[1] = min(b[1], joints[joint * 2 + 1]); b[3] = max(b[3], joints[joint * 2 + 1])
+            }
+        }
+        badgeBounds = b
     }
 
     /** Index loops: this runs every frame, and an iterator per list would be garbage each time. */
@@ -505,7 +542,8 @@ class ExerciseAnimationView @JvmOverloads constructor(
     }
 
     private fun shouldAnimate(): Boolean =
-        badge == null &&
+        (badge == null || badgeMoves) &&
+            !parked &&
             isAttachedToWindow &&
             windowVisibility == VISIBLE &&
             visibility == VISIBLE &&
@@ -633,6 +671,8 @@ private val LOOP_UNITS = floatArrayOf(1f)
 /** Joints that bound the body for badge framing (the averaged hands/feet points are skipped). */
 private const val BADGE_JOINTS = 14
 private const val BADGE_STROKE = 1.6f
+/** Poses sampled to frame a moving badge. */
+private const val CYCLE_SAMPLES = 12
 
 private data class ApparatusPrimitive(
     val type: String,
