@@ -163,14 +163,6 @@ fun Context.titleText(text: CharSequence, sizeSp: Float = 22f): TextView = TextV
     isAllCaps = themeShape.upperTitles
 }
 
-/** Wheatpaste prints a headline over a misregistered pink copy; the other themes leave it as it is. */
-fun TextView.headline(): TextView = apply {
-    if (AppColors.theme == StreetTheme.WHEATPASTE) {
-        val offset = context.dp(3).toFloat()
-        setShadowLayer(0.01f, offset, offset, AppColors.SPOT)
-    }
-}
-
 fun Context.bodyText(text: CharSequence, sizeSp: Float = 15f): TextView = TextView(this).apply {
     this.text = text
     setTextColor(AppColors.TEXT_SECONDARY)
@@ -239,9 +231,9 @@ fun Context.primaryButton(
         // The display face in capitals; Concrete outlines the button in ink, and both poster themes print a hard shadow.
         val radius = dp(16).toFloat()
         val offset = dp(themeShape.shadowDp)
-        val face = if (theme == StreetTheme.CONCRETE) roundedDrawable(color, radius, AppColors.BORDER, dp(2)) else roundedDrawable(color, radius)
+        val face = if (theme.concrete) roundedDrawable(color, radius, AppColors.BORDER, dp(2)) else roundedDrawable(color, radius)
         val shadow = roundedDrawable(if (theme == StreetTheme.WHEATPASTE) AppColors.SPOT else AppColors.BORDER, radius)
-        textSize = when (theme) { StreetTheme.CONCRETE -> 19f; StreetTheme.NIGHT_PARK -> 20f; else -> 15f }
+        textSize = when (theme) { StreetTheme.CONCRETE, StreetTheme.CONCRETE_TREES -> 19f; StreetTheme.NIGHT_PARK -> 20f; else -> 15f }
         typeface = AppType.display
         isAllCaps = true
         letterSpacing = if (theme == StreetTheme.WHEATPASTE) 0.02f else 0.05f
@@ -274,7 +266,7 @@ fun Context.secondaryButton(text: CharSequence, onClick: () -> Unit): Button = B
             isAllCaps = true
             letterSpacing = if (theme == StreetTheme.WHEATPASTE) 0.04f else 0.1f
             val face = when (theme) {
-                StreetTheme.CONCRETE -> roundedDrawable(AppColors.SURFACE, radius, AppColors.BORDER, dp(2))
+                StreetTheme.CONCRETE, StreetTheme.CONCRETE_TREES -> roundedDrawable(AppColors.SURFACE, radius, AppColors.BORDER, dp(2))
                 StreetTheme.WHEATPASTE -> dashedDrawable(Color.TRANSPARENT, AppColors.BORDER)
                 else -> roundedDrawable(AppColors.INFO_SURFACE, radius)
             }

@@ -235,7 +235,7 @@ class FocusWorkoutView(
             addView(LinearLayout(context).apply {
                 orientation = LinearLayout.HORIZONTAL
                 gravity = Gravity.CENTER_VERTICAL
-                addView(context.titleText(name, if (landscape) 18f else 20f).headline().apply {
+                addView(context.titleText(name, if (landscape) 18f else 20f).apply {
                     maxLines = 2
                     ellipsize = TextUtils.TruncateAt.END
                 }, LinearLayout.LayoutParams(0, WRAP, 1f))

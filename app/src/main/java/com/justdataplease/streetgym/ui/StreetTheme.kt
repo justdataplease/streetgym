@@ -6,7 +6,7 @@ import android.graphics.Typeface
 import android.widget.TextView
 import com.justdataplease.streetgym.R
 
-/** How corners are cut: Fresh Court rounds them, Concrete & Tape and Wheatpaste keep them square, Night Park chamfers them. */
+/** How corners are cut: Fresh Court rounds them, both Concrete looks and Wheatpaste keep them square, Night Park chamfers them. */
 enum class Corner { ROUND, SQUARE, CHAMFER }
 
 /** The page background: flat, or the fine grain of concrete or poster paper. */
@@ -62,7 +62,10 @@ private const val ALBERT = "albert_sans_regular.ttf"
 private const val ALBERT_BOLD = "albert_sans_bold.ttf"
 private const val ALBERT_EXTRABOLD = "albert_sans_extrabold.ttf"
 
-/** The four looks picked in Settings, all free. Concrete & Tape is the default; Night Park is the only dark one. */
+/**
+ * The five looks picked in Settings, all free. Fresh Court is the default; Night Park is the only dark one. Concrete &
+ * Trees is Concrete & Tape in the brand greens (the launcher icon's deep green and mint), so it shares its decor.
+ */
 enum class StreetTheme(
     val key: String,
     val dark: Boolean,
@@ -83,6 +86,21 @@ enum class StreetTheme(
             warningSurface = 0xFFFFF1A6.toInt(), border = 0xFF121212.toInt(), ink = 0xFF121212.toInt(),
             spot = 0xFFFFD60A.toInt(), heroText = 0xFFF5F4F0.toInt(), heroKicker = 0xFFFFD60A.toInt(),
             mark = 0xFF121212.toInt(), heart = 0xFFD7263D.toInt(),
+        ),
+        ThemeShape(Corner.SQUARE, borderDp = 2, shadowDp = 4, dashedSecondary = false, upperTitles = true,
+            titleScale = 1.15f, labelSpacing = 0.14f, texture = Texture.CONCRETE),
+        ThemeFonts(ALBERT, ALBERT_BOLD, "anton_regular.ttf", "anton_regular.ttf", ALBERT_EXTRABOLD, "anton_regular.ttf"),
+    ),
+    CONCRETE_TREES(
+        "concrete_trees", false, R.string.theme_concrete_trees, R.string.theme_concrete_trees_summary, R.style.Theme_StreetTrees,
+        Palette(
+            primary = 0xFF1E7056.toInt(), primaryDark = 0xFF193F31.toInt(), background = 0xFFD9D7D2.toInt(),
+            surface = 0xFFF5F4F0.toInt(), text = 0xFF121212.toInt(), textSecondary = 0xFF4A4945.toInt(),
+            divider = 0xFF9C9992.toInt(), infoSurface = 0xFFE9E7E2.toInt(), accent = 0xFF69DFB4.toInt(),
+            onAccent = 0xFFF5F4F0.toInt(), action = 0xFF69DFB4.toInt(), success = 0xFF1E7056.toInt(),
+            warningSurface = 0xFFD5F3E6.toInt(), border = 0xFF121212.toInt(), ink = 0xFF121212.toInt(),
+            spot = 0xFF69DFB4.toInt(), heroText = 0xFFF5F4F0.toInt(), heroKicker = 0xFF69DFB4.toInt(),
+            mark = 0xFF1E7056.toInt(), heart = 0xFFD7263D.toInt(),
         ),
         ThemeShape(Corner.SQUARE, borderDp = 2, shadowDp = 4, dashedSecondary = false, upperTitles = true,
             titleScale = 1.15f, labelSpacing = 0.14f, texture = Texture.CONCRETE),
@@ -136,8 +154,11 @@ enum class StreetTheme(
         ThemeFonts(null, null, null, null, null, null),
     );
 
+    /** Both Concrete looks: the same tape, boxes and outlined buttons. */
+    val concrete: Boolean get() = this == CONCRETE || this == CONCRETE_TREES
+
     companion object {
-        val DEFAULT = CONCRETE
+        val DEFAULT = FRESH_COURT
         fun fromKey(key: String?): StreetTheme? = entries.firstOrNull { it.key == key }
     }
 }

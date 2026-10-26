@@ -2,11 +2,12 @@
 
 Dedicated Android app with 700 guided calisthenics workouts across seven levels and 151 animated movements. Copied from the owned StreetGym source into the Android suite; the original project remains unchanged.
 
-Settings > Theme picks one of four looks:
-- Concrete & Tape: light, the default.
+Settings > Theme picks one of five looks:
+- Fresh Court: the original green, the default.
+- Concrete & Tape: light.
+- Concrete & Trees: Concrete & Tape in the brand greens.
 - Night Park: dark.
 - Wheatpaste: light.
-- Fresh Court: the original green.
 
 Older installs with dark mode on open in Night Park.
 

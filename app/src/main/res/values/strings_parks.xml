@@ -17,6 +17,7 @@
     <string name="parks_no_location">Couldn’t get your location. Search by city instead.</string>
     <string name="parks_location_denied">Location is off for Street Gymnastics. Search by city instead.</string>
     <string name="parks_credit">Park data: howtocalisthenics.com. Map: OpenFreeMap, © OpenStreetMap. Your location isn’t sent anywhere; the map downloads the area on screen.</string>
+    <string name="parks_privacy">Your location isn’t sent anywhere.</string>
     <string name="parks_view_map">Map</string>
     <string name="parks_view_list">List</string>
     <string name="parks_my_location">Show my location</string>

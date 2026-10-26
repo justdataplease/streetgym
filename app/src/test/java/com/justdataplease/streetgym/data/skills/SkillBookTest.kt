@@ -75,13 +75,25 @@ class SkillBookTest {
     }
 
     @Test
-    fun difficultyFollowsTheLevelThatTeachesASkillAndNeverDropsUpTheLadder() {
+    fun difficultyIsTheCoachGradeWhereverTheProgramTeachesTheRung() {
         val level = { n: Int, id: String -> SkillProgram("$id$n", n, 1, 1, listOf(SkillStep(id, 2))) }
         val graded = SkillBook.build(movements, listOf(level(3, "assisted_pullup"), level(1, "pullup"), level(6, "archer_pullup")), listOf(spec))
-        assertEquals(listOf(3, 3, 5), graded.families.single().skills.map { it.difficulty })
+        assertEquals(listOf(1, 2, 3), graded.families.single().skills.map { it.difficulty })
+    }
+
+    @Test
+    fun aRungWithoutAGradeIsEstimatedBetweenItsNeighboursAndNeverDropsUpTheLadder() {
+        val level = { n: Int, id: String -> SkillProgram("$id$n", n, 1, 1, listOf(SkillStep(id, 2))) }
+        val ungraded = SkillBook.build(movements, listOf(level(3, "assisted_pullup"), level(1, "pullup"), level(6, "archer_pullup")),
+            listOf(spec), grades = emptyMap())
+        assertEquals(listOf(3, 3, 5), ungraded.families.single().skills.map { it.difficulty })
+        // A rung the program never teaches is one step past the rung below, not Elite, and stays under the graded rung above.
+        val skipped = SkillBook.build(movements, listOf(level(1, "assisted_pullup"), level(4, "archer_pullup")), listOf(spec),
+            grades = mapOf("assisted_pullup" to 1, "archer_pullup" to 3))
+        assertEquals(listOf(1, 2, 3), skipped.families.single().skills.map { it.difficulty })
+        assertEquals(3, SkillBook.estimate(movements.getValue("pullup"), null, below = 2, above = 3))
         // An advanced-category movement is at least intermediate, wherever it is taught.
-        assertEquals(3, SkillBook.difficulty(movements.getValue("archer_pullup"), level(1, "archer_pullup")))
-        assertEquals(5, SkillBook.difficulty(movements.getValue("pullup"), null))
+        assertEquals(3, SkillBook.estimate(movements.getValue("archer_pullup"), level(1, "archer_pullup"), below = 1, above = 5))
     }
 
     @Test
@@ -146,11 +158,16 @@ class SkillBookTest {
         val stillLocked = finished.statuses.filter { it.skill.expected != null && !it.unlocked }.map { it.skill.id }
         assertEquals("taught skills still locked after the last class", emptyList<String>(), stillLocked)
         SkillGroup.entries.forEach { assertEquals("$it after the last class", 100, finished.groupScore(it)) }
-        // Difficulty is 1-5 and never drops up a ladder.
+        // Every rung has a coach's grade; difficulty is 1-5 and never drops up a ladder.
+        assertEquals("rungs without a grade", emptyList<String>(), skillIds.filterNot(SkillBook.DEFAULT_GRADES::containsKey))
         real.families.forEach { family ->
             val difficulty = family.skills.map { it.difficulty }
             assertTrue("${family.spec.id} difficulty $difficulty", difficulty.all { it in 1..5 } && difficulty == difficulty.sorted())
+            assertEquals(family.spec.id, family.skills.map { SkillBook.DEFAULT_GRADES[it.id] }, difficulty)
         }
+        // The program never schedules the negative dip and first schedules wall push-ups in Level 3; neither moves a grade.
+        fun grade(id: String) = real.families.flatMap { it.skills }.first { it.id == id }.difficulty
+        assertEquals(listOf(1, 2, 1, 1), listOf("eccentric_dip", "parallel_dip", "wall_pushup", "pushup").map(::grade))
         // Source workouts earn credit for their main work, not only for the practice block.
         val pushup = real.families.first { it.spec.id == "pushup" }.skills.first { it.id == "pushup" }
         assertEquals("push-ups are first taught in a Level 1 source workout", 1, pushup.expected?.level)

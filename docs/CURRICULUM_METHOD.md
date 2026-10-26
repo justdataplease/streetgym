@@ -229,7 +229,7 @@ The strict muscle-up waits until chest-to-bar pull-ups have reached 3 × 5. Befo
 
 **Skills.**
 - Every skill now shows 0–100 skill points, and each group (Pull, Push, Legs, Core) shows the average score of the skills the program teaches in it. Finishing every class brings all four groups to 100.
-- Each skill carries a difficulty from 1 (Beginner) to 5 (Elite). It comes from the level that first teaches it, is at least Intermediate for advanced movements, and never drops up a ladder.
+- Each skill carries a difficulty from 1 (Beginner) to 5 (Elite): a street-workout coach's grade of each rung (`SkillBook.DEFAULT_GRADES`), which never drops up a ladder. Novice is the first strict benchmark (pull-up, dip); Elite is kept for the one-arm pull-up negative, full front lever, straddle and full planche, freestanding handstand push-up negative and full flag. A rung that joins a ladder without a grade is estimated from the level that first teaches it, at least Intermediate for advanced movements and kept between the rungs around it. The level alone was a poor grade: the program never schedules the negative dip (it showed as Elite) and first schedules wall push-ups in Level 3 deloads (every push-up showed as Intermediate or harder).
 - Ladders keep the coaching order the reviews asked for, rather than re-sorting by first appearance.
 - Source workouts now earn credit for their main work, not only for their practice block.
 

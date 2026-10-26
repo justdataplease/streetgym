@@ -8,6 +8,7 @@ import android.graphics.DashPathEffect
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.Rect
+import android.graphics.RectF
 import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.View
@@ -122,6 +123,12 @@ class ExerciseAnimationView @JvmOverloads constructor(
     private var badge: BadgeStyle? = null
     private val badgeClip = Path()
 
+    /** Hangs and pull-ups are drawn from the front ([FrontPull]) so the grip and any shift along the bar show. */
+    private var front: FrontPull.Variant? = null
+    private val frontFrame = FrontPull.Frame()
+    private val frontRect = RectF()
+    private val frontInk by lazy { FrontPull.Ink(figurePaint, headPaint, handPaint, apparatusPaint, floorPaint) }
+
     // Playback frame, resolved once per draw.
     private var frameTimeline = 0f
     private var frameSegment = -1
@@ -161,6 +168,7 @@ class ExerciseAnimationView @JvmOverloads constructor(
             category = category,
             equipment = equipment,
         )
+        front = FrontPull.variant(movementId, resolved.template.name)
         contentDescription = "Line-figure movement guide for $readableName. Follow the written instructions for exact technique."
         updateCoachingText()
         animationPhase = resolved.template.startPhase
@@ -259,6 +267,16 @@ class ExerciseAnimationView @JvmOverloads constructor(
 
         val running = isAnimationRunning()
         resolveFrame(running)
+        front?.let { variant ->
+            // Above the phase strip; the guide's tempo and phase labels drive the front view too.
+            frontRect.set(left + dp(4f), top + dp(4f), right - dp(4f), bottom - dp(13f))
+            canvas.save()
+            canvas.clipRect(left, top, right, bottom)
+            FrontPull.draw(canvas, variant, frameTimeline, frontRect, FrontPull.GUIDE_WINDOW, frontInk, 1f, true, frontFrame)
+            canvas.restore()
+            if (running) drawPhase(canvas, left, top, right, bottom)
+            return
+        }
         resolved.template.curve.evaluate(frameTimeline, blendedPose, joints)
 
         canvas.save()
@@ -278,6 +296,15 @@ class ExerciseAnimationView @JvmOverloads constructor(
         badgeClip.rewind()
         badgeClip.addRoundRect(0f, 0f, w, h, radius, radius, Path.Direction.CW)
         canvas.drawPath(badgeClip, backgroundPaint)
+        front?.let { variant ->
+            resolveFrame(false)
+            frontRect.set(0f, 0f, w, h)
+            canvas.save()
+            canvas.clipPath(badgeClip)
+            FrontPull.draw(canvas, variant, frameTimeline, frontRect, FrontPull.BADGE_WINDOW, frontInk, BADGE_STROKE, false, frontFrame)
+            canvas.restore()
+            return
+        }
 
         resolveFrame(false)
         resolved.template.curve.evaluate(frameTimeline, blendedPose, joints)

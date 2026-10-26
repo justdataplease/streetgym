@@ -7,6 +7,7 @@ import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.Rect
+import android.graphics.RectF
 import android.graphics.Shader
 import android.view.View
 import android.view.ViewTreeObserver
@@ -29,12 +30,14 @@ import kotlin.math.sin
  * runs once per process and ends on the held skill, where the figure keeps breathing; a tap replays it. Debug
  * builds step to the next day's routine on a long press.
  * [Mode.WALK]: the walk cycle alone on a scrolling path, for the loading screen.
+ * [Mode.PULL]: the same figure doing pull-ups, seen from the front ([FrontPull]), the loading screen's other figure;
+ * it needs no clip, so it draws while the clips are still being parsed.
  *
  * Reduced motion shows the final frame (the signature skill), and nothing runs while the view is off-screen.
  * Canvas units are the clips' (floor at y = 106).
  */
 class ParkSceneView(context: Context, private val mode: Mode = Mode.STORY) : View(context) {
-    enum class Mode { STORY, WALK }
+    enum class Mode { STORY, WALK, PULL }
 
     private val rig = if (mode == Mode.STORY) MotionClip.rig(context) else Rig.DEFAULT
     private val clipNamed: (String) -> MotionClip? = { name -> MotionClip.named(context, name) }
@@ -61,7 +64,7 @@ class ParkSceneView(context: Context, private val mode: Mode = Mode.STORY) : Vie
     private val scrollChangedListener = ViewTreeObserver.OnScrollChangedListener { updateAnimationState() }
     private val frameTick = Runnable { invalidate() }
 
-    // STORY sits on the dark hero card in both themes; WALK on the page background.
+    // STORY sits on the dark hero card in both themes; WALK and PULL on the page background.
     private val backdrop = if (mode == Mode.STORY) AppColors.PRIMARY_DARK else AppColors.BACKGROUND
     private val ink = if (mode == Mode.STORY) Color.WHITE else AppColors.TEXT
     private val accent = if (mode == Mode.STORY) AppColors.ACCENT else AppColors.PRIMARY
@@ -82,12 +85,17 @@ class ParkSceneView(context: Context, private val mode: Mode = Mode.STORY) : Vie
     private val dashColor = blendColor(AppColors.TEXT_SECONDARY, backdrop, 0.55f)
     private val groundPaint = stroke(groundColor).apply { strokeCap = Paint.Cap.BUTT }
     private val dashPaint = stroke(dashColor)
+    private val pullInk = FrontPull.Ink(heroNear, heroHead, heroHand, barPaint, postPaint)
+    private val pullFrame = FrontPull.Frame()
+    private val pullRect = RectF()
 
     init {
         importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_YES
         if (mode == Mode.WALK) {
             contentDescription = resources.getString(R.string.park_scene_walk_description)
             walk.plan(0f, Gait.STEP_LENGTH * LOOP_INTERVALS, 0f)
+        } else if (mode == Mode.PULL) {
+            contentDescription = resources.getString(R.string.park_scene_pull_description)
         } else {
             showRoutine(ParkRoutine.localEpochDay())
             if (story.ready) setOnClickListener { replay() }
@@ -119,8 +127,8 @@ class ParkSceneView(context: Context, private val mode: Mode = Mode.STORY) : Vie
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val density = resources.displayMetrics.density
-        val desiredWidth = (if (mode == Mode.WALK) 200f else 320f) * density
-        val desiredHeight = (if (mode == Mode.WALK) 96f else 180f) * density
+        val desiredWidth = (if (mode == Mode.STORY) 320f else 200f) * density
+        val desiredHeight = (when (mode) { Mode.STORY -> 180f; Mode.WALK -> 96f; Mode.PULL -> 150f }) * density
         setMeasuredDimension(
             resolveSize(desiredWidth.roundToInt(), widthMeasureSpec),
             resolveSize(desiredHeight.roundToInt(), heightMeasureSpec),
@@ -134,6 +142,8 @@ class ParkSceneView(context: Context, private val mode: Mode = Mode.STORY) : Vie
         if (mode == Mode.WALK) {
             scale = h / (WALK_BOTTOM - WALK_TOP)
             originY = -WALK_TOP * scale
+            fade = 0.3f
+        } else if (mode == Mode.PULL) {
             fade = 0.3f
         } else {
             val idle = startIdle || (story.end > 0f && clock >= story.end)
@@ -202,7 +212,11 @@ class ParkSceneView(context: Context, private val mode: Mode = Mode.STORY) : Vie
             if (lastFrameMs > 0L) advance((now - lastFrameMs) / 1000f)
             lastFrameMs = now
         }
-        if (mode == Mode.WALK) drawWalk(canvas) else drawStory(canvas)
+        when (mode) {
+            Mode.STORY -> drawStory(canvas)
+            Mode.WALK -> drawWalk(canvas)
+            Mode.PULL -> drawPull(canvas)
+        }
         if (!ticking) return
         if (mode == Mode.STORY && clock >= story.end) {
             // The idle only breathes and waves, so it does not need every vsync.
@@ -217,6 +231,10 @@ class ParkSceneView(context: Context, private val mode: Mode = Mode.STORY) : Vie
         clock += seconds.coerceIn(0f, MAX_FRAME_SECONDS)
         if (mode == Mode.WALK) {
             clock %= 2f * Gait.STEP_TIME
+            return
+        }
+        if (mode == Mode.PULL) {
+            clock %= PULL_REP
             return
         }
         if (clock < story.end) storyPlayed = true
@@ -351,6 +369,14 @@ class ParkSceneView(context: Context, private val mode: Mode = Mode.STORY) : Vie
         )
     }
 
+    /** Pull-ups from the front: the chin clears the bar, then the figure lowers to a straight-armed hang. */
+    private fun drawPull(canvas: Canvas) {
+        // Reduced motion holds the top of the rep, chin over the bar.
+        val lift = if (reducedMotion) 1f else ParkStory.pull(clock / PULL_REP)
+        pullRect.set(0f, 0f, width.toFloat(), height.toFloat())
+        FrontPull.draw(canvas, FrontPull.PULL_UP, lift, pullRect, FrontPull.LOADING_WINDOW, pullInk, 1f, true, pullFrame)
+    }
+
     private fun edgeFade(color: Int, width: Int, fade: Float): Shader {
         val clear = color and 0x00FFFFFF
         return LinearGradient(
@@ -386,6 +412,7 @@ class ParkSceneView(context: Context, private val mode: Mode = Mode.STORY) : Vie
         const val SCENE_BOTTOM = 110f
         const val WALK_TOP = 36f
         const val WALK_BOTTOM = 112f
+        const val PULL_REP = 1.6f
         const val TREE_X = 15f
         const val LOOP_INTERVALS = 20
         const val FLOOR_Y = ParkStory.FLOOR_Y

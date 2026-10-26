@@ -109,6 +109,7 @@ import java.util.ArrayDeque
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.Executors
+import kotlin.random.Random
 
 /**
  * Offline training shell with optional Firebase account access in Settings.
@@ -647,19 +648,10 @@ open class HomeActivity : Activity() {
             orientation = LinearLayout.VERTICAL
             gravity = Gravity.CENTER
             setPadding(dp(28), dp(28), dp(28), dp(28))
-            addView(
-                ImageView(context).apply {
-                    setImageResource(R.drawable.logo)
-                    adjustViewBounds = true
-                    scaleType = ImageView.ScaleType.CENTER_INSIDE
-                    contentDescription = getString(R.string.logo_content_description)
-                },
-                LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(120)),
-            )
-            addView(spacer(24))
-            addView(ParkSceneView(context, ParkSceneView.Mode.WALK), LinearLayout.LayoutParams(dp(200), dp(96)).apply {
-                gravity = Gravity.CENTER_HORIZONTAL
-            })
+            // One figure: mostly the walk, now and then pull-ups.
+            val pull = Random.nextInt(3) == 0
+            addView(ParkSceneView(context, if (pull) ParkSceneView.Mode.PULL else ParkSceneView.Mode.WALK),
+                LinearLayout.LayoutParams(dp(200), dp(if (pull) 150 else 96)).apply { gravity = Gravity.CENTER_HORIZONTAL })
             addView(spacer(16))
             addView(bodyText(getString(R.string.loading_catalog)).apply { gravity = Gravity.CENTER })
         }
@@ -824,7 +816,7 @@ open class HomeActivity : Activity() {
             label?.let {
                 today.addWithMargins(bodyText(it, 12f).apply { setTextColor(AppColors.PRIMARY) }, bottomDp = 4)
             }
-            today.addView(titleText(displayName(next, uiLocale()), if (compact) 20f else 23f).headline())
+            today.addView(titleText(displayName(next, uiLocale()), if (compact) 20f else 23f))
             today.addWithMargins(bodyText(programMeta(next), 13f), topDp = 6)
             if (paywallLevel == null) {
                 today.addWithMargins(primaryButton(getString(if (active?.programId == next.id) R.string.resume_workout else R.string.start_today)) {
@@ -881,7 +873,7 @@ open class HomeActivity : Activity() {
         val locale = uiLocale()
         val completed = progressRepository.completedProgramIds()
         val page = verticalPage()
-        page.addView(titleText(getString(R.string.levels_title), 26f).headline())
+        page.addView(titleText(getString(R.string.levels_title), 26f))
         page.addWithMargins(segmentedSwitch(listOf(getString(R.string.training_tab_levels),
             getString(R.string.training_tab_workouts), getString(R.string.training_tab_parks)), trainingTab) { index ->
             trainingTab = index
@@ -988,7 +980,8 @@ open class HomeActivity : Activity() {
         if (map != null) {
             (map.view.parent as? ViewGroup)?.removeView(map.view)
             page.addView(map.view, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f).apply { topMargin = dp(10) })
-            page.addWithMargins(bodyText(getString(R.string.parks_credit), 12f), topDp = 8)
+            // One line, so the map keeps the height; its ⓘ button carries the OpenFreeMap and OpenStreetMap credit.
+            page.addWithMargins(bodyText(getString(R.string.parks_privacy), 12f), topDp = 6)
             showParksOnMap(all, map)
             val origin = parkOrigin
             if (origin != null) map.showMe(origin.first, origin.second)

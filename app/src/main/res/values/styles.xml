@@ -1,5 +1,5 @@
 <resources>
-    <!-- Fresh Court, the original light look. -->
+    <!-- Fresh Court, the original light look and the default. -->
     <style name="Theme.StreetGym" parent="android:style/Theme.Material.Light.NoActionBar">
         <item name="android:fontFamily">sans</item>
         <item name="android:windowActionModeOverlay">true</item>
@@ -29,7 +29,7 @@
         <item name="android:windowBackground">@drawable/dialog_dark</item>
         <item name="android:colorAccent">@color/street_dark_primary</item>
     </style>
-    <!-- Concrete & Tape, the default. -->
+    <!-- Concrete & Tape. -->
     <style name="Theme.StreetConcrete" parent="android:style/Theme.Material.Light.NoActionBar">
         <item name="android:fontFamily">sans</item>
         <item name="android:windowActionModeOverlay">true</item>
@@ -43,6 +43,21 @@
     <style name="StreetDialog.concrete" parent="android:style/Theme.Material.Light.Dialog.Alert">
         <item name="android:windowBackground">@drawable/dialog_concrete</item>
         <item name="android:colorAccent">@color/street_concrete_primary</item>
+    </style>
+    <!-- Concrete & Trees: Concrete & Tape in the brand greens. -->
+    <style name="Theme.StreetTrees" parent="android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:windowBackground">@color/street_concrete_background</item>
+        <item name="android:colorAccent">@color/street_trees_primary</item>
+        <item name="android:statusBarColor">@color/street_concrete_background</item>
+        <item name="android:navigationBarColor">@color/street_concrete_background</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:alertDialogTheme">@style/StreetDialog.trees</item>
+    </style>
+    <style name="StreetDialog.trees" parent="android:style/Theme.Material.Light.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/dialog_concrete</item>
+        <item name="android:colorAccent">@color/street_trees_primary</item>
     </style>
     <!-- Wheatpaste. -->
     <style name="Theme.StreetPaste" parent="android:style/Theme.Material.Light.NoActionBar">

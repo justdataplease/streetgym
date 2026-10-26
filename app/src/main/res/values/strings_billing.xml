@@ -8,13 +8,24 @@
     <string name="tier_current_plus">You have Plus: every level, no ads, 30 saved or custom days, your own level names and parks near you.</string>
     <string name="tier_current_pro">You have Pro: everything in Plus, 300 saved or custom days, the leaderboard, and your progress saved to your Google account.</string>
     <string name="plus_title">Plus · one payment</string>
-    <string name="plus_features">No ads · Every level · 30 saved and custom days · Rename levels · Calisthenics parks near you</string>
+    <string-array name="plus_features">
+        <item>No ads</item>
+        <item>Every level, 1 to 7</item>
+        <item>30 saved and custom days</item>
+        <item>Rename levels</item>
+        <item>Calisthenics parks near you</item>
+    </string-array>
     <string name="plus_buy">Get Plus</string>
     <string name="plus_buy_price">Get Plus · %1$s</string>
     <string name="plus_owned">Plus is yours.</string>
-    <string name="pro_title">Pro · yearly</string>
-    <string name="pro_features">Everything in Plus · 300 saved and custom days · Leaderboard: overall and per skill · Your progress saved to your Google account and on all your devices</string>
-    <string name="pro_why">Pro is yearly because cloud progress and the leaderboard run on servers and a database, and the subscription pays for them. It renews every year until you cancel in Google Play.</string>
+    <string name="pro_title">Pro · yearly*</string>
+    <string-array name="pro_features">
+        <item>Everything in Plus</item>
+        <item>300 saved and custom days</item>
+        <item>Leaderboard: overall and per skill</item>
+        <item>Your progress saved to your Google account and on all your devices</item>
+    </string-array>
+    <string name="pro_why">* Pro is yearly because cloud progress and the leaderboard run on servers and a database, and the subscription pays for them. It renews every year until you cancel in Google Play.</string>
     <string name="pro_buy">Get Pro</string>
     <string name="pro_buy_price">Get Pro · %1$s per year</string>
     <string name="pro_active">Pro is active.</string>

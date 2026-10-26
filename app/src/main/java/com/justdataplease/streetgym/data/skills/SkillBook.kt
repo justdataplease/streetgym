@@ -50,7 +50,7 @@ data class Skill(
     /** First session that prescribes the skill, or null when the program never does. */
     val expected: SkillProgram?,
     val beyondProgram: Boolean,
-    /** 1 (beginner) to 5 (elite): the level where the program first teaches it, never below the rung beneath it. */
+    /** 1 (beginner) to 5 (elite): a coach's grade of the movement, never below the rung beneath it. */
     val difficulty: Int,
     internal val weights: Map<String, Double>,
 )
@@ -153,6 +153,7 @@ class SkillBook private constructor(
             movements: Map<String, SkillMovement>,
             schedule: List<SkillProgram>,
             specs: List<SkillFamilySpec> = DEFAULT_FAMILIES,
+            grades: Map<String, Int> = DEFAULT_GRADES,
         ): SkillBook {
             val ladders = resolveLadders(movements, specs)
             val families = specs.mapNotNull { spec ->
@@ -176,7 +177,9 @@ class SkillBook private constructor(
                         else -> raw
                     }
                     previous = threshold
-                    previousDifficulty = maxOf(previousDifficulty, difficulty(movements.getValue(id), expected))
+                    val above = ladder.drop(rung + 1).firstNotNullOfOrNull(grades::get) ?: 5
+                    previousDifficulty = maxOf(previousDifficulty,
+                        grades[id] ?: estimate(movements.getValue(id), expected, previousDifficulty, above))
                     Skill(id, movements.getValue(id).name, rung, threshold, expected, beyond, previousDifficulty, weights)
                 }
                 SkillFamily(spec, skills)
@@ -184,10 +187,16 @@ class SkillBook private constructor(
             return SkillBook(families, movements, schedule.associateBy { it.id })
         }
 
-        /** Beginner (1) to elite (5) by the level that first teaches a movement; advanced categories start higher. */
-        internal fun difficulty(movement: SkillMovement, expected: SkillProgram?): Int {
+        /**
+         * Difficulty for a rung without a grade (one that joined its ladder by its regression): the level that first
+         * teaches it, at least Intermediate for advanced categories, and kept between the rung [below] and the next
+         * graded rung [above]. When the program never teaches it, it is one step past the rung below. Where a class
+         * first schedules a movement is a poor grade on its own: the program saves regressions for deload days and
+         * leaves some rungs out, so a negative dip would be Elite and a wall push-up would make push-ups Advanced.
+         */
+        internal fun estimate(movement: SkillMovement, expected: SkillProgram?, below: Int, above: Int): Int {
             val byLevel = when (expected?.level) {
-                null -> 5
+                null -> below + 1
                 1 -> 1
                 2 -> 2
                 3 -> 3
@@ -199,7 +208,7 @@ class SkillBook private constructor(
                 "advanced_skill", "advanced_strength", "advanced_fundamental" -> 3
                 else -> 1
             }
-            return maxOf(byLevel, floor)
+            return maxOf(byLevel, floor).coerceIn(below, maxOf(below, above))
         }
 
         /** Target for one skill: points the schedule delivers before (and on) the first session that prescribes it. */
@@ -255,6 +264,40 @@ class SkillBook private constructor(
             }
             return ladders
         }
+
+        /**
+         * 1 Beginner, 2 Novice, 3 Intermediate, 4 Advanced, 5 Elite: how a street-workout coach grades each rung,
+         * ladder by ladder. Novice is the first strict benchmark (pull-up, dip); Elite is kept for the one-arm
+         * pull-up negative, full front lever, straddle and full planche, freestanding handstand push-up negative and
+         * full flag.
+         */
+        val DEFAULT_GRADES = mapOf(
+            "assisted_pullup" to 1, "eccentric_pullup" to 1, "chinup" to 2, "pullup" to 2, "archer_pullup" to 3,
+            "typewriter_pullup" to 4, "assisted_one_arm_pullup" to 4, "one_arm_pullup_negative" to 5,
+            "straight_bar_support" to 1, "low_bar_transition" to 2, "pullover_lowbar" to 2, "chest_to_bar" to 3,
+            "jump_muscleup" to 3, "negative_muscleup" to 3, "band_muscleup" to 3, "strict_muscleup" to 4,
+            "tuck_front_row" to 2, "tuck_front_hold" to 3, "advanced_tuck_front" to 3, "one_leg_front" to 4,
+            "straddle_front" to 4, "full_front" to 5,
+            "skin_cat_partial" to 1, "german_hang" to 2, "tuck_back_entry" to 2, "tuck_back_hold" to 2,
+            "advanced_tuck_back" to 3, "one_leg_back" to 3, "straddle_back" to 4, "full_back" to 4,
+            "support_hold" to 1, "assisted_dip" to 1, "eccentric_dip" to 1, "parallel_dip" to 2, "straight_bar_dip" to 3,
+            "wall_pushup" to 1, "incline_pushup" to 1, "pushup" to 1, "pseudo_planche_pushup" to 2, "pause_pushup" to 2,
+            "close_pushup" to 2, "archer_pushup" to 3,
+            "pike_pushup" to 2, "elevated_pike_pushup" to 3, "wall_hspu_negative" to 3, "wall_hspu" to 4,
+            "deficit_wall_hspu" to 4, "freestanding_hspu_negative" to 5,
+            "elevated_plank" to 1, "planche_lean" to 2, "frog_stand" to 2, "tuck_planche" to 3,
+            "advanced_tuck_planche" to 4, "straddle_planche" to 5, "full_planche" to 5,
+            "overhead_line" to 1, "pike_handstand_hold" to 1, "wall_handstand" to 2, "wall_kickup" to 2,
+            "handstand_toe_pull" to 3, "handstand_exit" to 3, "handstand_balance" to 3,
+            "split_squat" to 1, "bulgarian_split_squat" to 2, "assisted_pistol_squat" to 2, "pistol_squat" to 3,
+            "sliding_leg_curl" to 2, "nordic_negative" to 3, "nordic_curl" to 4,
+            "knee_raise" to 1, "hanging_leg_raise" to 2, "toes_to_bar" to 3,
+            "tuck_lsit" to 1, "one_leg_lsit" to 2, "lsit" to 3,
+            "candlestick" to 1, "bent_dragon_negative" to 2, "one_leg_dragon_negative" to 3, "full_dragon_negative" to 3,
+            "dragon_flag" to 4,
+            "kneeling_side_plank" to 1, "flag_ground_support" to 2, "assisted_tuck_flag" to 3, "tuck_flag" to 3,
+            "straddle_flag" to 4, "full_flag" to 5,
+        )
 
         val DEFAULT_FAMILIES = listOf(
             SkillFamilySpec("pullup", "Pull-up", SkillGroup.PULL,

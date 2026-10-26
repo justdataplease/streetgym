@@ -88,6 +88,7 @@
     <string name="brand_line">We choose the workout. You just train.</string>
     <string name="park_scene_description">Line drawing: a figure walks into the park, does %1$s and %2$s, then holds %3$s while friends cheer.</string>
     <string name="park_scene_walk_description">Line drawing of a figure walking</string>
+    <string name="park_scene_pull_description">Line drawing of a figure doing pull-ups</string>
     <string name="park_scene_replay">Replay</string>
     <string name="section_check_description">Complete all %1$s sets</string>
     <string name="nav_timer">Timer</string>

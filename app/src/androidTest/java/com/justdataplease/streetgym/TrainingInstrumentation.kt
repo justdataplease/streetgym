@@ -73,7 +73,7 @@ class TrainingInstrumentation : Instrumentation() {
             AppSettings(targetContext).placementDone = true
             val repository = SharedPreferencesProgressRepository(targetContext)
             launch()
-            check(AppSettings(targetContext).theme == StreetTheme.CONCRETE && AppColors.theme == StreetTheme.CONCRETE && !AppColors.darkMode)
+            check(AppSettings(targetContext).theme == StreetTheme.FRESH_COURT && AppColors.theme == StreetTheme.FRESH_COURT && !AppColors.darkMode)
             check(find { it.contentDescription == "Basketball" } == null)
             clickText(R.string.start_today)
             check(repository.activeWorkout()?.programId == programs.first().id)
@@ -81,7 +81,7 @@ class TrainingInstrumentation : Instrumentation() {
             runOnMainSync { first.performClick() }; settle()
             val active = checkNotNull(repository.activeWorkout())
             check(active.completedSetIds.size == 1)
-            report("Default Concrete & Tape theme, dedicated navigation and first-session set saving")
+            report("Default Fresh Court theme, dedicated navigation and first-session set saving")
 
             val scroller = checkNotNull(find { it is android.widget.ScrollView }) as android.widget.ScrollView
             runOnMainSync { scroller.scrollTo(0, targetContext.resources.displayMetrics.density.times(600).toInt()) }; settle()
@@ -106,11 +106,11 @@ class TrainingInstrumentation : Instrumentation() {
 
 
             nav(R.string.nav_settings)
-            check(themeRow(StreetTheme.CONCRETE).isSelected && StreetTheme.entries.size == 4)
+            check(themeRow(StreetTheme.FRESH_COURT).isSelected && StreetTheme.entries.size == 5)
             pickTheme(StreetTheme.NIGHT_PARK)
             check(AppSettings(targetContext).theme == StreetTheme.NIGHT_PARK && AppColors.darkMode)
             check(repository.activeWorkout() == active)
-            check(themeRow(StreetTheme.NIGHT_PARK).isSelected && !themeRow(StreetTheme.CONCRETE).isSelected)
+            check(themeRow(StreetTheme.NIGHT_PARK).isSelected && !themeRow(StreetTheme.FRESH_COURT).isSelected)
             nav(R.string.nav_today); clickText(R.string.resume_workout)
             check((find { it is CheckBox && it.contentDescription?.toString()?.startsWith("Mark set ") == true } as CheckBox).isChecked)
             report("Picking Night Park recreates on the settings screen and keeps the active session and checked set")
@@ -202,10 +202,10 @@ class TrainingInstrumentation : Instrumentation() {
                 report("Legacy basketball preferences remain untouched in the gymnastics app")
             }
             nav(R.string.nav_settings)
-            pickTheme(StreetTheme.FRESH_COURT)
-            check(AppSettings(targetContext).theme == StreetTheme.FRESH_COURT && !AppColors.darkMode)
+            pickTheme(StreetTheme.CONCRETE_TREES)
+            check(AppSettings(targetContext).theme == StreetTheme.CONCRETE_TREES && !AppColors.darkMode)
             check(repository.completedProgramIds() == setOf(programs.first().id))
-            report("Switching back to Fresh Court retains completed history")
+            report("Switching to Concrete & Trees retains completed history")
             nav(R.string.nav_today)
             check(find { it is NativeAdSlot } == null)
             nav(R.string.nav_settings)
@@ -463,16 +463,17 @@ class TrainingInstrumentation : Instrumentation() {
             clickLabel("Turn off"); check(timing.load().alarmAt == 0L)
             runOnMainSync { activity.finish() }; settle()
             TimingAlerts.update(targetContext) { it.copy(alarmAt = System.currentTimeMillis() + 1500L) }
-            await { timing.load().alarmRinging }
-            check(timing.load().alarmRinging && timing.load().alarmAt == 0L)
             val notifications = targetContext.getSystemService(android.app.NotificationManager::class.java)
+            // The alert saves its ringing state, then posts the notification: wait for both.
+            await { timing.load().alarmRinging && notifications.activeNotifications.any { it.id == 711 } }
+            check(timing.load().alarmRinging && timing.load().alarmAt == 0L)
             check(notifications.activeNotifications.any { it.id == 711 })
             launch(); clickDialogLabel("Stop")
             check(!timing.load().alarmRinging && notifications.activeNotifications.none { it.id == 711 })
             report("Clock alarm schedules, delivers a background notification and stops from the app")
             runOnMainSync { activity.finish() }; settle()
             TimingAlerts.update(targetContext) { it.copy(countdown = Countdown(1500L).start(SystemClock.elapsedRealtime())) }
-            await { timing.load().timerRinging }
+            await { timing.load().timerRinging && notifications.activeNotifications.any { it.id == 710 } }
             check(timing.load().timerRinging && !timing.load().countdown.running)
             val alert = checkNotNull(notifications.activeNotifications.firstOrNull { it.id == 710 })
             alert.notification.actions.first().actionIntent.send()

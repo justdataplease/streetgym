@@ -30,7 +30,7 @@ private val active get() = AppColors.theme
 
 /** The bottom bar's background in the active theme. */
 fun Context.navBarBackground(): Drawable = when (active) {
-    StreetTheme.CONCRETE -> roundedDrawable(AppColors.BORDER, 0f)
+    StreetTheme.CONCRETE, StreetTheme.CONCRETE_TREES -> roundedDrawable(AppColors.BORDER, 0f)
     StreetTheme.WHEATPASTE -> TopRuleDrawable(AppColors.BACKGROUND, AppColors.BORDER, dp(3).toFloat())
     StreetTheme.NIGHT_PARK -> roundedDrawable(AppColors.SURFACE, dp(24).toFloat())
     StreetTheme.FRESH_COURT -> roundedDrawable(AppColors.SURFACE, dp(24).toFloat(), AppColors.DIVIDER, dp(1))
@@ -38,7 +38,7 @@ fun Context.navBarBackground(): Drawable = when (active) {
 
 /** A bottom-bar item's background, null for none. */
 fun Context.navItemBackground(selected: Boolean): Drawable? = when (active) {
-    StreetTheme.CONCRETE -> if (selected) roundedDrawable(AppColors.ACCENT, 0f) else null
+    StreetTheme.CONCRETE, StreetTheme.CONCRETE_TREES -> if (selected) roundedDrawable(AppColors.ACCENT, 0f) else null
     StreetTheme.NIGHT_PARK -> if (selected) TopRuleDrawable(Color.TRANSPARENT, AppColors.PRIMARY, dp(3).toFloat()) else null
     StreetTheme.WHEATPASTE -> null
     StreetTheme.FRESH_COURT -> roundedDrawable(if (selected) AppColors.INFO_SURFACE else AppColors.SURFACE, dp(16).toFloat())
@@ -46,7 +46,7 @@ fun Context.navItemBackground(selected: Boolean): Drawable? = when (active) {
 
 /** The colour of a bottom-bar item's icon and label. */
 fun navItemColor(selected: Boolean): Int = when (active) {
-    StreetTheme.CONCRETE -> if (selected) AppColors.BORDER else 0xFFBDBAB3.toInt()
+    StreetTheme.CONCRETE, StreetTheme.CONCRETE_TREES -> if (selected) AppColors.BORDER else 0xFFBDBAB3.toInt()
     StreetTheme.WHEATPASTE -> if (selected) AppColors.TEXT else AppColors.TEXT_SECONDARY
     else -> if (selected) AppColors.PRIMARY else AppColors.TEXT_SECONDARY
 }
@@ -80,7 +80,7 @@ fun Context.todayHeader(levelNumber: Int, levelName: String, classInLevel: Int, 
     val levelLine = getString(R.string.theme_level_line, levelNumber, levelName)
     return when (active) {
         StreetTheme.FRESH_COURT -> null
-        StreetTheme.CONCRETE -> LinearLayout(this).apply {
+        StreetTheme.CONCRETE, StreetTheme.CONCRETE_TREES -> LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             addWithMargins(TextView(context).apply {
                 text = levelLine.uppercase()
@@ -89,7 +89,10 @@ fun Context.todayHeader(levelNumber: Int, levelName: String, classInLevel: Int, 
                 typeface = AppType.label
                 letterSpacing = 0.14f
                 maxLines = 1
-                setPadding(dp(24), dp(7), dp(24), dp(7))
+                ellipsize = android.text.TextUtils.TruncateAt.END
+                // The tape runs 8 dp past the card on each side and tilts, so the text needs more than the 24 dp it
+                // used to have to clear the clipped, lowered left end and the edges.
+                setPadding(dp(32), dp(9), dp(28), dp(9))
                 background = roundedDrawable(AppColors.ACCENT, 0f, AppColors.BORDER, dp(2))
                 rotation = -2f
             }, leftDp = -24, rightDp = -24, topDp = 2, bottomDp = 12)
@@ -163,7 +166,6 @@ fun Context.todayHeader(levelNumber: Int, levelName: String, classInLevel: Int, 
                 textSize = 34f
                 typeface = AppType.display
                 includeFontPadding = false
-                headline()
             }, topDp = 8)
             contentDescription = getString(R.string.theme_class_of, classInLevel, levelSize, levelLine)
             importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
@@ -204,7 +206,7 @@ fun Context.decorateLevel(card: LinearLayout, state: LevelState, index: Int, fir
     val radius = dp(24).toFloat()
     when (active) {
         StreetTheme.FRESH_COURT -> Unit
-        StreetTheme.CONCRETE -> when (state) {
+        StreetTheme.CONCRETE, StreetTheme.CONCRETE_TREES -> when (state) {
             LevelState.CURRENT -> {
                 val offset = dp(4)
                 card.background = shadowed(roundedDrawable(AppColors.ACCENT, 0f, AppColors.BORDER, dp(2)),
@@ -334,7 +336,7 @@ class SetProgressView(context: Context, private val completed: BooleanArray, pri
 
     override fun onDraw(canvas: Canvas) {
         when (AppColors.theme) {
-            StreetTheme.CONCRETE -> boxes(canvas)
+            StreetTheme.CONCRETE, StreetTheme.CONCRETE_TREES -> boxes(canvas)
             StreetTheme.WHEATPASTE -> tally(canvas)
             else -> track(canvas)
         }
@@ -417,7 +419,7 @@ class SetProgressView(context: Context, private val completed: BooleanArray, pri
     companion object {
         /** How tall the strip is in the active theme, in dp. */
         val heightDp: Int get() = when (AppColors.theme) {
-            StreetTheme.CONCRETE -> 10
+            StreetTheme.CONCRETE, StreetTheme.CONCRETE_TREES -> 10
             StreetTheme.NIGHT_PARK -> 12
             StreetTheme.WHEATPASTE -> 22
             StreetTheme.FRESH_COURT -> 4
@@ -460,7 +462,7 @@ fun Context.themePicker(selected: StreetTheme, onPick: (StreetTheme) -> Unit): L
                 isChecked = option == selected
                 isClickable = false
                 isFocusable = false
-                buttonTintList = ColorStateList.valueOf(if (AppColors.theme == StreetTheme.CONCRETE) AppColors.TEXT else AppColors.PRIMARY)
+                buttonTintList = ColorStateList.valueOf(if (AppColors.theme.concrete) AppColors.TEXT else AppColors.PRIMARY)
                 importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
             })
         })

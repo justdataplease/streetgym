@@ -3,8 +3,13 @@ package com.justdataplease.streetgym.ui
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.TimePickerDialog
+import android.graphics.Canvas
+import android.graphics.Paint
 import android.graphics.Typeface
 import android.os.SystemClock
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.ReplacementSpan
 import android.text.format.DateFormat
 import android.view.Gravity
 import android.view.ViewGroup
@@ -16,6 +21,38 @@ import android.widget.TextView
 import com.justdataplease.streetgym.timer.*
 import java.util.Date
 import java.util.Locale
+import kotlin.math.ceil
+
+/** [text] with every digit drawn in the width of the widest one: the timer faces (Anton, Big Shoulders) have proportional figures. */
+internal fun tabular(text: String): CharSequence =
+    SpannableString(text).apply { setSpan(TabularDigits(), 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE) }
+
+private class TabularDigits : ReplacementSpan() {
+    override fun getSize(paint: Paint, text: CharSequence, start: Int, end: Int, fm: Paint.FontMetricsInt?): Int {
+        if (fm != null) paint.getFontMetricsInt(fm)
+        val digit = digitWidth(paint)
+        var width = 0f
+        for (i in start until end) width += if (text[i].isDigit()) digit else paint.measureText(text, i, i + 1)
+        return ceil(width).toInt()
+    }
+
+    override fun draw(canvas: Canvas, text: CharSequence, start: Int, end: Int, x: Float, top: Int, y: Int, bottom: Int, paint: Paint) {
+        val digit = digitWidth(paint)
+        var left = x
+        for (i in start until end) {
+            val width = paint.measureText(text, i, i + 1)
+            val cell = if (text[i].isDigit()) digit else width
+            canvas.drawText(text, i, i + 1, left + (cell - width) / 2f, y.toFloat(), paint)
+            left += cell
+        }
+    }
+
+    private fun digitWidth(paint: Paint): Float = DIGITS.maxOf { paint.measureText(it) }
+
+    private companion object {
+        val DIGITS = (0..9).map(Int::toString)
+    }
+}
 
 /** A branded, independent timing tool. No workout state is changed here. */
 class TimingPanel(private val host: Activity, private val askNotifications: () -> Unit,
@@ -58,7 +95,7 @@ class TimingPanel(private val host: Activity, private val askNotifications: () -
         when (shownTab) {
             0 -> {
                 val left = state.countdown.remaining(now)
-                digits.showText(clockText(left, roundUp = true))
+                digits.showClock(clockText(left, roundUp = true))
                 detail.showText(when {
                     state.countdown.running -> "Counting down"
                     left == 0L -> "Time’s up"
@@ -72,7 +109,7 @@ class TimingPanel(private val host: Activity, private val askNotifications: () -
             }
             1 -> {
                 val elapsed = state.stopwatch.elapsed(now)
-                digits.showText(clockText(elapsed) + String.format(Locale.US, ".%02d", elapsed / 10 % 100))
+                digits.showClock(clockText(elapsed) + String.format(Locale.US, ".%02d", elapsed / 10 % 100))
                 detail.showText(if (state.stopwatch.running) "Running" else if (elapsed > 0) "Paused" else "Ready")
                 primary.showText(if (state.stopwatch.running) "Pause" else if (elapsed > 0) "Resume" else "Start")
                 secondary.showText(if (state.stopwatch.running) "Lap" else "Reset")
@@ -82,13 +119,19 @@ class TimingPanel(private val host: Activity, private val askNotifications: () -
                     renderedLaps = state.stopwatch.laps
                     lapsView?.removeAllViews()
                     state.stopwatch.laps.withIndex().reversed().forEach { (index, time) ->
-                        lapsView?.addWithMargins(host.bodyText("Lap ${index + 1}     ${clockText(time)}.${(time / 10 % 100).toString().padStart(2, '0')}", 16f), topDp = 12)
+                        // Lap number on the left, its time on the right, the digits in even columns.
+                        lapsView?.addWithMargins(LinearLayout(host).apply {
+                            addView(host.bodyText("Lap ${index + 1}", 16f), LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+                            addView(host.bodyText(tabular("${clockText(time)}.${(time / 10 % 100).toString().padStart(2, '0')}"), 16f).apply {
+                                setTextColor(AppColors.TEXT)
+                            })
+                        }, topDp = 12)
                     }
                 }
             }
             2 -> {
                 val time = java.util.Calendar.getInstance().apply { set(java.util.Calendar.HOUR_OF_DAY, state.alarmHour); set(java.util.Calendar.MINUTE, state.alarmMinute) }
-                digits.showText(DateFormat.getTimeFormat(host).format(time.time))
+                digits.showClock(DateFormat.getTimeFormat(host).format(time.time))
                 detail.showText(if (state.alarmAt > 0) "${DateFormat.format("EEE, d MMM", Date(state.alarmAt))} · One time"
                     else "Tap the time to change it")
                 primary.showText(when {
@@ -110,6 +153,9 @@ class TimingPanel(private val host: Activity, private val askNotifications: () -
     }
 
     private fun TextView.showText(value: String) { if (text.toString() != value) text = value }
+
+    /** A clock readout: digits in even widths, so a face with proportional figures doesn't shift as it runs. */
+    private fun TextView.showClock(value: String) { if (text.toString() != value) text = tabular(value) }
 
     private fun build(tab: Int) {
         shownTab = tab; content.removeAllViews(); renderedLaps = emptyList(); lapsView = null; presets = emptyList(); alertsHint = null
@@ -147,8 +193,10 @@ class TimingPanel(private val host: Activity, private val askNotifications: () -
             }
             refresh(store.load())
         }
-        val actions = LinearLayout(host)
-        if (tab != 2) actions.addView(secondary, LinearLayout.LayoutParams(0, host.dp(54), 1f).apply { rightMargin = host.dp(10) })
+        // Not baseline-aligned: the primary's larger type and shadow padding pushed the secondary down past the row's
+        // bottom, cutting off its outline. The secondary matches the primary's face, above the hard shadow.
+        val actions = LinearLayout(host).apply { isBaselineAligned = false }
+        if (tab != 2) actions.addView(secondary, LinearLayout.LayoutParams(0, host.dp(54 - AppColors.theme.shape.shadowDp), 1f).apply { rightMargin = host.dp(10) })
         actions.addView(primary, LinearLayout.LayoutParams(0, host.dp(54), 1f))
         if (compact) panel.addView(actions, LinearLayout.LayoutParams(host.dp(240), ViewGroup.LayoutParams.WRAP_CONTENT).apply {
             marginStart = host.dp(16)

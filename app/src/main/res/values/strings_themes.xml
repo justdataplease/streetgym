@@ -2,6 +2,8 @@
     <string name="theme_section">Theme</string>
     <string name="theme_concrete">Concrete &amp; Tape</string>
     <string name="theme_concrete_summary">Light · concrete, black lines and hazard tape</string>
+    <string name="theme_concrete_trees">Concrete &amp; Trees</string>
+    <string name="theme_concrete_trees_summary">Light · concrete, black lines and park green</string>
     <string name="theme_night_park">Night Park</string>
     <string name="theme_night_park_summary">Dark · asphalt and streetlight orange</string>
     <string name="theme_wheatpaste">Wheatpaste</string>
