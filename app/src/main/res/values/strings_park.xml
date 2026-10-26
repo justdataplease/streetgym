@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Today hero: the day's three movements, filled into park_scene_description. -->
+    <string name="park_move_squats">squats</string>
+    <string name="park_move_dips">dips on the parallel bars</string>
+    <string name="park_move_knee_raises">hanging knee raises</string>
+    <string name="park_move_pull_ups">pull-ups</string>
+    <string name="park_move_pistol_squats">pistol squats</string>
+    <string name="park_move_muscle_up">a muscle-up</string>
+    <string name="park_move_handstand">a freestanding handstand</string>
+    <string name="park_move_tuck_lever">a tuck front lever</string>
+    <string name="park_move_front_lever">a front lever</string>
+    <string name="park_move_human_flag">a human flag on the bar\'s post</string>
+</resources>

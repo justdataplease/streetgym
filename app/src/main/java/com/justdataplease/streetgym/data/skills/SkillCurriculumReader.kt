@@ -5,12 +5,13 @@ import org.json.JSONObject
 
 /**
  * Reads what skills need straight from curriculum.json: the movement library (category, patterns,
- * regression) and every session's main and practice steps in schedule order. Optional readiness
- * checks (tempo "readiness_check") are flagged so they do not count toward targets.
+ * regression) and every session's main and practice steps in schedule order. Readiness checks
+ * (tempo "readiness_check") are flagged so they do not count toward targets.
  */
 object SkillCurriculumReader {
-    fun read(json: String): SkillBook {
-        val root = JSONObject(json)
+    fun read(json: String): SkillBook = read(JSONObject(json))
+
+    fun read(root: JSONObject): SkillBook {
         val movements = buildMap {
             val library = root.optJSONArray("movement_library") ?: JSONArray()
             for (index in 0 until library.length()) {
@@ -32,7 +33,8 @@ object SkillCurriculumReader {
                 SkillProgram(
                     id = program.optString("id"),
                     level = program.optInt("level", level.optInt("number")),
-                    week = schedule?.optInt("week")?.takeIf { it > 0 },
+                    // Stored weeks restart at each source block; the athlete's week follows the class number.
+                    week = program.optInt("number").takeIf { it > 0 }?.let { (it - 1) / 7 + 1 },
                     day = schedule?.optInt("day")?.takeIf { it > 0 },
                     steps = steps(program, movements.keys),
                 )
@@ -42,27 +44,39 @@ object SkillCurriculumReader {
     }
 
     private fun steps(program: JSONObject, known: Set<String>): List<SkillStep> {
-        val compact = (program.optJSONArray("training_main") ?: program.optJSONArray("main")).tuples() +
-            program.optJSONArray("practice").tuples()
-        val fromTuples = compact.mapNotNull { tuple ->
+        val main = program.optJSONArray("training_main") ?: program.optJSONArray("main")
+        val compact = (main.tuples() + program.optJSONArray("practice").tuples()).mapNotNull { tuple ->
             val id = tuple.optString(0).takeIf { it in known } ?: return@mapNotNull null
             SkillStep(id, tuple.optInt(1, 1).coerceAtLeast(1), tuple.optString(5) == READINESS_CHECK)
         }
-        if (fromTuples.isNotEmpty()) return fromTuples
-        // Authentic sessions list exercises by name; map the recurring ones to library movements.
+        if (main != null) return compact
+        // Authentic sessions list their main work by exercise name; map the recurring ones, then add the practice.
         val content = program.optJSONObject("training_content") ?: program.optJSONObject("content")
         return content?.optJSONArray("exercises").objects().mapNotNull { exercise ->
             val name = exercise.optJSONObject("name")?.optString("en").orEmpty()
-            val id = (exercise.optString("movement_id").takeIf { it in known } ?: AUTHENTIC_NAMES[name])
+            val description = exercise.optJSONObject("description")?.optString("en").orEmpty()
+            val id = (exercise.optString("movement_id").takeIf { it in known } ?: authenticMovement(name, description))
                 ?.takeIf { it in known } ?: return@mapNotNull null
             SkillStep(id, exercise.optJSONArray("sets")?.length()?.coerceAtLeast(1) ?: 1)
-        }
+        }.orEmpty() + compact
     }
 
     private const val READINESS_CHECK = "readiness_check"
 
+    /** Variants named in an authentic exercise's description come before its plain name. */
+    private fun authenticMovement(name: String, description: String): String? =
+        AUTHENTIC_VARIANTS.firstOrNull { (variantName, phrase, _) -> name == variantName && description.contains(phrase, ignoreCase = true) }
+            ?.third ?: AUTHENTIC_NAMES[name]
+
+    private val AUTHENTIC_VARIANTS = listOf(
+        Triple("Pull Up", "foot on the post", "assisted_pullup"),
+        Triple("Pull Up", "Chin Up", "chinup"),
+        Triple("Jump To Hang On High Bar", "Negative Pull Up", "eccentric_pullup"),
+        Triple("Pull Over", "Negative Muscle Up", "negative_muscleup"),
+    )
+
     private val AUTHENTIC_NAMES = mapOf(
-        "Pull Up" to "pullup", "Push Up" to "pushup", "Squat" to "squat", "Hanging Leg Raise" to "hanging_leg_raise",
+        "Pull Up" to "pullup", "Push Up" to "pushup", "Squat" to "squat", "Hanging Leg Raise" to "knee_raise",
         "Front Support" to "plank", "Hang" to "active_hang", "Dips" to "parallel_dip", "Half Dips" to "assisted_dip",
         "Inverted Row" to "inverted_row", "Pull Over" to "pullover_lowbar", "Assisted Pull Over" to "pullover_lowbar",
         "Hanging Knee Raise" to "knee_raise", "Band-Assisted Muscle-Up" to "band_muscleup", "Bar Dips" to "straight_bar_dip",
@@ -70,6 +84,8 @@ object SkillCurriculumReader {
         "Feet-Assisted Low-Bar Transition" to "low_bar_transition", "Plank" to "plank", "Muscle Up" to "strict_muscleup",
         "Tuck Front-Lever Hold" to "tuck_front_hold", "Side Plank" to "side_plank", "Single Leg Squat" to "assisted_pistol_squat",
         "2/3 Muscle Up" to "jump_muscleup", "Spotted Tuck Back-Lever Entry" to "tuck_back_entry", "Front Lunges" to "reverse_lunge",
+        "Jump To Hang On High Bar" to "active_hang", "Shoulder Shrugs" to "support_hold", "Rolling Shoulder Shrugs" to "support_hold",
+        "Squat Jump" to "squat_jump", "Parallel Bars - Hand Walk" to "parallel_bar_walk",
     )
 
     private fun humanize(id: String) = id.split('_').joinToString(" ").replaceFirstChar(Char::uppercase)

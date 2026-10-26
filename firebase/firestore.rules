@@ -1,0 +1,58 @@
+rules_version = '2';
+
+// Street Gymnastics: who may read and write what (docs/TIERS.md, "Pro account setup").
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Leaderboards: the app reads them without signing in (Plus); only the scheduled function writes them.
+    match /boards/{board} {
+      allow get: if true;
+      allow list, write: if false;
+    }
+
+    // The function's own bookkeeping.
+    match /meta/{doc} {
+      allow read, write: if false;
+    }
+
+    // A username belongs to one account: claimed once, released only by its owner.
+    match /usernames/{name} {
+      allow get: if request.auth != null;
+      allow create: if request.auth != null
+        && name.matches('^[a-z0-9_.]{3,20}$')
+        && request.resource.data.keys().hasOnly(['uid'])
+        && request.resource.data.uid == request.auth.uid;
+      allow delete: if request.auth != null && resource.data.uid == request.auth.uid;
+      allow list, update: if false;
+    }
+
+    // A profile: its username must be the one this account holds.
+    match /users/{uid} {
+      allow get, delete: if request.auth != null && request.auth.uid == uid;
+      allow create, update: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.username is string
+        && request.resource.data.username.matches('^[A-Za-z0-9_.]{3,20}$')
+        && getAfter(/databases/$(database)/documents/usernames/$(request.resource.data.username.lower())).data.uid == uid
+        && request.resource.data.country is string && request.resource.data.country.size() == 2
+        && request.resource.data.visible is bool;
+      allow list: if false;
+
+      // Cloud progress (Pro): only its owner reads or writes it.
+      match /data/{doc} {
+        allow read, write: if request.auth != null && request.auth.uid == uid && doc in ['progress', 'library'];
+      }
+    }
+
+    // Public scores: written by their owner under their profile's name, read only by the function.
+    match /scores/{uid} {
+      allow create, update: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.username == get(/databases/$(database)/documents/users/$(uid)).data.username
+        && request.resource.data.country is string && request.resource.data.country.size() == 2
+        && request.resource.data.overall is int
+        && request.resource.data.overall >= 0 && request.resource.data.overall <= 1000000
+        && request.resource.data.skills is map && request.resource.data.skills.size() <= 200;
+      allow delete: if request.auth != null && request.auth.uid == uid;
+      allow read: if false;
+    }
+  }
+}

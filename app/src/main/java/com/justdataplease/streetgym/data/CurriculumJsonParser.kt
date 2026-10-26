@@ -19,6 +19,8 @@ import org.json.JSONObject
  * doses, progressions, or variations.
  */
 object CurriculumJsonParser {
+    private const val EASIER_RUNGS = 3
+
     fun parse(json: String): CurriculumCatalog = parse(JSONObject(json))
 
     fun parse(root: JSONObject): CurriculumCatalog {
@@ -184,8 +186,7 @@ object CurriculumJsonParser {
                 val tempo = tuple.optNullableString(5)
                 val regressionId = tuple.optNullableString(6)
                     ?: movement?.optValueAsString("regression_id")
-                val regression = regressionId?.let(movementLibrary::get)
-                val description = movementDescription(movement, regression)
+                val description = movementDescription(movement, easierChain(regressionId, movementLibrary))
 
                 add(
                     TrainingExercise(
@@ -258,19 +259,34 @@ object CurriculumJsonParser {
 
     private fun movementDescription(
         movement: JSONObject?,
-        regression: JSONObject?,
+        easier: List<String>,
     ): LocalizedText {
         if (movement == null) return LocalizedText.EMPTY
         val base = movement.optLocalized("description")
         val safety = movement.optLocalized("safety")
-        val regressionName = regression?.optLocalized("name") ?: LocalizedText.EMPTY
         return LocalizedText(
             en = joinNotes(
                 base.en,
                 safety.en?.let { "Safety: $it" },
-                regressionName.en?.let { "Regression: $it" },
+                easier.takeIf { it.isNotEmpty() }?.let { "Regression: ${it.joinToString(" → ")}" },
             ),
         )
+    }
+
+    /**
+     * The step's easier rung followed by the library's own easier rungs, up to [EASIER_RUNGS] names, so an athlete
+     * two rungs behind still sees what to do in the same sets.
+     */
+    private fun easierChain(regressionId: String?, movementLibrary: Map<String, JSONObject>): List<String> {
+        val names = mutableListOf<String>()
+        val seen = mutableSetOf<String>()
+        var id = regressionId
+        while (id != null && names.size < EASIER_RUNGS && seen.add(id)) {
+            val rung = movementLibrary[id] ?: break
+            rung.optLocalized("name").en?.let(names::add)
+            id = rung.optValueAsString("regression_id")
+        }
+        return names
     }
 
     private fun compactSetDescription(

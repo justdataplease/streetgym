@@ -1,4 +1,5 @@
-"""Sampled motion checks for the progression animations (tools/animation_authoring/progressions.py).
+"""Sampled motion checks for the progression animations (tools/animation_authoring/progressions.py
+and group_e.py).
 
 Every template is sampled at 201 phases, so the frames between keyframes are checked too:
 loaded contacts stay pinned, straight-arm supports stay straight, elbows and knees bend the
@@ -12,7 +13,7 @@ from pathlib import Path
 
 TOOLS = Path(__file__).resolve().parent
 sys.path.insert(0, str(TOOLS))
-from preview_animations import Figure, Template  # noqa: E402
+from preview_animations import Figure, Template, _blend_meta  # noqa: E402
 
 ROOT = TOOLS.parent
 asset = json.loads((ROOT / "app/src/main/assets/exercise_animations.json").read_text(encoding="utf-8"))
@@ -27,7 +28,18 @@ EXPECTED = {
     "seated_pike_lift": "seated_pike_lift", "bulgarian_split_squat": "bulgarian_split_squat",
     "sliding_leg_curl": "sliding_leg_curl", "nordic_negative": "nordic_negative", "single_leg_rdl": "single_leg_rdl",
     "prone_ytw": "prone_ytw", "squat_jump": "half_squat_jump",
+    # group_e.py
+    "straight_side_plank": "straight_side_plank", "hollow_body_hold": "hollow_body_hold", "german_hang": "german_hang",
+    "handstand_exit": "handstand_exit", "straddle_flag": "straddle_flag", "full_flag": "full_flag",
+    "nordic_curl": "nordic_curl",
+    # group_f.py (Level 7 "Mastery")
+    "typewriter_pullup": "typewriter_pullup", "assisted_one_arm_pullup": "assisted_one_arm_pullup",
+    "one_arm_pullup_negative": "one_arm_pullup_negative", "deficit_wall_hspu": "deficit_wall_hspu",
+    "freestanding_hspu_negative": "freestanding_hspu_negative",
 }
+# The typewriter guide faces the viewer (its slide is sideways), so its elbows point out to the sides;
+# group_f checks them against the bar and the outer side instead of the side-view bend direction.
+FRONT_VIEW = {"typewriter_pullup"}
 failures = []
 cache = {}
 
@@ -91,9 +103,11 @@ def straight(name, side, minimum=STRAIGHT, window=(0.0, 1.0)):
 
 def general(name, check_elbows=True, head_floor=FLOOR - 0.5):
     """Canvas, head clearance and anatomical bend direction on every sample."""
-    facing = motion(name).keyframes[0][1].facing
+    m = motion(name)
     r = figure.head_radius
     for i, t, j in frames(name):
+        # A figure that turns (the handstand exit) is judged by its facing at each sample.
+        facing = _blend_meta(m, i / (SAMPLES - 1))[1]
         head = j["head"]
         if not (r <= head[0] <= WIDTH - r and r <= head[1] and head[1] + r <= head_floor):
             fail(name, f"head outside the canvas or on the floor at sample {i}: {tuple(round(v, 2) for v in head)}")
@@ -125,7 +139,8 @@ if failures:
     sys.exit(1)
 
 for name in EXPECTED.values():
-    general(name, check_elbows=name != "prone_ytw")  # Y-T-W arm shapes come from shoulder rotation
+    # Y-T-W arm shapes come from shoulder rotation; front-view guides are checked in their own section.
+    general(name, check_elbows=name != "prone_ytw" and name not in FRONT_VIEW)
 
 # 1 archer pull-up: both hands stay on the bar, the far arm stays nearly straight.
 pinned("archer_pullup", "hand_near", (92, 12))
@@ -258,6 +273,240 @@ if peak["foot_near"][1] > ANKLE - 8 or max(peak["toe_near"][1], peak["toe_far"][
 airborne = sum(1 for _, _, j in frames("half_squat_jump") if j["foot_near"][1] < ANKLE - 1)
 if airborne > SAMPLES * 0.25:
     fail("half_squat_jump", f"the flight phase is too long ({airborne} of {SAMPLES} samples)")
+
+
+# ---- group_e.py ----
+def above_floor(name):
+    """No limb sinks into the floor between keyframes (feet and elbows at ankle height, hands and toes lower)."""
+    limits = {"hand_near": HAND_FLOOR, "hand_far": HAND_FLOOR, "toe_near": FLOOR, "toe_far": FLOOR}
+    for i, t, j in frames(name):
+        for joint, (_, y) in j.items():
+            if joint in ("hands", "feet"):
+                continue
+            limit = limits.get(joint, ANKLE)
+            if y > limit + TOL:
+                fail(name, f"{joint} sinks into the floor at sample {i} (t={t:.3f}): y={y:.2f} > {limit}")
+                return
+
+
+def straight_legs(name, minimum=30.8, window=(0.0, 1.0), sides=("near", "far")):
+    for i, t, j in frames(name):
+        for side in sides:
+            if window[0] <= t <= window[1] and dist(j["hip"], j[f"foot_{side}"]) < minimum:
+                fail(name, f"leg_{side} bends ({dist(j['hip'], j[f'foot_{side}']):.2f} < {minimum}) at sample {i} (t={t:.3f})")
+                return
+
+
+def extension(j, facing=1):
+    """Shoulder extension in degrees: 0 with the arms along the sides, positive as they go behind the back."""
+    return ((angle(j["shoulder"], j["hand_near"]) - angle(j["hip"], j["neck"])) * facing) % 360 - 180
+
+
+for name in ("straight_side_plank", "hollow_body_hold", "german_hang", "handstand_exit", "straddle_flag", "full_flag", "nordic_curl"):
+    above_floor(name)
+
+# 15 straight-leg side plank: forearm and feet planted, straight legs, one line from head to heels.
+SSP_ANKLE = (74 + math.sqrt(51 ** 2 - 13.5 ** 2), ANKLE)
+pinned("straight_side_plank", "elbow_near", (74, ANKLE))
+pinned("straight_side_plank", "hand_near", (86.5, ANKLE))
+pinned("straight_side_plank", "foot_near", SSP_ANKLE)
+straight_legs("straight_side_plank")
+hold = at("straight_side_plank", 1.0)
+if abs(signed(angle(hold["foot_near"], hold["hip"]) - angle(hold["hip"], hold["neck"]))) > 1:
+    fail("straight_side_plank", "the hold is not one line from head to heels")
+if abs(hold["shoulder"][0] - hold["elbow_near"][0]) > 0.1:
+    fail("straight_side_plank", "the elbow is not stacked under the shoulder in the hold")
+if not at("straight_side_plank", 0.0)["hip"][1] > hold["hip"][1] + 1.5:
+    fail("straight_side_plank", "the hips do not lift into the line")
+
+# 16 straight hollow body: lower back down, straight legs low, shoulders up, arms by the ears.
+pinned("hollow_body_hold", "hip", (106, 100))
+straight_legs("hollow_body_hold")
+straight("hollow_body_hold", "near")
+for t in (0.0, 1.0):
+    hold = at("hollow_body_hold", t)
+    lift = -signed(angle(hold["hip"], hold["foot_near"]) - 90)
+    if not 8 <= lift <= 25:
+        fail("hollow_body_hold", f"the straight legs are not held low at t={t} ({lift:.1f} deg)")
+    if not hold["neck"][1] < hold["hip"][1] - 4:
+        fail("hollow_body_hold", f"the shoulders are not lifted at t={t}")
+    if not (hold["hand_near"][0] < hold["head"][0] - 4 and hold["hand_near"][1] < hold["shoulder"][1]):
+        fail("hollow_body_hold", f"the arms are not reaching past the head at t={t}")
+
+# 17 feet-supported German hang: hands on the bar with straight arms, feet planted in front at the
+# start and behind in the hang, the hips pass over the shoulders, shoulders open in the hold.
+GH_HAND, GH_SIT, GH_BACK = (100, 46), (124, ANKLE), (60, 101)
+pinned("german_hang", "hand_near", GH_HAND)
+pinned("german_hang", "hand_far", GH_HAND)
+straight("german_hang", "near")
+straight("german_hang", "far")
+for window in ((0.0, 0.06), (0.94, 1.0)):
+    pinned("german_hang", "foot_near", GH_SIT, window=window)
+    pinned("german_hang", "foot_far", GH_SIT, window=window)
+pinned("german_hang", "foot_near", GH_BACK, window=(0.36, 0.64))
+pinned("german_hang", "foot_far", GH_BACK, window=(0.36, 0.64))
+on_level("german_hang", "toe_near", 1, FLOOR, window=(0.36, 0.64))
+if min(j["hip"][1] - j["shoulder"][1] for _, _, j in frames("german_hang")) > -15:
+    fail("german_hang", "the hips never rotate over the shoulders (no skin-the-cat)")
+if extension(at("german_hang", 0.5)) < 100:
+    fail("german_hang", f"the hands are not behind the body in the hang ({extension(at('german_hang', 0.5)):.0f} deg)")
+
+# 18 handstand cartwheel exit: support hand planted and straight until the first foot lands, toes on
+# the wall at the start, the far hand off the floor, one foot at a time, lunge finish, nothing in the wall.
+HS_HAND, HS_STEP, HS_BACK, WALL = (145, HAND_FLOOR), (114, ANKLE), (86, 101.5), 150.0
+for window in ((0.0, 0.34), (0.7295, 1.0)):
+    pinned("handstand_exit", "hand_near", HS_HAND, window=window)
+    straight("handstand_exit", "near", window=window)
+on_level("handstand_exit", "toe_near", 0, WALL, window=(0.0, 0.08))
+pinned("handstand_exit", "foot_near", HS_STEP, window=(0.34, 0.7295))
+pinned("handstand_exit", "foot_far", HS_BACK, window=(0.47, 0.62))
+for i, t, j in frames("handstand_exit"):
+    if any(x > WALL + 0.05 for _, (x, _) in j.items()) or j["head"][0] + figure.head_radius > WALL:
+        fail("handstand_exit", f"a limb or the head passes through the wall at sample {i}")
+        break
+    if 0.2 <= t <= 0.34 and j["hand_far"][1] > HAND_FLOOR - 4:
+        fail("handstand_exit", f"the weight is not on one hand (far hand down) at sample {i}")
+        break
+    if abs(t - 0.34) < 0.004 and j["foot_far"][1] > ANKLE - 15:
+        fail("handstand_exit", "both feet come down together")
+        break
+finish = at("handstand_exit", 0.55)
+if not (abs(signed(angle(finish["hip"], finish["neck"]))) < 5 and finish["hand_near"][1] < finish["head"][1]):
+    fail("handstand_exit", "the exit does not finish upright with the arms overhead")
+
+# 19-20 human flags: split grip with both arms straight, trunk level; wide straddle, then one straight line.
+FLAG_DY = math.sqrt(26 ** 2 - 18 ** 2)
+for name in ("straddle_flag", "full_flag"):
+    pinned(name, "hand_near", (62, 60 + FLAG_DY))
+    pinned(name, "hand_far", (62, 60 - FLAG_DY))
+    straight(name, "near")
+    straight(name, "far")
+    on_level(name, "hip", 1, 60)
+straddle = at("straddle_flag", 1.0)
+if abs(signed(angle(straddle["hip"], straddle["foot_near"]) - angle(straddle["hip"], straddle["foot_far"]))) < 60:
+    fail("straddle_flag", "the legs are not in a wide straddle")
+straight_legs("straddle_flag", window=(0.55, 1.0))
+full = at("full_flag", 1.0)
+for side in ("near", "far"):
+    if abs(signed(angle(full["hip"], full[f"foot_{side}"]) - angle(full["neck"], full["hip"]))) > 2:
+        fail("full_flag", f"leg_{side} is not in one line with the trunk")
+straight_legs("full_flag")
+
+# 21 full Nordic curl: knees and anchored ankles fixed, one line from the knees through the whole
+# range, the chest close to the floor at the bottom, the hands never catch, back up to kneeling.
+pinned("nordic_curl", "knee_near", (124, 102))
+pinned("nordic_curl", "foot_near", (139, 102))
+for i, t, j in frames("nordic_curl"):
+    if abs(signed(angle(j["knee_near"], j["hip"]) - angle(j["hip"], j["neck"]))) > 1:
+        fail("nordic_curl", f"the hips break the body line at sample {i}")
+        break
+    if max(j["hand_near"][1], j["hand_far"][1]) > HAND_FLOOR - 2:
+        fail("nordic_curl", f"the hands catch the floor at sample {i}")
+        break
+if max(j["neck"][1] for _, _, j in frames("nordic_curl")) < 92.5:
+    fail("nordic_curl", "the curl does not lower through the full range")
+if abs(signed(angle(at("nordic_curl", 1.0)["hip"], at("nordic_curl", 1.0)["neck"]))) > 1:
+    fail("nordic_curl", "the curl does not return to upright kneeling")
+
+# ---- group_f.py (Level 7 "Mastery") ----
+BAR = 12.0
+
+# 22 typewriter pull-up (front view): both hands stay on the bar, each elbow below the bar on its own
+# outer side, the chin clears the bar across the slide, and the straight arm swaps sides.
+TW_LEFT, TW_RIGHT = (86, BAR), (114, BAR)
+pinned("typewriter_pullup", "hand_near", TW_LEFT)
+pinned("typewriter_pullup", "hand_far", TW_RIGHT)
+for i, t, j in frames("typewriter_pullup"):
+    sh = j["shoulder"]
+    outer = [((j[f"hand_{s}"][0] - sh[0]) * (j[f"elbow_{s}"][1] - sh[1]) - (j[f"hand_{s}"][1] - sh[1]) * (j[f"elbow_{s}"][0] - sh[0])) * sign
+             for s, sign in (("near", -1), ("far", 1))]
+    if min(j["elbow_near"][1], j["elbow_far"][1]) < BAR + 2:
+        fail("typewriter_pullup", f"an elbow rises over the bar at sample {i}")
+        break
+    if min(outer) < -TOL:
+        fail("typewriter_pullup", f"an elbow points inward at sample {i}")
+        break
+for t in (0.4, 0.49, 0.58):
+    if at("typewriter_pullup", t)["head"][1] > BAR:
+        fail("typewriter_pullup", f"the chin drops below the bar during the slide (t={t})")
+left_top, right_top = at("typewriter_pullup", 0.36), at("typewriter_pullup", 0.62)
+if not (left_top["shoulder"][0] < 92 < 108 < right_top["shoulder"][0]):
+    fail("typewriter_pullup", "the shoulders do not travel from one hand to the other at the top")
+if dist(left_top["shoulder"], left_top["hand_far"]) < 25.5 or dist(right_top["shoulder"], right_top["hand_near"]) < 25.5:
+    fail("typewriter_pullup", "the long arm is not straight at either end of the slide")
+
+# 23 towel-assisted one-arm pull-up: the bar hand and the towel hand stay put, the working arm is
+# straight in the hang, the chin clears the bar at the top and the towel hand ends beside the shoulder.
+pinned("assisted_one_arm_pullup", "hand_near", (100, BAR))
+pinned("assisted_one_arm_pullup", "hand_far", (109, 26))
+straight("assisted_one_arm_pullup", "near", 25.5, window=(0.0, 0.0))
+oap_top = at("assisted_one_arm_pullup", 1.0)
+if oap_top["head"][1] > BAR:
+    fail("assisted_one_arm_pullup", "the chin does not clear the bar at the top")
+if not oap_top["hand_far"][1] > oap_top["shoulder"][1]:
+    fail("assisted_one_arm_pullup", "the towel hand is not pressing down beside the shoulder at the top")
+
+# 24 one-arm pull-up negative: one hand on the bar, the free hand off it, a long steady lowering to a
+# straight arm, and the feet clear of the box in the hang.
+pinned("one_arm_pullup_negative", "hand_near", (100, BAR))
+straight("one_arm_pullup_negative", "near", 25.5, window=(0.78, 0.88))
+heights = []
+for i, t, j in frames("one_arm_pullup_negative"):
+    if j["hand_far"][1] < BAR + 3:
+        fail("one_arm_pullup_negative", f"the free hand reaches the bar at sample {i}")
+        break
+    if max(j["foot_near"][1], j["toe_near"][1], j["foot_far"][1], j["toe_far"][1]) > 97 - TOL:
+        fail("one_arm_pullup_negative", f"the feet touch the box at sample {i}")
+        break
+    if 0.12 <= t <= 0.78:
+        heights.append(j["shoulder"][1])
+if any(b < a - 1e-6 for a, b in zip(heights, heights[1:])) or heights[-1] - heights[0] < 15:
+    fail("one_arm_pullup_negative", "the lowering is not one steady descent to the hang")
+if at("one_arm_pullup_negative", 0.0)["head"][1] > BAR:
+    fail("one_arm_pullup_negative", "the negative does not start with the chin over the bar")
+
+# 25 deficit wall handstand push-up: hands planted on the blocks, toes on the wall, straight arms at the
+# top, the head lowering below hand level beside the blocks onto the mat, nothing through the wall.
+DEF_HAND, DEF_MAT, DEF_BLOCK = (137, 96), 104.0, (134.0, 97.0)
+pinned("deficit_wall_hspu", "hand_near", DEF_HAND)
+pinned("deficit_wall_hspu", "hand_far", DEF_HAND)
+on_level("deficit_wall_hspu", "toe_near", 0, 150)
+straight("deficit_wall_hspu", "near", window=(0.0, 0.0))
+general("deficit_wall_hspu", head_floor=DEF_MAT)
+deepest = max((j["head"][1] for _, _, j in frames("deficit_wall_hspu")))
+if deepest < DEF_HAND[1] + 2 or deepest + figure.head_radius < DEF_MAT - 1.5:
+    fail("deficit_wall_hspu", "the head does not lower below the hands to the mat")
+for i, t, j in frames("deficit_wall_hspu"):
+    if any(x > 150.05 for k, (x, _) in j.items() if k != "toe_near"):
+        fail("deficit_wall_hspu", f"a limb passes through the wall at sample {i}")
+        break
+    if j["head"][1] + figure.head_radius > DEF_BLOCK[1] and j["head"][0] + figure.head_radius > DEF_BLOCK[0]:
+        fail("deficit_wall_hspu", f"the head enters the blocks at sample {i}")
+        break
+
+# 26 freestanding handstand push-up negative: hands planted, stacked over them at the top with straight
+# arms, hips kept over the hands, the head lowering to the mat, and nothing touching the backstop wall.
+FS_HAND, FS_MAT, FS_WALL = (110, HAND_FLOOR), 102.5, 140.0
+pinned("freestanding_hspu_negative", "hand_near", FS_HAND)
+pinned("freestanding_hspu_negative", "hand_far", FS_HAND)
+straight("freestanding_hspu_negative", "near", window=(0.0, 0.0))
+general("freestanding_hspu_negative", head_floor=FS_MAT)
+if abs(at("freestanding_hspu_negative", 0.0)["hip"][0] - FS_HAND[0]) > 0.5:
+    fail("freestanding_hspu_negative", "the start is not a stacked handstand over the hands")
+lowest = max((j["head"][1] for _, _, j in frames("freestanding_hspu_negative")))
+if lowest + figure.head_radius < FS_MAT - 1.5:
+    fail("freestanding_hspu_negative", "the head does not lower to the mat")
+for i, t, j in frames("freestanding_hspu_negative"):
+    if abs(j["hip"][0] - FS_HAND[0]) > 4:
+        fail("freestanding_hspu_negative", f"the hips leave the hands at sample {i}")
+        break
+    if max(x for k, (x, _) in j.items()) > FS_WALL - 2:
+        fail("freestanding_hspu_negative", f"the body reaches the backstop wall at sample {i}")
+        break
+    if max(j["foot_near"][1], j["foot_far"][1]) > 60:
+        fail("freestanding_hspu_negative", f"the feet come down during the negative at sample {i}")
+        break
+straight_legs("freestanding_hspu_negative")
 
 if failures:
     print(f"Progression motion checks failed with {len(failures)} error(s):")

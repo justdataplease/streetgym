@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="progress_tab_leaderboard">Leaderboard</string>
+    <string name="leaderboard_intro">See how your training compares: an overall board and one for every skill, worldwide and by country.</string>
+    <string name="leaderboard_unavailable">The leaderboard isn’t available in this build.</string>
+    <string name="leaderboard_world">World</string>
+    <string name="leaderboard_overall">Overall</string>
+    <string name="leaderboard_board">Board: %1$s ▾</string>
+    <string name="leaderboard_pick">Choose a board</string>
+    <string name="leaderboard_loading">Loading the leaderboard…</string>
+    <string name="leaderboard_offline">Couldn’t load the leaderboard. Check your connection.</string>
+    <string name="leaderboard_empty">No one is on this board yet.</string>
+    <string name="leaderboard_rank">#%1$d</string>
+    <string name="leaderboard_you_rank">You’re #%1$d · %2$s points</string>
+    <string name="leaderboard_you_top">You’re in the top %1$d%% · %2$s points</string>
+    <string name="leaderboard_you_none">Finish workouts to earn points on this board.</string>
+    <string name="leaderboard_hidden">You’re hidden from the leaderboard. Turn it on in Settings.</string>
+    <string name="leaderboard_sign_in">Sign in in Settings to appear on the leaderboard.</string>
+    <string name="leaderboard_join">Get Pro to appear on the leaderboard</string>
+    <string name="leaderboard_updated">%1$s players · updated %2$s · boards refresh every 6 hours</string>
+    <string name="leaderboard_how">Points come from workouts you finish: the same skill points as Progress. Days marked with Complete day or Complete level, repeats and your own workouts don’t count.</string>
+    <string name="paywall_leaderboard">The leaderboard is part of Plus</string>
+    <string name="paywall_account">Joining the leaderboard and saving your progress are part of Pro</string>
+</resources>

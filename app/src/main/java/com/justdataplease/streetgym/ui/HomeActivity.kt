@@ -1,9 +1,7 @@
 package com.justdataplease.streetgym.ui
 
 import com.justdataplease.streetgym.BuildConfig
-import com.justdataplease.monetization.AdPalette
 import com.justdataplease.monetization.NativeAds
-import com.justdataplease.monetization.NativeAdSlot
 
 import android.Manifest
 import android.content.Intent
@@ -12,13 +10,54 @@ import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
 import com.justdataplease.streetgym.timer.TimingAlerts
-import com.justdataplease.streetgym.timer.TimingStore
 import com.justdataplease.streetgym.ads.WorkoutAdBreak
 import com.justdataplease.streetgym.ads.ManagedNativePlacement
-import com.justdataplease.streetgym.billing.RemoveAdsBilling
+import com.justdataplease.streetgym.billing.Entitlement
+import com.justdataplease.streetgym.billing.LevelAccess
+import com.justdataplease.streetgym.billing.SavedLimit
+import com.justdataplease.streetgym.billing.Tier
+import com.justdataplease.streetgym.billing.TierBilling
+import com.justdataplease.streetgym.data.library.CustomDay
+import com.justdataplease.streetgym.data.library.CustomDays
+import com.justdataplease.streetgym.data.library.CustomExercise
+import com.justdataplease.streetgym.data.library.CustomSet
+import com.justdataplease.streetgym.data.library.ExerciseLibrary
+import com.justdataplease.streetgym.data.library.LibraryCodec
+import com.justdataplease.streetgym.data.library.LibraryMovement
+import com.justdataplease.streetgym.data.library.LibraryRepository
+import com.justdataplease.streetgym.account.AccountStore
+import com.justdataplease.streetgym.account.Cloud
+import com.justdataplease.streetgym.account.CloudSync
+import com.justdataplease.streetgym.leaderboard.Board
+import com.justdataplease.streetgym.leaderboard.Boards
+import com.justdataplease.streetgym.leaderboard.Countries
+import com.justdataplease.streetgym.leaderboard.LeaderboardRepository
+import com.justdataplease.streetgym.leaderboard.Score
+import com.justdataplease.streetgym.leaderboard.Scores
+import com.justdataplease.streetgym.leaderboard.Standing
+import com.justdataplease.streetgym.data.parks.NearbyPark
+import com.justdataplease.streetgym.data.parks.Park
+import com.justdataplease.streetgym.data.parks.Parks
+import com.justdataplease.streetgym.data.parks.ParksUpdater
+import android.annotation.SuppressLint
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
+import android.text.Editable
+import android.text.InputType
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.TextWatcher
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
+import android.widget.BaseAdapter
+import android.widget.EditText
+import org.json.JSONObject
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.graphics.Color
@@ -29,31 +68,38 @@ import android.media.ToneGenerator
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import android.view.WindowInsets
 import android.view.WindowManager
+import android.view.animation.OvershootInterpolator
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.CheckBox
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ListView
-import android.widget.ProgressBar
 import android.widget.ScrollView
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
 import com.justdataplease.streetgym.R
 import com.justdataplease.streetgym.data.AssetCurriculumRepository
+import com.justdataplease.streetgym.data.CurriculumJsonParser
 import com.justdataplease.streetgym.data.model.CurriculumCatalog
 import com.justdataplease.streetgym.data.model.TrainingExercise
 import com.justdataplease.streetgym.data.model.TrainingLevel
 import com.justdataplease.streetgym.data.model.TrainingProgram
-import com.justdataplease.streetgym.data.model.TrainingSet
 import com.justdataplease.streetgym.data.progress.ActiveWorkout
+import com.justdataplease.streetgym.data.progress.DayAssignment
+import com.justdataplease.streetgym.data.progress.LevelReplay
+import com.justdataplease.streetgym.data.progress.Placement
 import com.justdataplease.streetgym.data.progress.SharedPreferencesProgressRepository
+import com.justdataplease.streetgym.data.progress.WorkoutSession
 import com.justdataplease.streetgym.data.skills.SkillBook
 import com.justdataplease.streetgym.data.skills.SkillCurriculumReader
 import com.justdataplease.streetgym.data.skills.SkillGroup
@@ -74,6 +120,8 @@ open class HomeActivity : Activity() {
         data class Workouts(val levelNumber: Int) : Screen
         data class Overview(val programId: String) : Screen
         data class Active(val programId: String) : Screen
+        /** The day builder for a custom day (new or saved); its unsaved state is [draft]. */
+        data class EditDay(val dayId: String) : Screen
         data object Progress : Screen
         data object Settings : Screen
         data object Timing : Screen
@@ -87,19 +135,59 @@ open class HomeActivity : Activity() {
 
     private lateinit var settings: AppSettings
     private lateinit var progressRepository: SharedPreferencesProgressRepository
+    private lateinit var library: LibraryRepository
+    private var exerciseLibrary: ExerciseLibrary? = null
+    /** Training's tabs: 0 Levels, 1 My workouts, 2 Parks. */
+    private var trainingTab = 0
+    private var draft: CustomDay? = null
+    /** The first-launch placement's picks, one band per question (-1 for none), kept through a redraw. */
+    private var placementAnswers = IntArray(Placement.Question.entries.size) { -1 }
+    private var parks: List<Park>? = null
+    private var parksLoading = false
+    private var parkOrigin: Pair<Double, Double>? = null
+    private var parkQuery = ""
+    private var parkResults: List<NearbyPark>? = null
+    /** The Parks map while it's on screen; null in the list, on other screens, or where MapLibre can't start. */
+    private var parksMap: ParksMap? = null
+    private var parksMapFailed = false
+    private var parksGeoJson: Pair<List<Park>, String>? = null
+    private var parksGeoJsonBuilding: List<Park>? = null
+    private var parksLocateTried = false
+    private var activityResumed = false
+    /** Parks ranking and the map's GeoJSON: off the main thread, and not queued behind the parks download. */
+    private val parksWorker = Executors.newSingleThreadExecutor()
     private lateinit var appRoot: LinearLayout
     private lateinit var toolbar: LinearLayout
     private lateinit var toolbarBack: TextView
     private lateinit var toolbarMark: ImageView
     private lateinit var toolbarTitle: TextView
+    private lateinit var toolbarAction: ImageView
     private lateinit var bodyContainer: FrameLayout
     private lateinit var bottomNavigation: LinearLayout
 
     private val worker = Executors.newSingleThreadExecutor()
     private val backStack = ArrayDeque<Screen>()
     private var catalog: CurriculumCatalog? = null
+        set(value) {
+            field = value
+            // Every screen walks the day order and looks days up by id: sort and index them once per catalog.
+            orderedPrograms = value?.let(::allPrograms).orEmpty()
+            programIndex = orderedPrograms.associateBy(TrainingProgram::id)
+        }
+    private var orderedPrograms: List<TrainingProgram> = emptyList()
+    private var programIndex: Map<String, TrainingProgram> = emptyMap()
     private var skillBook: SkillBook? = null
-    private var showSkills = true
+    /** Progress's tabs: 0 Skills, 1 History, 2 Leaderboard. */
+    private var progressTab = 0
+    private val historyCalendar = HistoryCalendarState()
+    private lateinit var accountStore: AccountStore
+    private lateinit var cloudSync: CloudSync
+    private lateinit var leaderboard: LeaderboardRepository
+    private var boardSkill: String? = null
+    private var boardInCountry = false
+    private val cloudHandler = Handler(Looper.getMainLooper())
+    // A burst of changes (a finished workout, My workouts edits) becomes one sync and at most one score write.
+    private val cloudCatchUp = Runnable { cloudSync.sync(force = true, done = ::afterSync) }
     private var skillGroup: SkillGroup? = null
     private var currentScreen: Screen? = null
     private var restTimer: CountDownTimer? = null
@@ -108,7 +196,17 @@ open class HomeActivity : Activity() {
     private var restStatusView: TextView? = null
     private var toneGenerator: ToneGenerator? = null
     private var restoredScreen: Screen? = null
-    private lateinit var billing: RemoveAdsBilling
+    private lateinit var billing: TierBilling
+    private var tier = Tier.FREE
+    // Purchase, refund, restore or the debug switch: redraw gated screens. Held strongly for SharedPreferences.
+    private val entitlementChanged = SharedPreferences.OnSharedPreferenceChangeListener { _, _ ->
+        val access = Entitlement.tier(this)
+        if (access != tier) {
+            tier = access
+            currentScreen?.takeIf { it != Screen.Settings && it != Screen.Progress && it != Screen.Timing }
+                ?.let { showScreen(it, pushCurrent = false) }
+        }
+    }
     private lateinit var adBreak: WorkoutAdBreak
     private var timingPanel: TimingPanel? = null
     private var timingDialog: AlertDialog? = null
@@ -119,7 +217,7 @@ open class HomeActivity : Activity() {
             val state = TimingAlerts.checkDue(this@HomeActivity)
             timingPanel?.refresh(state)
             if ((state.timerRinging || state.alarmRinging) && timingDialog == null && !isFinishing) {
-                if (!TimingAlerts.notifications(this@HomeActivity)) playTimingTone()
+                if (!TimingAlerts.notifications(this@HomeActivity)) TimingAlerts.tone()
                 timingDialog = AlertDialog.Builder(this@HomeActivity)
                     .setTitle(if (state.alarmRinging) "Alarm" else "Time's up")
                     .setPositiveButton("Stop") { _, _ -> TimingAlerts.stop(this@HomeActivity); timingDialog = null }
@@ -140,11 +238,22 @@ open class HomeActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         settings = AppSettings(this)
-        AppColors.configure(settings.darkMode)
-        setTheme(if (settings.darkMode) R.style.Theme_StreetNight else R.style.Theme_StreetGym)
+        AppColors.configure(settings.theme)
+        AppType.init(this)
+        setTheme(settings.theme.style)
         super.onCreate(savedInstanceState)
         progressRepository = SharedPreferencesProgressRepository(this)
-        billing = RemoveAdsBilling(this)
+        library = LibraryRepository(this)
+        accountStore = AccountStore(this)
+        cloudSync = CloudSync(this, progressRepository, library)
+        leaderboard = LeaderboardRepository(this)
+        library.onChange = ::cloudChanged
+        draft = savedInstanceState?.getString(STATE_DRAFT)?.let { runCatching { LibraryCodec.decodeDay(JSONObject(it)) }.getOrNull() }
+        trainingTab = savedInstanceState?.getInt(STATE_TRAINING_TAB) ?: 0
+        savedInstanceState?.getIntArray(STATE_PLACEMENT)?.takeIf { it.size == placementAnswers.size }?.let { placementAnswers = it }
+        billing = TierBilling(this)
+        tier = Entitlement.tier(this)
+        Entitlement.prefs(this).registerOnSharedPreferenceChangeListener(entitlementChanged)
         adBreak = WorkoutAdBreak(this)
         restoredScreen = savedInstanceState?.let(::screenFromBundle)
             ?: if (intent.getBooleanExtra(TimingAlerts.OPEN_TIMER, false)) Screen.Timing else null
@@ -162,13 +271,19 @@ open class HomeActivity : Activity() {
     override fun onResume() {
         super.onResume()
         billing.connect()
+        // Pro: catch up with other devices at most every six hours; nothing at all without the account.
+        cloudSync.sync(done = ::afterSync)
         adBreak.resume()
         TimingAlerts.schedule(this)
         timingHandler.removeCallbacks(timingTick)
         timingHandler.post(timingTick)
+        activityResumed = true
+        parksMap?.resume()
     }
 
     override fun onPause() {
+        activityResumed = false
+        parksMap?.pause()
         adBreak.pause()
         timingHandler.removeCallbacks(timingTick)
         timingDialog?.dismiss(); timingDialog = null
@@ -180,12 +295,6 @@ open class HomeActivity : Activity() {
         if (intent.getBooleanExtra(TimingAlerts.OPEN_TIMER, false)) {
             if (catalog != null) openRoot(Screen.Timing) else restoredScreen = Screen.Timing
         }
-    }
-
-    private fun playTimingTone() {
-        val tone = ToneGenerator(AudioManager.STREAM_ALARM, 80)
-        tone.startTone(ToneGenerator.TONE_PROP_BEEP, 700)
-        Handler(Looper.getMainLooper()).postDelayed({ tone.release() }, 900)
     }
 
     private fun enableTimingNotifications() {
@@ -214,20 +323,161 @@ open class HomeActivity : Activity() {
                 }
                 is Screen.Overview -> outState.putString(STATE_PROGRAM, screen.programId)
                 is Screen.Active -> outState.putString(STATE_PROGRAM, screen.programId)
+                is Screen.EditDay -> outState.putString(STATE_PROGRAM, screen.dayId)
                 else -> Unit
             }
         }
+        draft?.let { outState.putString(STATE_DRAFT, LibraryCodec.encodeDay(it).toString()) }
+        outState.putInt(STATE_TRAINING_TAB, trainingTab)
+        outState.putIntArray(STATE_PLACEMENT, placementAnswers)
         restEndsAtEpochMillis?.let { outState.putLong(STATE_REST_END, it) }
         restProgramId?.let { outState.putString(STATE_REST_PROGRAM, it) }
     }
 
+    /**
+     * Plus sees the boards; Pro also appears on them. A board is one cached document ([LeaderboardRepository]); the
+     * athlete's place comes from that same document, so this screen costs at most one read per board every six hours.
+     */
+    private fun renderLeaderboard(page: LinearLayout, book: SkillBook) {
+        val tier = Entitlement.tier(this)
+        page.addWithMargins(bodyText(getString(R.string.leaderboard_intro), 14f), topDp = 12)
+        if (!tier.leaderboard) {
+            page.addWithMargins(TiersPanel(this, billing, Paywall.Leaderboard), topDp = 12)
+            return
+        }
+        if (!Cloud.available(this)) {
+            page.addWithMargins(card().apply { addView(bodyText(getString(R.string.leaderboard_unavailable))) }, topDp = 12)
+            return
+        }
+        val uid = Cloud.uid(this)?.takeIf { tier.account }
+        val profile = uid?.let(accountStore::profile)
+        val country = profile?.country ?: Locale.getDefault().country.takeIf(Countries::valid)
+        if (country != null) page.addWithMargins(segmentedSwitch(listOf(getString(R.string.leaderboard_world),
+            "${Countries.flag(country)} ${Countries.name(country)}"), if (boardInCountry) 1 else 0) {
+            boardInCountry = it == 1; renderProgress()
+        }, width = ViewGroup.LayoutParams.WRAP_CONTENT, topDp = 12)
+        val skills = book.families.flatMap { it.skills }
+        val skillName = skills.firstOrNull { it.id == boardSkill }?.name ?: run { boardSkill = null; getString(R.string.leaderboard_overall) }
+        page.addWithMargins(secondaryButton(getString(R.string.leaderboard_board, skillName)) {
+            val choices = listOf<Pair<String?, String>>(null to getString(R.string.leaderboard_overall)) + skills.map { it.id to it.name }
+            AlertDialog.Builder(this).setTitle(R.string.leaderboard_pick)
+                .setItems(choices.map { it.second }.toTypedArray()) { _, which -> boardSkill = choices[which].first; renderProgress() }
+                .setNegativeButton(R.string.cancel, null).show()
+        }, topDp = 10)
+        val id = Boards.id(boardSkill, country?.takeIf { boardInCountry })
+        val holder = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        page.addWithMargins(holder, topDp = 12)
+        page.addWithMargins(bodyText(getString(R.string.leaderboard_how), 12f), topDp = 14)
+        val score = if (uid != null && profile != null) currentScore(book).let { if (boardSkill == null) it.overall else it.skills[boardSkill] ?: 0 } else 0
+        fun show(board: Board?, loading: Boolean) {
+            holder.removeAllViews()
+            if (board == null) { holder.addView(bodyText(getString(if (loading) R.string.leaderboard_loading else R.string.leaderboard_offline), 14f)); return }
+            holder.addView(card().apply {
+                when {
+                    uid == null && tier.account -> addView(bodyText(getString(R.string.leaderboard_sign_in), 14f))
+                    !tier.account -> {
+                        addView(bodyText(getString(R.string.leaderboard_join), 14f))
+                        addWithMargins(secondaryButton(getString(R.string.pro_buy)) { showPaywall(Paywall.Account) }, topDp = 8)
+                    }
+                    profile == null -> addView(bodyText(getString(R.string.account_pick_name), 14f))
+                    !profile.visible -> addView(bodyText(getString(R.string.leaderboard_hidden), 14f))
+                    else -> addView(titleText(when (val standing = Boards.standing(board, profile.username, score)) {
+                        is Standing.Rank -> getString(R.string.leaderboard_you_rank, standing.rank, NumberFormat.getIntegerInstance().format(score))
+                        is Standing.TopPercent -> getString(R.string.leaderboard_you_top, standing.percent, NumberFormat.getIntegerInstance().format(score))
+                        null -> getString(R.string.leaderboard_you_none)
+                    }, 16f))
+                }
+            }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { bottomMargin = dp(10) })
+            if (board.entries.isEmpty()) { holder.addView(bodyText(getString(R.string.leaderboard_empty), 14f)); return }
+            board.entries.forEachIndexed { index, entry ->
+                val mine = profile != null && entry.username == profile.username
+                holder.addView(LinearLayout(this).apply {
+                    orientation = LinearLayout.HORIZONTAL
+                    gravity = Gravity.CENTER_VERTICAL
+                    setPadding(dp(14), dp(10), dp(14), dp(10))
+                    background = roundedDrawable(if (mine) AppColors.INFO_SURFACE else AppColors.SURFACE, dp(14).toFloat())
+                    addView(bodyText(getString(R.string.leaderboard_rank, index + 1), 14f), LinearLayout.LayoutParams(dp(48), ViewGroup.LayoutParams.WRAP_CONTENT))
+                    addView(oneLineText("${Countries.flag(entry.country)} ${entry.username}", bold = mine),
+                        LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+                    addView(titleText(NumberFormat.getIntegerInstance().format(entry.score), 15f))
+                }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { bottomMargin = dp(4) })
+            }
+            if (board.updatedAt > 0) holder.addView(bodyText(getString(R.string.leaderboard_updated,
+                NumberFormat.getIntegerInstance().format(board.players),
+                DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(Date(board.updatedAt))), 12f).apply { setPadding(0, dp(8), 0, 0) })
+        }
+        show(leaderboard.cached(id)?.first, loading = true)
+        leaderboard.board(id) { board ->
+            // Only if the athlete is still looking at this board.
+            if (holder.isAttachedToWindow && Boards.id(boardSkill, country?.takeIf { boardInCountry }) == id) show(board, loading = false)
+        }
+    }
+
+    /** Another device's progress may have arrived: redraw the overview screens (never a workout or the builder). */
+    private fun afterSync(result: CloudSync.Result) {
+        publishScore()
+        if (result == CloudSync.Result.Synced && !isFinishing && catalog != null)
+            currentScreen?.takeIf { it == Screen.Dashboard || it == Screen.Levels || it == Screen.Progress }
+                ?.let { showScreen(it, pushCurrent = false) }
+    }
+
+    /** Something to save changed on the phone: sync and update the score shortly, once for a burst of changes. */
+    private fun cloudChanged() {
+        if (!Entitlement.tier(this).account || Cloud.uid(this) == null) return
+        cloudHandler.removeCallbacks(cloudCatchUp)
+        cloudHandler.postDelayed(cloudCatchUp, 3_000L)
+    }
+
+    /**
+     * Pro with a visible profile: the score from finished workouts goes to the leaderboard when it changed, at most
+     * every ten minutes ([Scores.shouldPublish]). A hidden profile takes its score off.
+     */
+    private fun publishScore() {
+        val book = skillBook ?: return
+        if (!Entitlement.tier(this).account) return
+        val uid = Cloud.uid(this) ?: return
+        val profile = accountStore.profile(uid) ?: return
+        val published = accountStore.publishedScore(uid)
+        if (!profile.visible) {
+            if (published != null) leaderboard.unpublish(uid) { ok -> if (ok) accountStore.savePublishedScore(uid, null, 0) }
+            return
+        }
+        val now = System.currentTimeMillis()
+        val score = currentScore(book)
+        if (!Scores.shouldPublish(published?.first, published?.second ?: 0, score, now)) return
+        leaderboard.publish(uid, profile, score) { ok -> if (ok) accountStore.savePublishedScore(uid, score, now) }
+    }
+
+    private fun currentScore(book: SkillBook): Score =
+        Scores.from(book.progress(Scores.trainedDays(progressRepository.sessionHistory())))
+
     override fun onDestroy() {
+        cloudHandler.removeCallbacks(cloudCatchUp)
+        Entitlement.prefs(this).unregisterOnSharedPreferenceChangeListener(entitlementChanged)
         billing.close()
         adBreak.destroy()
         restTimer?.cancel()
         toneGenerator?.release()
         worker.shutdownNow()
+        parksMap?.destroy(); parksMap = null
+        parksWorker.shutdownNow()
         super.onDestroy()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        parksMap?.start()
+    }
+
+    override fun onStop() {
+        parksMap?.stop()
+        super.onStop()
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onLowMemory() {
+        super.onLowMemory()
+        parksMap?.lowMemory()
     }
 
     @Deprecated("Uses platform back navigation for minSdk 23 compatibility")
@@ -246,7 +496,7 @@ open class HomeActivity : Activity() {
     private fun configureWindow() {
         window.statusBarColor = AppColors.BACKGROUND
         window.navigationBarColor = AppColors.BACKGROUND
-        window.decorView.systemUiVisibility = if (settings.darkMode) 0 else View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or
+        window.decorView.systemUiVisibility = if (AppColors.darkMode) 0 else View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or
             (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR else 0)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             window.isStatusBarContrastEnforced = false
@@ -257,7 +507,7 @@ open class HomeActivity : Activity() {
     private fun buildShell() {
         appRoot = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setBackgroundColor(AppColors.BACKGROUND)
+            background = pageBackground()
         }
 
         toolbarBack = TextView(this).apply {
@@ -276,33 +526,41 @@ open class HomeActivity : Activity() {
             setTextColor(AppColors.TEXT)
             typeface = Typeface.DEFAULT_BOLD
             maxLines = 1
+            styleToolbarTitle()
         }
         toolbarMark = ImageView(this).apply {
             setImageResource(R.drawable.ic_brand_mark)
-            imageTintList = ColorStateList.valueOf(AppColors.ACTION)
+            imageTintList = ColorStateList.valueOf(AppColors.MARK)
             setPadding(dp(14), dp(12), dp(10), dp(12))
             importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+        }
+        toolbarAction = ImageView(this).apply {
+            imageTintList = ColorStateList.valueOf(AppColors.TEXT)
+            setPadding(dp(16), dp(16), dp(16), dp(16))
+            isClickable = true
+            isFocusable = true
+            visibility = View.GONE
+            setOnClickListener { switchWorkoutView() }
         }
         toolbar = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
-            setBackgroundColor(AppColors.BACKGROUND)
+            // appRoot paints the page (with its grain) behind the toolbar too.
             elevation = 0f
             addView(toolbarMark, LinearLayout.LayoutParams(dp(56), dp(56)))
             addView(toolbarBack, LinearLayout.LayoutParams(dp(56), dp(56)))
             addView(toolbarTitle, LinearLayout.LayoutParams(0, dp(56), 1f))
+            addView(toolbarAction, LinearLayout.LayoutParams(dp(56), dp(56)))
             addView(View(context), LinearLayout.LayoutParams(dp(16), dp(56)))
         }
 
-        bodyContainer = FrameLayout(this).apply {
-            setBackgroundColor(AppColors.BACKGROUND)
-        }
+        // No background of its own: appRoot already paints the page colour behind every screen.
+        bodyContainer = FrameLayout(this)
         bottomNavigation = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER
-            setBackgroundColor(AppColors.SURFACE)
             elevation = 0f
-            background = roundedDrawable(AppColors.SURFACE, dp(24).toFloat(), AppColors.DIVIDER, dp(1))
+            background = navBarBackground()
             clipToOutline = true
             setPadding(dp(8), dp(8), dp(8), dp(8))
         }
@@ -361,15 +619,18 @@ open class HomeActivity : Activity() {
         bottomNavigation.visibility = View.GONE
         renderLoading()
         worker.execute {
-            val result = AssetCurriculumRepository(this).load()
-            // Skills read the same asset for the movement library and schedule; a failure only hides the Skills tab.
-            val skills = runCatching {
-                assets.open(AssetCurriculumRepository.DEFAULT_ASSET_NAME).bufferedReader(Charsets.UTF_8)
-                    .use { SkillCurriculumReader.read(it.readText()) }
-            }.getOrNull()
+            // The catalog asset is read and parsed once, for the program, the exercise library and Skills.
+            val root = AssetCurriculumRepository(this).readRoot()
+            val result = root.mapCatching(CurriculumJsonParser::parse)
+            val exercises = result.getOrNull()?.let { runCatching { ExerciseLibrary.from(it) }.getOrNull() }
+            // Skills read the movement library and schedule from the same JSON; a failure only hides the Skills tab.
+            val skills = root.getOrNull()?.let { runCatching { SkillCurriculumReader.read(it) }.getOrNull() }
+            // Today's park scene and every movement guide use the clips; parse them here, not on the main thread.
+            runCatching { MotionClip.preload(this) }
             runOnUiThread {
                 if (isFinishing || isDestroyed) return@runOnUiThread
                 skillBook = skills
+                exerciseLibrary = exercises
                 result.fold(onSuccess = {
                     catalog = it
                     val destination = restoredScreen?.takeIf(::isValidScreen) ?: Screen.Dashboard
@@ -396,7 +657,7 @@ open class HomeActivity : Activity() {
                 LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(120)),
             )
             addView(spacer(24))
-            addView(ProgressBar(context), LinearLayout.LayoutParams(dp(44), dp(44)).apply {
+            addView(ParkSceneView(context, ParkSceneView.Mode.WALK), LinearLayout.LayoutParams(dp(200), dp(96)).apply {
                 gravity = Gravity.CENTER_HORIZONTAL
             })
             addView(spacer(16))
@@ -445,12 +706,14 @@ open class HomeActivity : Activity() {
         }
         if (pushCurrent) currentScreen?.let(backStack::addLast)
         currentScreen = screen
+        if (screen !is Screen.EditDay) draft = null
         if (screen != Screen.Timing) timingPanel = null
         toolbar.visibility = View.VISIBLE
         bottomNavigation.visibility = View.VISIBLE
         toolbarBack.visibility = if (isNested(screen)) View.VISIBLE else View.GONE
         toolbarMark.visibility = if (isNested(screen)) View.GONE else View.VISIBLE
         toolbarTitle.text = screenTitle(screen)
+        bindWorkoutViewAction(screen)
         rebuildBottomNavigation(screen)
 
         val active = screen is Screen.Active
@@ -469,7 +732,9 @@ open class HomeActivity : Activity() {
             Screen.Levels -> renderLevels()
             is Screen.Workouts -> renderWorkouts(screen.levelNumber)
             is Screen.Overview -> renderOverview(screen.programId)
-            is Screen.Active -> renderActive(screen.programId)
+            is Screen.Active -> if (settings.workoutView == WorkoutView.FOCUS) renderFocus(screen.programId)
+                else renderActive(screen.programId)
+            is Screen.EditDay -> renderEditDay(screen.dayId)
             Screen.Progress -> renderProgress()
             Screen.Settings -> renderSettings()
             Screen.Timing -> {
@@ -505,23 +770,23 @@ open class HomeActivity : Activity() {
                 isClickable = true
                 isFocusable = true
                 contentDescription = getString(labelRes)
-                background = roundedDrawable(if (isSelected) AppColors.INFO_SURFACE else AppColors.SURFACE, dp(16).toFloat())
+                background = navItemBackground(isSelected)
                 setOnClickListener { openRoot(destination) }
                 addView(ImageView(context).apply {
                     setImageResource(icon)
-                    imageTintList = ColorStateList.valueOf(if (isSelected) AppColors.PRIMARY else AppColors.TEXT_SECONDARY)
+                    imageTintList = ColorStateList.valueOf(navItemColor(isSelected))
                     importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
                 }, LinearLayout.LayoutParams(dp(22), dp(22)))
-                addView(TextView(context).apply {
+                addWithMargins(TextView(context).apply {
                     text = getString(labelRes)
                     gravity = Gravity.CENTER
                     textSize = 11f
-                    setPadding(0, dp(4), 0, 0)
                     maxLines = 1
                     typeface = if (isSelected) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
-                    setTextColor(if (isSelected) AppColors.PRIMARY else AppColors.TEXT_SECONDARY)
+                    setTextColor(navItemColor(isSelected))
                     importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
-                })
+                    styleNavLabel(isSelected)
+                }, width = ViewGroup.LayoutParams.WRAP_CONTENT, topDp = 4)
             }
             bottomNavigation.addView(item, LinearLayout.LayoutParams(0, dp(58), 1f).apply {
                 setMargins(dp(3), 0, dp(3), 0)
@@ -530,40 +795,52 @@ open class HomeActivity : Activity() {
     }
 
     private fun renderDashboard() {
-        val plan = catalog ?: return
-        val all = allPrograms(plan)
+        if (catalog == null) return
+        val all = orderedPrograms
         val completed = progressRepository.completedProgramIds()
         val active = progressRepository.activeWorkout()
-        val next = active?.programId?.let(::programById)?.takeIf { canStart(it.id) } ?: assignedProgram()
+        val next = active?.takeIf(::canRun)?.programId?.let(::programById) ?: assignedProgram()
+        // A repeat in progress takes Today's card until it is finished or ended, as any active workout does.
+        val repeating = active?.repeat == true && active.programId == next?.id
         val compact = resources.configuration.screenHeightDp < 480
         val page = verticalPage()
         val hero = card().apply {
             background = roundedDrawable(AppColors.PRIMARY_DARK, dp(24).toFloat())
-            addView(bodyText(getString(R.string.brand_kicker), 12f).apply { setTextColor(AppColors.ACCENT) })
-            addWithMargins(titleText(getString(R.string.brand_line), 30f).apply { setTextColor(Color.WHITE) }, topDp = 8)
-            addWithMargins(ImageView(context).apply {
-                setImageResource(R.drawable.ic_brand_mark)
-                imageTintList = ColorStateList.valueOf(AppColors.ACCENT)
-                contentDescription = getString(R.string.logo_content_description)
-                scaleType = ImageView.ScaleType.CENTER_INSIDE
-            }, height = dp(108), topDp = 4)
+            addView(bodyText(getString(R.string.brand_kicker), 12f).apply { setTextColor(AppColors.HERO_KICKER) })
+            addWithMargins(titleText(getString(R.string.brand_line), 30f).apply { setTextColor(AppColors.HERO_TEXT) }, topDp = 8)
+            addWithMargins(ParkSceneView(context), height = dp(180), topDp = 4)
         }
         if (!compact) page.addWithMargins(hero, bottomDp = 20)
         if (!compact) page.addView(sectionLabel(getString(R.string.today_section)))
         val today = card(clickable = next != null)
+        val paywallLevel = next?.levelNumber?.takeIf(::levelLocked)
         if (next != null) {
-            today.addView(titleText(displayName(next, uiLocale()), if (compact) 20f else 23f))
+            if (!compact) catalog?.levels?.firstOrNull { it.number == next.levelNumber }?.let { level ->
+                todayHeader(level.number, displayName(level, uiLocale()), next.number, level.programs.size,
+                    all.indexOfFirst { it.id == next.id } + 1, all.size)
+            }?.let(today::addView)
+            val label = if (repeating) getString(R.string.repeat_note)
+                else levelReplay()?.let { getString(R.string.replay_today, it.levelNumber) }
+            label?.let {
+                today.addWithMargins(bodyText(it, 12f).apply { setTextColor(AppColors.PRIMARY) }, bottomDp = 4)
+            }
+            today.addView(titleText(displayName(next, uiLocale()), if (compact) 20f else 23f).headline())
             today.addWithMargins(bodyText(programMeta(next), 13f), topDp = 6)
-            today.addWithMargins(primaryButton(getString(if (active?.programId == next.id) R.string.resume_workout else R.string.start_today)) {
-                requestStart(next)
-            }, topDp = 16)
-            if (canStart(next.id)) today.addWithMargins(secondaryButton("Complete day") { requestCompleteDay(next) }, topDp = 8)
+            if (paywallLevel == null) {
+                today.addWithMargins(primaryButton(getString(if (active?.programId == next.id) R.string.resume_workout else R.string.start_today)) {
+                    requestStart(next, repeat = repeating)
+                }, topDp = 16)
+                if (canStart(next.id) && !repeating) today.addWithMargins(secondaryButton("Complete day") { requestCompleteDay(next) }, topDp = 8)
+            }
             today.setOnClickListener { navigate(Screen.Overview(next.id)) }
         } else {
             today.addView(titleText(getString(R.string.all_complete_title), 22f))
             today.addWithMargins(bodyText(getString(R.string.all_complete_body)), topDp = 8)
         }
-        page.addWithMargins(today, bottomDp = 16)
+        // A new athlete first says where to start; Today's day card follows once that's answered or skipped.
+        page.addWithMargins(if (askPlacement(completed, active)) placementCard(catalog?.levels.orEmpty(), uiLocale(),
+            placementAnswers, ::startPlacement) else today, bottomDp = 16)
+        if (paywallLevel != null) page.addWithMargins(TiersPanel(this, billing, Paywall.Level(paywallLevel)), bottomDp = 16)
         val done = all.count { it.id in completed }
         page.addWithMargins(card(clickable = true).apply {
             addView(titleText(getString(R.string.progress_title), 18f))
@@ -576,17 +853,503 @@ open class HomeActivity : Activity() {
         setBody(scroll(page))
     }
 
+    /** True for a new athlete ([Placement.shouldAsk]). Any progress, even from before placement existed, settles it for good. */
+    private fun askPlacement(completed: Set<String>, active: ActiveWorkout?): Boolean {
+        val ask = Placement.shouldAsk(settings.placementDone, completed.size, active != null)
+        if (!ask && !settings.placementDone) settings.placementDone = true
+        return ask
+    }
+
+    /**
+     * The placement's answer. A start past Level 1, day 1 marks every earlier day complete exactly as "Complete level"
+     * does: skill points, no leaderboard points ([Scores.trainedDays]), and the same sync.
+     */
+    private fun startPlacement(start: Placement.Start) {
+        val skipped = Placement.skipped(orderedPrograms, start, TrainingProgram::levelNumber, TrainingProgram::number)
+            .map(TrainingProgram::id)
+        if (skipped.isNotEmpty()) {
+            progressRepository.completePrograms(skipped)
+            cloudChanged()
+        }
+        settings.placementDone = true
+        placementAnswers.fill(-1)
+        clearRest(); openRoot(Screen.Dashboard)
+    }
+
     private fun renderLevels() {
         val catalog = catalog ?: return
         val locale = uiLocale()
         val completed = progressRepository.completedProgramIds()
         val page = verticalPage()
-        page.addView(titleText(getString(R.string.levels_title), 26f))
-        page.addWithMargins(bodyText(getString(R.string.empty_description)), topDp = 5, bottomDp = 16)
-        catalog.levels.sortedBy { it.number }.forEach { level ->
-            page.addWithMargins(levelCard(level, locale, completed), bottomDp = 12)
+        page.addView(titleText(getString(R.string.levels_title), 26f).headline())
+        page.addWithMargins(segmentedSwitch(listOf(getString(R.string.training_tab_levels),
+            getString(R.string.training_tab_workouts), getString(R.string.training_tab_parks)), trainingTab) { index ->
+            trainingTab = index
+            renderLevels()
+        }, width = ViewGroup.LayoutParams.WRAP_CONTENT, topDp = 12, bottomDp = 14)
+        if (trainingTab != 0) {
+            val map = if (trainingTab == 1) { renderMyWorkouts(page, locale); false } else renderParks(page)
+            // The Parks map fills the screen instead of scrolling with the page.
+            setBody(if (map) page else scroll(page))
+            return
+        }
+        page.addWithMargins(bodyText(getString(R.string.empty_description)), bottomDp = 16)
+        levelReplay()?.let { page.addWithMargins(replayCard(it, locale), bottomDp = 12) }
+        val levels = catalog.levels.sortedBy { it.number }
+        val currentLevel = assignedProgram()?.levelNumber
+        levels.forEachIndexed { index, level ->
+            val state = when {
+                level.number == currentLevel -> LevelState.CURRENT
+                level.programs.all { it.id in completed } -> LevelState.DONE
+                else -> LevelState.UPCOMING
+            }
+            page.addWithMargins(decorateLevel(levelCard(level, locale, completed), state, index, index == 0, index == levels.lastIndex),
+                bottomDp = if (levelsOnRoute) 0 else 12)
         }
         setBody(scroll(page))
+    }
+
+    /** Saved program days and custom days, which share the tier's limit. */
+    private fun renderMyWorkouts(page: LinearLayout, locale: Locale) {
+        val tier = Entitlement.tier(this)
+        val state = library.state()
+        page.addView(bodyText(getString(R.string.library_intro)))
+        page.addWithMargins(bodyText(getString(R.string.library_usage, state.used, tier.savedDays), 13f).apply {
+            setTextColor(AppColors.PRIMARY)
+        }, topDp = 10)
+        if (SavedLimit.overLimit(tier, state.used)) {
+            page.addWithMargins(bodyText(getString(R.string.library_over_limit, tier.savedDays), 13f), topDp = 4)
+        }
+        page.addWithMargins(primaryButton(getString(R.string.library_create)) { requestNewDay() }, topDp = 14, bottomDp = 18)
+        page.addView(sectionLabel(getString(R.string.library_custom)))
+        if (state.customDays.isEmpty()) page.addWithMargins(bodyText(getString(R.string.library_empty), 14f), bottomDp = 12)
+        state.customDays.forEach { day ->
+            page.addWithMargins(card(clickable = true).apply {
+                addView(titleText(day.name, 18f))
+                addWithMargins(bodyText(customMeta(day.exercises.size, CustomDays.estimatedMinutes(day)), 13f), topDp = 4)
+                setOnClickListener { navigate(Screen.Overview(day.id)) }
+            }, bottomDp = 10)
+        }
+        page.addWithMargins(sectionLabel(getString(R.string.library_saved)), topDp = 8)
+        val saved = state.savedIds.mapNotNull(::programById)
+        if (saved.isEmpty()) page.addView(bodyText(getString(R.string.library_empty), 14f))
+        saved.forEach { program ->
+            page.addWithMargins(card(clickable = true).apply {
+                addView(titleText(displayName(program, locale), 18f))
+                addWithMargins(bodyText(listOf(getString(R.string.level_number, program.levelNumber), programMeta(program))
+                    .joinToString(" • "), 13f), topDp = 4)
+                setOnClickListener { navigate(Screen.Overview(program.id)) }
+            }, bottomDp = 10)
+        }
+    }
+
+    /**
+     * Parks near the athlete or by name (Plus), on a map (the default) or as a list; true when the page holds the map.
+     * The parks ship with the app; the location never leaves the phone.
+     */
+    private fun renderParks(page: LinearLayout): Boolean {
+        if (!Entitlement.tier(this).parks) {
+            page.addWithMargins(bodyText(getString(R.string.parks_teaser)), bottomDp = 12)
+            page.addView(TiersPanel(this, billing, Paywall.Parks))
+            return false
+        }
+        val all = parks
+        if (all == null) {
+            page.addView(bodyText(getString(R.string.parks_loading)))
+            loadParks()
+            return false
+        }
+        val prefs = getSharedPreferences(ParksUpdater.PREFERENCES_NAME, MODE_PRIVATE)
+        val map = if (prefs.getBoolean(KEY_PARKS_LIST, false) || parksMapFailed) null else parksMap ?: openParksMap()
+        page.addWithMargins(segmentedSwitch(listOf(getString(R.string.parks_view_map), getString(R.string.parks_view_list)),
+            if (map != null) 0 else 1) { index ->
+            prefs.edit().putBoolean(KEY_PARKS_LIST, index == 1).apply()
+            renderLevels()
+        }, width = ViewGroup.LayoutParams.WRAP_CONTENT, bottomDp = 6)
+        val search = EditText(this).apply {
+            hint = getString(R.string.parks_search_hint)
+            setText(parkQuery)
+            isSingleLine = true
+            imeOptions = EditorInfo.IME_ACTION_SEARCH
+            setTextColor(AppColors.TEXT)
+            setHintTextColor(AppColors.TEXT_SECONDARY)
+        }
+        fun runSearch() {
+            getSystemService(InputMethodManager::class.java)?.hideSoftInputFromWindow(search.windowToken, 0)
+            searchParks(all, search.text.toString().trim())
+        }
+        search.setOnEditorActionListener { _, action, _ -> (action == EditorInfo.IME_ACTION_SEARCH).also { if (it) runSearch() } }
+        page.addView(LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            addView(search, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+            addView(secondaryButton(getString(R.string.parks_search)) { runSearch() })
+        })
+        if (map != null) {
+            (map.view.parent as? ViewGroup)?.removeView(map.view)
+            page.addView(map.view, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f).apply { topMargin = dp(10) })
+            page.addWithMargins(bodyText(getString(R.string.parks_credit), 12f), topDp = 8)
+            showParksOnMap(all, map)
+            val origin = parkOrigin
+            if (origin != null) map.showMe(origin.first, origin.second)
+            else if (!parksLocateTried) {
+                // The map opens on the athlete's location: asked for once, then only from its location button.
+                parksLocateTried = true
+                if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) locateForParks()
+                else if (!prefs.getBoolean(KEY_LOCATION_ASKED, false)) {
+                    prefs.edit().putBoolean(KEY_LOCATION_ASKED, true).apply()
+                    requestParksNearMe()
+                }
+            }
+            return true
+        }
+        page.addWithMargins(bodyText(getString(R.string.parks_intro, NumberFormat.getIntegerInstance().format(all.size))), topDp = 10)
+        page.addWithMargins(primaryButton(getString(R.string.parks_near_me)) { requestParksNearMe() }, topDp = 12)
+        parkResults?.let { results ->
+            page.addWithMargins(sectionLabel(if (parkQuery.isBlank()) getString(R.string.parks_nearest)
+                else getString(R.string.parks_matches, parkQuery)), topDp = 14)
+            if (results.isEmpty()) page.addView(bodyText(getString(R.string.parks_none), 14f))
+            else page.addWithMargins(bodyText(getString(R.string.parks_directions), 13f), bottomDp = 8)
+            results.forEach { nearby ->
+                page.addWithMargins(card(clickable = true).apply {
+                    addView(titleText(nearby.park.name, 16f))
+                    if (nearby.kilometres >= 0) addWithMargins(bodyText(
+                        if (nearby.kilometres < 1) getString(R.string.parks_m, (nearby.kilometres * 1000).toInt())
+                        else getString(R.string.parks_km, nearby.kilometres), 13f), topDp = 4)
+                    setOnClickListener { openPark(nearby.park) }
+                }, bottomDp = 8)
+            }
+        }
+        page.addWithMargins(bodyText(getString(R.string.parks_credit), 12f), topDp = 16)
+        return false
+    }
+
+    /** A new map, or null (and the list from then on) where MapLibre can't start, such as a phone without its native library. */
+    private fun openParksMap(): ParksMap? = runCatching {
+        ParksMap(this, ::requestParksNearMe, ::openPark, parkOrigin).also { if (activityResumed) it.resume() }
+    }.onFailure {
+        Log.w("ParksMap", "The map can't start here; showing the list", it)
+        parksMapFailed = true
+    }.getOrNull().also { parksMap = it }
+
+    private fun showParksOnMap(all: List<Park>, map: ParksMap) {
+        parksGeoJson?.takeIf { it.first === all }?.let { map.showParks(all, it.second); return }
+        if (parksGeoJsonBuilding === all) return
+        parksGeoJsonBuilding = all
+        parksWorker.execute {
+            val json = Parks.geoJson(all)
+            runOnUiThread {
+                parksGeoJson = all to json
+                if (parksGeoJsonBuilding === all) parksGeoJsonBuilding = null
+                if (parks === all) parksMap?.showParks(all, json)
+            }
+        }
+    }
+
+    /** Nearest parks for a blank query (when the location is known), else the matches: on the map or in the list. */
+    private fun searchParks(all: List<Park>, query: String) {
+        parkQuery = query
+        val origin = parkOrigin
+        parksWorker.execute {
+            val results = if (query.isBlank() && origin != null) Parks.nearest(all, origin.first, origin.second)
+                else Parks.search(all, query, origin)
+            runOnUiThread {
+                parkResults = results
+                val map = parksMap
+                when {
+                    map == null -> if (currentScreen == Screen.Levels && trainingTab == 2) renderLevels()
+                    query.isBlank() -> origin?.let { map.showNearby(it.first, it.second, results.take(NEARBY_ON_MAP).map(NearbyPark::park)) }
+                    results.isEmpty() -> Toast.makeText(this, R.string.parks_none, Toast.LENGTH_SHORT).show()
+                    else -> map.focus(results.map { it.park })
+                }
+            }
+        }
+    }
+
+    private fun loadParks() {
+        if (parksLoading) return
+        parksLoading = true
+        worker.execute {
+            val updater = ParksUpdater(this)
+            val loaded = runCatching { updater.load() }.getOrDefault(emptyList())
+            runOnUiThread {
+                parks = loaded; parksLoading = false
+                if (currentScreen == Screen.Levels && trainingTab == 2) renderLevels()
+            }
+            // The quarterly file, when the job published a new one (at most one small request a week).
+            val fresh = runCatching { updater.update(loaded.size) }.getOrNull() ?: return@execute
+            runOnUiThread {
+                parks = fresh
+                if (currentScreen == Screen.Levels && trainingTab == 2) renderLevels()
+            }
+        }
+    }
+
+    private fun requestParksNearMe() {
+        if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) locateForParks()
+        else requestPermissions(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), REQUEST_LOCATION)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode != REQUEST_LOCATION) return
+        if (grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED) locateForParks()
+        else Toast.makeText(this, R.string.parks_location_denied, Toast.LENGTH_LONG).show()
+    }
+
+    /**
+     * The last known approximate fix shows parks at once; a fresh fix then refines them when the last one is older
+     * than ten minutes. No Play services needed.
+     */
+    @SuppressLint("MissingPermission")
+    private fun locateForParks() {
+        val manager = getSystemService(LocationManager::class.java) ?: return
+        fun show(location: Location) {
+            val all = parks ?: return
+            parkOrigin = location.latitude to location.longitude
+            // The dot at once; the camera follows with the nearest parks in view.
+            parksMap?.showMe(location.latitude, location.longitude)
+            searchParks(all, "")
+        }
+        val providers = runCatching { manager.getProviders(true) }.getOrDefault(emptyList())
+        val last = providers.mapNotNull { runCatching { manager.getLastKnownLocation(it) }.getOrNull() }.maxByOrNull { it.time }
+        last?.let(::show)
+        if (last != null && System.currentTimeMillis() - last.time < 10 * 60_000L) return
+        // "fused" is LocationManager.FUSED_PROVIDER (API 31); older phones just don't list it.
+        val provider = listOf("fused", LocationManager.NETWORK_PROVIDER, LocationManager.GPS_PROVIDER).firstOrNull { it in providers }
+        if (provider == null) {
+            if (last == null) Toast.makeText(this, R.string.parks_no_location, Toast.LENGTH_LONG).show()
+            return
+        }
+        if (last == null) Toast.makeText(this, R.string.parks_locating, Toast.LENGTH_SHORT).show()
+        fun fresh(location: Location?) {
+            if (location != null) show(location)
+            else if (last == null) Toast.makeText(this, R.string.parks_no_location, Toast.LENGTH_LONG).show()
+        }
+        runCatching {
+            if (Build.VERSION.SDK_INT >= 30) manager.getCurrentLocation(provider, null, mainExecutor, ::fresh)
+            else @Suppress("DEPRECATION") manager.requestSingleUpdate(provider, object : LocationListener {
+                override fun onLocationChanged(location: Location) = fresh(location)
+                @Deprecated("Required on API < 29") override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) = Unit
+                override fun onProviderEnabled(provider: String) = Unit
+                override fun onProviderDisabled(provider: String) = Unit
+            }, Looper.getMainLooper())
+        }.onFailure { fresh(null) }
+    }
+
+    private fun openPark(park: Park) {
+        val geo = Uri.parse("geo:${park.lat},${park.lng}?q=${park.lat},${park.lng}(${Uri.encode(park.name)})")
+        runCatching { startActivity(Intent(Intent.ACTION_VIEW, geo)) }.onFailure {
+            runCatching { startActivity(Intent(Intent.ACTION_VIEW,
+                Uri.parse("https://www.google.com/maps/search/?api=1&query=${park.lat},${park.lng}"))) }
+        }
+    }
+
+    /** True when one more saved or custom day fits; otherwise shows what raises the limit. */
+    private fun roomForAnother(): Boolean {
+        val tier = Entitlement.tier(this)
+        if (SavedLimit.canAdd(tier, library.state().used)) return true
+        if (tier == Tier.PRO) Toast.makeText(this, R.string.saved_limit_pro, Toast.LENGTH_LONG).show()
+        else showPaywall(Paywall.Saved(tier.savedDays))
+        return false
+    }
+
+    private fun showPaywall(paywall: Paywall) {
+        AlertDialog.Builder(this).setView(scroll(LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(12), dp(12), dp(12), dp(4))
+            addView(TiersPanel(this@HomeActivity, billing, paywall))
+        })).setNegativeButton(R.string.cancel, null).show()
+    }
+
+    private fun requestNewDay() {
+        if (!roomForAnother()) return
+        val day = CustomDay(CustomDays.newId(), "", emptyList(), System.currentTimeMillis())
+        draft = day
+        navigate(Screen.EditDay(day.id))
+    }
+
+    private fun requestEditDay(id: String) {
+        draft = library.customDay(id) ?: return
+        navigate(Screen.EditDay(id))
+    }
+
+    private fun renderEditDay(dayId: String) {
+        val day = draft?.takeIf { it.id == dayId } ?: library.customDay(dayId)?.also { draft = it } ?: return
+        val page = verticalPage()
+        page.addView(EditText(this).apply {
+            hint = getString(R.string.builder_name_hint)
+            setText(day.name)
+            textSize = 20f
+            setTextColor(AppColors.TEXT)
+            setHintTextColor(AppColors.TEXT_SECONDARY)
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
+            isSingleLine = true
+            addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
+                override fun afterTextChanged(s: Editable?) { draft = draft?.copy(name = s?.toString().orEmpty()) }
+            })
+        })
+        day.exercises.forEachIndexed { index, exercise ->
+            page.addWithMargins(card().apply {
+                addView(titleText("${index + 1}. ${exercise.name}", 17f))
+                addWithMargins(bodyText(prescription(exercise), 13f), topDp = 4)
+                addWithMargins(LinearLayout(context).apply {
+                    orientation = LinearLayout.HORIZONTAL
+                    fun action(label: Int, enabled: Boolean = true, change: (MutableList<CustomExercise>) -> Unit) =
+                        addView(secondaryButton(getString(label)) {
+                            val list = draft?.exercises.orEmpty().toMutableList()
+                            change(list)
+                            draft = draft?.copy(exercises = list)
+                            renderEditDay(dayId)
+                        }.apply { isEnabled = enabled; alpha = if (enabled) 1f else .4f; minWidth = 0; setPadding(dp(10), 0, dp(10), 0) },
+                            LinearLayout.LayoutParams(0, dp(44), 1f).apply { setMargins(dp(2), 0, dp(2), 0) })
+                    action(R.string.builder_up, index > 0) { it.add(index - 1, it.removeAt(index)) }
+                    action(R.string.builder_down, index < day.exercises.lastIndex) { it.add(index + 1, it.removeAt(index)) }
+                    addView(secondaryButton(getString(R.string.builder_edit)) {
+                        editSets(exercise.name, exercise.sets) { sets ->
+                            draft = draft?.copy(exercises = draft?.exercises.orEmpty().toMutableList().also { it[index] = exercise.copy(sets = sets) })
+                            renderEditDay(dayId)
+                        }
+                    }.apply { minWidth = 0; setPadding(dp(10), 0, dp(10), 0) },
+                        LinearLayout.LayoutParams(0, dp(44), 1f).apply { setMargins(dp(2), 0, dp(2), 0) })
+                    action(R.string.builder_remove) { it.removeAt(index) }
+                }, topDp = 10)
+            }, topDp = 12)
+        }
+        page.addWithMargins(secondaryButton(getString(R.string.builder_add)) {
+            pickExercise { movement ->
+                val sets = List(3) { movement.sample }
+                editSets(movement.name, sets) { chosen ->
+                    draft = draft?.copy(exercises = draft?.exercises.orEmpty() + CustomExercise(movement.key, movement.name,
+                        movement.movementId, movement.category, movement.equipment, chosen))
+                    renderEditDay(dayId)
+                }
+            }
+        }, topDp = 16)
+        page.addWithMargins(primaryButton(getString(R.string.builder_save)) {
+            val current = draft ?: return@primaryButton
+            when {
+                current.name.isBlank() -> Toast.makeText(this, R.string.builder_needs_name, Toast.LENGTH_SHORT).show()
+                current.exercises.isEmpty() -> Toast.makeText(this, R.string.builder_needs_exercise, Toast.LENGTH_SHORT).show()
+                else -> {
+                    library.saveDay(current.copy(name = current.name.trim(), updatedAt = System.currentTimeMillis()))
+                    if (backStack.peekLast() == Screen.Overview(current.id)) backStack.pollLast()
+                    showScreen(Screen.Overview(current.id), pushCurrent = false)
+                }
+            }
+        }, topDp = 10)
+        setBody(scroll(page))
+    }
+
+    private fun customMeta(exercises: Int, minutes: Int): String =
+        getString(R.string.custom_meta, resources.getQuantityString(R.plurals.custom_exercises, exercises, exercises), minutes)
+
+    private fun prescription(exercise: CustomExercise): String {
+        val set = exercise.sets.firstOrNull() ?: return ""
+        return if (set.durationSeconds != null) getString(R.string.builder_seconds, exercise.sets.size, set.durationSeconds, set.breakSeconds)
+        else getString(R.string.builder_reps, exercise.sets.size, set.repetitions ?: 0, set.breakSeconds)
+    }
+
+    /** Search every exercise of the program and pick one. */
+    private fun pickExercise(onPick: (LibraryMovement) -> Unit) {
+        val all = exerciseLibrary ?: return
+        var shown = all.movements
+        val empty = bodyText(getString(R.string.picker_empty), 14f).apply { visibility = View.GONE; setPadding(0, dp(12), 0, 0) }
+        val adapter = object : BaseAdapter() {
+            override fun getCount() = shown.size
+            override fun getItem(position: Int) = shown[position]
+            override fun getItemId(position: Int) = position.toLong()
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View = LinearLayout(this@HomeActivity).apply {
+                orientation = LinearLayout.VERTICAL
+                setPadding(dp(4), dp(10), dp(4), dp(10))
+                val movement = shown[position]
+                addView(oneLineText(movement.name, bold = true))
+                listOfNotNull(movement.category?.let(::humanize), movement.equipment.joinToString(", ", transform = ::humanize).ifBlank { null })
+                    .joinToString(" · ")
+                    .takeIf(String::isNotBlank)?.let { addView(bodyText(it, 13f).apply { maxLines = 1 }) }
+            }
+        }
+        val list = ListView(this).apply { this.adapter = adapter; divider = ColorDrawable(AppColors.DIVIDER); dividerHeight = 1 }
+        val search = EditText(this).apply {
+            hint = getString(R.string.picker_hint)
+            isSingleLine = true
+            setTextColor(AppColors.TEXT)
+            setHintTextColor(AppColors.TEXT_SECONDARY)
+            addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
+                override fun afterTextChanged(s: Editable?) {
+                    shown = all.search(s?.toString().orEmpty())
+                    empty.visibility = if (shown.isEmpty()) View.VISIBLE else View.GONE
+                    adapter.notifyDataSetChanged()
+                }
+            })
+        }
+        val content = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(20), dp(8), dp(20), 0)
+            addView(search)
+            addView(empty)
+            addView(list, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(380)))
+        }
+        val dialog = AlertDialog.Builder(this).setTitle(R.string.picker_title).setView(content)
+            .setNegativeButton(R.string.cancel, null).show()
+        list.setOnItemClickListener { _, _, position, _ -> dialog.dismiss(); onPick(shown[position]) }
+    }
+
+    /** The same dose for every set: how many, reps or seconds, and rest. */
+    private fun editSets(name: String, sets: List<CustomSet>, onApply: (List<CustomSet>) -> Unit) {
+        val first = sets.firstOrNull() ?: CustomSet(repetitions = 8)
+        var timed = first.durationSeconds != null
+        fun field(label: Int, value: Int) = EditText(this).apply {
+            hint = getString(label)
+            setText(value.toString())
+            inputType = InputType.TYPE_CLASS_NUMBER
+            isSingleLine = true
+            setTextColor(AppColors.TEXT)
+        }
+        val count = field(R.string.sets_count, sets.size.coerceAtLeast(1))
+        val amount = field(R.string.sets_amount, first.durationSeconds ?: first.repetitions ?: 8)
+        val rest = field(R.string.sets_rest, first.breakSeconds)
+        val content = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(20), dp(8), dp(20), 0)
+            addView(bodyText(getString(R.string.sets_count), 13f)); addView(count)
+            addWithMargins(segmentedSwitch(listOf(getString(R.string.sets_reps), getString(R.string.sets_seconds)), if (timed) 1 else 0) {
+                timed = it == 1
+            }, width = ViewGroup.LayoutParams.WRAP_CONTENT, topDp = 8, bottomDp = 4)
+            addView(bodyText(getString(R.string.sets_amount), 13f)); addView(amount)
+            addView(bodyText(getString(R.string.sets_rest), 13f)); addView(rest)
+        }
+        AlertDialog.Builder(this).setTitle(getString(R.string.sets_title, name)).setView(content)
+            .setNegativeButton(R.string.cancel, null)
+            .setPositiveButton(R.string.sets_apply) { _, _ ->
+                val n = count.text.toString().toIntOrNull()?.coerceIn(1, 20) ?: 1
+                val value = amount.text.toString().toIntOrNull()?.coerceIn(1, 600) ?: 1
+                val pause = rest.text.toString().toIntOrNull()?.coerceIn(0, 600) ?: 60
+                onApply(List(n) { if (timed) CustomSet(durationSeconds = value, breakSeconds = pause) else CustomSet(repetitions = value, breakSeconds = pause) })
+            }.show()
+    }
+
+    private fun renameLevel(level: TrainingLevel) {
+        if (!Entitlement.tier(this).renameLevels) { showPaywall(Paywall.Rename); return }
+        val names = LevelNames(this)
+        val field = EditText(this).apply {
+            setText(displayName(level, uiLocale()))
+            isSingleLine = true
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_WORDS
+            setTextColor(AppColors.TEXT)
+        }
+        AlertDialog.Builder(this).setTitle(getString(R.string.rename_level_title, getString(R.string.level_number, level.number)))
+            .setView(LinearLayout(this).apply { setPadding(dp(20), dp(8), dp(20), 0); addView(field, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)) })
+            .setNegativeButton(R.string.cancel, null)
+            .setNeutralButton(R.string.rename_reset) { _, _ -> names.set(level.number, null); showScreen(currentScreen ?: Screen.Levels, pushCurrent = false) }
+            .setPositiveButton(R.string.rename_save) { _, _ ->
+                names.set(level.number, field.text.toString().trim().ifBlank { null })
+                showScreen(currentScreen ?: Screen.Levels, pushCurrent = false)
+            }.show()
     }
 
     private fun levelCard(
@@ -610,6 +1373,8 @@ open class HomeActivity : Activity() {
             if (description.isNotBlank()) addView(bodyText(description, 13f).apply { maxLines = 2 })
         }
         header.addView(text, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+        val locked = levelLocked(level.number)
+        if (locked) header.addView(lockBadge())
         addView(header)
         val complete = level.programs.count { it.id in completedIds }
         val percent = percentage(complete, level.programs.size)
@@ -618,18 +1383,41 @@ open class HomeActivity : Activity() {
             topDp = 12,
         )
         addWithMargins(horizontalProgress(percent), topDp = 7, height = dp(8))
-        contentDescription = "${displayName(level, locale)}, ${getString(R.string.level_progress_format, complete, level.programs.size)}"
+        contentDescription = "${displayName(level, locale)}, ${getString(R.string.level_progress_format, complete, level.programs.size)}" +
+            if (locked) ", ${getString(R.string.tier_plus)}" else ""
         setOnClickListener { navigate(Screen.Workouts(level.number)) }
+    }
+
+    private fun replayCard(replay: LevelReplay, locale: Locale): LinearLayout = card().apply {
+        addView(titleText(getString(R.string.replay_card_title, replay.levelNumber), 18f))
+        val furthest = furthestProgram()
+        addWithMargins(bodyText(
+            if (furthest == null) getString(R.string.replay_card_body_complete)
+            else getString(R.string.replay_card_body,
+                "${getString(R.string.level_number, furthest.levelNumber)} · ${displayName(furthest, locale)}"),
+            14f,
+        ), topDp = 6)
+        addWithMargins(secondaryButton(getString(R.string.replay_return)) {
+            progressRepository.endLevelReplay()
+            clearRest(); openRoot(Screen.Levels)
+        }, topDp = 12)
+    }
+
+    private fun requestLevelReplay(level: TrainingLevel) {
+        AlertDialog.Builder(this).setTitle(getString(R.string.replay_dialog_title, level.number))
+            .setMessage(getString(R.string.replay_dialog_message, displayName(level, uiLocale())))
+            .setNegativeButton(R.string.cancel, null)
+            .setPositiveButton(R.string.replay_confirm) { _, _ ->
+                progressRepository.startLevelReplay(level.number)
+                clearRest(); openRoot(Screen.Dashboard)
+            }.show()
     }
 
     private fun renderWorkouts(levelNumber: Int) {
         val level = catalog?.levels?.firstOrNull { it.number == levelNumber } ?: return
         val locale = uiLocale()
         val completed = progressRepository.completedProgramIds()
-        val container = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setBackgroundColor(AppColors.BACKGROUND)
-        }
+        val container = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         val summary = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dp(16), dp(14), dp(16), dp(10))
@@ -648,26 +1436,40 @@ open class HomeActivity : Activity() {
                 height = dp(8),
             )
         }
-        if (assignedProgram()?.levelNumber == level.number) {
+        val locked = levelLocked(level.number)
+        val assigned = assignedProgram()
+        // A locked level offers the purchase instead of "Complete level", so the lock can't be skipped.
+        if (locked) summary.addWithMargins(TiersPanel(this, billing, Paywall.Level(level.number)), topDp = 14)
+        if (assigned?.levelNumber == level.number && !locked) {
+            // Level 1 is a gentle on-ramp: someone who already trains can move on in one step (not while replaying it).
+            if (level.number == 1 && levelReplay() == null) {
+                summary.addWithMargins(bodyText(getString(R.string.placement_level_one_hint), 13f), topDp = 12)
+            }
             summary.addWithMargins(secondaryButton("Complete level") {
                 AlertDialog.Builder(this).setTitle("Complete this level?")
                     .setMessage("Mark all ${level.programs.size} days in ${displayName(level, locale)} complete.")
                     .setNegativeButton("Cancel", null)
                     .setPositiveButton("Complete") { _, _ ->
                         progressRepository.completePrograms(level.programs.map { it.id })
+                        cloudChanged()
                         clearRest(); openRoot(Screen.Levels)
                     }.show()
             }, topDp = 10)
         }
+        // Any level before the furthest day can be trained again; nothing completed is undone.
+        val furthestLevel = furthestProgram()?.levelNumber ?: Int.MAX_VALUE
+        if (level.number < furthestLevel && assigned?.levelNumber != level.number && !locked) {
+            summary.addWithMargins(secondaryButton(getString(R.string.replay_go_back)) { requestLevelReplay(level) }, topDp = 10)
+        }
+        summary.addWithMargins(secondaryButton(getString(R.string.rename_level)) { renameLevel(level) }, topDp = 10)
         val programs = level.programs.sortedBy { it.number }
         val list = ListView(this).apply {
             addHeaderView(summary, null, false)
-            adapter = ProgramListAdapter(context, programs, completed, assignedProgram()?.id, locale)
+            adapter = ProgramListAdapter(context, programs, completed, assigned?.id, locale)
             divider = ColorDrawable(Color.TRANSPARENT)
             dividerHeight = 0
             clipToPadding = false
             setPadding(0, dp(4), 0, dp(16))
-            setBackgroundColor(AppColors.BACKGROUND)
             setOnItemClickListener { _, _, position, _ ->
                 programs.getOrNull(position - headerViewsCount)?.let { navigate(Screen.Overview(it.id)) }
             }
@@ -680,6 +1482,16 @@ open class HomeActivity : Activity() {
         val program = programById(programId) ?: return
         val locale = uiLocale()
         val page = verticalPage()
+        if (levelLocked(program.levelNumber) && !progressRepository.isProgramCompleted(program.id)) {
+            page.addWithMargins(card().apply {
+                addView(titleText(displayName(program, locale), 25f))
+                addWithMargins(bodyText(listOf(getString(R.string.level_number, program.levelNumber), programMeta(program))
+                    .filter(String::isNotBlank).joinToString(" • "), 14f), topDp = 4)
+            }, bottomDp = 14)
+            page.addView(TiersPanel(this, billing, Paywall.Level(program.levelNumber)))
+            setBody(scroll(page))
+            return
+        }
         if (!canStart(program.id) && !progressRepository.isProgramCompleted(program.id)) {
             page.addView(card().apply {
                 addView(titleText(displayName(program, locale), 25f))
@@ -690,22 +1502,53 @@ open class HomeActivity : Activity() {
             return
         }
 
+        val custom = CustomDays.isCustom(program.id)
+        val assigned = assignedProgram()
+        val active = progressRepository.activeWorkout()
+        // Today's day starts as usual (during a level replay too); any other completed day can be repeated.
+        val repeatable = !custom && assigned?.id != program.id && canRepeat(program.id)
+        val repeatResume = active?.programId == program.id && active.repeat
         val hero = card()
-        hero.addView(titleText(displayName(program, locale), 25f))
-        val meta = buildList {
+        val title = titleText(displayName(program, locale), 25f)
+        if (custom) hero.addView(title) else hero.addView(LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            addView(title, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+            addView(heartButton(program.id))
+        })
+        val meta = if (custom) customMeta(program.exercises.size, program.estimatedMinutes ?: 1)
+        else buildList {
             add(getString(R.string.level_number, program.levelNumber))
             programMeta(program).takeIf(String::isNotBlank)?.let(::add)
         }.joinToString(" • ")
         hero.addWithMargins(bodyText(meta, 14f), topDp = 4)
-        hero.addWithMargins(
+        if (!custom) hero.addWithMargins(
             bodyText(
                 program.description.resolve(locale).ifBlank { getString(R.string.empty_description) },
             ),
             topDp = 12,
         )
+        hero.addWithMargins(safetyLine(program), topDp = 6)
+        if (custom) {
+            hero.addWithMargins(secondaryButton(getString(R.string.custom_edit)) { requestEditDay(program.id) }, topDp = 12)
+            hero.addWithMargins(secondaryButton(getString(R.string.custom_delete)) {
+                AlertDialog.Builder(this).setTitle(R.string.custom_delete_title)
+                    .setMessage(getString(R.string.custom_delete_message, displayName(program, locale)))
+                    .setNegativeButton(R.string.cancel, null)
+                    .setPositiveButton(R.string.delete) { _, _ ->
+                        if (progressRepository.activeWorkout()?.programId == program.id) { clearRest(); progressRepository.abandonWorkout() }
+                        library.deleteDay(program.id)
+                        onBackPressed()
+                    }.show()
+            }, topDp = 8)
+        }
+        // Also at the top, so a completed day can be repeated without scrolling past every exercise.
+        if (repeatable) {
+            hero.addWithMargins(bodyText(getString(R.string.repeat_note), 13f).apply {
+                setTextColor(AppColors.PRIMARY)
+            }, topDp = 12)
+            hero.addWithMargins(repeatButton(program, repeatResume), topDp = 10)
+        }
         page.addWithMargins(hero, bottomDp = 14)
-
-        page.addWithMargins(workoutSafetyCard(program), bottomDp = 16)
 
         val sections = sections(program)
         if (sections.all { it.exercises.isEmpty() }) {
@@ -714,9 +1557,9 @@ open class HomeActivity : Activity() {
             sections.filter { it.exercises.isNotEmpty() }.forEach { section ->
                 addExerciseSection(page, section, locale)
             }
-            val assigned = assignedProgram()
-            if (assigned?.id == program.id || canReplay(program.id)) {
-                val isResume = progressRepository.activeWorkout()?.programId == program.id
+            if (custom || assigned?.id == program.id) {
+                val isResume = active?.programId == program.id && !active.repeat
+                page.addWithMargins(workoutViewSetting(settings), topDp = 4)
                 val start = primaryButton(
                     getString(when {
                         isResume -> R.string.resume_workout
@@ -726,7 +1569,13 @@ open class HomeActivity : Activity() {
                 start.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_play_arrow_white_24dp, 0, 0, 0)
                 start.compoundDrawablePadding = dp(8)
                 page.addWithMargins(start, topDp = 8)
-                page.addWithMargins(secondaryButton("Complete day") { requestCompleteDay(program) }, topDp = 8)
+                // Complete day moves the sequence on, so only the assigned day offers it.
+                if (!custom) page.addWithMargins(secondaryButton("Complete day") { requestCompleteDay(program) }, topDp = 8)
+            } else if (repeatable) {
+                page.addWithMargins(bodyText(getString(R.string.sequence_completed_note), 14f), topDp = 8)
+                page.addWithMargins(workoutViewSetting(settings), topDp = 4)
+                page.addWithMargins(repeatButton(program, repeatResume), topDp = 8)
+                page.addWithMargins(bodyText(getString(R.string.repeat_note), 13f), topDp = 8)
             } else {
                 val completed = progressRepository.isProgramCompleted(program.id)
                 page.addWithMargins(
@@ -822,13 +1671,22 @@ open class HomeActivity : Activity() {
         page.addWithMargins(ManagedNativePlacement(this, training = true), bottomDp = 14)
     }
 
-    private fun requestStart(program: TrainingProgram) {
-        if (!canStart(program.id)) {
+    private fun repeatButton(program: TrainingProgram, resume: Boolean): View =
+        primaryButton(getString(if (resume) R.string.resume_workout else R.string.repeat_day)) {
+            requestStart(program, repeat = true)
+        }.apply {
+            setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_play_arrow_white_24dp, 0, 0, 0)
+            compoundDrawablePadding = dp(8)
+        }
+
+    /** Today's day, or with [repeat] a completed day again. Another active workout is only replaced on confirmation. */
+    private fun requestStart(program: TrainingProgram, repeat: Boolean = false) {
+        if (!(if (repeat) canRepeat(program.id) else canStart(program.id))) {
             Toast.makeText(this, R.string.sequence_locked_note, Toast.LENGTH_LONG).show()
             return
         }
         val current = progressRepository.activeWorkout()
-        if (current != null && current.programId != program.id) {
+        if (current != null && (current.programId != program.id || current.repeat != repeat)) {
             AlertDialog.Builder(this)
                 .setTitle(R.string.replace_workout_title)
                 .setMessage(R.string.replace_workout_message)
@@ -836,35 +1694,28 @@ open class HomeActivity : Activity() {
                 .setPositiveButton(R.string.replace) { _, _ ->
                     clearRest()
                     progressRepository.abandonWorkout()
-                    progressRepository.startWorkout(program.id)
+                    progressRepository.startWorkout(program.id, repeat = repeat)
                     navigate(Screen.Active(program.id))
                 }
                 .show()
             return
         }
-        if (current == null) progressRepository.startWorkout(program.id)
+        if (current == null) progressRepository.startWorkout(program.id, repeat = repeat)
         navigate(Screen.Active(program.id))
     }
 
     private fun renderActive(programId: String) {
         val program = programById(programId) ?: return
         val active = progressRepository.activeWorkout()
-        if (active?.programId != program.id || !canStart(program.id)) {
+        if (active?.programId != program.id || !canRun(active)) {
             openRoot(Screen.Dashboard)
             return
         }
         val locale = uiLocale()
         val sections = sections(program).filter { it.exercises.isNotEmpty() }
         if (restProgramId != program.id) clearRest()
-        val allSetKeys = buildList {
-            sections.forEach { section ->
-                section.exercises.forEachIndexed { exerciseIndex, exercise ->
-                    exercise.sets.forEachIndexed { setIndex, set ->
-                        add(scopedSetId(program, section.key, exercise, exerciseIndex, set, setIndex))
-                    }
-                }
-            }
-        }
+        val flow = workoutFlow(program)
+        val allSetKeys = flow.keys
         var doneCount = allSetKeys.count { it in active.completedSetIds }
         val setChecks = linkedMapOf<String, CheckBox>()
         val sectionUpdates = mutableListOf<(Set<String>) -> Unit>()
@@ -888,6 +1739,9 @@ open class HomeActivity : Activity() {
         val page = verticalPage()
         val status = card().apply {
             background = roundedDrawable(AppColors.INFO_SURFACE, dp(24).toFloat())
+            if (active.repeat) addWithMargins(bodyText(getString(R.string.repeat_note), 12f).apply {
+                setTextColor(AppColors.PRIMARY)
+            }, bottomDp = 4)
             addView(titleText(displayName(program, locale), 22f))
             val minutes = ((System.currentTimeMillis() - active.startedAtEpochMillis) / 60_000L)
                 .coerceAtLeast(0L)
@@ -907,17 +1761,13 @@ open class HomeActivity : Activity() {
             }
             addWithMargins(restStatusView!!, topDp = 12)
         }
-        status.addWithMargins(secondaryButton("Complete day") { requestCompleteDay(program) }, topDp = 12)
-        page.addWithMargins(status, bottomDp = 14)
-
-        page.addWithMargins(workoutSafetyCard(program), bottomDp = 14)
+        // A repeated day is already complete; it ends with Finish or End session.
+        if (!active.repeat) status.addWithMargins(secondaryButton("Complete day") { requestCompleteDay(program) }, topDp = 12)
+        page.addWithMargins(status, bottomDp = 6)
+        page.addWithMargins(safetyLine(program), leftDp = 4, rightDp = 4, bottomDp = 10)
 
         sections.forEach { section ->
-            val keys = section.exercises.flatMapIndexed { exerciseIndex, exercise ->
-                exercise.sets.mapIndexed { setIndex, set ->
-                    scopedSetId(program, section.key, exercise, exerciseIndex, set, setIndex)
-                }
-            }
+            val keys = flow.keys(section.key)
             val sectionName = getString(section.titleRes)
             val sectionCount = bodyText("", 12f).apply { gravity = Gravity.CENTER }
             val sectionCheck = CheckBox(this).apply {
@@ -963,14 +1813,7 @@ open class HomeActivity : Activity() {
                     exerciseCard.addWithMargins(bodyText(it, 13f), topDp = 4)
                 }
                 exercise.sets.forEachIndexed { setIndex, set ->
-                    val setKey = scopedSetId(
-                        program,
-                        section.key,
-                        exercise,
-                        exerciseIndex,
-                        set,
-                        setIndex,
-                    )
+                    val setKey = WorkoutFlow.setKey(program.id, section.key, exercise, exerciseIndex, set, setIndex)
                     val checked = setKey in active.completedSetIds
                     val row = LinearLayout(this).apply {
                         orientation = LinearLayout.HORIZONTAL
@@ -1033,6 +1876,56 @@ open class HomeActivity : Activity() {
         scheduleRestUpdates()
     }
 
+    /** One set per screen. Shares set keys, rest timer, ad breaks and finish flow with renderActive. */
+    private fun renderFocus(programId: String) {
+        val program = programById(programId) ?: return
+        val active = progressRepository.activeWorkout()
+        if (active?.programId != program.id || !canRun(active)) {
+            openRoot(Screen.Dashboard)
+            return
+        }
+        if (restProgramId != program.id) clearRest()
+        restStatusView = null
+        bottomNavigation.visibility = View.GONE
+        val host = object : FocusWorkoutView.Host {
+            override fun completedSets() = progressRepository.activeWorkout()?.completedSetIds.orEmpty()
+            override fun setCompleted(key: String, completed: Boolean) = progressRepository.setCompleted(key, completed)
+            override fun restEndsAt() = restEndsAtEpochMillis
+            override fun startRest(seconds: Int) {
+                this@HomeActivity.startRest(seconds)
+                scheduleRestUpdates()
+            }
+            override fun addRest(seconds: Int) {
+                restEndsAtEpochMillis = restEndsAtEpochMillis?.plus(seconds * 1_000L)
+                scheduleRestUpdates()
+            }
+            override fun skipRest() = clearRest()
+            override fun sectionComplete() {
+                if ((restEndsAtEpochMillis ?: 0L) <= System.currentTimeMillis()) adBreak.atNaturalBreak()
+            }
+            override fun holdFinished() {
+                if (settings.soundCues) TimingAlerts.tone()
+                TimingAlerts.vibrate(this@HomeActivity)
+            }
+            override fun finish(completedSets: Int, totalSets: Int) = requestFinish(program, completedSets, totalSets)
+        }
+        val titles = sections(program).associate { it.key to getString(it.titleRes) }
+        setBody(FocusWorkoutView(this, program, workoutFlow(program), titles, active.startedAtEpochMillis, uiLocale(), host))
+        scheduleRestUpdates()
+    }
+
+    private fun bindWorkoutViewAction(screen: Screen) {
+        val focus = settings.workoutView == WorkoutView.FOCUS
+        toolbarAction.visibility = if (screen is Screen.Active) View.VISIBLE else View.GONE
+        toolbarAction.setImageResource(if (focus) R.drawable.ic_view_list else R.drawable.ic_view_focus)
+        toolbarAction.contentDescription = getString(if (focus) R.string.switch_to_list else R.string.switch_to_focus)
+    }
+
+    private fun switchWorkoutView() {
+        settings.workoutView = if (settings.workoutView == WorkoutView.FOCUS) WorkoutView.LIST else WorkoutView.FOCUS
+        currentScreen?.let { showScreen(it, pushCurrent = false) }
+    }
+
     private fun requestCompleteDay(program: TrainingProgram) {
         if (!canStart(program.id)) return
         AlertDialog.Builder(this).setTitle("Complete this day?")
@@ -1040,6 +1933,7 @@ open class HomeActivity : Activity() {
             .setNegativeButton("Cancel", null)
             .setPositiveButton("Complete") { _, _ ->
                 progressRepository.completePrograms(listOf(program.id))
+                cloudChanged()
                 clearRest(); openRoot(Screen.Dashboard)
             }.show()
     }
@@ -1067,9 +1961,12 @@ open class HomeActivity : Activity() {
             .setSingleChoiceItems(labels, selected) { _, which -> selected = which }
             .setNegativeButton(R.string.cancel, null)
             .setPositiveButton(R.string.finish) { _, _ ->
-                progressRepository.finishWorkout(effortRating = values[selected])
+                // A repeat's rating is kept on its own history entry only; see WorkoutSession.
+                val session = progressRepository.finishWorkout(effortRating = values[selected])
+                cloudChanged()
                 clearRest()
-                Toast.makeText(this, R.string.workout_saved, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, if (session?.repeat == true) R.string.repeat_saved else R.string.workout_saved,
+                    Toast.LENGTH_SHORT).show()
                 backStack.clear()
                 showScreen(
                     Screen.Progress,
@@ -1143,7 +2040,7 @@ open class HomeActivity : Activity() {
     private fun renderProgress() {
         val catalog = catalog ?: return
         val locale = uiLocale()
-        val all = allPrograms(catalog)
+        val all = orderedPrograms
         val completedIds = progressRepository.completedProgramIds()
         val complete = all.count { it.id in completedIds }
         val percent = percentage(complete, all.size)
@@ -1156,16 +2053,22 @@ open class HomeActivity : Activity() {
         if (skills != null) {
             page.addWithMargins(
                 segmentedSwitch(
-                    listOf(getString(R.string.progress_tab_skills), getString(R.string.progress_tab_history)),
-                    if (showSkills) 0 else 1,
+                    listOf(getString(R.string.progress_tab_skills), getString(R.string.progress_tab_history),
+                        getString(R.string.progress_tab_leaderboard)),
+                    progressTab,
                 ) { index ->
-                    showSkills = index == 0
+                    progressTab = index
                     renderProgress()
                 },
                 width = ViewGroup.LayoutParams.WRAP_CONTENT,
                 topDp = 12,
             )
-            if (showSkills) {
+            if (progressTab == 2) {
+                renderLeaderboard(page, skills)
+                setBody(scroll(page))
+                return
+            }
+            if (progressTab == 0) {
                 page.addWithMargins(
                     skillsContent(
                         skills.progress(completedIds),
@@ -1216,60 +2119,68 @@ open class HomeActivity : Activity() {
         }
 
 
-        page.addView(sectionLabel(getString(R.string.history)))
-        val history = progressRepository.sessionHistory()
-        if (history.isEmpty()) {
-            page.addWithMargins(card().apply { addView(bodyText(getString(R.string.no_history))) }, bottomDp = 10)
-        } else {
-            val formatter = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, locale)
-            history.take(100).forEach { session ->
-                val program = programById(session.programId)
-                val row = card(clickable = program != null).apply {
-                    addView(
-                        titleText(
-                            program?.let { displayName(it, locale) } ?: session.programId,
-                            17f,
-                        ),
-                    )
-                    addWithMargins(
-                        bodyText(
-                            if (session.manuallyCompleted) "Marked complete \u00b7 ${formatter.format(Date(session.completedAtEpochMillis))}"
-                            else getString(
-                                R.string.completed_on,
-                                formatter.format(Date(session.completedAtEpochMillis)),
-                                session.durationSeconds / 60L,
-                            ),
-                            13f,
-                        ),
-                        topDp = 3,
-                    )
-                    program?.let { target ->
-                        setOnClickListener { navigate(Screen.Overview(target.id)) }
-                    }
-                }
-                page.addWithMargins(row, bottomDp = 8)
+        // The list or the month calendar ([historySection]); both use the same rows.
+        val formatter = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, locale)
+        page.addView(historySection(settings, progressRepository.sessionHistory(), historyCalendar) { historyRow(it, formatter, locale) })
+        setBody(scroll(page))
+    }
+
+    /** One history entry: the day and when it was finished. Tapping it opens that day's overview. */
+    private fun historyRow(session: WorkoutSession, formatter: DateFormat, locale: Locale): View {
+        val program = programById(session.programId)
+        return card(clickable = program != null).apply {
+            addView(
+                titleText(
+                    program?.let { displayName(it, locale) }
+                        ?: if (CustomDays.isCustom(session.programId)) getString(R.string.custom_deleted) else session.programId,
+                    17f,
+                ),
+            )
+            addWithMargins(
+                bodyText(
+                    if (session.manuallyCompleted) "Marked complete \u00b7 ${formatter.format(Date(session.completedAtEpochMillis))}"
+                    else getString(
+                        R.string.completed_on,
+                        formatter.format(Date(session.completedAtEpochMillis)),
+                        session.durationSeconds / 60L,
+                    ).let { if (session.repeat) getString(R.string.history_repeat, it) else it },
+                    13f,
+                ).apply { if (session.repeat) setTextColor(AppColors.PRIMARY) },
+                topDp = 3,
+            )
+            program?.let { target ->
+                setOnClickListener { navigate(Screen.Overview(target.id)) }
             }
         }
-        setBody(scroll(page))
     }
 
     @Suppress("DEPRECATION")
     private fun renderSettings() {
         val page = verticalPage()
 
-        page.addView(sectionLabel(getString(R.string.appearance)))
-        page.addWithMargins(card().apply {
-            addView(settingSwitch(getString(R.string.dark_mode), settings.darkMode) { enabled ->
-                settings.darkMode = enabled
-                recreate()
-            })
+        page.addView(sectionLabel(getString(R.string.theme_section)))
+        page.addWithMargins(themePicker(settings.theme) { picked ->
+            settings.theme = picked
+            recreate()
         }, bottomDp = 18)
-        val accountsAvailable = AccountSettingsView.isAvailable(this)
-        if (accountsAvailable) {
+        // Only Pro signs in; a build without Firebase shows no account at all.
+        if (Cloud.signInAvailable(this) && (Entitlement.tier(this).account || Cloud.uid(this) != null)) {
             page.addView(sectionLabel(getString(R.string.account_section)))
-            page.addWithMargins(AccountSettingsView(this), bottomDp = 16)
+            page.addWithMargins(AccountSettingsView(this, cloudSync) { publishScore() }, bottomDp = 16)
         }
-        page.addWithMargins(RemoveAdsPanel(this, billing), bottomDp = 16)
+        val tiersPanel = TiersPanel(this, billing)
+        page.addWithMargins(tiersPanel, bottomDp = 16)
+        if (BuildConfig.DEBUG) page.addWithMargins(card().apply {
+            addView(titleText(getString(R.string.simulate_tier), 17f))
+            addWithMargins(bodyText(getString(R.string.simulate_tier_note), 13f), topDp = 4)
+            val choices = listOf(null, Tier.FREE, Tier.PLUS, Tier.PRO)
+            val labels = listOf(getString(R.string.simulate_tier_default), getString(R.string.tier_free),
+                getString(R.string.tier_plus), getString(R.string.tier_pro))
+            addWithMargins(segmentedSwitch(labels, choices.indexOf(Entitlement.simulatedTier(this@HomeActivity))) { index ->
+                Entitlement.setSimulatedTier(this@HomeActivity, choices[index])
+                renderSettings()
+            }, width = ViewGroup.LayoutParams.WRAP_CONTENT, topDp = 10)
+        }, bottomDp = 16)
         page.addView(sectionLabel(getString(R.string.training_preferences)))
         val preferencesCard = card()
         preferencesCard.addView(settingSwitch(
@@ -1280,6 +2191,7 @@ open class HomeActivity : Activity() {
             getString(R.string.sound_cues),
             settings.soundCues,
         ) { settings.soundCues = it })
+        preferencesCard.addView(workoutViewSetting(settings))
         page.addWithMargins(preferencesCard, bottomDp = 16)
         val safety = card().apply {
             background = roundedDrawable(AppColors.WARNING_SURFACE, dp(24).toFloat())
@@ -1293,6 +2205,7 @@ open class HomeActivity : Activity() {
             addView(titleText(getString(R.string.about_title), 19f))
             addWithMargins(bodyText(getString(R.string.about_body), 14f), topDp = 7)
             addWithMargins(bodyText(getString(R.string.version_format, version), 12f), topDp = 10)
+            addWithMargins(bodyText(getString(R.string.theme_fonts_notice), 12f), topDp = 6)
         }
         about.addWithMargins(secondaryButton("Ad privacy") { NativeAds.showPrivacy(this, BuildConfig.ADMOB_NATIVE_ID) }, topDp = 12)
         page.addView(about)
@@ -1351,52 +2264,95 @@ open class HomeActivity : Activity() {
         }
     }
 
-    private fun workoutSafetyCard(program: TrainingProgram): LinearLayout = card().apply {
-        addView(titleText(getString(R.string.class_guidance_title), 18f))
-        addWithMargins(bodyText(getString(R.string.class_guidance_summary), 14f), topDp = 7)
-        addWithMargins(secondaryButton(getString(R.string.class_guidance_details)) {
-            val notes = buildList {
-                add(getString(R.string.readiness_note))
-                if (program.practice.isNotEmpty()) add(getString(R.string.skill_practice_note))
-                add(getString(R.string.flexibility_note))
-                program.readiness.resolve().takeIf(String::isNotBlank)?.let(::add)
-                program.safety.resolve().takeIf(String::isNotBlank)?.let(::add)
-            }.joinToString("\n\n")
-            AlertDialog.Builder(this@HomeActivity)
-                .setTitle(R.string.class_guidance_details)
-                .setMessage(notes)
-                .setPositiveButton(android.R.string.ok, null)
-                .show()
-        }, topDp = 4)
+    /** One quiet safety line on the overview and during a workout; it opens the class's readiness and safety notes. */
+    private fun safetyLine(program: TrainingProgram): TextView {
+        val link = getString(R.string.safety_notes) + " ›"
+        val text = SpannableStringBuilder(getString(R.string.safety_line)).append(' ').append(link)
+        val start = text.length - link.length
+        text.setSpan(ForegroundColorSpan(AppColors.PRIMARY), start, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        text.setSpan(StyleSpan(Typeface.BOLD), start, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        return bodyText(text, 13f).apply {
+            isClickable = true
+            isFocusable = true
+            setPadding(0, dp(6), 0, dp(6))
+            setOnClickListener {
+                val notes = listOf(getString(R.string.readiness_note), program.readiness.resolve(), program.safety.resolve())
+                    .filter(String::isNotBlank).joinToString("\n\n")
+                AlertDialog.Builder(this@HomeActivity).setTitle(R.string.safety_notes).setMessage(notes)
+                    .setPositiveButton(android.R.string.ok, null).show()
+            }
+        }
     }
 
-    private fun scopedSetId(
-        program: TrainingProgram,
-        section: String,
-        exercise: TrainingExercise,
-        exerciseIndex: Int,
-        set: TrainingSet,
-        setIndex: Int,
-    ): String = buildString {
-        append(program.id).append(':').append(section).append(':')
-        append(exercise.id).append('-').append(exerciseIndex).append(':')
-        append(set.id).append('-').append(setIndex)
+    /** The heart at the top right of a day's overview: saves the day to My workouts, or removes it. */
+    private fun heartButton(programId: String): ImageView = ImageView(this).apply {
+        layoutParams = LinearLayout.LayoutParams(dp(48), dp(48)).apply { topMargin = -dp(8); marginEnd = -dp(10) }
+        setPadding(dp(10), dp(10), dp(10), dp(10))
+        val ripple = TypedValue()
+        if (theme.resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, ripple, true)) setBackgroundResource(ripple.resourceId)
+        fun show(saved: Boolean) {
+            setImageResource(if (saved) R.drawable.ic_heart else R.drawable.ic_heart_outline)
+            imageTintList = ColorStateList.valueOf(if (saved) AppColors.HEART else AppColors.TEXT_SECONDARY)
+            contentDescription = getString(if (saved) R.string.saved_day else R.string.save_day)
+        }
+        show(library.isSaved(programId))
+        setOnClickListener {
+            val saved = library.isSaved(programId)
+            if (!saved && !roomForAnother()) return@setOnClickListener
+            library.setSaved(programId, !saved)
+            show(!saved)
+            if (!saved && systemAnimationsEnabled()) {
+                scaleX = 0.6f; scaleY = 0.6f
+                animate().scaleX(1f).scaleY(1f).setInterpolator(OvershootInterpolator(3f)).setDuration(260).start()
+            }
+            Toast.makeText(this@HomeActivity, if (saved) R.string.day_removed else R.string.day_saved, Toast.LENGTH_SHORT).show()
+        }
     }
+
+    private fun workoutFlow(program: TrainingProgram): WorkoutFlow =
+        WorkoutFlow.of(program.id, sections(program).map { it.key to it.exercises })
 
     private fun programById(id: String): TrainingProgram? =
-        catalog?.levels?.asSequence()?.flatMap { it.programs.asSequence() }?.firstOrNull { it.id == id }
+        if (CustomDays.isCustom(id)) library.customDay(id)?.let(CustomDays::toProgram) else programIndex[id]
 
-    private fun canReplay(id: String): Boolean = false
+    /** Today's assigned day, or one of the athlete's own custom days, which start any time. */
+    private fun canStart(id: String): Boolean =
+        (assignedProgram()?.id == id || CustomDays.isCustom(id) && library.customDay(id) != null) &&
+            programById(id)?.levelNumber?.let(::levelLocked) != true
 
-    private fun canStart(id: String): Boolean = assignedProgram()?.id == id || canReplay(id)
+    /** Any completed day can be trained again, in a level the athlete can open; days not reached yet cannot. */
+    private fun canRepeat(id: String): Boolean =
+        progressRepository.isProgramCompleted(id) && programById(id)?.levelNumber?.let(::levelLocked) == false
+
+    private fun canRun(active: ActiveWorkout): Boolean =
+        if (active.repeat) canRepeat(active.programId) else canStart(active.programId)
+
+    private fun levelLocked(levelNumber: Int): Boolean = LevelAccess.locked(levelNumber, Entitlement.allLevels(this))
 
     private fun allPrograms(catalog: CurriculumCatalog): List<TrainingProgram> =
         catalog.levels.sortedBy { it.number }.flatMap { level -> level.programs.sortedBy { it.number } }
 
     private fun assignedProgram(): TrainingProgram? {
-        val loadedCatalog = catalog ?: return null
+        if (catalog == null) return null
+        return DayAssignment.next(orderedPrograms, progressRepository.completedProgramIds(), levelReplay(),
+            TrainingProgram::id, TrainingProgram::levelNumber)
+    }
+
+    /** The first day never completed: where the athlete stopped, whatever they repeat. */
+    private fun furthestProgram(): TrainingProgram? {
+        if (catalog == null) return null
         val completed = progressRepository.completedProgramIds()
-        return allPrograms(loadedCatalog).firstOrNull { it.id !in completed }
+        return orderedPrograms.firstOrNull { it.id !in completed }
+    }
+
+    /** The level replay in effect, or null. One that has caught up with the furthest day is ended here. */
+    private fun levelReplay(): LevelReplay? {
+        if (catalog == null) return null
+        val replay = progressRepository.levelReplay() ?: return null
+        if (DayAssignment.replaying(orderedPrograms, progressRepository.completedProgramIds(), replay,
+                TrainingProgram::id, TrainingProgram::levelNumber)) return replay
+        progressRepository.endLevelReplay()
+        return null
     }
 
     private fun percentage(part: Int, whole: Int): Int =
@@ -1414,6 +2370,7 @@ open class HomeActivity : Activity() {
     }
 
     private fun setBody(view: View) {
+        view.applyThemeType()
         bodyContainer.removeAllViews()
         bodyContainer.addView(
             view,
@@ -1422,6 +2379,11 @@ open class HomeActivity : Activity() {
                 ViewGroup.LayoutParams.MATCH_PARENT,
             ),
         )
+        // The Parks map lives only while it's on screen.
+        parksMap?.takeIf { map -> generateSequence(map.view as View?) { it.parent as? View }.none { it === view } }?.let {
+            it.destroy()
+            parksMap = null
+        }
     }
 
     private fun screenTitle(screen: Screen): String = when (screen) {
@@ -1429,17 +2391,20 @@ open class HomeActivity : Activity() {
         Screen.Levels -> getString(R.string.levels_title)
         is Screen.Workouts -> getString(R.string.workouts_title, screen.levelNumber)
         is Screen.Overview -> getString(R.string.workout_overview)
-        is Screen.Active -> getString(R.string.active_workout)
+        is Screen.Active -> getString(
+            if (progressRepository.activeWorkout()?.repeat == true) R.string.repeat_active_title else R.string.active_workout,
+        )
+        is Screen.EditDay -> getString(R.string.builder_title)
         Screen.Progress -> getString(R.string.progress_title)
         Screen.Settings -> getString(R.string.settings_title)
         Screen.Timing -> getString(R.string.nav_timer)
     }
 
     private fun isNested(screen: Screen): Boolean =
-        screen is Screen.Workouts || screen is Screen.Overview || screen is Screen.Active
+        screen is Screen.Workouts || screen is Screen.Overview || screen is Screen.Active || screen is Screen.EditDay
 
     private fun rootFor(screen: Screen): Screen = when (screen) {
-        is Screen.Workouts, is Screen.Overview, is Screen.Active -> Screen.Levels
+        is Screen.Workouts, is Screen.Overview, is Screen.Active, is Screen.EditDay -> Screen.Levels
         else -> screen
     }
 
@@ -1447,8 +2412,8 @@ open class HomeActivity : Activity() {
         is Screen.Workouts -> catalog?.levels?.any { it.number == screen.levelNumber } == true
         is Screen.Overview -> programById(screen.programId) != null
         is Screen.Active -> programById(screen.programId) != null &&
-            progressRepository.activeWorkout()?.programId == screen.programId &&
-            canStart(screen.programId)
+            progressRepository.activeWorkout()?.takeIf { it.programId == screen.programId }?.let(::canRun) == true
+        is Screen.EditDay -> draft?.id == screen.dayId || library.customDay(screen.dayId) != null
         else -> true
     }
 
@@ -1463,10 +2428,20 @@ open class HomeActivity : Activity() {
         )
         Screen.Overview::class.java.simpleName -> bundle.getString(STATE_PROGRAM)?.let(Screen::Overview)
         Screen.Active::class.java.simpleName -> bundle.getString(STATE_PROGRAM)?.let(Screen::Active)
+        Screen.EditDay::class.java.simpleName -> bundle.getString(STATE_PROGRAM)?.let(Screen::EditDay)
         else -> null
     }
 
     companion object {
+        private const val REQUEST_LOCATION = 720
+        /** In ParksUpdater's preferences: the list instead of the map, and whether the map asked for location yet. */
+        private const val KEY_PARKS_LIST = "show_list"
+        private const val KEY_LOCATION_ASKED = "location_asked"
+        /** How many of the nearest parks the map frames around the athlete. */
+        private const val NEARBY_ON_MAP = 5
+        private const val STATE_DRAFT = "draft_day"
+        private const val STATE_TRAINING_TAB = "training_tab"
+        private const val STATE_PLACEMENT = "placement_answers"
         private const val STATE_SCREEN = "screen"
         private const val STATE_LEVEL = "level"
         private const val STATE_PROGRAM = "program"

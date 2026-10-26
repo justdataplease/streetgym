@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="placement_title">Where should you start?</string>
+    <string name="placement_prompt">Your best clean set today:</string>
+    <string name="placement_push_ups">Push-ups</string>
+    <string name="placement_pull_ups">Pull-ups (strict, overhand)</string>
+    <string name="placement_squats">Bodyweight squats</string>
+    <string name="placement_skip">Start at Level 1</string>
+    <string name="placement_result">Based on your experience, you should start at Level %1$d: %2$s. Do you agree, or do you want to start from scratch?</string>
+    <string name="placement_result_day">Based on your experience, you should start at %1$s. Do you agree, or do you want to start from scratch?</string>
+    <string name="placement_result_first">Based on your experience, start at Level %1$d: %2$s</string>
+    <string name="placement_level_day">Level %1$d, day %2$d</string>
+    <string name="placement_opens">%1$s opens with %2$s.</string>
+    <string name="placement_list_end">%1$s and %2$s</string>
+    <string name="placement_confirm">Start at %1$s</string>
+    <string name="placement_scratch">Start from scratch</string>
+    <string name="placement_level_one_hint">Already train? Complete Level 1 and start at Level 2.</string>
+</resources>

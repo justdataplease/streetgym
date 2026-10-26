@@ -7,13 +7,13 @@ import com.google.android.ump.UserMessagingPlatform
 import com.justdataplease.monetization.AdPalette
 import com.justdataplease.monetization.NativeAdSlot
 import com.justdataplease.streetgym.BuildConfig
-import com.justdataplease.streetgym.billing.RemoveAdsBilling
+import com.justdataplease.streetgym.billing.Entitlement
 import com.justdataplease.streetgym.ui.AppColors
 
 /** Removes existing cards immediately on purchase. Training never launches a consent popup. */
 class ManagedNativePlacement(context: Context, private val training: Boolean = false) : FrameLayout(context),
     SharedPreferences.OnSharedPreferenceChangeListener {
-    private val prefs = context.getSharedPreferences(RemoveAdsBilling.PREFS, Context.MODE_PRIVATE)
+    private val prefs = Entitlement.prefs(context)
     private var slot: NativeAdSlot? = null
     private val retry = Runnable { refresh() }
     override fun onAttachedToWindow() {
@@ -23,11 +23,11 @@ class ManagedNativePlacement(context: Context, private val training: Boolean = f
         prefs.unregisterOnSharedPreferenceChangeListener(this); removeCallbacks(retry)
         removeAllViews(); slot = null; super.onDetachedFromWindow()
     }
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) { if (key == "owned") refresh() }
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) = refresh()
     private fun refresh() {
         removeCallbacks(retry)
         if (!isAttachedToWindow) return
-        if (RemoveAdsBilling.noAds(context)) { removeAllViews(); slot = null; return }
+        if (Entitlement.adFree(context)) { removeAllViews(); slot = null; return }
         if (training && !UserMessagingPlatform.getConsentInformation(context).canRequestAds()) {
             // The dashboard handles consent. Deferring here avoids interrupting an active set/dialog.
             removeAllViews(); slot = null; postDelayed(retry, 2000); return

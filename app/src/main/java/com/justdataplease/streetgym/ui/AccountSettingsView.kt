@@ -1,178 +1,194 @@
 package com.justdataplease.streetgym.ui
 
 import android.app.Activity
-import android.graphics.Typeface
-import android.os.Build
+import android.app.AlertDialog
 import android.text.InputType
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.LinearLayout
-import com.justdataplease.streetgym.R
-import com.google.firebase.FirebaseApp
-import com.google.firebase.FirebaseNetworkException
-import com.google.firebase.FirebaseTooManyRequestsException
+import android.widget.Spinner
+import android.widget.Switch
+import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthException
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException
+import com.justdataplease.streetgym.R
+import com.justdataplease.streetgym.account.AccountStore
+import com.justdataplease.streetgym.account.Cloud
+import com.justdataplease.streetgym.account.CloudSync
+import com.justdataplease.streetgym.account.GoogleAccount
+import com.justdataplease.streetgym.account.Profile
+import com.justdataplease.streetgym.account.Profiles
+import com.justdataplease.streetgym.billing.Entitlement
+import com.justdataplease.streetgym.leaderboard.Countries
+import com.justdataplease.streetgym.leaderboard.Usernames
+import java.text.DateFormat
+import java.util.Date
+import java.util.Locale
 
 /**
- * Firebase owns session persistence; passwords never enter app preferences or saved view state.
- * Only create this view when [isAvailable] is true: builds without a Firebase configuration
- * (see README) have no default FirebaseApp, and the app then hides sign-in entirely.
+ * The Pro account in Settings: Sign in with Google, the leaderboard profile, cloud progress, sign out and account
+ * deletion. Only create it when [Cloud.signInAvailable]: builds without a Firebase configuration (README) show
+ * nothing here. [onChanged] runs after sign-in or a profile change, so the score and sync catch up.
  */
-class AccountSettingsView(private val activity: Activity) : LinearLayout(activity) {
-    companion object {
-        /** True when the build bundles a Firebase configuration and the default app initialised. */
-        fun isAvailable(context: android.content.Context): Boolean =
-            runCatching { FirebaseApp.getApps(context).isNotEmpty() }.getOrDefault(false)
-    }
-
-    private val auth = FirebaseAuth.getInstance()
-    private var creatingAccount = false
+class AccountSettingsView(
+    private val activity: Activity,
+    private val sync: CloudSync,
+    private val onChanged: () -> Unit,
+) : LinearLayout(activity) {
+    private val store = AccountStore(activity)
+    private val auth = Cloud.auth(activity)
+    private val listener = FirebaseAuth.AuthStateListener { post { render() } }
     private var busy = false
-    private val listener = FirebaseAuth.AuthStateListener { render() }
 
     init {
         orientation = VERTICAL
         setPadding(context.dp(16), context.dp(16), context.dp(16), context.dp(16))
-        background = roundedDrawable(AppColors.SURFACE, context.dp(24).toFloat())
-        elevation = context.dp(2).toFloat()
+        background = roundedDrawable(AppColors.SURFACE, context.dp(24).toFloat(), AppColors.DIVIDER, context.dp(1))
         render()
     }
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        auth.addAuthStateListener(listener)
-    }
-
-    override fun onDetachedFromWindow() {
-        auth.removeAuthStateListener(listener)
-        super.onDetachedFromWindow()
-    }
+    override fun onAttachedToWindow() { super.onAttachedToWindow(); auth?.addAuthStateListener(listener) }
+    override fun onDetachedFromWindow() { auth?.removeAuthStateListener(listener); super.onDetachedFromWindow() }
 
     private fun render() {
         removeAllViews()
-        val user = auth.currentUser
-        addView(context.titleText(context.getString(if (user == null) R.string.account_title else R.string.account_signed_in), 20f))
-        if (user != null) {
-            addWithMargins(context.bodyText(user.email.orEmpty()), topDp = 8)
-            addWithMargins(context.bodyText(context.getString(R.string.account_local_progress), 13f), topDp = 8)
-            addWithMargins(context.secondaryButton(context.getString(R.string.account_sign_out)) {
-                creatingAccount = false
-                auth.signOut()
-            }, topDp = 12)
+        val user = auth?.currentUser
+        addView(context.titleText(context.getString(R.string.account_title), 20f))
+        if (!Entitlement.tier(activity).account) {
+            // Only Pro signs in; an account from a lapsed Pro stays signed in, but nothing syncs.
+            if (user != null) {
+                addWithMargins(context.bodyText(context.getString(R.string.account_lapsed), 14f), topDp = 6)
+                addWithMargins(context.secondaryButton(context.getString(R.string.account_sign_out)) { GoogleAccount.signOut(activity) }, topDp = 12)
+            } else visibility = View.GONE
             return
         }
-        addWithMargins(context.bodyText(context.getString(R.string.account_optional), 14f), topDp = 6)
-        val email = field(R.string.account_email, InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS)
-        val password = field(R.string.account_password, InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD)
-        val confirmation = field(R.string.account_confirm_password, InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD)
-        confirmation.visibility = if (creatingAccount) View.VISIBLE else View.GONE
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            email.setAutofillHints(View.AUTOFILL_HINT_EMAIL_ADDRESS)
-            password.setAutofillHints(if (creatingAccount) "newPassword" else View.AUTOFILL_HINT_PASSWORD)
-            confirmation.setAutofillHints("newPassword")
-        }
-        addWithMargins(email, topDp = 12)
-        addView(password)
-        addView(confirmation)
-        val status = context.bodyText("", 14f).apply {
-            accessibilityLiveRegion = View.ACCESSIBILITY_LIVE_REGION_POLITE
-        }
-        addWithMargins(status, topDp = 8)
-        val controls = mutableListOf<View>(email, password, confirmation)
-        fun setBusy(value: Boolean) {
-            busy = value
-            controls.forEach { it.isEnabled = !value }
-            if (value) status.setText(R.string.account_working)
-        }
-        fun validEmail(): String? {
-            val value = email.text.toString().trim()
-            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(value).matches()) {
-                email.error = context.getString(R.string.account_invalid_email)
-                email.requestFocus()
-                return null
-            }
-            return value
-        }
-        val submit = context.primaryButton(context.getString(if (creatingAccount) R.string.account_create else R.string.account_sign_in)) {
-            if (!busy) {
-                val address = validEmail()
-                val secret = password.text.toString()
-                when {
-                    address == null -> Unit
-                    secret.isEmpty() -> { password.error = context.getString(R.string.account_enter_password); password.requestFocus() }
-                    creatingAccount && secret.length < 6 -> { password.error = context.getString(R.string.account_short_password); password.requestFocus() }
-                    creatingAccount && secret != confirmation.text.toString() -> {
-                        confirmation.error = context.getString(R.string.account_password_mismatch)
-                        confirmation.requestFocus()
+        visibility = View.VISIBLE
+        val status = context.bodyText("", 13f)
+        if (user == null) {
+            addWithMargins(context.bodyText(context.getString(R.string.account_intro), 14f), topDp = 6)
+            addWithMargins(context.primaryButton(context.getString(R.string.account_sign_in)) {
+                if (busy) return@primaryButton
+                busy = true; status.setText(R.string.account_working)
+                GoogleAccount.signIn(activity) { result ->
+                    busy = false
+                    when (result) {
+                        is GoogleAccount.Result.Signed -> Profiles.load(activity, result.user.uid) { profile ->
+                            sync.sync(force = true) { onChanged() }
+                            render()
+                            if (profile == null) editProfile(result.user.uid, null)
+                        }
+                        GoogleAccount.Result.Cancelled -> status.text = ""
+                        is GoogleAccount.Result.Failed -> status.setText(R.string.account_sign_in_failed)
                     }
-                    else -> {
-                        setBusy(true)
-                        val task = if (creatingAccount) auth.createUserWithEmailAndPassword(address, secret)
-                            else auth.signInWithEmailAndPassword(address, secret)
-                        task.addOnCompleteListener(activity) { result ->
-                            password.text.clear()
-                            confirmation.text.clear()
-                            if (isAttachedToWindow) {
-                                setBusy(false)
-                                if (result.isSuccessful) render() else status.text = errorMessage(result.exception)
-                            }
+                }
+            }, topDp = 12)
+            addWithMargins(status, topDp = 8)
+            return
+        }
+        addWithMargins(context.bodyText(user.email.orEmpty(), 14f), topDp = 4)
+        val profile = store.profile(user.uid)
+        if (profile == null) {
+            addWithMargins(context.bodyText(context.getString(R.string.account_pick_name), 14f), topDp = 10)
+            addWithMargins(context.primaryButton(context.getString(R.string.account_choose_profile)) { editProfile(user.uid, null) }, topDp = 10)
+        } else {
+            addWithMargins(context.titleText("${Countries.flag(profile.country)} ${profile.username}", 18f), topDp = 12)
+            addWithMargins(context.bodyText(Countries.name(profile.country), 13f), topDp = 2)
+            addWithMargins(Switch(context).apply {
+                text = context.getString(R.string.account_visible)
+                textSize = 15f
+                setTextColor(AppColors.TEXT)
+                isChecked = profile.visible
+                minHeight = context.dp(56)
+                setOnCheckedChangeListener { _, visible -> saveProfile(user.uid, profile.copy(visible = visible), profile) }
+            }, topDp = 6)
+            addWithMargins(context.secondaryButton(context.getString(R.string.account_edit_profile)) { editProfile(user.uid, profile) }, topDp = 4)
+        }
+        status.text = if (store.lastSyncAt > 0) context.getString(R.string.account_synced,
+            DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(Date(store.lastSyncAt)))
+            else context.getString(R.string.account_not_synced)
+        addWithMargins(status, topDp = 14)
+        addWithMargins(context.secondaryButton(context.getString(R.string.account_sync_now)) {
+            status.setText(R.string.account_working)
+            sync.sync(force = true) { result ->
+                if (result == CloudSync.Result.Failed) status.setText(R.string.account_sync_failed) else { render(); onChanged() }
+            }
+        }, topDp = 8)
+        addWithMargins(context.secondaryButton(context.getString(R.string.account_sign_out)) { GoogleAccount.signOut(activity) }, topDp = 8)
+        addWithMargins(context.bodyText(context.getString(R.string.account_sign_out_note), 12f), topDp = 4)
+        addWithMargins(context.secondaryButton(context.getString(R.string.account_delete)) { confirmDelete(user.uid, profile) }, topDp = 12)
+    }
+
+    /** Username (unique) and country; first shown right after the first sign-in. */
+    private fun editProfile(uid: String, previous: Profile?) {
+        val countries = Countries.all()
+        val name = EditText(context).apply {
+            hint = context.getString(R.string.profile_username)
+            setText(previous?.username.orEmpty())
+            isSingleLine = true
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+            setTextColor(AppColors.TEXT)
+            setHintTextColor(AppColors.TEXT_SECONDARY)
+        }
+        val country = Spinner(context).apply {
+            adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item,
+                countries.map { "${Countries.flag(it.first)} ${it.second}" })
+            val current = previous?.country ?: Locale.getDefault().country
+            setSelection(countries.indexOfFirst { it.first == current }.coerceAtLeast(0))
+        }
+        val content = LinearLayout(context).apply {
+            orientation = VERTICAL
+            setPadding(context.dp(20), context.dp(8), context.dp(20), 0)
+            addView(name)
+            addWithMargins(context.bodyText(context.getString(R.string.profile_country), 13f), topDp = 12)
+            addView(country)
+        }
+        val dialog = AlertDialog.Builder(activity).setTitle(R.string.profile_title).setView(content)
+            .setNegativeButton(R.string.cancel, null).setPositiveButton(R.string.profile_save, null).show()
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+            val username = name.text.toString().trim()
+            if (!Usernames.valid(username)) { name.error = context.getString(R.string.profile_invalid); return@setOnClickListener }
+            val profile = Profile(username, countries[country.selectedItemPosition].first, previous?.visible ?: true)
+            saveProfile(uid, profile, previous) { error -> if (error == null) dialog.dismiss() else name.error = error }
+        }
+    }
+
+    /** [done] gets null once saved, else the reason to show. A saved profile republishes the score under it. */
+    private fun saveProfile(uid: String, profile: Profile, previous: Profile?, done: (String?) -> Unit = {}) {
+        Profiles.save(activity, uid, profile, previous) { claim ->
+            when (claim) {
+                Profiles.Claim.Saved -> { store.savePublishedScore(uid, null, 0); render(); onChanged(); done(null) }
+                Profiles.Claim.Taken -> done(context.getString(R.string.profile_taken))
+                Profiles.Claim.Failed -> { render(); done(context.getString(R.string.profile_failed)) }
+            }
+        }
+    }
+
+    /** Play requires in-app deletion: cloud progress, username, profile and score go, then the Firebase account. */
+    private fun confirmDelete(uid: String, profile: Profile?) {
+        AlertDialog.Builder(activity).setTitle(R.string.account_delete_title).setMessage(R.string.account_delete_message)
+            .setNegativeButton(R.string.cancel, null)
+            .setPositiveButton(R.string.delete) { _, _ ->
+                GoogleAccount.reauthenticate(activity) { confirmed ->
+                    val db = Cloud.firestore(activity)
+                    if (!confirmed || db == null) return@reauthenticate failed()
+                    db.batch().apply {
+                        delete(db.document("users/$uid/data/progress"))
+                        delete(db.document("users/$uid/data/library"))
+                        delete(db.document("scores/$uid"))
+                        profile?.let { delete(db.document("usernames/${Usernames.key(it.username)}")) }
+                        delete(db.document("users/$uid"))
+                    }.commit().addOnCompleteListener(activity) { cleared ->
+                        if (!cleared.isSuccessful) return@addOnCompleteListener failed()
+                        auth?.currentUser?.delete()?.addOnCompleteListener(activity) { deleted ->
+                            if (!deleted.isSuccessful) return@addOnCompleteListener failed()
+                            store.clear()
+                            Toast.makeText(activity, R.string.account_deleted, Toast.LENGTH_LONG).show()
+                            render()
                         }
                     }
                 }
-            }
-        }
-        controls.add(submit)
-        addWithMargins(submit, topDp = 8)
-        val mode = context.secondaryButton(context.getString(if (creatingAccount) R.string.account_have_account else R.string.account_new_account)) {
-            creatingAccount = !creatingAccount
-            render()
-        }
-        controls.add(mode)
-        addView(mode)
-        val reset = context.secondaryButton(context.getString(R.string.account_reset)) {
-            val address = validEmail()
-            if (address != null && !busy) {
-                setBusy(true)
-                auth.sendPasswordResetEmail(address).addOnCompleteListener(activity) { result ->
-                    if (isAttachedToWindow) {
-                        setBusy(false)
-                        status.text = if (result.isSuccessful) context.getString(R.string.account_reset_sent) else errorMessage(result.exception)
-                    }
-                }
-            }
-        }
-        controls.add(reset)
-        addView(reset)
-        setBusy(busy)
+            }.show()
     }
 
-    private fun field(label: Int, type: Int) = EditText(context).apply {
-        hint = context.getString(label)
-        contentDescription = hint
-        inputType = type
-        isSingleLine = true
-        minHeight = context.dp(56)
-        textSize = 16f
-        setTextColor(AppColors.TEXT)
-        setHintTextColor(AppColors.TEXT_SECONDARY)
-        typeface = Typeface.DEFAULT
-        isSaveEnabled = false
-    }
-
-    private fun errorMessage(error: Exception?): String = context.getString(when {
-        error is FirebaseNetworkException -> R.string.account_network_error
-        error is FirebaseTooManyRequestsException -> R.string.account_rate_limit
-        error is FirebaseAuthWeakPasswordException -> R.string.account_weak_password
-        error is FirebaseAuthException -> when (error.errorCode) {
-            "ERROR_EMAIL_ALREADY_IN_USE" -> R.string.account_email_in_use
-            "ERROR_OPERATION_NOT_ALLOWED" -> R.string.account_unavailable
-            "ERROR_USER_DISABLED" -> R.string.account_disabled
-            "ERROR_INVALID_EMAIL" -> R.string.account_invalid_email
-            "ERROR_INVALID_CREDENTIAL", "ERROR_INVALID_LOGIN_CREDENTIALS", "ERROR_WRONG_PASSWORD", "ERROR_USER_NOT_FOUND" -> R.string.account_invalid_credentials
-            else -> R.string.account_generic_error
-        }
-        else -> R.string.account_generic_error
-    })
+    private fun failed() = Toast.makeText(activity, R.string.account_delete_failed, Toast.LENGTH_LONG).show()
 }

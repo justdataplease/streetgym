@@ -2,5 +2,4 @@
 <resources>
     <string name="app_name">Street Gymnastics</string>
     <string name="logo_content_description">Street Gymnastics logo</string>
-    <string name="scaffold_ready">Your training plan is loading…</string>
 </resources>

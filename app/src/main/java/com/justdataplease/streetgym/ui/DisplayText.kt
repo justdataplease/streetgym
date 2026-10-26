@@ -9,6 +9,7 @@ import com.justdataplease.streetgym.data.model.TrainingSet
 import java.util.Locale
 
 fun Context.displayName(level: TrainingLevel, locale: Locale): String {
+    LevelNames(this).name(level.number)?.let { return it }
     val value = level.name.resolve(locale)
     return if (value.isBlank() || value == "Level ${level.number}") {
         getString(R.string.level_number, level.number)
@@ -25,6 +26,9 @@ fun Context.displayName(program: TrainingProgram, locale: Locale): String {
         value
     }
 }
+
+/** A catalog id such as "static_stretch" or "doorway_or_post" as words. */
+fun humanize(id: String): String = id.replace('_', ' ').trim().replaceFirstChar { it.titlecase(Locale.ENGLISH) }
 
 fun Context.displayName(exercise: TrainingExercise, locale: Locale): String =
     exercise.name.resolve(locale).ifBlank { getString(R.string.exercise_number, exercise.number) }

@@ -40,6 +40,6 @@ The immutable forensic export is never overwritten. A separate assembly step:
 2. Adds a clearly labeled, newly authored warm-up and stretching overlay.
 3. Fills the 180 empty Pro slots inside the balanced 100-workout Level 1-3 app sequence with distinct `reconstructed_placeholder` workouts.
 4. Adds 30 clearly labeled `llm_extension` workouts to bring Level 3 from 70 to 100 slots.
-5. Adds 300 `new_level` workouts across Levels 4-6.
+5. Adds 400 `new_level` workouts across Levels 4-7.
 
-The app catalog therefore has exactly 600 complete workouts - 100 in each of six levels - while preserving an auditable boundary between extracted and newly authored material. The 109 original empty Level 1-2 placeholders above the app's 100-workout boundary remain preserved in the forensic export. Polish remains only in that separate forensic export; the app and its bundled catalog are English-only.
+The app catalog therefore has exactly 700 complete workouts - 100 in each of seven levels - while preserving an auditable boundary between extracted and newly authored material. The 109 original empty Level 1-2 placeholders above the app's 100-workout boundary remain preserved in the forensic export. Polish remains only in that separate forensic export; the app and its bundled catalog are English-only.

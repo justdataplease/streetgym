@@ -104,17 +104,17 @@
       "level": 1,
       "number": 41,
       "title": {
-        "en": "Foundation Re-entry Check"
+        "en": "Foundation Starting Point"
       },
       "description": {
-        "en": "Begin this continuation with a deload assessment to establish safe hang, row, and assisted-pull baselines before volume rises."
+        "en": "A starting point for people with twenty push-ups and thirty squats but few or no pull-ups: push-ups, squats and dips at your level, pulling from foot-assisted pull-ups and slow negatives."
       },
       "schedule": {
         "week": 1,
         "day": 1,
-        "day_type": "post_legacy_reentry_assessment",
-        "minutes": 30,
-        "rpe": 4,
+        "day_type": "starting_point_reentry",
+        "minutes": 39,
+        "rpe": 6,
         "focus": [
           "reentry_assessment",
           "deload",
@@ -129,6 +129,15 @@
           180,
           0,
           "easy",
+          null
+        ],
+        [
+          "wrist_circles",
+          1,
+          10,
+          null,
+          0,
+          "each_direction",
           null
         ],
         [
@@ -170,49 +179,49 @@
       ],
       "main": [
         [
-          "active_hang",
+          "pushup",
           2,
+          12,
           null,
+          75,
+          "2111",
+          "incline_pushup"
+        ],
+        [
+          "squat",
+          2,
           15,
-          45,
-          "isometric",
-          "foot_assisted_hang"
-        ],
-        [
-          "high_inverted_row",
-          1,
-          6,
           null,
-          75,
-          "2111",
-          null
-        ],
-        [
-          "inverted_row",
-          1,
-          5,
-          null,
-          75,
-          "2111",
-          "high_inverted_row"
+          60,
+          "2010",
+          "box_squat"
         ],
         [
           "assisted_pullup",
           2,
-          4,
+          5,
           null,
           90,
-          "3011",
+          "21X1",
           "inverted_row"
         ],
         [
-          "glute_bridge",
+          "eccentric_pullup",
           2,
-          12,
+          3,
           null,
-          45,
-          "2011",
-          null
+          90,
+          "4-second_lowering",
+          "assisted_pullup"
+        ],
+        [
+          "parallel_dip",
+          2,
+          6,
+          null,
+          90,
+          "2111",
+          "assisted_dip"
         ],
         [
           "dead_bug",
@@ -270,7 +279,7 @@
         "week": 1,
         "day": 2,
         "day_type": "legs_core",
-        "minutes": 34,
+        "minutes": 31,
         "rpe": 6,
         "focus": [
           "squat",
@@ -318,13 +327,13 @@
       ],
       "main": [
         [
-          "box_squat",
+          "squat",
           3,
-          10,
+          15,
           null,
           60,
           "3011",
-          null
+          "box_squat"
         ],
         [
           "split_squat",
@@ -355,7 +364,7 @@
         ],
         [
           "dead_bug",
-          3,
+          2,
           "5/side",
           null,
           30,
@@ -409,7 +418,7 @@
         "week": 1,
         "day": 3,
         "day_type": "push_support",
-        "minutes": 35,
+        "minutes": 33,
         "rpe": 6,
         "focus": [
           "support",
@@ -458,7 +467,7 @@
       "main": [
         [
           "foot_assisted_support",
-          3,
+          2,
           null,
           15,
           45,
@@ -475,27 +484,27 @@
           "foot_assisted_support"
         ],
         [
-          "incline_pushup",
-          3,
-          8,
+          "pushup",
+          2,
+          12,
           null,
           60,
           "3011",
-          null
+          "incline_pushup"
         ],
         [
-          "assisted_dip",
-          3,
-          5,
+          "parallel_dip",
+          2,
+          6,
           null,
           75,
-          "3011",
-          "foot_assisted_support"
+          "2111",
+          "assisted_dip"
         ],
         [
           "squat",
           2,
-          12,
+          15,
           null,
           45,
           "2011",
@@ -503,7 +512,7 @@
         ],
         [
           "incline_plank",
-          2,
+          1,
           null,
           25,
           45,
@@ -557,7 +566,7 @@
         "week": 1,
         "day": 4,
         "day_type": "active_recovery",
-        "minutes": 27,
+        "minutes": 23,
         "rpe": 4,
         "focus": [
           "mobility",
@@ -678,7 +687,7 @@
         "week": 1,
         "day": 5,
         "day_type": "bar_transition",
-        "minutes": 38,
+        "minutes": 33,
         "rpe": 6,
         "focus": [
           "vertical_pull",
@@ -735,13 +744,13 @@
       ],
       "main": [
         [
-          "assisted_pullup",
+          "eccentric_pullup",
           4,
-          4,
+          3,
           null,
           90,
-          "3011",
-          "inverted_row"
+          "4-second_lowering",
+          "assisted_pullup"
         ],
         [
           "straight_bar_support",
@@ -762,13 +771,13 @@
           "straight_bar_support"
         ],
         [
-          "assisted_dip",
+          "parallel_dip",
           3,
-          5,
+          6,
           null,
           75,
-          "3011",
-          "support_hold"
+          "2111",
+          "assisted_dip"
         ],
         [
           "hollow_hold",
@@ -817,16 +826,16 @@
       "level": 1,
       "number": 46,
       "title": {
-        "en": "Whole-Body Circuit"
+        "en": "Whole-Body Circuit Checkpoint"
       },
       "description": {
-        "en": "Move through pull, push, legs, and trunk at a sustainable weekend pace."
+        "en": "Move through pull, push, legs, and trunk at a sustainable weekend pace. Today the basics are one recorded set each. Clean reps up to the number shown: stop at the first form break and note it; don't top up with the easier option."
       },
       "schedule": {
         "week": 1,
         "day": 6,
-        "day_type": "mixed_fundamentals",
-        "minutes": 37,
+        "day_type": "mixed_fundamentals_checkpoint",
+        "minutes": 26,
         "rpe": 6,
         "focus": [
           "pull",
@@ -876,7 +885,7 @@
       "main": [
         [
           "high_inverted_row",
-          3,
+          2,
           8,
           null,
           45,
@@ -884,26 +893,26 @@
           null
         ],
         [
-          "incline_pushup",
-          3,
-          9,
-          null,
-          45,
-          "2111",
-          null
-        ],
-        [
-          "squat",
-          3,
+          "pushup",
+          1,
           12,
           null,
           45,
-          "3010",
+          "assessment",
+          "incline_pushup"
+        ],
+        [
+          "squat",
+          1,
+          15,
+          null,
+          45,
+          "assessment",
           "box_squat"
         ],
         [
           "glute_bridge",
-          3,
+          2,
           10,
           null,
           45,
@@ -912,11 +921,11 @@
         ],
         [
           "plank",
-          3,
+          1,
           null,
           20,
           45,
-          "isometric",
+          "assessment",
           "incline_plank"
         ]
       ],
@@ -966,7 +975,7 @@
         "week": 1,
         "day": 7,
         "day_type": "recovery_flexibility",
-        "minutes": 30,
+        "minutes": 27,
         "rpe": 3,
         "focus": [
           "recovery",
@@ -1087,7 +1096,7 @@
         "week": 2,
         "day": 1,
         "day_type": "pull_skill",
-        "minutes": 38,
+        "minutes": 33,
         "rpe": 6,
         "focus": [
           "grip",
@@ -1226,7 +1235,7 @@
         "week": 2,
         "day": 2,
         "day_type": "legs_core",
-        "minutes": 36,
+        "minutes": 33,
         "rpe": 6,
         "focus": [
           "squat",
@@ -1359,13 +1368,13 @@
         "en": "Push with Shape"
       },
       "description": {
-        "en": "Keep ribs and hips connected while support and incline presses grow steadier."
+        "en": "Keep ribs and hips connected while support holds, floor push-ups and first parallel-bar dips grow steadier."
       },
       "schedule": {
         "week": 2,
         "day": 3,
         "day_type": "push_support",
-        "minutes": 37,
+        "minutes": 33,
         "rpe": 6,
         "focus": [
           "bodyline",
@@ -1414,7 +1423,7 @@
       "main": [
         [
           "foot_assisted_support",
-          4,
+          2,
           null,
           18,
           45,
@@ -1422,27 +1431,27 @@
           null
         ],
         [
-          "incline_pushup",
-          4,
-          7,
+          "pushup",
+          2,
+          12,
           null,
           60,
           "3111",
-          null
+          "incline_pushup"
         ],
         [
-          "assisted_dip",
-          3,
+          "parallel_dip",
+          2,
           6,
           null,
           75,
           "3011",
-          "support_hold"
+          "assisted_dip"
         ],
         [
           "squat",
-          3,
-          10,
+          2,
+          15,
           null,
           45,
           "3011",
@@ -1450,7 +1459,7 @@
         ],
         [
           "incline_plank",
-          3,
+          2,
           null,
           25,
           45,
@@ -1504,7 +1513,7 @@
         "week": 2,
         "day": 4,
         "day_type": "active_recovery",
-        "minutes": 28,
+        "minutes": 25,
         "rpe": 4,
         "focus": [
           "mobility",
@@ -1634,7 +1643,7 @@
         "week": 2,
         "day": 5,
         "day_type": "bar_transition",
-        "minutes": 40,
+        "minutes": 34,
         "rpe": 6,
         "focus": [
           "vertical_pull",
@@ -1691,17 +1700,17 @@
       ],
       "main": [
         [
-          "assisted_pullup",
-          4,
-          5,
+          "eccentric_pullup",
+          3,
+          3,
           null,
           90,
-          "2111",
-          "inverted_row"
+          "4-second_lowering",
+          "assisted_pullup"
         ],
         [
           "straight_bar_support",
-          4,
+          3,
           null,
           15,
           60,
@@ -1710,25 +1719,25 @@
         ],
         [
           "low_bar_transition",
+          2,
           4,
-          3,
           null,
           75,
           "smooth",
           "straight_bar_support"
         ],
         [
-          "assisted_dip",
-          3,
+          "parallel_dip",
+          2,
           6,
           null,
           75,
-          "3111",
-          "support_hold"
+          "2111",
+          "assisted_dip"
         ],
         [
           "hollow_hold",
-          3,
+          2,
           null,
           18,
           45,
@@ -1782,7 +1791,7 @@
         "week": 2,
         "day": 6,
         "day_type": "mixed_fundamentals",
-        "minutes": 39,
+        "minutes": 33,
         "rpe": 6,
         "focus": [
           "pull",
@@ -1833,7 +1842,7 @@
       "main": [
         [
           "inverted_row",
-          3,
+          2,
           7,
           null,
           50,
@@ -1841,17 +1850,17 @@
           "high_inverted_row"
         ],
         [
-          "incline_pushup",
-          3,
-          10,
+          "pushup",
+          2,
+          12,
           null,
           50,
           "2111",
-          null
+          "incline_pushup"
         ],
         [
           "tempo_squat",
-          3,
+          2,
           10,
           null,
           50,
@@ -1860,7 +1869,7 @@
         ],
         [
           "glute_bridge",
-          3,
+          2,
           12,
           null,
           50,
@@ -1869,7 +1878,7 @@
         ],
         [
           "dead_bug",
-          3,
+          2,
           "6/side",
           null,
           40,
@@ -1923,7 +1932,7 @@
         "week": 2,
         "day": 7,
         "day_type": "recovery_flexibility",
-        "minutes": 31,
+        "minutes": 27,
         "rpe": 3,
         "focus": [
           "recovery",
@@ -2044,7 +2053,7 @@
         "week": 3,
         "day": 1,
         "day_type": "pull_skill",
-        "minutes": 40,
+        "minutes": 32,
         "rpe": 6,
         "focus": [
           "active_hang",
@@ -2183,7 +2192,7 @@
         "week": 3,
         "day": 2,
         "day_type": "legs_core",
-        "minutes": 38,
+        "minutes": 35,
         "rpe": 6,
         "focus": [
           "lunge",
@@ -2232,8 +2241,8 @@
       "main": [
         [
           "squat",
-          4,
-          12,
+          3,
+          15,
           null,
           60,
           "3011",
@@ -2250,7 +2259,7 @@
         ],
         [
           "glute_bridge",
-          3,
+          2,
           14,
           null,
           45,
@@ -2259,7 +2268,7 @@
         ],
         [
           "calf_raise",
-          3,
+          2,
           14,
           null,
           35,
@@ -2268,7 +2277,7 @@
         ],
         [
           "side_plank",
-          3,
+          2,
           null,
           "15/side",
           40,
@@ -2316,13 +2325,13 @@
         "en": "Press from Stable Ground"
       },
       "description": {
-        "en": "Use a lower incline only while the trunk and shoulder blades stay organized."
+        "en": "Press from the floor and the parallel bars only while the trunk and shoulder blades stay organized."
       },
       "schedule": {
         "week": 3,
         "day": 3,
         "day_type": "push_support",
-        "minutes": 39,
+        "minutes": 34,
         "rpe": 6,
         "focus": [
           "pushup",
@@ -2371,7 +2380,7 @@
       "main": [
         [
           "support_hold",
-          4,
+          2,
           null,
           15,
           50,
@@ -2379,26 +2388,26 @@
           "foot_assisted_support"
         ],
         [
-          "incline_pushup",
-          4,
-          9,
+          "pushup",
+          2,
+          12,
           null,
           70,
           "3011",
-          null
+          "incline_pushup"
         ],
         [
-          "assisted_dip",
-          4,
-          5,
+          "parallel_dip",
+          2,
+          6,
           null,
           80,
           "3111",
-          "support_hold"
+          "assisted_dip"
         ],
         [
           "tempo_squat",
-          3,
+          2,
           10,
           null,
           50,
@@ -2407,7 +2416,7 @@
         ],
         [
           "plank",
-          3,
+          2,
           null,
           25,
           45,
@@ -2461,7 +2470,7 @@
         "week": 3,
         "day": 4,
         "day_type": "active_recovery",
-        "minutes": 29,
+        "minutes": 27,
         "rpe": 4,
         "focus": [
           "joint_care",
@@ -2591,7 +2600,7 @@
         "week": 3,
         "day": 5,
         "day_type": "bar_transition",
-        "minutes": 42,
+        "minutes": 35,
         "rpe": 6,
         "focus": [
           "straight_bar_support",
@@ -2648,13 +2657,13 @@
       ],
       "main": [
         [
-          "assisted_pullup",
+          "eccentric_pullup",
           4,
-          6,
+          3,
           null,
           90,
-          "2111",
-          "inverted_row"
+          "4-second_lowering",
+          "assisted_pullup"
         ],
         [
           "straight_bar_support",
@@ -2675,12 +2684,12 @@
           "straight_bar_support"
         ],
         [
-          "eccentric_dip",
+          "parallel_dip",
           3,
-          3,
+          6,
           null,
           90,
-          "5011",
+          "2111",
           "assisted_dip"
         ],
         [
@@ -2730,16 +2739,16 @@
       "level": 1,
       "number": 60,
       "title": {
-        "en": "Four-Corner Strength"
+        "en": "Four-Corner Strength Checkpoint"
       },
       "description": {
-        "en": "Balance upper and lower body with a compact circuit that never sacrifices range control."
+        "en": "Balance upper and lower body with a compact circuit that never sacrifices range control. Today the basics are one recorded set each, a little above your best so far. Clean reps up to the number shown: stop at the first form break and note it; don't top up with the easier option."
       },
       "schedule": {
         "week": 3,
         "day": 6,
-        "day_type": "mixed_fundamentals",
-        "minutes": 41,
+        "day_type": "mixed_fundamentals_checkpoint",
+        "minutes": 31,
         "rpe": 6,
         "focus": [
           "row",
@@ -2789,7 +2798,7 @@
       "main": [
         [
           "inverted_row",
-          4,
+          2,
           7,
           null,
           55,
@@ -2797,17 +2806,17 @@
           "high_inverted_row"
         ],
         [
-          "incline_pushup",
-          4,
-          9,
+          "pushup",
+          1,
+          12,
           null,
           55,
-          "3011",
-          null
+          "assessment",
+          "incline_pushup"
         ],
         [
           "reverse_lunge",
-          3,
+          2,
           "6/side",
           null,
           55,
@@ -2816,7 +2825,7 @@
         ],
         [
           "glute_bridge",
-          3,
+          2,
           14,
           null,
           50,
@@ -2825,7 +2834,7 @@
         ],
         [
           "plank",
-          3,
+          2,
           null,
           25,
           45,
@@ -2879,7 +2888,7 @@
         "week": 3,
         "day": 7,
         "day_type": "recovery_flexibility",
-        "minutes": 32,
+        "minutes": 29,
         "rpe": 3,
         "focus": [
           "flexibility",
@@ -3417,7 +3426,7 @@
         "week": 4,
         "day": 4,
         "day_type": "active_recovery",
-        "minutes": 26,
+        "minutes": 19,
         "rpe": 3,
         "focus": [
           "mobility_flow",
@@ -3538,7 +3547,7 @@
         "week": 4,
         "day": 5,
         "day_type": "bar_deload",
-        "minutes": 33,
+        "minutes": 32,
         "rpe": 5,
         "focus": [
           "pull",
@@ -3686,7 +3695,7 @@
         "week": 4,
         "day": 6,
         "day_type": "mixed_deload",
-        "minutes": 32,
+        "minutes": 31,
         "rpe": 5,
         "focus": [
           "technique",
@@ -3825,7 +3834,7 @@
         "week": 4,
         "day": 7,
         "day_type": "review_recovery",
-        "minutes": 34,
+        "minutes": 31,
         "rpe": 4,
         "focus": [
           "review",
@@ -3955,7 +3964,7 @@
         "week": 5,
         "day": 1,
         "day_type": "pull_capacity",
-        "minutes": 41,
+        "minutes": 33,
         "rpe": 6,
         "focus": [
           "pull_volume",
@@ -4030,22 +4039,22 @@
           "inverted_row"
         ],
         [
-          "arch_hold",
+          "skin_cat_partial",
           3,
+          2,
           null,
-          20,
-          45,
-          "isometric",
-          "bird_dog"
+          60,
+          "slow",
+          "straight_bar_support"
         ],
         [
-          "lying_knee_raise",
+          "knee_raise",
           3,
-          9,
+          6,
           null,
           45,
-          "2021",
-          "dead_bug"
+          "3-second_hold_at_hip_height",
+          "lying_knee_raise"
         ]
       ],
       "cooldown": [
@@ -4094,7 +4103,7 @@
         "week": 5,
         "day": 2,
         "day_type": "legs_capacity",
-        "minutes": 40,
+        "minutes": 36,
         "rpe": 6,
         "focus": [
           "squat_volume",
@@ -4143,8 +4152,8 @@
       "main": [
         [
           "squat",
-          4,
-          14,
+          3,
+          16,
           null,
           60,
           "3011",
@@ -4161,7 +4170,7 @@
         ],
         [
           "glute_bridge",
-          4,
+          2,
           12,
           null,
           45,
@@ -4170,7 +4179,7 @@
         ],
         [
           "calf_raise",
-          3,
+          2,
           15,
           null,
           35,
@@ -4179,7 +4188,7 @@
         ],
         [
           "dead_bug",
-          3,
+          2,
           "7/side",
           null,
           35,
@@ -4233,7 +4242,7 @@
         "week": 5,
         "day": 3,
         "day_type": "push_capacity",
-        "minutes": 41,
+        "minutes": 35,
         "rpe": 6,
         "focus": [
           "push_volume",
@@ -4282,7 +4291,7 @@
       "main": [
         [
           "support_hold",
-          4,
+          2,
           null,
           18,
           50,
@@ -4290,26 +4299,26 @@
           "foot_assisted_support"
         ],
         [
-          "incline_pushup",
-          5,
-          8,
+          "pushup",
+          2,
+          12,
           null,
           65,
           "2111",
-          null
+          "incline_pushup"
         ],
         [
-          "assisted_dip",
-          4,
+          "parallel_dip",
+          2,
           6,
           null,
           80,
-          "3011",
-          "support_hold"
+          "2111",
+          "assisted_dip"
         ],
         [
           "tempo_squat",
-          3,
+          2,
           11,
           null,
           50,
@@ -4318,7 +4327,7 @@
         ],
         [
           "plank",
-          3,
+          2,
           null,
           28,
           45,
@@ -4372,7 +4381,7 @@
         "week": 5,
         "day": 4,
         "day_type": "active_recovery",
-        "minutes": 29,
+        "minutes": 27,
         "rpe": 4,
         "focus": [
           "recovery",
@@ -4493,7 +4502,7 @@
         "week": 5,
         "day": 5,
         "day_type": "bar_capacity",
-        "minutes": 43,
+        "minutes": 35,
         "rpe": 6,
         "focus": [
           "transition_volume",
@@ -4550,13 +4559,13 @@
       ],
       "main": [
         [
-          "assisted_pullup",
+          "eccentric_pullup",
           4,
-          6,
+          3,
           null,
           90,
-          "2111",
-          "inverted_row"
+          "4-second_lowering",
+          "assisted_pullup"
         ],
         [
           "straight_bar_support",
@@ -4577,13 +4586,13 @@
           "straight_bar_support"
         ],
         [
-          "assisted_dip",
+          "parallel_dip",
           4,
           6,
           null,
           80,
-          "3011",
-          "support_hold"
+          "2111",
+          "assisted_dip"
         ],
         [
           "hollow_hold",
@@ -4641,7 +4650,7 @@
         "week": 5,
         "day": 6,
         "day_type": "mixed_capacity",
-        "minutes": 43,
+        "minutes": 34,
         "rpe": 6,
         "focus": [
           "full_body_volume",
@@ -4690,7 +4699,7 @@
       "main": [
         [
           "inverted_row",
-          3,
+          2,
           9,
           null,
           50,
@@ -4698,18 +4707,18 @@
           "high_inverted_row"
         ],
         [
-          "incline_pushup",
-          3,
-          11,
+          "pushup",
+          1,
+          12,
           null,
           50,
           "2111",
-          null
+          "incline_pushup"
         ],
         [
           "squat",
-          3,
-          15,
+          2,
+          16,
           null,
           50,
           "3011",
@@ -4726,7 +4735,7 @@
         ],
         [
           "glute_bridge",
-          3,
+          2,
           13,
           null,
           45,
@@ -4735,7 +4744,7 @@
         ],
         [
           "side_plank",
-          2,
+          1,
           null,
           "18/side",
           40,
@@ -4789,7 +4798,7 @@
         "week": 5,
         "day": 7,
         "day_type": "recovery_flexibility",
-        "minutes": 33,
+        "minutes": 29,
         "rpe": 3,
         "focus": [
           "flexibility",
@@ -4910,7 +4919,7 @@
         "week": 6,
         "day": 1,
         "day_type": "pull_tempo",
-        "minutes": 42,
+        "minutes": 35,
         "rpe": 6,
         "focus": [
           "eccentric_control",
@@ -4959,7 +4968,7 @@
       "main": [
         [
           "active_hang",
-          4,
+          2,
           null,
           18,
           45,
@@ -4968,8 +4977,8 @@
         ],
         [
           "inverted_row",
-          4,
-          7,
+          2,
+          8,
           null,
           80,
           "4011",
@@ -4977,7 +4986,7 @@
         ],
         [
           "eccentric_pullup",
-          4,
+          2,
           3,
           null,
           105,
@@ -4985,22 +4994,31 @@
           "assisted_pullup"
         ],
         [
-          "arch_hold",
-          3,
+          "chinup",
+          2,
+          1,
           null,
-          22,
-          45,
-          "isometric",
-          "bird_dog"
+          90,
+          "21X1",
+          "assisted_pullup"
         ],
         [
-          "lying_knee_raise",
-          3,
-          9,
+          "skin_cat_partial",
+          2,
+          2,
+          null,
+          60,
+          "slow",
+          "straight_bar_support"
+        ],
+        [
+          "knee_raise",
+          2,
+          6,
           null,
           45,
-          "3021",
-          "dead_bug"
+          "3-second_hold_at_hip_height",
+          "lying_knee_raise"
         ]
       ],
       "cooldown": [
@@ -5049,7 +5067,7 @@
         "week": 6,
         "day": 2,
         "day_type": "legs_tempo",
-        "minutes": 41,
+        "minutes": 37,
         "rpe": 6,
         "focus": [
           "pause_squat",
@@ -5188,7 +5206,7 @@
         "week": 6,
         "day": 3,
         "day_type": "push_tempo",
-        "minutes": 42,
+        "minutes": 36,
         "rpe": 6,
         "focus": [
           "pause_push",
@@ -5254,22 +5272,22 @@
           "incline_pushup"
         ],
         [
-          "eccentric_dip",
+          "parallel_dip",
           4,
-          3,
+          6,
           null,
           95,
-          "6011",
+          "2111",
           "assisted_dip"
         ],
         [
-          "tempo_squat",
-          3,
-          10,
+          "pike_pushup",
+          2,
+          5,
           null,
-          55,
-          "4011",
-          "box_squat"
+          75,
+          "2111",
+          "incline_pushup"
         ],
         [
           "plank",
@@ -5327,7 +5345,7 @@
         "week": 6,
         "day": 4,
         "day_type": "active_recovery",
-        "minutes": 30,
+        "minutes": 29,
         "rpe": 4,
         "focus": [
           "slow_mobility",
@@ -5457,7 +5475,7 @@
         "week": 6,
         "day": 5,
         "day_type": "bar_tempo",
-        "minutes": 44,
+        "minutes": 37,
         "rpe": 6,
         "focus": [
           "eccentric_pull",
@@ -5532,21 +5550,21 @@
           "foot_assisted_support"
         ],
         [
-          "low_bar_transition",
+          "pullover_lowbar",
           4,
-          4,
+          2,
           null,
           85,
           "slow",
-          "straight_bar_support"
+          "low_bar_transition"
         ],
         [
-          "eccentric_dip",
+          "parallel_dip",
           4,
-          3,
+          6,
           null,
           100,
-          "6011",
+          "2111",
           "assisted_dip"
         ],
         [
@@ -5605,7 +5623,7 @@
         "week": 6,
         "day": 6,
         "day_type": "mixed_tempo",
-        "minutes": 44,
+        "minutes": 35,
         "rpe": 6,
         "focus": [
           "tempo",
@@ -5654,25 +5672,25 @@
       "main": [
         [
           "inverted_row",
-          3,
-          7,
+          2,
+          8,
           null,
           60,
           "4011",
           "high_inverted_row"
         ],
         [
-          "incline_pushup",
-          3,
-          8,
+          "pushup",
+          2,
+          12,
           null,
           60,
           "4011",
-          null
+          "incline_pushup"
         ],
         [
           "tempo_squat",
-          3,
+          2,
           10,
           null,
           60,
@@ -5681,7 +5699,7 @@
         ],
         [
           "glute_bridge",
-          3,
+          2,
           12,
           null,
           50,
@@ -5690,7 +5708,7 @@
         ],
         [
           "side_plank",
-          3,
+          2,
           null,
           "18/side",
           40,
@@ -5744,7 +5762,7 @@
         "week": 6,
         "day": 7,
         "day_type": "recovery_flexibility",
-        "minutes": 34,
+        "minutes": 29,
         "rpe": 3,
         "focus": [
           "chest_mobility",
@@ -5865,7 +5883,7 @@
         "week": 7,
         "day": 1,
         "day_type": "pull_density",
-        "minutes": 43,
+        "minutes": 34,
         "rpe": 6,
         "focus": [
           "pull_density",
@@ -5914,34 +5932,34 @@
       "main": [
         [
           "active_hang",
-          5,
+          1,
           null,
-          12,
+          15,
           35,
           "isometric",
           "foot_assisted_hang"
         ],
         [
           "inverted_row",
-          5,
-          6,
+          2,
+          8,
           null,
           55,
           "2111",
           "high_inverted_row"
         ],
         [
-          "assisted_pullup",
-          6,
+          "chinup",
+          3,
           3,
           null,
-          70,
-          "2011",
-          "inverted_row"
+          90,
+          "21X1",
+          "assisted_pullup"
         ],
         [
           "arch_hold",
-          3,
+          2,
           null,
           24,
           40,
@@ -5949,12 +5967,21 @@
           "bird_dog"
         ],
         [
+          "skin_cat_partial",
+          2,
+          2,
+          null,
+          60,
+          "slow",
+          "straight_bar_support"
+        ],
+        [
           "knee_raise",
-          3,
-          6,
+          2,
+          8,
           null,
           55,
-          "2021",
+          "3-second_hold_at_hip_height",
           "lying_knee_raise"
         ]
       ],
@@ -6004,7 +6031,7 @@
         "week": 7,
         "day": 2,
         "day_type": "legs_density",
-        "minutes": 42,
+        "minutes": 36,
         "rpe": 6,
         "focus": [
           "leg_density",
@@ -6053,8 +6080,8 @@
       "main": [
         [
           "squat",
-          4,
-          12,
+          3,
+          17,
           null,
           45,
           "2011",
@@ -6062,8 +6089,8 @@
         ],
         [
           "reverse_lunge",
-          4,
-          "6/side",
+          3,
+          "7/side",
           null,
           55,
           "2011",
@@ -6071,7 +6098,7 @@
         ],
         [
           "single_leg_bridge",
-          3,
+          2,
           "8/side",
           null,
           45,
@@ -6080,7 +6107,7 @@
         ],
         [
           "calf_raise",
-          4,
+          2,
           12,
           null,
           30,
@@ -6089,7 +6116,7 @@
         ],
         [
           "dead_bug",
-          3,
+          2,
           "8/side",
           null,
           30,
@@ -6143,7 +6170,7 @@
         "week": 7,
         "day": 3,
         "day_type": "push_density",
-        "minutes": 43,
+        "minutes": 35,
         "rpe": 6,
         "focus": [
           "press_density",
@@ -6192,48 +6219,48 @@
       "main": [
         [
           "support_hold",
-          5,
+          2,
           null,
-          15,
+          16,
           40,
           "isometric",
           "foot_assisted_support"
         ],
         [
-          "incline_pushup",
-          6,
-          6,
+          "pushup",
+          2,
+          12,
           null,
           50,
           "2111",
-          null
+          "incline_pushup"
         ],
         [
-          "assisted_dip",
-          5,
-          4,
+          "parallel_dip",
+          2,
+          6,
           null,
-          65,
+          75,
           "2111",
-          "support_hold"
+          "assisted_dip"
         ],
         [
-          "pause_squat",
-          3,
-          9,
+          "pike_pushup",
+          2,
+          5,
           null,
-          45,
-          "2211",
-          "box_squat"
+          75,
+          "2111",
+          "incline_pushup"
         ],
         [
-          "plank",
-          4,
+          "tuck_lsit",
+          2,
           null,
-          22,
-          40,
+          10,
+          60,
           "isometric",
-          "incline_plank"
+          "support_hold"
         ]
       ],
       "cooldown": [
@@ -6282,7 +6309,7 @@
         "week": 7,
         "day": 4,
         "day_type": "active_recovery",
-        "minutes": 30,
+        "minutes": 27,
         "rpe": 4,
         "focus": [
           "recovery",
@@ -6397,13 +6424,13 @@
         "en": "Frequent Clean Transitions"
       },
       "description": {
-        "en": "Practice the low-bar transition in short bursts, resetting feet and grip every time."
+        "en": "Practise the low-bar pull-over in short bursts, resetting feet and grip every time."
       },
       "schedule": {
         "week": 7,
         "day": 5,
         "day_type": "bar_density",
-        "minutes": 45,
+        "minutes": 34,
         "rpe": 6,
         "focus": [
           "transition_density",
@@ -6460,17 +6487,17 @@
       ],
       "main": [
         [
-          "assisted_pullup",
-          6,
+          "chinup",
+          3,
           3,
           null,
-          70,
-          "2011",
-          "inverted_row"
+          90,
+          "21X1",
+          "assisted_pullup"
         ],
         [
           "straight_bar_support",
-          5,
+          3,
           null,
           16,
           45,
@@ -6478,28 +6505,28 @@
           "foot_assisted_support"
         ],
         [
-          "low_bar_transition",
-          6,
-          3,
+          "pullover_lowbar",
+          2,
+          2,
           null,
           60,
           "smooth",
-          "straight_bar_support"
+          "low_bar_transition"
         ],
         [
-          "assisted_dip",
-          5,
-          4,
+          "parallel_dip",
+          2,
+          6,
           null,
-          65,
+          75,
           "2111",
-          "support_hold"
+          "assisted_dip"
         ],
         [
           "hollow_hold",
-          4,
+          2,
           null,
-          18,
+          20,
           40,
           "isometric",
           "dead_bug"
@@ -6551,7 +6578,7 @@
         "week": 7,
         "day": 6,
         "day_type": "mixed_density",
-        "minutes": 44,
+        "minutes": 33,
         "rpe": 6,
         "focus": [
           "full_body_density",
@@ -6600,26 +6627,26 @@
       "main": [
         [
           "inverted_row",
-          4,
-          7,
+          2,
+          8,
           null,
           45,
           "2111",
           "high_inverted_row"
         ],
         [
-          "incline_pushup",
-          4,
-          9,
+          "pushup",
+          2,
+          12,
           null,
           45,
           "2111",
-          null
+          "incline_pushup"
         ],
         [
           "squat",
-          4,
-          12,
+          2,
+          17,
           null,
           45,
           "2011",
@@ -6627,8 +6654,8 @@
         ],
         [
           "glute_bridge",
-          4,
-          11,
+          2,
+          12,
           null,
           40,
           "2021",
@@ -6636,7 +6663,7 @@
         ],
         [
           "side_plank",
-          3,
+          2,
           null,
           "17/side",
           35,
@@ -6690,7 +6717,7 @@
         "week": 7,
         "day": 7,
         "day_type": "recovery_flexibility",
-        "minutes": 35,
+        "minutes": 32,
         "rpe": 3,
         "focus": [
           "walking",
@@ -6811,7 +6838,7 @@
         "week": 8,
         "day": 1,
         "day_type": "pull_deload",
-        "minutes": 32,
+        "minutes": 33,
         "rpe": 5,
         "focus": [
           "pull_recovery",
@@ -6877,8 +6904,17 @@
           null
         ],
         [
+          "pullup",
+          1,
+          1,
+          null,
+          120,
+          "readiness_check",
+          "assisted_pullup"
+        ],
+        [
           "assisted_pullup",
-          3,
+          2,
           5,
           null,
           85,
@@ -6886,22 +6922,22 @@
           "inverted_row"
         ],
         [
-          "arch_hold",
+          "skin_cat_partial",
+          2,
           2,
           null,
-          20,
-          40,
-          "isometric",
-          "bird_dog"
+          60,
+          "slow",
+          "straight_bar_support"
         ],
         [
-          "lying_knee_raise",
+          "knee_raise",
           2,
-          8,
+          6,
           null,
           40,
-          "3021",
-          "dead_bug"
+          "3-second_hold_at_hip_height",
+          "lying_knee_raise"
         ]
       ],
       "cooldown": [
@@ -6950,7 +6986,7 @@
         "week": 8,
         "day": 2,
         "day_type": "legs_deload",
-        "minutes": 31,
+        "minutes": 33,
         "rpe": 5,
         "focus": [
           "leg_recovery",
@@ -7083,13 +7119,13 @@
         "en": "Pressing Respite"
       },
       "description": {
-        "en": "Use a higher incline and shorter holds to let wrists and shoulders absorb the last block."
+        "en": "Easy push-ups, short tuck L-sits and light dips let wrists and shoulders absorb the last block."
       },
       "schedule": {
         "week": 8,
         "day": 3,
         "day_type": "push_deload",
-        "minutes": 31,
+        "minutes": 32,
         "rpe": 5,
         "focus": [
           "push_recovery",
@@ -7138,7 +7174,7 @@
       "main": [
         [
           "foot_assisted_support",
-          3,
+          2,
           null,
           16,
           45,
@@ -7146,22 +7182,22 @@
           null
         ],
         [
-          "incline_pushup",
-          3,
-          8,
-          null,
-          60,
-          "3121",
-          null
-        ],
-        [
-          "assisted_dip",
+          "pushup",
           2,
           5,
           null,
+          60,
+          "3121",
+          "incline_pushup"
+        ],
+        [
+          "parallel_dip",
+          2,
+          4,
+          null,
           75,
-          "3111",
-          "support_hold"
+          "2111",
+          "assisted_dip"
         ],
         [
           "box_squat",
@@ -7173,13 +7209,13 @@
           null
         ],
         [
-          "incline_plank",
+          "tuck_lsit",
           2,
           null,
-          28,
-          40,
+          10,
+          60,
           "isometric",
-          null
+          "support_hold"
         ]
       ],
       "cooldown": [
@@ -7228,7 +7264,7 @@
         "week": 8,
         "day": 4,
         "day_type": "active_recovery",
-        "minutes": 27,
+        "minutes": 24,
         "rpe": 3,
         "focus": [
           "mobility",
@@ -7343,13 +7379,13 @@
         "en": "Easy Bar Rehearsal"
       },
       "description": {
-        "en": "Keep the pull-to-support map fresh with easy assistance and generous rest."
+        "en": "Keep the pull-to-support map fresh with the first overhand pull-up singles, easy assistance and generous rest."
       },
       "schedule": {
         "week": 8,
         "day": 5,
         "day_type": "bar_deload",
-        "minutes": 34,
+        "minutes": 33,
         "rpe": 5,
         "focus": [
           "transition_recovery",
@@ -7406,13 +7442,13 @@
       ],
       "main": [
         [
-          "assisted_pullup",
-          3,
-          5,
+          "pullup",
+          2,
+          1,
           null,
-          85,
-          "3111",
-          "inverted_row"
+          90,
+          "21X1",
+          "eccentric_pullup"
         ],
         [
           "straight_bar_support",
@@ -7433,13 +7469,13 @@
           "straight_bar_support"
         ],
         [
-          "assisted_dip",
+          "parallel_dip",
           2,
-          5,
+          4,
           null,
           75,
-          "3111",
-          "support_hold"
+          "2111",
+          "assisted_dip"
         ],
         [
           "hollow_hold",
@@ -7497,7 +7533,7 @@
         "week": 8,
         "day": 6,
         "day_type": "mixed_deload",
-        "minutes": 33,
+        "minutes": 32,
         "rpe": 5,
         "focus": [
           "easy_full_body",
@@ -7554,13 +7590,13 @@
           null
         ],
         [
-          "incline_pushup",
+          "pushup",
           2,
-          9,
+          6,
           null,
           50,
           "3121",
-          null
+          "incline_pushup"
         ],
         [
           "box_squat",
@@ -7636,7 +7672,7 @@
         "week": 8,
         "day": 7,
         "day_type": "review_recovery",
-        "minutes": 35,
+        "minutes": 32,
         "rpe": 4,
         "focus": [
           "review",
@@ -7766,7 +7802,7 @@
         "week": 9,
         "day": 1,
         "day_type": "pull_bodyline",
-        "minutes": 42,
+        "minutes": 36,
         "rpe": 6,
         "focus": [
           "active_hang",
@@ -7815,7 +7851,7 @@
       "main": [
         [
           "hollow_hold",
-          4,
+          2,
           null,
           20,
           45,
@@ -7824,7 +7860,7 @@
         ],
         [
           "active_hang",
-          4,
+          1,
           null,
           18,
           45,
@@ -7833,7 +7869,7 @@
         ],
         [
           "inverted_row",
-          4,
+          2,
           8,
           null,
           75,
@@ -7841,22 +7877,31 @@
           "high_inverted_row"
         ],
         [
-          "assisted_pullup",
+          "chinup",
+          3,
           4,
-          6,
           null,
           90,
-          "2111",
-          "inverted_row"
+          "21X1",
+          "assisted_pullup"
         ],
         [
-          "arch_hold",
+          "skin_cat_partial",
+          2,
+          2,
+          null,
+          60,
+          "slow",
+          "straight_bar_support"
+        ],
+        [
+          "pullup",
+          2,
           3,
           null,
-          22,
-          45,
-          "isometric",
-          "bird_dog"
+          90,
+          "21X1",
+          "eccentric_pullup"
         ]
       ],
       "cooldown": [
@@ -7905,7 +7950,7 @@
         "week": 9,
         "day": 2,
         "day_type": "legs_bodyline",
-        "minutes": 40,
+        "minutes": 37,
         "rpe": 6,
         "focus": [
           "squat",
@@ -8044,7 +8089,7 @@
         "week": 9,
         "day": 3,
         "day_type": "push_bodyline",
-        "minutes": 41,
+        "minutes": 36,
         "rpe": 6,
         "focus": [
           "elevated_plank",
@@ -8093,7 +8138,7 @@
       "main": [
         [
           "elevated_plank",
-          4,
+          1,
           null,
           25,
           45,
@@ -8101,40 +8146,40 @@
           "incline_plank"
         ],
         [
-          "support_hold",
-          4,
+          "tuck_lsit",
+          2,
           null,
-          20,
-          50,
+          10,
+          60,
           "isometric",
-          "foot_assisted_support"
-        ],
-        [
-          "pushup",
-          4,
-          6,
-          null,
-          75,
-          "3011",
-          "incline_pushup"
-        ],
-        [
-          "assisted_dip",
-          4,
-          6,
-          null,
-          80,
-          "3011",
           "support_hold"
         ],
         [
-          "pause_squat",
-          3,
-          10,
+          "pushup",
+          2,
+          13,
           null,
-          50,
-          "2211",
-          "box_squat"
+          60,
+          "2111",
+          "incline_pushup"
+        ],
+        [
+          "parallel_dip",
+          3,
+          7,
+          null,
+          80,
+          "2111",
+          "assisted_dip"
+        ],
+        [
+          "pike_pushup",
+          2,
+          6,
+          null,
+          75,
+          "2111",
+          "incline_pushup"
         ]
       ],
       "cooldown": [

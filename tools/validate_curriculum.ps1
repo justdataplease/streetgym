@@ -3,12 +3,14 @@ param(
     [string]$CatalogPath = "generated/curriculum_v2.json",
     [string]$BaselinePath = "street_gymnastic_programs_levels.json",
     [string]$AppSourcePath = "app/src/main",
+    [string]$CatalogMetadataPath = "curriculum/catalog_metadata.json",
     [string[]]$AuthoredSourcePaths = @(
         "curriculum/l1_tail.json",
         "curriculum/l2_l3_tails.json",
         "curriculum/l3_extension.json",
         "curriculum/l4_l5.json",
-        "curriculum/l6.json"
+        "curriculum/l6.json",
+        "curriculum/l7.json"
     )
 )
 
@@ -23,8 +25,10 @@ foreach ($pair in @(
     "cossack_squat->squat",
     "hollow_arch_swing->hollow_hold",
     "incline_pushup->wall_pushup",
+    "negative_muscleup->band_muscleup",
     "ninety_ninety_hip_switch->hip_circles",
     "pseudo_planche_pushup->planche_lean",
+    "pullup->eccentric_pullup",
     "scapular_pull->dead_hang",
     "side_plank->dead_bug",
     "side_plank->plank",
@@ -392,6 +396,9 @@ function Validate-Step($Step, [string]$Location, $MovementById) {
         "single_leg_rdl",
         "archer_pullup",
         "archer_pushup",
+        "typewriter_pullup",
+        "assisted_one_arm_pullup",
+        "one_arm_pullup_negative",
         "thoracic_rotation"
     )
     if ($movementId -in $explicitPerSideRepMovements -and $hasReps -and
@@ -554,8 +561,8 @@ foreach ($movementId in $movementById.Keys) {
     }
 }
 
-# Validate all 619 authored source records, including the 109 owner-research
-# drafts that are intentionally archived outside the 600-slot app catalog.
+# Validate all 719 authored source records, including the 109 owner-research
+# drafts that are intentionally archived outside the 700-slot app catalog.
 $authoredSourceProgramIds = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::Ordinal)
 $authoredSourceTitles = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
 $authoredSourceDescriptions = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
@@ -630,11 +637,11 @@ foreach ($authoredSourcePath in $AuthoredSourcePaths) {
         }
     }
 }
-if ($authoredSourceProgramCount -ne 619) {
-    Add-Error "Expected 619 authored source programs including archive, found $authoredSourceProgramCount"
+if ($authoredSourceProgramCount -ne 719) {
+    Add-Error "Expected 719 authored source programs including archive, found $authoredSourceProgramCount"
 }
-if ($authoredSourceProgramIds.Count -ne 619) {
-    Add-Error "Expected 619 unique authored source program ids, found $($authoredSourceProgramIds.Count)"
+if ($authoredSourceProgramIds.Count -ne 719) {
+    Add-Error "Expected 719 unique authored source program ids, found $($authoredSourceProgramIds.Count)"
 }
 
 $profileById = @{}
@@ -680,9 +687,24 @@ if ($baselineDetailedCount -ne 90 -or $baselinePlaceholderCount -ne 289) {
     Add-Error "Baseline content counts changed: detailed=$baselineDetailedCount placeholders=$baselinePlaceholderCount"
 }
 
+# App position -> source slot (catalog_metadata.json app_slot_order; Level 2 runs slots 31-70 before 1-30).
+$sourceSlotByPosition = @{}
+$catalogMetadata = Get-Content -Raw -Encoding UTF8 -LiteralPath $CatalogMetadataPath | ConvertFrom-Json
+foreach ($slotOrder in @($catalogMetadata.app_slot_order.levels)) {
+    $orderLevel = [int]$slotOrder.level
+    $orderSlots = @(foreach ($range in @($slotOrder.source_slots)) { [int]$range[0]..[int]$range[1] })
+    if ($orderLevel -lt 1 -or $orderLevel -gt 3 -or (@($orderSlots | Sort-Object) -join ",") -cne ((1..100) -join ",")) {
+        Add-Error "app_slot_order for Level $orderLevel must list source slots 1-100 exactly once"
+        continue
+    }
+    for ($positionIndex = 0; $positionIndex -lt $orderSlots.Count; $positionIndex++) {
+        $sourceSlotByPosition["$orderLevel-$($positionIndex + 1)"] = $orderSlots[$positionIndex]
+    }
+}
+
 $levels = @($catalog.levels)
-$expectedCounts = @{ 1 = 100; 2 = 100; 3 = 100; 4 = 100; 5 = 100; 6 = 100 }
-if ($levels.Count -ne 6) { Add-Error "Expected 6 levels, found $($levels.Count)" }
+$expectedCounts = @{ 1 = 100; 2 = 100; 3 = 100; 4 = 100; 5 = 100; 6 = 100; 7 = 100 }
+if ($levels.Count -ne 7) { Add-Error "Expected 7 levels, found $($levels.Count)" }
 $seenLevels = New-Object 'System.Collections.Generic.HashSet[int]'
 $programIds = New-Object 'System.Collections.Generic.HashSet[string]'
 $globalAuthoredTitles = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
@@ -760,6 +782,7 @@ foreach ($level in $levels) {
         }
 
         $slot = "$levelNumber-$programNumber"
+        if ($sourceSlotByPosition.ContainsKey($slot)) { $slot = "$levelNumber-$($sourceSlotByPosition[$slot])" }
         $baselineProgram = $null
         $expectedOrigin = "new_level"
         if ($levelNumber -le 3) {
@@ -1076,10 +1099,10 @@ foreach ($level in $levels) {
                 Add-Error "Level $levelNumber authored week $($weekGroup.Name) does not contain days 1 through 7 exactly once"
             }
             $tokenText = Get-ProgramTokenText $weekPrograms $movementById
-            if ($tokenText -notmatch '(?:^|\s)(?:assisted_pullup|eccentric_pullup|pullup|chinup|archer_pullup|inverted_row|high_inverted_row|feet_elevated_row)(?:\s|$)') {
+            if ($tokenText -notmatch '(?:^|\s)(?:assisted_pullup|eccentric_pullup|pullup|chinup|archer_pullup|typewriter_pullup|assisted_one_arm_pullup|one_arm_pullup_negative|inverted_row|high_inverted_row|feet_elevated_row)(?:\s|$)') {
                 Add-Error "Level $levelNumber authored week $($weekGroup.Name) has no basic pull-up or row"
             }
-            if ($tokenText -notmatch '(?:^|\s)(?:wall_pushup|incline_pushup|pushup|pause_pushup|close_pushup|archer_pushup|pike_pushup|elevated_pike_pushup|wall_hspu_negative|wall_hspu)(?:\s|$)') {
+            if ($tokenText -notmatch '(?:^|\s)(?:wall_pushup|incline_pushup|pushup|pause_pushup|close_pushup|archer_pushup|pike_pushup|elevated_pike_pushup|wall_hspu_negative|wall_hspu|deficit_wall_hspu|freestanding_hspu_negative)(?:\s|$)') {
                 Add-Error "Level $levelNumber authored week $($weekGroup.Name) has no basic push-up"
             }
             if ($tokenText -notmatch '(?:^|\s)(?:assisted_dip|eccentric_dip|parallel_dip|straight_bar_dip|support_hold|foot_assisted_support|straight_bar_support)(?:\s|$)') {
@@ -1125,10 +1148,10 @@ foreach ($level in $levels) {
             $windowLabel = "Level $levelNumber authored rolling window $firstNumber-$lastNumber"
             $tokenText = Get-ProgramTokenText $windowPrograms $movementById
 
-            if ($tokenText -notmatch '(?:^|\s)(?:assisted_pullup|eccentric_pullup|pullup|chinup|archer_pullup|inverted_row|high_inverted_row|feet_elevated_row)(?:\s|$)') {
+            if ($tokenText -notmatch '(?:^|\s)(?:assisted_pullup|eccentric_pullup|pullup|chinup|archer_pullup|typewriter_pullup|assisted_one_arm_pullup|one_arm_pullup_negative|inverted_row|high_inverted_row|feet_elevated_row)(?:\s|$)') {
                 Add-Error "$windowLabel has no basic pull-up or row"
             }
-            if ($tokenText -notmatch '(?:^|\s)(?:wall_pushup|incline_pushup|pushup|pause_pushup|close_pushup|archer_pushup|pike_pushup|elevated_pike_pushup|wall_hspu_negative|wall_hspu)(?:\s|$)') {
+            if ($tokenText -notmatch '(?:^|\s)(?:wall_pushup|incline_pushup|pushup|pause_pushup|close_pushup|archer_pushup|pike_pushup|elevated_pike_pushup|wall_hspu_negative|wall_hspu|deficit_wall_hspu|freestanding_hspu_negative)(?:\s|$)') {
                 Add-Error "$windowLabel has no basic push-up"
             }
             if ($tokenText -notmatch '(?:^|\s)(?:assisted_dip|eccentric_dip|parallel_dip|straight_bar_dip|support_hold|foot_assisted_support|straight_bar_support)(?:\s|$)') {
@@ -1237,11 +1260,11 @@ foreach ($orderedLevel in @($levels | Sort-Object { [int]$_.number })) {
     }
 }
 
-foreach ($requiredLevel in 1..6) {
+foreach ($requiredLevel in 1..7) {
     if (-not $seenLevels.Contains($requiredLevel)) { Add-Error "Missing Level $requiredLevel" }
 }
-if ($totalPrograms -ne 600) { Add-Error "Expected 600 total programs, found $totalPrograms" }
-if ($programIds.Count -ne 600) { Add-Error "Expected 600 unique program ids, found $($programIds.Count)" }
+if ($totalPrograms -ne 700) { Add-Error "Expected 700 total programs, found $totalPrograms" }
+if ($programIds.Count -ne 700) { Add-Error "Expected 700 unique program ids, found $($programIds.Count)" }
 if ([int]$originCounts.apk_authentic -ne 90) {
     Add-Error "Expected 90 apk_authentic programs, found $($originCounts.apk_authentic)"
 }
@@ -1251,17 +1274,17 @@ if ([int]$originCounts.reconstructed_placeholder -ne 180) {
 if ([int]$originCounts.llm_extension -ne 30) {
     Add-Error "Expected 30 llm_extension programs, found $($originCounts.llm_extension)"
 }
-if ([int]$originCounts.new_level -ne 300) {
-    Add-Error "Expected 300 new_level programs, found $($originCounts.new_level)"
+if ([int]$originCounts.new_level -ne 400) {
+    Add-Error "Expected 400 new_level programs, found $($originCounts.new_level)"
 }
 
 $expectedSummary = [ordered]@{
-    level_count = 6
-    program_count = 600
+    level_count = 7
+    program_count = 700
     authentic_program_count = 90
     reconstructed_placeholder_count = 180
     new_extension_program_count = 30
-    new_level_program_count = 300
+    new_level_program_count = 400
     archived_legacy_placeholder_count = 109
     movement_count = $movementById.Count
 }

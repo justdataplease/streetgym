@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="training_tab_levels">Levels</string>
+    <string name="training_tab_workouts">My workouts</string>
+    <string name="library_intro">Save any day with the heart on its overview, or build your own from every exercise in the program.</string>
+    <string name="library_usage">%1$d of %2$d saved and custom days</string>
+    <string name="library_over_limit">You have more than %1$d. Nothing is removed; remove some to add new ones.</string>
+    <string name="library_create">Create a workout</string>
+    <string name="library_custom">Your workouts</string>
+    <string name="library_saved">Saved days</string>
+    <string name="library_empty">Nothing here yet.</string>
+    <string name="custom_meta">Your workout · %1$s · About %2$d min</string>
+    <plurals name="custom_exercises">
+        <item quantity="one">%d exercise</item>
+        <item quantity="other">%d exercises</item>
+    </plurals>
+    <string name="custom_deleted">Deleted workout</string>
+    <string name="save_day">Save to My workouts</string>
+    <string name="saved_day">Saved to My workouts. Tap to remove.</string>
+    <string name="day_saved">Saved to My workouts</string>
+    <string name="day_removed">Removed from My workouts</string>
+    <string name="safety_line">Keep 2–3 reps in reserve and stop for sharp joint pain.</string>
+    <string name="safety_notes">Safety notes</string>
+    <string name="builder_title">Your workout</string>
+    <string name="builder_name_hint">Workout name</string>
+    <string name="builder_add">Add exercise</string>
+    <string name="builder_save">Save workout</string>
+    <string name="builder_needs_name">Give the workout a name.</string>
+    <string name="builder_needs_exercise">Add at least one exercise.</string>
+    <string name="builder_up">Up</string>
+    <string name="builder_down">Down</string>
+    <string name="builder_edit">Sets</string>
+    <string name="builder_remove">Remove</string>
+    <string name="builder_reps">%1$d × %2$d reps · rest %3$d s</string>
+    <string name="builder_seconds">%1$d × %2$d s · rest %3$d s</string>
+    <string name="picker_title">Add an exercise</string>
+    <string name="picker_hint">Search: pull-up, core, rings…</string>
+    <string name="picker_empty">No exercise matches.</string>
+    <string name="sets_title">Sets for %1$s</string>
+    <string name="sets_count">Sets</string>
+    <string name="sets_reps">Reps</string>
+    <string name="sets_seconds">Seconds</string>
+    <string name="sets_amount">Reps or seconds per set</string>
+    <string name="sets_rest">Rest after each set (seconds)</string>
+    <string name="sets_apply">Apply</string>
+    <string name="custom_edit">Edit workout</string>
+    <string name="custom_delete">Delete workout</string>
+    <string name="custom_delete_title">Delete this workout?</string>
+    <string name="custom_delete_message">%1$s is removed from My workouts. Its history stays.</string>
+    <string name="delete">Delete</string>
+    <string name="rename_level">Rename level</string>
+    <string name="rename_level_title">Rename %1$s</string>
+    <string name="rename_reset">Original name</string>
+    <string name="rename_save">Save</string>
+</resources>

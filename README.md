@@ -1,8 +1,12 @@
 # Street Gymnastics
 
-Dedicated Android app with 600 guided calisthenics workouts across six levels and 138 animated movements. Copied from the owned StreetGym source into the Android suite; the original project remains unchanged.
+Dedicated Android app with 700 guided calisthenics workouts across seven levels and 150 animated movements. Copied from the owned StreetGym source into the Android suite; the original project remains unchanged.
 
-Fresh Court is the default light theme. Settings > Dark mode selects Night Session and remembers it independently in each app. Training, checked sets, timers and progress remain local. Optional Firebase account access appears only when client configuration is supplied; it does not synchronize progress.
+Fresh Court is the default light theme. Settings > Dark mode selects Night Session and remembers it independently in each app. Training, checked sets, timers and progress are kept on the phone. Pro can also save them to a Google account; that, and the leaderboard, appear only when a Firebase configuration is supplied (see [Free, Plus and Pro](docs/TIERS.md)).
+
+Training has three tabs: **Levels**; **My workouts** (days saved with the heart at the top right of their overview, and custom days built from every exercise in the program); and **Parks** (Plus: 23,512 bundled calisthenics parks on a map that opens on the athlete's location with the nearest parks in view, or as a list; search by city or park). The map is MapLibre with OpenFreeMap tiles, as in JustMaps: no API key and no per-view cost. Progress has **Skills**, **History** and **Leaderboard**.
+
+A day's overview and the workout's list view carry one safety line ("Keep 2–3 reps in reserve and stop for sharp joint pain. Safety notes ›") that opens the readiness and safety notes of the class.
 
 "We choose the workout. You just train." Today assigns the next session. Future days show only their titles until the preceding day is complete; the next day unlocks immediately. Check individual sets or entire sections without a scroll jump, or explicitly complete a day or the current level. Basketball screens and assets now belong to the separate StreetBasketball app.
 
@@ -25,7 +29,7 @@ Google native cards appear below progress on Today and at the end of workout sec
 
 Debug builds always use Google demo IDs. Release builds read `admob.streetgymnastics.appId` and `admob.streetgymnastics.nativeId`, falling back to the existing Toolbox `admob.appId` / `admob.nativeId` settings, then demo IDs if neither exists. An optional `admob.streetgymnastics.fullscreenNativeId` overrides the full-screen native placement; otherwise it uses the same native unit. Canonical ad code lives in the suite's `shared/nativeads`; run `tools/sync_native_ads.py` after changes. Copies inside the app keep standalone exports self-contained.
 
-Settings > Remove ads offers a one-time 9.99 purchase and Restore purchase. Confirmed ownership disables every placement and remains cached offline. The actual currency and price come from Google Play. **Play Console product activation and a live checkout test remain required**; see [purchase setup and acceptance](docs/REMOVE_ADS.md). Debug downloads do not claim production purchasing support.
+Free has Levels 1–3, ads and 3 saved days. **Plus** (one payment, requested at 9.99) unlocks every level, removes every placement, and adds 30 saved and custom days, level renaming, Parks and a view of the leaderboard. **Pro** (a yearly subscription, requested at 19.99) adds 300 days, Sign in with Google, cloud progress and a place on the leaderboard; its offer says the subscription pays for the servers and database. Without Plus, Today, Training and the class overview show a paywall in place of Start for Level 4 and later. Settings shows both offers with Play's prices and Restore purchases; ownership stays cached offline. **Play Console products, the Firebase project and live checkout tests remain required**; see [Free, Plus and Pro](docs/TIERS.md). Debug and GitHub builds can't buy, so they get Pro; Settings > Simulate tier (debug only) tests Free and Plus.
 
 ## Timer tools
 
@@ -37,7 +41,7 @@ For emulator integration checks, grant `android.permission.POST_NOTIFICATIONS` o
 
 The original StreetGym application ID and gymnastics preference keys are retained. Existing basketball preferences are left untouched, but are no longer displayed. The GitHub development APK retains the previous GitHub APK's signing certificate and updates its `.debug` package in place. Production-package upgrades would require their own matching certificate.
 
-Firebase is optional. Add ignored `app/src/debug/res/values/firebase.xml` or `app/src/release/res/values/firebase.xml` with `google_app_id`, `google_api_key` and `project_id` only for the corresponding registered package; enable email/password authentication. Never copy service-account credentials into the app. Tests restore the preferences they modify and do not create online accounts.
+Firebase is optional. Add ignored `app/src/debug/res/values/firebase.xml` or `app/src/release/res/values/firebase.xml` with `google_app_id`, `google_api_key`, `project_id` and `default_web_client_id` only for the corresponding registered package; enable Google sign-in and deploy `firebase/` (rules and the board function). The full console checklist, fingerprints included, is in [docs/TIERS.md](docs/TIERS.md), "Pro account setup". Never copy service-account credentials into the app. Tests restore the preferences they modify and do not create online accounts.
 
 ## Content checks
 

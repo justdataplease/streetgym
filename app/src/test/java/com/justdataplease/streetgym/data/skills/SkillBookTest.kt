@@ -38,20 +38,63 @@ class SkillBookTest {
     }
 
     @Test
-    fun laddersReorderThemselvesWhenTheScheduleChanges() {
-        // The schedule now introduces the pull-up before the assisted version; the ladder follows it.
-        val reordered = SkillBook.build(movements, listOf(
+    fun laddersKeepTheirCoachingOrderWhenTheScheduleTeachesARungEarly() {
+        // The schedule introduces the pull-up before the assisted version; the ladder still runs easiest to hardest,
+        // and the harder rung's target stays above the easier one.
+        val early = SkillBook.build(movements, listOf(
             SkillProgram("a", 1, 1, 1, listOf(SkillStep("pullup", 2))),
             SkillProgram("b", 1, 1, 2, listOf(SkillStep("assisted_pullup", 2))),
         ), listOf(spec))
-        assertEquals(listOf("pullup", "assisted_pullup"), reordered.families.single().skills.map { it.id }.take(2))
+        val skills = early.families.single().skills
+        assertEquals(listOf("assisted_pullup", "pullup"), skills.map { it.id }.take(2))
+        // Unlocking the pull-up still completes the easier rung below it.
+        assertTrue(early.progress(setOf("a")).let { p -> p.statuses.first { it.skill.id == "pullup" }.unlocked == p.statuses.first { it.skill.id == "assisted_pullup" }.unlocked })
     }
 
     @Test
-    fun targetsRiseAlongTheLadder() {
-        val thresholds = book.families.first().skills.map { it.threshold }
-        assertEquals(thresholds.sorted(), thresholds)
-        assertEquals(thresholds.size, thresholds.toSet().size)
+    fun skillPointsRunFromZeroToOneHundred() {
+        assertEquals(0, book.progress(emptySet()).status("pullup").score)
+        val partway = book.progress(setOf("p1")).status("pullup").score
+        assertTrue("partway $partway", partway in 1..99)
+        assertEquals(100, book.progress(setOf("p1", "p2", "p3")).status("pullup").score)
+        // A source's share is measured against the same 100.
+        val sources = book.progress(setOf("p1", "p2", "p3")).status("pullup").sources
+        assertTrue(sources.sumOf { it.second } >= 100)
+    }
+
+    @Test
+    fun aGroupScoreIsTheAverageOfTheSkillsTheProgramTeaches() {
+        val start = book.progress(emptySet())
+        assertEquals(0, start.groupScore(SkillGroup.PULL))
+        val finished = book.progress(schedule.map { it.id }.toSet())
+        assertEquals(100, finished.groupScore(SkillGroup.PULL))
+        val partway = book.progress(setOf("p1", "p2", "p3"))
+        val taught = partway.statuses.filter { it.skill.expected != null }
+        assertEquals(taught.sumOf { it.score } / taught.size, partway.groupScore(SkillGroup.PULL))
+        assertEquals(0, partway.groupScore(SkillGroup.LEGS))
+    }
+
+    @Test
+    fun difficultyFollowsTheLevelThatTeachesASkillAndNeverDropsUpTheLadder() {
+        val level = { n: Int, id: String -> SkillProgram("$id$n", n, 1, 1, listOf(SkillStep(id, 2))) }
+        val graded = SkillBook.build(movements, listOf(level(3, "assisted_pullup"), level(1, "pullup"), level(6, "archer_pullup")), listOf(spec))
+        assertEquals(listOf(3, 3, 5), graded.families.single().skills.map { it.difficulty })
+        // An advanced-category movement is at least intermediate, wherever it is taught.
+        assertEquals(3, SkillBook.difficulty(movements.getValue("archer_pullup"), level(1, "archer_pullup")))
+        assertEquals(5, SkillBook.difficulty(movements.getValue("pullup"), null))
+    }
+
+    @Test
+    fun everySkillReachesOneHundredOnTheClassThatIntroducesIt() {
+        val order = schedule.map { it.id }
+        val taught = book.families.flatMap { it.skills }.filter { it.expected != null }
+        // Skills on the 40-point minimum target (the very first classes) fill up just after they are introduced.
+        taught.filter { it.threshold > 40 }.forEach { skill ->
+            val through = order.take(order.indexOf(skill.expected!!.id) + 1).toSet()
+            assertEquals(skill.id, 100, book.progress(through).status(skill.id).score)
+            assertFalse(skill.id, book.progress(through - skill.expected.id).status(skill.id).unlocked)
+        }
+        taught.forEach { assertEquals(it.id, 100, book.progress(order.toSet()).status(it.id).score) }
     }
 
     @Test
@@ -68,8 +111,10 @@ class SkillBookTest {
         val front = book.families.first { it.spec.id == "front_lever" }.skills.single()
         assertEquals("p2", front.expected?.id)
         assertTrue(front.beyondProgram)
-        // Nothing scheduled counts toward it, so the target is the minimum rather than the test set itself.
-        assertEquals(40, front.threshold)
+        // Nothing scheduled counts toward it, so the check set itself (one advanced set, 20 points) completes it.
+        assertEquals(20, front.threshold)
+        assertFalse(book.progress(setOf("p1")).status("full_front").unlocked)
+        assertTrue(book.progress(setOf("p1", "p2")).status("full_front").unlocked)
     }
 
     @Test
@@ -80,9 +125,7 @@ class SkillBookTest {
         assertTrue("skills found: ${skillIds.size}", skillIds.size >= 60)
         assertEquals("each skill appears once", skillIds.size, skillIds.toSet().size)
         real.families.forEach { family ->
-            val thresholds = family.skills.map { it.threshold }
-            assertEquals("${family.spec.id} targets rise", thresholds.sorted(), thresholds)
-            assertTrue("${family.spec.id} targets positive", thresholds.all { it > 0 })
+            assertTrue("${family.spec.id} targets positive", family.skills.all { it.threshold > 0 })
         }
         // Every pullup-style rung the program prescribes has a scheduled day.
         assertTrue(real.families.first { it.spec.id == "pullup" }.skills.first { it.id == "pullup" }.expected != null)
@@ -94,20 +137,23 @@ class SkillBookTest {
             .map { it.getString("id") }
             .filterNot(skillIds::contains)
         assertEquals("skill movements outside every ladder", emptyList<String>(), missing)
-        // Ladders follow the program on their own: each rung the schedule prescribes is introduced no earlier than
-        // the one below it. Regression-only rungs, which the program uses as late fallbacks, are exempt.
-        val regressions = (0 until library.length()).map(library::getJSONObject)
-            .filter { it.optString("category") == "strength_regression" }.map { it.getString("id") }.toSet()
-        // Workout order as the app assigns it: by level, then workout number.
+        // Following every class unlocks every skill the program teaches, and every group reaches 100.
         val levels = org.json.JSONObject(file.readText()).getJSONArray("levels")
-        val order = (0 until levels.length()).map(levels::getJSONObject).sortedBy { it.getInt("number") }
-            .flatMap { level -> level.getJSONArray("programs").let { p -> (0 until p.length()).map(p::getJSONObject) }.sortedBy { it.getInt("number") } }
-            .mapIndexed { index, program -> program.getString("id") to index }.toMap()
+        val allIds = (0 until levels.length()).map(levels::getJSONObject).flatMap { level ->
+            level.getJSONArray("programs").let { p -> (0 until p.length()).map { p.getJSONObject(it).getString("id") } }
+        }.toSet()
+        val finished = real.progress(allIds)
+        val stillLocked = finished.statuses.filter { it.skill.expected != null && !it.unlocked }.map { it.skill.id }
+        assertEquals("taught skills still locked after the last class", emptyList<String>(), stillLocked)
+        SkillGroup.entries.forEach { assertEquals("$it after the last class", 100, finished.groupScore(it)) }
+        // Difficulty is 1-5 and never drops up a ladder.
         real.families.forEach { family ->
-            val introduced = family.skills.filter { !it.beyondProgram && it.expected != null && it.id !in regressions }
-                .map { it.id to order.getValue(it.expected!!.id) }
-            assertEquals("${family.spec.id} ladder matches the schedule", introduced.sortedBy { it.second }, introduced)
+            val difficulty = family.skills.map { it.difficulty }
+            assertTrue("${family.spec.id} difficulty $difficulty", difficulty.all { it in 1..5 } && difficulty == difficulty.sorted())
         }
+        // Source workouts earn credit for their main work, not only for the practice block.
+        val pushup = real.families.first { it.spec.id == "pushup" }.skills.first { it.id == "pushup" }
+        assertEquals("push-ups are first taught in a Level 1 source workout", 1, pushup.expected?.level)
     }
 
     private fun SkillProgress.status(id: String) = statuses.first { it.skill.id == id }

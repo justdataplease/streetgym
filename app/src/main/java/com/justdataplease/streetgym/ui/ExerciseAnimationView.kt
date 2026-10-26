@@ -9,8 +9,6 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.Rect
 import android.graphics.Typeface
-import android.os.Build
-import android.provider.Settings
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewTreeObserver
@@ -54,9 +52,6 @@ class ExerciseAnimationView @JvmOverloads constructor(
     private var resolved = library.fallback
     private var animationPhase = resolved.template.startPhase
     private var animator: ValueAnimator? = null
-    private var reducedMotionRequested = false
-    private var playbackPaused = false
-    private var slowPlayback = false
     private val visibleRect = Rect()
     private var scrollListenerAttached = false
     private val scrollChangedListener = ViewTreeObserver.OnScrollChangedListener {
@@ -79,7 +74,7 @@ class ExerciseAnimationView @JvmOverloads constructor(
         color = AppColors.TEXT
     }
     private val farLimbPaint = Paint(figurePaint).apply {
-        color = blend(AppColors.TEXT, AppColors.SURFACE, 0.42f)
+        color = blendColor(AppColors.TEXT, AppColors.SURFACE, 0.42f)
     }
     private val headPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
@@ -97,7 +92,7 @@ class ExerciseAnimationView @JvmOverloads constructor(
     }
     private val apparatusFillPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
-        color = blend(AppColors.TEXT_SECONDARY, AppColors.SURFACE, 0.85f)
+        color = blendColor(AppColors.TEXT_SECONDARY, AppColors.SURFACE, 0.85f)
     }
     private val floorPaint = Paint(apparatusPaint).apply { color = AppColors.DIVIDER }
     private val accentPaint = Paint(apparatusPaint).apply { color = AppColors.PRIMARY }
@@ -190,32 +185,11 @@ class ExerciseAnimationView @JvmOverloads constructor(
         farLimbPaint.color = style.farFigure
         apparatusPaint.color = style.apparatus
         floorPaint.color = style.apparatus
-        apparatusFillPaint.color = blend(style.apparatus, style.background, 0.6f)
+        apparatusFillPaint.color = blendColor(style.apparatus, style.background, 0.6f)
         setPadding(0, 0, 0, 0)
         minimumWidth = 0
         minimumHeight = 0
         stopAnimator()
-        invalidate()
-    }
-
-    fun setPlaybackPaused(paused: Boolean) {
-        playbackPaused = paused
-        if (paused) stopAnimator() else updateAnimationState()
-        invalidate()
-    }
-
-    fun setSlowPlayback(slow: Boolean) {
-        slowPlayback = slow
-        stopAnimator()
-        updateAnimationState()
-    }
-
-    /** Lets the containing screen honor an in-app reduce-motion preference as well. */
-    fun setReducedMotion(enabled: Boolean) {
-        if (reducedMotionRequested == enabled) return
-        reducedMotionRequested = enabled
-        animationPhase = resolved.template.startPhase
-        restartAnimationIfNeeded()
         invalidate()
     }
 
@@ -289,11 +263,7 @@ class ExerciseAnimationView @JvmOverloads constructor(
 
         canvas.save()
         canvas.clipRect(left, top, right, bottom)
-        resolved.apparatus.forEach { name ->
-            library.apparatus[name]?.forEach { primitive ->
-                drawPrimitive(canvas, primitive, originX, originY, scale)
-            }
-        }
+        drawApparatus(canvas, originX, originY, scale)
         drawRangeMarker(canvas, originX, originY, scale, right - dp(6f))
         drawFigure(canvas, originX, originY, scale)
         canvas.restore()
@@ -329,11 +299,18 @@ class ExerciseAnimationView @JvmOverloads constructor(
 
         canvas.save()
         canvas.clipPath(badgeClip)
-        resolved.apparatus.forEach { name ->
-            library.apparatus[name]?.forEach { primitive -> drawPrimitive(canvas, primitive, ox, oy, scale) }
-        }
+        drawApparatus(canvas, ox, oy, scale)
         drawFigure(canvas, ox, oy, scale, BADGE_STROKE)
         canvas.restore()
+    }
+
+    /** Index loops: this runs every frame, and an iterator per list would be garbage each time. */
+    private fun drawApparatus(canvas: Canvas, ox: Float, oy: Float, scale: Float) {
+        val names = resolved.apparatus
+        for (i in names.indices) {
+            val primitives = library.apparatus[names[i]] ?: continue
+            for (j in primitives.indices) drawPrimitive(canvas, primitives[j], ox, oy, scale)
+        }
     }
 
     /** Maps the animator phase to a pose timeline; ping-pong templates play as a tempo rep. */
@@ -464,54 +441,11 @@ class ExerciseAnimationView @JvmOverloads constructor(
         }
     }
 
-    private fun drawFigure(canvas: Canvas, ox: Float, oy: Float, scale: Float, strokeBoost: Float = 1f) {
-        val rig = library.rig
-        fun x(joint: Int): Float = ox + joints[joint * 2] * scale
-        fun y(joint: Int): Float = oy + joints[joint * 2 + 1] * scale
-        fun bone(from: Int, to: Int, paint: Paint) = canvas.drawLine(x(from), y(from), x(to), y(to), paint)
-
-        figurePaint.strokeWidth = 2.6f * scale * strokeBoost
-        farLimbPaint.strokeWidth = 2.2f * scale * strokeBoost
-
-        // Far-side limbs are lighter so the small figure keeps its depth and stays legible.
-        bone(Rig.HIP, Rig.KNEE_FAR, farLimbPaint)
-        bone(Rig.KNEE_FAR, Rig.FOOT_FAR, farLimbPaint)
-        bone(Rig.FOOT_FAR, Rig.TOE_FAR, farLimbPaint)
-        bone(Rig.SHOULDER, Rig.ELBOW_FAR, farLimbPaint)
-        bone(Rig.ELBOW_FAR, Rig.HAND_FAR, farLimbPaint)
-
-        val hipX = x(Rig.HIP)
-        val hipY = y(Rig.HIP)
-        val neckX = x(Rig.NECK)
-        val neckY = y(Rig.NECK)
-        val dx = neckX - hipX
-        val dy = neckY - hipY
-        val length = hypot(dx, dy).coerceAtLeast(1f)
-        val curve = blendedPose.spine * scale
-        val frontX = -dy / length * blendedPose.facing
-        val frontY = dx / length * blendedPose.facing
-        torsoPath.rewind()
-        torsoPath.moveTo(hipX, hipY)
-        torsoPath.quadTo(
-            (hipX + neckX) * 0.5f + frontX * curve,
-            (hipY + neckY) * 0.5f + frontY * curve,
-            neckX,
-            neckY,
+    private fun drawFigure(canvas: Canvas, ox: Float, oy: Float, scale: Float, strokeBoost: Float = 1f) =
+        canvas.drawLineFigure(
+            joints, blendedPose.spine, blendedPose.facing, library.rig.headRadius, ox, oy, scale,
+            figurePaint, farLimbPaint, headPaint, handPaint, torsoPath, strokeBoost,
         )
-        canvas.drawPath(torsoPath, figurePaint)
-        bone(Rig.NECK, Rig.HEAD, figurePaint)
-        canvas.drawCircle(x(Rig.HEAD), y(Rig.HEAD), rig.headRadius * scale * (1f + (strokeBoost - 1f) * 0.4f), headPaint)
-
-        bone(Rig.HIP, Rig.KNEE_NEAR, figurePaint)
-        bone(Rig.KNEE_NEAR, Rig.FOOT_NEAR, figurePaint)
-        bone(Rig.FOOT_NEAR, Rig.TOE_NEAR, figurePaint)
-        bone(Rig.SHOULDER, Rig.ELBOW_NEAR, figurePaint)
-        bone(Rig.ELBOW_NEAR, Rig.HAND_NEAR, figurePaint)
-
-        val handRadius = 1.6f * scale
-        canvas.drawCircle(x(Rig.HAND_FAR), y(Rig.HAND_FAR), handRadius, handPaint)
-        canvas.drawCircle(x(Rig.HAND_NEAR), y(Rig.HAND_NEAR), handRadius, handPaint)
-    }
 
     private fun restartAnimationIfNeeded() {
         stopAnimator()
@@ -531,7 +465,7 @@ class ExerciseAnimationView @JvmOverloads constructor(
         }
         if (animator != null) return
         animator = ValueAnimator.ofFloat(animationPhase, animationPhase + 1f).apply {
-            duration = resolved.template.cycleDurationMs * if (slowPlayback) 2L else 1L
+            duration = resolved.template.cycleDurationMs
             interpolator = LinearInterpolator()
             repeatCount = ValueAnimator.INFINITE
             repeatMode = ValueAnimator.RESTART
@@ -553,9 +487,7 @@ class ExerciseAnimationView @JvmOverloads constructor(
             height > 0 &&
             getGlobalVisibleRect(visibleRect) &&
             !visibleRect.isEmpty &&
-            !reducedMotionRequested &&
-            !playbackPaused &&
-            systemAnimationsEnabled()
+            context.systemAnimationsEnabled()
 
     private fun isAnimationRunning(): Boolean = animator?.isRunning == true
 
@@ -565,32 +497,97 @@ class ExerciseAnimationView @JvmOverloads constructor(
         animator = null
     }
 
-    private fun systemAnimationsEnabled(): Boolean = try {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            ValueAnimator.areAnimatorsEnabled()
-        } else {
-            Settings.Global.getFloat(
-                context.contentResolver,
-                Settings.Global.ANIMATOR_DURATION_SCALE,
-                1f,
-            ) > 0f
-        }
-    } catch (_: RuntimeException) {
-        true
-    }
-
     private fun dp(value: Float): Float = value * resources.displayMetrics.density
 
     private fun withAlpha(color: Int, alpha: Int): Int = Color.argb(alpha, Color.red(color), Color.green(color), Color.blue(color))
+}
 
-    private fun blend(color: Int, towards: Int, amount: Float): Int {
-        val keep = 1f - amount
-        return Color.argb(
-            255,
-            (Color.red(color) * keep + Color.red(towards) * amount).roundToInt().coerceIn(0, 255),
-            (Color.green(color) * keep + Color.green(towards) * amount).roundToInt().coerceIn(0, 255),
-            (Color.blue(color) * keep + Color.blue(towards) * amount).roundToInt().coerceIn(0, 255),
-        )
+/**
+ * Strokes a solved figure: lighter far-side limbs, a curved torso, a filled head and hand dots ([hand] null
+ * skips them). [joints] are canvas units mapped through [ox], [oy] and [scale]; [torsoPath] is scratch.
+ */
+internal fun Canvas.drawLineFigure(
+    joints: FloatArray,
+    spine: Float,
+    facing: Float,
+    headRadius: Float,
+    ox: Float,
+    oy: Float,
+    scale: Float,
+    near: Paint,
+    far: Paint,
+    head: Paint,
+    hand: Paint?,
+    torsoPath: Path,
+    strokeBoost: Float = 1f,
+) {
+    fun x(joint: Int): Float = ox + joints[joint * 2] * scale
+    fun y(joint: Int): Float = oy + joints[joint * 2 + 1] * scale
+    fun bone(from: Int, to: Int, paint: Paint) = drawLine(x(from), y(from), x(to), y(to), paint)
+
+    near.strokeWidth = 2.6f * scale * strokeBoost
+    far.strokeWidth = 2.2f * scale * strokeBoost
+
+    // Far-side limbs are lighter so the small figure keeps its depth and stays legible.
+    bone(Rig.HIP, Rig.KNEE_FAR, far)
+    bone(Rig.KNEE_FAR, Rig.FOOT_FAR, far)
+    bone(Rig.FOOT_FAR, Rig.TOE_FAR, far)
+    bone(Rig.SHOULDER, Rig.ELBOW_FAR, far)
+    bone(Rig.ELBOW_FAR, Rig.HAND_FAR, far)
+
+    val hipX = x(Rig.HIP)
+    val hipY = y(Rig.HIP)
+    val neckX = x(Rig.NECK)
+    val neckY = y(Rig.NECK)
+    val dx = neckX - hipX
+    val dy = neckY - hipY
+    val length = hypot(dx, dy).coerceAtLeast(1f)
+    val curve = spine * scale
+    val frontX = -dy / length * facing
+    val frontY = dx / length * facing
+    torsoPath.rewind()
+    torsoPath.moveTo(hipX, hipY)
+    torsoPath.quadTo(
+        (hipX + neckX) * 0.5f + frontX * curve,
+        (hipY + neckY) * 0.5f + frontY * curve,
+        neckX,
+        neckY,
+    )
+    drawPath(torsoPath, near)
+    bone(Rig.NECK, Rig.HEAD, near)
+    drawCircle(x(Rig.HEAD), y(Rig.HEAD), headRadius * scale * (1f + (strokeBoost - 1f) * 0.4f), head)
+
+    bone(Rig.HIP, Rig.KNEE_NEAR, near)
+    bone(Rig.KNEE_NEAR, Rig.FOOT_NEAR, near)
+    bone(Rig.FOOT_NEAR, Rig.TOE_NEAR, near)
+    bone(Rig.SHOULDER, Rig.ELBOW_NEAR, near)
+    bone(Rig.ELBOW_NEAR, Rig.HAND_NEAR, near)
+
+    if (hand != null) {
+        val handRadius = 1.6f * scale
+        drawCircle(x(Rig.HAND_FAR), y(Rig.HAND_FAR), handRadius, hand)
+        drawCircle(x(Rig.HAND_NEAR), y(Rig.HAND_NEAR), handRadius, hand)
+    }
+}
+
+/** Read access to the authored clips for other line-figure scenes (see ParkSceneView). */
+internal class MotionClip private constructor(private val curve: MotionCurve) {
+    /** Writes the pose at [timeline] (0..1 along the keyframes) and its joints in clip canvas units. */
+    fun sample(timeline: Float, pose: Pose, joints: FloatArray) = curve.evaluate(timeline, pose, joints)
+
+    /** Where keyframe [index] sits on the timeline after re-spacing. */
+    fun keyTime(index: Int): Float = curve.keyTime(index)
+
+    companion object {
+        /** Parses exercise_animations.json now (off the main thread), so the first scene or guide doesn't wait for it. */
+        fun preload(context: Context) {
+            AnimationLibrary.load(context.applicationContext)
+        }
+
+        fun rig(context: Context): Rig = AnimationLibrary.load(context.applicationContext).rig
+
+        fun named(context: Context, name: String): MotionClip? =
+            AnimationLibrary.load(context.applicationContext).template(name)?.let { MotionClip(it.curve) }
     }
 }
 
@@ -609,15 +606,6 @@ private val LOOP_UNITS = floatArrayOf(1f)
 /** Joints that bound the body for badge framing (the averaged hands/feet points are skipped). */
 private const val BADGE_JOINTS = 14
 private const val BADGE_STROKE = 1.6f
-
-private data class Palette(
-    val background: Int,
-    val border: Int,
-    val figure: Int,
-    val accent: Int,
-    val apparatus: Int,
-    val floor: Int,
-)
 
 private data class ApparatusPrimitive(
     val type: String,
@@ -723,9 +711,9 @@ internal class Rig(
     private val torso: Float,
     private val upperArm: Float,
     private val forearm: Float,
-    private val thigh: Float,
-    private val shin: Float,
-    private val foot: Float,
+    val thigh: Float,
+    val shin: Float,
+    val foot: Float,
 ) {
     /** Writes joint positions (x, y pairs indexed by the joint constants) into [out]. */
     fun solve(pose: Pose, out: FloatArray, hipOverride: FloatArray?) {
@@ -915,6 +903,8 @@ private class MotionCurve(
             rig.solve(out, joints, hipOverride)
         }
     }
+
+    fun keyTime(index: Int): Float = times[index.coerceIn(0, count - 1)]
 
     /** Within each run bounded by holds, reversals or the ends, place keyframes by distance travelled. */
     private fun respace(solved: Array<FloatArray>) {
@@ -1120,7 +1110,6 @@ private data class NameHeuristic(
 )
 
 private class AnimationLibrary(
-    val palette: Palette,
     val canvasWidth: Float,
     val canvasHeight: Float,
     val rig: Rig,
@@ -1135,6 +1124,8 @@ private class AnimationLibrary(
 ) {
     val fallback: ResolvedMotion = resolveReference(MotionReference(fallbackName, null))
         ?: ResolvedMotion(emergencyTemplate().also { it.prepare(rig) }, listOf("floor"))
+
+    fun template(name: String): MotionTemplate? = templates[name]
 
     fun resolve(
         movementId: String?,
@@ -1211,15 +1202,7 @@ private class AnimationLibrary(
 
         private fun parse(root: JSONObject): AnimationLibrary {
             require(root.optInt("schema_version", 0) == 2) { "Unsupported animation schema" }
-            val paletteJson = root.optJSONObject("palette") ?: JSONObject()
-            val palette = Palette(
-                background = paletteJson.color("background", AppColors.INFO_SURFACE),
-                border = paletteJson.color("border", AppColors.DIVIDER),
-                figure = paletteJson.color("figure", AppColors.NUMBER_DARK),
-                accent = paletteJson.color("accent", AppColors.ACTION_LIGHT),
-                apparatus = paletteJson.color("apparatus", AppColors.NUMBER),
-                floor = paletteJson.color("floor", 0xFF90A4AE.toInt()),
-            )
+            // The JSON's "palette" is for the preview tools; the app draws in the theme's colours.
             val canvas = root.optJSONObject("canvas") ?: JSONObject()
             val segments = root.optJSONObject("figure")?.optJSONObject("segments") ?: JSONObject()
             fun segment(key: String, fallback: Float): Float =
@@ -1287,7 +1270,6 @@ private class AnimationLibrary(
             require(templates.isNotEmpty()) { "No animation templates" }
             templates.values.forEach { it.prepare(rig) }
             return AnimationLibrary(
-                palette = palette,
                 canvasWidth = canvas.optDouble("width", 200.0).toFloat().coerceIn(50f, 1000f),
                 canvasHeight = canvas.optDouble("height", 120.0).toFloat().coerceIn(30f, 1000f),
                 rig = rig,
@@ -1308,14 +1290,6 @@ private class AnimationLibrary(
         private fun fallbackLibrary(): AnimationLibrary {
             val template = emergencyTemplate().also { it.prepare(Rig.DEFAULT) }
             return AnimationLibrary(
-                palette = Palette(
-                    AppColors.INFO_SURFACE,
-                    AppColors.DIVIDER,
-                    AppColors.NUMBER_DARK,
-                    AppColors.ACTION_LIGHT,
-                    AppColors.NUMBER,
-                    0xFF90A4AE.toInt(),
-                ),
                 canvasWidth = 200f,
                 canvasHeight = 120f,
                 rig = Rig.DEFAULT,
@@ -1360,13 +1334,12 @@ private class AnimationLibrary(
     }
 }
 
+private val NOT_ALPHANUMERIC = Regex("[^a-z0-9]+")
+
 private fun normalize(value: String): String = value
     .lowercase(Locale.ENGLISH)
-    .replace(Regex("[^a-z0-9]+"), "_")
+    .replace(NOT_ALPHANUMERIC, "_")
     .trim('_')
-
-private fun JSONObject.color(key: String, fallback: Int): Int =
-    runCatching { Color.parseColor(optString(key)) }.getOrDefault(fallback)
 
 private fun JSONObject?.references(normalizeKeys: Boolean = false): Map<String, MotionReference> =
     mapObjectNotNull { key, value ->

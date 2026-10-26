@@ -3,25 +3,31 @@ package com.justdataplease.streetgym.ui
 import android.app.AlertDialog
 import android.content.Context
 import android.content.res.ColorStateList
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.ColorFilter
+import android.graphics.Paint
+import android.graphics.PixelFormat
 import android.graphics.Typeface
+import android.graphics.drawable.Drawable
 import android.graphics.drawable.RippleDrawable
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.HorizontalScrollView
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.justdataplease.streetgym.R
+import com.justdataplease.streetgym.billing.Entitlement
+import com.justdataplease.streetgym.billing.LevelAccess
 import com.justdataplease.streetgym.data.skills.SkillFamily
 import com.justdataplease.streetgym.data.skills.SkillGroup
 import com.justdataplease.streetgym.data.skills.SkillProgress
 import com.justdataplease.streetgym.data.skills.SkillStatus
-import java.text.NumberFormat
-import kotlin.math.roundToInt
 
-/** Two-option switch used at the top of Progress (Skills / History). */
+/** A row of options with one selected: the tabs of Training and Progress, and other small choices. */
 fun Context.segmentedSwitch(labels: List<String>, selected: Int, onSelect: (Int) -> Unit): LinearLayout =
     LinearLayout(this).apply {
         orientation = LinearLayout.HORIZONTAL
@@ -44,7 +50,14 @@ fun Context.segmentedSwitch(labels: List<String>, selected: Int, onSelect: (Int)
         }
     }
 
-/** Skills tab: summary, the skills closest to unlocking, a group filter and one ladder per family. */
+private val GROUPS = listOf(
+    SkillGroup.PULL to R.string.skills_filter_pull,
+    SkillGroup.PUSH to R.string.skills_filter_push,
+    SkillGroup.LEGS to R.string.skills_filter_legs,
+    SkillGroup.CORE to R.string.skills_filter_core,
+)
+
+/** Skills tab: unlocked count and the four group scores, the skills closest to unlocking, a group filter and one ladder per family. */
 fun Context.skillsContent(
     progress: SkillProgress,
     group: SkillGroup?,
@@ -52,8 +65,8 @@ fun Context.skillsContent(
     onOpen: (SkillStatus, SkillFamily, List<SkillStatus>) -> Unit,
 ): LinearLayout = LinearLayout(this).apply {
     orientation = LinearLayout.VERTICAL
-    val numbers = NumberFormat.getIntegerInstance()
     val closest = progress.closest(3)
+    val owned = Entitlement.allLevels(context)
 
     addView(LinearLayout(context).apply {
         orientation = LinearLayout.VERTICAL
@@ -76,11 +89,21 @@ fun Context.skillsContent(
             progressTintList = ColorStateList.valueOf(AppColors.ACCENT)
             progressBackgroundTintList = ColorStateList.valueOf(blendColor(AppColors.ACCENT, AppColors.PRIMARY_DARK, 0.75f))
         }, height = dp(8), topDp = 10)
-        val pointsLine = getString(R.string.skills_points_earned, numbers.format(progress.earnedPoints)) +
-            (closest.firstOrNull()?.let { "   ·   " + getString(R.string.skills_next, it.skill.name) } ?: "")
-        addWithMargins(bodyText(pointsLine, 13f).apply {
-            setTextColor(blendColor(Color.WHITE, AppColors.PRIMARY_DARK, 0.2f))
-        }, topDp = 10)
+        addWithMargins(LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
+            GROUPS.forEachIndexed { index, (option, label) ->
+                addView(groupScoreTile(getString(label), progress.groupScore(option), option == group) {
+                    onGroup(if (option == group) null else option)
+                }, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
+                    if (index > 0) marginStart = dp(6)
+                })
+            }
+        }, topDp = 14)
+        closest.firstOrNull()?.let { next ->
+            addWithMargins(bodyText(getString(R.string.skills_next, next.skill.name), 13f).apply {
+                setTextColor(blendColor(Color.WHITE, AppColors.PRIMARY_DARK, 0.2f))
+            }, topDp = 10)
+        }
     })
 
     addWithMargins(sectionLabel(getString(R.string.skills_closest)), topDp = 14)
@@ -97,13 +120,7 @@ fun Context.skillsContent(
         isHorizontalScrollBarEnabled = false
         addView(LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
-            val options = listOf(
-                null to R.string.skills_filter_all,
-                SkillGroup.PULL to R.string.skills_filter_pull,
-                SkillGroup.PUSH to R.string.skills_filter_push,
-                SkillGroup.LEGS to R.string.skills_filter_legs,
-                SkillGroup.CORE to R.string.skills_filter_core,
-            )
+            val options = listOf<Pair<SkillGroup?, Int>>(null to R.string.skills_filter_all) + GROUPS
             options.forEach { (option, label) ->
                 addWithMargins(filterChip(getString(label), option == group) { onGroup(option) },
                     width = LinearLayout.LayoutParams.WRAP_CONTENT, rightDp = 8)
@@ -124,7 +141,7 @@ fun Context.skillsContent(
             addView(LinearLayout(context).apply {
                 orientation = LinearLayout.HORIZONTAL
                 statuses.forEach { status ->
-                    addWithMargins(skillCell(status, numbers) { onOpen(status, family, statuses) },
+                    addWithMargins(skillCell(status, lockedFor(status, owned)) { onOpen(status, family, statuses) },
                         width = dp(82), rightDp = 10)
                 }
             })
@@ -133,10 +150,10 @@ fun Context.skillsContent(
     addWithMargins(bodyText(getString(R.string.skills_how_points), 12f), topDp = 18)
 }
 
-/** Detail sheet: the animated movement guide, points, schedule and where the points came from. */
+/** Detail sheet: the animated movement guide, skill points out of 100, difficulty, schedule and where the points came from. */
 fun Context.showSkillSheet(status: SkillStatus, family: SkillFamily, statuses: List<SkillStatus>) {
-    val numbers = NumberFormat.getIntegerInstance()
     val skill = status.skill
+    val locked = lockedFor(status, Entitlement.allLevels(this))
     val content = LinearLayout(this).apply {
         orientation = LinearLayout.VERTICAL
         setPadding(dp(20), dp(16), dp(20), dp(8))
@@ -146,34 +163,39 @@ fun Context.showSkillSheet(status: SkillStatus, family: SkillFamily, statuses: L
         addWithMargins(bodyText(getString(R.string.skills_ladder_rung, family.spec.name, skill.rung + 1, statuses.size), 13f), topDp = 2)
         val pill = when {
             status.unlocked -> badge(getString(R.string.skills_unlocked), AppColors.SUCCESS)
-            status.points > 0 -> badge(getString(R.string.skills_in_progress, (status.fraction * 100).toInt()), AppColors.PRIMARY)
+            locked -> lockBadge(getString(R.string.skills_plus))
+            status.points > 0 -> badge(getString(R.string.skills_in_progress, status.score), AppColors.PRIMARY)
             else -> badge(getString(R.string.skills_locked), AppColors.TEXT_SECONDARY)
         }
         addWithMargins(pill, width = LinearLayout.LayoutParams.WRAP_CONTENT, topDp = 10)
         addWithMargins(LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
-            addView(oneLineText(getString(R.string.skills_points_line,
-                numbers.format(minOf(status.points, skill.threshold)), numbers.format(skill.threshold)), bold = true),
+            addView(oneLineText(getString(R.string.skills_points_line, status.score), bold = true),
                 LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
-            if (!status.unlocked) {
-                addView(bodyText(getString(R.string.skills_points_to_go, numbers.format(skill.threshold - status.points)), 13f))
+            if (!status.unlocked) addView(bodyText(getString(R.string.skills_points_to_go, 100 - status.score), 13f))
+        }, topDp = 12)
+        addWithMargins(horizontalProgress(status.score), height = dp(8), topDp = 6)
+        addWithMargins(detailRow(getString(R.string.skills_difficulty),
+            getString(R.string.skills_difficulty_value, difficultyName(skill.difficulty), skill.difficulty.coerceIn(1, 5))).apply {
+            (getChildAt(1) as TextView).apply {
+                setCompoundDrawablesRelative(DifficultyDots(skill.difficulty, dp(50), dp(8)), null, null, null)
+                compoundDrawablePadding = dp(8)
             }
         }, topDp = 12)
-        addWithMargins(horizontalProgress((status.fraction * 100).roundToInt()), height = dp(8), topDp = 6)
         val schedule = when {
             skill.expected == null -> getString(R.string.skills_beyond_program)
-            skill.beyondProgram -> getString(R.string.skills_optional_test, skill.expected.level)
+            skill.beyondProgram -> getString(R.string.skills_readiness_test, skill.expected.level)
             skill.expected.week != null -> getString(R.string.skills_schedule_week, skill.expected.level, skill.expected.week)
             else -> getString(R.string.skills_schedule_level, skill.expected.level)
         }
-        addWithMargins(detailRow(getString(R.string.skills_on_schedule), schedule), topDp = 12)
+        addView(detailRow(getString(R.string.skills_on_schedule), schedule))
         statuses.getOrNull(skill.rung - 1)?.let { addView(detailRow(getString(R.string.skills_builds_on), it.skill.name)) }
         statuses.getOrNull(skill.rung + 1)?.let { addView(detailRow(getString(R.string.skills_unlocks_next), it.skill.name)) }
         addWithMargins(sectionLabel(getString(R.string.skills_sources)), topDp = 10)
         if (status.sources.isEmpty()) {
             addView(detailRow(getString(R.string.skills_no_sources), "0"))
         } else {
-            status.sources.take(4).forEach { (name, points) -> addView(detailRow(name, "${numbers.format(points)} pts")) }
+            status.sources.take(4).forEach { (name, share) -> addView(detailRow(name, getString(R.string.skills_source_share, share))) }
         }
     }
     AlertDialog.Builder(this)
@@ -189,29 +211,32 @@ private fun Context.closestRow(status: SkillStatus, onClick: () -> Unit): View =
     background = tappable(AppColors.SURFACE, dp(18).toFloat())
     isClickable = true
     isFocusable = true
-    contentDescription = getString(R.string.skills_badge_description, status.skill.name, "${(status.fraction * 100).toInt()}%")
+    contentDescription = getString(R.string.skills_badge_description, status.skill.name,
+        getString(R.string.skills_points_short, status.score))
     setOnClickListener { onClick() }
     addView(skillBadge(status), LinearLayout.LayoutParams(dp(44), dp(44)))
     addView(LinearLayout(context).apply {
         orientation = LinearLayout.VERTICAL
         addView(oneLineText(status.skill.name, bold = true).apply { textSize = 14f })
-        addWithMargins(horizontalProgress((status.fraction * 100).roundToInt()), height = dp(5), topDp = 6)
+        addWithMargins(horizontalProgress(status.score), height = dp(5), topDp = 6)
     }, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
         setMargins(dp(12), 0, dp(12), 0)
     })
-    addView(titleText("${(status.fraction * 100).toInt()}%", 14f).apply { setTextColor(AppColors.PRIMARY) })
+    addView(titleText(getString(R.string.skills_points_short, status.score), 14f).apply { setTextColor(AppColors.PRIMARY) })
 }
 
-private fun Context.skillCell(status: SkillStatus, numbers: NumberFormat, onClick: () -> Unit): View = LinearLayout(this).apply {
+private fun Context.skillCell(status: SkillStatus, locked: Boolean, onClick: () -> Unit): View = LinearLayout(this).apply {
     orientation = LinearLayout.VERTICAL
     isClickable = true
     isFocusable = true
     background = tappable(Color.TRANSPARENT, dp(14).toFloat())
     val state = when {
         status.unlocked -> getString(R.string.skills_unlocked)
-        else -> getString(R.string.skills_points_short, numbers.format(status.points), numbers.format(status.skill.threshold))
+        locked -> getString(R.string.skills_plus)
+        else -> getString(R.string.skills_points_short, status.score)
     }
-    contentDescription = getString(R.string.skills_badge_description, status.skill.name, state)
+    contentDescription = getString(R.string.skills_badge_description, status.skill.name,
+        "$state, ${difficultyName(status.skill.difficulty)}")
     setOnClickListener { onClick() }
     addView(FrameLayout(context).apply {
         addView(skillBadge(status), FrameLayout.LayoutParams(dp(78), dp(78)))
@@ -243,16 +268,95 @@ private fun Context.skillCell(status: SkillStatus, numbers: NumberFormat, onClic
         minLines = 2
         ellipsize = TextUtils.TruncateAt.END
     }, topDp = 4)
-    if (!status.unlocked) {
-        addWithMargins(horizontalProgress((status.fraction * 100).roundToInt()), width = dp(78), height = dp(4), topDp = 4)
+    if (!status.unlocked && !locked) {
+        addWithMargins(horizontalProgress(status.score), width = dp(78), height = dp(4), topDp = 4)
     }
-    addWithMargins(bodyText(state, 11f).apply {
-        if (status.unlocked) {
-            setTextColor(AppColors.PRIMARY)
-            typeface = Typeface.DEFAULT_BOLD
-        }
-    }, topDp = 2)
+    if (locked) {
+        addWithMargins(lockBadge(), width = LinearLayout.LayoutParams.WRAP_CONTENT, topDp = 4)
+    } else {
+        addWithMargins(bodyText(state, 11f).apply {
+            if (status.unlocked) {
+                setTextColor(AppColors.PRIMARY)
+                typeface = Typeface.DEFAULT_BOLD
+            }
+        }, topDp = 2)
+    }
+    addWithMargins(ImageView(context).apply {
+        setImageDrawable(DifficultyDots(status.skill.difficulty, dp(44), dp(7)))
+        importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+    }, topDp = 6)
 }
+
+/** One of the four group scores in the summary card; tapping filters the ladders to that group. */
+private fun Context.groupScoreTile(label: String, score: Int, selected: Boolean, onClick: () -> Unit): View =
+    LinearLayout(this).apply {
+        orientation = LinearLayout.VERTICAL
+        gravity = Gravity.CENTER_HORIZONTAL
+        setPadding(dp(4), dp(8), dp(4), dp(8))
+        background = tappable(blendColor(AppColors.ACCENT, AppColors.PRIMARY_DARK, if (selected) 0.55f else 0.85f), dp(14).toFloat())
+        isClickable = true
+        isFocusable = true
+        contentDescription = getString(R.string.skills_group_score_description, label, score)
+        setOnClickListener { onClick() }
+        addView(titleText(score.toString(), 20f).apply { setTextColor(Color.WHITE) })
+        addView(bodyText(getString(R.string.skills_group_score_of, label), 11f).apply {
+            setTextColor(blendColor(Color.WHITE, AppColors.PRIMARY_DARK, 0.25f))
+            maxLines = 1
+            ellipsize = TextUtils.TruncateAt.END
+        })
+    }
+
+/** Skills the program first teaches in Levels 4 and up stay locked until Plus. */
+private fun lockedFor(status: SkillStatus, owned: Boolean): Boolean =
+    !status.unlocked && status.skill.expected?.let { LevelAccess.locked(it.level, owned) } == true
+
+/** Difficulty runs green, blue, amber, orange, red from Beginner to Elite, like trail grades. */
+private fun difficultyColor(level: Int): Int {
+    val dark = AppColors.darkMode
+    return when (level.coerceIn(1, 5)) {
+        1 -> AppColors.PRIMARY
+        2 -> if (dark) 0xFF7CC8F0.toInt() else 0xFF2B78A0.toInt()
+        3 -> if (dark) 0xFFF2C14E.toInt() else 0xFFB7791F.toInt()
+        4 -> if (dark) 0xFFFF9466.toInt() else 0xFFC4521C.toInt()
+        else -> if (dark) 0xFFFF7A90.toInt() else 0xFFB3263E.toInt()
+    }
+}
+
+/** Five dots, the first [level] filled in that level's colour; the dots are as tall as the drawable. */
+private class DifficultyDots(level: Int, private val width: Int, private val height: Int) : Drawable() {
+    private val filled = level.coerceIn(1, 5)
+    private val on = difficultyColor(filled)
+    private val off = blendColor(AppColors.TEXT_SECONDARY, AppColors.BACKGROUND, 0.65f)
+    private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+
+    init { setBounds(0, 0, width, height) }
+
+    override fun getIntrinsicWidth() = width
+    override fun getIntrinsicHeight() = height
+
+    override fun draw(canvas: Canvas) {
+        val area = bounds
+        val radius = area.height() / 2f
+        val step = (area.width() - area.height()) / 4f
+        for (i in 0 until 5) {
+            paint.color = if (i < filled) on else off
+            canvas.drawCircle(area.left + radius + i * step, area.exactCenterY(), radius, paint)
+        }
+    }
+
+    override fun setAlpha(alpha: Int) { paint.alpha = alpha }
+    override fun setColorFilter(colorFilter: ColorFilter?) { paint.colorFilter = colorFilter }
+    @Deprecated("Deprecated in Java")
+    override fun getOpacity() = PixelFormat.TRANSLUCENT
+}
+
+private fun Context.difficultyName(level: Int): String = getString(when (level.coerceIn(1, 5)) {
+    1 -> R.string.skills_difficulty_1
+    2 -> R.string.skills_difficulty_2
+    3 -> R.string.skills_difficulty_3
+    4 -> R.string.skills_difficulty_4
+    else -> R.string.skills_difficulty_5
+})
 
 /** Unlocked: night tile with mint figure. In progress: light tint. Locked: muted. */
 private fun Context.skillBadge(status: SkillStatus): ExerciseAnimationView {
@@ -287,7 +391,7 @@ private fun Context.filterChip(label: String, selected: Boolean, onClick: () -> 
     setOnClickListener { onClick() }
 }
 
-private fun Context.detailRow(label: String, value: String): View = LinearLayout(this).apply {
+private fun Context.detailRow(label: String, value: String): LinearLayout = LinearLayout(this).apply {
     orientation = LinearLayout.HORIZONTAL
     setPadding(0, dp(7), 0, dp(7))
     addView(bodyText(label, 13f), LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
@@ -298,12 +402,3 @@ private fun Context.tappable(color: Int, radius: Float) =
     RippleDrawable(ColorStateList.valueOf(0x22000000), roundedDrawable(color, radius), roundedDrawable(Color.BLACK, radius))
 
 private fun percent(part: Int, whole: Int): Int = if (whole <= 0) 0 else (part * 100 / whole)
-
-private fun blendColor(color: Int, towards: Int, amount: Float): Int {
-    val keep = 1f - amount
-    return Color.rgb(
-        (Color.red(color) * keep + Color.red(towards) * amount).roundToInt().coerceIn(0, 255),
-        (Color.green(color) * keep + Color.green(towards) * amount).roundToInt().coerceIn(0, 255),
-        (Color.blue(color) * keep + Color.blue(towards) * amount).roundToInt().coerceIn(0, 255),
-    )
-}

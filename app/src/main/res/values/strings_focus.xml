@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="workout_view">Workout view</string>
+    <string name="workout_view_focus">Focus</string>
+    <string name="workout_view_list">List</string>
+    <string name="switch_to_list">Switch to list view</string>
+    <string name="switch_to_focus">Switch to focus view</string>
+    <string name="focus_set_of">Set %1$d of %2$d</string>
+    <string name="focus_side">side %1$d</string>
+    <string name="focus_seconds">%1$d s</string>
+    <string name="focus_done">Done · Next</string>
+    <string name="focus_done_description">Complete set %1$d of %2$d, %3$s</string>
+    <string name="focus_start">Start %1$d s</string>
+    <string name="focus_start_side">Start side %1$d</string>
+    <string name="focus_start_description">Start the %1$d second timer for set %2$d of %3$d, %4$s</string>
+    <string name="focus_back_description">Back to the previous set</string>
+    <string name="focus_skip">Skip</string>
+    <string name="focus_skip_description">Skip set %1$d of %2$d, %3$s</string>
+    <string name="focus_details">Details</string>
+    <string name="focus_easier">Easier: %1$s</string>
+    <string name="focus_easier_generic">reduce range or add support</string>
+    <string name="focus_easier_description">Easier option: %1$s. Opens the details.</string>
+    <string name="focus_details_tempo">Tempo</string>
+    <string name="focus_details_safety">Safety</string>
+    <string name="focus_details_easier">Easier option</string>
+    <string name="focus_details_start">Start criteria</string>
+    <string name="focus_close">Close</string>
+    <string name="focus_time_up">Time’s up. Set %1$d of %2$d, %3$s</string>
+    <string name="focus_switch_sides">Switch sides</string>
+    <string name="focus_rest">Rest</string>
+    <string name="focus_rest_next">Next: %1$s · set %2$d</string>
+    <string name="focus_rest_started">Rest %1$d seconds. Next: %2$s, set %3$d</string>
+    <string name="focus_rest_left">%1$d seconds of rest left</string>
+    <string name="focus_rest_over">Rest over. Set %1$d of %2$d, %3$s</string>
+    <string name="focus_skip_rest">Skip rest</string>
+    <string name="focus_add_rest">+15 s</string>
+    <string name="focus_add_rest_description">Add 15 seconds of rest</string>
+    <string name="focus_summary_complete">Class complete</string>
+    <string name="focus_summary_partial">End of class</string>
+    <plurals name="focus_summary_skipped">
+        <item quantity="one">%1$d set skipped</item>
+        <item quantity="other">%1$d sets skipped</item>
+    </plurals>
+    <string name="focus_do_skipped">Do skipped sets</string>
+</resources>

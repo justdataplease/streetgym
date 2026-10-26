@@ -96,6 +96,7 @@ class ProgramListAdapter(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                 ),
             )
+            applyThemeType()
         }
     }
 }

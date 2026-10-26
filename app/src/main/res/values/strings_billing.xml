@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tier_free">Free</string>
+    <string name="tier_plus">Plus</string>
+    <string name="tier_pro">Pro</string>
+    <string name="tiers_title">Plus and Pro</string>
+    <string name="tier_current_free">You’re on Free: Levels 1–3 with ads and 3 saved or custom days.</string>
+    <string name="tier_current_plus">You have Plus: every level, no ads, 30 saved or custom days, your own level names and parks near you.</string>
+    <string name="tier_current_pro">You have Pro: everything in Plus, 300 saved or custom days, the leaderboard, and your progress saved to your Google account.</string>
+    <string name="plus_title">Plus · one payment</string>
+    <string name="plus_features">No ads · Every level · 30 saved and custom days · Rename levels · Calisthenics parks near you</string>
+    <string name="plus_buy">Get Plus</string>
+    <string name="plus_buy_price">Get Plus · %1$s</string>
+    <string name="plus_owned">Plus is yours.</string>
+    <string name="pro_title">Pro · yearly</string>
+    <string name="pro_features">Everything in Plus · 300 saved and custom days · Leaderboard: overall and per skill · Your progress saved to your Google account and on all your devices</string>
+    <string name="pro_why">Pro is yearly because cloud progress and the leaderboard run on servers and a database, and the subscription pays for them. It renews every year until you cancel in Google Play.</string>
+    <string name="pro_buy">Get Pro</string>
+    <string name="pro_buy_price">Get Pro · %1$s per year</string>
+    <string name="pro_active">Pro is active.</string>
+    <string name="pro_manage">Manage subscription</string>
+    <string name="paywall_level">Level %1$d is part of Plus</string>
+    <string name="paywall_level_body">Lever, planche, flag and handstand work through the last class. Pro includes it too.</string>
+    <string name="paywall_parks">Parks near you are part of Plus</string>
+    <string name="paywall_rename">Renaming levels is part of Plus</string>
+    <string name="paywall_saved">You’ve used all %1$d saved and custom days</string>
+    <string name="saved_limit_pro">You’ve reached the 300 saved and custom days of Pro. Remove one to add another.</string>
+    <string name="restore_purchase">Restore purchases</string>
+    <string name="purchase_checking">Checking purchases…</string>
+    <string name="purchase_restored_pro">Pro restored. Everything is unlocked.</string>
+    <string name="purchase_restored_plus">Plus restored. Every level is unlocked and ads are off.</string>
+    <string name="purchase_not_found">No purchase found for this Google account.</string>
+    <string name="purchase_unreachable">Couldn’t reach Google Play. Try again later.</string>
+    <string name="purchase_unavailable">Google Play purchases are unavailable.</string>
+    <string name="purchase_unavailable_retry">Google Play purchases are unavailable. Try again later.</string>
+    <string name="purchase_connecting">Connecting to Google Play…</string>
+    <string name="purchase_pending">Payment pending. It unlocks when Google Play confirms it.</string>
+    <string name="simulate_tier">Simulate tier</string>
+    <string name="simulate_tier_default">Default</string>
+    <string name="simulate_tier_note">Debug builds can’t buy, so they get Pro. Pick a tier to test its limits and ads.</string>
+</resources>

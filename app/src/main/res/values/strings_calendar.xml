@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="history_view_list">List</string>
+    <string name="history_view_calendar">Calendar</string>
+    <string name="calendar_previous_month">Previous month</string>
+    <string name="calendar_next_month">Next month</string>
+    <plurals name="calendar_month_count_current">
+        <item quantity="one">%d workout this month</item>
+        <item quantity="other">%d workouts this month</item>
+    </plurals>
+    <plurals name="calendar_month_count">
+        <item quantity="one">%1$d workout in %2$s</item>
+        <item quantity="other">%1$d workouts in %2$s</item>
+    </plurals>
+    <string name="calendar_legend_workout">Workout</string>
+    <string name="calendar_legend_repeat">Repeat</string>
+    <string name="calendar_legend_custom">Your workout</string>
+    <string name="calendar_legend_marked">Marked complete</string>
+    <string name="calendar_empty">Finish a workout and its day is marked here.</string>
+    <string name="calendar_pick_day">Tap a day to see its workouts.</string>
+    <string name="calendar_day_empty">No workouts on this day.</string>
+    <plurals name="calendar_marked_days">
+        <item quantity="one">%d day marked complete</item>
+        <item quantity="other">%d days marked complete</item>
+    </plurals>
+    <!-- A day cell's description, read by TalkBack: "October 25, today, 2 workouts, 1 repeat". -->
+    <string name="calendar_today_description">today</string>
+    <string name="calendar_no_workouts_description">no workouts</string>
+    <plurals name="calendar_workouts_description">
+        <item quantity="one">%d workout</item>
+        <item quantity="other">%d workouts</item>
+    </plurals>
+    <plurals name="calendar_repeats_description">
+        <item quantity="one">%d repeat</item>
+        <item quantity="other">%d repeats</item>
+    </plurals>
+    <plurals name="calendar_custom_description">
+        <item quantity="one">%d of your workouts</item>
+        <item quantity="other">%d of your workouts</item>
+    </plurals>
+    <plurals name="calendar_marked_description">
+        <item quantity="one">%d marked complete</item>
+        <item quantity="other">%d marked complete</item>
+    </plurals>
+</resources>

@@ -27,8 +27,8 @@ android {
         applicationId = "com.justdataplease.streetgym"
         minSdk = 23
         targetSdk = 35
-        versionCode = 8
-        versionName = "2.3.0"
+        versionCode = 9
+        versionName = "2.4.0"
         testInstrumentationRunner = "com.justdataplease.streetgym.TrainingInstrumentation"
 
         vectorDrawables.useSupportLibrary = false
@@ -41,6 +41,9 @@ android {
             buildConfigField("String", "ADMOB_FULLSCREEN_NATIVE_ID", "\"${fullScreenNativeId(false)}\"")
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-debug"
+            // The GitHub APK carries the map's native library for every phone ABI plus the x86_64 emulator; the
+            // 32-bit x86 copy (12 MB) serves no phone. Play builds are bundles, split per ABI by Play.
+            ndk { abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86_64") }
         }
         release {
             manifestPlaceholders["admobAppId"] = nativeAdId("appId", true)
@@ -86,6 +89,16 @@ dependencies {
     implementation("com.google.android.ump:user-messaging-platform:3.2.0")
     implementation(platform("com.google.firebase:firebase-bom:34.2.0"))
     implementation("com.google.firebase:firebase-auth")
+    // Pro: cloud progress and the leaderboard. App Check keeps the public leaderboard reads to the genuine app.
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-appcheck-playintegrity")
+    debugImplementation("com.google.firebase:firebase-appcheck-debug")
+    // Sign in with Google through Credential Manager (Pro only).
+    implementation("androidx.credentials:credentials:1.5.0")
+    implementation("androidx.credentials:credentials-play-services-auth:1.5.0")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+    // Parks map: MapLibre with OpenFreeMap tiles, the same as JustMaps (no API key, no per-view cost).
+    implementation("org.maplibre.gl:android-sdk:11.11.0")
 }
 
 kotlin {

@@ -15,7 +15,7 @@ import com.google.android.ump.UserMessagingPlatform
 import com.justdataplease.monetization.AdPalette
 import com.justdataplease.monetization.NativeAdSlot
 import com.justdataplease.streetgym.BuildConfig
-import com.justdataplease.streetgym.billing.RemoveAdsBilling
+import com.justdataplease.streetgym.billing.Entitlement
 import com.justdataplease.streetgym.timer.TimingStore
 import com.justdataplease.streetgym.ui.*
 
@@ -41,7 +41,7 @@ class WorkoutAdBreak(private val activity: Activity) {
 
     fun tick() {
         val now = SystemClock.elapsedRealtime()
-        if (RemoveAdsBilling.noAds(activity)) { ready?.destroy(); ready = null; dialog?.dismiss(); clock.shown(now); return }
+        if (Entitlement.adFree(activity)) { ready?.destroy(); ready = null; dialog?.dismiss(); clock.shown(now); return }
         if (!UserMessagingPlatform.getConsentInformation(activity).canRequestAds()) { ready?.destroy(); ready = null; return }
         if (ready != null && now - loadedAt > 50 * 60_000L) { ready?.destroy(); ready = null }
         if (!resumed || destroyed || ready != null || loading || dialog != null ||
@@ -49,13 +49,13 @@ class WorkoutAdBreak(private val activity: Activity) {
         attemptedAt = now; loading = true
         MobileAds.initialize(activity.applicationContext) {
             activity.runOnUiThread {
-                if (RemoveAdsBilling.noAds(activity) || destroyed || !resumed || !UserMessagingPlatform.getConsentInformation(activity).canRequestAds()) {
+                if (Entitlement.adFree(activity) || destroyed || !resumed || !UserMessagingPlatform.getConsentInformation(activity).canRequestAds()) {
                     loading = false; return@runOnUiThread
                 }
                 AdLoader.Builder(activity, BuildConfig.ADMOB_FULLSCREEN_NATIVE_ID)
                     .forNativeAd { ad ->
                         loading = false
-                        if (RemoveAdsBilling.noAds(activity) || destroyed || !resumed || !UserMessagingPlatform.getConsentInformation(activity).canRequestAds()) ad.destroy()
+                        if (Entitlement.adFree(activity) || destroyed || !resumed || !UserMessagingPlatform.getConsentInformation(activity).canRequestAds()) ad.destroy()
                         else { ready?.destroy(); ready = ad; loadedAt = SystemClock.elapsedRealtime() }
                     }
                     .withNativeAdOptions(NativeAdOptions.Builder()
@@ -72,7 +72,7 @@ class WorkoutAdBreak(private val activity: Activity) {
     fun atNaturalBreak() {
         val now = SystemClock.elapsedRealtime()
         val timing = TimingStore(activity).load()
-        if (RemoveAdsBilling.noAds(activity) || !resumed || destroyed || dialog != null || !clock.due(now) || activity.isFinishing ||
+        if (Entitlement.adFree(activity) || !resumed || destroyed || dialog != null || !clock.due(now) || activity.isFinishing ||
             timing.countdown.running || timing.stopwatch.running || timing.timerRinging || timing.alarmRinging ||
             !UserMessagingPlatform.getConsentInformation(activity).canRequestAds()) return
         val ad = ready ?: return

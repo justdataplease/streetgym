@@ -156,3 +156,12 @@ MOVEMENTS.update({name: name for name in ["overhead_line", "kneeling_side_plank"
 # "squat_jump" template stays behind the authentic "Squat Jump" alias and heuristic.
 MOVEMENTS.update({name: name for name in ["archer_pullup", "archer_pushup", "elevated_pike_pushup", "wall_hspu_negative", "wall_hspu", "one_leg_lsit", "lsit", "seated_pike_lift", "bulgarian_split_squat", "sliding_leg_curl", "nordic_negative", "single_leg_rdl", "prone_ytw"]})
 MOVEMENTS["squat_jump"] = "half_squat_jump"
+
+# Group E movements (group_e.py).
+MOVEMENTS.update({name: name for name in ["straight_side_plank", "hollow_body_hold", "german_hang", "handstand_exit", "straddle_flag", "full_flag", "nordic_curl"]})
+
+# Group F: Level 7 "Mastery" rungs (group_f.py).
+MOVEMENTS.update({name: name for name in ["typewriter_pullup", "assisted_one_arm_pullup", "one_arm_pullup_negative", "deficit_wall_hspu", "freestanding_hspu_negative"]})
+
+# Group G: kick-up to the wall, round 2 of the 2.4.0 pro-athlete reviews (group_g.py).
+MOVEMENTS["wall_kickup"] = "wall_kickup"

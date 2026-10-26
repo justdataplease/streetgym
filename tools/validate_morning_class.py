@@ -12,7 +12,9 @@ plan = json.loads((ROOT / "curriculum/morning_class.json").read_text(encoding="u
 movements = {m["id"]: m for m in catalog["movement_library"]}
 progression = json.loads((ROOT / "curriculum/class_progression.json").read_text(encoding="utf-8"))
 limits_by_level = {p["level"]: p for p in progression["levels"]}
-assert list(limits_by_level) == list(range(1, 7))
+assert list(limits_by_level) == list(range(1, 8))
+assert [lv["level"] for lv in json.loads((ROOT / "curriculum/morning_class.json").read_text(encoding="utf-8"))["levels"]] == list(range(1, 8))
+assert [lv["number"] for lv in catalog["levels"]] == list(range(1, 8))
 budgets = [p["main_sets_including_practice"] for p in progression["levels"]]
 assert budgets == sorted(budgets) and budgets[0] < budgets[-1]
 changed_workouts = 0
@@ -27,6 +29,10 @@ def dose_values(value, sets):
     assert len(values) in (1, sets), (value, sets)
     return [(v, bool(match[2])) for v in (values * sets if len(values) == 1 else values)]
 new_ids = {"overhead_line", "kneeling_side_plank", "pike_handstand_hold", "wall_handstand", "handstand_toe_pull", "handstand_balance", "flag_ground_support", "assisted_tuck_flag", "tuck_flag"}
+FLAG_PRACTICE_IDS = {"flag_ground_support", "assisted_tuck_flag", "tuck_flag", "straddle_flag", "full_flag"}
+LEVER_AND_MUSCLE_UP_IDS = {"tuck_front_hold", "advanced_tuck_front", "one_leg_front", "straddle_front", "full_front", "tuck_back_hold",
+                           "advanced_tuck_back", "one_leg_back", "straddle_back", "full_back", "strict_muscleup", "band_muscleup",
+                           "negative_muscleup", "jump_muscleup"}
 seen = set()
 recovery_count = 0
 def phase_for(level_plan, number):
@@ -37,13 +43,15 @@ def weekly_practice_seconds(phase, goal):
     total = 0
     for day in phase["days"]:
         for mid, sets, _, seconds, *_ in day["practice"]:
-            if goal in movements[mid]["patterns"]:
+            # Rep-based drills (handstand exits) add skill work, not hold time.
+            if goal in movements[mid]["patterns"] and seconds is not None:
                 total += sets * int(str(seconds).split("/")[0])
     return total
 
 
 def practice_rungs(phase, goal):
-    return {s[0] for d in phase["days"] for s in d["practice"] if goal in movements[s[0]]["patterns"]}
+    # A readiness check tests the next rung; it is trained only once it appears without the check tempo.
+    return {s[0] for d in phase["days"] for s in d["practice"] if goal in movements[s[0]]["patterns"] and s[5] != "readiness_check"}
 
 
 def easier_chain(mid):
@@ -84,13 +92,21 @@ for level in catalog["levels"]:
         expected = phase_for(level_plan, p["number"])["days"][day-1]["practice"]
         if (p["schedule"]["rpe"] is not None and p["schedule"]["rpe"] <= 4) or p.get("morning_recovery"):
             expected = []
+        # Authored classes that train levers or muscle-ups leave flag practice out (pulling-tendon load).
+        if p["origin"] != "apk_authentic" and {s[0] for s in p.get("main", [])} & LEVER_AND_MUSCLE_UP_IDS:
+            expected = [s for s in expected if s[0] not in FLAG_PRACTICE_IDS]
         assert practice == expected, p["id"]
         assert sum(s[1] for s in practice) <= 8, p["id"]
         for step in practice:
             mid, sets, reps, seconds, rest, tempo, regression = step
             assert mid in movements and mid in asset["movements"]
-            assert 1 <= sets <= 5 and reps is None and rest in (45, 60)
-            assert 0 < int(str(seconds).split("/")[0]) <= 45
+            # Near-maximal straddle and full flag holds get longer rests.
+            assert 1 <= sets <= 5 and rest in ((60, 75, 90) if mid in ("straddle_flag", "full_flag") else (45, 60)), (p["id"], step)
+            if mid in ("handstand_exit", "wall_kickup"):
+                # Practice is timed holds, except the cartwheel exit and the kick-up to the wall: a few easy reps per side.
+                assert seconds is None and str(reps).endswith("/side") and 0 < int(str(reps).split("/")[0]) <= 3, p["id"]
+            else:
+                assert reps is None and 0 < int(str(seconds).split("/")[0]) <= 45, p["id"]
             if "human_flag" in movements[mid]["patterns"]:
                 assert str(seconds).endswith("/side"), p["id"]
             fallback = regression or movements[mid]["regression_id"]
@@ -139,15 +155,20 @@ for level in catalog["levels"]:
         assert sum(movements[s[0]]["category"] in ("static_stretch", "static_cooldown") for s in overlay["cooldown"]) >= 2
 
     assert min(counts.values()) >= 10, (level["number"], counts)
-assert seen == new_ids
+# The 2.4.0 pro-athlete reviews added the straight side plank, cartwheel exits, the straddle and full flag and
+# (round 2) the kick-up to the wall.
+assert seen == new_ids | {"straight_side_plank", "handstand_exit", "straddle_flag", "full_flag", "wall_kickup"}, seen ^ new_ids
 prescribed = {step[0] for level in catalog["levels"] for p in level["programs"] for step in p.get("main", [])}
-assert {"full_planche", "straddle_planche", "full_front", "straddle_front", "full_back", "straddle_back", "dragon_flag"} <= prescribed
+# Since the 2.4.0 reviews the full planche lies beyond Level 6: its readiness check became a straddle planche check.
+assert {"straddle_planche", "full_front", "straddle_front", "full_back", "straddle_back", "dragon_flag"} <= prescribed
 for level in catalog["levels"]:
     for p in level["programs"]:
         for step in p.get("main", []):
             if step[0] in {"full_planche", "straddle_planche", "full_front", "full_back"}:
                 assert step[1] <= 3 and isinstance(step[3], int) and step[3] <= 8, p["id"]
-assert recovery_count == 24, recovery_count
+# Source workouts on weekdays 4 and 7 run the recovery routine: 11 in Level 1, 9 in Level 2 (its source block runs
+# as classes 41-70 since round 2 of the pro-athlete reviews) and 5 in Level 3.
+assert recovery_count == 25, recovery_count
 
 assert changed_workouts > 0
 # These are one-sided stretches: their visible instructions must disambiguate the dose.
@@ -212,5 +233,7 @@ for i in range(101):
     j = template("planche_lean").pose_at(i/100,figure)
     assert abs(distance(j["shoulder"],j["hand_near"])-26) < 0.01
     assert abs(j["toe_near"][1]-106) < 0.1
-print(f"Morning-class checks passed: 600 named sessions, {recovery_count} early recovery classes, {changed_workouts} authored workload projections, flexibility, handstand supports and sampled motion contacts.")
+session_count = sum(len(level["programs"]) for level in catalog["levels"])
+assert session_count == 700, session_count
+print(f"Morning-class checks passed: {session_count} named sessions, {recovery_count} early recovery classes, {changed_workouts} authored workload projections, flexibility, handstand supports and sampled motion contacts.")
 

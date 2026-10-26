@@ -25,7 +25,7 @@
       "en": "Jump-to-Hang & Squats"
     },
     "1-8": {
-      "en": "Jump-to-Hang & Core"
+      "en": "Active Hang & Core"
     },
     "1-9": {
       "en": "Rows, Support & Squats"
@@ -37,10 +37,10 @@
       "en": "Rows & Half-Dip Foundations"
     },
     "1-12": {
-      "en": "Rows, Half Dips & Leg Raises"
+      "en": "Rows, Half Dips & Knee Raises"
     },
     "1-13": {
-      "en": "Bar Catches & Half Dips"
+      "en": "Assisted Pull-Ups & Half Dips"
     },
     "1-14": {
       "en": "Bar Catches & Hanging Core"
@@ -58,28 +58,28 @@
       "en": "Bar Control & Trunk Strength"
     },
     "1-19": {
-      "en": "Rows & Bar-to-Floor Practice"
+      "en": "Rows & Assisted Pull-Ups"
     },
     "1-20": {
-      "en": "Rows & Bar-to-Floor Core"
+      "en": "Rows, Assisted Pulls & Core"
     },
     "1-21": {
       "en": "Push-Up & Squat Foundations"
     },
     "1-22": {
-      "en": "Push-Up & Leg-Raise Foundations"
+      "en": "Push-Up & Knee-Raise Foundations"
     },
     "1-23": {
-      "en": "Bar Catches & Push-Up Practice"
+      "en": "Pull-Up Negatives & Push-Ups"
     },
     "1-24": {
-      "en": "Bar Catches & Core Practice"
+      "en": "Pull-Up Negatives & Core"
     },
     "1-25": {
       "en": "Bar-to-Floor & Lunges"
     },
     "1-26": {
-      "en": "Bar-to-Floor & Leg Raises"
+      "en": "Assisted Pulls & Knee Raises"
     },
     "1-27": {
       "en": "Dip & Lunge Foundations"
@@ -94,7 +94,7 @@
       "en": "Grip, Dips & Core Circuit"
     },
     "1-31": {
-      "en": "Bar Catches & Lower-Body Strength"
+      "en": "Pull-Up Negatives & Lower-Body Strength"
     },
     "1-32": {
       "en": "Bar Catches & Dip Control"
@@ -103,7 +103,7 @@
       "en": "Pull-Ups & Parallel-Bar Walks"
     },
     "1-34": {
-      "en": "Pull-Ups, Dips & Leg Raises"
+      "en": "Pull-Ups, Dips & Knee Raises"
     },
     "1-35": {
       "en": "Pull-Up & Leg Strength"
@@ -124,7 +124,7 @@
       "en": "Pull, Push & Knee-Raise Consolidation"
     },
     "2-1": {
-      "en": "Inverted-Hang & Pull Foundations"
+      "en": "Skin-the-Cat & Pull Foundations"
     },
     "2-2": {
       "en": "Inversion & Mixed Bar Practice"
@@ -133,7 +133,7 @@
       "en": "Pulling Volume & Squat Practice"
     },
     "2-4": {
-      "en": "Inverted-Hang & Push-Up Practice"
+      "en": "Skin-the-Cat & Push-Up Practice"
     },
     "2-5": {
       "en": "Inversion & Pull-Up Strength"
@@ -151,13 +151,13 @@
       "en": "Hanging L-Sit & Push-Pull Strength"
     },
     "2-10": {
-      "en": "Hanging L-Sit & Bar Combinations"
+      "en": "Knee-Raise Holds & Bar Combinations"
     },
     "2-11": {
-      "en": "Hanging L-Sit & Leg Raises"
+      "en": "Tuck Entries & Knee-Raise Holds"
     },
     "2-12": {
-      "en": "Hanging L-Sit & Full-Body Practice"
+      "en": "Knee-Raise Holds & Full-Body Practice"
     },
     "2-13": {
       "en": "Pull-Up Volume & Leg Strength"
@@ -214,13 +214,13 @@
       "en": "Pullover & Core Consolidation"
     },
     "3-1": {
-      "en": "Pullover & Dip Strength"
+      "en": "Muscle-Up Negatives & Dip Strength"
     },
     "3-2": {
       "en": "Muscle-Up & Bar-Dip Practice"
     },
     "3-3": {
-      "en": "Muscle-Up & Inverted-Hang Control"
+      "en": "Muscle-Up & Tuck-Entry Control"
     },
     "3-4": {
       "en": "Pull, Dip & Bar Combinations"
@@ -229,16 +229,16 @@
       "en": "Plank & Trunk-Control Circuit"
     },
     "3-6": {
-      "en": "Muscle-Up, Pullover & Squats"
+      "en": "Muscle-Up Negatives & Squats"
     },
     "3-7": {
       "en": "Muscle-Up & Tuck-Lever Practice"
     },
     "3-8": {
-      "en": "Pullover & Straight-Bar Strength"
+      "en": "Negatives & Straight-Bar Strength"
     },
     "3-9": {
-      "en": "Tuck-Lever Holds & Single-Leg Squats"
+      "en": "Tuck-Lever Holds & Supported Pistols"
     },
     "3-10": {
       "en": "Muscle-Up & Back-Lever Entries"
@@ -250,13 +250,13 @@
       "en": "Muscle-Up & Single-Leg Strength"
     },
     "3-13": {
-      "en": "Pullover, Dips & Jump Practice"
+      "en": "Negatives, Dips & Jump Practice"
     },
     "3-14": {
       "en": "Muscle-Up & Pullover Consolidation"
     },
     "3-15": {
-      "en": "Tuck-Lever Holds & Inversion Practice"
+      "en": "Tuck-Lever Rows & Holds"
     },
     "3-16": {
       "en": "Bar Combinations & Fundamentals"
@@ -268,7 +268,7 @@
       "en": "Muscle-Up & Pulling Combinations"
     },
     "3-19": {
-      "en": "Inversion & Bar-Dip Combinations"
+      "en": "Pullover & Bar-Dip Combinations"
     },
     "3-20": {
       "en": "Muscle-Up & Full-Body Consolidation"

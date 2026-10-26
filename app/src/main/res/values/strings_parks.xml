@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="training_tab_parks">Parks</string>
+    <string name="parks_teaser">More than 23,000 calisthenics parks worldwide, nearest first, with directions.</string>
+    <string name="parks_intro">%1$s calisthenics parks worldwide. Find the nearest, or search by city or park.</string>
+    <string name="parks_loading">Loading parks…</string>
+    <string name="parks_near_me">Parks near me</string>
+    <string name="parks_search_hint">City or park name</string>
+    <string name="parks_search">Search</string>
+    <string name="parks_nearest">Nearest to you</string>
+    <string name="parks_matches">Matches for “%1$s”</string>
+    <string name="parks_none">No park matches.</string>
+    <string name="parks_km">%1$.1f km away</string>
+    <string name="parks_m">%1$d m away</string>
+    <string name="parks_directions">Tap a park for directions in your maps app.</string>
+    <string name="parks_locating">Finding your location…</string>
+    <string name="parks_no_location">Couldn’t get your location. Search by city instead.</string>
+    <string name="parks_location_denied">Location is off for Street Gymnastics. Search by city instead.</string>
+    <string name="parks_credit">Park data: howtocalisthenics.com. Map: OpenFreeMap, © OpenStreetMap. Your location isn’t sent anywhere; the map downloads the area on screen.</string>
+    <string name="parks_view_map">Map</string>
+    <string name="parks_view_list">List</string>
+    <string name="parks_my_location">Show my location</string>
+    <string name="parks_directions_button">Directions</string>
+</resources>

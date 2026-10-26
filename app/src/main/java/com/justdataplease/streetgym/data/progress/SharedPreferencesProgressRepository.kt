@@ -2,6 +2,7 @@ package com.justdataplease.streetgym.data.progress
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.justdataplease.streetgym.data.library.CustomDays
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -30,9 +31,10 @@ class SharedPreferencesProgressRepository(
         decodeActiveWorkout(preferences.getString(KEY_ACTIVE_WORKOUT, null))
     }
 
-    override fun startWorkout(programId: String, startedAtEpochMillis: Long) {
+    override fun startWorkout(programId: String, startedAtEpochMillis: Long, repeat: Boolean) {
         require(programId.isNotBlank()) { "programId cannot be blank" }
-        val workout = ActiveWorkout(programId, startedAtEpochMillis)
+        require(!repeat || isProgramCompleted(programId)) { "only a completed day can be repeated" }
+        val workout = ActiveWorkout(programId, startedAtEpochMillis, repeat = repeat)
         preferences.edit().putString(KEY_ACTIVE_WORKOUT, encode(workout).toString()).apply()
     }
 
@@ -66,15 +68,19 @@ class SharedPreferencesProgressRepository(
             completedAtEpochMillis = completedAt,
             durationSeconds = (completedAt - active.startedAtEpochMillis) / 1_000L,
             effortRating = effortRating,
+            repeat = active.repeat,
         )
-        val completed = completedProgramIds().toMutableSet().apply { add(active.programId) }
         val sessions = decodeSessions(preferences.getString(KEY_SESSION_HISTORY, null)) + session
-
-        preferences.edit()
-            .putStringSet(KEY_COMPLETED_PROGRAM_IDS, completed)
+        val edit = preferences.edit()
             .putString(KEY_SESSION_HISTORY, encodeSessions(sessions).toString())
             .remove(KEY_ACTIVE_WORKOUT)
-            .apply()
+        // A repeat or a custom day only adds its history entry: completed days and the level replay stay exactly as
+        // they were.
+        if (!active.repeat && !CustomDays.isCustom(active.programId)) {
+            edit.putStringSet(KEY_COMPLETED_PROGRAM_IDS, completedProgramIds() + active.programId)
+                .putRepeated(listOf(active.programId))
+        }
+        edit.apply()
         session
     }
 
@@ -90,8 +96,41 @@ class SharedPreferencesProgressRepository(
         completed.addAll(newIds)
         val edit = preferences.edit().putStringSet(KEY_COMPLETED_PROGRAM_IDS, completed)
             .putString(KEY_SESSION_HISTORY, encodeSessions(sessions).toString())
-        if (active?.programId in programIds) edit.remove(KEY_ACTIVE_WORKOUT)
+            .putRepeated(programIds)
+        // A repeat in progress is of a day already completed, so completing days leaves it running.
+        if (active != null && !active.repeat && active.programId in programIds) edit.remove(KEY_ACTIVE_WORKOUT)
         edit.apply()
+    }
+
+    /** The level the athlete went back to, or null. Completed days and history are never touched by a replay. */
+    fun levelReplay(): LevelReplay? = synchronized(lock) {
+        val level = preferences.getInt(KEY_REPLAY_LEVEL, 0)
+        if (level <= 0) null
+        else LevelReplay(level, preferences.getStringSet(KEY_REPLAY_REPEATED_IDS, emptySet()).orEmpty().toSet())
+    }
+
+    fun startLevelReplay(levelNumber: Int) = synchronized(lock) {
+        require(levelNumber > 0)
+        preferences.edit().putInt(KEY_REPLAY_LEVEL, levelNumber).remove(KEY_REPLAY_REPEATED_IDS).apply()
+    }
+
+    fun endLevelReplay() = synchronized(lock) {
+        preferences.edit().remove(KEY_REPLAY_LEVEL).remove(KEY_REPLAY_REPEATED_IDS).apply()
+    }
+
+    /** During a replay, also records [programIds] as repeated, so Today moves on. */
+    private fun SharedPreferences.Editor.putRepeated(programIds: Collection<String>): SharedPreferences.Editor {
+        val replay = levelReplay() ?: return this
+        return putStringSet(KEY_REPLAY_REPEATED_IDS, replay.repeatedIds + programIds)
+    }
+
+    /** Pro: merges the cloud copy into this device ([ProgressMerge]) and returns the merged copy to upload. */
+    fun mergeCloud(completed: Collection<String>, sessionsJson: String?): Pair<Set<String>, String> = synchronized(lock) {
+        val mergedCompleted = ProgressMerge.completed(completedProgramIds(), completed)
+        val merged = encodeSessions(ProgressMerge.sessions(
+            decodeSessions(preferences.getString(KEY_SESSION_HISTORY, null)), decodeSessions(sessionsJson))).toString()
+        preferences.edit().putStringSet(KEY_COMPLETED_PROGRAM_IDS, mergedCompleted).putString(KEY_SESSION_HISTORY, merged).apply()
+        mergedCompleted to merged
     }
 
     override fun abandonWorkout() {
@@ -115,6 +154,8 @@ class SharedPreferencesProgressRepository(
             programId = json.getString("program_id"),
             startedAtEpochMillis = json.getLong("started_at_epoch_millis"),
             completedSetIds = json.optJSONArray("completed_set_ids").toStringSet(),
+            // Saved before repeats existed: a normal workout.
+            repeat = json.optBoolean("repeat", false),
         )
     }.getOrNull()
 
@@ -131,6 +172,7 @@ class SharedPreferencesProgressRepository(
                         completedAtEpochMillis = json.getLong("completed_at_epoch_millis"),
                         durationSeconds = json.optLong("duration_seconds", 0L),
                         manuallyCompleted = json.optBoolean("manually_completed", false),
+                        repeat = json.optBoolean("repeat", false),
                         effortRating = if (json.isNull("effort_rating")) {
                             null
                         } else {
@@ -146,6 +188,7 @@ class SharedPreferencesProgressRepository(
         .put("program_id", active.programId)
         .put("started_at_epoch_millis", active.startedAtEpochMillis)
         .put("completed_set_ids", JSONArray(active.completedSetIds.sorted()))
+        .put("repeat", active.repeat)
 
     private fun encodeSessions(sessions: List<WorkoutSession>): JSONArray = JSONArray().apply {
         sessions.forEach { session ->
@@ -156,6 +199,7 @@ class SharedPreferencesProgressRepository(
                     .put("completed_at_epoch_millis", session.completedAtEpochMillis)
                     .put("duration_seconds", session.durationSeconds)
                     .put("manually_completed", session.manuallyCompleted)
+                    .put("repeat", session.repeat)
                     .put("effort_rating", session.effortRating ?: JSONObject.NULL),
             )
         }
@@ -175,5 +219,7 @@ class SharedPreferencesProgressRepository(
         private const val KEY_COMPLETED_PROGRAM_IDS = "completed_program_ids"
         private const val KEY_SESSION_HISTORY = "session_history"
         private const val KEY_ACTIVE_WORKOUT = "active_workout"
+        private const val KEY_REPLAY_LEVEL = "replay_level"
+        private const val KEY_REPLAY_REPEATED_IDS = "replay_repeated_ids"
     }
 }

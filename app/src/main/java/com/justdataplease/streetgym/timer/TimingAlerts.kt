@@ -11,9 +11,15 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.AudioAttributes
+import android.media.AudioManager
 import android.media.RingtoneManager
+import android.media.ToneGenerator
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.os.SystemClock
+import android.os.VibrationEffect
+import android.os.Vibrator
 import com.justdataplease.streetgym.MainActivity
 import com.justdataplease.streetgym.R
 
@@ -23,6 +29,24 @@ object TimingAlerts {
     private const val CHANNEL = "training_time_alerts"
     private const val TIMER_ID = 710
     private const val ALARM_ID = 711
+    private val VIBRATION = longArrayOf(0, 400, 200, 400)
+
+    /** The in-app "time's up" beep, also played when a timed set ends. */
+    fun tone() {
+        runCatching {
+            val tone = ToneGenerator(AudioManager.STREAM_ALARM, 80)
+            tone.startTone(ToneGenerator.TONE_PROP_BEEP, 700)
+            Handler(Looper.getMainLooper()).postDelayed({ tone.release() }, 900)
+        }
+    }
+
+    /** The alert notification's vibration, for a timed set that ends on screen. */
+    @Suppress("DEPRECATION")
+    fun vibrate(context: Context) {
+        val vibrator = context.getSystemService(Vibrator::class.java)?.takeIf { it.hasVibrator() } ?: return
+        if (Build.VERSION.SDK_INT >= 26) vibrator.vibrate(VibrationEffect.createWaveform(VIBRATION, -1))
+        else vibrator.vibrate(VIBRATION, -1)
+    }
 
     fun exact(context: Context) = Build.VERSION.SDK_INT < 31 ||
         context.getSystemService(AlarmManager::class.java).canScheduleExactAlarms()
@@ -113,7 +137,7 @@ object TimingAlerts {
         val notification = builder.setSmallIcon(R.drawable.ic_nav_timer).setColor(0xFF1E7056.toInt())
             .setContentTitle(title).setContentText(context.getString(R.string.app_name))
             .setCategory(Notification.CATEGORY_ALARM).setPriority(Notification.PRIORITY_HIGH)
-            .setSound(sound, attributes).setVibrate(longArrayOf(0, 400, 200, 400))
+            .setSound(sound, attributes).setVibrate(VIBRATION)
             .setContentIntent(open(context)).setDeleteIntent(stop).setAutoCancel(false)
             .addAction(Notification.Action.Builder(null, "Stop", stop).build()).build()
         notification.flags = notification.flags or Notification.FLAG_INSISTENT

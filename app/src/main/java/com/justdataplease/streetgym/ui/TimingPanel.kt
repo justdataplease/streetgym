@@ -121,7 +121,7 @@ class TimingPanel(private val host: Activity, private val askNotifications: () -
         val panel = host.card()
         val compact = resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
         digits = host.titleText("", if (tab == 0) 60f else 48f).apply {
-            gravity = Gravity.CENTER; typeface = Typeface.MONOSPACE; maxLines = 1
+            gravity = Gravity.CENTER; typeface = AppType.timer(Typeface.MONOSPACE); maxLines = 1
             if (android.os.Build.VERSION.SDK_INT >= 26) setAutoSizeTextTypeUniformWithConfiguration(
                 24, if (tab == 0) 60 else 48, 1, android.util.TypedValue.COMPLEX_UNIT_SP)
             setPadding(0, host.dp(if (compact) 4 else 24), 0, host.dp(if (compact) 4 else 12))
@@ -173,6 +173,7 @@ class TimingPanel(private val host: Activity, private val askNotifications: () -
             }
             content.addWithMargins(alertsHint!!, topDp = 8)
         }
+        content.applyThemeType()
     }
 
     private fun primaryAction() {
