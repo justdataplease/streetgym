@@ -1,8 +1,16 @@
 # Street Gymnastics
 
-Dedicated Android app with 700 guided calisthenics workouts across seven levels and 150 animated movements. Copied from the owned StreetGym source into the Android suite; the original project remains unchanged.
+Dedicated Android app with 700 guided calisthenics workouts across seven levels and 151 animated movements. Copied from the owned StreetGym source into the Android suite; the original project remains unchanged.
 
-Fresh Court is the default light theme. Settings > Dark mode selects Night Session and remembers it independently in each app. Training, checked sets, timers and progress are kept on the phone. Pro can also save them to a Google account; that, and the leaderboard, appear only when a Firebase configuration is supplied (see [Free, Plus and Pro](docs/TIERS.md)).
+Settings > Theme picks one of four looks:
+- Concrete & Tape: light, the default.
+- Night Park: dark.
+- Wheatpaste: light.
+- Fresh Court: the original green.
+
+Older installs with dark mode on open in Night Park.
+
+On first launch with no progress, three questions (push-ups, pull-ups, squats) suggest a start at Level 1 (day 1, 22 or 41), Level 2 or Level 3. The athlete can agree or start from scratch. Training, checked sets, timers and progress are kept on the phone. Pro can also save them to a Google account; that, and the leaderboard, appear only when a Firebase configuration is supplied (see [Free, Plus and Pro](docs/TIERS.md)).
 
 Training has three tabs: **Levels**; **My workouts** (days saved with the heart at the top right of their overview, and custom days built from every exercise in the program); and **Parks** (Plus: 23,512 bundled calisthenics parks on a map that opens on the athlete's location with the nearest parks in view, or as a list; search by city or park). The map is MapLibre with OpenFreeMap tiles, as in JustMaps: no API key and no per-view cost. Progress has **Skills**, **History** and **Leaderboard**.
 
