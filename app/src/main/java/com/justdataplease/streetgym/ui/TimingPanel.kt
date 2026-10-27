@@ -70,6 +70,11 @@ class TimingPanel(private val host: Activity, private val askNotifications: () -
     private var lapsView: LinearLayout? = null
     private var renderedLaps: List<Long> = emptyList()
     private var alertsHint: TextView? = null
+    // Whether alerts and exact alarms are allowed. Both are system calls, so the 10-per-second refresh asks once a
+    // second: soon enough to notice the athlete coming back from the settings screen.
+    private var notificationsOn = true
+    private var exactOn = true
+    private var permissionsAt = 0L
 
     init {
         isFillViewport = true
@@ -92,6 +97,11 @@ class TimingPanel(private val host: Activity, private val askNotifications: () -
     fun refresh(state: TimingState) {
         if (shownTab != state.tab) build(state.tab)
         val now = SystemClock.elapsedRealtime()
+        if (now - permissionsAt >= 1000) {
+            permissionsAt = now
+            notificationsOn = TimingAlerts.notifications(host)
+            exactOn = TimingAlerts.exact(host)
+        }
         when (shownTab) {
             0 -> {
                 val left = state.countdown.remaining(now)
@@ -136,16 +146,16 @@ class TimingPanel(private val host: Activity, private val askNotifications: () -
                     else "Tap the time to change it")
                 primary.showText(when {
                     state.alarmAt > 0 -> "Turn off"
-                    !TimingAlerts.notifications(host) -> "Enable alerts"
-                    !TimingAlerts.exact(host) -> "Enable alarms"
+                    !notificationsOn -> "Enable alerts"
+                    !exactOn -> "Enable alarms"
                     else -> "Set alarm"
                 })
             }
         }
         alertsHint?.apply {
             showText(when {
-                !TimingAlerts.notifications(host) -> "Background alerts are off. Enable alerts"
-                !TimingAlerts.exact(host) -> "For on-time background alerts, enable alarms"
+                !notificationsOn -> "Background alerts are off. Enable alerts"
+                !exactOn -> "For on-time background alerts, enable alarms"
                 else -> ""
             })
             visibility = if (text.isEmpty()) GONE else VISIBLE

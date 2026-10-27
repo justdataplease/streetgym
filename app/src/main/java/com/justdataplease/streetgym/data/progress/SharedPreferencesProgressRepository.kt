@@ -15,6 +15,8 @@ class SharedPreferencesProgressRepository(
         Context.MODE_PRIVATE,
     )
     private val lock = Any()
+    // The last decoded history and the saved text it came from: Progress and the score check ask for it often.
+    private var history: Pair<String?, List<WorkoutSession>>? = null
 
     override fun completedProgramIds(): Set<String> =
         preferences.getStringSet(KEY_COMPLETED_PROGRAM_IDS, emptySet()).orEmpty().toSet()
@@ -23,8 +25,9 @@ class SharedPreferencesProgressRepository(
         programId in completedProgramIds()
 
     override fun sessionHistory(): List<WorkoutSession> = synchronized(lock) {
-        decodeSessions(preferences.getString(KEY_SESSION_HISTORY, null))
-            .sortedByDescending(WorkoutSession::completedAtEpochMillis)
+        val raw = preferences.getString(KEY_SESSION_HISTORY, null)
+        history?.takeIf { it.first == raw }?.second
+            ?: decodeSessions(raw).sortedByDescending(WorkoutSession::completedAtEpochMillis).also { history = raw to it }
     }
 
     override fun activeWorkout(): ActiveWorkout? = synchronized(lock) {

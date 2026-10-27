@@ -11,8 +11,10 @@ the app shows anyone's place with that single read.
 import hashlib
 import json
 import math
+import re
 
 TOP = 100
+COUNTRY = re.compile(r"[A-Z]{2}")
 VERSION = 2
 SCORE_MAX = 1000
 # Each family's top value, as the app's OverallScore.SKILL_VALUES gives it (SkillBookTest checks they agree): a
@@ -35,7 +37,8 @@ def _valid(score: dict) -> bool:
     families = score.get("families")
     if (score.get("hidden") or score.get("v") != VERSION
             or not (isinstance(score.get("username"), str) and score["username"])
-            or not (isinstance(score.get("country"), str) and len(score["country"]) == 2)
+            # The country names boards (boards/overall_GR), so anything but two capitals, like "a/", is refused.
+            or not (isinstance(score.get("country"), str) and COUNTRY.fullmatch(score["country"]))
             or not (isinstance(score.get("overall"), int) and 0 <= score["overall"] <= SCORE_MAX)
             or not isinstance(families, dict)):
         return False

@@ -31,8 +31,8 @@ object GoogleAccount {
             val auth = Cloud.auth(activity)
             if (credential == null || auth == null) { onResult(failure ?: Result.Failed("unavailable")); return@googleCredential }
             auth.signInWithCredential(credential).addOnCompleteListener(activity) { task ->
-                val user = task.result?.user
-                onResult(if (task.isSuccessful && user != null) Result.Signed(user) else Result.Failed(task.exception?.message ?: "sign-in"))
+                val user = if (task.isSuccessful) task.result?.user else null
+                onResult(if (user != null) Result.Signed(user) else Result.Failed(task.exception?.message ?: "sign-in"))
             }
         }
     }

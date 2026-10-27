@@ -18,10 +18,12 @@ service cloud.firestore {
     // A username belongs to one account: claimed once, released only by its owner.
     match /usernames/{name} {
       allow get: if request.auth != null;
+      // Claimed only together with the profile that uses it, so one account can't hoard names.
       allow create: if request.auth != null
         && name.matches('^[a-z0-9_.]{3,20}$')
         && request.resource.data.keys().hasOnly(['uid'])
-        && request.resource.data.uid == request.auth.uid;
+        && request.resource.data.uid == request.auth.uid
+        && getAfter(/databases/$(database)/documents/users/$(request.auth.uid)).data.username.lower() == name;
       allow delete: if request.auth != null && resource.data.uid == request.auth.uid;
       allow list, update: if false;
     }
@@ -33,7 +35,7 @@ service cloud.firestore {
         && request.resource.data.username is string
         && request.resource.data.username.matches('^[A-Za-z0-9_.]{3,20}$')
         && getAfter(/databases/$(database)/documents/usernames/$(request.resource.data.username.lower())).data.uid == uid
-        && request.resource.data.country is string && request.resource.data.country.size() == 2
+        && request.resource.data.country is string && request.resource.data.country.matches('^[A-Z]{2}$')
         && request.resource.data.visible is bool;
       allow list: if false;
 
@@ -43,14 +45,17 @@ service cloud.firestore {
       }
     }
 
-    // Public scores (version 2): written by their owner under their profile's name, read only by the function, which
-    // also checks that the overall adds up from the families.
+    // Public scores (version 2): written by their owner under their profile's name, which the account still holds,
+    // read only by the function, which also checks that the overall adds up from the families. The time is the
+    // server's, so the function's "changed since the last run" check can't be gamed.
     match /scores/{uid} {
       allow create, update: if request.auth != null && request.auth.uid == uid
         && request.resource.data.keys().hasOnly(['v', 'username', 'country', 'overall', 'families', 'verified', 'updated_at'])
         && request.resource.data.v == 2
         && request.resource.data.username == get(/databases/$(database)/documents/users/$(uid)).data.username
-        && request.resource.data.country is string && request.resource.data.country.size() == 2
+        && get(/databases/$(database)/documents/usernames/$(request.resource.data.username.lower())).data.uid == uid
+        && request.resource.data.updated_at == request.time
+        && request.resource.data.country is string && request.resource.data.country.matches('^[A-Z]{2}$')
         && request.resource.data.overall is int
         && request.resource.data.overall >= 0 && request.resource.data.overall <= 1000
         && request.resource.data.families is map && request.resource.data.families.size() <= 15

@@ -23,6 +23,10 @@ object CurriculumJsonParser {
     private const val EASIER_RUNGS = 3
     private const val READINESS_CHECK = "readiness_check"
     private const val ASSESSMENT = "assessment"
+    // Compiled once: the catalog runs them for thousands of sets.
+    private val TEMPO = Regex("[0-9Xx]{4}")
+    private val DOSE_SERIES = Regex("^(\\d+(?:-\\d+)*)(/side)?$", RegexOption.IGNORE_CASE)
+    private val REPETITION_CLUSTER = Regex("^([0-9]+(?:[+][0-9]+)+)(/side(?:-focus)?)?$", RegexOption.IGNORE_CASE)
 
     fun parse(json: String): CurriculumCatalog = parse(JSONObject(json))
 
@@ -190,6 +194,20 @@ object CurriculumJsonParser {
                 val regressionId = tuple.optNullableString(6)
                     ?: movement?.optValueAsString("regression_id")
                 val description = movementDescription(movement, easierChain(regressionId, movementLibrary))
+                // Every set of a step carries the same note, so it is worked out once per step.
+                val repetitionNote = when {
+                    repetitionText.equals("max", ignoreCase = true) -> null
+                    repetitionSeries?.perSide == true -> "per side"
+                    repetitionSeries != null -> null
+                    else -> formatRepetitionNote(repetitionText)
+                }
+                val durationNote = when {
+                    secondsSeries?.perSide == true -> "per side"
+                    secondsSeries != null -> null
+                    secondsText != null -> "Duration $secondsText"
+                    else -> null
+                }
+                val setDescription = compactSetDescription(repetitionNote, durationNote, tempo)
 
                 add(
                     TrainingExercise(
@@ -200,27 +218,11 @@ object CurriculumJsonParser {
                             ?: LocalizedText(en = movementId.humanize()),
                         description = description,
                         sets = List(setCount) { setIndex ->
-                            val repetitionNote = when {
-                                repetitionText.equals("max", ignoreCase = true) -> null
-                                repetitionSeries?.perSide == true -> "per side"
-                                repetitionSeries != null -> null
-                                else -> formatRepetitionNote(repetitionText)
-                            }
-                            val durationNote = when {
-                                secondsSeries?.perSide == true -> "per side"
-                                secondsSeries != null -> null
-                                secondsText != null -> "Duration $secondsText"
-                                else -> null
-                            }
                             TrainingSet(
                                 id = "$exerciseId:s${(setIndex + 1).toString().padStart(2, '0')}",
                                 number = setIndex + 1,
                                 name = LocalizedText.EMPTY,
-                                description = compactSetDescription(
-                                    repetitionNote,
-                                    durationNote,
-                                    tempo,
-                                ),
+                                description = setDescription,
                                 repetitions = repetitionNumber
                                     ?: repetitionSeries?.values?.get(setIndex),
                                 repetitionsMax = repetitionText.equals("max", ignoreCase = true),
@@ -305,7 +307,7 @@ object CurriculumJsonParser {
         val tempoNote = tempo?.takeIf { it.isNotBlank() && !it.equals("null", ignoreCase = true) }
         return LocalizedText(
             en = joinNotes(repetitionNote, durationNote, tempoNote?.let { raw ->
-                if (Regex("[0-9Xx]{4}").matches(raw)) {
+                if (TEMPO.matches(raw)) {
                     val lift = if (raw[2].equals('X', ignoreCase = true)) "brisk lift" else "${raw[2]}s lift"
                     "${raw[0]}s lower, ${raw[1]}s pause, $lift, ${raw[3]}s reset"
                 } else if (raw.equals("isometric", ignoreCase = true)) {
@@ -323,8 +325,7 @@ object CurriculumJsonParser {
      */
     private fun parseDoseSeries(raw: String?, setCount: Int): CompactDoseSeries? {
         if (raw.isNullOrBlank() || setCount <= 0) return null
-        val match = Regex("^(\\d+(?:-\\d+)*)(/side)?$", RegexOption.IGNORE_CASE)
-            .matchEntire(raw.trim()) ?: return null
+        val match = DOSE_SERIES.matchEntire(raw.trim()) ?: return null
         val parsed = match.groupValues[1].split('-').map { token ->
             token.toIntOrNull() ?: return null
         }
@@ -346,8 +347,7 @@ object CurriculumJsonParser {
      */
     private fun formatRepetitionNote(raw: String?): String? {
         if (raw.isNullOrBlank()) return null
-        val match = Regex("^([0-9]+(?:[+][0-9]+)+)(/side(?:-focus)?)?$", RegexOption.IGNORE_CASE)
-            .matchEntire(raw.trim()) ?: return raw
+        val match = REPETITION_CLUSTER.matchEntire(raw.trim()) ?: return raw
         val cluster = match.groupValues[1].replace("+", " + ")
         val qualifier = when (match.groupValues[2].lowercase()) {
             "/side" -> " per side"

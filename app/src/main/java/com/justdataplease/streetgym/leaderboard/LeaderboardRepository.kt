@@ -27,8 +27,9 @@ class LeaderboardRepository(private val context: Context) {
         if (cached != null && Boards.fresh(cached.second, now)) return done(cached.first)
         val db = Cloud.firestore(context) ?: return done(cached?.first)
         db.document("boards/$id").get(Source.SERVER).addOnCompleteListener { task ->
-            val doc = task.result
-            if (!task.isSuccessful || doc == null) return@addOnCompleteListener done(cached?.first)
+            // A failed task throws from result, so it is only read once the task succeeded.
+            val doc = if (task.isSuccessful) task.result else null
+            if (doc == null) return@addOnCompleteListener done(cached?.first)
             @Suppress("UNCHECKED_CAST")
             val board = if (!doc.exists()) Board(id, emptyList(), 0, 0) else Board(
                 id = id,

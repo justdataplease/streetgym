@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
+import android.text.TextUtils
 import com.justdataplease.streetgym.timer.TimingAlerts
 import com.justdataplease.streetgym.ads.WorkoutAdBreak
 import com.justdataplease.streetgym.ads.ManagedNativePlacement
@@ -45,6 +46,7 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.text.Editable
+import android.text.InputFilter
 import android.text.InputType
 import android.text.SpannableStringBuilder
 import android.text.Spanned
@@ -234,7 +236,8 @@ open class HomeActivity : Activity() {
                     .create().also { it.show() }
             }
             if (!state.timerRinging && !state.alarmRinging) { timingDialog?.dismiss(); timingDialog = null }
-            timingHandler.postDelayed(this, 100)
+            // Tenths only show on the Timer screen; elsewhere a second is soon enough for a due alert or an ad break.
+            timingHandler.postDelayed(this, if (timingPanel != null) 100 else 1000)
         }
     }
 
@@ -738,6 +741,7 @@ open class HomeActivity : Activity() {
     }
 
     private fun loadCatalog() {
+        loaded?.let { return showLoaded(it) }
         toolbar.visibility = View.GONE
         bottomNavigation.visibility = View.GONE
         renderLoading()
@@ -750,19 +754,38 @@ open class HomeActivity : Activity() {
             val skills = root.getOrNull()?.let { runCatching { SkillCurriculumReader.read(it) }.getOrNull() }
             // Today's park scene and every movement guide use the clips; parse them here, not on the main thread.
             runCatching { MotionClip.preload(this) }
+            val parsed = result.getOrNull()?.let { LoadedCatalog(it, exercises, skills) }?.also { loaded = it }
             runOnUiThread {
                 if (isFinishing || isDestroyed) return@runOnUiThread
-                skillBook = skills
-                exerciseLibrary = exercises
-                result.fold(onSuccess = {
-                    catalog = it
-                    val destination = restoredScreen?.takeIf(::isValidScreen) ?: Screen.Dashboard
-                    restoredScreen = null
-                    showScreen(destination, pushCurrent = false)
-                }, onFailure = { renderLoadError() })
+                if (parsed != null) showLoaded(parsed) else renderLoadError()
             }
         }
     }
+
+    private fun showLoaded(parsed: LoadedCatalog) {
+        skillBook = parsed.skills
+        exerciseLibrary = parsed.exercises
+        catalog = parsed.catalog
+        val destination = restoredScreen?.takeIf(::isValidScreen) ?: Screen.Dashboard
+        restoredScreen = null
+        showScreen(destination, pushCurrent = false)
+    }
+
+    /**
+     * A movement's notes for the overview and list workout: the description, then safety and the easier rungs on lines
+     * of their own, as the focus view's details show them, instead of the parser's "…; Safety: …" join.
+     */
+    private fun exerciseNotes(exercise: TrainingExercise, locale: Locale): String {
+        val notes = ExerciseNotes.parse(exercise.description.resolve(locale))
+        return listOfNotNull(
+            notes.description.takeIf(String::isNotBlank),
+            notes.safety.takeIf(String::isNotBlank)?.let { "${getString(R.string.focus_details_safety)}: $it" },
+            notes.easier.takeIf(String::isNotBlank)?.let { "${getString(R.string.focus_details_easier)}: $it" },
+        ).joinToString("\n")
+    }
+
+    /** What [loadCatalog] parses from the assets, which never change while the app runs. */
+    private class LoadedCatalog(val catalog: CurriculumCatalog, val exercises: ExerciseLibrary?, val skills: SkillBook?)
 
     private fun renderLoading() {
         bodyContainer.removeAllViews()
@@ -855,6 +878,8 @@ open class HomeActivity : Activity() {
             Screen.Timing -> {
                 timingPanel = TimingPanel(this, ::enableTimingNotifications, ::enableExactTiming)
                 setBody(timingPanel!!)
+                // Back to ten ticks a second at once, not after the slower tick of the other screens.
+                if (activityResumed) { timingHandler.removeCallbacks(timingTick); timingHandler.post(timingTick) }
             }
         }
     }
@@ -931,8 +956,7 @@ open class HomeActivity : Activity() {
         val paywallLevel = next?.levelNumber?.takeIf(::levelLocked)
         if (next != null) {
             if (!compact) catalog?.levels?.firstOrNull { it.number == next.levelNumber }?.let { level ->
-                todayHeader(level.number, displayName(level, uiLocale()), next.number, level.programs.size,
-                    all.indexOfFirst { it.id == next.id } + 1, all.size)
+                todayHeader(level.number, displayName(level, uiLocale()), next.number, level.programs.size)
             }?.let(today::addView)
             val label = if (repeating) getString(R.string.repeat_note)
                 else levelReplay()?.let {
@@ -998,12 +1022,11 @@ open class HomeActivity : Activity() {
         val locale = uiLocale()
         val completed = progressRepository.completedProgramIds()
         val page = verticalPage()
-        page.addView(titleText(getString(R.string.levels_title), 26f))
         page.addWithMargins(segmentedSwitch(listOf(getString(R.string.training_tab_levels),
             getString(R.string.training_tab_workouts), getString(R.string.training_tab_parks)), trainingTab) { index ->
             trainingTab = index
             renderLevels()
-        }, width = ViewGroup.LayoutParams.WRAP_CONTENT, topDp = 12, bottomDp = 14)
+        }, width = ViewGroup.LayoutParams.WRAP_CONTENT, bottomDp = 14)
         if (trainingTab != 0) {
             val map = if (trainingTab == 1) { renderMyWorkouts(page, locale); false } else renderParks(page)
             // The Parks map fills the screen instead of scrolling with the page.
@@ -1340,6 +1363,7 @@ open class HomeActivity : Activity() {
             setHintTextColor(AppColors.TEXT_SECONDARY)
             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
             isSingleLine = true
+            filters = arrayOf(InputFilter.LengthFilter(MAX_NAME_LENGTH))
             addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
@@ -1523,6 +1547,7 @@ open class HomeActivity : Activity() {
             setText(displayName(level, uiLocale()))
             isSingleLine = true
             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_WORDS
+            filters = arrayOf(InputFilter.LengthFilter(MAX_NAME_LENGTH))
             setTextColor(AppColors.TEXT)
         }
         AlertDialog.Builder(this).setTitle(getString(R.string.rename_level_title, getString(R.string.level_number, level.number)))
@@ -1553,7 +1578,11 @@ open class HomeActivity : Activity() {
             setPadding(dp(14), 0, 0, 0)
             addView(titleText(displayName(level, locale), 19f))
             val description = level.description.resolve(locale)
-            if (description.isNotBlank()) addView(bodyText(description, 13f).apply { maxLines = 2 })
+            // The level's own page shows it in full.
+            if (description.isNotBlank()) addView(bodyText(description, 13f).apply {
+                maxLines = 3
+                ellipsize = TextUtils.TruncateAt.END
+            })
         }
         header.addView(text, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
         val locked = levelLocked(level.number)
@@ -1836,7 +1865,7 @@ open class HomeActivity : Activity() {
                 height = ViewGroup.LayoutParams.WRAP_CONTENT,
                 topDp = 10,
             )
-            exercise.description.resolve(locale).takeIf(String::isNotBlank)?.let {
+            exerciseNotes(exercise, locale).takeIf(String::isNotBlank)?.let {
                 exerciseCard.addWithMargins(bodyText(it, 14f), topDp = 10)
             }
             exercise.sets.forEach { set ->
@@ -2007,7 +2036,7 @@ open class HomeActivity : Activity() {
                     height = ViewGroup.LayoutParams.WRAP_CONTENT,
                     topDp = 8,
                 )
-                exercise.description.resolve(locale).takeIf(String::isNotBlank)?.let {
+                exerciseNotes(exercise, locale).takeIf(String::isNotBlank)?.let {
                     exerciseCard.addWithMargins(bodyText(it, 13f), topDp = 4)
                 }
                 exercise.easier?.takeIf { section.key in WorkoutFlow.CREDITED_SECTIONS && !exercise.readinessCheck }?.let { option ->
@@ -2269,10 +2298,6 @@ open class HomeActivity : Activity() {
         val complete = all.count { it.id in completedIds }
         val percent = percentage(complete, all.size)
         val page = verticalPage()
-        page.addView(titleText(getString(
-            R.string.progress_title,
-        ), 26f))
-
         val skills = skillBook
         if (skills != null) {
             page.addWithMargins(
@@ -2285,7 +2310,6 @@ open class HomeActivity : Activity() {
                     renderProgress()
                 },
                 width = ViewGroup.LayoutParams.WRAP_CONTENT,
-                topDp = 12,
             )
             if (progressTab == 2) {
                 renderLeaderboard(page, skills)
@@ -2686,6 +2710,13 @@ open class HomeActivity : Activity() {
     }
 
     companion object {
+        /**
+         * The parsed catalog, kept for the process: rotating the phone, changing the theme or dark mode recreates the
+         * activity, and parsing the whole curriculum again each time would show the loading screen for nothing.
+         */
+        @Volatile private var loaded: LoadedCatalog? = null
+        /** The longest name for a custom day or a renamed level: room for any built-in one, short enough for a card. */
+        private const val MAX_NAME_LENGTH = 60
         private const val REQUEST_LOCATION = 720
         /** In ParksUpdater's preferences: the list instead of the map, and whether the map asked for location yet. */
         private const val KEY_PARKS_LIST = "show_list"

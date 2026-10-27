@@ -8,7 +8,7 @@
     <string name="theme_wheatpaste_summary">Light · street posters and riso ink</string>
     <string name="theme_selected">selected</string>
     <string name="theme_level_line">Level %1$d — %2$s</string>
-    <string name="theme_level_chip">Lv %1$d · %2$s · class %3$d</string>
+    <string name="theme_level_chip">Lv %1$d · %2$s</string>
     <string name="theme_class">Class</string>
     <string name="theme_class_number">Class %d</string>
     <string name="theme_class_of">Class %1$d of %2$d, %3$s</string>

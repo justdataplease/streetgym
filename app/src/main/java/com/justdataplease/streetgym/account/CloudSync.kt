@@ -2,8 +2,10 @@ package com.justdataplease.streetgym.account
 
 import android.content.Context
 import com.google.android.gms.tasks.Tasks
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 import com.justdataplease.streetgym.billing.Entitlement
 import com.justdataplease.streetgym.data.library.LibraryCodec
 import com.justdataplease.streetgym.data.library.LibraryRepository
@@ -35,36 +37,54 @@ class CloudSync(
         if (!force && System.currentTimeMillis() - store.lastSyncAt < MIN_INTERVAL_MILLIS) return done(Result.Skipped)
         if (running) { again = true; return done(Result.Skipped) }
         running = true
+        // The cached profile too: a username changed on another device would otherwise keep the score from publishing.
+        Profiles.load(context, uid) {}
         val progressDoc = db.document("users/$uid/data/progress")
         val libraryDoc = db.document("users/$uid/data/library")
         val reads = listOf(progressDoc.get(), libraryDoc.get())
         Tasks.whenAllComplete(reads).addOnCompleteListener {
             if (reads.any { !it.isSuccessful }) return@addOnCompleteListener finish(Result.Failed, done)
-            val cloudProgress = reads[0].result as DocumentSnapshot
-            val cloudLibrary = reads[1].result as DocumentSnapshot
-            val cloudSessions = cloudProgress.getString("sessions")
-            val cloudTests = cloudProgress.getString("tests")
-            val cloudExams = cloudProgress.getString("exams")
-            @Suppress("UNCHECKED_CAST")
-            val cloudCompleted = (cloudProgress.get("completed") as? List<String>).orEmpty()
-            val (completed, sessions, tests, exams) = progress.mergeCloud(cloudCompleted, cloudSessions, cloudTests, cloudExams)
-            val cloudLibraryJson = cloudLibrary.getString("library")
-            val mergedLibrary = library.state().merge(LibraryCodec.decode(cloudLibraryJson?.let { runCatching { JSONObject(it) }.getOrNull() }))
-            library.replace(mergedLibrary)
-            val libraryJson = LibraryCodec.encode(mergedLibrary).toString()
-            val batch = db.batch()
-            var writes = 0
-            if (sessions != cloudSessions || tests != cloudTests || exams != (cloudExams ?: ExamLog().encode()) ||
-                completed != cloudCompleted.toSet()) {
-                batch.set(progressDoc, mapOf("completed" to completed.sorted(), "sessions" to sessions, "tests" to tests,
-                    "exams" to exams, "updated_at" to FieldValue.serverTimestamp())); writes++
+            // A document of an unexpected shape (another app version, a console edit) fails this sync, not the app.
+            try {
+                merge(db, progressDoc, libraryDoc, reads[0].result as DocumentSnapshot, reads[1].result as DocumentSnapshot, done)
+            } catch (e: Exception) {
+                finish(Result.Failed, done)
             }
-            if (cloudLibraryJson == null || LibraryCodec.decode(JSONObject(cloudLibraryJson)) != mergedLibrary) {
-                batch.set(libraryDoc, mapOf("library" to libraryJson, "updated_at" to FieldValue.serverTimestamp())); writes++
-            }
-            if (writes == 0) return@addOnCompleteListener finish(Result.Synced, done)
-            batch.commit().addOnCompleteListener { commit -> finish(if (commit.isSuccessful) Result.Synced else Result.Failed, done) }
         }
+    }
+
+    private fun merge(
+        db: FirebaseFirestore,
+        progressDoc: DocumentReference,
+        libraryDoc: DocumentReference,
+        cloudProgress: DocumentSnapshot,
+        cloudLibrary: DocumentSnapshot,
+        done: (Result) -> Unit,
+    ) {
+        val cloudSessions = cloudProgress.getString("sessions")
+        val cloudTests = cloudProgress.getString("tests")
+        val cloudExams = cloudProgress.getString("exams")
+        @Suppress("UNCHECKED_CAST")
+        val cloudCompleted = (cloudProgress.get("completed") as? List<String>).orEmpty()
+        val (completed, sessions, tests, exams) = progress.mergeCloud(cloudCompleted, cloudSessions, cloudTests, cloudExams)
+        val cloudLibraryObject = cloudLibrary.getString("library")?.let { runCatching { JSONObject(it) }.getOrNull() }
+        val cloudLibraryState = LibraryCodec.decode(cloudLibraryObject)
+        val mergedLibrary = library.state().merge(cloudLibraryState)
+        library.replace(mergedLibrary)
+        val libraryJson = LibraryCodec.encode(mergedLibrary).toString()
+        val batch = db.batch()
+        var writes = 0
+        if (sessions != cloudSessions || tests != cloudTests || exams != (cloudExams ?: ExamLog().encode()) ||
+            completed != cloudCompleted.toSet()) {
+            batch.set(progressDoc, mapOf("completed" to completed.sorted(), "sessions" to sessions, "tests" to tests,
+                "exams" to exams, "updated_at" to FieldValue.serverTimestamp())); writes++
+        }
+        // Missing or unreadable in the cloud: the merged copy replaces it.
+        if (cloudLibraryObject == null || cloudLibraryState != mergedLibrary) {
+            batch.set(libraryDoc, mapOf("library" to libraryJson, "updated_at" to FieldValue.serverTimestamp())); writes++
+        }
+        if (writes == 0) return finish(Result.Synced, done)
+        batch.commit().addOnCompleteListener { commit -> finish(if (commit.isSuccessful) Result.Synced else Result.Failed, done) }
     }
 
     private fun finish(result: Result, done: (Result) -> Unit) {

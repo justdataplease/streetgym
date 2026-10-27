@@ -56,8 +56,8 @@ object Profiles {
     fun load(context: Context, uid: String, done: (Profile?) -> Unit) {
         val db = Cloud.firestore(context) ?: return done(null)
         db.document("users/$uid").get().addOnCompleteListener { task ->
-            val doc = task.result
-            val profile = if (task.isSuccessful && doc != null && doc.exists()) runCatching {
+            val doc = if (task.isSuccessful) task.result else null
+            val profile = if (doc != null && doc.exists()) runCatching {
                 Profile(doc.getString("username")!!, doc.getString("country")!!, doc.getBoolean("visible") ?: true)
             }.getOrNull() else null
             profile?.let { AccountStore(context).saveProfile(uid, it) }
@@ -67,17 +67,19 @@ object Profiles {
 
     /**
      * Saves the profile, claiming the username (unique ignoring case) in usernames/{key} in the same transaction,
-     * and releasing the previous one.
+     * and releasing the one the account held. That one is read from the server, not this phone's copy: another device
+     * may have changed it since.
      */
-    fun save(context: Context, uid: String, profile: Profile, previous: Profile?, done: (Claim) -> Unit) {
+    fun save(context: Context, uid: String, profile: Profile, done: (Claim) -> Unit) {
         val db = Cloud.firestore(context) ?: return done(Claim.Failed)
         val key = Usernames.key(profile.username)
         db.runTransaction { transaction ->
             val claim = db.document("usernames/$key")
             val owner = transaction.get(claim).getString("uid")
             if (owner != null && owner != uid) return@runTransaction Claim.Taken
+            val held = transaction.get(db.document("users/$uid")).getString("username")
             if (owner == null) transaction.set(claim, mapOf("uid" to uid))
-            previous?.let { Usernames.key(it.username) }?.takeIf { it != key }?.let { transaction.delete(db.document("usernames/$it")) }
+            held?.let(Usernames::key)?.takeIf { it != key }?.let { transaction.delete(db.document("usernames/$it")) }
             transaction.set(db.document("users/$uid"), mapOf("username" to profile.username, "country" to profile.country,
                 "visible" to profile.visible, "updated_at" to FieldValue.serverTimestamp()))
             Claim.Saved

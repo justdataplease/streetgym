@@ -28,6 +28,8 @@ def test_hidden_old_malformed_and_inconsistent_scores_are_left_out():
         score("h", hidden=True, pullup=100),
         score("old", v=1, pullup=100),
         {**score("x", pullup=100), "country": "GRC"},
+        {**score("slash", pullup=100), "country": "a/"},
+        {**score("lower", pullup=100), "country": "gr"},
         {**score("n", pullup=100), "username": ""},
         score("inflated", overall=900, pullup=100),
         score("unknown", lever=100),

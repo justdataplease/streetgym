@@ -71,10 +71,10 @@ fun TextView.styleToolbarTitle() {
 }
 
 /**
- * The head of Today's day card: Concrete's tape strip and big class number, Night Park's stencilled overall number,
- * Wheatpaste's pasted poster.
+ * The head of Today's day card: Concrete's tape strip and big class number, Night Park's stencilled class number,
+ * Wheatpaste's pasted poster. Every theme counts the class within its level.
  */
-fun Context.todayHeader(levelNumber: Int, levelName: String, classInLevel: Int, levelSize: Int, overall: Int, total: Int): View {
+fun Context.todayHeader(levelNumber: Int, levelName: String, classInLevel: Int, levelSize: Int): View {
     val levelLine = getString(R.string.theme_level_line, levelNumber, levelName)
     return when (active) {
         StreetTheme.CONCRETE -> LinearLayout(this).apply {
@@ -124,12 +124,12 @@ fun Context.todayHeader(levelNumber: Int, levelName: String, classInLevel: Int, 
             addView(LinearLayout(context).apply {
                 orientation = LinearLayout.HORIZONTAL
                 gravity = Gravity.BOTTOM
-                addView(bigNumber(overall.toString(), 80f, AppColors.PRIMARY))
-                addWithMargins(bigNumber("/$total", 22f, AppColors.TEXT_SECONDARY, AppType.display),
+                addView(bigNumber(classInLevel.toString(), 80f, AppColors.PRIMARY))
+                addWithMargins(bigNumber("/$levelSize", 22f, AppColors.TEXT_SECONDARY, AppType.display),
                     width = ViewGroup.LayoutParams.WRAP_CONTENT, leftDp = 6, bottomDp = 8)
             })
             addWithMargins(TextView(context).apply {
-                text = getString(R.string.theme_level_chip, levelNumber, levelName, classInLevel).uppercase()
+                text = getString(R.string.theme_level_chip, levelNumber, levelName).uppercase()
                 setTextColor(AppColors.TEXT)
                 textSize = 14f
                 typeface = AppType.display
@@ -138,7 +138,7 @@ fun Context.todayHeader(levelNumber: Int, levelName: String, classInLevel: Int, 
                 setPadding(dp(12), dp(6), dp(12), dp(6))
                 background = roundedDrawable(AppColors.INFO_SURFACE, dp(12).toFloat())
             }, width = ViewGroup.LayoutParams.WRAP_CONTENT, topDp = 8, bottomDp = 12)
-            contentDescription = getString(R.string.theme_class_of, overall, total, levelLine)
+            contentDescription = getString(R.string.theme_class_of, classInLevel, levelSize, levelLine)
             importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
         }
         StreetTheme.WHEATPASTE -> LinearLayout(this).apply {

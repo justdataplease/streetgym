@@ -99,7 +99,7 @@ class AccountSettingsView(
                 setTextColor(AppColors.TEXT)
                 isChecked = profile.visible
                 minHeight = context.dp(56)
-                setOnCheckedChangeListener { _, visible -> saveProfile(user.uid, profile.copy(visible = visible), profile) }
+                setOnCheckedChangeListener { _, visible -> saveProfile(user.uid, profile.copy(visible = visible)) }
             }, topDp = 6)
             addWithMargins(context.secondaryButton(context.getString(R.string.account_edit_profile)) { editProfile(user.uid, profile) }, topDp = 4)
         }
@@ -115,7 +115,7 @@ class AccountSettingsView(
         }, topDp = 8)
         addWithMargins(context.secondaryButton(context.getString(R.string.account_sign_out)) { GoogleAccount.signOut(activity) }, topDp = 8)
         addWithMargins(context.bodyText(context.getString(R.string.account_sign_out_note), 12f), topDp = 4)
-        addWithMargins(context.secondaryButton(context.getString(R.string.account_delete)) { confirmDelete(user.uid, profile) }, topDp = 12)
+        addWithMargins(context.secondaryButton(context.getString(R.string.account_delete)) { confirmDelete(user.uid) }, topDp = 12)
     }
 
     /** Username (unique) and country; first shown right after the first sign-in. */
@@ -148,13 +148,13 @@ class AccountSettingsView(
             val username = name.text.toString().trim()
             if (!Usernames.valid(username)) { name.error = context.getString(R.string.profile_invalid); return@setOnClickListener }
             val profile = Profile(username, countries[country.selectedItemPosition].first, previous?.visible ?: true)
-            saveProfile(uid, profile, previous) { error -> if (error == null) dialog.dismiss() else name.error = error }
+            saveProfile(uid, profile) { error -> if (error == null) dialog.dismiss() else name.error = error }
         }
     }
 
     /** [done] gets null once saved, else the reason to show. A saved profile republishes the score under it. */
-    private fun saveProfile(uid: String, profile: Profile, previous: Profile?, done: (String?) -> Unit = {}) {
-        Profiles.save(activity, uid, profile, previous) { claim ->
+    private fun saveProfile(uid: String, profile: Profile, done: (String?) -> Unit = {}) {
+        Profiles.save(activity, uid, profile) { claim ->
             when (claim) {
                 Profiles.Claim.Saved -> { store.savePublishedScore(uid, null, 0); render(); onChanged(); done(null) }
                 Profiles.Claim.Taken -> done(context.getString(R.string.profile_taken))
@@ -163,27 +163,32 @@ class AccountSettingsView(
         }
     }
 
-    /** Play requires in-app deletion: cloud progress, username, profile and score go, then the Firebase account. */
-    private fun confirmDelete(uid: String, profile: Profile?) {
+    /**
+     * Play requires in-app deletion: cloud progress, username, profile and score go, then the Firebase account. The
+     * profile is read again first, so a username changed on another device is the one released.
+     */
+    private fun confirmDelete(uid: String) {
         AlertDialog.Builder(activity).setTitle(R.string.account_delete_title).setMessage(R.string.account_delete_message)
             .setNegativeButton(R.string.cancel, null)
             .setPositiveButton(R.string.delete) { _, _ ->
                 GoogleAccount.reauthenticate(activity) { confirmed ->
                     val db = Cloud.firestore(activity)
                     if (!confirmed || db == null) return@reauthenticate failed()
-                    db.batch().apply {
-                        delete(db.document("users/$uid/data/progress"))
-                        delete(db.document("users/$uid/data/library"))
-                        delete(db.document("scores/$uid"))
-                        profile?.let { delete(db.document("usernames/${Usernames.key(it.username)}")) }
-                        delete(db.document("users/$uid"))
-                    }.commit().addOnCompleteListener(activity) { cleared ->
-                        if (!cleared.isSuccessful) return@addOnCompleteListener failed()
-                        auth?.currentUser?.delete()?.addOnCompleteListener(activity) { deleted ->
-                            if (!deleted.isSuccessful) return@addOnCompleteListener failed()
-                            store.clear()
-                            Toast.makeText(activity, R.string.account_deleted, Toast.LENGTH_LONG).show()
-                            render()
+                    Profiles.load(activity, uid) { profile ->
+                        db.batch().apply {
+                            delete(db.document("users/$uid/data/progress"))
+                            delete(db.document("users/$uid/data/library"))
+                            delete(db.document("scores/$uid"))
+                            profile?.let { delete(db.document("usernames/${Usernames.key(it.username)}")) }
+                            delete(db.document("users/$uid"))
+                        }.commit().addOnCompleteListener(activity) { cleared ->
+                            if (!cleared.isSuccessful) return@addOnCompleteListener failed()
+                            auth?.currentUser?.delete()?.addOnCompleteListener(activity) { deleted ->
+                                if (!deleted.isSuccessful) return@addOnCompleteListener failed()
+                                store.clear()
+                                Toast.makeText(activity, R.string.account_deleted, Toast.LENGTH_LONG).show()
+                                render()
+                            }
                         }
                     }
                 }
