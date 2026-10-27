@@ -115,11 +115,21 @@ template("knee_hip_raise", 2000, [(0, "hang_active"), (0.5, "knee_raise_up"), (1
 template("hanging_leg_raise", 2100, [(0, "hang_active"), (0.85, "leg_raise_up"), (1, "leg_raise_up")], apparatus=("high_bar",))
 template("toes_to_bar", 2200, [(0, "hang_active"), (0.5, "leg_raise_up"), (1, "toes_bar")], apparatus=("high_bar",))
 template("hanging_lsit", 2600, [(0, "leg_raise_up"), (1, {"pose": "leg_raise_up", "legs": [88, 88], "leg_far": [90, 90]})], apparatus=("high_bar",))
-template("windshield_wiper", 1800, [(0, "wiper_left"), (1, "wiper_right")], apparatus=("high_bar",))
+# windshield wipers face the viewer: the piked legs sweep from one side, up past the bar, to the other, and back
+pose("wiper_up", base="hang_active", torso=0, legs=[2, 2], leg_far=[358, 358], feet=10)
+pose("wiper_far_left", base="hang_active", torso=12, legs=[300, 300], leg_far=[298, 298], feet=290)
+template("windshield_wiper", 3600, [(0, "wiper_far_left"), (0.25, "wiper_up"), (0.5, "wiper_right"), (0.75, "wiper_up"),
+                                    (1, "wiper_far_left")], mode="loop", apparatus=("high_bar",))
+# windshield wipers from the side, beside the front clip: a pike hang, the feet dropping as the legs sweep out to a side
+pose("wiper_side_up", base="hang_active", torso=345, legs=[22, 22], leg_far=[24, 24], feet=30)
+pose("wiper_side_out", base="hang_active", torso=352, legs=[58, 58], leg_far=[60, 60], feet=68)
+template("wiper_side", 3600, [(0, "wiper_side_out"), (0.25, "wiper_side_up"), (0.5, "wiper_side_out"), (0.75, "wiper_side_up"),
+                              (1, "wiper_side_out")], mode="loop", apparatus=("high_bar",))
 
 # ---------- muscle-ups (chest-height bar so the whole path fits) ----------
-pose("mu_hang", facing=1, torso=0, arms=[0, 0], shrug=-1, legs=[176, 190], leg_far=[178, 192], feet=180, pin=MB)
-pose("mu_pull", facing=1, torso=350, arms=arm(-4, -6, DOWN), legs=[172, 200], leg_far=[175, 203], feet=190, pin=MB)
+# Hanging from the chest-height bar the knees bend and the shins tuck back, so the feet stay off the floor.
+pose("mu_hang", facing=1, torso=0, arms=[0, 0], shrug=-1, legs=[150, 272], leg_far=[153, 276], feet=255, pin=MB)
+pose("mu_pull", facing=1, torso=350, arms=arm(-4, -6, DOWN), legs=[166, 214], leg_far=[169, 217], feet=200, pin=MB)
 pose("mu_transition", facing=1, torso=20, arms=arm(-8, 10, DOWN), legs=[170, 205], leg_far=[173, 208], feet=190, head=45, pin=MB)
 pose("mu_press", facing=1, torso=8, arms=arm(-3, 18, LEFT), legs=[172, 195], leg_far=[175, 198], feet=180, pin=MB)
 pose("mu_support", facing=1, torso=6, arms=arm(-2, 26, LEFT), legs=[174, 178], leg_far=[176, 180], feet=180, pin=MB)
@@ -130,8 +140,12 @@ template("negative_muscleup", 3600,
          [(0, "mu_support"), (0.1, "mu_support"), (0.3, "mu_press"), (0.5, "mu_transition"), (0.72, "mu_pull"), (0.88, "mu_hang"), (1, "mu_support")],
          mode="loop", apparatus=("mid_bar",))
 template("two_thirds_muscleup", 2400, [(0, "mu_hang"), (0.5, "mu_pull"), (0.85, "mu_transition"), (1, "mu_transition")], apparatus=("mid_bar",))
+# The jump starts crouched on the box with the hands on the bar and lands back on it.
+pose("mu_box", facing=1, torso=0, arms=[0, 0], shrug=-1, pin=MB)
+reach_leg("mu_box", (X + 4, 90), pref=RIGHT)
 template("jump_muscleup", 3200,
-         [(0, "mu_hang"), (0.3, "mu_pull"), (0.5, "mu_transition"), (0.65, "mu_press"), (0.8, "mu_support"), (0.9, "mu_support"), (1, "mu_hang")],
+         [(0, "mu_box"), (0.1, "mu_box"), (0.3, "mu_pull"), (0.5, "mu_transition"), (0.65, "mu_press"), (0.8, "mu_support"),
+          (0.88, "mu_support"), (0.95, "mu_hang"), (1, "mu_box")],
          mode="loop", apparatus=("mid_bar", "box_under"))
 # low-bar transition with feet on the floor
 pose("lbt_under", facing=1, torso=350, arms=[0, 0], shrug=-1, pin=MB)

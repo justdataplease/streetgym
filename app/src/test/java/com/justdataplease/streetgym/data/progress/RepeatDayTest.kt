@@ -5,6 +5,7 @@ import android.content.ContextWrapper
 import android.content.SharedPreferences
 import com.justdataplease.streetgym.data.skills.SkillCurriculumReader
 import com.justdataplease.streetgym.data.skills.SkillGroup
+import com.justdataplease.streetgym.leaderboard.Scores
 import org.json.JSONObject
 import org.junit.Assert.*
 import org.junit.Test
@@ -24,7 +25,7 @@ class RepeatDayTest {
     }
     private fun today() = DayAssignment.next(days, repository.completedProgramIds(), repository.levelReplay(),
         Day::id, Day::level)
-    private fun skills() = book.progress(repository.completedProgramIds())
+    private fun skills() = book.progress(Scores.credits(repository.sessionHistory()), repository.skillTests().passed.keys)
     private fun levelProgress(level: Int) = days.count { it.level == level && it.id in repository.completedProgramIds() }
 
     @Test fun aRepeatChangesNoCompletedDayTodayLevelProgressOrSkillPoints() {
@@ -41,8 +42,9 @@ class RepeatDayTest {
         assertEquals(days[12], today())
         assertEquals(level, levelProgress(1))
         assertEquals(points, skills())
-        assertEquals(points.unlockedCount, skills().unlockedCount)
-        SkillGroup.entries.forEach { assertEquals(it.name, points.groupScore(it), skills().groupScore(it)) }
+        assertEquals(points.achievedCount, skills().achievedCount)
+        assertEquals(points.overall.score, skills().overall.score)
+        SkillGroup.entries.forEach { assertEquals(it.name, points.overall.group(it), skills().overall.group(it)) }
     }
 
     @Test fun historyKeepsTheRepeatFlaggedWithItsOwnRating() {
@@ -105,6 +107,27 @@ class RepeatDayTest {
         assertTrue(repository.sessionHistory().none { it.repeat })
     }
 
+    @Test fun aFinishedClassKeepsItsTicksAndEasierOptions() {
+        repository.startWorkout(days[0].id, 0L)
+        repository.setEasier("main:e1-0", true)
+        repository.setEasier("main:e2-1", true)
+        repository.setEasier("main:e2-1", false)
+        assertEquals(setOf("main:e1-0"), repository.activeWorkout()!!.easierExercises)
+        val session = repository.finishWorkout(30 * MINUTE, 7, credits = mapOf("pushup" to 2, "squat" to 0))
+        assertEquals(mapOf("pushup" to 2), session!!.credits)
+        assertEquals(mapOf("pushup" to 2), repository.sessionHistory().single().credits)
+    }
+
+    @Test fun skillTestsAreKeptAndMergedWithTheCloudCopy() {
+        repository.recordSkillTest("lsit", passed = true, at = 10)
+        repository.recordSkillTest("tuck_planche", passed = false, at = 20)
+        assertEquals(setOf("lsit"), repository.skillTests().passed.keys)
+        val cloud = SkillTestLog().record("dragon_flag", true, 5).encode()
+        val merged = repository.mergeCloud(emptyList(), null, cloud)
+        assertEquals(setOf("lsit", "dragon_flag"), repository.skillTests().passed.keys)
+        assertEquals(repository.skillTests(), SkillTestLog.decode(merged.tests))
+    }
+
     @Test fun dataSavedBeforeRepeatsReadsAsNormalSessions() {
         preferences.edit()
             .putStringSet("completed_program_ids", setOf(days[0].id))
@@ -115,6 +138,9 @@ class RepeatDayTest {
 
         val old = repository.sessionHistory().single()
         assertFalse(old.repeat)
+        // Saved before ticks were kept: its prescription counts.
+        assertNull(old.credits)
+        assertTrue(repository.activeWorkout()!!.easierExercises.isEmpty())
         assertEquals(6, old.effortRating)
         assertFalse(repository.activeWorkout()!!.repeat)
         repository.finishWorkout(4L, 7)

@@ -1,3 +1,4 @@
+import math
 # Group D: legs, floor core, dragon flag, planche, stretches, crawl, seated hip work
 from author import *
 
@@ -41,7 +42,8 @@ template("squat_jump", 2000, [(0, "stand"), (0.25, "jump_load"), (0.5, "jump_air
 pose("calf_flat", facing=-1, torso=0, legs=[180, 180], leg_far=[182, 178], feet=270, pin={"joint": "toe_near", "at": [88, FLOOR]})
 reach_arm("calf_flat", (62, 60), pref=DOWN, which=("arm_near",))
 POSES["calf_flat"]["arm_far"] = [180, 180]
-pose("calf_up", base="calf_flat", feet=305)
+# Up on the toes: the foot tips toe-down, so the heel and the whole body rise.
+pose("calf_up", base="calf_flat", feet=230)
 template("calf_raise", 1800, [(0, "calf_flat"), (0.8, "calf_up"), (1, "calf_up")], apparatus=("post_left",))
 # step-up onto a box on the right
 pose("step_bottom", facing=1, torso=8, leg_far=[180, 180], arms=[165, 165], pin={"joint": "foot_far", "at": [104, ANKLE]})
@@ -80,6 +82,15 @@ pose("cossack_bottom", facing=1, torso=8, leg_near=leg(8, 12, RIGHT), leg_far=le
      arm_near=[110, 60], arm_far=[250, 300], pin={"joint": "foot_near", "at": [124, ANKLE]})
 template("cossack", 2400, [(0, "cossack_wide"), (1, "cossack_bottom")])
 template("cossack_hold", 3000, [(0, "cossack_bottom"), (1, {"pose": "cossack_bottom", "torso": 14})])
+# cossack squat / adductor stretch from the side, beside their front views: the hips sink back over the bent leg with the
+# chest leaning and the hands together in front; the long leg reaches out on its heel, toes up.
+pose("cossack_side_top", base="stand", arms=[150, 40], leg_far=[180, 180])
+pose("cossack_side_bottom", base="stand", torso=30, head=18, arms=[120, 30], leg_near=leg(6, 12, RIGHT), foot_far=20)
+_hip = solved("cossack_side_bottom")["hip"]
+reach_leg("cossack_side_bottom", (_hip[0] + math.sqrt((THIGH + SHIN - 0.3) ** 2 - (ANKLE - _hip[1]) ** 2), ANKLE),
+          which=("leg_far",))
+template("cossack_side", 2400, [(0, "cossack_side_top"), (1, "cossack_side_bottom")])
+template("cossack_hold_side", 3000, [(0, "cossack_side_bottom"), (1, {"pose": "cossack_side_bottom", "torso": 34})])
 # glute bridge
 pose("bridge_down", facing=1, torso=270, arm_near=[95, 95], arm_far=[97, 97], pin={"joint": "neck", "at": [70, 100]})
 reach_leg("bridge_down", (114, ANKLE), pref=UP)
@@ -99,7 +110,9 @@ pose("deadbug_a", base="deadbug_neutral", arm_near=[285, 285], leg_far=[78, 78],
 pose("deadbug_b", base="deadbug_neutral", arm_far=[285, 285], leg_near=[78, 78], foot_near=85)
 template("dead_bug", 2600, [(0, "deadbug_a"), (0.25, "deadbug_neutral"), (0.5, "deadbug_b"), (0.75, "deadbug_neutral"), (1, "deadbug_a")], mode="loop")
 pose("birddog_a", base="quadruped", arm_near=[270, 270], leg_far=[90, 90], foot_far=100)
-pose("birddog_b", base="quadruped", arm_far=[270, 270], leg_near=[90, 90], foot_near=100)
+# The other side lifts the near leg, so the far knee carries the body (pinned where the quadruped puts it).
+pose("birddog_b", base="quadruped", arm_far=[270, 270], leg_near=[90, 90], foot_near=100,
+     pin={"joint": "knee_far", "at": [round(v, 2) for v in solved("quadruped")["knee_far"]]})
 template("bird_dog", 2800, [(0, "birddog_a"), (0.25, "quadruped"), (0.5, "birddog_b"), (0.75, "quadruped"), (1, "birddog_a")], mode="loop")
 # knee side plank (front view: bottom forearm on the floor)
 pose("side_plank_up", facing=1, torso=292, arm_far=[180, 90], arm_near=[0, 0], leg_near=[74, 55], leg_far=[76, 62], foot_near=60, foot_far=60,
@@ -121,9 +134,10 @@ pose("candle_seat", facing=1, torso=340, arms=[75, 75], legs=[20, 110], leg_far=
 pose("candle_up", facing=1, torso=15, head=270, arms=[100, 100], legs=[5, 5], leg_far=[7, 7], feet=10, pin={"joint": "neck", "at": [84, 100]})
 template("candlestick", 3200, [(0, "candle_seat"), (0.5, "candle_up"), (1, "candle_seat")], mode="loop", apparatus=("mat",))
 # bear crawl
-pose("crawl_a", facing=-1, torso=270, leg_far=[118, 176], leg_near=[130, 200], foot_near=230, pin={"joint": "toe_far", "at": [126, FLOOR]})
+# The stepping foot clears the floor while the other foot and the opposite hand carry the weight.
+pose("crawl_a", facing=-1, torso=270, leg_far=[118, 176], leg_near=[122, 228], foot_near=250, pin={"joint": "toe_far", "at": [126, FLOOR]})
 reach_arm("crawl_a", (68, 105), pref=RIGHT, which=("arm_near",)); reach_arm("crawl_a", (80, 105), pref=RIGHT, which=("arm_far",))
-pose("crawl_b", facing=-1, torso=270, leg_near=[118, 176], leg_far=[130, 200], foot_far=230, pin={"joint": "toe_near", "at": [126, FLOOR]})
+pose("crawl_b", facing=-1, torso=270, leg_near=[118, 176], leg_far=[122, 228], foot_far=250, pin={"joint": "toe_near", "at": [126, FLOOR]})
 reach_arm("crawl_b", (80, 105), pref=RIGHT, which=("arm_near",)); reach_arm("crawl_b", (68, 105), pref=RIGHT, which=("arm_far",))
 template("bear_crawl", 1600, [(0, "crawl_a"), (1, "crawl_b")])
 # seated 90/90

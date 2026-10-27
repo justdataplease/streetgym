@@ -62,10 +62,18 @@ def easier_chain(mid):
     return chain
 
 
+def rung_seconds(phase, rung):
+    return sum(s[1] * int(str(s[3]).split("/")[0]) for d in phase["days"] for s in d["practice"] if s[0] == rung and s[3] is not None)
+
+
 def progresses(earlier, later, goal):
-    """One variable at a time: more practice time, or a harder rung of the same ladder."""
+    """One variable at a time: more practice time, a harder rung of the same ladder, or (round 5b) more time on the
+    hardest shared rung when an easier rung drops out."""
     harder = any(set(easier_chain(m)) & practice_rungs(earlier, goal) for m in practice_rungs(later, goal) - practice_rungs(earlier, goal))
-    return harder or weekly_practice_seconds(later, goal) >= weekly_practice_seconds(earlier, goal)
+    shared = practice_rungs(earlier, goal) & practice_rungs(later, goal)
+    top = max(shared, key=lambda m: len(easier_chain(m)), default=None)
+    more_on_top = top is not None and rung_seconds(later, top) > rung_seconds(earlier, top)
+    return harder or more_on_top or weekly_practice_seconds(later, goal) >= weekly_practice_seconds(earlier, goal)
 
 
 for level in catalog["levels"]:
@@ -74,8 +82,8 @@ for level in catalog["levels"]:
     level_plan = plan["levels"][level["number"]-1]
     assert [ph["through_program"] for ph in level_plan["phases"]] == [35, 70, 100]
     # Everyday small practice: handstand in every class (recovery classes drop it), flag twice
-    # a week, and both doses rise from phase to phase inside the level.
-    for goal, days in (("handstand", 7), ("human_flag", 2)):
+    # a week (once in Levels 4-5, beside the planche work: round 5b), and both doses rise from phase to phase.
+    for goal, days in (("handstand", 7), ("human_flag", 1 if level["number"] in (4, 5) else 2)):
         phases = level_plan["phases"]
         for earlier, later in zip(phases, phases[1:]):
             assert progresses(earlier, later, goal), (level["number"], goal, later["through_program"])
@@ -95,6 +103,12 @@ for level in catalog["levels"]:
         # Authored classes that train levers or muscle-ups leave flag practice out (pulling-tendon load).
         if p["origin"] != "apk_authentic" and {s[0] for s in p.get("main", [])} & LEVER_AND_MUSCLE_UP_IDS:
             expected = [s for s in expected if s[0] not in FLAG_PRACTICE_IDS]
+        # Deload weeks halve the practice: one set per side of flag work, half the other sets (round 5b).
+        if p["origin"] != "apk_authentic" and "deload" in p["schedule"]["day_type"]:
+            expected = [[s[0], 1 if s[0] in FLAG_PRACTICE_IDS else math.ceil(s[1] / 2)] + s[2:] for s in expected]
+        # Original-source training classes add the level's source practice (pike push-ups, round 5b).
+        if p["origin"] == "apk_authentic" and expected:
+            expected = expected + next((d["practice"] for d in level_plan.get("source_practice", []) if d["day"] == day), [])
         assert practice == expected, p["id"]
         assert sum(s[1] for s in practice) <= 8, p["id"]
         for step in practice:
@@ -105,6 +119,9 @@ for level in catalog["levels"]:
             if mid in ("handstand_exit", "wall_kickup"):
                 # Practice is timed holds, except the cartwheel exit and the kick-up to the wall: a few easy reps per side.
                 assert seconds is None and str(reps).endswith("/side") and 0 < int(str(reps).split("/")[0]) <= 3, p["id"]
+            elif mid == "pike_pushup":
+                # The source blocks' pressing practice: a few easy pike push-ups.
+                assert p["origin"] == "apk_authentic" and seconds is None and 0 < int(reps) <= 10, p["id"]
             else:
                 assert reps is None and 0 < int(str(seconds).split("/")[0]) <= 45, p["id"]
             if "human_flag" in movements[mid]["patterns"]:
@@ -118,7 +135,8 @@ for level in catalog["levels"]:
                     counts[goal] += 1
         if p["origin"] == "apk_authentic" and day in (4, 7):
             assert p["morning_recovery"] is True
-            assert p["main"] == plan["early_recovery"] and not practice
+            hinge = plan["early_recovery_hinge"]["steps"] if level["number"] >= plan["early_recovery_hinge"]["from_level"] else []
+            assert p["main"] == plan["early_recovery"] + hinge and not practice
             assert p["content"]["exercises"], "Original source must stay auditable"
             recovery_count += 1
         else:
@@ -156,8 +174,8 @@ for level in catalog["levels"]:
 
     assert min(counts.values()) >= 10, (level["number"], counts)
 # The 2.4.0 pro-athlete reviews added the straight side plank, cartwheel exits, the straddle and full flag and
-# (round 2) the kick-up to the wall.
-assert seen == new_ids | {"straight_side_plank", "handstand_exit", "straddle_flag", "full_flag", "wall_kickup"}, seen ^ new_ids
+# (round 2) the kick-up to the wall; round 5b the source blocks' pike push-ups.
+assert seen == new_ids | {"straight_side_plank", "handstand_exit", "straddle_flag", "full_flag", "wall_kickup", "pike_pushup"}, seen ^ new_ids
 prescribed = {step[0] for level in catalog["levels"] for p in level["programs"] for step in p.get("main", [])}
 # Since the 2.4.0 reviews the full planche lies beyond Level 6: its readiness check became a straddle planche check.
 assert {"straddle_planche", "full_front", "straddle_front", "full_back", "straddle_back", "dragon_flag"} <= prescribed
@@ -183,15 +201,17 @@ def distance(a, b):
     return math.hypot(a[0]-b[0], a[1]-b[1])
 # Sample between keyframes too: endpoints alone missed floating feet in the old asset.
 contacts = {
-    "pushup": {"foot_near": (146,101), "hand_near": (96,105)},
-    "incline_pushup": {"foot_near": (105,101), "hand_near": (57,82)},
+    # Round 5 of the pro reviews: push-up hands under the shoulders, rows that reach the bar, the tuck row's feet
+    # leaving the floor as the hips rise, and the low-bar transition from a step under the bar.
+    "pushup": {"foot_near": (146,101), "hand_near": (101,105)},
+    "incline_pushup": {"foot_near": (105,101), "hand_near": (60,82)},
     "assisted_dip": {"foot_near": (106,74), "hand_near": (100,50)},
-    "low_bar_transition": {"foot_near": (108,92), "hand_near": (100,66)},
-    "row": {"foot_near": (128,104), "hand_near": (80,66)},
-    "high_row": {"foot_near": (125,104), "hand_near": (100,40)},
-    "feet_elevated_row": {"foot_near": (145,80), "hand_near": (100,40)},
+    "low_bar_transition": {"foot_near": (104,86), "hand_near": (100,66)},
+    "row": {"foot_near": (106,104), "hand_near": (80,66)},
+    "high_row": {"foot_near": (113,104), "hand_near": (100,60)},
+    "feet_elevated_row": {"foot_near": (120,90), "hand_near": (80,66)},
     "assisted_pullup": {"foot_near": (108,104), "hand_near": (100,58)},
-    "tuck_front_row": {"foot_near": (111,104), "hand_near": (80,66)},
+    "tuck_front_row": {"hand_near": (80,66)},
 }
 for name, pins in contacts.items():
     motion = template(name)

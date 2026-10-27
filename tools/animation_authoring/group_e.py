@@ -191,6 +191,15 @@ _template("german_hang", 5600, [(0, _roll[0][1])] + _gh_in + _mirror(_gh_in, 0.5
           mode="loop", apparatus=("gh_bar", "mat"), easing="linear")
 
 
+# ---------- supported partial skin-the-cat (low bar) ----------
+# The German hang's roll from sitting under the bar with the feet down, only as far as the inverted
+# tuck (a comfortable shoulder range), a short hold, then back to the feet the same way.
+_pc = dense("pc_roll", lambda key, s: _gh_roll(key, 0.6 * s), 14, span=1.0, hold=False)
+_pc_in = [(round(0.06 + 0.36 * t, 4), k) for t, k in _pc]
+_template("skin_cat_partial", 4400, [(0, _pc[0][1])] + _pc_in + _mirror(_pc_in, 0.58, 0.94) + [(1, _pc[0][1])],
+          mode="loop", apparatus=("gh_bar", "mat"), easing="linear")
+
+
 # ---------- handstand cartwheel exit (from the chest-to-wall handstand) ----------
 # Side view: the weight shifts onto the near hand while the far hand lifts and reaches out, the
 # hips turn (the figure's facing flips while every limb is straight), the near leg steps down

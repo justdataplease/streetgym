@@ -91,8 +91,60 @@ class WorkoutLibraryTest {
     }
 
     @Test fun theCodecRoundTrips() {
-        val state = LibraryState(saved = mapOf("a" to SavedMark(true, 3)), days = mapOf(day.id to day))
+        val state = LibraryState(saved = mapOf("a" to SavedMark(true, 3)), days = mapOf(day.id to day),
+            lists = mapOf("list:1" to WorkoutList("list:1", "Travel", listOf("a", day.id), 4, 6),
+                "list:2" to WorkoutList("list:2", "Old", emptyList(), 1, 9, deleted = true)))
         assertEquals(state, LibraryCodec.decode(LibraryCodec.encode(state)))
         assertEquals(LibraryState(), LibraryCodec.decode(null))
+    }
+
+    @Test fun aLibraryFromBeforeListsHasNone() {
+        val old = LibraryCodec.encode(LibraryState(saved = mapOf("a" to SavedMark(true, 3)))).apply { remove("lists") }
+        assertEquals(LibraryState(saved = mapOf("a" to SavedMark(true, 3))), LibraryCodec.decode(old))
+    }
+
+    private val travel = WorkoutList("list:t", "Travel", listOf("a", day.id, "gone"), createdAt = 2, updatedAt = 2)
+    private val push = WorkoutList("list:p", "Push", listOf("c"), createdAt = 1, updatedAt = 1)
+    private val lists = LibraryState(
+        saved = mapOf("a" to SavedMark(true, 5), "c" to SavedMark(true, 7), "gone" to SavedMark(false, 8)),
+        days = mapOf(day.id to day),
+        lists = mapOf(travel.id to travel, push.id to push, "list:x" to push.copy(id = "list:x", createdAt = 0, deleted = true)),
+    )
+
+    @Test fun listsKeepTheirOrderAndHoldOnlyDaysStillInMyWorkouts() {
+        assertEquals(listOf("Push", "Travel"), lists.activeLists.map { it.name })
+        assertEquals(listOf(day.id, "a"), lists.daysIn(travel))
+        assertEquals(setOf(travel.id), lists.listIdsWith("a"))
+        assertEquals(3, lists.used)
+    }
+
+    @Test fun aDayMovesBetweenListsAndOnlyTheChangedListsGetANewTime() {
+        val moved = lists.withDayInLists("a", setOf(push.id), at = 50)
+        assertEquals(listOf(day.id, "gone"), moved.lists.getValue(travel.id).dayIds)
+        assertEquals(listOf("c", "a"), moved.lists.getValue(push.id).dayIds)
+        assertEquals(50, moved.lists.getValue(push.id).updatedAt)
+        val same = lists.withDayInLists("a", setOf(travel.id), at = 60)
+        assertEquals(lists, same)
+        assertTrue(lists.withDayInLists("a", setOf("list:x"), at = 70).lists.getValue("list:x").deleted)
+    }
+
+    @Test fun listsMergeByTheirNewerChange() {
+        val renamed = LibraryState(lists = mapOf(travel.id to travel.copy(name = "Away", updatedAt = 20)))
+        val deleted = LibraryState(lists = mapOf(push.id to push.copy(dayIds = emptyList(), updatedAt = 30, deleted = true)))
+        val merged = lists.merge(renamed).merge(deleted)
+        assertEquals(listOf("Away"), merged.activeLists.map { it.name })
+        assertEquals(merged, deleted.merge(renamed).merge(lists))
+    }
+
+    @Test fun listNamesAreTrimmedShortAndUnique() {
+        assertEquals("Leg day", WorkoutLists.clean("  Leg   day "))
+        assertNull(WorkoutLists.nameProblem("Legs", lists, "Favorites"))
+        assertEquals(WorkoutLists.NameProblem.Blank, WorkoutLists.nameProblem("   ", lists, "Favorites"))
+        assertEquals(WorkoutLists.NameProblem.TooLong, WorkoutLists.nameProblem("x".repeat(31), lists, "Favorites"))
+        assertEquals(WorkoutLists.NameProblem.Taken, WorkoutLists.nameProblem("favorites", lists, "Favorites"))
+        assertEquals(WorkoutLists.NameProblem.Taken, WorkoutLists.nameProblem(" travel", lists, "Favorites"))
+        assertNull(WorkoutLists.nameProblem("TRAVEL", lists, "Favorites", except = travel.id))
+        // A deleted list's name is free again.
+        assertNull(WorkoutLists.nameProblem("Push", lists.copy(lists = lists.lists - push.id), "Favorites"))
     }
 }

@@ -1,8 +1,4 @@
 <resources>
-    <!-- Fresh Court. -->
-    <color name="street_light_primary">#1E7056</color>
-    <color name="street_light_background">#F4F7F3</color>
-    <color name="street_light_surface">#FFFFFF</color>
     <!-- Night Park. -->
     <color name="street_dark_primary">#FF8A2A</color>
     <color name="street_dark_background">#0F1012</color>
@@ -11,8 +7,6 @@
     <color name="street_concrete_primary">#121212</color>
     <color name="street_concrete_background">#D9D7D2</color>
     <color name="street_concrete_surface">#F5F4F0</color>
-    <!-- Concrete & Trees. -->
-    <color name="street_trees_primary">#1E7056</color>
     <!-- Wheatpaste. -->
     <color name="street_paste_primary">#1F4FD1</color>
     <color name="street_paste_background">#F1ECE2</color>

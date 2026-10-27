@@ -93,7 +93,8 @@ ARCHER_NEAR, ARCHER_FAR, ARCHER_REACH = (92.0, 12.0), (110.0, 12.0), 25.85
 
 
 def _archer_pull(key, s):
-    tilt = math.radians(20.6 + (76.5 - 20.6) * s)
+    # At the top the shoulders reach bar height, so the chin clears the bar (round 5).
+    tilt = math.radians(20.6 + (87.0 - 20.6) * s)
     shoulder = [ARCHER_FAR[0] - ARCHER_REACH * math.sin(tilt), ARCHER_FAR[1] + ARCHER_REACH * math.cos(tilt)]
     _pose(key, facing=1, torso=(-6 * s) % 360, shrug=-1.5 * (1 - s), legs=[180 - 4 * s, 181 + 11 * s],
           leg_far=[181 - 4 * s, 182 + 13 * s], feet=180, pin={"joint": "shoulder", "at": shoulder})
@@ -109,12 +110,13 @@ _template("archer_pullup", 2600, dense("archer_pull", _archer_pull, 16), apparat
 # ---------- archer push-up (floor) ----------
 # Toes and the near hand stay planted; the far arm stays nearly straight and slides forward.
 def _archer_push(key, s):
-    a = 294 - 14 * s
+    # Round 5: the near hand sits under the shoulder and the top starts with both arms locked.
+    a = 295.6 - 15.6 * s
     _pose(key, facing=-1, torso=a, head=a + 10 * s, legs=[a - 180, a - 180], feet=180,
           pin={"joint": "foot_near", "at": [146, 101]})
-    arm_to(key, (96, 105), ("arm_near",))
+    arm_to(key, (101, 105), ("arm_near",))
     sx, sy = solved(key)["shoulder"]
-    arm_to(key, (sx - math.sqrt(ARCHER_REACH ** 2 - (105 - sy) ** 2), 105), ("arm_far",))
+    arm_to(key, (sx - math.sqrt(max(0.0, 25.98 ** 2 - (105 - sy) ** 2)), 105), ("arm_far",))
     return key
 
 
@@ -175,10 +177,10 @@ def _hspu(key, s):
 
 
 down = dense("hspu_down", _hspu, 14, span=1.0, hold=False)
-wall_hspu_negative = [(0, down[0][1])] + [(round(0.12 + 0.70 * t, 4), k) for t, k in down] + \
-    [(0.88, down[-1][1])] + [(round(0.88 + 0.12 * (1 - t), 4), k) for t, k in reversed(down[:-1])]
-wall_hspu_negative.sort()
-_template("wall_hspu_negative", 3600, wall_hspu_negative, mode="loop", apparatus=("wall_right", "hspu_mat"), easing="linear")
+# Round 5: a slow lowering (about 3.5 s) and a pause on the mat; the athlete comes down and the guide cuts back to the
+# top instead of pressing up.
+wall_hspu_negative = [(0, down[0][1])] + [(round(0.08 + 0.64 * t, 4), k) for t, k in down] + [(1.0, down[-1][1])]
+_template("wall_hspu_negative", 5600, wall_hspu_negative, mode="loop", apparatus=("wall_right", "hspu_mat"), easing="linear")
 _template("wall_hspu", 2800, [(0, down[0][1])] + [(round(0.1 + 0.75 * t, 4), k) for t, k in down] + [(1, down[-1][1])],
           apparatus=("wall_right", "hspu_mat"), easing="linear")
 
@@ -219,8 +221,24 @@ _template("bulgarian_split_squat", 2400, dense("bulgarian", _bss, 12), apparatus
 
 # ---------- sliding leg curl (shoulders down, hips lifted, heels slide) ----------
 def _leg_curl(key, s):
-    _pose(key, facing=1, torso=238 + 13 * s, head=270, arms=[95, 95], arm_far=[97, 97], pin={"joint": "neck", "at": [70, 100]})
-    leg_to(key, (101 + 16.8 * s, ANKLE), ("leg_near", "leg_far"))
+    # Round 5: shoulders, hips and knees stay in one line in the curl (no arched back), and as the heels slide out the
+    # hips stay just off the floor, never more than a few degrees past that line.
+    foot = (101 + 18.7 * s, ANKLE)
+    best = None
+    for tenth in range(2500, 2701):
+        torso = tenth / 10
+        POSES.pop(key, None)
+        _pose(key, facing=1, torso=torso, head=270, arms=[95, 95], arm_far=[97, 97], pin={"joint": "neck", "at": [70, 100]})
+        leg_to(key, foot, ("leg_near", "leg_far"))
+        j = solved(key)
+        line = math.degrees(math.atan2(j["hip"][1] - j["neck"][1], j["hip"][0] - j["neck"][0]))
+        thigh = math.degrees(math.atan2(j["knee_near"][1] - j["hip"][1], j["knee_near"][0] - j["hip"][0]))
+        miss = abs((thigh - line) - 5 * s) + (100 if j["hip"][1] > 97.5 else 0)
+        if best is None or miss < best[0]:
+            best = (miss, torso)
+    del POSES[key]
+    _pose(key, facing=1, torso=best[1], head=270, arms=[95, 95], arm_far=[97, 97], pin={"joint": "neck", "at": [70, 100]})
+    leg_to(key, foot, ("leg_near", "leg_far"))
     return key
 
 
@@ -264,7 +282,9 @@ _template("single_leg_rdl", 2800, [(0, "sl_rdl_stand"), (0.8, "sl_rdl_hinge"), (
 # Y: straight arms overhead, just lifted. T: the arm points at the viewer, so only a short
 # raised stub shows above the shoulder. W: elbows drawn back toward the ribs, hands by the head.
 _pose("ytw_y", base="arch_flat", leg_far=[89.6, 89.6], head=273, arm_near=[283, 283], arm_far=[286, 286])
-_pose("ytw_t", base="ytw_y", arm_near=[8, 186], arm_far=[12, 190])
+# Round 5: the T points the arms out of the picture, toward the viewer, so they fold to a short stub by the shoulder
+# instead of a vertical spike.
+_pose("ytw_t", base="ytw_y", arm_near=[278, 98], arm_far=[281, 101])
 _pose("ytw_w", base="ytw_y", head=274, arm_near=[80, 292], arm_far=[84, 296])
 _template("prone_ytw", 3600, [(0, "ytw_y"), (0.18, "ytw_y"), (0.33, "ytw_t"), (0.5, "ytw_t"), (0.66, "ytw_w"), (0.84, "ytw_w"), (1, "ytw_y")],
           mode="loop", apparatus=("mat",))

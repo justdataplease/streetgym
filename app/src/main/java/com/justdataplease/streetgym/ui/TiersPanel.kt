@@ -20,6 +20,8 @@ sealed interface Paywall {
     /** The account: joining the leaderboard and cloud progress (Pro). */
     data object Account : Paywall
     data class Saved(val limit: Int) : Paywall
+    /** Own lists in My workouts: Plus, or more of them with Pro once Plus has made all of its [limit]. */
+    data class Lists(val limit: Int) : Paywall
 }
 
 /** The Plus and Pro offers: in Settings, or as the card that replaces a locked feature. */
@@ -36,7 +38,8 @@ class TiersPanel(
         Paywall.Leaderboard -> R.string.paywall_leaderboard
         Paywall.Account -> R.string.paywall_account
         is Paywall.Saved -> R.string.paywall_saved
-    }, (paywall as? Paywall.Level)?.number ?: (paywall as? Paywall.Saved)?.limit ?: 0), 20f)
+        is Paywall.Lists -> if (paywall.limit == 0) R.string.paywall_lists else R.string.paywall_lists_full
+    }, (paywall as? Paywall.Level)?.number ?: (paywall as? Paywall.Saved)?.limit ?: (paywall as? Paywall.Lists)?.limit ?: 0), 20f)
     private val current = activity.bodyText("", 14f)
     private val plusBlock = block()
     private val plusNote = activity.bodyText("", 13f)
@@ -69,8 +72,10 @@ class TiersPanel(
         orientation = VERTICAL
         setPadding(activity.dp(16), activity.dp(16), activity.dp(16), activity.dp(16))
         background = roundedDrawable(AppColors.SURFACE, activity.dp(24).toFloat(), AppColors.DIVIDER, activity.dp(1))
+        // Past Plus, a paywall offers only Pro.
         if (paywall != null) addWithMargins(activity.lockBadge(activity.getString(
-            if (paywall == Paywall.Account) R.string.tier_pro else R.string.tier_plus)), width = ViewGroup.LayoutParams.WRAP_CONTENT, bottomDp = 10)
+            if (paywall == Paywall.Account || Entitlement.tier(activity) >= Tier.PLUS) R.string.tier_pro else R.string.tier_plus)),
+            width = ViewGroup.LayoutParams.WRAP_CONTENT, bottomDp = 10)
         addView(heading)
         if (paywall is Paywall.Level) addWithMargins(activity.bodyText(activity.getString(R.string.paywall_level_body), 14f), topDp = 6)
         addWithMargins(current, topDp = 6)

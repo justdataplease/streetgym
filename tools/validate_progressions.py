@@ -34,7 +34,7 @@ OVERHEAD = {"pike_pushup", "elevated_pike_pushup", "wall_hspu_negative", "wall_h
 WALL_HSPU = {"wall_hspu", "wall_hspu_negative", "deficit_wall_hspu", "freestanding_hspu_negative"}
 LSITS = {"tuck_lsit", "one_leg_lsit", "lsit"}
 HINGE = {"glute_bridge", "single_leg_bridge", "sliding_leg_curl", "nordic_negative", "single_leg_rdl"}
-WRIST = {"wrist_circles", "wrist_rocks"}
+WRIST = {"wrist_circles", "wrist_rocks", "wrist_pushup"}
 
 
 def effective(p):
@@ -134,23 +134,30 @@ for p in classes:
         if sets > 5:
             errors.append(f"{p['id']} has {sets} planche hold sets")
 
-# 5. Weekly overhead pressing and compression from Level 3, hinge work from Level 2.
+# 5. Weekly overhead pressing from Level 2 (round 5), compression from Level 3, hinge work from Level 2. Round 5b:
+#    overhead and hinge work by calendar week (classes 1-7, 8-14, ...), original-source classes and practice included;
+#    the L-sit rung on the authored seven-class weeks, as before (the original-source blocks hold no L-sit work).
+def test_week(week):
+    training = [p for p in week if (p["schedule"]["rpe"] or 9) > 4]
+    tests = sum(bool(re.search(r"(check|assessment|audit|gate|baseline|benchmark)", p["schedule"]["day_type"])) for p in training)
+    return 2 * tests >= len(training)  # test weeks keep their authored content
+
+
 for level in catalog["levels"]:
-    authored = [p for p in level["programs"] if p["origin"] != "apk_authentic"]
-    for w in range(0, len(authored) - 6, 7):
-        week = authored[w:w + 7]
-        ids = {mid for p in week for mid, _, _ in effective(p)}
-        label = f"Level {level['number']} classes {week[0]['number']}-{week[-1]['number']}"
-        training = [p for p in week if (p["schedule"]["rpe"] or 9) > 4]
-        tests = sum(bool(re.search(r"(check|assessment|audit|gate|baseline|benchmark)", p["schedule"]["day_type"])) for p in training)
-        if 2 * tests >= len(training):
-            continue  # test weeks keep their authored content
-        if level["number"] >= 3 and not ids & OVERHEAD:
-            errors.append(f"{label} has no overhead pressing")
-        if level["number"] >= 3 and not ids & LSITS:
-            errors.append(f"{label} has no L-sit rung")
-        if level["number"] >= 2 and not ids & HINGE:
-            errors.append(f"{label} has no hinge or hamstring work")
+    for calendar in (False, True):
+        rows = level["programs"] if calendar else [p for p in level["programs"] if p["origin"] != "apk_authentic"]
+        for w in range(0, len(rows) - 6, 7):
+            week = rows[w:w + 7]
+            if test_week(week):
+                continue
+            ids = {mid for p in week for mid, _, _ in effective(p)} | {s[0] for p in week for s in p["practice"]}
+            label = f"Level {level['number']} classes {week[0]['number']}-{week[-1]['number']}"
+            if calendar and level["number"] >= 2 and not ids & OVERHEAD:
+                errors.append(f"{label} has no overhead pressing")
+            if calendar and level["number"] >= 2 and not ids & HINGE:
+                errors.append(f"{label} has no hinge or hamstring work")
+            if not calendar and level["number"] >= 3 and not ids & LSITS:
+                errors.append(f"{label} has no L-sit rung")
 
 # 6. Wrist preparation before any class that loads the wrists.
 WRIST_LOAD = {"planche", "handstand", "support", "horizontal_push", "vertical_push", "straight_arm_push"}
@@ -169,8 +176,9 @@ for p in classes:
 
 # 8. Harder basics keep strength rising with the skills.
 by_level = {lv["number"]: {mid for p in lv["programs"] for mid, _, _ in effective(p)} for lv in catalog["levels"]}
-for level, required in {4: {"archer_pullup", "archer_pushup", "elevated_pike_pushup", "one_leg_lsit", "bulgarian_split_squat"},
-                        5: {"archer_pullup", "archer_pushup", "wall_hspu_negative", "lsit", "nordic_negative", "pistol_squat"},
+for level, required in {4: {"archer_pullup", "archer_pushup", "elevated_pike_pushup", "wall_hspu_negative", "one_leg_lsit",
+                            "bulgarian_split_squat"},
+                        5: {"archer_pullup", "archer_pushup", "lsit", "nordic_negative", "pistol_squat"},
                         6: {"archer_pullup", "archer_pushup", "wall_hspu", "lsit", "nordic_negative", "pistol_squat"},
                         7: {"typewriter_pullup", "assisted_one_arm_pullup", "one_arm_pullup_negative", "archer_pushup",
                             "deficit_wall_hspu", "freestanding_hspu_negative", "lsit", "nordic_negative", "pistol_squat",
@@ -350,20 +358,33 @@ for p in authored:
         errors.append(f"{p['id']} puts the strict muscle-up after lever holds")
 
 # 13. From Level 4 the front lever and planche come at least twice a week and the back lever weekly; Nordic negatives
-#     weekly from L4:58; toes-to-bar weekly from Level 5; overhead pressing twice a week; no wall HSPU with planche holds.
+#     weekly from L4:58; toes-to-bar weekly from Level 5; overhead pressing twice a week from Level 3 (round 5); no wall
+#     HSPU with planche holds. Round 5: two of the week's planche classes lie at least 48 hours apart, and no planche
+#     hold (tuck or harder) comes the day after another.
+TUCK_PLANCHE_UP = {"tuck_planche", "advanced_tuck_planche", "straddle_planche"}
 for level in catalog["levels"]:
     for week in weeks(level):
         label = f"Level {level['number']} classes {week[0]['number']}-{week[-1]['number']}"
         count = lambda ids: sum(bool({mid for mid, _, _ in effective(p)} & ids) for p in week)
+        if level["number"] >= 3 and count(OVERHEAD) < 2:
+            errors.append(f"{label} has overhead pressing in {count(OVERHEAD)} classes; at least 2")
         if level["number"] >= 4:
-            for name, ids, need in (("front lever", set(LADDERS["front lever"]), 2), ("planche", PLANCHE_HOLDS | {"planche_lean"}, 2),
-                                    ("back lever", BL_HOLDS, 1), ("overhead pressing", OVERHEAD, 2)):
+            # Level 5 week 1 trains the front lever once: L4:099-100 trained it the two days before (round 5).
+            front = 1 if (level["number"], week[0]["number"]) == (5, 1) else 2
+            for name, ids, need in (("front lever", set(LADDERS["front lever"]), front), ("planche", PLANCHE_HOLDS | {"planche_lean"}, 2),
+                                    ("back lever", BL_HOLDS, 1)):
                 if count(ids) < need:
                     errors.append(f"{label} has {name} in {count(ids)} classes; at least {need}")
+            days = [p["number"] for p in week if {mid for mid, _, _ in effective(p)} & (PLANCHE_HOLDS | {"planche_lean"})]
+            if len(days) >= 2 and max(days) - min(days) < 2:
+                errors.append(f"{label} has its planche classes on consecutive days only")
         if (level["number"], week[0]["number"]) >= (4, 58) and not count({"nordic_negative"}):
             errors.append(f"{label} has no Nordic negatives")
         if level["number"] >= 5 and not count({"toes_to_bar"}):
             errors.append(f"{label} has no toes-to-bar")
+for a, b in zip(classes, classes[1:]):
+    if a["level"] >= 4 and all({mid for mid, _, _ in effective(p)} & TUCK_PLANCHE_UP for p in (a, b)):
+        errors.append(f"{b['id']} holds a planche the day after {a['id']}")
 for p in classes:
     ids = {mid for mid, _, _ in effective(p)}
     if ids & {"tuck_planche", "advanced_tuck_planche"} and ids & WALL_HSPU:
@@ -609,10 +630,11 @@ for b1, b2, gap in zip(blocks, blocks[1:], deload_gaps):
     if gap > 42:
         errors.append(f"{gap} classes without a deload between {classes[b1[-1]]['id']} and {classes[b2[0]]['id']}")
 
-# 29. Levels 6-7 (R3 elbow.py, R2 wrist.py definitions): no more than three heavy elbow-flexor days in a row (ten or
-#     more strict pull repetitions, per-side work counted twice; a lever, German-hang or tuck-or-harder planche hold; or
-#     human-flag work), and no more than three heavy wrist days in a row (two or more sets of planche-family work or of
-#     overhead pressing).
+# 29. Levels 3-7 (R3 elbow.py, R2 wrist.py definitions; Levels 3-5 since round 5): no more than three heavy
+#     elbow-flexor days in a row (ten or more strict pull repetitions, per-side work counted twice; a lever, German-hang
+#     or tuck-or-harder planche hold; or human-flag work), and no more than three heavy wrist days in a row (two or more
+#     sets of planche-family work or of overhead pressing). Round 5b: one run from Level 3 to the end, across level
+#     boundaries (the body does not reset at a level change).
 STRICT_PULL = {"pullup", "chinup", "eccentric_pullup", "chest_to_bar", "strict_muscleup", "band_muscleup", "negative_muscleup",
                "jump_muscleup", "archer_pullup", "typewriter_pullup", "assisted_one_arm_pullup", "one_arm_pullup_negative"}
 ELBOW_HOLDS = set(LADDERS["front lever"]) | set(LADDERS["back lever"]) | {"full_front", "full_back", "german_hang",
@@ -640,7 +662,7 @@ def heavy_wrist(p):
 late = [p for p in classes if p["level"] >= 6]
 for name, test in (("elbow-flexor", heavy_elbow), ("wrist", heavy_wrist)):
     run, start = 0, None
-    for p in late:
+    for p in (p for p in classes if p["level"] >= 3):
         run, start = (run + 1, start if run else p["id"]) if test(p) else (0, None)
         if run == 4:
             errors.append(f"four heavy {name} days in a row from {start}")
@@ -673,11 +695,17 @@ if first_flag is None or (first_flag["level"], first_flag["number"]) < (7, 71) o
 #     original-source blocks after Level 1 set the best so far for the pull-ups, dips and push-ups they show. Strict
 #     muscle-ups before Level 5 stop at rule 14's six repetitions a class. Paused and slow-tempo sets (a 3+ second
 #     lowering or a 2+ second pause, such as 22X2, 31X1 or 41X1) are a different stimulus at fewer repetitions by
-#     design (round 4: paused pull-ups 3 x 6-7), so they neither set nor meet the best so far.
+#     design (round 4: paused pull-ups 3 x 6-7), so they neither set nor meet the best so far. Round 5: squat and
+#     push-up variations stop at 20 repetitions a set (past that the program moves to a harder movement), so their
+#     best so far counts at most 20. Round 5b: the cap holds on test days too, outside assessment sets.
 RATCHET_SKIP = {"dynamic_warmup", "mobility", "static_stretch", "static_cooldown", "recovery", "activation",
                 "mobility_strength", "strength_regression"}
-REENTRY = {"sg:l02:p0071": "the planned easy re-entry class after the Level 2 original-source block"}
+REENTRY = {"sg:l02:p0071": "the planned easy re-entry class after the Level 2 original-source block",
+           "sg:l06:p0001": "the easy re-entry class after the Level 5 benchmark week (round 5b: elbow runs across level ends)"}
 SOURCE_NAMES = {"Pull Up": "pullup", "Push Up": "pushup", "Dips": "parallel_dip", "Bar Dips": "straight_bar_dip"}
+REP_CAP = 20
+CAPPED = {"squat", "box_squat", "tempo_squat", "pause_squat", "wall_pushup", "incline_pushup", "pushup", "pause_pushup",
+          "close_pushup"}
 
 
 def day_of(p):
@@ -713,6 +741,8 @@ for p in classes:
     if recovery(p) or "deload" in dt or p["id"] in REENTRY or dt.startswith("five_") or "relay" in dt:
         continue
     for s in [s for _, _, s in effective(p)] + list(p["practice"]):
+        if s[0] in CAPPED and s[3] is None and s[5] not in (RC, "assessment") and (per_set(s[2]) or 0) > REP_CAP:
+            errors.append(f"{p['id']} {s[0]} {s[1]}x{s[2]} runs past {REP_CAP} repetitions; progress the movement instead")
         if s[5] == RC or movements[s[0]]["category"] in RATCHET_SKIP or slow_tempo(s[5]):
             continue
         # Benchmarks (assessment sets, single sets on benchmark, audit and checkpoint days) form their own series.
@@ -724,6 +754,9 @@ for p in classes:
         floor = math.ceil(0.8 * best_dose.get((series, s[0], k), 0))
         if s[0] == "strict_muscleup" and p["level"] < 5:
             floor = min(floor, 6 // s[1])
+        if s[0] in CAPPED and k == 2:
+            dose = min(dose, REP_CAP)
+            floor = min(floor, math.ceil(0.8 * REP_CAP))
         if dose < floor:
             errors.append(f"{p['id']} {s[0]} {s[1]}x{s[k]} falls below 80% of its best {series} dose so far "
                           f"({best_dose[(series, s[0], k)]})")
@@ -816,9 +849,82 @@ for p in classes:
     if p["schedule"]["rpe"] > 5 or sum(s[1] for s in rows) > 10 or any(s[0] in STRICT_PULL for s in rows):
         errors.append(f"{p['id']} is day 7 of a Level {p['level']} build week but not an easy day")
 
+# ---- Round 5 (27 October 2026): the curriculum review by a former gymnast and adult calisthenics coach ----
+# 38. Before Level 6 a class holds at most eight straight-arm lever sets (front and back lever rungs, German hangs and
+#     tuck-or-harder planche holds; per-side sets count twice).
+LEVER_SETS = LEVER_HOLDS | {"german_hang"} | TUCK_PLANCHE_UP
+for p in classes:
+    if p["level"] >= 6 or p["origin"] == "apk_authentic":
+        continue
+    holds = sum(s[1] * (2 if "/side" in str(s[3] if s[3] is not None else s[2]) else 1) for s in work(p) if s[0] in LEVER_SETS)
+    if holds > 8:
+        errors.append(f"{p['id']} holds {holds} straight-arm lever sets; at most 8 before Level 6")
+
+# 39. Recovery classes at RPE 3 or easier stay short: 25 minutes or less, walks of 8 minutes or less and 3 minutes of
+#     slow breathing or less. Round 5b: RPE 4 classes too, within 30 minutes.
+for p in authored:
+    if (p["schedule"]["rpe"] or 9) > 4:
+        continue
+    cap = 25 if p["schedule"]["rpe"] <= 3 else 30
+    if p["schedule"]["minutes"] > cap or class_seconds(p) > cap * 60:
+        errors.append(f"{p['id']} is an RPE {p['schedule']['rpe']} class of {p['schedule']['minutes']} minutes "
+                      f"(about {math.ceil(class_seconds(p) / 60)}); at most {cap}")
+    for s in list(warmup(p)) + [s for _, _, s in effective(p)] + list(p["cooldown"]):
+        if s[0] in ("easy_walk", "slow_breathing") and s[1] * max(numbers(s[3]) or [0]) > (480 if s[0] == "easy_walk" else 180):
+            errors.append(f"{p['id']} {s[0]} {s[1]}x{s[3]} s runs long on a recovery day")
+
+# 40. From Level 3, classes with planche work or handstand balance attempts warm up with wrist push-ups.
+for p in classes:
+    if p["level"] < 3 or p.get("morning_recovery"):
+        continue
+    ids = {s[0] for s in work(p)} | {mid for mid, _, _ in effective(p)}
+    if ids & (PLANCHE_FAMILY | {"handstand_balance"}) and "wrist_pushup" not in {s[0] for s in warmup(p)}:
+        errors.append(f"{p['id']} has planche or balance work without wrist push-ups in the warm-up")
+
+# 41. From Level 3 every week keeps one short skill-mobility class (RPE 4 or easier) with shoulder flexion, pancake
+#     compression and thoracic extension, whose doses never fall along the program.
+MOBILITY_BLOCK = ("wall_shoulder_flexion", "pancake_compression", "thoracic_extension")
+block_best = {}
+for level in catalog["levels"]:
+    if level["number"] < 3:
+        continue
+    rows = [p for p in level["programs"] if p["origin"] != "apk_authentic"]
+    for w in range(0, len(rows) - 6, 7):
+        week = rows[w:w + 7]
+        if not any(recovery(p) and {s[0] for _, _, s in effective(p)} >= set(MOBILITY_BLOCK) for p in week):
+            errors.append(f"Level {level['number']} classes {week[0]['number']}-{week[-1]['number']} have no skill-mobility class")
+    for p in rows:
+        for _, _, s in effective(p):
+            if s[0] in MOBILITY_BLOCK:
+                dose = s[1] * per_set(s[3] if s[3] is not None else s[2])
+                if dose < block_best.get(s[0], 0):
+                    errors.append(f"{p['id']} {s[0]} {s[1]}x{s[3] or s[2]} falls below its earlier dose")
+                block_best[s[0]] = max(block_best.get(s[0], 0), dose)
+
+# ---- Round 5b (27 October 2026): coach, physiotherapist and strength-coach audits of round 5 ----
+# 42. Wall handstand push-up work comes before any German hang, lever or planche work in its class: the first inverted
+#     eccentrics come fresh, not after loaded shoulder extension. Test, relay and five-skill classes keep their order.
+STRAIGHT_SHOULDER = LEVER_HOLDS | {"german_hang", "skin_cat_partial"} | PLANCHE_FAMILY
+for p in authored:
+    dt = p["schedule"]["day_type"]
+    if TEST_DAY.search(dt) or "relay" in dt or dt.startswith("five_"):
+        continue
+    ids = [mid for mid, _, _ in effective(p)]
+    hspu = [i for i, mid in enumerate(ids) if mid in WALL_HSPU]
+    straight = [i for i, mid in enumerate(ids) if mid in STRAIGHT_SHOULDER]
+    if hspu and straight and min(hspu) > min(straight):
+        errors.append(f"{p['id']} puts wall handstand push-up work after {ids[min(straight)]}")
+
+# 43. From Level 3, flag work (the assisted tuck flag and harder) never falls on consecutive days: the bottom arm loads
+#     the same straight-arm and wrist structures as the planche, the top arm the elbow flexors.
+flag_days = [any(s[0] in FLAGS for s in p["practice"]) or bool({mid for mid, _, _ in effective(p)} & FLAGS) for p in classes]
+for i in range(1, len(classes)):
+    if classes[i]["level"] >= 3 and flag_days[i] and flag_days[i - 1]:
+        errors.append(f"{classes[i]['id']} trains the flag the day after {classes[i - 1]['id']}")
+
 if errors:
     print(f"Progression checks failed with {len(errors)} error(s):")
-    for e in errors[:60]:
+    for e in errors[:int(__import__("os").environ.get("SHOW_ERRORS", 60))]:
         print(" -", e)
     sys.exit(1)
 gaps = ", ".join(f"{h} +{first[h] - first[e]}" for ladder in LADDERS.values() for e, h in zip(ladder, ladder[1:]))
@@ -837,4 +943,9 @@ print(f"Progression checks passed: rung gaps {gaps}; {len(GATES)} start gates; n
       "checks from L7:071. "
       f"Calibration: no build dose more than 20% below its best so far; L4:083 and L5:083 test above the level before; "
       f"a checkpoint at least every {max(checkpoint_gaps)} classes and a first strict pull-up check at class {first_pull_check}. "
-      "Round 4: every class within 55 minutes by the length estimate; the Level 4-5 pull-up ramp; an easy day 7 in Levels 6-7.")
+      "Round 4: every class within 55 minutes by the length estimate; the Level 4-5 pull-up ramp; an easy day 7 in Levels 6-7. "
+      "Round 5: elbow runs from Level 3; at most eight lever sets a class before Level 6; overhead pressing weekly from "
+      "Level 2 and twice weekly from Level 3; planche 48 hours apart; squat and push-up sets at 20 or fewer; short "
+      "recovery days; wrist push-ups before planche and balance work; a weekly skill-mobility class. "
+      "Round 5b: overhead and hinge work in every calendar week; elbow runs across level ends; wall handstand push-ups "
+      "before straight-arm shoulder work; flag work never on consecutive days; RPE 4 classes within 30 minutes.")

@@ -9,10 +9,10 @@ from author import *
 from group_e import _mirror, _track
 from progressions import _pose, _signed, _template, dense, leg_to, repin
 
-KU_HAND = (134.0, 105.0)          # hands about a hand's width from the wall at x 150
-KU_FRONT = (112.0, ANKLE)         # front (push) foot
-KU_REAR = (88.0, ANKLE)           # back (kicking) foot, on the ball of the foot
-KU_HIP0 = (103.0, 77.0)           # upright lunge
+KU_HAND = (141.0, 105.0)          # hands about a hand's width from the wall at x 150 (round 5)
+KU_FRONT = (119.0, ANKLE)         # front (push) foot
+KU_REAR = (95.0, ANKLE)           # back (kicking) foot, on the ball of the foot
+KU_HIP0 = (110.0, 77.0)           # upright lunge
 KU_TOUCH_TORSO, KU_TOUCH_ARM = 100.0, 170.0
 _neck = (KU_HAND[0] - (UPPER + FORE) * d(KU_TOUCH_ARM)[0], KU_HAND[1] - (UPPER + FORE) * d(KU_TOUCH_ARM)[1])
 KU_HIP1 = (_neck[0] - TORSO * d(KU_TOUCH_TORSO)[0], _neck[1] - TORSO * d(KU_TOUCH_TORSO)[1])
@@ -33,7 +33,7 @@ def _turn(a, b, f):
 def _reach(key, s):
     """Lunge to hands-down, the weight on the front foot: the hips travel forward as the torso pitches over."""
     torso = 8.0 + (KU_TOUCH_TORSO - 8.0) * s
-    arms = _track([0.0, 0.4, 1.0], [6.0, 120.0, KU_TOUCH_ARM], s)  # overhead, then reaching down toward the floor
+    arms = _track([0.0, 0.4, 1.0], [6.0, 135.0, KU_TOUCH_ARM], s)  # overhead, then reaching down toward the floor
     hip = [KU_HIP0[i] + (KU_HIP1[i] - KU_HIP0[i]) * s for i in (0, 1)]
     rear = _REAR_ANGLE + (215.0 - _REAR_ANGLE) * s
     _pose(key, facing=1, torso=round(torso, 2), head=round(torso + 8 * s, 2), arms=[arms, arms],

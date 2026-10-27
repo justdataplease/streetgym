@@ -1,42 +1,65 @@
 """The board builder without Firebase: python -m pytest streetgymnastics/firebase/functions"""
-from boards import TOP, board_hash, build_boards
+from boards import FAMILY_CEILINGS, TOP, board_hash, build_boards, expected_overall
 
 
-def score(name, country="GR", overall=0, hidden=False, **skills):
-    return {"username": name, "country": country, "overall": overall, "skills": skills, "hidden": hidden}
+def score(name, country="GR", hidden=False, overall=None, v=2, **families):
+    """A version 2 score document; the overall adds up from the families unless given."""
+    return {"v": v, "username": name, "country": country, "families": families, "verified": [], "hidden": hidden,
+            "overall": expected_overall(families) if overall is None else overall}
 
 
 def test_world_and_country_boards_rank_by_score_then_name():
-    boards = build_boards([score("b", overall=50), score("a", overall=50), score("c", "DE", overall=90)])
+    boards = build_boards([score("b", pullup=500), score("a", pullup=500), score("c", "DE", planche=900)])
     assert [e["username"] for e in boards["overall_world"]["entries"]] == ["c", "a", "b"]
     assert [e["username"] for e in boards["overall_GR"]["entries"]] == ["a", "b"]
     assert boards["overall_DE"]["players"] == 1
 
 
-def test_each_skill_gets_a_world_and_a_country_board_for_points_above_zero():
-    boards = build_boards([score("a", overall=30, pull_up=20, dip=0), score("b", "DE", overall=10, pull_up=5)])
-    assert [e["score"] for e in boards["skill_pull_up_world"]["entries"]] == [20, 5]
-    assert "skill_pull_up_GR" in boards and "skill_pull_up_DE" in boards
-    assert not any(board.startswith("skill_dip") for board in boards)
+def test_each_family_gets_a_world_and_a_country_board_for_points_above_zero():
+    boards = build_boards([score("a", pullup=200, dip=0), score("b", "DE", pullup=50)])
+    assert [e["score"] for e in boards["family_pullup_world"]["entries"]] == [200, 50]
+    assert "family_pullup_GR" in boards and "family_pullup_DE" in boards
+    assert not any(board.startswith("family_dip") for board in boards)
 
 
-def test_hidden_and_malformed_scores_are_left_out():
-    boards = build_boards([score("a", overall=5), score("h", overall=99, hidden=True),
-                           {"username": "x", "country": "GRC", "overall": 1}, {"country": "GR", "overall": 3},
-                           score("y", overall=-1), score("z", **{"bad/id": 4})])
-    assert [e["username"] for e in boards["overall_world"]["entries"]] == ["a", "z"]
-    assert not any("bad" in board for board in boards)
+def test_hidden_old_malformed_and_inconsistent_scores_are_left_out():
+    boards = build_boards([
+        score("a", pullup=100),
+        score("h", hidden=True, pullup=100),
+        score("old", v=1, pullup=100),
+        {**score("x", pullup=100), "country": "GRC"},
+        {**score("n", pullup=100), "username": ""},
+        score("inflated", overall=900, pullup=100),
+        score("unknown", lever=100),
+        score("over", dip=10 * FAMILY_CEILINGS["dip"] + 1),
+        score("negative", pullup=-5),
+        score("max", overall=1001, **{family: 10 * top for family, top in FAMILY_CEILINGS.items()}),
+    ])
+    assert [e["username"] for e in boards["overall_world"]["entries"]] == ["a"]
+
+
+def test_every_family_at_its_top_is_the_whole_thousand():
+    top = {family: 10 * value for family, value in FAMILY_CEILINGS.items()}
+    assert expected_overall(top) == 1000
+    assert build_boards([score("w", **top)])["overall_world"]["entries"][0]["score"] == 1000
+
+
+def test_rounding_on_the_phone_is_tolerated():
+    families = {"pullup": 333, "planche": 251}
+    assert build_boards([score("r", overall=expected_overall(families) + 2, **families)])["overall_world"]["players"] == 1
+    assert "overall_world" not in build_boards([score("r", overall=expected_overall(families) + 3, **families)])
 
 
 def test_only_the_top_entries_are_kept_but_every_player_counts():
-    boards = build_boards([score(f"p{i:03}", overall=i) for i in range(250)])
-    world = boards["overall_world"]
-    assert len(world["entries"]) == TOP and world["players"] == 250
-    assert world["entries"][0]["score"] == 249
+    boards = build_boards([score(f"p{i:03}", pullup=4 * i) for i in range(250)])
+    world = boards["family_pullup_world"]
+    assert len(world["entries"]) == TOP and world["players"] == 249   # p000 has no pull-up points
+    assert world["entries"][0]["score"] == 996
+    assert boards["overall_world"]["players"] == 250
 
 
 def test_percentiles_are_the_score_at_each_one_percent_step():
-    world = build_boards([score(f"p{i:03}", overall=i) for i in range(1, 201)])["overall_world"]
+    world = build_boards([score(f"p{i:03}", pullup=i) for i in range(1, 201)])["family_pullup_world"]
     p = world["percentiles"]
     assert len(p) == 100
     assert p[0] == 199           # the top 1% of 200 players is 2 players: 200 and 199
@@ -46,11 +69,11 @@ def test_percentiles_are_the_score_at_each_one_percent_step():
 
 
 def test_one_player_fills_every_percentile():
-    assert build_boards([score("a", overall=7)])["overall_world"]["percentiles"] == [7] * 100
+    assert build_boards([score("a", pullup=100)])["family_pullup_world"]["percentiles"] == [100] * 100
 
 
 def test_an_unchanged_board_has_the_same_hash():
-    a = build_boards([score("a", overall=7)])["overall_world"]
-    b = build_boards([score("a", overall=7)])["overall_world"]
-    c = build_boards([score("a", overall=8)])["overall_world"]
+    a = build_boards([score("a", pullup=100)])["family_pullup_world"]
+    b = build_boards([score("a", pullup=100)])["family_pullup_world"]
+    c = build_boards([score("a", pullup=110)])["family_pullup_world"]
     assert board_hash(a) == board_hash(b) != board_hash(c)

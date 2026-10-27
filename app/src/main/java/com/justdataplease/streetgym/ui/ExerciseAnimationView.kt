@@ -8,7 +8,6 @@ import android.graphics.DashPathEffect
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.Rect
-import android.graphics.RectF
 import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.View
@@ -83,7 +82,12 @@ class ExerciseAnimationView @JvmOverloads constructor(
     }
     private val handPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
-        color = AppColors.PRIMARY
+        color = AppColors.PALM
+    }
+    /** Rings the hands in the text colour where the palm colour is faint on the panel (Concrete's tape yellow). */
+    private val handRingPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        color = if (AppColors.contrast(AppColors.PALM, AppColors.SURFACE) < 3.0) AppColors.TEXT else Color.TRANSPARENT
     }
     private val apparatusPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
@@ -128,17 +132,73 @@ class ExerciseAnimationView @JvmOverloads constructor(
     /** A list keeps scrapped rows attached; their clips stop until the row is reused. */
     private var parked = false
 
-    /** Hangs and pull-ups are drawn from the front ([FrontPull]) so the grip and any shift along the bar show. */
-    private var front: FrontPull.Variant? = null
-    private val frontFrame = FrontPull.Frame()
-    private val frontRect = RectF()
-    private val frontInk by lazy { FrontPull.Ink(figurePaint, headPaint, handPaint, apparatusPaint, floorPaint) }
+    /**
+     * Bar work and sideways movements also show from the front ([FrontView]), so the grip and any shift to a side show;
+     * guides put the side clip beside it.
+     */
+    private var front: FrontView.Variant? = null
+    /** The side clip shown beside the front view, and the clip whose range line the two views share. */
+    private var sideTemplate = resolved.template
+    private var markerTemplate = resolved.template
+    /** How far the side clip moves to sit in the left half of a two-view guide; NaN until measured. */
+    private var sideShift = Float.NaN
+    private val frontFrame = FrontView.Frame()
+    private val frontInk by lazy {
+        FrontView.Ink(figurePaint, headPaint, handPaint, apparatusPaint, floorPaint, apparatusFillPaint, handRingPaint)
+    }
+    /** Finished loops, so a movement done to alternate sides switches every other rep. */
+    private var cycle = 0
+    private val captionPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = AppColors.TEXT_SECONDARY
+        textSize = dp(9f)
+        typeface = Typeface.DEFAULT_BOLD
+        letterSpacing = 0.12f
+        textAlign = Paint.Align.CENTER
+    }
+    private val sideCaption = resources.getString(R.string.motion_view_side).uppercase(Locale.getDefault())
+    private val frontCaption = resources.getString(R.string.motion_view_front).uppercase(Locale.getDefault())
+    private val endCaption = resources.getString(R.string.motion_view_end).uppercase(Locale.getDefault())
+
+    /** Every other movement shows its side clip seen from the front too ([FrontView.project]), unless it [faces]. */
+    private var projected = false
+    /**
+     * The clip already faces the viewer ([FACING_CLIPS]): it plays in the front half, beside its own side clip or, for
+     * planks and flags, itself seen end-on along the body.
+     */
+    private var faces = false
+    private var facingSide: MotionTemplate? = null
+    /** Where the facing clip's side clip sits in the left half, and where its hands hold the bar; NaN until measured. */
+    private var facingSideShift = Float.NaN
+    private var facingSideGrip = Float.NaN
+    private val projection = FrontView.Projection()
+    /** The clip's facing at its start, which puts the front viewer at that end. */
+    private var projectFacing = 1f
+    /** The front view's scene, read from the clip's apparatus: a bar across, dip bars, handles, and boxes (top, half width). */
+    private var frontBarY = 0f
+    private var dipY = 0f
+    private var handleY = 0f
+    private val boxes = FloatArray(MAX_BOXES * 2)
+    private var boxCount = 0
+    /**
+     * The side half's bar and posts: centred on the grip and wide enough that the whole movement, a lever's body
+     * included, stays between the posts. NaN until measured.
+     */
+    private var sideBarX = Float.NaN
+    private var sideBarHalf = SIDE_BAR_HALF
+    /** A post the hands hold ([postX] in the side clip, NaN for none), and where the front view stands it. */
+    private var postX = Float.NaN
+    private var postTop = 0f
+    private var postLateral = 0f
+    /** Which hands hold the post; with both on it the hands meet at a post in front of the body. */
+    private var nearOnPost = false
+    private var farOnPost = false
 
     // Playback frame, resolved once per draw.
     private var frameTimeline = 0f
     private var frameSegment = -1
     private var frameProgress = 0f
     private var phaseLabels = emptyArray<String>()
+    private var ownPhaseLabels: Array<String>? = null
     private var markerLabel = ""
     private var markerLabelReached = ""
 
@@ -173,7 +233,18 @@ class ExerciseAnimationView @JvmOverloads constructor(
             category = category,
             equipment = equipment,
         )
-        front = FrontPull.variant(movementId, resolved.template.name)
+        front = FrontView.variant(movementId, resolved.template.name)
+        sideTemplate = front?.sideClip?.let(library::template) ?: resolved.template
+        markerTemplate = front?.let { it.marker ?: it.sideClip }?.let(library::template) ?: sideTemplate
+        faces = front == null && resolved.template.name in FACING_CLIPS
+        facingSide = if (faces) FACING_CLIPS[resolved.template.name]?.let(library::template) else null
+        facingSideShift = Float.NaN
+        projected = front == null && !faces
+        if (projected || faces) readFrontScene()
+        sideShift = Float.NaN
+        sideBarX = Float.NaN
+        sideBarHalf = SIDE_BAR_HALF
+        cycle = 0
         badgeBounds = null
         contentDescription = "Line-figure movement guide for $readableName. Follow the written instructions for exact technique."
         updateCoachingText()
@@ -196,6 +267,7 @@ class ExerciseAnimationView @JvmOverloads constructor(
         figurePaint.color = style.figure
         headPaint.color = style.figure
         handPaint.color = style.figure
+        handRingPaint.color = Color.TRANSPARENT
         farLimbPaint.color = style.farFigure
         apparatusPaint.color = style.apparatus
         floorPaint.color = style.apparatus
@@ -287,25 +359,398 @@ class ExerciseAnimationView @JvmOverloads constructor(
 
         val running = isAnimationRunning()
         resolveFrame(running)
-        front?.let { variant ->
-            // Above the phase strip; the guide's tempo and phase labels drive the front view too.
-            frontRect.set(left + dp(4f), top + dp(4f), right - dp(4f), bottom - dp(13f))
-            canvas.save()
-            canvas.clipRect(left, top, right, bottom)
-            FrontPull.draw(canvas, variant, frameTimeline, frontRect, FrontPull.GUIDE_WINDOW, frontInk, 1f, true, frontFrame)
-            canvas.restore()
-            if (running) drawPhase(canvas, left, top, right, bottom)
-            return
-        }
-        resolved.template.curve.evaluate(frameTimeline, blendedPose, joints)
-
+        val variant = front
         canvas.save()
         canvas.clipRect(left, top, right, bottom)
-        drawApparatus(canvas, originX, originY, scale)
-        drawRangeMarker(canvas, originX, originY, scale, right - dp(6f))
-        drawFigure(canvas, originX, originY, scale)
+        when {
+            variant == null && projected -> drawProjectedViews(canvas, originX, originY, scale, left, top, right, bottom)
+            variant == null && faces -> drawFacingViews(canvas, originX, originY, scale, left, top, right, bottom)
+            variant == null -> {
+                resolved.template.curve.evaluate(frameTimeline, blendedPose, joints)
+                drawApparatus(canvas, resolved.apparatus, originX, originY, scale)
+                drawRangeMarker(canvas, originX, originY, scale, right - dp(6f))
+                drawFigure(canvas, originX, originY, scale)
+            }
+            else -> drawBothViews(canvas, variant, originX, originY, scale, left, top, right, bottom)
+        }
         canvas.restore()
         if (running) drawPhase(canvas, left, top, right, bottom)
+    }
+
+    /**
+     * The side clip in the left half and the front view in the right, each with its own bar or floor, at the scale every
+     * guide uses and at the same moment, joined by the range line and captioned.
+     */
+    private fun drawBothViews(
+        canvas: Canvas, variant: FrontView.Variant, ox: Float, oy: Float, scale: Float,
+        left: Float, top: Float, right: Float, bottom: Float,
+    ) {
+        val shift = sideShift(variant)
+        evaluateSide(variant, frameTimeline)
+        poseFront(variant, frameTimeline, mirrored(variant), sideReady = true)
+        val mid = ox + HALF * scale
+        val sideX = ox + shift * scale
+        canvas.save()
+        canvas.clipRect(left, top, mid, bottom)
+        FrontView.rig(canvas, HALF / 2f - shift, frontFrame.barY, SIDE_BAR_HALF, HALF_FLOOR, sideX, oy, scale, frontInk)
+        drawApparatus(canvas, if (variant.sideClip != null) sideTemplate.apparatus else resolved.apparatus, sideX, oy, scale,
+            skipFrame = true)
+        drawFigure(canvas, sideX, oy, scale)
+        canvas.restore()
+        canvas.save()
+        canvas.clipRect(mid, top, right, bottom)
+        FrontView.draw(canvas, frontFrame, ox + HALF / 2f * scale, oy, scale, frontInk, 1f, HALF_FLOOR)
+        canvas.restore()
+        drawSharedMarker(canvas, ox, oy, scale, frontFrame.barY, frontFrame.barHalf)
+        drawCaptions(canvas, ox, oy, scale, left, right, bottom)
+    }
+
+    /**
+     * The same two views for a movement without a front motion of its own: the side clip in the left half, and in the
+     * right the clip seen from the front with its bar, dip bars, handles or boxes, at the same moment and scale.
+     */
+    private fun drawProjectedViews(
+        canvas: Canvas, ox: Float, oy: Float, scale: Float, left: Float, top: Float, right: Float, bottom: Float,
+    ) {
+        val shift = projectedShift()
+        resolved.template.curve.evaluate(frameTimeline, blendedPose, joints)
+        val mid = ox + HALF * scale
+        val sideX = ox + shift * scale
+        canvas.save()
+        canvas.clipRect(left, top, mid, bottom)
+        FrontView.rig(canvas, HALF / 2f - shift, 0f, 0f, HALF_FLOOR, sideX, oy, scale, frontInk)
+        if (frontBarY > 0f) FrontView.rig(canvas, sideBarX, frontBarY, sideBarHalf, sideBarHalf, sideX, oy, scale, frontInk)
+        drawApparatus(canvas, resolved.apparatus, sideX, oy, scale, skipFrame = true)
+        drawFigure(canvas, sideX, oy, scale)
+        canvas.restore()
+
+        val frontX = ox + HALF / 2f * scale
+        canvas.save()
+        canvas.clipRect(mid, top, right, bottom)
+        drawFrontScene(canvas, frontX, oy, scale)
+        FrontView.project(joints, projectFacing, handWidth(Rig.HAND_NEAR), handWidth(Rig.HAND_FAR), projection)
+        FrontView.drawProjected(canvas, projection, frontX, oy, scale, frontInk, farLimbPaint)
+        canvas.restore()
+        drawSharedMarker(canvas, ox, oy, scale, frontBarY, FRONT_BAR_HALF)
+        drawCaptions(canvas, ox, oy, scale, left, right, bottom)
+    }
+
+    /**
+     * A clip that already faces the viewer ([faces]) in the right half, captioned as the front, and beside it in the left
+     * half its own side clip or, without one, the clip seen end-on along the body ([END_WIDTH]).
+     */
+    private fun drawFacingViews(
+        canvas: Canvas, ox: Float, oy: Float, scale: Float, left: Float, top: Float, right: Float, bottom: Float,
+    ) {
+        val shift = projectedShift()
+        val mid = ox + HALF * scale
+        val side = facingSide
+        canvas.save()
+        canvas.clipRect(left, top, mid, bottom)
+        if (side != null) {
+            val sideShift = facingSideShift(side)
+            val sideX = ox + sideShift * scale
+            side.curve.evaluate(frameTimeline, blendedPose, joints)
+            FrontView.rig(canvas, HALF / 2f - sideShift, 0f, 0f, HALF_FLOOR, sideX, oy, scale, frontInk)
+            if (frontBarY > 0f) FrontView.rig(canvas, facingSideGrip, frontBarY, sideBarHalf, sideBarHalf, sideX, oy, scale, frontInk)
+            drawApparatus(canvas, side.apparatus, sideX, oy, scale, skipFrame = true)
+            drawFigure(canvas, sideX, oy, scale)
+        } else {
+            resolved.template.curve.evaluate(frameTimeline, blendedPose, joints)
+            val endX = ox - HALF / 2f * scale
+            drawFrontScene(canvas, endX, oy, scale)
+            FrontView.project(joints, projectFacing, handWidth(Rig.HAND_NEAR), handWidth(Rig.HAND_FAR), projection, END_WIDTH)
+            FrontView.drawProjected(canvas, projection, endX, oy, scale, frontInk, farLimbPaint)
+        }
+        canvas.restore()
+
+        val frontX = ox + (shift + HALF) * scale
+        resolved.template.curve.evaluate(frameTimeline, blendedPose, joints)
+        canvas.save()
+        canvas.clipRect(mid, top, right, bottom)
+        FrontView.rig(canvas, HALF / 2f - shift, 0f, 0f, HALF_FLOOR, frontX, oy, scale, frontInk)
+        if (frontBarY > 0f) FrontView.rig(canvas, sideBarX, frontBarY, sideBarHalf, sideBarHalf, frontX, oy, scale, frontInk)
+        drawApparatus(canvas, resolved.apparatus, frontX, oy, scale, skipFrame = true)
+        drawFigure(canvas, frontX, oy, scale)
+        canvas.restore()
+        drawSharedMarker(canvas, ox, oy, scale, frontBarY, sideBarHalf)
+        drawCaptions(canvas, ox, oy, scale, left, right, bottom, if (side != null) sideCaption else endCaption)
+    }
+
+    /** Moves a facing clip's side clip into the left half, centred on its whole cycle, and finds its grip on the bar. */
+    private fun facingSideShift(side: MotionTemplate): Float {
+        if (!facingSideShift.isNaN()) return facingSideShift
+        var minX = Float.MAX_VALUE
+        var maxX = -Float.MAX_VALUE
+        var gripSum = 0f
+        var grips = 0
+        for (step in 0..CYCLE_SAMPLES) {
+            side.curve.evaluate(step / CYCLE_SAMPLES.toFloat(), blendedPose, joints)
+            for (joint in 0 until BADGE_JOINTS) {
+                minX = min(minX, joints[joint * 2])
+                maxX = max(maxX, joints[joint * 2])
+            }
+            for (hand in intArrayOf(Rig.HAND_NEAR, Rig.HAND_FAR)) {
+                if (frontBarY > 0f && FrontView.contact(joints[hand * 2 + 1], frontBarY) > 0.5f) {
+                    gripSum += joints[hand * 2]
+                    grips++
+                }
+            }
+        }
+        val center = (minX + maxX) / 2f
+        facingSideGrip = if (grips > 0) gripSum / grips else center
+        facingSideShift = HALF / 2f - center
+        return facingSideShift
+    }
+
+    /** Reads what the front view stands on or holds from the clip's apparatus, and which end the clip faces. */
+    private fun readFrontScene() {
+        resolved.template.curve.evaluate(0f, blendedPose, joints)
+        projectFacing = blendedPose.facing
+        frontBarY = 0f
+        dipY = 0f
+        handleY = 0f
+        boxCount = 0
+        postX = Float.NaN
+        for (name in resolved.apparatus) {
+            val first = library.apparatus[name]?.firstOrNull() ?: continue
+            when {
+                name in CROSS_BARS -> frontBarY = first.values[1]
+                name == "parallel_bars" -> dipY = first.values[1]
+                name == "parallettes" -> handleY = first.values[1]
+                name in POSTS -> {
+                    postX = first.values[0]
+                    postTop = first.values[1]
+                }
+                first.type == "round_rect" && boxCount < MAX_BOXES -> {
+                    // Boxes keep their height and take a box's width; a mat a little less.
+                    boxes[boxCount * 2] = first.values[1]
+                    boxes[boxCount * 2 + 1] = if (first.values[3] - first.values[1] < 5f) MAT_HALF else BOX_HALF
+                    boxCount++
+                }
+            }
+        }
+    }
+
+    /** How far a hand sits from the centre line: by the side, or wider where it holds a bar or rests on a support. */
+    private fun handWidth(hand: Int): Float {
+        val y = joints[hand * 2 + 1]
+        var width = supportWidth(y, FLOOR_HAND_Y, PRESS_WIDTH)
+        width = max(width, supportWidth(y, frontBarY, GRIP_WIDTH))
+        width = max(width, supportWidth(y, dipY, DIP_WIDTH))
+        width = max(width, supportWidth(y, handleY, HANDLE_WIDTH))
+        for (box in 0 until boxCount) width = max(width, supportWidth(y, boxes[box * 2] - 1.5f, PRESS_WIDTH))
+        if (if (hand == Rig.HAND_NEAR) nearOnPost else farOnPost) {
+            // Out to a post beside the body, or both hands in to one in front of it.
+            val reach = 1f - FrontView.ease((abs(joints[hand * 2] - postX) - 4f) / 6f)
+            width = width + ((if (nearOnPost && farOnPost) POST_GRIP_WIDTH else abs(postLateral)) - width) * reach
+        }
+        return width
+    }
+
+    private fun supportWidth(handY: Float, supportY: Float, width: Float): Float =
+        FrontView.handWidth(if (supportY > 0f) FrontView.contact(handY, supportY) else 0f, width)
+
+    /** The front view's floor and bar, dip bars and handles seen end-on, and boxes, behind the figure. */
+    private fun drawFrontScene(canvas: Canvas, ox: Float, oy: Float, scale: Float) {
+        val center = FrontView.CENTER
+        FrontView.rig(canvas, center, frontBarY, if (frontBarY > 0f) FRONT_BAR_HALF else 0f, HALF_FLOOR, ox, oy, scale, frontInk)
+        for (box in 0 until boxCount) {
+            val half = boxes[box * 2 + 1]
+            val radius = 2.5f * scale
+            val boxTop = oy + boxes[box * 2] * scale
+            val boxBottom = oy + FrontView.FLOOR_Y * scale
+            canvas.drawRoundRect(ox + (center - half) * scale, boxTop, ox + (center + half) * scale, boxBottom, radius, radius, apparatusFillPaint)
+            apparatusPaint.strokeWidth = 1.7f * scale
+            canvas.drawRoundRect(ox + (center - half) * scale, boxTop, ox + (center + half) * scale, boxBottom, radius, radius, apparatusPaint)
+        }
+        drawEndOnBars(canvas, dipY, DIP_WIDTH, ox, oy, scale)
+        drawEndOnBars(canvas, handleY, HANDLE_WIDTH, ox, oy, scale)
+        if (nearOnPost || farOnPost) {
+            apparatusPaint.strokeWidth = 1.7f * scale
+            val x = ox + (center + postLateral) * scale
+            canvas.drawLine(x, oy + postTop * scale, x, oy + FrontView.FLOOR_Y * scale, apparatusPaint)
+        }
+    }
+
+    /** A pair of bars running toward the viewer at [barY], [spread] either side of the centre, each on a post. */
+    private fun drawEndOnBars(canvas: Canvas, barY: Float, spread: Float, ox: Float, oy: Float, scale: Float) {
+        if (barY <= 0f) return
+        floorPaint.strokeWidth = 1.4f * scale
+        apparatusPaint.strokeWidth = 1.7f * scale
+        for (side in -1..1 step 2) {
+            val x = ox + (FrontView.CENTER + side * spread) * scale
+            canvas.drawLine(x, oy + (barY + 2f) * scale, x, oy + FrontView.FLOOR_Y * scale, floorPaint)
+            canvas.drawCircle(x, oy + barY * scale, 2f * scale, apparatusPaint)
+        }
+    }
+
+    /**
+     * Moves the side clip into the left half, centred on its whole cycle (with any box, post or wall beside it when the
+     * half has room), and finds where its hands hold a bar.
+     */
+    private fun projectedShift(): Float {
+        if (!sideShift.isNaN()) return sideShift
+        var minX = Float.MAX_VALUE
+        var maxX = -Float.MAX_VALUE
+        var gripSum = 0f
+        var grips = 0
+        var nearToPost = Float.MAX_VALUE
+        var farToPost = Float.MAX_VALUE
+        for (step in 0..CYCLE_SAMPLES) {
+            resolved.template.curve.evaluate(step / CYCLE_SAMPLES.toFloat(), blendedPose, joints)
+            for (joint in 0 until BADGE_JOINTS) {
+                minX = min(minX, joints[joint * 2])
+                maxX = max(maxX, joints[joint * 2])
+            }
+            for (hand in intArrayOf(Rig.HAND_NEAR, Rig.HAND_FAR)) {
+                if (frontBarY > 0f && FrontView.contact(joints[hand * 2 + 1], frontBarY) > 0.5f) {
+                    gripSum += joints[hand * 2]
+                    grips++
+                }
+            }
+            if (!postX.isNaN()) {
+                nearToPost = min(nearToPost, abs(joints[Rig.HAND_NEAR * 2] - postX))
+                farToPost = min(farToPost, abs(joints[Rig.HAND_FAR * 2] - postX))
+            }
+        }
+        var sceneMin = minX
+        var sceneMax = maxX
+        for (name in resolved.apparatus) {
+            if (name in FRAME_APPARATUS || name == "parallel_bars") continue
+            val primitives = library.apparatus[name] ?: continue
+            for (primitive in primitives) {
+                val values = primitive.values
+                if (primitive.type == "circle" && values.size >= 3) {
+                    sceneMin = min(sceneMin, values[0] - values[2]); sceneMax = max(sceneMax, values[0] + values[2])
+                } else if (values.size >= 4) {
+                    sceneMin = min(sceneMin, min(values[0], values[2])); sceneMax = max(sceneMax, max(values[0], values[2]))
+                }
+            }
+        }
+        val center = if (sceneMax - sceneMin <= HALF - 6f) (sceneMin + sceneMax) / 2f else (minX + maxX) / 2f
+        if (grips > 0) {
+            // The posts stand clear of the whole movement, so a lever's body doesn't cross one.
+            val grip = gripSum / grips
+            val barLeft = min(grip - SIDE_BAR_HALF, minX - 6f)
+            val barRight = max(grip + SIDE_BAR_HALF, maxX + 6f)
+            sideBarX = (barLeft + barRight) / 2f
+            sideBarHalf = (barRight - barLeft) / 2f
+        } else {
+            sideBarX = center
+        }
+        nearOnPost = nearToPost < POST_REACH
+        farOnPost = farToPost < POST_REACH
+        // One hand reaches out to a post on its side of the body; held with both, the post stands on the centre line.
+        val nearSide = -projectFacing
+        postLateral = when {
+            nearOnPost && farOnPost -> 0f
+            nearOnPost -> nearSide * POST_WIDTH
+            farOnPost -> -nearSide * POST_WIDTH
+            else -> 0f
+        }
+        sideShift = HALF / 2f - center
+        return sideShift
+    }
+
+    /**
+     * "Side" and "Front" under each half when the panel has room below the floor (a tall focus screen), otherwise at
+     * the two outer ends of the floor in the margins a wide guide leaves; neither when there is no room.
+     */
+    private fun drawCaptions(
+        canvas: Canvas, ox: Float, oy: Float, scale: Float, left: Float, right: Float, bottom: Float,
+        leftCaption: String = sideCaption,
+    ) {
+        val floor = oy + FrontView.FLOOR_Y * scale
+        val below = floor + dp(4f) - captionPaint.ascent()
+        if (below + captionPaint.descent() < bottom - dp(11f)) {
+            captionPaint.textAlign = Paint.Align.CENTER
+            canvas.drawText(leftCaption, ox + HALF / 2f * scale, below, captionPaint)
+            canvas.drawText(frontCaption, ox + HALF * 1.5f * scale, below, captionPaint)
+            return
+        }
+        val start = ox + (HALF / 2f - HALF_FLOOR) * scale - dp(4f)
+        val end = ox + (HALF * 1.5f + HALF_FLOOR) * scale + dp(4f)
+        if (start - captionPaint.measureText(leftCaption) < left + dp(6f) || end + captionPaint.measureText(frontCaption) > right - dp(6f)) return
+        val y = floor + (captionPaint.descent() - captionPaint.ascent()) / 2f - captionPaint.descent()
+        captionPaint.textAlign = Paint.Align.RIGHT
+        canvas.drawText(leftCaption, start, y, captionPaint)
+        captionPaint.textAlign = Paint.Align.LEFT
+        canvas.drawText(frontCaption, end, y, captionPaint)
+    }
+
+    /** Moves the side clip into the left half: bar work by its grip, anything else by the middle of its whole cycle. */
+    private fun sideShift(variant: FrontView.Variant): Float {
+        if (!sideShift.isNaN()) return sideShift
+        var center = FrontView.CENTER
+        if (!variant.motion.bar) {
+            var minX = Float.MAX_VALUE
+            var maxX = -Float.MAX_VALUE
+            for (step in 0..CYCLE_SAMPLES) {
+                sideTemplate.curve.evaluate(step / CYCLE_SAMPLES.toFloat(), blendedPose, joints)
+                for (joint in 0 until BADGE_JOINTS) {
+                    minX = min(minX, joints[joint * 2])
+                    maxX = max(maxX, joints[joint * 2])
+                }
+            }
+            center = (minX + maxX) / 2f
+        }
+        sideShift = HALF / 2f - center
+        return sideShift
+    }
+
+    private fun mirrored(variant: FrontView.Variant) = variant.mirrors && cycle % 2 == 1
+
+    private fun evaluateSide(variant: FrontView.Variant, timeline: Float) =
+        sideTemplate.curve.evaluate(FrontView.sideTime(variant, timeline), blendedPose, joints)
+
+    /**
+     * Poses the front view at [timeline]; a motion that follows the side clip takes its height from the clip's joints,
+     * which [sideReady] says are already evaluated at that moment.
+     */
+    private fun poseFront(variant: FrontView.Variant, timeline: Float, mirror: Boolean, sideReady: Boolean = false) {
+        var neck = Float.NaN
+        var shrug = 0f
+        if (variant.motion.follows) {
+            if (!sideReady) evaluateSide(variant, timeline)
+            neck = joints[Rig.NECK * 2 + 1]
+            shrug = neck - joints[Rig.SHOULDER * 2 + 1]
+        }
+        FrontView.pose(variant, timeline, frontFrame, mirror, neck, shrug)
+    }
+
+    /**
+     * The range line across both views at the side clip's end height, its label in the gap between them; [barY] and
+     * [frontBarHalf] are the front view's bar (0 for none).
+     */
+    private fun drawSharedMarker(canvas: Canvas, ox: Float, oy: Float, scale: Float, barY: Float, frontBarHalf: Float) {
+        val template = markerTemplate
+        val joint = template.markerJoint
+        if (joint < 0) return
+        val reached = abs(joints[joint * 2 + 1] - template.markerReachY) < 1.2f
+        val y = oy + template.markerY * scale
+        if (markerDashScale != scale) {
+            markerDash = DashPathEffect(floatArrayOf(2.2f * scale, 2.2f * scale), 0f)
+            markerDashScale = scale
+        }
+        markerPaint.pathEffect = if (reached) null else markerDash
+        markerPaint.strokeWidth = (if (reached) 1.3f else 0.9f) * scale
+        markerPaint.color = if (reached) AppColors.PRIMARY else withAlpha(AppColors.TEXT_SECONDARY, 140)
+        canvas.drawLine(ox + 14f * scale, y, ox + (HALF * 2f - 14f) * scale, y, markerPaint)
+        val label = if (reached) markerLabelReached else markerLabel
+        markerTextPaint.color = if (reached) AppColors.PRIMARY else AppColors.TEXT_SECONDARY
+        // Between the two views: under the bars, midway between their posts, when the line runs over a bar.
+        val overBar = barY > 0f && template.markerY < barY
+        val center = if (overBar) {
+            (HALF / 2f + SIDE_BAR_HALF - 3f + HALF * 1.5f - frontBarHalf + 3f) / 2f
+        } else HALF
+        val textX = ox + center * scale - markerTextPaint.measureText(label) / 2f
+        val textY = when {
+            overBar -> oy + barY * scale + 2.5f * scale - markerTextPaint.ascent()
+            template.markerY < library.canvasHeight / 2f -> y + 1.5f * scale - markerTextPaint.ascent()
+            else -> y - 1.5f * scale
+        }
+        canvas.drawText(label, textX, textY, markerTextPaint)
     }
 
     private fun drawBadge(canvas: Canvas) {
@@ -317,14 +762,20 @@ class ExerciseAnimationView @JvmOverloads constructor(
         badgeClip.addRoundRect(0f, 0f, w, h, radius, radius, Path.Direction.CW)
         canvas.drawPath(badgeClip, backgroundPaint)
         val running = badgeMoves && isAnimationRunning()
-        front?.let { variant ->
+        front?.takeIf { it.badge }?.let { variant ->
             resolveFrame(running)
-            frontRect.set(0f, 0f, w, h)
+            // Centred as the side badges are: on this pose, or on the whole cycle when the badge moves.
+            val bounds = if (badgeMoves) frontCycleBounds(variant) else frontBounds.also {
+                it[0] = Float.MAX_VALUE; it[1] = Float.MAX_VALUE; it[2] = -Float.MAX_VALUE; it[3] = -Float.MAX_VALUE
+                poseFront(variant, frameTimeline, mirrored(variant))
+                FrontView.bounds(frontFrame, it)
+            }
+            val scale = badgeScale(w, h)
+            poseFront(variant, frameTimeline, mirrored(variant))
             canvas.save()
             canvas.clipPath(badgeClip)
-            // A moving badge frames down to the floor, where the standing starts begin.
-            val window = if (badgeMoves) FrontPull.LOADING_WINDOW else FrontPull.BADGE_WINDOW
-            FrontPull.draw(canvas, variant, frameTimeline, frontRect, window, frontInk, BADGE_STROKE, false, frontFrame)
+            FrontView.draw(canvas, frontFrame, w * 0.5f - (bounds[0] + bounds[2]) * 0.5f * scale,
+                h * 0.5f - (bounds[1] + bounds[3]) * 0.5f * scale, scale, frontInk, BADGE_STROKE, FLOOR_HALF, posts = false)
             canvas.restore()
             return
         }
@@ -343,18 +794,31 @@ class ExerciseAnimationView @JvmOverloads constructor(
             maxY = max(maxY, joints[joint * 2 + 1])
         }
         if (cycle != null) { minX = cycle[0]; minY = cycle[1]; maxX = cycle[2]; maxY = cycle[3] }
-        val head = library.rig.headRadius
-        val span = max(maxX - minX, maxY - minY) + head * 2f
-        val scale = min(w, h) * 0.64f / span.coerceAtLeast(1f)
+        val scale = badgeScale(w, h)
         val ox = w * 0.5f - (minX + maxX) * 0.5f * scale
         val oy = h * 0.5f - (minY + maxY) * 0.5f * scale
 
         canvas.save()
         canvas.clipPath(badgeClip)
-        drawApparatus(canvas, ox, oy, scale)
+        drawApparatus(canvas, resolved.apparatus, ox, oy, scale)
         drawFigure(canvas, ox, oy, scale, BADGE_STROKE)
         canvas.restore()
     }
+
+    private val frontBounds = FloatArray(4)
+
+    /** One figure scale for every badge, so a pike push-up and a handstand show the same-sized athlete. */
+    private fun badgeScale(w: Float, h: Float) = min(w, h) * BADGE_FILL / BADGE_SPAN
+
+    /** The front figure's bounds over the whole clip, both sides when it alternates, sampled once per binding. */
+    private fun frontCycleBounds(variant: FrontView.Variant): FloatArray =
+        badgeBounds ?: floatArrayOf(Float.MAX_VALUE, Float.MAX_VALUE, -Float.MAX_VALUE, -Float.MAX_VALUE).also { b ->
+            for (mirror in listOf(false, variant.mirrors).distinct()) for (step in 0..CYCLE_SAMPLES) {
+                poseFront(variant, step / CYCLE_SAMPLES.toFloat(), mirror)
+                FrontView.bounds(frontFrame, b)
+            }
+            badgeBounds = b
+        }
 
     /** The body's bounds over the whole clip (minX, minY, maxX, maxY), sampled once per binding. Uses the pose scratch. */
     private fun cycleBounds(): FloatArray = badgeBounds ?: floatArrayOf(Float.MAX_VALUE, Float.MAX_VALUE, -Float.MAX_VALUE, -Float.MAX_VALUE).also { b ->
@@ -368,10 +832,13 @@ class ExerciseAnimationView @JvmOverloads constructor(
         badgeBounds = b
     }
 
-    /** Index loops: this runs every frame, and an iterator per list would be garbage each time. */
-    private fun drawApparatus(canvas: Canvas, ox: Float, oy: Float, scale: Float) {
-        val names = resolved.apparatus
+    /**
+     * Index loops: this runs every frame, and an iterator per list would be garbage each time. [skipFrame] leaves out
+     * the floor and bars, which a two-view guide draws per half.
+     */
+    private fun drawApparatus(canvas: Canvas, names: List<String>, ox: Float, oy: Float, scale: Float, skipFrame: Boolean = false) {
         for (i in names.indices) {
+            if (skipFrame && names[i] in FRAME_APPARATUS) continue
             val primitives = library.apparatus[names[i]] ?: continue
             for (j in primitives.indices) drawPrimitive(canvas, primitives[j], ox, oy, scale)
         }
@@ -414,7 +881,9 @@ class ExerciseAnimationView @JvmOverloads constructor(
         val template = resolved.template
         val locale = Locale.getDefault()
         phaseLabels = template.phaseLabels.labels.map { resources.getString(it).uppercase(locale) }.toTypedArray()
-        markerLabel = resources.getString(template.markerLabel)
+        ownPhaseLabels = template.phaseSpec?.labels?.map { resources.getString(it).uppercase(locale) }?.toTypedArray()
+        // A two-view guide may borrow another clip's range line (a negative shows the pull-up's chin line).
+        markerLabel = resources.getString(markerTemplate.markerLabel)
         markerLabelReached = "✓ $markerLabel"
     }
 
@@ -423,7 +892,7 @@ class ExerciseAnimationView @JvmOverloads constructor(
         val template = resolved.template
         val joint = template.markerJoint
         if (joint < 0) return
-        val reached = abs(joints[joint * 2 + 1] - template.markerY) < 1.2f
+        val reached = abs(joints[joint * 2 + 1] - template.markerReachY) < 1.2f
         val y = oy + template.markerY * scale
         val centerX = ox + template.markerX * scale
         val x0 = max(ox + 10f * scale, centerX - 30f * scale)
@@ -445,10 +914,17 @@ class ExerciseAnimationView @JvmOverloads constructor(
     /** Corner label for the current phase and a segmented progress strip along the bottom. */
     private fun drawPhase(canvas: Canvas, left: Float, top: Float, right: Float, bottom: Float) {
         val template = resolved.template
-        // Neutral movements (stretches, mobility) show the strip only; "Move / Return" adds nothing.
-        if (template.usesTempo && template.phaseLabels != PhaseLabels.MOVE && frameSegment in phaseLabels.indices) {
-            canvas.drawText(phaseLabels[frameSegment], left + dp(12f), top + dp(10f) - phaseTextPaint.ascent(), phaseTextPaint)
+        val own = template.phaseSpec
+        val ownLabels = ownPhaseLabels
+        // A clip's own labels (holds, slow negatives) come first; otherwise neutral movements (stretches, mobility) show
+        // the strip only, as "Move / Return" adds nothing.
+        val label = when {
+            own != null && ownLabels != null -> ownLabels[own.indexAt(frameTimeline)]
+            template.usesTempo && template.phaseLabels != PhaseLabels.MOVE && frameSegment in phaseLabels.indices ->
+                phaseLabels[frameSegment]
+            else -> null
         }
+        if (label != null) canvas.drawText(label, left + dp(12f), top + dp(10f) - phaseTextPaint.ascent(), phaseTextPaint)
         val units = if (template.usesTempo) template.tempoUnits else LOOP_UNITS
         val total = units.sum()
         val startX = left + dp(14f)
@@ -508,7 +984,7 @@ class ExerciseAnimationView @JvmOverloads constructor(
     private fun drawFigure(canvas: Canvas, ox: Float, oy: Float, scale: Float, strokeBoost: Float = 1f) =
         canvas.drawLineFigure(
             joints, blendedPose.spine, blendedPose.facing, library.rig.headRadius, ox, oy, scale,
-            figurePaint, farLimbPaint, headPaint, handPaint, torsoPath, strokeBoost,
+            figurePaint, farLimbPaint, headPaint, handPaint, torsoPath, strokeBoost, handRingPaint,
         )
 
     private fun restartAnimationIfNeeded() {
@@ -534,7 +1010,9 @@ class ExerciseAnimationView @JvmOverloads constructor(
             repeatCount = ValueAnimator.INFINITE
             repeatMode = ValueAnimator.RESTART
             addUpdateListener {
-                animationPhase = (it.animatedValue as Float) % 1f
+                val phase = (it.animatedValue as Float) % 1f
+                if (phase < animationPhase) cycle++
+                animationPhase = phase
                 postInvalidateOnAnimation()
             }
             start()
@@ -542,7 +1020,8 @@ class ExerciseAnimationView @JvmOverloads constructor(
     }
 
     private fun shouldAnimate(): Boolean =
-        (badge == null || badgeMoves) &&
+        !held &&
+            (badge == null || badgeMoves) &&
             !parked &&
             isAttachedToWindow &&
             windowVisibility == VISIBLE &&
@@ -554,7 +1033,18 @@ class ExerciseAnimationView @JvmOverloads constructor(
             !visibleRect.isEmpty &&
             context.systemAnimationsEnabled()
 
-    private fun isAnimationRunning(): Boolean = animator?.isRunning == true
+    /** Review tools only (the androidTest gallery): draws the frame at [phase] of the loop, [cycle] reps in, as if playing. */
+    internal fun hold(phase: Float, cycle: Int = 0) {
+        stopAnimator()
+        held = true
+        animationPhase = phase
+        this.cycle = cycle
+        invalidate()
+    }
+
+    private var held = false
+
+    private fun isAnimationRunning(): Boolean = held || animator?.isRunning == true
 
     private fun stopAnimator() {
         animator?.cancel()
@@ -585,6 +1075,7 @@ internal fun Canvas.drawLineFigure(
     hand: Paint?,
     torsoPath: Path,
     strokeBoost: Float = 1f,
+    handRing: Paint? = null,
 ) {
     fun x(joint: Int): Float = ox + joints[joint * 2] * scale
     fun y(joint: Int): Float = oy + joints[joint * 2 + 1] * scale
@@ -632,6 +1123,11 @@ internal fun Canvas.drawLineFigure(
         val handRadius = 1.6f * scale
         drawCircle(x(Rig.HAND_FAR), y(Rig.HAND_FAR), handRadius, hand)
         drawCircle(x(Rig.HAND_NEAR), y(Rig.HAND_NEAR), handRadius, hand)
+        if (handRing != null) {
+            handRing.strokeWidth = FrontView.HAND_RING * scale
+            drawCircle(x(Rig.HAND_FAR), y(Rig.HAND_FAR), handRadius, handRing)
+            drawCircle(x(Rig.HAND_NEAR), y(Rig.HAND_NEAR), handRadius, handRing)
+        }
     }
 }
 
@@ -671,8 +1167,53 @@ private val LOOP_UNITS = floatArrayOf(1f)
 /** Joints that bound the body for badge framing (the averaged hands/feet points are skipped). */
 private const val BADGE_JOINTS = 14
 private const val BADGE_STROKE = 1.6f
+/**
+ * Badges draw every figure at one scale: [BADGE_SPAN] canvas units (a hang from the bar to the toes, a lying body)
+ * across [BADGE_FILL] of the tile.
+ */
+private const val BADGE_SPAN = 92f
+private const val BADGE_FILL = 0.86f
 /** Poses sampled to frame a moving badge. */
 private const val CYCLE_SAMPLES = 12
+/** Half the canvas width: a two-view guide's side clip fills the left half and its front view the right. */
+private const val HALF = 100f
+/** Floors either side of a view's centre: across the whole canvas, or across one half of a two-view guide. */
+private const val FLOOR_HALF = 92f
+private const val HALF_FLOOR = 46f
+/** The bar in a two-view guide's side half: seen end-on its width means nothing, so every grip gets the same frame. */
+private const val SIDE_BAR_HALF = 19f
+/** Bars that run across the body, so a side view sees them end-on and a front view along their length. */
+private val CROSS_BARS = setOf("high_bar", "mid_bar", "low_bar", "chest_bar", "assisted_bar", "gh_bar")
+private val FRAME_APPARATUS = setOf("floor") + CROSS_BARS
+/** The front view's bar, as a pull-up's: wide enough for the grip, with its posts clear of the body. */
+private const val FRONT_BAR_HALF = 19f
+/** Hands' distance from the centre line on supports: a push-up's, a bar grip, dip bars, parallettes. */
+private const val PRESS_WIDTH = 8.5f
+private const val GRIP_WIDTH = 11f
+private const val DIP_WIDTH = 9f
+private const val HANDLE_WIDTH = 8f
+/** Posts a hand holds, and how close a hand comes to one that it holds. */
+private val POSTS = setOf("post_left", "post_right")
+private const val POST_REACH = 9f
+/** A post beside the body, and the hands either side of one held in front with both. */
+private const val POST_WIDTH = 12f
+private const val POST_GRIP_WIDTH = 2.5f
+/** Where a hand flat on the floor sits in the side clips. */
+private const val FLOOR_HAND_Y = 104.5f
+private const val MAX_BOXES = 3
+private const val BOX_HALF = 12f
+private const val MAT_HALF = 9f
+/**
+ * Clips drawn facing the viewer, so a front view can't be worked out from them: each with its own side clip, or null
+ * for planks and flags, whose other view is the clip seen end-on along the body.
+ */
+private val FACING_CLIPS: Map<String, String?> = mapOf(
+    "windshield_wiper" to "wiper_side", "pancake_compression" to "pancake_side",
+    "assisted_tuck_flag" to null, "tuck_flag" to null, "straddle_flag" to null, "full_flag" to null,
+    "flag_ground_support" to null, "side_plank" to null, "straight_side_plank" to null, "kneeling_side_plank" to null,
+)
+/** How wide a figure seen end-on along its body is drawn: nearly stacked in line. */
+private const val END_WIDTH = 0.35f
 
 private data class ApparatusPrimitive(
     val type: String,
@@ -864,6 +1405,8 @@ internal class Rig(
 
         fun jointIndex(name: String): Int = names.indexOf(name).takeIf { it >= 0 } ?: HIP
 
+        fun jointOrNull(name: String): Int? = names.indexOf(name).takeIf { it >= 0 }
+
         val DEFAULT = Rig(
             headRadius = 4.5f, neck = 3f, torso = 20f, upperArm = 13.5f,
             forearm = 12.5f, thigh = 16f, shin = 15f, foot = 5f,
@@ -1048,6 +1591,22 @@ private enum class PhaseLabels(val labels: IntArray) {
     MOVE(intArrayOf(R.string.motion_phase_move, R.string.motion_phase_hold, R.string.motion_phase_return, R.string.motion_phase_reset)),
 }
 
+/**
+ * A clip's own range line (the template's "marker"), for what the app can't work out from the clip: the [joint] to
+ * watch (-1: the worked-out one), where the line sits ([y], NaN: where the joint ends up), its [label] (0: worked out)
+ * and the moment of the timeline the joint is measured at ([at]). [off] removes the line, as on stretches.
+ */
+private class MarkerSpec(val joint: Int, val y: Float, val label: Int, val at: Float, val off: Boolean)
+
+/** A clip's own phase labels (the template's "phases"): [labels][i] from [times][i] of the timeline on. */
+private class PhaseSpec(val times: FloatArray, val labels: IntArray) {
+    fun indexAt(timeline: Float): Int {
+        var index = 0
+        for (i in times.indices) if (timeline >= times[i]) index = i
+        return index
+    }
+}
+
 private class MotionTemplate(
     val name: String,
     val durationMs: Long,
@@ -1056,6 +1615,8 @@ private class MotionTemplate(
     val reducedMotionFrame: Float,
     val apparatus: List<String>,
     val keyframes: List<PoseKeyframe>,
+    val markerSpec: MarkerSpec? = null,
+    val phaseSpec: PhaseSpec? = null,
 ) {
     lateinit var curve: MotionCurve
         private set
@@ -1068,6 +1629,9 @@ private class MotionTemplate(
     var markerX = 0f
         private set
     var markerY = 0f
+        private set
+    /** Where the marker joint ends up: the line lights up when the joint gets there, wherever the line itself sits. */
+    var markerReachY = 0f
         private set
     var phaseLabels = PhaseLabels.MOVE
         private set
@@ -1145,6 +1709,23 @@ private class MotionTemplate(
         } else {
             R.string.motion_marker_range
         }
+        markerReachY = markerY
+        markerSpec?.let { applyMarker(it, pose) }
+    }
+
+    private fun applyMarker(spec: MarkerSpec, pose: Pose) {
+        if (spec.off) {
+            markerJoint = -1
+            return
+        }
+        if (spec.joint >= 0) markerJoint = spec.joint
+        if (markerJoint < 0) return
+        val joints = FloatArray(Rig.JOINT_COUNT * 2)
+        curve.evaluate(spec.at, pose, joints)
+        markerX = joints[markerJoint * 2]
+        markerReachY = joints[markerJoint * 2 + 1]
+        markerY = if (spec.y.isNaN()) markerReachY else spec.y
+        if (spec.label != 0) markerLabel = spec.label
     }
 
     fun timeline(rawPhase: Float): Float = when (mode) {
@@ -1332,6 +1913,8 @@ private class AnimationLibrary(
                         keyframes.single(),
                         PoseKeyframe(1f, keyframes.single().pose),
                     ) else keyframes,
+                    markerSpec = markerSpec(json.opt("marker")),
+                    phaseSpec = phaseSpec(json.opt("phases")),
                 )
             }
             require(templates.isNotEmpty()) { "No animation templates" }
@@ -1353,6 +1936,55 @@ private class AnimationLibrary(
                 fallbackName = root.optString("fallback", templates.keys.first()),
             )
         }
+
+        /** A template's "marker": false for none, or an object with any of joint, y, label and at. */
+        private fun markerSpec(value: Any?): MarkerSpec? = when (value) {
+            false -> MarkerSpec(-1, Float.NaN, 0, 1f, off = true)
+            is JSONObject -> MarkerSpec(
+                joint = value.optString("joint").takeIf(String::isNotBlank)?.let { Rig.jointOrNull(it) } ?: -1,
+                y = value.optDouble("y", Double.NaN).toFloat(),
+                label = MARKER_LABELS[value.optString("label")] ?: 0,
+                at = value.optDouble("at", 1.0).toFloat().coerceIn(0f, 1f),
+                off = false,
+            )
+            else -> null
+        }
+
+        /** A template's "phases": one label name for the whole clip, or [at, label] pairs along a loop. */
+        private fun phaseSpec(value: Any?): PhaseSpec? = when (value) {
+            is String -> PHASE_LABELS[value]?.let { PhaseSpec(floatArrayOf(0f), intArrayOf(it)) }
+            is JSONArray -> {
+                val pairs = (0 until value.length()).mapNotNull { index ->
+                    val pair = value.optJSONArray(index) ?: return@mapNotNull null
+                    val label = PHASE_LABELS[pair.optString(1)] ?: return@mapNotNull null
+                    pair.optDouble(0, 0.0).toFloat() to label
+                }.sortedBy { it.first }
+                if (pairs.isEmpty()) null
+                else PhaseSpec(FloatArray(pairs.size) { pairs[it].first }, IntArray(pairs.size) { pairs[it].second })
+            }
+            else -> null
+        }
+
+        private val MARKER_LABELS = mapOf(
+            "chin_over_bar" to R.string.motion_marker_chin, "full_range" to R.string.motion_marker_range,
+            "chest_to_bar" to R.string.motion_marker_chest_to_bar, "chest_to_fist" to R.string.motion_marker_chest_to_fist,
+            "chest_to_edge" to R.string.motion_marker_chest_to_edge, "chest_to_wall" to R.string.motion_marker_chest_to_wall,
+            "shoulders_to_elbows" to R.string.motion_marker_shoulders_to_elbows,
+            "hips_to_knees" to R.string.motion_marker_hips_to_knees, "back_knee_down" to R.string.motion_marker_back_knee_down,
+            "knees_to_hips" to R.string.motion_marker_knees_to_hips, "feet_to_hips" to R.string.motion_marker_feet_to_hips,
+            "toes_to_bar" to R.string.motion_marker_toes_to_bar, "hips_in_line" to R.string.motion_marker_hips_in_line,
+            "head_ahead" to R.string.motion_marker_head_ahead, "head_to_mat" to R.string.motion_marker_head_to_mat,
+            "shoulders_down" to R.string.motion_marker_shoulders_down, "heels_high" to R.string.motion_marker_heels_high,
+            "hips_level" to R.string.motion_marker_hips_level, "legs_level" to R.string.motion_marker_legs_level,
+            "feet_off" to R.string.motion_marker_feet_off, "stand_tall" to R.string.motion_marker_stand_tall,
+        )
+
+        private val PHASE_LABELS = mapOf(
+            "hold" to R.string.motion_phase_hold_breathe, "lower_slow" to R.string.motion_phase_lower_slow,
+            "step_down" to R.string.motion_phase_step_down, "step_up" to R.string.motion_phase_step_up,
+            "come_down" to R.string.motion_phase_come_down, "hang" to R.string.motion_phase_hang,
+            "pull" to R.string.motion_phase_pull, "press" to R.string.motion_phase_press,
+        )
 
         private fun fallbackLibrary(): AnimationLibrary {
             val template = emergencyTemplate().also { it.prepare(Rig.DEFAULT) }

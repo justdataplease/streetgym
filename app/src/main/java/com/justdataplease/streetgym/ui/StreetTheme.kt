@@ -6,13 +6,16 @@ import android.graphics.Typeface
 import android.widget.TextView
 import com.justdataplease.streetgym.R
 
-/** How corners are cut: Fresh Court rounds them, both Concrete looks and Wheatpaste keep them square, Night Park chamfers them. */
-enum class Corner { ROUND, SQUARE, CHAMFER }
+/** How corners are cut: Concrete & Tape and Wheatpaste keep them square, Night Park chamfers them. */
+enum class Corner { SQUARE, CHAMFER }
 
 /** The page background: flat, or the fine grain of concrete or poster paper. */
 enum class Texture { NONE, CONCRETE, PAPER }
 
-/** The colours behind [AppColors]. [ink] is the dark text put on light fills; [spot] only decorates (shadows, halftone, highlights). */
+/**
+ * The colours behind [AppColors]. [ink] is the dark text put on light fills; [spot] only decorates (shadows, halftone,
+ * highlights); [palm] colours the movement guides' hands.
+ */
 class Palette(
     val primary: Int,
     val primaryDark: Int,
@@ -34,6 +37,7 @@ class Palette(
     val heroKicker: Int,
     val mark: Int,
     val heart: Int,
+    val palm: Int,
 )
 
 /** Shapes and type treatment: card outline and the hard offset shadow under primary buttons, in dp. */
@@ -48,7 +52,7 @@ class ThemeShape(
     val texture: Texture,
 )
 
-/** Font files under assets/fonts; null keeps the system face, as Fresh Court always has. */
+/** Font files under assets/fonts; null keeps the system face. */
 class ThemeFonts(
     val body: String?,
     val bold: String?,
@@ -62,10 +66,7 @@ private const val ALBERT = "albert_sans_regular.ttf"
 private const val ALBERT_BOLD = "albert_sans_bold.ttf"
 private const val ALBERT_EXTRABOLD = "albert_sans_extrabold.ttf"
 
-/**
- * The five looks picked in Settings, all free. Fresh Court is the default; Night Park is the only dark one. Concrete &
- * Trees is Concrete & Tape in the brand greens (the launcher icon's deep green and mint), so it shares its decor.
- */
+/** The three looks picked in Settings, all free. Concrete & Tape is the default and Night Park the dark one. */
 enum class StreetTheme(
     val key: String,
     val dark: Boolean,
@@ -85,22 +86,7 @@ enum class StreetTheme(
             onAccent = 0xFFF5F4F0.toInt(), action = 0xFFFFD60A.toInt(), success = 0xFF121212.toInt(),
             warningSurface = 0xFFFFF1A6.toInt(), border = 0xFF121212.toInt(), ink = 0xFF121212.toInt(),
             spot = 0xFFFFD60A.toInt(), heroText = 0xFFF5F4F0.toInt(), heroKicker = 0xFFFFD60A.toInt(),
-            mark = 0xFF121212.toInt(), heart = 0xFFD7263D.toInt(),
-        ),
-        ThemeShape(Corner.SQUARE, borderDp = 2, shadowDp = 4, dashedSecondary = false, upperTitles = true,
-            titleScale = 1.15f, labelSpacing = 0.14f, texture = Texture.CONCRETE),
-        ThemeFonts(ALBERT, ALBERT_BOLD, "anton_regular.ttf", "anton_regular.ttf", ALBERT_EXTRABOLD, "anton_regular.ttf"),
-    ),
-    CONCRETE_TREES(
-        "concrete_trees", false, R.string.theme_concrete_trees, R.string.theme_concrete_trees_summary, R.style.Theme_StreetTrees,
-        Palette(
-            primary = 0xFF1E7056.toInt(), primaryDark = 0xFF193F31.toInt(), background = 0xFFD9D7D2.toInt(),
-            surface = 0xFFF5F4F0.toInt(), text = 0xFF121212.toInt(), textSecondary = 0xFF4A4945.toInt(),
-            divider = 0xFF9C9992.toInt(), infoSurface = 0xFFE9E7E2.toInt(), accent = 0xFF69DFB4.toInt(),
-            onAccent = 0xFFF5F4F0.toInt(), action = 0xFF69DFB4.toInt(), success = 0xFF1E7056.toInt(),
-            warningSurface = 0xFFD5F3E6.toInt(), border = 0xFF121212.toInt(), ink = 0xFF121212.toInt(),
-            spot = 0xFF69DFB4.toInt(), heroText = 0xFFF5F4F0.toInt(), heroKicker = 0xFF69DFB4.toInt(),
-            mark = 0xFF1E7056.toInt(), heart = 0xFFD7263D.toInt(),
+            mark = 0xFF121212.toInt(), heart = 0xFFD7263D.toInt(), palm = 0xFFFFD60A.toInt(),
         ),
         ThemeShape(Corner.SQUARE, borderDp = 2, shadowDp = 4, dashedSecondary = false, upperTitles = true,
             titleScale = 1.15f, labelSpacing = 0.14f, texture = Texture.CONCRETE),
@@ -115,7 +101,7 @@ enum class StreetTheme(
             onAccent = 0xFF140B03.toInt(), action = 0xFFFF8A2A.toInt(), success = 0xFFFF8A2A.toInt(),
             warningSurface = 0xFF33281C.toInt(), border = 0xFF2A2D31.toInt(), ink = 0xFF140B03.toInt(),
             spot = 0xFFFF8A2A.toInt(), heroText = 0xFFF2EEE6.toInt(), heroKicker = 0xFFFF8A2A.toInt(),
-            mark = 0xFFFF8A2A.toInt(), heart = 0xFFFF7D8F.toInt(),
+            mark = 0xFFFF8A2A.toInt(), heart = 0xFFFF7D8F.toInt(), palm = 0xFFFF8A2A.toInt(),
         ),
         ThemeShape(Corner.CHAMFER, borderDp = 0, shadowDp = 0, dashedSecondary = false, upperTitles = true,
             titleScale = 1.15f, labelSpacing = 0.2f, texture = Texture.NONE),
@@ -131,39 +117,25 @@ enum class StreetTheme(
             onAccent = 0xFFFFFFFF.toInt(), action = 0xFF1C1B1A.toInt(), success = 0xFF1F4FD1.toInt(),
             warningSurface = 0xFFFFE1EE.toInt(), border = 0xFF1C1B1A.toInt(), ink = 0xFF1C1B1A.toInt(),
             spot = 0xFFFF4FA0.toInt(), heroText = 0xFFFFFFFF.toInt(), heroKicker = 0xFFFFFFFF.toInt(),
-            mark = 0xFF1F4FD1.toInt(), heart = 0xFFE0245E.toInt(),
+            mark = 0xFF1F4FD1.toInt(), heart = 0xFFE0245E.toInt(), palm = 0xFF1F4FD1.toInt(),
         ),
         ThemeShape(Corner.SQUARE, borderDp = 2, shadowDp = 5, dashedSecondary = true, upperTitles = false,
             titleScale = 0.95f, labelSpacing = 0.06f, texture = Texture.PAPER),
         ThemeFonts(ALBERT, ALBERT_BOLD, "archivo_black_regular.ttf", "archivo_black_regular.ttf", "space_mono_bold.ttf",
             "space_mono_bold.ttf"),
-    ),
-    FRESH_COURT(
-        "fresh_court", false, R.string.theme_fresh_court, R.string.theme_fresh_court_summary, R.style.Theme_StreetGym,
-        Palette(
-            primary = 0xFF1E7056.toInt(), primaryDark = 0xFF193F31.toInt(), background = 0xFFF4F7F3.toInt(),
-            surface = 0xFFFFFFFF.toInt(), text = 0xFF182A22.toInt(), textSecondary = 0xFF66756C.toInt(),
-            divider = 0xFFE0E7E0.toInt(), infoSurface = 0xFFE3F2E9.toInt(), accent = 0xFF69DFB4.toInt(),
-            onAccent = 0xFFFFFFFF.toInt(), action = 0xFF1E7056.toInt(), success = 0xFF1E7056.toInt(),
-            warningSurface = 0xFFFFF0D9.toInt(), border = 0xFFE0E7E0.toInt(), ink = 0xFF182A22.toInt(),
-            spot = 0xFF69DFB4.toInt(), heroText = 0xFFFFFFFF.toInt(), heroKicker = 0xFF69DFB4.toInt(),
-            mark = 0xFF1E7056.toInt(), heart = 0xFFE0455A.toInt(),
-        ),
-        ThemeShape(Corner.ROUND, borderDp = 1, shadowDp = 0, dashedSecondary = false, upperTitles = false,
-            titleScale = 1f, labelSpacing = 0.08f, texture = Texture.NONE),
-        ThemeFonts(null, null, null, null, null, null),
     );
 
-    /** Both Concrete looks: the same tape, boxes and outlined buttons. */
-    val concrete: Boolean get() = this == CONCRETE || this == CONCRETE_TREES
-
     companion object {
-        val DEFAULT = FRESH_COURT
-        fun fromKey(key: String?): StreetTheme? = entries.firstOrNull { it.key == key }
+        val DEFAULT = CONCRETE
+
+        /** Looks that were dropped open as the one they were a copy of; Fresh Court falls back to the default. */
+        private val RETIRED = mapOf("concrete_trees" to "concrete", "green_park" to "night_park")
+
+        fun fromKey(key: String?): StreetTheme? = (RETIRED[key] ?: key).let { found -> entries.firstOrNull { it.key == found } }
     }
 }
 
-/** The active theme's faces. Fresh Court keeps the system font, so it gets nothing from here. */
+/** The active theme's faces. */
 object AppType {
     private var assets: AssetManager? = null
     private val cache = HashMap<String, Typeface>()

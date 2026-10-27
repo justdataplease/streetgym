@@ -38,11 +38,25 @@ function Limit-TrainingSteps($Steps, [int]$SetBudget, [int]$SetsPerExercise) {
     $lowerIndexes = @($allIndexes | Where-Object {
         @($movementById[[string]$rows[$_][0]].patterns | Where-Object { $_ -in $script:lowerBodyPatterns }).Count -gt 0
     })
+    # The class's lead skill (its first advanced skill, else its first skill rung) keeps its authored sets, so a
+    # rung's start gate never rests on a trimmed session; the trims fall on the supporting work (round 5b).
+    $rank = @{ advanced_skill = 2; mastery_skill = 2; skill = 1 }
+    $lead = -1
+    foreach ($index in $allIndexes) {
+        $leadRank = [int]$rank[[string]$movementById[[string]$rows[$index][0]].category]
+        if ($leadRank -gt 0 -and ($lead -lt 0 -or $leadRank -gt [int]$rank[[string]$movementById[[string]$rows[$lead][0]].category])) { $lead = $index }
+    }
     for ($round = 0; $round -lt $SetsPerExercise; $round++) {
         $order = if ($round -eq 1) { @($lowerIndexes) + @($allIndexes | Where-Object { $_ -notin $lowerIndexes }) } else { $allIndexes }
         foreach ($index in $order) {
-            if ($SetBudget -gt 0 -and $round -lt [int]$rows[$index][1]) {
+            if ($SetBudget -gt 0 -and $round -lt [int]$rows[$index][1] -and $counts[$index] -eq $round) {
                 $counts[$index]++
+                $SetBudget--
+            }
+        }
+        if ($round -eq 0 -and $lead -ge 0) {
+            while ($SetBudget -gt 0 -and $counts[$lead] -lt [Math]::Min([int]$rows[$lead][1], $SetsPerExercise)) {
+                $counts[$lead]++
                 $SetBudget--
             }
         }
@@ -419,11 +433,35 @@ foreach ($levelDefinition in $levelDefinitions) {
                 }
                 $program["practice"] = $kept.ToArray()
             }
+            # Deload weeks unload the practice too: one set per side of flag work and half the other practice sets.
+            if ([string]$program.schedule.day_type -match "deload") {
+                $halved = New-Object System.Collections.ArrayList
+                foreach ($step in @($program.practice)) {
+                    $copy = @($step).Clone()
+                    $copy[1] = $(if ([string]$copy[0] -in $script:flagPracticeIds) { 1 } else { [int][Math]::Ceiling([int]$copy[1] / 2) })
+                    [void]$halved.Add($copy)
+                }
+                $program["practice"] = $halved.ToArray()
+            }
+        } elseif ($classDay -notin @(4, 7)) {
+            # Original-source classes add the level's source practice (pike push-ups: the source blocks press too little).
+            $sourceSlot = @($classLevel.source_practice | Where-Object { [int]$_.day -eq $classDay } | Select-Object -First 1)
+            if ($sourceSlot.Count -eq 1) {
+                $combined = New-Object System.Collections.ArrayList
+                foreach ($step in @($classSlot.practice) + @($sourceSlot[0].practice)) { [void]$combined.Add($step) }
+                $program["practice"] = $combined.ToArray()
+            }
         }
         if ($program.origin -eq "apk_authentic" -and $classDay -in @(4, 7)) {
             $program["morning_recovery"] = $true
             $program["practice"] = @()
-            $program["main"] = $morningClass.early_recovery
+            $recoveryMain = New-Object System.Collections.ArrayList
+            foreach ($step in @($morningClass.early_recovery)) { [void]$recoveryMain.Add($step) }
+            # From Level 2 the source recovery days add hinge work (the source blocks hold almost none).
+            if ($levelNumber -ge [int]$morningClass.early_recovery_hinge.from_level) {
+                foreach ($step in @($morningClass.early_recovery_hinge.steps)) { [void]$recoveryMain.Add($step) }
+            }
+            $program["main"] = $recoveryMain.ToArray()
             $program["title"] = Localized ("Mobility & Recovery - Session {0}" -f $program.number)
             $program["description"] = Localized "An easy morning class: gentle walking, shoulder mobility and trunk control. Finish feeling fresher for the next strength session."
             $program["safety"] = $catalogMetadata.training_recovery

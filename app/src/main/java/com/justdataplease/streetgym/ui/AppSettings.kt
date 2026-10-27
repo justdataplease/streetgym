@@ -39,9 +39,21 @@ class AppSettings(context: Context) {
         get() = preferences.getBoolean(KEY_PLACEMENT_DONE, false)
         set(value) = preferences.edit().putBoolean(KEY_PLACEMENT_DONE, value).apply()
 
+    /** The developer settings' passcode was accepted ([DeveloperMenu]); one tap on the version then opens them. */
+    var developerUnlocked: Boolean
+        get() = preferences.getBoolean(KEY_DEVELOPER_UNLOCKED, false)
+        set(value) = preferences.edit().putBoolean(KEY_DEVELOPER_UNLOCKED, value).apply()
+
+    /** Developer setting: days not reached yet, paid levels included, open read-only to inspect them. */
+    var inspectAllDays: Boolean
+        get() = preferences.getBoolean(KEY_INSPECT_ALL_DAYS, false)
+        set(value) = preferences.edit().putBoolean(KEY_INSPECT_ALL_DAYS, value).apply()
+
     fun selectedLocale(): Locale = Locale.ENGLISH
 
     companion object {
+        private const val KEY_DEVELOPER_UNLOCKED = "developer_unlocked"
+        private const val KEY_INSPECT_ALL_DAYS = "inspect_all_days"
         private const val KEY_HISTORY_VIEW = "history_view"
         private const val PREFERENCES_NAME = "streetgym_settings"
         private const val KEY_THEME = "theme"

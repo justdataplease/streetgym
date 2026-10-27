@@ -45,6 +45,10 @@ data class TrainingProgram(
     val cooldown: List<TrainingExercise> = emptyList(),
 )
 
+/**
+ * One exercise of a class. [easier]: the step's easier rung, which the athlete may do instead and is credited for.
+ * [readinessCheck]: a single test set, answered "Did you hit it?" rather than credited as training.
+ */
 data class TrainingExercise(
     val id: String,
     val movementId: String? = null,
@@ -54,7 +58,11 @@ data class TrainingExercise(
     val sets: List<TrainingSet>,
     val category: String? = null,
     val equipment: List<String> = emptyList(),
+    val easier: EasierOption? = null,
+    val readinessCheck: Boolean = false,
 )
+
+data class EasierOption(val movementId: String, val name: LocalizedText)
 
 data class TrainingSet(
     val id: String,

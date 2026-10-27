@@ -23,30 +23,28 @@ import kotlin.math.min
 
 /*
  * The signature pieces of each theme, beyond what UiKit's shared helpers draw: the bottom bar, the Today header,
- * the level list and the focus progress strip. Fresh Court has none of them and looks exactly as it always did.
+ * the level list and the focus progress strip.
  */
 
 private val active get() = AppColors.theme
 
 /** The bottom bar's background in the active theme. */
 fun Context.navBarBackground(): Drawable = when (active) {
-    StreetTheme.CONCRETE, StreetTheme.CONCRETE_TREES -> roundedDrawable(AppColors.BORDER, 0f)
+    StreetTheme.CONCRETE -> roundedDrawable(AppColors.BORDER, 0f)
     StreetTheme.WHEATPASTE -> TopRuleDrawable(AppColors.BACKGROUND, AppColors.BORDER, dp(3).toFloat())
     StreetTheme.NIGHT_PARK -> roundedDrawable(AppColors.SURFACE, dp(24).toFloat())
-    StreetTheme.FRESH_COURT -> roundedDrawable(AppColors.SURFACE, dp(24).toFloat(), AppColors.DIVIDER, dp(1))
 }
 
 /** A bottom-bar item's background, null for none. */
 fun Context.navItemBackground(selected: Boolean): Drawable? = when (active) {
-    StreetTheme.CONCRETE, StreetTheme.CONCRETE_TREES -> if (selected) roundedDrawable(AppColors.ACCENT, 0f) else null
+    StreetTheme.CONCRETE -> if (selected) roundedDrawable(AppColors.ACCENT, 0f) else null
     StreetTheme.NIGHT_PARK -> if (selected) TopRuleDrawable(Color.TRANSPARENT, AppColors.PRIMARY, dp(3).toFloat()) else null
     StreetTheme.WHEATPASTE -> null
-    StreetTheme.FRESH_COURT -> roundedDrawable(if (selected) AppColors.INFO_SURFACE else AppColors.SURFACE, dp(16).toFloat())
 }
 
 /** The colour of a bottom-bar item's icon and label. */
 fun navItemColor(selected: Boolean): Int = when (active) {
-    StreetTheme.CONCRETE, StreetTheme.CONCRETE_TREES -> if (selected) AppColors.BORDER else 0xFFBDBAB3.toInt()
+    StreetTheme.CONCRETE -> if (selected) AppColors.BORDER else 0xFFBDBAB3.toInt()
     StreetTheme.WHEATPASTE -> if (selected) AppColors.TEXT else AppColors.TEXT_SECONDARY
     else -> if (selected) AppColors.PRIMARY else AppColors.TEXT_SECONDARY
 }
@@ -74,13 +72,12 @@ fun TextView.styleToolbarTitle() {
 
 /**
  * The head of Today's day card: Concrete's tape strip and big class number, Night Park's stencilled overall number,
- * Wheatpaste's pasted poster. Null in Fresh Court.
+ * Wheatpaste's pasted poster.
  */
-fun Context.todayHeader(levelNumber: Int, levelName: String, classInLevel: Int, levelSize: Int, overall: Int, total: Int): View? {
+fun Context.todayHeader(levelNumber: Int, levelName: String, classInLevel: Int, levelSize: Int, overall: Int, total: Int): View {
     val levelLine = getString(R.string.theme_level_line, levelNumber, levelName)
     return when (active) {
-        StreetTheme.FRESH_COURT -> null
-        StreetTheme.CONCRETE, StreetTheme.CONCRETE_TREES -> LinearLayout(this).apply {
+        StreetTheme.CONCRETE -> LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             addWithMargins(TextView(context).apply {
                 text = levelLine.uppercase()
@@ -205,8 +202,7 @@ val levelsOnRoute: Boolean get() = active == StreetTheme.NIGHT_PARK
 fun Context.decorateLevel(card: LinearLayout, state: LevelState, index: Int, first: Boolean, last: Boolean): View {
     val radius = dp(24).toFloat()
     when (active) {
-        StreetTheme.FRESH_COURT -> Unit
-        StreetTheme.CONCRETE, StreetTheme.CONCRETE_TREES -> when (state) {
+        StreetTheme.CONCRETE -> when (state) {
             LevelState.CURRENT -> {
                 val offset = dp(4)
                 card.background = shadowed(roundedDrawable(AppColors.ACCENT, 0f, AppColors.BORDER, dp(2)),
@@ -336,7 +332,7 @@ class SetProgressView(context: Context, private val completed: BooleanArray, pri
 
     override fun onDraw(canvas: Canvas) {
         when (AppColors.theme) {
-            StreetTheme.CONCRETE, StreetTheme.CONCRETE_TREES -> boxes(canvas)
+            StreetTheme.CONCRETE -> boxes(canvas)
             StreetTheme.WHEATPASTE -> tally(canvas)
             else -> track(canvas)
         }
@@ -419,10 +415,9 @@ class SetProgressView(context: Context, private val completed: BooleanArray, pri
     companion object {
         /** How tall the strip is in the active theme, in dp. */
         val heightDp: Int get() = when (AppColors.theme) {
-            StreetTheme.CONCRETE, StreetTheme.CONCRETE_TREES -> 10
+            StreetTheme.CONCRETE -> 10
             StreetTheme.NIGHT_PARK -> 12
             StreetTheme.WHEATPASTE -> 22
-            StreetTheme.FRESH_COURT -> 4
         }
     }
 }
@@ -462,7 +457,7 @@ fun Context.themePicker(selected: StreetTheme, onPick: (StreetTheme) -> Unit): L
                 isChecked = option == selected
                 isClickable = false
                 isFocusable = false
-                buttonTintList = ColorStateList.valueOf(if (AppColors.theme.concrete) AppColors.TEXT else AppColors.PRIMARY)
+                buttonTintList = ColorStateList.valueOf(if (AppColors.theme == StreetTheme.CONCRETE) AppColors.TEXT else AppColors.PRIMARY)
                 importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
             })
         })
@@ -513,7 +508,6 @@ private class ThemeSwatch(context: Context, private val option: StreetTheme) : V
         path.reset()
         val r = radiusDp * density
         when (option.shape.corner) {
-            Corner.ROUND -> path.addRoundRect(box, r, r, Path.Direction.CW)
             Corner.SQUARE -> path.addRect(box, Path.Direction.CW)
             Corner.CHAMFER -> {
                 val cut = min(r * 0.8f, min(box.width(), box.height()) / 2)

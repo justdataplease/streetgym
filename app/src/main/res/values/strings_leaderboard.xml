@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="progress_tab_leaderboard">Leaderboard</string>
-    <string name="leaderboard_intro">See how your training compares: an overall board and one for every skill, worldwide and by country.</string>
+    <string name="leaderboard_intro">See how your skills compare: the overall score out of 1000 and a board for every skill family, worldwide and by country.</string>
     <string name="leaderboard_unavailable">The leaderboard isn’t available in this build.</string>
     <string name="leaderboard_world">World</string>
     <string name="leaderboard_overall">Overall</string>
@@ -13,12 +13,12 @@
     <string name="leaderboard_rank">#%1$d</string>
     <string name="leaderboard_you_rank">You’re #%1$d · %2$s points</string>
     <string name="leaderboard_you_top">You’re in the top %1$d%% · %2$s points</string>
-    <string name="leaderboard_you_none">Finish workouts to earn points on this board.</string>
+    <string name="leaderboard_you_none">Train and pass skill tests to earn points on this board.</string>
     <string name="leaderboard_hidden">You’re hidden from the leaderboard. Turn it on in Settings.</string>
-    <string name="leaderboard_sign_in">Sign in in Settings to appear on the leaderboard.</string>
+    <string name="leaderboard_sign_in">Sign in from Settings to appear on the leaderboard.</string>
     <string name="leaderboard_join">Get Pro to appear on the leaderboard</string>
     <string name="leaderboard_updated">%1$s players · updated %2$s · boards refresh every 6 hours</string>
-    <string name="leaderboard_how">Points come from workouts you finish: the same skill points as Progress. Days marked with Complete day or Complete level, repeats and your own workouts don’t count.</string>
+    <string name="leaderboard_how">The board shows your overall score from Skills: each family counts its hardest achieved rung, weighted by how hard it is, and harder rungs need a passed test. Only ticked sets in finished workouts count; days marked complete or placed past, repeats and your own workouts don’t. Tiers: Beginner, Novice from 75, Intermediate from 200, Advanced from 425, Elite from 650 and World-class from 850.</string>
     <string name="paywall_leaderboard">The leaderboard is part of Plus</string>
     <string name="paywall_account">Joining the leaderboard and saving your progress are part of Pro</string>
 </resources>

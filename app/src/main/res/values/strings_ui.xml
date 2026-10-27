@@ -62,7 +62,7 @@
     <string name="replace">Start this one</string>
     <string name="cancel">Cancel</string>
     <string name="finish_early_title">Finish before every set?</string>
-    <string name="finish_early_message">You can finish now, but reduce the difficulty next time if form or fatigue stopped the session.</string>
+    <string name="finish_early_message">You can finish now: only the sets you ticked count toward your skills. Reduce the difficulty next time if form or fatigue stopped the session.</string>
     <string name="finish">Finish</string>
     <string name="effort_title">How hard did that feel?</string>
     <string name="effort_item">RPE %1$d</string>
@@ -86,7 +86,7 @@
     <string name="empty_description">A balanced session of skill practice, fundamentals, and mobility.</string>
     <string name="brand_kicker">DAILY CALISTHENICS</string>
     <string name="brand_line">We choose the workout. You just train.</string>
-    <string name="park_scene_description">Line drawing: a figure walks into the park, does %1$s and %2$s, then holds %3$s while friends cheer.</string>
+    <string name="park_scene_description">Line drawing: a figure walks into the park, does %1$s and %2$s, then briefly holds %3$s while friends cheer. The three exercises repeat.</string>
     <string name="park_scene_walk_description">Line drawing of a figure walking</string>
     <string name="park_scene_pull_description">Line drawing of a figure doing pull-ups</string>
     <string name="park_scene_replay">Replay</string>

@@ -47,8 +47,9 @@ class LeaderboardRepository(private val context: Context) {
     /** One write: the athlete's public score (scores/{uid}). The server folds it into the boards every six hours. */
     fun publish(uid: String, profile: Profile, score: Score, done: (Boolean) -> Unit) {
         val db = Cloud.firestore(context) ?: return done(false)
-        db.document("scores/$uid").set(mapOf("username" to profile.username, "country" to profile.country,
-            "overall" to score.overall, "skills" to score.skills, "updated_at" to FieldValue.serverTimestamp()))
+        db.document("scores/$uid").set(mapOf("v" to Score.VERSION, "username" to profile.username, "country" to profile.country,
+            "overall" to score.overall, "families" to score.families, "verified" to score.verified,
+            "updated_at" to FieldValue.serverTimestamp()))
             .addOnCompleteListener { done(it.isSuccessful) }
     }
 

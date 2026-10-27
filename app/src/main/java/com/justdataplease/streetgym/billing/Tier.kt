@@ -4,13 +4,16 @@ package com.justdataplease.streetgym.billing
  * What each tier unlocks. Plus is one payment; Pro is a yearly subscription that includes everything in Plus and
  * pays for the server and database behind the account: sign-in, the leaderboard and cloud progress.
  */
-enum class Tier(val savedDays: Int) {
-    FREE(3), PLUS(30), PRO(300);
+enum class Tier(val savedDays: Int, val workoutLists: Int, val daysPerList: Int) {
+    // The lists can hold every saved day: 3 lists of 10 on Plus, 10 lists of 30 on Pro.
+    FREE(3, 0, 0), PLUS(30, 3, 10), PRO(300, 10, 30);
 
     val allLevels: Boolean get() = this >= PLUS
     val adFree: Boolean get() = this >= PLUS
     val renameLevels: Boolean get() = this >= PLUS
     val parks: Boolean get() = this >= PLUS
+    /** Own lists in My workouts; Free keeps everything in Favorites. */
+    val lists: Boolean get() = workoutLists > 0
     /** Plus sees the leaderboard; only Pro appears on it. */
     val leaderboard: Boolean get() = this >= PLUS
     /** Only Pro signs in: its place on the leaderboard and cloud progress need the account. */
@@ -30,8 +33,10 @@ fun tierFor(plusOwned: Boolean, proActive: Boolean, debug: Boolean, simulated: T
     return maxOf(owned, if (debug) simulated ?: Tier.PRO else Tier.FREE)
 }
 
-/** Saved ready days and custom days share the tier's limit; nothing is removed when a tier ends. */
+/** Saved ready days and custom days share the tier's limit, and lists have their own; nothing is removed when a tier ends. */
 object SavedLimit {
     fun canAdd(tier: Tier, used: Int): Boolean = used < tier.savedDays
     fun overLimit(tier: Tier, used: Int): Boolean = used > tier.savedDays
+    fun canAddList(tier: Tier, lists: Int): Boolean = lists < tier.workoutLists
+    fun canAddToList(tier: Tier, days: Int): Boolean = days < tier.daysPerList
 }

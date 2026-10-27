@@ -4,6 +4,7 @@ import android.content.Context
 import com.google.firebase.firestore.FieldValue
 import com.justdataplease.streetgym.leaderboard.Score
 import com.justdataplease.streetgym.leaderboard.Usernames
+import org.json.JSONArray
 import org.json.JSONObject
 
 /** A Pro athlete's public name and country, and whether they show on the leaderboard. */
@@ -24,17 +25,21 @@ class AccountStore(context: Context) {
         get() = preferences.getLong("last_sync_at", 0L)
         set(value) = preferences.edit().putLong("last_sync_at", value).apply()
 
+    /** The score last published, as of [Score.VERSION]: an older one reads as null, so the new score goes up. */
     fun publishedScore(uid: String): Pair<Score, Long>? = preferences.getString("score_$uid", null)?.let {
         runCatching {
             val json = JSONObject(it)
-            val skills = json.getJSONObject("skills").let { map -> map.keys().asSequence().associateWith(map::getInt) }
-            Score(json.getInt("overall"), skills) to json.getLong("at")
+            if (json.optInt("v") != Score.VERSION) return@runCatching null
+            val families = json.getJSONObject("families").let { map -> map.keys().asSequence().associateWith(map::getInt) }
+            val verified = json.getJSONArray("verified").let { list -> (0 until list.length()).map(list::getString) }
+            Score(json.getInt("overall"), families, verified) to json.getLong("at")
         }.getOrNull()
     }
 
     fun savePublishedScore(uid: String, score: Score?, at: Long) = preferences.edit().apply {
         if (score == null) remove("score_$uid")
-        else putString("score_$uid", JSONObject().put("overall", score.overall).put("skills", JSONObject(score.skills)).put("at", at).toString())
+        else putString("score_$uid", JSONObject().put("v", Score.VERSION).put("overall", score.overall)
+            .put("families", JSONObject(score.families)).put("verified", JSONArray(score.verified)).put("at", at).toString())
     }.apply()
 
     fun clear() = preferences.edit().clear().apply()

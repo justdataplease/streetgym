@@ -2,6 +2,7 @@ package com.justdataplease.streetgym.leaderboard
 
 import com.justdataplease.streetgym.data.progress.ProgressMerge
 import com.justdataplease.streetgym.data.progress.WorkoutSession
+import com.justdataplease.streetgym.data.skills.SkillCredit
 import org.junit.Assert.*
 import org.junit.Test
 
@@ -9,31 +10,34 @@ class LeaderboardTest {
     private fun session(id: String, at: Long = 1, manual: Boolean = false, repeat: Boolean = false) =
         WorkoutSession(id, at, at + 60_000, 60, manuallyCompleted = manual, repeat = repeat)
 
-    @Test fun onlyFinishedProgramWorkoutsEarnLeaderboardPoints() {
-        val days = Scores.trainedDays(listOf(
+    @Test fun onlyFinishedProgramWorkoutsEarnPoints() {
+        val sessions = listOf(
+            session("sg:l01:p0003", at = 9).copy(credits = mapOf("pullup" to 2)),
             session("sg:l01:p0001"),
             session("sg:l01:p0002", manual = true),
             session("sg:l01:p0001", at = 5, repeat = true),
             session("custom:abc"),
-            session("sg:l01:p0003"),
-        ))
-        assertEquals(setOf("sg:l01:p0001", "sg:l01:p0003"), days)
+        )
+        // In the order they were trained, with their ticks and length.
+        assertEquals(listOf(SkillCredit("sg:l01:p0001", null, 60), SkillCredit("sg:l01:p0003", mapOf("pullup" to 2), 60)),
+            Scores.credits(sessions))
+        assertEquals(1, Scores.placedPast(sessions))
     }
 
     @Test fun aScoreIsPublishedWhenItChangesAndAtMostEveryTenMinutes() {
-        val a = Score(10, mapOf("pull_up" to 10))
-        val b = Score(12, mapOf("pull_up" to 12))
+        val a = Score(10, mapOf("pullup" to 100))
+        val b = Score(12, mapOf("pullup" to 120), listOf("archer_pullup"))
         assertTrue(Scores.shouldPublish(null, 0, a, 1_000))
         assertFalse(Scores.shouldPublish(a, 1_000, a, 99_000_000))
         assertFalse(Scores.shouldPublish(a, 1_000, b, 1_000 + Scores.PUBLISH_MILLIS - 1))
         assertTrue(Scores.shouldPublish(a, 1_000, b, 1_000 + Scores.PUBLISH_MILLIS))
     }
 
-    @Test fun boardIdsCoverOverallAndSkillsWorldwideAndByCountry() {
+    @Test fun boardIdsCoverOverallAndFamiliesWorldwideAndByCountry() {
         assertEquals("overall_world", Boards.id(null, null))
         assertEquals("overall_GR", Boards.id(null, "GR"))
-        assertEquals("skill_pull_up_world", Boards.id("pull_up", null))
-        assertEquals("skill_pull_up_DE", Boards.id("pull_up", "DE"))
+        assertEquals("family_front_lever_world", Boards.id("front_lever", null))
+        assertEquals("family_front_lever_DE", Boards.id("front_lever", "DE"))
     }
 
     @Test fun aCachedBoardIsFreshForSixHours() {

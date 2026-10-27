@@ -83,4 +83,20 @@ class EntitlementTest {
         assertTrue(SavedLimit.overLimit(Tier.FREE, 12))
         assertFalse(SavedLimit.overLimit(Tier.PLUS, 30))
     }
+    @Test fun onlyPlusAndProMakeLists() {
+        assertEquals(listOf(0, 3, 10), Tier.entries.map { it.workoutLists })
+        assertEquals(listOf(0, 10, 30), Tier.entries.map { it.daysPerList })
+        listOf(Tier.PLUS, Tier.PRO).forEach { assertEquals(it.savedDays, it.workoutLists * it.daysPerList) }
+        assertFalse(Tier.FREE.lists)
+        assertTrue(Tier.PLUS.lists && Tier.PRO.lists)
+        assertFalse(SavedLimit.canAddList(Tier.FREE, 0))
+        assertTrue(SavedLimit.canAddList(Tier.PLUS, 2))
+        assertFalse(SavedLimit.canAddList(Tier.PLUS, 3))
+        assertTrue(SavedLimit.canAddList(Tier.PRO, 9))
+        assertFalse(SavedLimit.canAddList(Tier.PRO, 10))
+        assertTrue(SavedLimit.canAddToList(Tier.PLUS, 9))
+        assertFalse(SavedLimit.canAddToList(Tier.PLUS, 10))
+        assertTrue(SavedLimit.canAddToList(Tier.PRO, 29))
+        assertFalse(SavedLimit.canAddToList(Tier.PRO, 30))
+    }
 }

@@ -4,14 +4,15 @@
     <string name="tier_plus">Plus</string>
     <string name="tier_pro">Pro</string>
     <string name="tiers_title">Plus and Pro</string>
-    <string name="tier_current_free">You’re on Free: Levels 1–3 with ads and 3 saved or custom days.</string>
-    <string name="tier_current_plus">You have Plus: every level, no ads, 30 saved or custom days, your own level names and parks near you.</string>
-    <string name="tier_current_pro">You have Pro: everything in Plus, 300 saved or custom days, the leaderboard, and your progress saved to your Google account.</string>
+    <string name="tier_current_free">You’re on Free: Levels 1–3 with ads and 3 saved or custom days, all in Favorites.</string>
+    <string name="tier_current_plus">You have Plus: every level, no ads, 30 saved or custom days in up to 3 lists of 10, your own level names and parks near you.</string>
+    <string name="tier_current_pro">You have Pro: everything in Plus, 300 saved or custom days in up to 10 lists of 30, the leaderboard, and your progress saved to your Google account.</string>
     <string name="plus_title">Plus · one payment</string>
     <string-array name="plus_features">
         <item>No ads</item>
         <item>Every level, 1 to 7</item>
         <item>30 saved and custom days</item>
+        <item>3 lists of your own in My workouts, 10 days each</item>
         <item>Rename levels</item>
         <item>Calisthenics parks near you</item>
     </string-array>
@@ -21,7 +22,7 @@
     <string name="pro_title">Pro · yearly*</string>
     <string-array name="pro_features">
         <item>Everything in Plus</item>
-        <item>300 saved and custom days</item>
+        <item>300 saved and custom days in 10 lists of 30</item>
         <item>Leaderboard: overall and per skill</item>
         <item>Your progress saved to your Google account and on all your devices</item>
     </string-array>
@@ -35,6 +36,9 @@
     <string name="paywall_parks">Parks near you are part of Plus</string>
     <string name="paywall_rename">Renaming levels is part of Plus</string>
     <string name="paywall_saved">You’ve used all %1$d saved and custom days</string>
+    <string name="paywall_lists">Your own lists are part of Plus</string>
+    <string name="paywall_lists_full">You’ve made all %1$d lists of Plus</string>
+    <string name="lists_limit_pro">You’ve made the 10 lists of Pro. Delete one to make another.</string>
     <string name="saved_limit_pro">You’ve reached the 300 saved and custom days of Pro. Remove one to add another.</string>
     <string name="restore_purchase">Restore purchases</string>
     <string name="purchase_checking">Checking purchases…</string>

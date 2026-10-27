@@ -7,6 +7,7 @@ Street Gymnastics has three tiers. Plus is one Google Play payment. Pro is a yea
 | Levels | 1–3 | all | all |
 | Ads | yes | no | no |
 | Saved and custom days (My workouts) | 3 | 30 | 300 |
+| Own lists in My workouts (beside Favorites) | – | 3 of 10 days | 10 of 30 days |
 | Rename levels | – | yes | yes |
 | Parks near me (23,512 bundled parks) | – | yes | yes |
 | Leaderboard | – | view | view and appear on it |
@@ -28,6 +29,7 @@ Earlier IDs `full_program` and `remove_ads` were never activated and are no long
 - **Levels.** `LevelAccess.locked(level, Entitlement.allLevels(context))` locks Level 4 and up on Free: Today, Training, Overview, Skills, repeats and an active class all show the Plus paywall instead.
 - **Ads.** `Entitlement.adFree` (Plus and Pro) removes every placement.
 - **My workouts.** Saved days (the heart on an overview) and custom days share `Tier.savedDays`. At the limit, adding shows the paywall (or, on Pro, a note). Nothing is ever removed when a tier ends: everything stays usable, and only adding stops until the athlete is under the limit.
+- **Lists.** Favorites is the default list: every saved and custom day is in it, on every tier. Plus and Pro also make their own lists (`Tier.workoutLists` and `Tier.daysPerList`: 3 lists of 10 days on Plus, 10 lists of 30 on Pro, so the lists can hold every saved day); on those tiers the heart opens a picker with Favorites always ticked, the athlete's lists, New list and, for a saved day, Remove. Free's heart saves straight to Favorites, and its New list chip shows the Plus paywall; Plus at 3 lists sees Pro; a full list can't be ticked in the picker. Lists don't count toward the saved days, and a day leaves its lists when it leaves My workouts. Lists live in the library JSON (`LibraryState.lists`), so Pro's cloud copy carries them with no rules change; each list merges by its newest change, and a deleted list stays as a tombstone. When a tier ends the lists are kept but hidden, and come back with Plus.
 - **Rename levels** and **Parks** (Training tab) show the Plus paywall on Free.
 - **Leaderboard** (Progress tab): Free sees the Plus paywall; Plus sees the boards and an offer to join with Pro; Pro signs in and appears.
 - **Account** (Settings): only Pro. A lapsed Pro stays signed in; nothing syncs and its cloud copy and last score are kept until it renews or deletes the account.

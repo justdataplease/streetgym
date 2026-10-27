@@ -27,10 +27,11 @@ import kotlin.math.sin
  * [Mode.STORY]: a routine generated per local day ([ParkRoutine]): three different movements, a fundamental, a harder
  * strength move and a held skill. The figure walks into the park and trains while three smaller friends wave, clap,
  * hop and cheer; the choreography lives in [ParkStory]. A park that needs more room than 200 units zooms out. It
- * runs once per process and ends on the held skill, where the figure keeps breathing; a tap replays it. Debug
- * builds step to the next day's routine on a long press.
+ * repeats all three movements, briefly holding the final skill before fading the hero out for another walk-in.
+ * Returning to the visible scene starts the routine from the beginning; a tap also restarts it. Debug builds step
+ * to the next day's routine on a long press.
  * [Mode.WALK]: the walk cycle alone on a scrolling path, for the loading screen.
- * [Mode.PULL]: the same figure doing pull-ups, seen from the front ([FrontPull]), the loading screen's other figure;
+ * [Mode.PULL]: the same figure doing pull-ups, seen from the front ([FrontView]), the loading screen's other figure;
  * it needs no clip, so it draws while the clips are still being parsed.
  *
  * Reduced motion shows the final frame (the signature skill), and nothing runs while the view is off-screen.
@@ -58,11 +59,9 @@ class ParkSceneView(context: Context, private val mode: Mode = Mode.STORY) : Vie
     private var lastFrameMs = 0L
     private var ticking = false
     private var reducedMotion = false
-    private var startIdle = mode == Mode.STORY && storyPlayed
     private val visibleRect = Rect()
     private var scrollListenerAttached = false
     private val scrollChangedListener = ViewTreeObserver.OnScrollChangedListener { updateAnimationState() }
-    private val frameTick = Runnable { invalidate() }
 
     // STORY sits on the dark hero card in both themes; WALK and PULL on the page background.
     private val backdrop = if (mode == Mode.STORY) AppColors.PRIMARY_DARK else AppColors.BACKGROUND
@@ -85,8 +84,8 @@ class ParkSceneView(context: Context, private val mode: Mode = Mode.STORY) : Vie
     private val dashColor = blendColor(AppColors.TEXT_SECONDARY, backdrop, 0.55f)
     private val groundPaint = stroke(groundColor).apply { strokeCap = Paint.Cap.BUTT }
     private val dashPaint = stroke(dashColor)
-    private val pullInk = FrontPull.Ink(heroNear, heroHead, heroHand, barPaint, postPaint)
-    private val pullFrame = FrontPull.Frame()
+    private val pullInk = FrontView.Ink(heroNear, heroHead, heroHand, barPaint, postPaint)
+    private val pullFrame = FrontView.Frame()
     private val pullRect = RectF()
 
     init {
@@ -146,10 +145,7 @@ class ParkSceneView(context: Context, private val mode: Mode = Mode.STORY) : Vie
         } else if (mode == Mode.PULL) {
             fade = 0.3f
         } else {
-            val idle = startIdle || (story.end > 0f && clock >= story.end)
             fitStory()
-            if (idle) clock = story.end + ParkStory.IDLE_WRAP_AT
-            startIdle = false
             fade = 0.12f
         }
         groundPaint.shader = edgeFade(groundColor, w, fade)
@@ -190,7 +186,6 @@ class ParkSceneView(context: Context, private val mode: Mode = Mode.STORY) : Vie
             scrollListenerAttached = false
         }
         ticking = false
-        removeCallbacks(frameTick)
         super.onDetachedFromWindow()
     }
 
@@ -217,14 +212,7 @@ class ParkSceneView(context: Context, private val mode: Mode = Mode.STORY) : Vie
             Mode.WALK -> drawWalk(canvas)
             Mode.PULL -> drawPull(canvas)
         }
-        if (!ticking) return
-        if (mode == Mode.STORY && clock >= story.end) {
-            // The idle only breathes and waves, so it does not need every vsync.
-            removeCallbacks(frameTick)
-            postDelayed(frameTick, IDLE_FRAME_MS)
-        } else {
-            postInvalidateOnAnimation()
-        }
+        if (ticking) postInvalidateOnAnimation()
     }
 
     private fun advance(seconds: Float) {
@@ -237,9 +225,8 @@ class ParkSceneView(context: Context, private val mode: Mode = Mode.STORY) : Vie
             clock %= PULL_REP
             return
         }
-        if (clock < story.end) storyPlayed = true
-        // Wrap after the last cheer has faded and before the first idle wave, so nothing jumps.
-        if (clock - story.end >= ParkStory.IDLE_WRAP_AT + ParkStory.IDLE_CYCLE) clock -= ParkStory.IDLE_CYCLE
+        // The final cheer finishes, then the hero fades out before walking in for the next full routine.
+        clock %= story.end + FINALE_HOLD_SECONDS + LOOP_FADE_SECONDS
     }
 
     private fun replay() {
@@ -280,9 +267,9 @@ class ParkSceneView(context: Context, private val mode: Mode = Mode.STORY) : Vie
             getGlobalVisibleRect(visibleRect) &&
             !visibleRect.isEmpty
         if (animate == ticking && wasReduced == reducedMotion) return
+        if (animate && !ticking && mode == Mode.STORY) clock = 0f
         ticking = animate
         lastFrameMs = 0L
-        if (!animate) removeCallbacks(frameTick)
         invalidate()
     }
 
@@ -313,6 +300,12 @@ class ParkSceneView(context: Context, private val mode: Mode = Mode.STORY) : Vie
         for (index in 0 until ParkStory.FRIENDS) drawFriend(canvas, index, t)
 
         story.poseHero(t, hero, heroJoints)
+        val opacity = if (reducedMotion) 255 else (255f *
+            ((story.end + FINALE_HOLD_SECONDS + LOOP_FADE_SECONDS - clock) / LOOP_FADE_SECONDS).coerceIn(0f, 1f)).roundToInt()
+        heroNear.alpha = opacity
+        heroFar.alpha = opacity
+        heroHead.alpha = opacity
+        heroHand.alpha = opacity
         canvas.drawLineFigure(
             heroJoints, hero.spine, hero.facing, rig.headRadius, originX, originY, scale,
             heroNear, heroFar, heroHead, heroHand, torsoPath,
@@ -374,7 +367,7 @@ class ParkSceneView(context: Context, private val mode: Mode = Mode.STORY) : Vie
         // Reduced motion holds the top of the rep, chin over the bar.
         val lift = if (reducedMotion) 1f else ParkStory.pull(clock / PULL_REP)
         pullRect.set(0f, 0f, width.toFloat(), height.toFloat())
-        FrontPull.draw(canvas, FrontPull.PULL_UP, lift, pullRect, FrontPull.LOADING_WINDOW, pullInk, 1f, true, pullFrame)
+        FrontView.draw(canvas, FrontView.PULL_UP, lift, pullRect, FrontView.LOADING_WINDOW, pullInk, pullFrame)
     }
 
     private fun edgeFade(color: Int, width: Int, fade: Float): Shader {
@@ -400,12 +393,10 @@ class ParkSceneView(context: Context, private val mode: Mode = Mode.STORY) : Vie
     }
 
     private companion object {
-        /** The story plays once per process; later Today screens open on the final hold. */
-        var storyPlayed = false
-
         const val FRIEND_SCALE = 0.82f
         const val FRIEND_STROKE = 1.1f
-        const val IDLE_FRAME_MS = 33L
+        const val FINALE_HOLD_SECONDS = 2f
+        const val LOOP_FADE_SECONDS = 0.45f
         const val MAX_FRAME_SECONDS = 0.1f
 
         const val SCENE_TOP = -9f

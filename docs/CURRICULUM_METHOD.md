@@ -1,5 +1,49 @@
 # StreetGym curriculum method
 
+## Round 5b (27 October 2026)
+
+Round 5 was audited before release by three reviewers: a gymnastics coach (skill progression), a sports physiotherapist (tissue load) and a strength coach for beginners. All three said "ship after fixes". Where they disagreed, the physiotherapist's tissue-safety view decided. New rules 42–43 and wider rules 5, 13, 29, 32 and 39 hold the fixes.
+
+- *Flag on consecutive days.* Round 5 moved Level 4–5 flag practice onto day 3, so flags fell on days 2 and 3, right beside the planche day. Levels 4–5 now train the flag once a week, on day 2 (2 × 8 → 3 × 8 → 3 × 10 s a side in Level 4; 3 × 8 → 3 × 10 s, then the tuck flag, in Level 5). Day 3 keeps only its handstand practice. Rule 43: from Level 3, flag work never falls on consecutive days. Level 3 drops the ground-support rung wherever the assisted tuck flag is trained.
+- *Elbow runs across level ends.* Rule 29 now counts one run from Level 3 to the end, because the body does not reset at a level change. L6:001 becomes an easy re-entry class (RPE 5: strict muscle-ups 2 × 2, chest-to-bar 1 × 4, straight-bar dips 2 × 8), so L5:099–L6:003 is no longer five heavy days. With the flag off day 3, L3:100–L4:003 is no longer four.
+- *Handstand push-ups first.* Wall handstand push-up negatives come before any German hang, lever or planche work in their class: 16 classes, including every Level 5 fundamentals day (rule 42).
+- *L5:006.* It keeps the muscle-up pairs but holds the advanced-tuck back lever 2 × 10 s after a 10 s German hang. The one-leg back lever starts at L5:013, a class with no muscle-ups.
+- *Set budget.* Each class's lead skill (its first advanced skill, else its first skill rung) keeps its authored sets, and trims fall on the supporting work. Gates no longer rest on a trimmed session: L4:097 keeps the advanced-tuck back lever at 3 × 10 s and L4:093 the one-leg dragon negative at 3 × 2 a side. Seventeen classes that this pushed past 55 minutes give back one set of supporting work.
+- *Pressing.* Level 4 keeps the elevated pike push-up (2 × 8, then × 9 from L4:027) instead of stepping back to the floor version. The original-source blocks add pike push-ups twice a week to their practice (2 × 6 in L2:041–070, 2 × 8 in L3:001–020), and their recovery days add single-leg bridges 2 × 10 a side from Level 2. Rule 5 now checks overhead and hinge work by calendar week, original-source classes included.
+- *Steadier steps.*
+  - Push-ups go 3 × 10 → 3 × 11 (L1:053–067) → 3 × 12.
+  - Dips go 3 × 6 → 3 × 7 (L1:057–066) → 3 × 8, and 3 × 9 from L2:026.
+  - Pike push-ups go 2 × 6 → 2 × 7 (L2:016–026) → 2 × 8 (L2:030–040).
+  - Sliding leg curls rise to 3 × 8 from L2:022.
+  - The Level 3 wall handstand runs 2 × 35 s in phase 1, then 2 × 40 s with one 3 × 40 s a week in phase 2.
+  - L5:041 runs 3 × 5 s a side, L5:064 3 × 7 s a side, L4:094 3 × 6 s.
+  - L3:061 drops its hollow holds, so the tuck back lever keeps its sets.
+- *Legs.* Paused squats become strength sets: 3 × 10 at 32X1 through Level 5, 3 × 12 later (deloads keep one set). L6:002's 2 × 32 squats become Bulgarian split squats 2 × 10 a side; the 20-repetition cap now holds on test days too, outside assessment sets. Bulgarian split squats 2 × 8 a side join L3:058 and replace L3:073's hollow holds. L1:050 and L1:064 swap split squats for glute bridges, so split squats never fall on back-to-back days.
+- *Recovery and joint prep.*
+  - RPE 4 classes stay within 30 minutes, with one walk a class (rule 39).
+  - Deload weeks halve the practice too: one set a side of flag work and half the other sets.
+  - The day-4 recovery class after the planche day adds wrist push-ups, 2 × 10 rising to 2 × 15 from Level 4 to Level 7.
+  - Handstand-balance and handstand push-up days open with a 30 s wall shoulder opener.
+  - The thoracic extension now says to cradle the head, never pull on the neck. The all-fours rotation is renamed "Quadruped Thoracic Rotation" to match its clip.
+- *Validator.* Rule 13's weekly Nordic and toes-to-bar checks had slipped inside the planche check and never ran; they run again.
+- *Left open for the reviewer.*
+  - The coach asked for a weekly flag session in L3:078–084 and L3:092–098, and the tuck front-lever hold back at L3:027. Both would make four heavy elbow days in a row unless the foot-assisted tuck flag stopped counting as heavy, which the physiotherapist advised against.
+  - The strength coach asked for the post-source deloads (L2:073–077, L3:022–026) to become RPE 6 ramp classes.
+  - The physiotherapist flagged back-lever days before pseudo-planche days at L3:057→058 and L3:092→093.
+
+## Round 5 (27 October 2026)
+
+A former gymnast who now coaches adults reviewed the whole program. The order of the skills held up; the review was about how load is spread. The changes below follow its report, and validator rules 38–41 plus wider rules 5, 8, 13, 29 and 32 hold them.
+
+- *Elbow load in Levels 3–5.* Rule 29 (no four heavy elbow-flexor days in a row) now covers Levels 3–5, counted inside each level (round 5b: across level ends). L3:066 rows instead of pulling up; L3:076 and L3:090 drop their German hang and tuck lever holds (L3:090 keeps tuck front-lever rows); L3:027 rows the tuck front lever. In every Level 4–5 week the German hang and back-lever rows move from the muscle-up day to the next day's fundamentals class, whose pull-ups become feet-elevated rows (archer pull-ups move to that week's front-lever day). Level 5's first week swaps days 5 and 6 so the back lever stays seven days from the next, and drops the one-leg front lever from its muscle-up class. Rule 38: before Level 6 a class holds at most eight straight-arm lever sets (per-side sets count twice).
+- *Overhead pressing.* Pike push-ups 2 × 6 in Level 2's push, fundamentals and deload classes (rule 5 from Level 2); a second pressing class in every Level 3 week, elevated pike push-ups from L3:044 (rule 13 from Level 3); wall handstand push-up negatives 2 × 3 at L4:062, 069, 076, 090 and 097 (rule 8), with planche leans in place of tuck planches on those days.
+- *Level 1 and early Level 2.* Push-ups 3 × 10 from L1:043 and 3 × 12 from L1:069, paused push-ups 3 × 8 at L1:099; dips 3 × 6, then 3 × 8 from L1:069; split squats or reverse lunges in place of the squat fillers from L1:049. Fewer exercises per class carry those third sets inside the 14-set budget. L1:062–067 and L2:015–017 are normal build classes. Deload weeks lower slowly with dip negatives (the eccentric dip). The Level 1 source block's half dips now project to the assisted dip.
+- *Daily practice.* The handstand ladder starts earlier and rises gradually: pike handstand holds join the overhead line in Level 1 phase 2, a 10 s wall handstand comes in phase 3, then 2 × 15, 2 × 20 and 2 × 30 s through Level 2 and 2 × 30 s in Level 3 phase 1. The assisted tuck flag starts in Level 3 phase 1 (2 × 5 s a side, once a week) and Level 4 keeps it at or above Level 3's best. Level 4–5 flag practice moves from day 6 (now a back-lever day) to day 3 (round 5b: day 2 only).
+- *Planche spacing.* No tuck-or-harder planche hold the day after another, and the week's planche classes lie at least 48 hours apart (rule 13). Planche rows leave L4:037, L4:086, L5:002, L5:009, L5:030 and L5:086; planche leans 2 × 20 s join L4:041, L5:001, L5:013 and L5:034.
+- *Reps.* Squat and push-up variations stop at 20 repetitions a set outside test days (rule 32). Squat rows of 25 or more become Bulgarian split squats 3 × 8 a side (Level 3 to L3:080), assisted pistols 3 × 6 a side (to the end of Level 4) or Bulgarian split squats 3 × 10 a side (later); rows of 21–24 become 20. Sliding leg curls 2 × 8 join Level 2's circuits.
+- *Recovery and joint prep.* Four new movements: wrist push-ups, the wall shoulder opener, pancake compression lifts and the bench thoracic extension. Wrist push-ups replace the wrist rocks (or one set of wrist circles) in the warm-up of every class from Level 3 with planche or balance work (rule 40). RPE 3 classes stay within 25 minutes, with walks of 8 minutes or less and 3 minutes of slow breathing or less (rule 39). Every week from Level 3 has one skill-mobility class whose three new drills rise week by week (rule 41).
+- *Time.* Listed minutes follow the assembled classes; seven classes that grew past 55 minutes lose a lower-priority set or step.
+
 ## Round 4 (26 October 2026)
 
 Three coaches who train everyday people reviewed the calibrated program. Their reports are in `docs/pro-reviews-2026-10-round4/`, and all three said "ship after fixes, no blockers". One pass applied their consensus. Each changed line opens lower where needed and then rises, so rule 32's "no falling back" still holds.
@@ -228,7 +272,7 @@ The strict muscle-up waits until chest-to-bar pull-ups have reached 3 × 5. Befo
 **Seven new movements:** the straight-leg side plank, hollow body hold, feet-supported German hang, handstand cartwheel exit, straddle human flag, full human flag and full Nordic curl. Each has a side-view guide.
 
 **Skills.**
-- Every skill now shows 0–100 skill points, and each group (Pull, Push, Legs, Core) shows the average score of the skills the program teaches in it. Finishing every class brings all four groups to 100.
+- Every skill now shows 0–100 skill points, and each group (Pull, Push, Legs, Core) shows the average score of the skills the program teaches in it. Finishing every class brings all four groups to 100. (Superseded on 27 October 2026 by ticked-set credit, tests and a weighted overall score: see `SKILLS_SCORE.md`.)
 - Each skill carries a difficulty from 1 (Beginner) to 5 (Elite): a street-workout coach's grade of each rung (`SkillBook.DEFAULT_GRADES`), which never drops up a ladder. Novice is the first strict benchmark (pull-up, dip); Elite is kept for the one-arm pull-up negative, full front lever, straddle and full planche, freestanding handstand push-up negative and full flag. A rung that joins a ladder without a grade is estimated from the level that first teaches it, at least Intermediate for advanced movements and kept between the rungs around it. The level alone was a poor grade: the program never schedules the negative dip (it showed as Elite) and first schedules wall push-ups in Level 3 deloads (every push-up showed as Intermediate or harder).
 - Ladders keep the coaching order the reviews asked for, rather than re-sorting by first appearance.
 - Source workouts now earn credit for their main work, not only for their practice block.

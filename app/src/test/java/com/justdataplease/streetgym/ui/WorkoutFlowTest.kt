@@ -1,5 +1,6 @@
 package com.justdataplease.streetgym.ui
 
+import com.justdataplease.streetgym.data.model.EasierOption
 import com.justdataplease.streetgym.data.model.LocalizedText
 import com.justdataplease.streetgym.data.model.TrainingExercise
 import com.justdataplease.streetgym.data.model.TrainingSet
@@ -121,5 +122,23 @@ class WorkoutFlowTest {
         assertEquals(listOf("2s lower, 1s pause, 1s lift, 1s reset"), notes.cues)
         assertEquals(SetNotes(emptyList(), listOf("2 times on each side")), SetNotes.parse("2 times on each side"))
         assertEquals(SetNotes(emptyList(), emptyList()), SetNotes.parse(""))
+    }
+
+    @Test fun aFinishedClassCreditsTickedPracticeAndMainSetsPerMovement() {
+        val check = exercise("tuck_planche", 1).copy(movementId = "tuck_planche", readinessCheck = true)
+        val pullup = main[0].copy(movementId = "pullup", easier = EasierOption("eccentric_pullup", LocalizedText("Negative Pull-Up")))
+        val flow = WorkoutFlow.of("p1", listOf("warmup" to warmup, "practice" to practice + check,
+            "main" to listOf(pullup, main[1]), "cooldown" to cooldown))
+        val movementOf = { exercise: TrainingExercise -> exercise.movementId ?: exercise.id }
+        // Warm-up and cooldown ticks prepare and recover; unticked sets and the readiness check earn nothing.
+        val ticked = flow.keys.toSet() - flow.steps.first { it.exercise.id == "dip" }.key
+        assertEquals(mapOf("wall_handstand" to 2, "pullup" to 3, "dip" to 1), flow.credits(ticked, emptySet(), movementOf))
+        // Pull-ups done as their easier option count for the negative instead.
+        val easier = setOf(flow.steps.first { it.exercise.id == "pullup" }.exerciseKey)
+        assertEquals(mapOf("wall_handstand" to 2, "eccentric_pullup" to 3, "dip" to 1), flow.credits(ticked, easier, movementOf))
+        assertEquals(emptyMap<String, Int>(), flow.credits(emptySet(), easier, movementOf))
+        // The ticked readiness check is asked about instead.
+        assertEquals(listOf("tuck_planche"), flow.readinessChecks(ticked).map { it.id })
+        assertEquals(emptyList<TrainingExercise>(), flow.readinessChecks(emptySet()))
     }
 }

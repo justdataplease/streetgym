@@ -6,7 +6,7 @@ MOVEMENTS = {
     "ankle_rocks": "ankle_rock", "leg_swings": "leg_swing",
     "scapular_pull": "scapular_pull", "scapular_pushup": "scapular_pushup",
     "elevated_scapular_pushup": "scapular_pushup_incline",
-    "dead_hang": "hang", "foot_assisted_hang": "foot_assisted_hang", "active_hang": "active_hang",
+    "dead_hang": "relaxed_hang", "foot_assisted_hang": "foot_assisted_hang", "active_hang": "active_hang",
     "assisted_pullup": "assisted_pullup", "eccentric_pullup": "eccentric_pullup", "pullup": "pullup", "chinup": "pullup",
     "inverted_row": "row", "high_inverted_row": "high_row", "feet_elevated_row": "feet_elevated_row",
     "support_hold": "support", "foot_assisted_support": "foot_assisted_support", "assisted_dip": "assisted_dip",
@@ -18,13 +18,13 @@ MOVEMENTS = {
     "calf_raise": "calf_raise", "glute_bridge": "glute_bridge", "single_leg_bridge": "single_leg_bridge",
     "plank": "plank_forearm", "incline_plank": "incline_plank", "hollow_hold": "hollow_hold",
     "dead_bug": "dead_bug", "bird_dog": "bird_dog", "side_plank": "side_plank",
-    "knee_raise": "hanging_knee_raise", "lying_knee_raise": "lying_knee_raise", "lying_leg_raise": "lying_leg_lower",
+    "knee_raise": "hanging_knee_raise", "lying_knee_raise": "lying_knee_raise", "lying_leg_raise": "bent_leg_lower",
     "arch_hold": "arch_hold", "tuck_lsit": "tuck_lsit", "candlestick": "candlestick",
     "low_bar_transition": "low_bar_transition", "pullover_lowbar": "pullover_lowbar", "jump_muscleup": "jump_muscleup",
     "chest_to_bar": "chest_to_bar", "band_muscleup": "muscleup", "strict_muscleup": "muscleup",
     "tuck_front_row": "tuck_front_row", "tuck_front_hold": "front_lever_tuck", "advanced_tuck_front": "front_lever_adv",
     "one_leg_front": "front_lever_one_leg", "straddle_front": "front_lever_straddle", "full_front": "front_lever_full",
-    "skin_cat_partial": "skin_the_cat", "tuck_back_entry": "back_lever_entry", "tuck_back_hold": "back_lever_tuck",
+    "skin_cat_partial": "skin_cat_partial", "tuck_back_entry": "back_lever_entry", "tuck_back_hold": "back_lever_tuck",
     "advanced_tuck_back": "back_lever_adv", "one_leg_back": "back_lever_one_leg", "straddle_back": "back_lever_straddle",
     "full_back": "back_lever_full",
     "bent_dragon_negative": "dragon_bent_negative", "one_leg_dragon_negative": "dragon_one_leg_negative",
@@ -163,5 +163,11 @@ MOVEMENTS.update({name: name for name in ["straight_side_plank", "hollow_body_ho
 # Group F: Level 7 "Mastery" rungs (group_f.py).
 MOVEMENTS.update({name: name for name in ["typewriter_pullup", "assisted_one_arm_pullup", "one_arm_pullup_negative", "deficit_wall_hspu", "freestanding_hspu_negative"]})
 
+# Beyond the program: the top rung of the pull-up, push-up, handstand and L-sit ladders (group_f.py).
+MOVEMENTS.update({name: name for name in ["one_arm_pullup", "one_arm_pushup", "freestanding_handstand", "v_sit"]})
+
 # Group G: kick-up to the wall, round 2 of the 2.4.0 pro-athlete reviews (group_g.py).
 MOVEMENTS["wall_kickup"] = "wall_kickup"
+
+# Joint-prep movements from round 5 of the pro reviews (form_review.py).
+MOVEMENTS.update({name: name for name in ["wrist_pushup", "wall_shoulder_flexion", "pancake_compression", "thoracic_extension"]})

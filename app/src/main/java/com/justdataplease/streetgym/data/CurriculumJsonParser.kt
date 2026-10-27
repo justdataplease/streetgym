@@ -3,6 +3,7 @@ package com.justdataplease.streetgym.data
 import com.justdataplease.streetgym.data.model.CatalogSource
 import com.justdataplease.streetgym.data.model.ContentOrigin
 import com.justdataplease.streetgym.data.model.CurriculumCatalog
+import com.justdataplease.streetgym.data.model.EasierOption
 import com.justdataplease.streetgym.data.model.LocalizedText
 import com.justdataplease.streetgym.data.model.TrainingExercise
 import com.justdataplease.streetgym.data.model.TrainingLevel
@@ -20,6 +21,7 @@ import org.json.JSONObject
  */
 object CurriculumJsonParser {
     private const val EASIER_RUNGS = 3
+    private const val READINESS_CHECK = "readiness_check"
 
     fun parse(json: String): CurriculumCatalog = parse(JSONObject(json))
 
@@ -228,6 +230,10 @@ object CurriculumJsonParser {
                         },
                         category = movement?.optValueAsString("category"),
                         equipment = movement?.optJSONArray("equipment").mapStrings(),
+                        easier = regressionId?.let { id ->
+                            movementLibrary[id]?.let { EasierOption(id, it.optLocalized("name")) }
+                        },
+                        readinessCheck = tempo == READINESS_CHECK,
                     ),
                 )
             }

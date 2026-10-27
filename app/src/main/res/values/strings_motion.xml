@@ -13,7 +13,36 @@
     <string name="motion_phase_down">Down</string>
     <string name="motion_phase_move">Move</string>
     <string name="motion_phase_return">Return</string>
+    <!-- Phase labels a guide sets itself: static holds and stretches, slow negatives and how they end. -->
+    <string name="motion_phase_hold_breathe">Hold · breathe</string>
+    <string name="motion_phase_lower_slow">Lower 3–5 s</string>
+    <string name="motion_phase_step_down">Step down</string>
+    <string name="motion_phase_step_up">Step up</string>
+    <string name="motion_phase_come_down">Come down</string>
     <!-- Range marker: a line at the end of the movement that lights up when reached. -->
     <string name="motion_marker_chin">Chin over bar</string>
     <string name="motion_marker_range">Full range</string>
+    <string name="motion_marker_chest_to_bar">Chest to bar</string>
+    <string name="motion_marker_chest_to_fist">Chest to fist height</string>
+    <string name="motion_marker_chest_to_edge">Chest to edge</string>
+    <string name="motion_marker_chest_to_wall">Chest to wall</string>
+    <string name="motion_marker_shoulders_to_elbows">Shoulders to elbows</string>
+    <string name="motion_marker_hips_to_knees">Hips to knees</string>
+    <string name="motion_marker_back_knee_down">Back knee to floor</string>
+    <string name="motion_marker_knees_to_hips">Knees to hips</string>
+    <string name="motion_marker_feet_to_hips">Feet to hip height</string>
+    <string name="motion_marker_toes_to_bar">Toes to bar</string>
+    <string name="motion_marker_hips_in_line">Hips in line</string>
+    <string name="motion_marker_head_ahead">Head ahead of hands</string>
+    <string name="motion_marker_head_to_mat">Head to mat</string>
+    <string name="motion_marker_shoulders_down">Shoulders down</string>
+    <string name="motion_marker_heels_high">Heels high</string>
+    <string name="motion_marker_hips_level">Hips at shoulder height</string>
+    <string name="motion_marker_legs_level">Legs at hip height</string>
+    <string name="motion_marker_feet_off">Feet off floor</string>
+    <string name="motion_marker_stand_tall">Stand tall</string>
+    <!-- Captions under a guide that shows a movement from the side and from the front. -->
+    <string name="motion_view_side">Side</string>
+    <string name="motion_view_front">Front</string>
+    <string name="motion_view_end">End</string>
 </resources>

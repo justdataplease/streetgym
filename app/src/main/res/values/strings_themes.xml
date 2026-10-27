@@ -2,14 +2,10 @@
     <string name="theme_section">Theme</string>
     <string name="theme_concrete">Concrete &amp; Tape</string>
     <string name="theme_concrete_summary">Light · concrete, black lines and hazard tape</string>
-    <string name="theme_concrete_trees">Concrete &amp; Trees</string>
-    <string name="theme_concrete_trees_summary">Light · concrete, black lines and park green</string>
     <string name="theme_night_park">Night Park</string>
     <string name="theme_night_park_summary">Dark · asphalt and streetlight orange</string>
     <string name="theme_wheatpaste">Wheatpaste</string>
     <string name="theme_wheatpaste_summary">Light · street posters and riso ink</string>
-    <string name="theme_fresh_court">Fresh Court</string>
-    <string name="theme_fresh_court_summary">Light · the original green</string>
     <string name="theme_selected">selected</string>
     <string name="theme_level_line">Level %1$d — %2$s</string>
     <string name="theme_level_chip">Lv %1$d · %2$s · class %3$d</string>

@@ -13,6 +13,8 @@ data class WorkoutStep(
     val key: String,
 ) {
     val setNumber: Int get() = set.number.takeIf { it > 0 } ?: setIndex + 1
+    /** The exercise this set belongs to, as the easier-option choice is saved. */
+    val exerciseKey: String get() = WorkoutFlow.exerciseKey(section, exercise, exerciseIndex)
     val setCount: Int get() = exercise.sets.size
 }
 
@@ -41,6 +43,27 @@ class WorkoutFlow(val steps: List<WorkoutStep>) {
     fun isSectionComplete(section: String, completed: Set<String>): Boolean =
         keys(section).let { keys -> keys.isNotEmpty() && keys.all { it in completed } }
 
+    /**
+     * What the finished class credits toward skills: ticked sets per movement in the practice and main work. An
+     * exercise done as its easier option ([easier] holds [exerciseKey]s) credits the easier movement; readiness checks
+     * are answered on their own and credit nothing; [movementOf] names the movement an exercise trains.
+     */
+    fun credits(completed: Set<String>, easier: Set<String>, movementOf: (TrainingExercise) -> String?): Map<String, Int> {
+        val credits = LinkedHashMap<String, Int>()
+        for (step in steps) {
+            if (step.section !in CREDITED_SECTIONS || step.key !in completed || step.exercise.readinessCheck) continue
+            val option = step.exercise.easier?.takeIf { step.exerciseKey in easier }
+            val id = option?.movementId ?: movementOf(step.exercise) ?: continue
+            credits[id] = (credits[id] ?: 0) + 1
+        }
+        return credits
+    }
+
+    /** Readiness checks with a ticked set: each asks "Did you hit it?" when the class is finished. */
+    fun readinessChecks(completed: Set<String>): List<TrainingExercise> = steps
+        .filter { it.section in CREDITED_SECTIONS && it.exercise.readinessCheck && it.key in completed }
+        .map(WorkoutStep::exercise).distinct()
+
     companion object {
         /** [sections] are (key, exercises) pairs in class order; empty sections add no steps. */
         fun of(programId: String, sections: List<Pair<String, List<TrainingExercise>>>): WorkoutFlow = WorkoutFlow(
@@ -55,6 +78,12 @@ class WorkoutFlow(val steps: List<WorkoutStep>) {
                 }
             },
         )
+
+        /** The sections whose sets train skills: warm-up and cooldown only prepare and recover. */
+        val CREDITED_SECTIONS = setOf("practice", "main")
+
+        fun exerciseKey(section: String, exercise: TrainingExercise, exerciseIndex: Int): String =
+            "$section:${exercise.id}-$exerciseIndex"
 
         fun setKey(
             programId: String,

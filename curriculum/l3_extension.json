@@ -345,13 +345,13 @@
           "march"
         ],
         [
-          "wrist_rocks",
-          2,
-          8,
+          "wrist_pushup",
+          1,
+          10,
           null,
-          15,
-          "controlled",
-          "wrist_circles"
+          20,
+          "slow",
+          "wrist_rocks"
         ],
         [
           "scapular_pushup",
@@ -383,13 +383,13 @@
           "pushup"
         ],
         [
-          "pike_pushup",
+          "elevated_pike_pushup",
           3,
-          10,
+          8,
           null,
           90,
           "2011",
-          "incline_pushup"
+          "pike_pushup"
         ],
         [
           "sliding_leg_curl",
@@ -401,13 +401,13 @@
           "glute_bridge"
         ],
         [
-          "hollow_body_hold",
-          3,
+          "bulgarian_split_squat",
+          2,
+          "8/side",
           null,
-          20,
-          45,
-          "isometric",
-          "hollow_hold"
+          60,
+          "3010",
+          "split_squat"
         ]
       ],
       "cooldown": [
@@ -680,13 +680,13 @@
           "incline_pushup"
         ],
         [
-          "squat",
+          "bulgarian_split_squat",
           2,
-          32,
+          "8/side",
           null,
-          55,
+          60,
           "3010",
-          "box_squat"
+          "split_squat"
         ],
         [
           "hanging_leg_raise",
@@ -781,27 +781,18 @@
           10,
           "each_direction",
           null
+        ],
+        [
+          "wrist_pushup",
+          1,
+          10,
+          null,
+          20,
+          "slow",
+          "wrist_rocks"
         ]
       ],
       "main": [
-        [
-          "german_hang",
-          2,
-          null,
-          10,
-          45,
-          "slow",
-          "skin_cat_partial"
-        ],
-        [
-          "tuck_back_hold",
-          3,
-          null,
-          10,
-          75,
-          "isometric",
-          "tuck_back_entry"
-        ],
         [
           "band_muscleup",
           2,
@@ -810,15 +801,6 @@
           105,
           "clean",
           "jump_muscleup"
-        ],
-        [
-          "tuck_front_hold",
-          2,
-          null,
-          8,
-          60,
-          "isometric",
-          "tuck_front_row"
         ],
         [
           "planche_lean",
@@ -846,6 +828,15 @@
           45,
           "2111",
           "incline_pushup"
+        ],
+        [
+          "elevated_pike_pushup",
+          2,
+          8,
+          null,
+          90,
+          "2111",
+          "pike_pushup"
         ]
       ],
       "cooldown": [
@@ -1191,13 +1182,13 @@
           "march"
         ],
         [
-          "wrist_rocks",
-          2,
-          9,
+          "wrist_pushup",
+          1,
+          10,
           null,
-          15,
-          "controlled",
-          "wrist_circles"
+          20,
+          "slow",
+          "wrist_rocks"
         ],
         [
           "scapular_pushup",
@@ -1247,13 +1238,13 @@
           "pushup"
         ],
         [
-          "pike_pushup",
+          "elevated_pike_pushup",
           3,
-          10,
+          8,
           null,
           90,
           "2011",
-          "incline_pushup"
+          "pike_pushup"
         ],
         [
           "sliding_leg_curl",
@@ -1304,13 +1295,13 @@
         "en": "Shoulders and Back-Line Restore"
       },
       "description": {
-        "en": "Restore shoulder range while rehearsing low-dose back-lever and dragon positions, applying the listed regression before effort rises above recovery pace."
+        "en": "Restore shoulder range while rehearsing low-dose back-lever and dragon positions, applying the listed regression before effort rises above recovery pace. The skill-mobility block opens the shoulders and upper back for the handstand line and builds the pancake compression the L-sit and press need. The weekly skill-mobility block closes the class: wall shoulder openers, pancake compression lifts and bench thoracic extensions."
       },
       "schedule": {
         "week": 9,
         "day": 4,
         "day_type": "back_dragon_mobility_recovery",
-        "minutes": 27,
+        "minutes": 30,
         "rpe": 4,
         "focus": [
           "recovery",
@@ -1386,13 +1377,31 @@
           null
         ],
         [
-          "bird_dog",
+          "wall_shoulder_flexion",
           2,
-          "6/side",
+          null,
+          23,
+          30,
+          null,
+          "wall_slide"
+        ],
+        [
+          "pancake_compression",
+          2,
+          5,
           null,
           30,
-          "pause",
-          "dead_bug"
+          "slow",
+          "seated_pike_lift"
+        ],
+        [
+          "thoracic_extension",
+          2,
+          5,
+          null,
+          30,
+          "2-second_pause",
+          "cat_cow"
         ]
       ],
       "cooldown": [
@@ -1655,13 +1664,13 @@
           "skin_cat_partial"
         ],
         [
-          "advanced_tuck_back",
+          "tuck_back_hold",
           3,
           null,
-          6,
+          10,
           105,
           "isometric",
-          "tuck_back_hold"
+          "tuck_back_entry"
         ],
         [
           "bent_dragon_negative",
@@ -1682,13 +1691,13 @@
           "assisted_pullup"
         ],
         [
-          "squat",
+          "assisted_pistol_squat",
           2,
-          32,
+          "6/side",
           null,
-          55,
-          "3010",
-          "box_squat"
+          75,
+          "3111",
+          "split_squat"
         ]
       ],
       "cooldown": [
@@ -1813,13 +1822,13 @@
           "support_hold"
         ],
         [
-          "pause_pushup",
+          "elevated_pike_pushup",
           3,
-          12,
+          8,
           null,
           60,
-          "22X1",
-          "incline_pushup"
+          "2111",
+          "pike_pushup"
         ],
         [
           "cossack_squat",
@@ -1970,13 +1979,13 @@
           "assisted_pullup"
         ],
         [
-          "squat",
+          "assisted_pistol_squat",
           3,
-          32,
+          "6/side",
           null,
-          55,
-          "3010",
-          "box_squat"
+          75,
+          "3111",
+          "split_squat"
         ]
       ],
       "cooldown": [
@@ -2044,13 +2053,13 @@
           "march"
         ],
         [
-          "wrist_rocks",
-          2,
+          "wrist_pushup",
+          1,
           10,
           null,
-          15,
-          "controlled",
-          "wrist_circles"
+          20,
+          "slow",
+          "wrist_rocks"
         ],
         [
           "scapular_pushup",
@@ -2091,13 +2100,13 @@
           "elevated_plank"
         ],
         [
-          "pike_pushup",
+          "elevated_pike_pushup",
           2,
-          8,
+          6,
           null,
           90,
           "2011",
-          "incline_pushup"
+          "pike_pushup"
         ],
         [
           "pseudo_planche_pushup",
@@ -2306,13 +2315,13 @@
         "en": "Midweek Back-Line Restore"
       },
       "description": {
-        "en": "Use gentle back-lever entries, short holds, and dragon negatives to restore positions, taking the listed regression before recovery effort rises."
+        "en": "Use gentle back-lever entries, short holds, and dragon negatives to restore positions, taking the listed regression before recovery effort rises. The skill-mobility block opens the shoulders and upper back for the handstand line and builds the pancake compression the L-sit and press need. The weekly skill-mobility block closes the class: wall shoulder openers, pancake compression lifts and bench thoracic extensions."
       },
       "schedule": {
         "week": 10,
         "day": 4,
         "day_type": "back_dragon_technique_recovery",
-        "minutes": 26,
+        "minutes": 29,
         "rpe": 4,
         "focus": [
           "recovery",
@@ -2388,13 +2397,31 @@
           null
         ],
         [
-          "bird_dog",
+          "wall_shoulder_flexion",
           2,
-          "7/side",
+          null,
+          23,
+          30,
+          null,
+          "wall_slide"
+        ],
+        [
+          "pancake_compression",
+          2,
+          5,
           null,
           30,
           "slow",
-          "dead_bug"
+          "seated_pike_lift"
+        ],
+        [
+          "thoracic_extension",
+          2,
+          5,
+          null,
+          30,
+          "2-second_pause",
+          "cat_cow"
         ]
       ],
       "cooldown": [
@@ -2719,7 +2746,7 @@
         "week": 10,
         "day": 7,
         "day_type": "five_skill_fundamentals_build",
-        "minutes": 43,
+        "minutes": 44,
         "rpe": 6,
         "focus": [
           "muscle_up",
@@ -2761,6 +2788,15 @@
           null
         ],
         [
+          "wrist_pushup",
+          1,
+          10,
+          null,
+          20,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
           "squat_jump",
           2,
           5,
@@ -2772,24 +2808,6 @@
       ],
       "main": [
         [
-          "german_hang",
-          3,
-          null,
-          10,
-          45,
-          "slow",
-          "skin_cat_partial"
-        ],
-        [
-          "tuck_back_hold",
-          2,
-          null,
-          9,
-          75,
-          "isometric",
-          "tuck_back_entry"
-        ],
-        [
           "jump_muscleup",
           2,
           3,
@@ -2799,13 +2817,13 @@
           "low_bar_transition"
         ],
         [
-          "tuck_front_hold",
+          "tuck_front_row",
           2,
+          6,
           null,
-          9,
-          60,
-          "isometric",
-          "tuck_front_row"
+          75,
+          "2111",
+          "inverted_row"
         ],
         [
           "planche_lean",
@@ -3158,13 +3176,13 @@
           "assisted_pullup"
         ],
         [
-          "squat",
+          "assisted_pistol_squat",
           2,
-          32,
+          "6/side",
           null,
-          55,
-          "controlled",
-          "box_squat"
+          75,
+          "3111",
+          "split_squat"
         ]
       ],
       "cooldown": [
@@ -3232,13 +3250,13 @@
           "march"
         ],
         [
-          "wrist_rocks",
-          2,
+          "wrist_pushup",
+          1,
           10,
           null,
-          15,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
           "scapular_pushup",
@@ -3288,13 +3306,13 @@
           "pushup"
         ],
         [
-          "pike_pushup",
+          "elevated_pike_pushup",
           3,
-          10,
+          8,
           null,
           90,
           "2011",
-          "incline_pushup"
+          "pike_pushup"
         ],
         [
           "sliding_leg_curl",
@@ -3345,13 +3363,13 @@
         "en": "Dragon Mobility Recovery"
       },
       "description": {
-        "en": "Restore trunk and hip motion with easy dragon-flag mechanics, dead-bug control, and relaxed mobility; every repetition remains comfortably below strain."
+        "en": "Restore trunk and hip motion with easy dragon-flag mechanics, dead-bug control, and relaxed mobility; every repetition remains comfortably below strain. The skill-mobility block opens the shoulders and upper back for the handstand line and builds the pancake compression the L-sit and press need. The weekly skill-mobility block closes the class: wall shoulder openers, pancake compression lifts and bench thoracic extensions."
       },
       "schedule": {
         "week": 11,
         "day": 4,
         "day_type": "dragon_mobility_recovery",
-        "minutes": 29,
+        "minutes": 30,
         "rpe": 4,
         "focus": [
           "recovery",
@@ -3410,7 +3428,7 @@
         ],
         [
           "bird_dog",
-          2,
+          1,
           "7/side",
           null,
           30,
@@ -3427,13 +3445,31 @@
           "box_squat"
         ],
         [
-          "ninety_ninety_hip_switch",
+          "wall_shoulder_flexion",
           2,
-          "8/side",
+          null,
+          23,
+          30,
+          null,
+          "wall_slide"
+        ],
+        [
+          "pancake_compression",
+          2,
+          5,
           null,
           30,
           "slow",
-          null
+          "seated_pike_lift"
+        ],
+        [
+          "thoracic_extension",
+          2,
+          5,
+          null,
+          30,
+          "2-second_pause",
+          "cat_cow"
         ]
       ],
       "cooldown": [
@@ -3760,58 +3796,61 @@
       "level": 3,
       "number": 97,
       "title": {
-        "en": "Pre-Benchmark Recovery"
+        "en": "Planche and Dragon Pairing"
       },
       "description": {
-        "en": "Wall slides, foot-assisted hangs, Cossack squats, trunk control and easy incline push-ups give the elbows and shoulders a day off before the Level 3 benchmark. Clean reps up to the number shown: stop at the first form break and note it; don't top up with the easier option."
+        "en": "Pair planche leans and forward-biased presses with deliberate dragon-flag negatives, maintaining exact positions before closing with controlled split squats."
       },
       "schedule": {
         "week": 11,
         "day": 7,
-        "day_type": "pre_benchmark_recovery",
-        "minutes": 32,
-        "rpe": 4,
+        "day_type": "planche_dragon_strength",
+        "minutes": 50,
+        "rpe": 6,
         "focus": [
-          "recovery",
-          "mobility"
+          "planche",
+          "dragon_flag",
+          "push_up",
+          "core",
+          "legs"
         ]
       },
       "warmup": [
         [
-          "easy_walk",
+          "low_jack",
           1,
+          48,
           null,
-          180,
           0,
           "easy",
           "march"
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "leg_swings",
-          1,
-          "10/side",
+          "cat_cow",
+          2,
+          8,
           null,
-          10,
-          "controlled",
+          15,
+          "slow",
           null
         ],
         [
-          "arm_swings",
+          "prone_ytw",
           1,
-          16,
+          6,
           null,
-          10,
-          "controlled",
-          null
+          15,
+          "slow",
+          "wall_slide"
         ],
         [
           "squat_jump",
@@ -3825,72 +3864,54 @@
       ],
       "main": [
         [
-          "wall_slide",
+          "planche_lean",
           2,
-          10,
           null,
-          30,
-          "slow",
-          null
+          16,
+          75,
+          "isometric",
+          "elevated_plank"
         ],
         [
-          "foot_assisted_hang",
-          2,
+          "elevated_pike_pushup",
+          3,
+          8,
           null,
-          20,
-          45,
-          "relaxed",
-          null
+          90,
+          "controlled",
+          "pike_pushup"
         ],
         [
-          "cossack_squat",
-          2,
-          "6/side",
+          "bent_dragon_negative",
+          3,
+          3,
           null,
-          35,
-          "gentle",
-          "split_squat"
+          105,
+          "7000",
+          "candlestick"
         ],
         [
-          "bird_dog",
-          2,
-          "6/side",
+          "split_squat",
+          3,
+          "12/side",
           null,
-          30,
-          "pause",
-          "dead_bug"
-        ],
-        [
-          "dead_bug",
-          2,
-          "6/side",
-          null,
-          30,
-          "slow",
-          null
-        ],
-        [
-          "incline_pushup",
-          2,
-          10,
-          null,
-          45,
-          "2111",
-          "wall_pushup"
+          60,
+          "controlled",
+          "box_squat"
         ]
       ],
       "cooldown": [
         [
-          "lat_stretch",
+          "forearm_stretch",
           2,
           null,
-          30,
+          35,
           10,
           "relaxed",
           null
         ],
         [
-          "quad_stretch",
+          "hip_flexor_stretch",
           2,
           null,
           35,
@@ -3982,7 +4003,7 @@
         ],
         [
           "tuck_front_hold",
-          3,
+          1,
           null,
           12,
           75,
@@ -4062,61 +4083,58 @@
       "level": 3,
       "number": 99,
       "title": {
-        "en": "Planche and Dragon Pairing"
+        "en": "Pre-Benchmark Recovery"
       },
       "description": {
-        "en": "Pair planche leans and forward-biased presses with deliberate dragon-flag negatives, maintaining exact positions before closing with controlled split squats."
+        "en": "Wall slides, foot-assisted hangs, Cossack squats, trunk control and easy incline push-ups give the elbows and shoulders a day off before the Level 3 benchmark. Clean reps up to the number shown: stop at the first form break and note it; don't top up with the easier option."
       },
       "schedule": {
         "week": 12,
         "day": 2,
-        "day_type": "planche_dragon_strength",
-        "minutes": 50,
-        "rpe": 7,
+        "day_type": "pre_benchmark_recovery",
+        "minutes": 30,
+        "rpe": 4,
         "focus": [
-          "planche",
-          "dragon_flag",
-          "push_up",
-          "core",
-          "legs"
+          "recovery",
+          "mobility"
         ]
       },
       "warmup": [
         [
-          "low_jack",
+          "easy_walk",
           1,
-          48,
           null,
+          180,
           0,
           "easy",
           "march"
         ],
         [
           "wrist_rocks",
-          2,
+          1,
           10,
           null,
-          15,
+          10,
           "slow",
           "wrist_circles"
         ],
         [
-          "cat_cow",
-          2,
-          8,
+          "leg_swings",
+          1,
+          "10/side",
           null,
-          15,
-          "slow",
+          10,
+          "controlled",
           null
         ],
         [
-          "prone_ytw",
+          "arm_swings",
           1,
-          6,
+          16,
           null,
-          15,
-          "slow",
-          "wall_slide"
+          10,
+          "controlled",
+          null
         ],
         [
           "squat_jump",
@@ -4130,54 +4148,72 @@
       ],
       "main": [
         [
-          "planche_lean",
-          4,
+          "wall_slide",
+          2,
+          10,
           null,
-          16,
-          75,
-          "isometric",
-          "elevated_plank"
+          30,
+          "slow",
+          null
         ],
         [
-          "pseudo_planche_pushup",
-          3,
-          7,
+          "foot_assisted_hang",
+          2,
           null,
-          90,
-          "controlled",
-          "pushup"
+          20,
+          45,
+          "relaxed",
+          null
         ],
         [
-          "bent_dragon_negative",
-          3,
-          3,
+          "cossack_squat",
+          1,
+          "6/side",
           null,
-          105,
-          "7000",
-          "candlestick"
+          35,
+          "gentle",
+          "split_squat"
         ],
         [
-          "split_squat",
-          3,
-          "12/side",
+          "bird_dog",
+          2,
+          "6/side",
           null,
-          60,
-          "controlled",
-          "box_squat"
+          30,
+          "pause",
+          "dead_bug"
+        ],
+        [
+          "dead_bug",
+          2,
+          "6/side",
+          null,
+          30,
+          "slow",
+          null
+        ],
+        [
+          "incline_pushup",
+          1,
+          10,
+          null,
+          45,
+          "2111",
+          "wall_pushup"
         ]
       ],
       "cooldown": [
         [
-          "forearm_stretch",
+          "lat_stretch",
           2,
           null,
-          35,
+          30,
           10,
           "relaxed",
           null
         ],
         [
-          "hip_flexor_stretch",
+          "quad_stretch",
           2,
           null,
           35,

@@ -43,14 +43,18 @@ service cloud.firestore {
       }
     }
 
-    // Public scores: written by their owner under their profile's name, read only by the function.
+    // Public scores (version 2): written by their owner under their profile's name, read only by the function, which
+    // also checks that the overall adds up from the families.
     match /scores/{uid} {
       allow create, update: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['v', 'username', 'country', 'overall', 'families', 'verified', 'updated_at'])
+        && request.resource.data.v == 2
         && request.resource.data.username == get(/databases/$(database)/documents/users/$(uid)).data.username
         && request.resource.data.country is string && request.resource.data.country.size() == 2
         && request.resource.data.overall is int
-        && request.resource.data.overall >= 0 && request.resource.data.overall <= 1000000
-        && request.resource.data.skills is map && request.resource.data.skills.size() <= 200;
+        && request.resource.data.overall >= 0 && request.resource.data.overall <= 1000
+        && request.resource.data.families is map && request.resource.data.families.size() <= 15
+        && request.resource.data.verified is list && request.resource.data.verified.size() <= 120;
       allow delete: if request.auth != null && request.auth.uid == uid;
       allow read: if false;
     }

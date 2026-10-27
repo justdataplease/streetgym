@@ -1,6 +1,6 @@
 {
   "purpose": {
-    "en": "One shared daily class. Handstand practice comes first on every training day and human-flag practice twice a week, in a few short, easy sets right after the warm-up. Doses rise in three steps inside each level. These are practice opportunities, never deadlines."
+    "en": "One shared daily class. Handstand practice comes first on every training day and human-flag practice once or twice a week, never on consecutive days, in a few short, easy sets right after the warm-up. Doses rise in three steps inside each level and halve in deload weeks. The original-source blocks add pike push-ups twice a week. These are practice opportunities, never deadlines."
   },
   "levels": [
     {
@@ -135,9 +135,18 @@
               "practice": [
                 [
                   "overhead_line",
-                  2,
+                  1,
                   null,
                   20,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "pike_handstand_hold",
+                  1,
+                  null,
+                  12,
                   45,
                   "easy technique",
                   null
@@ -158,9 +167,18 @@
               "practice": [
                 [
                   "overhead_line",
-                  2,
+                  1,
                   null,
                   20,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "pike_handstand_hold",
+                  1,
+                  null,
+                  12,
                   45,
                   "easy technique",
                   null
@@ -172,9 +190,18 @@
               "practice": [
                 [
                   "overhead_line",
-                  2,
+                  1,
                   null,
                   20,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "pike_handstand_hold",
+                  1,
+                  null,
+                  12,
                   45,
                   "easy technique",
                   null
@@ -186,9 +213,18 @@
               "practice": [
                 [
                   "overhead_line",
-                  2,
+                  1,
                   null,
                   20,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "pike_handstand_hold",
+                  1,
+                  null,
+                  12,
                   45,
                   "easy technique",
                   null
@@ -209,9 +245,18 @@
               "practice": [
                 [
                   "overhead_line",
-                  2,
+                  1,
                   null,
                   20,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "pike_handstand_hold",
+                  1,
+                  null,
+                  12,
                   45,
                   "easy technique",
                   null
@@ -223,9 +268,18 @@
               "practice": [
                 [
                   "overhead_line",
-                  2,
+                  1,
                   null,
                   20,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "pike_handstand_hold",
+                  1,
+                  null,
+                  12,
                   45,
                   "easy technique",
                   null
@@ -237,9 +291,18 @@
               "practice": [
                 [
                   "overhead_line",
-                  2,
+                  1,
                   null,
                   20,
+                  45,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "pike_handstand_hold",
+                  1,
+                  null,
+                  12,
                   45,
                   "easy technique",
                   null
@@ -255,22 +318,22 @@
               "day": 1,
               "practice": [
                 [
-                  "overhead_line",
+                  "pike_handstand_hold",
                   1,
                   null,
-                  20,
+                  15,
                   45,
                   "easy technique",
                   null
                 ],
                 [
-                  "pike_handstand_hold",
+                  "wall_handstand",
                   1,
                   null,
                   10,
                   45,
                   "easy technique",
-                  null
+                  "pike_handstand_hold"
                 ],
                 [
                   "kneeling_side_plank",
@@ -287,22 +350,22 @@
               "day": 2,
               "practice": [
                 [
-                  "overhead_line",
+                  "pike_handstand_hold",
                   1,
                   null,
-                  20,
+                  15,
                   45,
                   "easy technique",
                   null
                 ],
                 [
-                  "pike_handstand_hold",
+                  "wall_handstand",
                   1,
                   null,
                   10,
                   45,
                   "easy technique",
-                  null
+                  "pike_handstand_hold"
                 ]
               ]
             },
@@ -310,22 +373,22 @@
               "day": 3,
               "practice": [
                 [
-                  "overhead_line",
+                  "pike_handstand_hold",
                   1,
                   null,
-                  20,
+                  15,
                   45,
                   "easy technique",
                   null
                 ],
                 [
-                  "pike_handstand_hold",
+                  "wall_handstand",
                   1,
                   null,
                   10,
                   45,
                   "easy technique",
-                  null
+                  "pike_handstand_hold"
                 ]
               ]
             },
@@ -333,22 +396,22 @@
               "day": 4,
               "practice": [
                 [
-                  "overhead_line",
+                  "pike_handstand_hold",
                   1,
                   null,
-                  20,
+                  15,
                   45,
                   "easy technique",
                   null
                 ],
                 [
-                  "pike_handstand_hold",
+                  "wall_handstand",
                   1,
                   null,
                   10,
                   45,
                   "easy technique",
-                  null
+                  "pike_handstand_hold"
                 ],
                 [
                   "kneeling_side_plank",
@@ -365,22 +428,22 @@
               "day": 5,
               "practice": [
                 [
-                  "overhead_line",
+                  "pike_handstand_hold",
                   1,
                   null,
-                  20,
+                  15,
                   45,
                   "easy technique",
                   null
                 ],
                 [
-                  "pike_handstand_hold",
+                  "wall_handstand",
                   1,
                   null,
                   10,
                   45,
                   "easy technique",
-                  null
+                  "pike_handstand_hold"
                 ]
               ]
             },
@@ -388,22 +451,22 @@
               "day": 6,
               "practice": [
                 [
-                  "overhead_line",
+                  "pike_handstand_hold",
                   1,
                   null,
-                  20,
+                  15,
                   45,
                   "easy technique",
                   null
                 ],
                 [
-                  "pike_handstand_hold",
+                  "wall_handstand",
                   1,
                   null,
                   10,
                   45,
                   "easy technique",
-                  null
+                  "pike_handstand_hold"
                 ]
               ]
             },
@@ -411,22 +474,22 @@
               "day": 7,
               "practice": [
                 [
-                  "overhead_line",
+                  "pike_handstand_hold",
                   1,
                   null,
-                  20,
+                  15,
                   45,
                   "easy technique",
                   null
                 ],
                 [
-                  "pike_handstand_hold",
+                  "wall_handstand",
                   1,
                   null,
                   10,
                   45,
                   "easy technique",
-                  null
+                  "pike_handstand_hold"
                 ]
               ]
             }
@@ -444,13 +507,13 @@
               "day": 1,
               "practice": [
                 [
-                  "pike_handstand_hold",
+                  "wall_handstand",
                   2,
                   null,
-                  12,
+                  15,
                   45,
                   "easy technique",
-                  null
+                  "pike_handstand_hold"
                 ],
                 [
                   "flag_ground_support",
@@ -467,13 +530,13 @@
               "day": 2,
               "practice": [
                 [
-                  "pike_handstand_hold",
+                  "wall_handstand",
                   2,
                   null,
-                  12,
+                  15,
                   45,
                   "easy technique",
-                  null
+                  "pike_handstand_hold"
                 ]
               ]
             },
@@ -481,13 +544,13 @@
               "day": 3,
               "practice": [
                 [
-                  "pike_handstand_hold",
+                  "wall_handstand",
                   2,
                   null,
-                  12,
+                  15,
                   45,
                   "easy technique",
-                  null
+                  "pike_handstand_hold"
                 ]
               ]
             },
@@ -495,13 +558,13 @@
               "day": 4,
               "practice": [
                 [
-                  "pike_handstand_hold",
+                  "wall_handstand",
                   2,
                   null,
-                  12,
+                  15,
                   45,
                   "easy technique",
-                  null
+                  "pike_handstand_hold"
                 ],
                 [
                   "flag_ground_support",
@@ -518,13 +581,13 @@
               "day": 5,
               "practice": [
                 [
-                  "pike_handstand_hold",
+                  "wall_handstand",
                   2,
                   null,
-                  12,
+                  15,
                   45,
                   "easy technique",
-                  null
+                  "pike_handstand_hold"
                 ]
               ]
             },
@@ -532,13 +595,13 @@
               "day": 6,
               "practice": [
                 [
-                  "pike_handstand_hold",
+                  "wall_handstand",
                   2,
                   null,
-                  12,
+                  15,
                   45,
                   "easy technique",
-                  null
+                  "pike_handstand_hold"
                 ]
               ]
             },
@@ -546,13 +609,13 @@
               "day": 7,
               "practice": [
                 [
-                  "pike_handstand_hold",
+                  "wall_handstand",
                   2,
                   null,
-                  12,
+                  15,
                   45,
                   "easy technique",
-                  null
+                  "pike_handstand_hold"
                 ]
               ]
             }
@@ -565,13 +628,13 @@
               "day": 1,
               "practice": [
                 [
-                  "pike_handstand_hold",
+                  "wall_handstand",
                   2,
                   null,
-                  15,
+                  20,
                   45,
                   "easy technique",
-                  null
+                  "pike_handstand_hold"
                 ],
                 [
                   "flag_ground_support",
@@ -588,13 +651,13 @@
               "day": 2,
               "practice": [
                 [
-                  "pike_handstand_hold",
+                  "wall_handstand",
                   2,
                   null,
-                  15,
+                  20,
                   45,
                   "easy technique",
-                  null
+                  "pike_handstand_hold"
                 ]
               ]
             },
@@ -602,13 +665,13 @@
               "day": 3,
               "practice": [
                 [
-                  "pike_handstand_hold",
+                  "wall_handstand",
                   2,
                   null,
-                  15,
+                  20,
                   45,
                   "easy technique",
-                  null
+                  "pike_handstand_hold"
                 ]
               ]
             },
@@ -616,13 +679,13 @@
               "day": 4,
               "practice": [
                 [
-                  "pike_handstand_hold",
+                  "wall_handstand",
                   2,
                   null,
-                  15,
+                  20,
                   45,
                   "easy technique",
-                  null
+                  "pike_handstand_hold"
                 ],
                 [
                   "flag_ground_support",
@@ -639,13 +702,13 @@
               "day": 5,
               "practice": [
                 [
-                  "pike_handstand_hold",
+                  "wall_handstand",
                   2,
                   null,
-                  15,
+                  20,
                   45,
                   "easy technique",
-                  null
+                  "pike_handstand_hold"
                 ]
               ]
             },
@@ -653,13 +716,13 @@
               "day": 6,
               "practice": [
                 [
-                  "pike_handstand_hold",
+                  "wall_handstand",
                   2,
                   null,
-                  15,
+                  20,
                   45,
                   "easy technique",
-                  null
+                  "pike_handstand_hold"
                 ]
               ]
             },
@@ -667,13 +730,13 @@
               "day": 7,
               "practice": [
                 [
-                  "pike_handstand_hold",
+                  "wall_handstand",
                   2,
                   null,
-                  15,
+                  20,
                   45,
                   "easy technique",
-                  null
+                  "pike_handstand_hold"
                 ]
               ]
             }
@@ -686,19 +749,10 @@
               "day": 1,
               "practice": [
                 [
-                  "pike_handstand_hold",
-                  1,
-                  null,
-                  20,
-                  45,
-                  "easy technique",
-                  "overhead_line"
-                ],
-                [
                   "wall_handstand",
-                  1,
+                  2,
                   null,
-                  15,
+                  30,
                   45,
                   "easy technique",
                   "pike_handstand_hold"
@@ -709,19 +763,10 @@
               "day": 2,
               "practice": [
                 [
-                  "pike_handstand_hold",
-                  1,
-                  null,
-                  20,
-                  45,
-                  "easy technique",
-                  "overhead_line"
-                ],
-                [
                   "wall_handstand",
-                  1,
+                  2,
                   null,
-                  15,
+                  30,
                   45,
                   "easy technique",
                   "pike_handstand_hold"
@@ -732,19 +777,10 @@
               "day": 3,
               "practice": [
                 [
-                  "pike_handstand_hold",
-                  1,
-                  null,
-                  20,
-                  45,
-                  "easy technique",
-                  "overhead_line"
-                ],
-                [
                   "wall_handstand",
-                  1,
+                  2,
                   null,
-                  15,
+                  30,
                   45,
                   "easy technique",
                   "pike_handstand_hold"
@@ -755,19 +791,10 @@
               "day": 4,
               "practice": [
                 [
-                  "pike_handstand_hold",
-                  1,
-                  null,
-                  20,
-                  45,
-                  "easy technique",
-                  "overhead_line"
-                ],
-                [
                   "wall_handstand",
-                  1,
+                  2,
                   null,
-                  15,
+                  30,
                   45,
                   "easy technique",
                   "pike_handstand_hold"
@@ -787,19 +814,10 @@
               "day": 5,
               "practice": [
                 [
-                  "pike_handstand_hold",
-                  1,
-                  null,
-                  20,
-                  45,
-                  "easy technique",
-                  "overhead_line"
-                ],
-                [
                   "wall_handstand",
-                  1,
+                  2,
                   null,
-                  15,
+                  30,
                   45,
                   "easy technique",
                   "pike_handstand_hold"
@@ -810,19 +828,10 @@
               "day": 6,
               "practice": [
                 [
-                  "pike_handstand_hold",
-                  1,
-                  null,
-                  20,
-                  45,
-                  "easy technique",
-                  "overhead_line"
-                ],
-                [
                   "wall_handstand",
-                  1,
+                  2,
                   null,
-                  15,
+                  30,
                   45,
                   "easy technique",
                   "pike_handstand_hold"
@@ -833,19 +842,10 @@
               "day": 7,
               "practice": [
                 [
-                  "pike_handstand_hold",
-                  1,
-                  null,
-                  20,
-                  45,
-                  "easy technique",
-                  "overhead_line"
-                ],
-                [
                   "wall_handstand",
-                  1,
+                  2,
                   null,
-                  15,
+                  30,
                   45,
                   "easy technique",
                   "pike_handstand_hold"
@@ -863,6 +863,36 @@
             }
           ]
         }
+      ],
+      "source_practice": [
+        {
+          "day": 2,
+          "practice": [
+            [
+              "pike_pushup",
+              2,
+              6,
+              null,
+              60,
+              "easy technique",
+              "incline_pushup"
+            ]
+          ]
+        },
+        {
+          "day": 5,
+          "practice": [
+            [
+              "pike_pushup",
+              2,
+              6,
+              null,
+              60,
+              "easy technique",
+              "incline_pushup"
+            ]
+          ]
+        }
       ]
     },
     {
@@ -878,7 +908,7 @@
                   "wall_handstand",
                   2,
                   null,
-                  20,
+                  35,
                   45,
                   "easy technique",
                   "pike_handstand_hold"
@@ -892,16 +922,16 @@
                   "wall_handstand",
                   2,
                   null,
-                  20,
+                  35,
                   45,
                   "easy technique",
                   "pike_handstand_hold"
                 ],
                 [
-                  "flag_ground_support",
-                  3,
+                  "assisted_tuck_flag",
+                  2,
                   null,
-                  "18/side",
+                  "5/side",
                   60,
                   "easy technique",
                   null
@@ -924,7 +954,7 @@
                   "wall_handstand",
                   2,
                   null,
-                  20,
+                  35,
                   45,
                   "easy technique",
                   "pike_handstand_hold"
@@ -938,7 +968,7 @@
                   "wall_handstand",
                   2,
                   null,
-                  20,
+                  35,
                   45,
                   "easy technique",
                   "pike_handstand_hold"
@@ -952,14 +982,14 @@
                   "wall_handstand",
                   2,
                   null,
-                  20,
+                  35,
                   45,
                   "easy technique",
                   "pike_handstand_hold"
                 ],
                 [
                   "flag_ground_support",
-                  3,
+                  2,
                   null,
                   "18/side",
                   60,
@@ -984,7 +1014,7 @@
                   "wall_handstand",
                   2,
                   null,
-                  20,
+                  35,
                   45,
                   "easy technique",
                   "pike_handstand_hold"
@@ -998,7 +1028,7 @@
                   "wall_handstand",
                   2,
                   null,
-                  20,
+                  35,
                   45,
                   "easy technique",
                   "pike_handstand_hold"
@@ -1038,7 +1068,7 @@
               "practice": [
                 [
                   "wall_handstand",
-                  3,
+                  2,
                   null,
                   40,
                   45,
@@ -1046,10 +1076,10 @@
                   "pike_handstand_hold"
                 ],
                 [
-                  "flag_ground_support",
-                  3,
+                  "assisted_tuck_flag",
+                  2,
                   null,
-                  "20/side",
+                  "6/side",
                   60,
                   "easy technique",
                   null
@@ -1070,7 +1100,7 @@
               "practice": [
                 [
                   "wall_handstand",
-                  3,
+                  2,
                   null,
                   40,
                   45,
@@ -1107,7 +1137,7 @@
               "practice": [
                 [
                   "wall_handstand",
-                  3,
+                  2,
                   null,
                   40,
                   45,
@@ -1116,7 +1146,7 @@
                 ],
                 [
                   "flag_ground_support",
-                  3,
+                  2,
                   null,
                   "20/side",
                   60,
@@ -1139,7 +1169,7 @@
               "practice": [
                 [
                   "wall_handstand",
-                  3,
+                  2,
                   null,
                   40,
                   45,
@@ -1198,19 +1228,10 @@
                   "wall_handstand"
                 ],
                 [
-                  "flag_ground_support",
+                  "assisted_tuck_flag",
                   2,
                   null,
-                  "20/side",
-                  60,
-                  "easy technique",
-                  null
-                ],
-                [
-                  "assisted_tuck_flag",
-                  1,
-                  null,
-                  "4/side",
+                  "8/side",
                   60,
                   "easy technique",
                   null
@@ -1326,19 +1347,10 @@
                   "wall_handstand"
                 ],
                 [
-                  "flag_ground_support",
+                  "assisted_tuck_flag",
                   2,
                   null,
-                  "20/side",
-                  60,
-                  "easy technique",
-                  null
-                ],
-                [
-                  "assisted_tuck_flag",
-                  1,
-                  null,
-                  "4/side",
+                  "8/side",
                   60,
                   "easy technique",
                   null
@@ -1400,6 +1412,36 @@
                 ]
               ]
             }
+          ]
+        }
+      ],
+      "source_practice": [
+        {
+          "day": 3,
+          "practice": [
+            [
+              "pike_pushup",
+              2,
+              8,
+              null,
+              60,
+              "easy technique",
+              "incline_pushup"
+            ]
+          ]
+        },
+        {
+          "day": 6,
+          "practice": [
+            [
+              "pike_pushup",
+              2,
+              8,
+              null,
+              60,
+              "easy technique",
+              "incline_pushup"
+            ]
           ]
         }
       ]
@@ -1458,7 +1500,7 @@
                   "assisted_tuck_flag",
                   2,
                   null,
-                  "5/side",
+                  "8/side",
                   60,
                   "easy technique",
                   null
@@ -1563,24 +1605,6 @@
                   45,
                   "easy technique",
                   "wall_handstand"
-                ],
-                [
-                  "assisted_tuck_flag",
-                  2,
-                  null,
-                  "5/side",
-                  60,
-                  "easy technique",
-                  null
-                ],
-                [
-                  "straight_side_plank",
-                  2,
-                  null,
-                  "30/side",
-                  45,
-                  "easy technique",
-                  "side_plank"
                 ]
               ]
             },
@@ -1678,7 +1702,7 @@
                   "assisted_tuck_flag",
                   3,
                   null,
-                  "6/side",
+                  "8/side",
                   60,
                   "easy technique",
                   null
@@ -1801,24 +1825,6 @@
                   45,
                   "easy technique",
                   "handstand_toe_pull"
-                ],
-                [
-                  "assisted_tuck_flag",
-                  3,
-                  null,
-                  "6/side",
-                  60,
-                  "easy technique",
-                  null
-                ],
-                [
-                  "straight_side_plank",
-                  1,
-                  null,
-                  "35/side",
-                  45,
-                  "easy technique",
-                  "side_plank"
                 ]
               ]
             },
@@ -1902,6 +1908,24 @@
                   45,
                   "easy technique",
                   "handstand_toe_pull"
+                ],
+                [
+                  "assisted_tuck_flag",
+                  3,
+                  null,
+                  "10/side",
+                  60,
+                  "easy technique",
+                  null
+                ],
+                [
+                  "straight_side_plank",
+                  1,
+                  null,
+                  "40/side",
+                  45,
+                  "easy technique",
+                  "side_plank"
                 ]
               ]
             },
@@ -1925,24 +1949,6 @@
                   45,
                   "easy technique",
                   "handstand_toe_pull"
-                ],
-                [
-                  "assisted_tuck_flag",
-                  2,
-                  null,
-                  "10/side",
-                  60,
-                  "easy technique",
-                  null
-                ],
-                [
-                  "straight_side_plank",
-                  1,
-                  null,
-                  "40/side",
-                  45,
-                  "easy technique",
-                  "side_plank"
                 ]
               ]
             },
@@ -2021,24 +2027,6 @@
                   45,
                   "easy technique",
                   "handstand_toe_pull"
-                ],
-                [
-                  "assisted_tuck_flag",
-                  2,
-                  null,
-                  "10/side",
-                  60,
-                  "easy technique",
-                  null
-                ],
-                [
-                  "straight_side_plank",
-                  1,
-                  null,
-                  "40/side",
-                  45,
-                  "easy technique",
-                  "side_plank"
                 ]
               ]
             },
@@ -2246,24 +2234,6 @@
                   45,
                   "easy technique",
                   "wall_handstand"
-                ],
-                [
-                  "assisted_tuck_flag",
-                  3,
-                  null,
-                  "8/side",
-                  60,
-                  "easy technique",
-                  null
-                ],
-                [
-                  "straight_side_plank",
-                  1,
-                  null,
-                  "40/side",
-                  45,
-                  "easy technique",
-                  "side_plank"
                 ]
               ]
             },
@@ -2484,24 +2454,6 @@
                   45,
                   "easy technique",
                   "wall_handstand"
-                ],
-                [
-                  "assisted_tuck_flag",
-                  3,
-                  null,
-                  "10/side",
-                  60,
-                  "easy technique",
-                  null
-                ],
-                [
-                  "straight_side_plank",
-                  1,
-                  null,
-                  "45/side",
-                  45,
-                  "easy technique",
-                  "side_plank"
                 ]
               ]
             },
@@ -2585,29 +2537,6 @@
                   45,
                   "easy technique",
                   "wall_handstand"
-                ]
-              ]
-            },
-            {
-              "day": 3,
-              "practice": [
-                [
-                  "handstand_balance",
-                  3,
-                  null,
-                  20,
-                  45,
-                  "easy technique",
-                  "handstand_toe_pull"
-                ],
-                [
-                  "handstand_toe_pull",
-                  1,
-                  null,
-                  12,
-                  45,
-                  "easy technique",
-                  "wall_handstand"
                 ],
                 [
                   "assisted_tuck_flag",
@@ -2635,6 +2564,29 @@
                   45,
                   "easy technique",
                   "side_plank"
+                ]
+              ]
+            },
+            {
+              "day": 3,
+              "practice": [
+                [
+                  "handstand_balance",
+                  3,
+                  null,
+                  20,
+                  45,
+                  "easy technique",
+                  "handstand_toe_pull"
+                ],
+                [
+                  "handstand_toe_pull",
+                  1,
+                  null,
+                  12,
+                  45,
+                  "easy technique",
+                  "wall_handstand"
                 ]
               ]
             },
@@ -2713,33 +2665,6 @@
                   45,
                   "easy technique",
                   "wall_handstand"
-                ],
-                [
-                  "assisted_tuck_flag",
-                  1,
-                  null,
-                  "10/side",
-                  60,
-                  "easy technique",
-                  null
-                ],
-                [
-                  "tuck_flag",
-                  1,
-                  null,
-                  "3/side",
-                  60,
-                  "easy technique",
-                  null
-                ],
-                [
-                  "straight_side_plank",
-                  1,
-                  null,
-                  "45/side",
-                  45,
-                  "easy technique",
-                  "side_plank"
                 ]
               ]
             },
@@ -4031,10 +3956,10 @@
       "where": "L1:001-L1:040",
       "exercise": "Half Dips",
       "exercise_description": "On Parallel Bars",
-      "movement_id": "parallel_dip",
+      "movement_id": "assisted_dip",
       "difficulty": "same",
       "set_note": "Half range: lower only until the elbows reach a right angle. Use the easier option whenever needed; stop with reserve effort.",
-      "why": "R1 B1, R2 F4: half dips as half-range parallel-bar dips, with the assisted fallback"
+      "why": "R1 B1, R2 F4: half dips as half-range parallel-bar dips, with the assisted fallback; round 5: half dips credit the assisted dip, not the strict dip"
     },
     {
       "action": "project_exercise",
@@ -4949,5 +4874,19 @@
       "prepared_by": "inverted_row",
       "why": "low-bar rows inside the library row ladder"
     }
-  ]
+  ],
+  "early_recovery_hinge": {
+    "from_level": 2,
+    "steps": [
+      [
+        "single_leg_bridge",
+        2,
+        "10/side",
+        null,
+        45,
+        "controlled",
+        "glute_bridge"
+      ]
+    ]
+  }
 }

@@ -17,6 +17,14 @@ internal object TestMotionClips {
 
     val rig: Rig by lazy { library.javaClass.getDeclaredMethod("getRig").apply { isAccessible = true }.invoke(library) as Rig }
 
+    /** A prepared clip's property by its getter (getMarkerY, getPhaseSpec, ...), or null when the clip is missing. */
+    fun property(name: String, getter: String): Any? {
+        val template = library.javaClass.getDeclaredMethod("template", String::class.java)
+            .apply { isAccessible = true }
+            .invoke(library, name) ?: return null
+        return template.javaClass.getDeclaredMethod(getter).apply { isAccessible = true }.invoke(template)
+    }
+
     fun named(name: String): MotionClip? {
         val template = library.javaClass.getDeclaredMethod("template", String::class.java)
             .apply { isAccessible = true }

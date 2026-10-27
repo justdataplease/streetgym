@@ -47,7 +47,7 @@ object AppColors {
     val ON_ACCENT get() = palette.onAccent
     val SUCCESS get() = palette.success
     val WARNING_SURFACE get() = palette.warningSurface
-    /** Card outlines: ink in the poster themes, the divider in Fresh Court. */
+    /** Card outlines: ink in the poster themes. */
     val BORDER get() = palette.border
     /** Decoration only (offset shadows, halftone, highlights); never text. */
     val SPOT get() = palette.spot
@@ -56,12 +56,15 @@ object AppColors {
     val MARK get() = palette.mark
     /** The filled heart on a saved day. */
     val HEART get() = palette.heart
+    /** The line figure's hands in the movement guides: tape yellow in Concrete, each theme's light colour elsewhere. */
+    val PALM get() = palette.palm
 
     /** White or the theme's ink, whichever reads better on [background]. */
     fun contentOn(background: Int): Int =
         if (contrast(Color.WHITE, background) >= contrast(palette.ink, background)) Color.WHITE else palette.ink
 
-    private fun contrast(a: Int, b: Int): Double {
+    /** WCAG contrast ratio between two colours, 1 to 21. */
+    fun contrast(a: Int, b: Int): Double {
         val la = luminance(a)
         val lb = luminance(b)
         return (maxOf(la, lb) + 0.05) / (minOf(la, lb) + 0.05)
@@ -99,8 +102,8 @@ fun Context.systemAnimationsEnabled(): Boolean = try {
 }
 
 /**
- * A filled shape in the theme's corner style: [radiusPx] rounds it in Fresh Court, Night Park cuts two corners in
- * proportion, and the poster themes keep it square.
+ * A filled shape in the theme's corner style: Night Park cuts two corners in proportion to [radiusPx], and the
+ * poster themes keep it square.
  */
 fun roundedDrawable(
     color: Int,
@@ -110,7 +113,6 @@ fun roundedDrawable(
 ): Drawable = when (themeShape.corner) {
     Corner.CHAMFER -> ChamferDrawable(color, radiusPx * 0.58f, strokeColor, strokeWidthPx)
     Corner.SQUARE -> gradient(color, 0f, strokeColor, strokeWidthPx)
-    Corner.ROUND -> gradient(color, radiusPx, strokeColor, strokeWidthPx)
 }
 
 private fun gradient(color: Int, radiusPx: Float, strokeColor: Int?, strokeWidthPx: Int, dashPx: Float = 0f) =
@@ -222,25 +224,18 @@ fun Context.primaryButton(
     minHeight = dp(52)
     stateListAnimator = null
     val theme = AppColors.theme
-    if (theme == StreetTheme.FRESH_COURT) {
-        textSize = 14f
-        typeface = Typeface.DEFAULT_BOLD
-        setPadding(dp(18), dp(12), dp(18), dp(12))
-        background = RippleDrawable(ColorStateList.valueOf(0x22FFFFFF), roundedDrawable(color, dp(16).toFloat()), null)
-    } else {
-        // The display face in capitals; Concrete outlines the button in ink, and both poster themes print a hard shadow.
-        val radius = dp(16).toFloat()
-        val offset = dp(themeShape.shadowDp)
-        val face = if (theme.concrete) roundedDrawable(color, radius, AppColors.BORDER, dp(2)) else roundedDrawable(color, radius)
-        val shadow = roundedDrawable(if (theme == StreetTheme.WHEATPASTE) AppColors.SPOT else AppColors.BORDER, radius)
-        textSize = when (theme) { StreetTheme.CONCRETE, StreetTheme.CONCRETE_TREES -> 19f; StreetTheme.NIGHT_PARK -> 20f; else -> 15f }
-        typeface = AppType.display
-        isAllCaps = true
-        letterSpacing = if (theme == StreetTheme.WHEATPASTE) 0.02f else 0.05f
-        setPadding(dp(18), dp(12), dp(18) + offset, dp(12) + offset)
-        val ripple = if (content == Color.WHITE) 0x22FFFFFF else 0x22000000
-        background = RippleDrawable(ColorStateList.valueOf(ripple), shadowed(face, shadow, offset), null)
-    }
+    // The display face in capitals; Concrete outlines the button in ink, and both poster themes print a hard shadow.
+    val radius = dp(16).toFloat()
+    val offset = dp(themeShape.shadowDp)
+    val face = if (theme == StreetTheme.CONCRETE) roundedDrawable(color, radius, AppColors.BORDER, dp(2)) else roundedDrawable(color, radius)
+    val shadow = roundedDrawable(if (theme == StreetTheme.WHEATPASTE) AppColors.SPOT else AppColors.BORDER, radius)
+    textSize = when (theme) { StreetTheme.CONCRETE -> 19f; StreetTheme.NIGHT_PARK -> 20f; StreetTheme.WHEATPASTE -> 15f }
+    typeface = AppType.display
+    isAllCaps = true
+    letterSpacing = if (theme == StreetTheme.WHEATPASTE) 0.02f else 0.05f
+    setPadding(dp(18), dp(12), dp(18) + offset, dp(12) + offset)
+    val ripple = if (content == Color.WHITE) 0x22FFFFFF else 0x22000000
+    background = RippleDrawable(ColorStateList.valueOf(ripple), shadowed(face, shadow, offset), null)
     setOnClickListener { onClick() }
 }
 
@@ -251,29 +246,19 @@ fun Context.secondaryButton(text: CharSequence, onClick: () -> Unit): Button = B
     setPadding(dp(18), dp(12), dp(18), dp(12))
     stateListAnimator = null
     val radius = dp(16).toFloat()
-    when (AppColors.theme) {
-        StreetTheme.FRESH_COURT -> {
-            setTextColor(AppColors.NUMBER_DARK)
-            textSize = 14f
-            typeface = Typeface.DEFAULT_BOLD
-            background = RippleDrawable(ColorStateList.valueOf(0x22000000), roundedDrawable(AppColors.INFO_SURFACE, radius), null)
-        }
-        else -> {
-            val theme = AppColors.theme
-            setTextColor(AppColors.TEXT)
-            textSize = 13f
-            typeface = AppType.label
-            isAllCaps = true
-            letterSpacing = if (theme == StreetTheme.WHEATPASTE) 0.04f else 0.1f
-            val face = when (theme) {
-                StreetTheme.CONCRETE, StreetTheme.CONCRETE_TREES -> roundedDrawable(AppColors.SURFACE, radius, AppColors.BORDER, dp(2))
-                StreetTheme.WHEATPASTE -> dashedDrawable(Color.TRANSPARENT, AppColors.BORDER)
-                else -> roundedDrawable(AppColors.INFO_SURFACE, radius)
-            }
-            val ripple = if (AppColors.darkMode) 0x22FFFFFF else 0x22000000
-            background = RippleDrawable(ColorStateList.valueOf(ripple), face, roundedDrawable(Color.WHITE, radius))
-        }
+    val theme = AppColors.theme
+    setTextColor(AppColors.TEXT)
+    textSize = 13f
+    typeface = AppType.label
+    isAllCaps = true
+    letterSpacing = if (theme == StreetTheme.WHEATPASTE) 0.04f else 0.1f
+    val face = when (theme) {
+        StreetTheme.CONCRETE -> roundedDrawable(AppColors.SURFACE, radius, AppColors.BORDER, dp(2))
+        StreetTheme.WHEATPASTE -> dashedDrawable(Color.TRANSPARENT, AppColors.BORDER)
+        StreetTheme.NIGHT_PARK -> roundedDrawable(AppColors.INFO_SURFACE, radius)
     }
+    val ripple = if (AppColors.darkMode) 0x22FFFFFF else 0x22000000
+    background = RippleDrawable(ColorStateList.valueOf(ripple), face, roundedDrawable(Color.WHITE, radius))
     setOnClickListener { onClick() }
 }
 

@@ -22,10 +22,13 @@ import android.widget.TextView
 import com.justdataplease.streetgym.R
 import com.justdataplease.streetgym.billing.Entitlement
 import com.justdataplease.streetgym.billing.LevelAccess
+import com.justdataplease.streetgym.data.skills.OverallScore
+import com.justdataplease.streetgym.data.skills.Skill
 import com.justdataplease.streetgym.data.skills.SkillFamily
 import com.justdataplease.streetgym.data.skills.SkillGroup
 import com.justdataplease.streetgym.data.skills.SkillProgress
 import com.justdataplease.streetgym.data.skills.SkillStatus
+import com.justdataplease.streetgym.data.skills.SkillTest
 
 /** A row of options with one selected: the tabs of Training and Progress, and other small choices. */
 fun Context.segmentedSwitch(labels: List<String>, selected: Int, onSelect: (Int) -> Unit): LinearLayout =
@@ -57,9 +60,14 @@ private val GROUPS = listOf(
     SkillGroup.CORE to R.string.skills_filter_core,
 )
 
-/** Skills tab: unlocked count and the four group scores, the skills closest to unlocking, a group filter and one ladder per family. */
+/**
+ * Skills tab: the overall score with its tier and the four group scores, the strongest families and the next step,
+ * the skills closest to achieving, a group filter and one ladder per family. [placedPast]: days marked complete
+ * without training, which earn nothing.
+ */
 fun Context.skillsContent(
     progress: SkillProgress,
+    placedPast: Int,
     group: SkillGroup?,
     onGroup: (SkillGroup?) -> Unit,
     onOpen: (SkillStatus, SkillFamily, List<SkillStatus>) -> Unit,
@@ -67,43 +75,72 @@ fun Context.skillsContent(
     orientation = LinearLayout.VERTICAL
     val closest = progress.closest(3)
     val owned = Entitlement.allLevels(context)
+    val overall = progress.overall
+    val faint = blendColor(Color.WHITE, AppColors.PRIMARY_DARK, 0.25f)
 
     addView(LinearLayout(context).apply {
         orientation = LinearLayout.VERTICAL
         setPadding(dp(18), dp(18), dp(18), dp(18))
         background = roundedDrawable(AppColors.PRIMARY_DARK, dp(24).toFloat())
-        addView(bodyText(getString(R.string.skills_unlocked_kicker).uppercase(), 12f).apply {
+        addView(bodyText(getString(R.string.skills_score_kicker).uppercase(), 12f).apply {
             setTextColor(AppColors.ACCENT)
             typeface = Typeface.DEFAULT_BOLD
             letterSpacing = 0.1f
         })
+        val tier = overall.tier
         addWithMargins(LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.BOTTOM
-            addView(titleText(progress.unlockedCount.toString(), 38f).apply { setTextColor(Color.WHITE) })
-            addWithMargins(bodyText(getString(R.string.skills_unlocked_of, progress.totalCount), 15f).apply {
+            contentDescription = getString(R.string.skills_score_description, overall.score, OverallScore.MAX, tierName(tier))
+            addView(titleText(overall.score.toString(), 38f).apply { setTextColor(Color.WHITE) })
+            addWithMargins(bodyText(getString(R.string.skills_score_of, OverallScore.MAX), 15f).apply {
                 setTextColor(blendColor(Color.WHITE, AppColors.PRIMARY_DARK, 0.3f))
             }, width = LinearLayout.LayoutParams.WRAP_CONTENT, leftDp = 8, bottomDp = 6)
         }, topDp = 4)
-        addWithMargins(horizontalProgress(percent(progress.unlockedCount, progress.totalCount)).apply {
+        val next = tier.next
+        addView(bodyText(if (next == null) getString(R.string.skills_tier_top, tierName(tier))
+            else getString(R.string.skills_tier_next, tierName(tier), next.floor - overall.score, tierName(next)), 14f).apply {
+            setTextColor(Color.WHITE)
+            typeface = Typeface.DEFAULT_BOLD
+        })
+        val inTier = if (next == null) 100 else percent(overall.score - tier.floor, next.floor - tier.floor)
+        addWithMargins(horizontalProgress(inTier).apply {
             progressTintList = ColorStateList.valueOf(AppColors.ACCENT)
             progressBackgroundTintList = ColorStateList.valueOf(blendColor(AppColors.ACCENT, AppColors.PRIMARY_DARK, 0.75f))
         }, height = dp(8), topDp = 10)
         addWithMargins(LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
             GROUPS.forEachIndexed { index, (option, label) ->
-                addView(groupScoreTile(getString(label), progress.groupScore(option), option == group) {
+                val (points, ceiling) = overall.group(option)
+                addView(groupScoreTile(getString(label), points, ceiling, option == group) {
                     onGroup(if (option == group) null else option)
                 }, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
                     if (index > 0) marginStart = dp(6)
                 })
             }
         }, topDp = 14)
-        closest.firstOrNull()?.let { next ->
-            addWithMargins(bodyText(getString(R.string.skills_next, next.skill.name), 13f).apply {
-                setTextColor(blendColor(Color.WHITE, AppColors.PRIMARY_DARK, 0.2f))
+        // The three strongest families: the rung each holds and its points.
+        overall.families.filter { it.points > 0 }.sortedByDescending { it.points }.take(3).forEachIndexed { index, family ->
+            val rung = (family.base ?: family.next)?.skill?.name ?: return@forEachIndexed
+            addWithMargins(bodyText(getString(R.string.skills_family_line, family.family.spec.name, rung,
+                overall.scaled(family.points)), 13f).apply { setTextColor(faint) }, topDp = if (index == 0) 12 else 2)
+        }
+        val test = overall.bestTest()
+        val nextLine = when {
+            test != null -> getString(R.string.skills_next_test, test.first.skill.name, test.second)
+            closest.isNotEmpty() -> getString(R.string.skills_next, closest.first().skill.name)
+            else -> null
+        }
+        nextLine?.let {
+            addWithMargins(bodyText(it, 13f).apply {
+                setTextColor(Color.WHITE)
+                typeface = Typeface.DEFAULT_BOLD
             }, topDp = 10)
         }
+        addWithMargins(bodyText(getString(R.string.skills_rungs, progress.achievedCount, progress.totalCount), 12f).apply {
+            setTextColor(faint)
+        }, topDp = 6)
+        if (placedPast > 0) addView(bodyText(getString(R.string.skills_placed_past, placedPast), 12f).apply { setTextColor(faint) })
     })
 
     addWithMargins(sectionLabel(getString(R.string.skills_closest)), topDp = 14)
@@ -133,7 +170,7 @@ fun Context.skillsContent(
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
             addView(titleText(family.spec.name, 16f), LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
-            addView(bodyText(getString(R.string.skills_family_count, statuses.count { it.unlocked }, statuses.size), 12f))
+            addView(bodyText(getString(R.string.skills_family_count, statuses.count { it.achieved }, statuses.size), 12f))
         }, topDp = 14, bottomDp = 8)
         addView(HorizontalScrollView(context).apply {
             isHorizontalScrollBarEnabled = false
@@ -150,8 +187,19 @@ fun Context.skillsContent(
     addWithMargins(bodyText(getString(R.string.skills_how_points), 12f), topDp = 18)
 }
 
-/** Detail sheet: the animated movement guide, skill points out of 100, difficulty, schedule and where the points came from. */
-fun Context.showSkillSheet(status: SkillStatus, family: SkillFamily, statuses: List<SkillStatus>) {
+/**
+ * Detail sheet: the animated movement guide, skill points out of 100 with their prep and practice, the rung's value in
+ * the overall score, its test, difficulty, schedule and where the prep came from. [nextTestAt]: when the rung can be
+ * tested again, or null when it can be now; [onTest] logs an answer.
+ */
+fun Context.showSkillSheet(
+    status: SkillStatus,
+    family: SkillFamily,
+    statuses: List<SkillStatus>,
+    overall: OverallScore,
+    nextTestAt: Long?,
+    onTest: (Skill, Boolean) -> Unit,
+) {
     val skill = status.skill
     val locked = lockedFor(status, Entitlement.allLevels(this))
     val content = LinearLayout(this).apply {
@@ -162,9 +210,10 @@ fun Context.showSkillSheet(status: SkillStatus, family: SkillFamily, statuses: L
         addWithMargins(titleText(skill.name, 20f), topDp = 10)
         addWithMargins(bodyText(getString(R.string.skills_ladder_rung, family.spec.name, skill.rung + 1, statuses.size), 13f), topDp = 2)
         val pill = when {
-            status.unlocked -> badge(getString(R.string.skills_unlocked), AppColors.SUCCESS)
+            status.achieved -> badge(getString(R.string.skills_achieved), AppColors.SUCCESS)
             locked -> lockBadge(getString(R.string.skills_plus))
-            status.points > 0 -> badge(getString(R.string.skills_in_progress, status.score), AppColors.PRIMARY)
+            status.trained -> badge(getString(R.string.skills_trained_test), AppColors.PRIMARY)
+            status.own > 0 -> badge(getString(R.string.skills_in_progress, status.score), AppColors.PRIMARY)
             else -> badge(getString(R.string.skills_locked), AppColors.TEXT_SECONDARY)
         }
         addWithMargins(pill, width = LinearLayout.LayoutParams.WRAP_CONTENT, topDp = 10)
@@ -172,16 +221,31 @@ fun Context.showSkillSheet(status: SkillStatus, family: SkillFamily, statuses: L
             orientation = LinearLayout.HORIZONTAL
             addView(oneLineText(getString(R.string.skills_points_line, status.score), bold = true),
                 LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
-            if (!status.unlocked) addView(bodyText(getString(R.string.skills_points_to_go, 100 - status.score), 13f))
+            if (status.score < 100) addView(bodyText(getString(R.string.skills_points_to_go, 100 - status.score), 13f))
         }, topDp = 12)
         addWithMargins(horizontalProgress(status.score), height = dp(8), topDp = 6)
-        addWithMargins(detailRow(getString(R.string.skills_difficulty),
+        if (!status.achieved) {
+            addWithMargins(detailRow(getString(R.string.skills_prep), getString(R.string.skills_prep_value, status.prep)), topDp = 8)
+            addView(detailRow(getString(R.string.skills_practice),
+                getString(R.string.skills_practice_value, status.practice, minOf(status.sessions, 2))))
+        }
+        addWithMargins(detailRow(getString(R.string.skills_value), getString(R.string.skills_value_line,
+            overall.scaled(skill.value.toDouble()), family.spec.name, overall.scaled(family.ceiling.toDouble()))),
+            topDp = if (status.achieved) 8 else 0)
+        overall.gain(skill).takeIf { it > 0 && !status.achieved }?.let {
+            addView(detailRow(getString(R.string.skills_gain), getString(R.string.skills_gain_value, it)))
+        }
+        skill.test?.let { test ->
+            addView(detailRow(getString(R.string.skills_test),
+                if (status.verified) getString(R.string.skills_test_passed) else testStandard(test)))
+        }
+        addView(detailRow(getString(R.string.skills_difficulty),
             getString(R.string.skills_difficulty_value, difficultyName(skill.difficulty), skill.difficulty.coerceIn(1, 5))).apply {
             (getChildAt(1) as TextView).apply {
                 setCompoundDrawablesRelative(DifficultyDots(skill.difficulty, dp(50), dp(8)), null, null, null)
                 compoundDrawablePadding = dp(8)
             }
-        }, topDp = 12)
+        })
         val schedule = when {
             skill.expected == null -> getString(R.string.skills_beyond_program)
             skill.beyondProgram -> getString(R.string.skills_readiness_test, skill.expected.level)
@@ -191,18 +255,59 @@ fun Context.showSkillSheet(status: SkillStatus, family: SkillFamily, statuses: L
         addView(detailRow(getString(R.string.skills_on_schedule), schedule))
         statuses.getOrNull(skill.rung - 1)?.let { addView(detailRow(getString(R.string.skills_builds_on), it.skill.name)) }
         statuses.getOrNull(skill.rung + 1)?.let { addView(detailRow(getString(R.string.skills_unlocks_next), it.skill.name)) }
-        addWithMargins(sectionLabel(getString(R.string.skills_sources)), topDp = 10)
-        if (status.sources.isEmpty()) {
-            addView(detailRow(getString(R.string.skills_no_sources), "0"))
-        } else {
-            status.sources.take(4).forEach { (name, share) -> addView(detailRow(name, getString(R.string.skills_source_share, share))) }
+        if (!status.achieved) {
+            addWithMargins(sectionLabel(getString(R.string.skills_sources)), topDp = 10)
+            if (status.sources.isEmpty()) {
+                addView(detailRow(getString(R.string.skills_no_sources), "0"))
+            } else {
+                status.sources.take(4).forEach { (name, share) -> addView(detailRow(name, getString(R.string.skills_source_share, share))) }
+            }
         }
     }
-    AlertDialog.Builder(this)
+    val test = skill.test?.takeIf { !status.achieved }
+    val builder = AlertDialog.Builder(this)
         .setView(android.widget.ScrollView(this).apply { addView(content) })
         .setPositiveButton(R.string.skills_close, null)
+    if (test != null) builder.setNeutralButton(R.string.skills_test_take) { _, _ ->
+        askSkillTest(getString(R.string.skills_test_title, skill.name), testStandard(test)) { passed -> onTest(skill, passed) }
+    }
+    val dialog = builder.show()
+    if (test != null && nextTestAt != null) dialog.getButton(AlertDialog.BUTTON_NEUTRAL)?.apply {
+        isEnabled = false
+        val hours = ((nextTestAt - System.currentTimeMillis() + 3_599_999L) / 3_600_000L).toInt().coerceAtLeast(1)
+        text = getString(R.string.skills_test_wait, hours)
+    }
+}
+
+/** "Did you hit it?" for a test or a readiness check: [onAnswer] gets true for Yes, false for Not yet. */
+fun Context.askSkillTest(title: String, standard: String, onAnswer: (Boolean) -> Unit) {
+    AlertDialog.Builder(this)
+        .setTitle(title)
+        .setMessage(getString(R.string.skills_test_message, standard))
+        .setPositiveButton(R.string.skills_test_yes) { _, _ -> onAnswer(true) }
+        .setNegativeButton(R.string.skills_test_not_yet) { _, _ -> onAnswer(false) }
+        .setNeutralButton(R.string.cancel, null)
         .show()
 }
+
+/** A rung's test standard in words: "Hold it for 10 s", "3 clean reps on each side". */
+fun Context.testStandard(test: SkillTest?): String = when {
+    test == null -> getString(R.string.skills_test_prescribed)
+    test.kind == SkillTest.Kind.HOLD ->
+        getString(if (test.perSide) R.string.skills_test_hold_side else R.string.skills_test_hold, test.amount)
+    test.kind == SkillTest.Kind.REPS -> resources.getQuantityString(
+        if (test.perSide) R.plurals.skills_test_reps_side else R.plurals.skills_test_reps, test.amount, test.amount)
+    else -> getString(if (test.perSide) R.string.skills_test_negative_side else R.string.skills_test_negative, test.amount)
+}
+
+fun Context.tierName(tier: OverallScore.Tier): String = getString(when (tier) {
+    OverallScore.Tier.BEGINNER -> R.string.skills_tier_beginner
+    OverallScore.Tier.NOVICE -> R.string.skills_tier_novice
+    OverallScore.Tier.INTERMEDIATE -> R.string.skills_tier_intermediate
+    OverallScore.Tier.ADVANCED -> R.string.skills_tier_advanced
+    OverallScore.Tier.ELITE -> R.string.skills_tier_elite
+    OverallScore.Tier.WORLD_CLASS -> R.string.skills_tier_world_class
+})
 
 private fun Context.closestRow(status: SkillStatus, onClick: () -> Unit): View = LinearLayout(this).apply {
     orientation = LinearLayout.HORIZONTAL
@@ -222,7 +327,8 @@ private fun Context.closestRow(status: SkillStatus, onClick: () -> Unit): View =
     }, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
         setMargins(dp(12), 0, dp(12), 0)
     })
-    addView(titleText(getString(R.string.skills_points_short, status.score), 14f).apply { setTextColor(AppColors.PRIMARY) })
+    val state = if (status.trained) getString(R.string.skills_trained) else getString(R.string.skills_points_short, status.score)
+    addView(titleText(state, 14f).apply { setTextColor(AppColors.PRIMARY) })
 }
 
 private fun Context.skillCell(status: SkillStatus, locked: Boolean, onClick: () -> Unit): View = LinearLayout(this).apply {
@@ -231,8 +337,9 @@ private fun Context.skillCell(status: SkillStatus, locked: Boolean, onClick: () 
     isFocusable = true
     background = tappable(Color.TRANSPARENT, dp(14).toFloat())
     val state = when {
-        status.unlocked -> getString(R.string.skills_unlocked)
+        status.achieved -> getString(R.string.skills_achieved)
         locked -> getString(R.string.skills_plus)
+        status.trained -> getString(R.string.skills_trained)
         else -> getString(R.string.skills_points_short, status.score)
     }
     contentDescription = getString(R.string.skills_badge_description, status.skill.name,
@@ -247,12 +354,12 @@ private fun Context.skillCell(status: SkillStatus, locked: Boolean, onClick: () 
             importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
         }
         when {
-            status.unlocked -> marker.apply {
+            status.achieved -> marker.apply {
                 text = "✓"
                 setTextColor(AppColors.PRIMARY_DARK)
                 background = roundedDrawable(AppColors.ACCENT, dp(11).toFloat(), AppColors.BACKGROUND, dp(2))
             }
-            status.points == 0 -> marker.apply {
+            status.own == 0 -> marker.apply {
                 text = "•"
                 setTextColor(AppColors.TEXT_SECONDARY)
                 background = roundedDrawable(AppColors.DIVIDER, dp(11).toFloat(), AppColors.BACKGROUND, dp(2))
@@ -268,14 +375,14 @@ private fun Context.skillCell(status: SkillStatus, locked: Boolean, onClick: () 
         minLines = 2
         ellipsize = TextUtils.TruncateAt.END
     }, topDp = 4)
-    if (!status.unlocked && !locked) {
+    if (!status.achieved && !locked) {
         addWithMargins(horizontalProgress(status.score), width = dp(78), height = dp(4), topDp = 4)
     }
     if (locked) {
         addWithMargins(lockBadge(), width = LinearLayout.LayoutParams.WRAP_CONTENT, topDp = 4)
     } else {
         addWithMargins(bodyText(state, 11f).apply {
-            if (status.unlocked) {
+            if (status.achieved || status.trained) {
                 setTextColor(AppColors.PRIMARY)
                 typeface = Typeface.DEFAULT_BOLD
             }
@@ -287,8 +394,8 @@ private fun Context.skillCell(status: SkillStatus, locked: Boolean, onClick: () 
     }, topDp = 6)
 }
 
-/** One of the four group scores in the summary card; tapping filters the ladders to that group. */
-private fun Context.groupScoreTile(label: String, score: Int, selected: Boolean, onClick: () -> Unit): View =
+/** One of the four group scores in the summary card, out of the group's share of 1000; tapping filters the ladders. */
+private fun Context.groupScoreTile(label: String, score: Int, ceiling: Int, selected: Boolean, onClick: () -> Unit): View =
     LinearLayout(this).apply {
         orientation = LinearLayout.VERTICAL
         gravity = Gravity.CENTER_HORIZONTAL
@@ -296,10 +403,10 @@ private fun Context.groupScoreTile(label: String, score: Int, selected: Boolean,
         background = tappable(blendColor(AppColors.ACCENT, AppColors.PRIMARY_DARK, if (selected) 0.55f else 0.85f), dp(14).toFloat())
         isClickable = true
         isFocusable = true
-        contentDescription = getString(R.string.skills_group_score_description, label, score)
+        contentDescription = getString(R.string.skills_group_score_description, label, score, ceiling)
         setOnClickListener { onClick() }
         addView(titleText(score.toString(), 20f).apply { setTextColor(Color.WHITE) })
-        addView(bodyText(getString(R.string.skills_group_score_of, label), 11f).apply {
+        addView(bodyText(getString(R.string.skills_group_score_of, label, ceiling), 11f).apply {
             setTextColor(blendColor(Color.WHITE, AppColors.PRIMARY_DARK, 0.25f))
             maxLines = 1
             ellipsize = TextUtils.TruncateAt.END
@@ -308,7 +415,7 @@ private fun Context.groupScoreTile(label: String, score: Int, selected: Boolean,
 
 /** Skills the program first teaches in Levels 4 and up stay locked until Plus. */
 private fun lockedFor(status: SkillStatus, owned: Boolean): Boolean =
-    !status.unlocked && status.skill.expected?.let { LevelAccess.locked(it.level, owned) } == true
+    !status.achieved && status.skill.expected?.let { LevelAccess.locked(it.level, owned) } == true
 
 /** Difficulty runs green, blue, amber, orange, red from Beginner to Elite, like trail grades. */
 private fun difficultyColor(level: Int): Int {
@@ -358,13 +465,13 @@ private fun Context.difficultyName(level: Int): String = getString(when (level.c
     else -> R.string.skills_difficulty_5
 })
 
-/** Unlocked: night tile with mint figure. In progress: light tint. Locked: muted. */
+/** Achieved: night tile with mint figure. In progress: light tint. Not started: muted. */
 private fun Context.skillBadge(status: SkillStatus): ExerciseAnimationView {
     val style = when {
-        status.unlocked -> ExerciseAnimationView.BadgeStyle(
+        status.achieved -> ExerciseAnimationView.BadgeStyle(
             AppColors.PRIMARY_DARK, AppColors.ACCENT, blendColor(AppColors.ACCENT, AppColors.PRIMARY_DARK, 0.5f),
             blendColor(Color.WHITE, AppColors.PRIMARY_DARK, 0.55f))
-        status.points > 0 -> ExerciseAnimationView.BadgeStyle(
+        status.own > 0 -> ExerciseAnimationView.BadgeStyle(
             AppColors.INFO_SURFACE, AppColors.PRIMARY, blendColor(AppColors.PRIMARY, AppColors.INFO_SURFACE, 0.5f),
             blendColor(AppColors.TEXT_SECONDARY, AppColors.INFO_SURFACE, 0.4f))
         else -> ExerciseAnimationView.BadgeStyle(

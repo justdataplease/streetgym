@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- The suite's runner (testInstrumentationRunner), then a review aid beside it that draws the movement guides into
+         contact sheets (see AnimationGallery). -->
+    <instrumentation
+        android:name="com.justdataplease.streetgym.TrainingInstrumentation"
+        android:targetPackage="com.justdataplease.streetgym.debug" />
+    <instrumentation
+        android:name="com.justdataplease.streetgym.AnimationGallery"
+        android:targetPackage="com.justdataplease.streetgym.debug" />
+</manifest>

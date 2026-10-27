@@ -24,7 +24,9 @@ import com.justdataplease.streetgym.ui.ExerciseAnimationView
 import com.justdataplease.streetgym.ui.FocusWorkoutView
 import com.justdataplease.streetgym.ui.StreetTheme
 import com.justdataplease.streetgym.ui.HistoryView
+import com.justdataplease.streetgym.ui.ParkSceneView
 import com.justdataplease.streetgym.ui.WorkoutView
+import com.justdataplease.streetgym.ui.systemAnimationsEnabled
 import com.justdataplease.streetgym.timer.*
 import com.justdataplease.monetization.NativeAdSlot
 import android.content.pm.ActivityInfo
@@ -73,15 +75,16 @@ class TrainingInstrumentation : Instrumentation() {
             AppSettings(targetContext).placementDone = true
             val repository = SharedPreferencesProgressRepository(targetContext)
             launch()
-            check(AppSettings(targetContext).theme == StreetTheme.FRESH_COURT && AppColors.theme == StreetTheme.FRESH_COURT && !AppColors.darkMode)
+            check(AppSettings(targetContext).theme == StreetTheme.CONCRETE && AppColors.theme == StreetTheme.CONCRETE && !AppColors.darkMode)
             check(find { it.contentDescription == "Basketball" } == null)
+            checkParkScenePlayback()
             clickText(R.string.start_today)
             check(repository.activeWorkout()?.programId == programs.first().id)
             val first = checkNotNull(find { it is CheckBox && it.contentDescription?.toString()?.startsWith("Mark set ") == true })
             runOnMainSync { first.performClick() }; settle()
             val active = checkNotNull(repository.activeWorkout())
             check(active.completedSetIds.size == 1)
-            report("Default Fresh Court theme, dedicated navigation and first-session set saving")
+            report("Default Concrete & Tape theme, dedicated navigation and first-session set saving")
 
             val scroller = checkNotNull(find { it is android.widget.ScrollView }) as android.widget.ScrollView
             runOnMainSync { scroller.scrollTo(0, targetContext.resources.displayMetrics.density.times(600).toInt()) }; settle()
@@ -106,11 +109,11 @@ class TrainingInstrumentation : Instrumentation() {
 
 
             nav(R.string.nav_settings)
-            check(themeRow(StreetTheme.FRESH_COURT).isSelected && StreetTheme.entries.size == 5)
+            check(themeRow(StreetTheme.CONCRETE).isSelected && StreetTheme.entries.size == 3)
             pickTheme(StreetTheme.NIGHT_PARK)
             check(AppSettings(targetContext).theme == StreetTheme.NIGHT_PARK && AppColors.darkMode)
             check(repository.activeWorkout() == active)
-            check(themeRow(StreetTheme.NIGHT_PARK).isSelected && !themeRow(StreetTheme.FRESH_COURT).isSelected)
+            check(themeRow(StreetTheme.NIGHT_PARK).isSelected && !themeRow(StreetTheme.CONCRETE).isSelected)
             nav(R.string.nav_today); clickText(R.string.resume_workout)
             check((find { it is CheckBox && it.contentDescription?.toString()?.startsWith("Mark set ") == true } as CheckBox).isChecked)
             report("Picking Night Park recreates on the settings screen and keeps the active session and checked set")
@@ -129,6 +132,33 @@ class TrainingInstrumentation : Instrumentation() {
             check(locked != null && !locked.isEnabled)
             check(repository.activeWorkout() == active)
             report("Future sessions remain locked after the sport split")
+
+            val versionLine = targetContext.getString(R.string.version_format,
+                targetContext.packageManager.getPackageInfo(targetContext.packageName, 0).versionName)
+            nav(R.string.nav_settings)
+            repeat(10) { clickLabel(versionLine) }
+            typeInDialog("1234"); clickDialog(R.string.developer_unlock)
+            check(!AppSettings(targetContext).developerUnlocked)
+            clickLabel(versionLine); typeInDialog("0002"); clickDialog(R.string.developer_unlock)
+            check(AppSettings(targetContext).developerUnlocked && !AppSettings(targetContext).inspectAllDays)
+            clickDialog(R.string.developer_inspect_all); clickDialog(R.string.developer_done)
+            check(AppSettings(targetContext).inspectAllDays)
+            nav(R.string.nav_levels)
+            clickLabel(catalog.levels.first().name.resolve())
+            clickLabel(programs[2].name.resolve())
+            check(shown(R.string.inspect_only_note) && find { it is ExerciseAnimationView } != null)
+            check(!shown(R.string.start_workout) && !shown(R.string.assigned_later) && !shown("Complete day"))
+            check(find { it is TextView && it.text == targetContext.getString(R.string.inspect_only) && !it.isEnabled } != null)
+            check(repository.activeWorkout() == active && repository.completedProgramIds().isEmpty())
+            nav(R.string.nav_settings)
+            clickLabel(versionLine); clickDialog(R.string.developer_hide)
+            check(!AppSettings(targetContext).developerUnlocked && !AppSettings(targetContext).inspectAllDays)
+            nav(R.string.nav_levels)
+            clickLabel(catalog.levels.first().name.resolve())
+            clickLabel(programs[2].name.resolve())
+            check(find { it is TextView && it.text == targetContext.getString(R.string.assigned_later) && !it.isEnabled } != null)
+            check(!shown(R.string.inspect_only_note))
+            report("Ten taps on the version and passcode 0002 open developer settings; Inspect all days shows a future day read-only")
 
             nav(R.string.nav_today); clickText(R.string.resume_workout)
             clickText(R.string.finish_workout); clickDialog(R.string.finish); clickDialog(R.string.finish)
@@ -157,9 +187,10 @@ class TrainingInstrumentation : Instrumentation() {
             report("History calendar marks today's workout, lists it under the day, opens its overview and returns to the list")
 
             val skillBook = targetContext.assets.open("curriculum.json").bufferedReader().use { SkillCurriculumReader.read(it.readText()) }
+            fun skills() = skillBook.progress(Scores.credits(repository.sessionHistory()), repository.skillTests().passed.keys)
             val repeatDay = programs.first()
             val repeatCompleted = repository.completedProgramIds()
-            val repeatSkills = skillBook.progress(repeatCompleted)
+            val repeatSkills = skills()
             nav(R.string.nav_levels); clickLabel(catalog.levels.first().name.resolve()); clickLabel(repeatDay.name.resolve())
             check(shown(R.string.repeat_note) && !shown(R.string.workout_completed))
             clickText(R.string.repeat_day)
@@ -176,7 +207,7 @@ class TrainingInstrumentation : Instrumentation() {
             clickText(R.string.finish_workout); clickDialog(R.string.finish); clickDialog(R.string.finish)
             check(repository.activeWorkout() == null && repository.levelReplay() == null)
             check(repository.completedProgramIds() == repeatCompleted)
-            check(skillBook.progress(repository.completedProgramIds()) == repeatSkills)
+            check(skills() == repeatSkills)
             val repeatHistory = repository.sessionHistory()
             check(repeatHistory.size == 2 && repeatHistory.count { !it.repeat } == 1)
             check(repeatHistory.first().let { it.repeat && it.programId == repeatDay.id && it.effortRating != null })
@@ -202,10 +233,10 @@ class TrainingInstrumentation : Instrumentation() {
                 report("Legacy basketball preferences remain untouched in the gymnastics app")
             }
             nav(R.string.nav_settings)
-            pickTheme(StreetTheme.CONCRETE_TREES)
-            check(AppSettings(targetContext).theme == StreetTheme.CONCRETE_TREES && !AppColors.darkMode)
+            pickTheme(StreetTheme.WHEATPASTE)
+            check(AppSettings(targetContext).theme == StreetTheme.WHEATPASTE && !AppColors.darkMode)
             check(repository.completedProgramIds() == setOf(programs.first().id))
-            report("Switching to Concrete & Trees retains completed history")
+            report("Switching to Wheatpaste retains completed history")
             nav(R.string.nav_today)
             check(find { it is NativeAdSlot } == null)
             nav(R.string.nav_settings)
@@ -502,12 +533,10 @@ class TrainingInstrumentation : Instrumentation() {
             val levelTwoFirst = levelTwo.programs.minBy { it.number }
             val atDayFortyOne = targetContext.getString(R.string.placement_level_day, 1, 41)
             val atLevelTwo = targetContext.getString(R.string.level_number, 2)
-            fun skillPoints() = skillBook.progress(repository.completedProgramIds()).statuses.sumOf { it.points }
-            fun boardPoints() = Scores.from(skillBook.progress(Scores.trainedDays(repository.sessionHistory()))).overall
-            // Placed days count like Complete level: skill points, never leaderboard points.
+            // Placed days count like Complete level: done, but worth no skill or leaderboard points.
             fun placedOnly(days: Int) = repository.sessionHistory().let { it.size == days && it.all { session -> session.manuallyCompleted } } &&
-                Scores.trainedDays(repository.sessionHistory()).isEmpty() && boardPoints() == 0
-            val skillsBefore = skillPoints()
+                Scores.credits(repository.sessionHistory()).isEmpty() && skills().statuses.all { it.own == 0 } &&
+                Scores.from(skills()).overall == 0 && Scores.placedPast(repository.sessionHistory()) == days
             // A fit adult short on pull-ups starts inside Level 1, at day 41.
             clickLabel("20–29"); clickLabel("1–4")
             check(shown(R.string.placement_skip) && !shown(targetContext.getString(R.string.placement_confirm, atDayFortyOne)))
@@ -521,7 +550,7 @@ class TrainingInstrumentation : Instrumentation() {
             clickLabel(targetContext.getString(R.string.placement_confirm, atDayFortyOne))
             check(AppSettings(targetContext).placementDone &&
                 repository.completedProgramIds() == levelOneDays.filter { it.number < 41 }.map { it.id }.toSet())
-            check(placedOnly(40) && skillPoints() > skillsBefore)
+            check(placedOnly(40))
             check(!shown(R.string.placement_title) && shown(dayFortyOne.name.resolve()) && shown(R.string.start_today))
             nav(R.string.nav_levels)
             check(shown(targetContext.getString(R.string.level_progress_format, 40, 100)))
@@ -535,7 +564,7 @@ class TrainingInstrumentation : Instrumentation() {
             clickLabel("20–29"); clickLabel("5–9"); clickLabel("30–49")
             clickLabel(targetContext.getString(R.string.placement_confirm, atLevelTwo))
             check(AppSettings(targetContext).placementDone && repository.completedProgramIds() == levelOne)
-            check(placedOnly(levelOne.size) && skillPoints() > skillsBefore)
+            check(placedOnly(levelOne.size))
             check(!shown(R.string.placement_title) && shown(levelTwoFirst.name.resolve()) && shown(R.string.start_today))
             nav(R.string.nav_levels)
             check(levelOne.size == 100 && shown(targetContext.getString(R.string.level_progress_format, 100, 100)))
@@ -547,7 +576,7 @@ class TrainingInstrumentation : Instrumentation() {
             check(!shown(R.string.placement_title) && AppSettings(targetContext).placementDone)
             clickText(R.string.start_today)
             check(repository.activeWorkout()?.programId == levelTwoFirst.id)
-            report("First launch places by the weakest answer: a skip keeps Level 1 and its hint, Level 1 day 41 and Level 2 mark the days before complete for skill points but not the leaderboard, and placement never returns")
+            report("First launch places by the weakest answer: a skip keeps Level 1 and its hint, Level 1 day 41 and Level 2 mark the days before complete without skill or leaderboard points, and placement never returns")
         } catch (error: Throwable) { failure=error }
         finally {
             if (displayFontScale != null) runCatching { restoreDisplay() }
@@ -571,6 +600,54 @@ class TrainingInstrumentation : Instrumentation() {
             putString("stream",if(failure==null) "\nPASS: $checks training/theme integration checks.\n" else "\nFAIL: ${failure.stackTraceToString()}\n")
         })
     }
+    /** Exercise the real Canvas view and navigation: the choreography tests alone cannot catch skipped playback. */
+    private fun checkParkScenePlayback() {
+        check(targetContext.systemAnimationsEnabled()) { "Enable system animations for the park playback checks" }
+        // Read the Canvas clock without adding test controls to the production view.
+        val clock = ParkSceneView::class.java.getDeclaredField("clock").apply { isAccessible = true }
+        fun scene() = checkNotNull(find { it is ParkSceneView }) as ParkSceneView
+        fun time(view: ParkSceneView): Float {
+            var seconds = 0f
+            runOnMainSync { seconds = clock.getFloat(view) }
+            return seconds
+        }
+        val first = scene()
+        runOnMainSync { first.performClick() }
+        SystemClock.sleep(400)
+        check(time(first) in 0.1f..2f) { "Opening park scene did not start playing" }
+
+        nav(R.string.nav_settings)
+        nav(R.string.nav_today)
+        val returned = scene()
+        check(returned !== first)
+        check(time(returned) < 2f) { "Returning to Today skipped to the final held skill" }
+        report("Returning to Today starts the three-exercise routine from the beginning")
+
+        var previous = time(returned)
+        var repeated = false
+        val deadline = SystemClock.uptimeMillis() + 45_000L
+        while (!repeated && SystemClock.uptimeMillis() < deadline) {
+            SystemClock.sleep(100)
+            val current = time(returned)
+            repeated = previous > 10f && current < 1f
+            previous = current
+        }
+        check(repeated) { "The three-exercise routine stayed in its final hold instead of repeating" }
+        val restarted = time(returned)
+        SystemClock.sleep(300)
+        check(time(returned) > restarted) { "The second routine did not animate" }
+        report("The complete routine repeats automatically and continues animating on its second pass")
+
+        runOnMainSync { returned.visibility = View.INVISIBLE }
+        val paused = time(returned)
+        SystemClock.sleep(250)
+        check(time(returned) == paused) { "The hidden park kept animating" }
+        runOnMainSync { returned.visibility = View.VISIBLE }
+        SystemClock.sleep(250)
+        check(time(returned) in 0.1f..1f) { "Making the park visible did not restart the routine" }
+        report("The park pauses off-screen and starts the full routine when visible again")
+    }
+
     private fun launch() { activity=startActivitySync(Intent(targetContext,MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));awaitNavigation() }
     private fun awaitNavigation() { repeat(100) { if(find { it.contentDescription==targetContext.getString(R.string.nav_today) }!=null) return;SystemClock.sleep(100) };error("Training app did not load") }
     private fun nav(resource:Int) { val view=checkNotNull(find { it.contentDescription==targetContext.getString(resource) });runOnMainSync { view.performClick() };settle() }
@@ -600,6 +677,24 @@ class TrainingInstrumentation : Instrumentation() {
         error("Missing dialog action: $label. Visible text: $labels")
     }
     private fun shown(label: String) = find { it is TextView && it.text.toString() == label } != null
+    /** Types into the open dialog's text field, which lives outside the activity's views. */
+    private fun typeInDialog(text: String) {
+        fun field(node: AccessibilityNodeInfo?): AccessibilityNodeInfo? {
+            if (node == null) return null
+            if (node.className?.toString() == "android.widget.EditText") return node
+            for (i in 0 until node.childCount) field(node.getChild(i))?.let { return it }
+            return null
+        }
+        repeat(40) {
+            val target = field(uiAutomation.rootInActiveWindow)
+            if (target != null) {
+                val arguments = Bundle().apply { putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, text) }
+                check(target.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments)); settle(); return
+            }
+            SystemClock.sleep(100)
+        }
+        error("No text field in the open dialog")
+    }
     private fun shown(resource: Int) = shown(targetContext.getString(resource))
     private fun findAll(predicate: (View) -> Boolean): List<View> {
         val result = mutableListOf<View>()

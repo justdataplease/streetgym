@@ -163,10 +163,10 @@
     {
       "id": "thoracic_rotation",
       "name": {
-        "en": "Open-Book Rotation"
+        "en": "Quadruped Thoracic Rotation"
       },
       "description": {
-        "en": "Rotate the upper back while keeping hips stacked and breathing slowly."
+        "en": "On hands and knees with one hand behind the head, rotate the upper back to open the elbow toward the ceiling while the hips stay over the knees; breathe slowly."
       },
       "category": "mobility",
       "patterns": [
@@ -2539,6 +2539,25 @@
       }
     },
     {
+      "id": "freestanding_handstand",
+      "name": {
+        "en": "Freestanding Handstand"
+      },
+      "description": {
+        "en": "Kick up away from the wall and hold a straight, stacked handstand: hands shoulder-width, shoulders open over the hands, ribs in and legs together. Balance with the fingers and come down with the rehearsed exit."
+      },
+      "category": "advanced_skill",
+      "patterns": [
+        "handstand",
+        "balance"
+      ],
+      "equipment": [],
+      "regression_id": "handstand_balance",
+      "safety": {
+        "en": "Warm the wrists first and practise only with a clear exit and space around you. Start when ten-second balances away from the wall are repeatable."
+      }
+    },
+    {
       "id": "flag_ground_support",
       "name": {
         "en": "Feet-Grounded Human-Flag Support"
@@ -2726,6 +2745,27 @@
       }
     },
     {
+      "id": "one_arm_pullup",
+      "name": {
+        "en": "One-Arm Pull-Up"
+      },
+      "description": {
+        "en": "Hang from one hand with the shoulder packed and the free hand on the chest. Pull until the chin clears the bar without kicking or twisting toward the bar, then lower under control to a straight arm; repetitions are per side."
+      },
+      "category": "mastery_skill",
+      "patterns": [
+        "vertical_pull",
+        "unilateral_pull"
+      ],
+      "equipment": [
+        "high_bar"
+      ],
+      "regression_id": "one_arm_pullup_negative",
+      "safety": {
+        "en": "Start only when one-arm negatives of five seconds per side are smooth. Keep the shoulder engaged from the dead hang, never drop into a straight arm, and stop if the elbow or shoulder hurts."
+      }
+    },
+    {
       "id": "archer_pushup",
       "name": {
         "en": "Archer Push-Up"
@@ -2742,6 +2782,25 @@
       "regression_id": "pushup",
       "safety": {
         "en": "Keep the body in one line and the working elbow about 45 degrees from the ribs. Shorten the range or return to push-ups if the hips sag. Start only when about twenty strict push-ups feel easy."
+      }
+    },
+    {
+      "id": "one_arm_pushup",
+      "name": {
+        "en": "One-Arm Push-Up"
+      },
+      "description": {
+        "en": "Feet wide, one hand under the shoulder and the other behind the back. Lower the chest to fist height with the body in one line and the hips square, then press back up; repetitions are per side."
+      },
+      "category": "advanced_strength",
+      "patterns": [
+        "horizontal_push",
+        "unilateral_push"
+      ],
+      "equipment": [],
+      "regression_id": "archer_pushup",
+      "safety": {
+        "en": "Start when five archer push-ups per side are clean. Keep the working elbow close to the ribs and the hips level; raise the hand on a bench if the hips twist."
       }
     },
     {
@@ -2903,6 +2962,29 @@
       "regression_id": "one_leg_lsit",
       "safety": {
         "en": "Keep holds short and the shape exact; bend one knee as soon as the legs drop. Start after three clean 10-second holds on each leg in the one-leg version."
+      }
+    },
+    {
+      "id": "v_sit",
+      "name": {
+        "en": "V-Sit"
+      },
+      "description": {
+        "en": "From an L-sit, push the shoulders down and lean them back while lifting the straight legs above hip height into a V, toes pointed."
+      },
+      "category": "advanced_skill",
+      "patterns": [
+        "support",
+        "core",
+        "l_sit",
+        "compression"
+      ],
+      "equipment": [
+        "parallel_bars_or_blocks"
+      ],
+      "regression_id": "lsit",
+      "safety": {
+        "en": "Start when twenty-second L-sits are clean. Keep the arms locked and hold only as high as the hips allow; stop for wrist or elbow pain."
       }
     },
     {
@@ -3097,6 +3179,90 @@
       "regression_id": "wall_handstand",
       "safety": {
         "en": "Kick only as hard as the heels need to reach the wall softly, with the elbows locked and the eyes on the floor between the hands. Come down the way you went up, or cartwheel out if you overbalance. Start when two 45-second chest-to-wall holds and the cartwheel exit on both sides are calm."
+      }
+    },
+    {
+      "id": "wrist_pushup",
+      "name": {
+        "en": "Wrist Push-Up"
+      },
+      "description": {
+        "en": "Kneel on all fours with the hands flat under the shoulders and the fingers pointing forward. Press the heels of the hands off the floor until you are on the fingers and knuckles, pause, then lower slowly. Finish the set with the hands turned over, backs of the hands on the floor, rocking gently forward and back over them. One repetition is one lift or one rock."
+      },
+      "category": "activation",
+      "patterns": [
+        "wrist",
+        "push"
+      ],
+      "equipment": [
+        "mat"
+      ],
+      "regression_id": "wrist_rocks",
+      "safety": {
+        "en": "Keep most of the weight on the knees at first and move only as far as is comfortable; shift more weight onto the hands over the weeks. Stop for sharp wrist pain."
+      }
+    },
+    {
+      "id": "wall_shoulder_flexion",
+      "name": {
+        "en": "Wall Shoulder Opener"
+      },
+      "description": {
+        "en": "Face a wall or a bar at chest height, hands on it shoulder-width apart and arms straight. Walk the feet back and hinge at the hips, letting the chest sink between the arms until the arms line up with the trunk. Keep the ribs pulled in and breathe slowly through the hold."
+      },
+      "category": "mobility",
+      "patterns": [
+        "shoulder_mobility",
+        "shoulder"
+      ],
+      "equipment": [
+        "wall"
+      ],
+      "regression_id": "wall_slide",
+      "safety": {
+        "en": "Feel the stretch in the armpits and upper back, not the lower back: keep the ribs down and the back flat. Ease off for any pinching at the front of the shoulder."
+      }
+    },
+    {
+      "id": "pancake_compression",
+      "name": {
+        "en": "Pancake Compression Lift"
+      },
+      "description": {
+        "en": "Sit tall in a wide straddle with the knees and toes pointing up and the hands on the floor beside the knees. Lean forward from the hips with a long back, then lift both heels a few centimetres by squeezing the front of the hips. Pause, lower slowly and lean a little further each repetition."
+      },
+      "category": "mobility_strength",
+      "patterns": [
+        "compression",
+        "hip_mobility"
+      ],
+      "equipment": [
+        "mat"
+      ],
+      "regression_id": "seated_pike_lift",
+      "safety": {
+        "en": "Fold from the hips rather than rounding the back; a small lift is enough. Lift one leg at a time if the hip flexors cramp."
+      }
+    },
+    {
+      "id": "thoracic_extension",
+      "name": {
+        "en": "Bench Thoracic Extension"
+      },
+      "description": {
+        "en": "Sit on the ground with the upper back against the front edge of a bench, the edge just below the shoulder blades, hands cradling the head (never pulling on the neck) and elbows forward. Breathe out and arch the upper back over the edge, keeping the hips on the ground, pause for two seconds, then return."
+      },
+      "category": "mobility",
+      "patterns": [
+        "spine",
+        "shoulder_mobility"
+      ],
+      "equipment": [
+        "bench"
+      ],
+      "regression_id": "cat_cow",
+      "safety": {
+        "en": "Move from the upper back only: keep the ribs down and the lower back still. Pad the edge with a towel, and stop if the neck strains."
       }
     }
   ]

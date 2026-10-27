@@ -591,8 +591,8 @@ if ($null -ne $animation) {
 
     if ($null -ne $movementLibrary -and (Test-JsonArray $movementLibrary.movements) -and (Test-JsonObject $animation.movements)) {
         $expectedMovementIds = @($movementLibrary.movements | ForEach-Object { [string]$_.id })
-        if ($expectedMovementIds.Count -ne 151) {
-            Add-ValidationError "Authoritative movement library must contain exactly 151 movements, found $($expectedMovementIds.Count)"
+        if ($expectedMovementIds.Count -ne 159) {
+            Add-ValidationError "Authoritative movement library must contain exactly 159 movements, found $($expectedMovementIds.Count)"
         }
         foreach ($duplicate in @($expectedMovementIds | Group-Object | Where-Object Count -gt 1)) {
             Add-ValidationError "Movement library repeats ID '$($duplicate.Name)'"
@@ -604,8 +604,8 @@ if ($null -ne $animation) {
         foreach ($extra in @($actualMovementIds | Where-Object { $_ -notin $expectedMovementIds })) {
             Add-ValidationError "movements contains unknown ID '$extra'"
         }
-        if ($actualMovementIds.Count -ne 151) {
-            Add-ValidationError "Animation asset must map exactly 151 movement IDs, found $($actualMovementIds.Count)"
+        if ($actualMovementIds.Count -ne 159) {
+            Add-ValidationError "Animation asset must map exactly 159 movement IDs, found $($actualMovementIds.Count)"
         }
     }
     elseif ($null -ne $movementLibrary) { Add-ValidationError "Cannot verify exact movement coverage" }

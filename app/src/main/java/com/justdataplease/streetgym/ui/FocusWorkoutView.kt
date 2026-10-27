@@ -8,7 +8,6 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.RippleDrawable
 import android.os.Build
 import android.text.TextUtils
@@ -30,6 +29,30 @@ import java.util.Locale
 
 private const val MATCH = ViewGroup.LayoutParams.MATCH_PARENT
 private const val WRAP = ViewGroup.LayoutParams.WRAP_CONTENT
+
+/**
+ * Switches an exercise to its easier option and back, in both workout views: the sets ticked while it is on count
+ * for the easier movement.
+ */
+fun Context.easierToggle(name: String, on: Boolean, onToggle: (Boolean) -> Unit): TextView = TextView(this).apply {
+    text = getString(if (on) R.string.workout_easier_on else R.string.workout_easier_off, name)
+    textSize = 13f
+    typeface = Typeface.DEFAULT_BOLD
+    setTextColor(if (on) AppColors.ON_ACCENT else AppColors.PRIMARY)
+    maxLines = 2
+    ellipsize = TextUtils.TruncateAt.END
+    gravity = Gravity.CENTER_VERTICAL
+    setPadding(dp(12), dp(6), dp(12), dp(6))
+    background = RippleDrawable(
+        ColorStateList.valueOf(0x22000000),
+        roundedDrawable(if (on) AppColors.PRIMARY else AppColors.INFO_SURFACE, dp(16).toFloat()),
+        null,
+    )
+    isClickable = true
+    isFocusable = true
+    contentDescription = getString(if (on) R.string.workout_easier_on_description else R.string.workout_easier_off_description, name)
+    setOnClickListener { onToggle(!on) }
+}
 
 /** "Workout view: Focus · List", shown above Start on the overview and in Settings. */
 fun Context.workoutViewSetting(settings: AppSettings): LinearLayout = LinearLayout(this).apply {
@@ -88,6 +111,9 @@ class FocusWorkoutView(
         fun sectionComplete()
         fun holdFinished()
         fun finish(completedSets: Int, totalSets: Int)
+        /** Exercises done as their easier option ([WorkoutStep.exerciseKey]), credited to the easier movement. */
+        fun easierExercises(): Set<String>
+        fun setEasier(exerciseKey: String, easier: Boolean)
     }
 
     private enum class Mode { SET, REST, SUMMARY }
@@ -248,7 +274,7 @@ class FocusWorkoutView(
             val dose = context.titleText(big, largeSize(big)).apply {
                 maxLines = 2
                 ellipsize = TextUtils.TruncateAt.END
-                // Night Park stencils the dose in streetlight orange.
+                // Night Park stencils the dose in its light colour.
                 if (AppColors.theme == StreetTheme.NIGHT_PARK) {
                     typeface = AppType.numeral
                     setTextColor(AppColors.PRIMARY)
@@ -261,7 +287,14 @@ class FocusWorkoutView(
                 maxLines = 1
                 ellipsize = TextUtils.TruncateAt.END
             }, topDp = 2)
-            addWithMargins(easierChip(step, notes.easier), width = WRAP, topDp = 8)
+            val option = step.exercise.easier
+                ?.takeIf { step.section in WorkoutFlow.CREDITED_SECTIONS && !step.exercise.readinessCheck }
+            addWithMargins(if (option == null) easierChip(step, notes.easier) else context.easierToggle(
+                option.name.resolve(locale), step.exerciseKey in host.easierExercises(),
+            ) { on ->
+                host.setEasier(step.exerciseKey, on)
+                render()
+            }, width = WRAP, topDp = 8)
         }
 
         val primary = if (startRound != null && seconds != null) {
@@ -427,8 +460,7 @@ class FocusWorkoutView(
             addView(LinearLayout(context).apply {
                 orientation = LinearLayout.HORIZONTAL
                 gravity = Gravity.CENTER_VERTICAL
-                val bar = if (AppColors.theme == StreetTheme.FRESH_COURT) context.horizontalProgress(percent(completed))
-                    else SetProgressView(context, BooleanArray(flow.size) { flow[it].key in completed }, this@FocusWorkoutView.position)
+                val bar = SetProgressView(context, BooleanArray(flow.size) { flow[it].key in completed }, this@FocusWorkoutView.position)
                 addView(bar, LinearLayout.LayoutParams(0, dp(SetProgressView.heightDp), 1f))
                 addView(context.bodyText(position, 13f).apply {
                     typeface = Typeface.DEFAULT_BOLD
@@ -487,13 +519,9 @@ class FocusWorkoutView(
                 .filter(String::isNotBlank).joinToString("\n\n"))
             part(R.string.focus_details_start, program.readiness.resolve(locale))
         }
-        val radius = if (AppColors.theme.shape.corner == Corner.ROUND) dp(24).toFloat() else 0f
         val sheet = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
-            background = GradientDrawable().apply {
-                setColor(AppColors.SURFACE)
-                cornerRadii = floatArrayOf(radius, radius, radius, radius, 0f, 0f, 0f, 0f)
-            }
+            setBackgroundColor(AppColors.SURFACE)
             addView(LinearLayout(context).apply {
                 orientation = LinearLayout.HORIZONTAL
                 gravity = Gravity.CENTER_VERTICAL
@@ -619,9 +647,6 @@ class FocusWorkoutView(
 
     private fun stepLabel(resource: Int, step: WorkoutStep): String =
         context.getString(resource, step.setNumber, step.setCount, name(step))
-
-    private fun percent(completed: Set<String>): Int =
-        if (flow.size == 0) 0 else flow.completedCount(completed) * 100 / flow.size
 
     private fun dp(value: Int): Int = context.dp(value)
 

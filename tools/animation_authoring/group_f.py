@@ -6,6 +6,7 @@ anatomical bend and pinned on its loaded contact, so interpolation stays inside 
 tolerance checked by tools/validate_progression_motions.py.
 """
 from author import *
+from group_c import prone_pose
 from progressions import _both, _lerp, _pose, _template, arm_to, dense, repin
 
 
@@ -22,7 +23,7 @@ def arm_out(name, target, which, side):
 # elbow pointing out to its own side. Pull toward the left hand with the right arm long, slide the
 # chin along the bar to the right hand while staying at the top, then lower from that side back to
 # the centred hang. The shoulders never pass outside either hand, so neither elbow changes side.
-TW_LEFT, TW_RIGHT, TW_REACH, TW_TOP_Y = (86.0, 12.0), (114.0, 12.0), 25.85, 21.0
+TW_LEFT, TW_RIGHT, TW_REACH, TW_TOP_Y = (86.0, 12.0), (114.0, 12.0), 25.85, 16.5
 TW_SIDE_X = math.sqrt(TW_REACH ** 2 - (TW_TOP_Y - TW_LEFT[1]) ** 2)
 TW_HANG = (100.0, TW_LEFT[1] + math.sqrt(TW_REACH ** 2 - (100.0 - TW_LEFT[0]) ** 2))
 
@@ -65,13 +66,13 @@ _template("typewriter_pullup", 4200, [(0, _tw_up[0][1])] + _tw + [(1, _tw_down[-
 OAP_HAND, OAP_TOWEL = (100.0, 12.0), (109.0, 26.0)
 APPARATUS["towel_bar"] = [{"type": "line", "values": [107.5, 12, 107.5, 38]}, {"type": "line", "values": [110.5, 12, 110.5, 38]}]
 OAP_HANG = (OAP_HAND[0], OAP_HAND[1] + 25.9)
-OAP_TOP = (96.5, 18.0)
+OAP_TOP = (96.5, 13.5)
 
 
 def _oap(key, s, far=True):
     shoulder = _lerp(list(OAP_HANG), list(OAP_TOP), s)
     _pose(key, facing=1, torso=(-8 * s) % 360, shrug=-1.0 * (1 - s), legs=[178 - 6 * s, 184 + 10 * s],
-          leg_far=[180 - 6 * s, 186 + 12 * s], feet=180, arm_far=[165, 20],
+          leg_far=[180 - 6 * s, 186 + 12 * s], feet=180, arm_far=[170, 45],
           pin={"joint": "shoulder", "at": [round(v, 3) for v in shoulder]})
     arm_to(key, OAP_HAND, ("arm_near",))
     if far:
@@ -93,9 +94,9 @@ def _oap_neg(key, s):
 _neg = dense("oap_neg", _oap_neg, 14, span=1.0, hold=False)
 # A low box under the bar: the feet clear it in the hang and step back up from it to reset.
 APPARATUS["step_box"] = [{"type": "round_rect", "values": [84, 97, 114, FLOOR], "filled": True}]
-_template("one_arm_pullup_negative", 4200,
-          [(0, _neg[0][1])] + [(round(0.12 + 0.66 * t, 4), k) for t, k in _neg] + [(0.88, _neg[-1][1])] +
-          [(round(0.88 + 0.12 * (1 - t), 4), k) for t, k in reversed(_neg[:-1])],
+# Round 5: about four seconds down, a pause in the hang, then the athlete steps down and the guide cuts back to the top.
+_template("one_arm_pullup_negative", 5600,
+          [(0, _neg[0][1])] + [(round(0.1 + 0.68 * t, 4), k) for t, k in _neg] + [(1.0, _neg[-1][1])],
           mode="loop", apparatus=("high_bar", "step_box"), easing="linear")
 
 
@@ -156,7 +157,41 @@ def _freestanding(key, s):
 
 
 _fs = dense("freestanding_down", _freestanding, 16, span=1.0, hold=False)
-_template("freestanding_hspu_negative", 4400,
-          [(0, _fs[0][1])] + [(round(0.1 + 0.68 * t, 4), k) for t, k in _fs] + [(0.86, _fs[-1][1])] +
-          [(round(0.86 + 0.14 * (1 - t), 4), k) for t, k in reversed(_fs[:-1])],
+# Round 5: a slow lowering and a pause; the athlete tucks and steps down, and the guide cuts back to the top.
+_template("freestanding_hspu_negative", 5600,
+          [(0, _fs[0][1])] + [(round(0.08 + 0.66 * t, 4), k) for t, k in _fs] + [(1.0, _fs[-1][1])],
           mode="loop", apparatus=("backstop_wall", "freestanding_mat"), easing="linear")
+
+
+# ---------- beyond the program: the top rung of four ladders ----------
+# One-arm pull-up: the towel-free chain from the hang to chin over the bar, the free hand on the chest.
+_template("one_arm_pullup", 3000, dense("oap_full", lambda k, s: _oap(k, s, far=False), 14), apparatus=("high_bar",),
+          easing="linear")
+
+
+# One-arm push-up: the push-up line on one planted hand, the free hand resting on the lower back (upper arm back
+# along the body, forearm folded onto the spine), the chest lowering to fist height.
+def _one_arm_push(key, shoulder_y, shoulder_dx):
+    prone_pose(key, shoulder_y, shoulder_dx=shoulder_dx)
+    torso = POSES[key]["torso"]
+    POSES[key]["arm_far"] = [round((torso - 214) % 360, 1), round((torso - 144) % 360, 1)]
+    return key
+
+
+_template("one_arm_pushup", 2200, [(0, _one_arm_push("oa_push_top", 82, 3)), (1, _one_arm_push("oa_push_bottom", 95, -1))])
+
+
+# Freestanding handstand: the stacked line over the hands with no wall, swaying a degree or two either way as the
+# fingers balance it.
+def _hs_free(key, lean):
+    _pose(key, facing=-1, torso=180 + lean, head=180 + lean, arms=[180 + lean, 180 + lean], legs=[lean, lean],
+          leg_far=[lean - 1.5, lean - 1.5], foot_near=round(lean % 360, 2), foot_far=round((lean - 1.5) % 360, 2),
+          pin={"joint": "hand_near", "at": [100.0, 105.0]})
+    return key
+
+
+_template("freestanding_handstand", 3200, [(0, _hs_free("hs_free_a", -1.5)), (1, _hs_free("hs_free_b", 1.5))])
+
+# V-sit on parallettes: from the L-sit the shoulders lean back and the straight legs rise above hip height.
+_pose("vsit_hold", base="lsit_floor", torso=346, shrug=-2.5, legs=[38, 38], leg_far=[39, 39], feet=42)
+_template("v_sit", 2800, [(0, "lsit_hold"), (0.6, "vsit_hold"), (1, "vsit_hold")], apparatus=("parallettes",))

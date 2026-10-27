@@ -33,17 +33,51 @@ data class CustomDay(
 /** A program day saved with the heart; unsaving keeps the mark with saved = false for the same reason. */
 data class SavedMark(val saved: Boolean, val at: Long)
 
-/** Everything in My workouts: saved program days and custom days, by id. */
+/**
+ * One of the athlete's own lists (Plus and Pro): saved and custom days under a name. Favorites, the default list, is
+ * everything in My workouts, so it isn't stored. A deleted list is kept as a tombstone, like a day.
+ */
+data class WorkoutList(
+    val id: String,
+    val name: String,
+    val dayIds: List<String>,
+    val createdAt: Long,
+    val updatedAt: Long,
+    val deleted: Boolean = false,
+)
+
+/** Everything in My workouts: saved program days, custom days and the athlete's lists, by id. */
 data class LibraryState(
     val saved: Map<String, SavedMark> = emptyMap(),
     val days: Map<String, CustomDay> = emptyMap(),
+    val lists: Map<String, WorkoutList> = emptyMap(),
 ) {
     val savedIds: List<String> get() = saved.filterValues { it.saved }.entries.sortedByDescending { it.value.at }.map { it.key }
     val customDays: List<CustomDay> get() = days.values.filterNot { it.deleted }.sortedByDescending { it.updatedAt }
-    /** Saved and custom days share the tier's limit. */
+    /** Saved and custom days share the tier's limit; lists hold the same days, so they don't count. */
     val used: Int get() = savedIds.size + customDays.size
+    /** The lists in the order they were made. */
+    val activeLists: List<WorkoutList> get() = lists.values.filterNot { it.deleted }.sortedWith(compareBy({ it.createdAt }, { it.id }))
 
-    /** Two devices' libraries: the newer change of each saved mark and each day wins. */
+    /** A saved day or a custom day that still exists: what a list may hold. */
+    fun holds(dayId: String): Boolean = saved[dayId]?.saved == true || days[dayId]?.deleted == false
+
+    /** A list's days, newest first, without any that left My workouts. */
+    fun daysIn(list: WorkoutList): List<String> = list.dayIds.filter(::holds).reversed()
+
+    fun listIdsWith(dayId: String): Set<String> = activeLists.filter { dayId in it.dayIds }.mapTo(mutableSetOf()) { it.id }
+
+    /** [dayId] in exactly the lists [listIds]; only the lists that change get a new time. */
+    fun withDayInLists(dayId: String, listIds: Set<String>, at: Long): LibraryState = copy(lists = lists.mapValues { (id, list) ->
+        val inList = dayId in list.dayIds
+        when {
+            list.deleted || inList == (id in listIds) -> list
+            inList -> list.copy(dayIds = list.dayIds - dayId, updatedAt = at)
+            else -> list.copy(dayIds = list.dayIds + dayId, updatedAt = at)
+        }
+    })
+
+    /** Two devices' libraries: the newer change of each saved mark, each day and each list wins. */
     fun merge(other: LibraryState): LibraryState = LibraryState(
         saved = (saved.keys + other.saved.keys).associateWith { id ->
             listOfNotNull(saved[id], other.saved[id]).maxBy { it.at }
@@ -51,7 +85,33 @@ data class LibraryState(
         days = (days.keys + other.days.keys).associateWith { id ->
             listOfNotNull(days[id], other.days[id]).maxBy { it.updatedAt }
         },
+        lists = (lists.keys + other.lists.keys).associateWith { id ->
+            listOfNotNull(lists[id], other.lists[id]).maxBy { it.updatedAt }
+        },
     )
+}
+
+/** List names and ids. Favorites is the default list, so no other list may take its name. */
+object WorkoutLists {
+    const val PREFIX = "list:"
+    const val MAX_NAME_LENGTH = 30
+    fun newId(): String = PREFIX + java.util.UUID.randomUUID()
+
+    enum class NameProblem { Blank, TooLong, Taken }
+
+    fun clean(name: String): String = name.trim().replace(Regex("\\s+"), " ")
+
+    /** Why [name] can't be used, or null; [except] is the list being renamed. */
+    fun nameProblem(name: String, state: LibraryState, defaultName: String, except: String? = null): NameProblem? {
+        val cleaned = clean(name)
+        return when {
+            cleaned.isEmpty() -> NameProblem.Blank
+            cleaned.length > MAX_NAME_LENGTH -> NameProblem.TooLong
+            cleaned.equals(defaultName, ignoreCase = true) ||
+                state.activeLists.any { it.id != except && it.name.equals(cleaned, ignoreCase = true) } -> NameProblem.Taken
+            else -> null
+        }
+    }
 }
 
 object CustomDays {
@@ -88,6 +148,12 @@ object LibraryCodec {
     fun encode(state: LibraryState): JSONObject = JSONObject()
         .put("saved", JSONObject().apply { state.saved.forEach { (id, mark) -> put(id, JSONObject().put("saved", mark.saved).put("at", mark.at)) } })
         .put("days", JSONObject().apply { state.days.forEach { (id, day) -> put(id, encodeDay(day)) } })
+        .put("lists", JSONObject().apply {
+            state.lists.forEach { (id, list) ->
+                put(id, JSONObject().put("name", list.name).put("days", JSONArray(list.dayIds))
+                    .put("created_at", list.createdAt).put("updated_at", list.updatedAt).put("deleted", list.deleted))
+            }
+        })
 
     fun decode(json: JSONObject?): LibraryState {
         if (json == null) return LibraryState()
@@ -99,7 +165,17 @@ object LibraryCodec {
         val days = json.optJSONObject("days")?.let { all ->
             all.keys().asSequence().mapNotNull { id -> all.optJSONObject(id)?.let(::decodeDay)?.let { id to it } }.toMap()
         }.orEmpty()
-        return LibraryState(saved, days)
+        // Libraries from before lists have none.
+        val lists = json.optJSONObject("lists")?.let { all ->
+            all.keys().asSequence().mapNotNull { id ->
+                all.optJSONObject(id)?.let { list ->
+                    val dayIds = list.optJSONArray("days") ?: JSONArray()
+                    id to WorkoutList(id, list.optString("name"), (0 until dayIds.length()).map { dayIds.optString(it) }.distinct(),
+                        list.optLong("created_at"), list.optLong("updated_at"), list.optBoolean("deleted"))
+                }
+            }.toMap()
+        }.orEmpty()
+        return LibraryState(saved, days, lists)
     }
 
     fun encodeDay(day: CustomDay): JSONObject = JSONObject()

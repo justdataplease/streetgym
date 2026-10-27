@@ -37,6 +37,9 @@ object SkillCurriculumReader {
                     week = program.optInt("number").takeIf { it > 0 }?.let { (it - 1) / 7 + 1 },
                     day = schedule?.optInt("day")?.takeIf { it > 0 },
                     steps = steps(program, movements.keys),
+                    // As the workout screen plans it: morning recovery classes run 20 minutes.
+                    minutes = if (program.optBoolean("morning_recovery", false)) MORNING_MINUTES
+                    else schedule?.optInt("minutes")?.takeIf { it > 0 },
                 )
             }
         }
@@ -62,9 +65,10 @@ object SkillCurriculumReader {
     }
 
     private const val READINESS_CHECK = "readiness_check"
+    private const val MORNING_MINUTES = 20
 
     /** Variants named in an authentic exercise's description come before its plain name. */
-    private fun authenticMovement(name: String, description: String): String? =
+    internal fun authenticMovement(name: String, description: String): String? =
         AUTHENTIC_VARIANTS.firstOrNull { (variantName, phrase, _) -> name == variantName && description.contains(phrase, ignoreCase = true) }
             ?.third ?: AUTHENTIC_NAMES[name]
 

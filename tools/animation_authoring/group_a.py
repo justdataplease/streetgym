@@ -1,4 +1,5 @@
 # Group A: standing warm-ups, mobility, floor mobility, breathing
+import math
 from author import *
 
 X = 100
@@ -48,12 +49,33 @@ template("wrist_circles", 1600, [(0, "wrist_a"), (0.25, "wrist_b"), (0.5, "wrist
 
 # ---------- quadruped: wrist rocks, cat-cow ----------
 KNEE_PIN = {"joint": "knee_near", "at": [118, 102]}
-pose("quadruped", facing=-1, torso=270, legs=[180, 90], feet=90, leg_far=[178, 90], pin=KNEE_PIN)
-reach_arm("quadruped", (80, ANKLE), pref=LEFT)
-pose("quad_forward", base="quadruped", torso=276)
-reach_arm("quad_forward", (80, ANKLE), pref=LEFT)
-pose("quad_back", base="quadruped", torso=264)
-reach_arm("quad_back", (80, ANKLE), pref=LEFT)
+QUAD_HAND = (99.0, 105.0)
+
+
+def quad(name, shoulder_dx=0.0, **kw):
+    """All fours: knees pinned with the shins on the floor, arms straight and the hands planted at QUAD_HAND; the
+    shoulders sit shoulder_dx ahead of (negative) or behind the hands, and the hips follow on the thighs."""
+    sx = QUAD_HAND[0] + shoulder_dx
+    sy = QUAD_HAND[1] - math.sqrt((UPPER + FORE) ** 2 - shoulder_dx ** 2)
+    kx, ky = KNEE_PIN["at"]
+    dx, dy = sx - kx, sy - ky
+    dist = math.hypot(dx, dy)
+    a = (THIGH ** 2 - TORSO ** 2 + dist ** 2) / (2 * dist)
+    h = math.sqrt(THIGH ** 2 - a * a)
+    mx, my = kx + a * dx / dist, ky + a * dy / dist
+    hip = min(((mx - h * dy / dist, my + h * dx / dist), (mx + h * dy / dist, my - h * dx / dist)), key=lambda o: o[1])
+    torso = ang(sx - hip[0], sy - hip[1])
+    thigh = ang(kx - hip[0], ky - hip[1])
+    pose(name, facing=-1, torso=torso, legs=[thigh, 90], leg_far=[thigh - 2, 90], feet=90, pin=KNEE_PIN, **kw)
+    reach_arm(name, QUAD_HAND, pref=LEFT)
+    return name
+
+
+# Hands under the shoulders with the elbows straight; the back slopes up toward the head as the arms are longer
+# than the thighs.
+quad("quadruped")
+quad("quad_forward", -5.0)
+quad("quad_back", 4.0)
 template("wrist_rock", 1800, [(0, "quad_back"), (1, "quad_forward")])
 
 pose("cat", base="quadruped", spine=-4.5, head=225)
@@ -77,20 +99,26 @@ template("arm_swings", 1600, [(0, "swing_back"), (1, "swing_front")])
 pose("hips_neutral", base="stand", arms=[160, 65])
 pose("hips_forward", base="stand", arms=[160, 65], torso=352, leg_near=[170, 182], leg_far=[172, 180])
 pose("hips_back", base="stand", arms=[160, 65], torso=8, leg_near=[190, 178], leg_far=[192, 176])
-template("hip_circles", 2200, [(0, "hips_forward"), (0.5, "hips_neutral"), (1, "hips_back")])
+# One loop forward, through the middle, back and through again; the front view sways right and left at the
+# middles, so the two views together trace the circle.
+template("hip_circles", 3200, [(0, "hips_forward"), (0.25, "hips_neutral"), (0.5, "hips_back"), (0.75, "hips_neutral"),
+                               (1, "hips_forward")], mode="loop", reduced=0.25)
 
 # ---------- half-kneeling: ankle rocks, hip flexor stretch ----------
-pose("half_kneel", facing=1, torso=5, arms=[150, 80], leg_far=[180, 270], foot_far=270,
+# The front foot stays flat (heel down) under a vertical shin; rocking forward moves the hips forward over the rear
+# knee, so the front knee travels past the ankle over the toes.
+pose("half_kneel", facing=1, torso=5, arms=[150, 80], leg_far=[180, 270], foot_far=270, foot_near=90,
      pin={"joint": "knee_far", "at": [88, 102]})
-reach_leg("half_kneel", (109, ANKLE), pref=RIGHT, which=("leg_near",))
-pose("ankle_rock_fwd", base="half_kneel", torso=12, leg_far=[165, 270],
+reach_leg("half_kneel", (104, ANKLE), pref=RIGHT, which=("leg_near",))
+pose("ankle_rock_fwd", base="half_kneel", torso=12, leg_far=[198, 270],
      pin={"joint": "knee_far", "at": [88, 102]})
-reach_leg("ankle_rock_fwd", (109, ANKLE), pref=RIGHT, which=("leg_near",))
+reach_leg("ankle_rock_fwd", (104, ANKLE), pref=RIGHT, which=("leg_near",))
 template("ankle_rock", 1700, [(0, "half_kneel"), (1, "ankle_rock_fwd")])
 
-pose("hip_flexor", base="half_kneel", torso=0, arms=[175, 175], leg_far=[172, 270])
+# Hip flexor stretch: upright trunk, front shin vertical, and the hips shift forward so the rear hip extends.
+pose("hip_flexor", base="half_kneel", torso=0, arms=[175, 175], leg_far=[183, 270])
 reach_leg("hip_flexor", (109, ANKLE), pref=RIGHT, which=("leg_near",))
-pose("hip_flexor_fwd", base="half_kneel", torso=356, arms=[178, 178], leg_far=[160, 270])
+pose("hip_flexor_fwd", base="half_kneel", torso=0, arms=[178, 178], leg_far=[200, 270])
 reach_leg("hip_flexor_fwd", (109, ANKLE), pref=RIGHT, which=("leg_near",))
 template("hip_flexor_stretch", 3000, [(0, "hip_flexor"), (1, "hip_flexor_fwd")], apparatus=("mat",))
 
@@ -102,7 +130,8 @@ pose("leg_front", base="swing_base", leg_near=[235, 230], foot_near=320)
 template("leg_swing", 1500, [(0, "leg_back"), (1, "leg_front")], apparatus=("post_left",))
 
 # ---------- wall slide (back to wall on the right) ----------
-pose("wall_slide_low", facing=-1, torso=0, legs=[180, 180], arms=[60, 0], pin={"joint": "foot_near", "at": [143, ANKLE]})
+# The elbows reach the wall, not past it.
+pose("wall_slide_low", facing=-1, torso=0, legs=[180, 180], arms=[33, 0], pin={"joint": "foot_near", "at": [143, ANKLE]})
 pose("wall_slide_high", base="wall_slide_low", arms=[12, 5])
 template("wall_slide", 2000, [(0, "wall_slide_low"), (1, "wall_slide_high")], apparatus=("wall_right",))
 
@@ -121,5 +150,6 @@ template("thoracic_rotation", 2600, [(0, "trot_closed"), (1, "trot_open")])
 # ---------- supine twist (side view: knees stacked, rolling gently toward the mat) ----------
 pose("twist_center", facing=1, torso=270, arm_near=[270, 270], arm_far=[275, 275], legs=[30, 130], leg_far=[34, 130],
      pin={"joint": "neck", "at": [70, 100]})
-pose("twist_side", base="twist_center", legs=[70, 160], leg_far=[74, 160], feet=70)
+# The knees drop toward the mat while the feet stay down on it.
+pose("twist_side", base="twist_center", legs=[72, 128], leg_far=[76, 128], feet=70)
 template("supine_twist", 3000, [(0, "twist_center"), (1, "twist_side")], apparatus=("mat",))

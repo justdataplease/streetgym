@@ -333,7 +333,7 @@ internal class ParkStory(private val rig: Rig, val routine: ParkRoutine, clip: (
                 var barRight = if (apparatus == ON_HIGH_BAR) 18f else 30f
                 for (move in moves) barRight = max(barRight, barReach(move, apparatus))
                 val y = if (apparatus == ON_HIGH_BAR) HIGH_BAR_Y else MID_BAR_Y
-                props += ParkProp(ParkProp.BAR, y, x + barLeft(apparatus), x + barRight)
+                props += ParkProp(ParkProp.BAR, y, x + moves.minOf { barLeft(it, apparatus) }, x + barRight)
             }
             ON_PARALLEL_BARS -> props += ParkProp(ParkProp.PARALLEL_BARS, DIP_BAR_Y, x - 16f, x + 16f)
         }
@@ -364,8 +364,8 @@ internal class ParkStory(private val rig: Rig, val routine: ParkRoutine, clip: (
                 blend(0.34f, Rig.HIP, EASE_IN)
                 still(Rig.FOOT_NEAR) { pose, joints -> landPose(x, pose, joints) }
             }
-            // The muscle-up rests in its opening grip, already standing.
-            ON_MID_BAR -> standX = clipJointX(clips.getValue(MUSCLE_UP), GRIP_TIME, x, MUSCLE_UP_DY, Rig.FOOT_NEAR)
+            // The muscle-up rests in its opening grip; the hero drops to stand under the bar, where its hips hang.
+            ON_MID_BAR -> standX = clipJointX(clips.getValue(MUSCLE_UP), GRIP_TIME, x, MUSCLE_UP_DY, Rig.HIP)
         }
     }
 
@@ -430,7 +430,7 @@ internal class ParkStory(private val rig: Rig, val routine: ParkRoutine, clip: (
                 // Down from the bar, then along under it to the left post: the flag clips grip a post 38 left of
                 // the clip origin and stand on the floor, so only x moves.
                 dismount(x, apparatus)
-                val origin = x + barLeft(apparatus) + 38f
+                val origin = x + barLeft(move, apparatus) + 38f
                 blend(0.4f, Rig.FOOT_NEAR)
                 walkTo(origin - 1f)
                 blend(0.5f, Rig.FOOT_NEAR)
@@ -956,14 +956,20 @@ internal class ParkStory(private val rig: Rig, val routine: ParkRoutine, clip: (
             ParkMove.TUCK_LEVER, ParkMove.FRONT_LEVER, ParkMove.HUMAN_FLAG -> apparatus(middle, middle)
         }
 
-        /** The bar's left end, relative to the hands. */
-        private fun barLeft(apparatus: Int) = if (apparatus == ON_HIGH_BAR) -18f else -16f
+        /**
+         * The bar's left end, relative to the hands: further out under a lever, whose shoulders hang behind the bar so
+         * the hands sit over the body's centre of mass.
+         */
+        private fun barLeft(move: ParkMove, apparatus: Int): Float {
+            val lever = if (move == ParkMove.TUCK_LEVER || move == ParkMove.FRONT_LEVER) 8f else 0f
+            return (if (apparatus == ON_HIGH_BAR) -18f else -16f) - lever
+        }
 
         /** How far right of the hands the bar must run for [move]: past a lever's feet, or the flag's. */
         private fun barReach(move: ParkMove, apparatus: Int): Float = when (move) {
-            ParkMove.TUCK_LEVER -> 30f
-            ParkMove.FRONT_LEVER -> 62f
-            ParkMove.HUMAN_FLAG -> barLeft(apparatus) + FLAG_BAR_LENGTH
+            ParkMove.TUCK_LEVER -> 26f
+            ParkMove.FRONT_LEVER -> 50f
+            ParkMove.HUMAN_FLAG -> barLeft(move, apparatus) + FLAG_BAR_LENGTH
             else -> 0f
         }
 
@@ -975,9 +981,10 @@ internal class ParkStory(private val rig: Rig, val routine: ParkRoutine, clip: (
             // The landings' arms swing forward past the furniture.
             ParkMove.KNEE_RAISES, ParkMove.PULL_UPS -> -22f..25f
             ParkMove.DIPS -> -22f..25f
-            ParkMove.MUSCLE_UP -> -20f..34f
+            // From the muscle-up's hang the straight legs swing up into the tuck lever, past the bar's right end.
+            ParkMove.MUSCLE_UP -> -20f..39f
             ParkMove.TUCK_LEVER, ParkMove.FRONT_LEVER, ParkMove.HUMAN_FLAG ->
-                (barLeft(apparatus) - ParkProp.BAR_OVERHANG - 1f)..(barReach(move, apparatus) + ParkProp.BAR_OVERHANG + 1f)
+                (barLeft(move, apparatus) - ParkProp.BAR_OVERHANG - 1f)..(barReach(move, apparatus) + ParkProp.BAR_OVERHANG + 1f)
         }
 
         private val OPENER_CHEER = intArrayOf(CLAP, ARMS_UP, HOP)
@@ -1013,8 +1020,8 @@ internal class ParkStory(private val rig: Rig, val routine: ParkRoutine, clip: (
          */
         private const val MID_BAR_Y = 30f
         private const val MUSCLE_UP_DY = MID_BAR_Y - 40f
-        private const val GRIP_TIME = 0.1f
-        private const val SUPPORT_TIME = 0.8f
+        private const val GRIP_TIME = 0.02f
+        private const val SUPPORT_TIME = 0.5f
 
         // The kick-up is handstand_exit's second half: a lunge reaching forward (feet 14 either side of the clip
         // origin), then hands down 45 ahead and legs over.

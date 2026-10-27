@@ -6,17 +6,17 @@
       "level": 6,
       "number": 1,
       "title": {
-        "en": "Clean Transition Bridge"
+        "en": "Level 6 Re-Entry Bridge"
       },
       "description": {
-        "en": "Bridge into the mastery block with eight reserved muscle-ups and modest pulling and dipping support."
+        "en": "An easy first class after the Level 5 benchmark week: two pairs of strict muscle-ups, one set of chest-to-bar pull-ups and straight-bar dips, all with plenty in reserve. The harder pulling returns in the next classes, once the elbows have had their days off."
       },
       "schedule": {
         "week": 1,
         "day": 1,
         "day_type": "muscleup_bridge",
-        "minutes": 53,
-        "rpe": 6,
+        "minutes": 39,
+        "rpe": 5,
         "focus": [
           "muscle_up",
           "pull_up",
@@ -34,22 +34,22 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "arm_swings",
-          2,
-          15,
+          "wall_shoulder_flexion",
+          1,
           null,
-          10,
-          "controlled",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "scapular_pull",
@@ -73,8 +73,8 @@
       "main": [
         [
           "strict_muscleup",
-          3,
-          3,
+          2,
+          2,
           null,
           165,
           "clean_reserve",
@@ -82,26 +82,17 @@
         ],
         [
           "chest_to_bar",
-          3,
-          5,
+          1,
+          4,
           null,
           105,
           "easy_power",
           "pullup"
         ],
         [
-          "archer_pullup",
-          2,
-          "4/side",
-          null,
-          120,
-          "2111",
-          "pullup"
-        ],
-        [
           "straight_bar_dip",
           2,
-          9,
+          8,
           null,
           75,
           "2111",
@@ -176,19 +167,28 @@
           "march",
           1,
           null,
-          120,
+          90,
           0,
           null,
           null
         ],
         [
-          "wrist_rocks",
-          3,
-          12,
+          "wrist_pushup",
+          1,
+          10,
           null,
-          15,
-          "controlled",
-          null
+          20,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "scapular_pushup",
@@ -256,13 +256,13 @@
           "incline_pushup"
         ],
         [
-          "squat",
+          "bulgarian_split_squat",
           2,
-          32,
+          "10/side",
           null,
-          55,
+          75,
           "3010",
-          "box_squat"
+          "split_squat"
         ],
         [
           "elevated_pike_pushup",
@@ -338,22 +338,22 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "shoulder_cars",
-          2,
-          6,
+          "wall_shoulder_flexion",
+          1,
           null,
-          15,
-          "slow",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "active_hang",
@@ -469,13 +469,13 @@
         "en": "Mastery Recovery Walk"
       },
       "description": {
-        "en": "Easy walking and joint mobility absorb three baseline sessions without adding fatigue."
+        "en": "Foot-assisted hang and supported deep-squat hold first, then the weekly skill-mobility block: 34-second wall shoulder openers and bench thoracic extensions for the handstand line, and pancake compression lifts for the L-sit and the press."
       },
       "schedule": {
         "week": 1,
         "day": 4,
         "day_type": "active_recovery",
-        "minutes": 47,
+        "minutes": 25,
         "rpe": 3,
         "focus": [
           "walking",
@@ -488,14 +488,14 @@
           "easy_walk",
           1,
           null,
-          900,
+          240,
           0,
           null,
           null
         ],
         [
           "wrist_circles",
-          2,
+          1,
           10,
           null,
           10,
@@ -504,7 +504,7 @@
         ],
         [
           "ankle_rocks",
-          2,
+          1,
           "10/side",
           null,
           10,
@@ -514,35 +514,8 @@
       ],
       "main": [
         [
-          "shoulder_cars",
-          3,
-          6,
-          null,
-          20,
-          "slow",
-          null
-        ],
-        [
-          "cat_cow",
-          3,
-          10,
-          null,
-          25,
-          "slow",
-          null
-        ],
-        [
-          "ninety_ninety_hip_switch",
-          3,
-          10,
-          null,
-          30,
-          "controlled",
-          null
-        ],
-        [
           "foot_assisted_hang",
-          3,
+          1,
           null,
           30,
           45,
@@ -551,18 +524,54 @@
         ],
         [
           "deep_squat_hold",
-          3,
+          1,
           null,
           40,
           30,
           null,
           "box_squat"
+        ],
+        [
+          "wrist_pushup",
+          2,
+          12,
+          null,
+          30,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          2,
+          null,
+          34,
+          30,
+          null,
+          "wall_slide"
+        ],
+        [
+          "pancake_compression",
+          2,
+          7,
+          null,
+          30,
+          "slow",
+          "seated_pike_lift"
+        ],
+        [
+          "thoracic_extension",
+          2,
+          6,
+          null,
+          30,
+          "2-second_pause",
+          "cat_cow"
         ]
       ],
       "cooldown": [
         [
           "lat_stretch",
-          2,
+          1,
           null,
           45,
           10,
@@ -571,7 +580,7 @@
         ],
         [
           "hip_flexor_stretch",
-          2,
+          1,
           null,
           40,
           10,
@@ -582,7 +591,7 @@
           "slow_breathing",
           1,
           null,
-          300,
+          150,
           0,
           null,
           null
@@ -623,22 +632,22 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "shoulder_cars",
-          2,
-          6,
+          "wall_shoulder_flexion",
+          1,
           null,
-          15,
-          "slow",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "active_hang",
@@ -742,7 +751,7 @@
         "week": 1,
         "day": 6,
         "day_type": "dragon_baseline",
-        "minutes": 54,
+        "minutes": 55,
         "rpe": 7,
         "focus": [
           "dragon_flag",
@@ -756,19 +765,28 @@
           "march",
           1,
           null,
-          120,
+          90,
           0,
           null,
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "cat_cow",
@@ -920,13 +938,13 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
           "leg_swings",
@@ -938,13 +956,13 @@
           null
         ],
         [
-          "arm_swings",
+          "wall_shoulder_flexion",
           1,
-          15,
           null,
-          10,
-          "controlled",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ]
       ],
       "main": [
@@ -976,13 +994,13 @@
           "incline_pushup"
         ],
         [
-          "squat",
+          "bulgarian_split_squat",
           2,
-          32,
+          "10/side",
           null,
-          45,
+          75,
           "3010",
-          "box_squat"
+          "split_squat"
         ],
         [
           "toes_to_bar",
@@ -1059,12 +1077,30 @@
         ],
         [
           "wrist_circles",
-          2,
+          1,
           12,
           null,
           10,
           "each_direction",
           null
+        ],
+        [
+          "wrist_pushup",
+          1,
+          10,
+          null,
+          20,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "scapular_pull",
@@ -1106,7 +1142,7 @@
         ],
         [
           "archer_pullup",
-          3,
+          2,
           "4/side",
           null,
           120,
@@ -1191,19 +1227,28 @@
           "march",
           1,
           null,
-          120,
+          90,
           0,
           null,
           null
         ],
         [
-          "wrist_rocks",
-          3,
-          12,
+          "wrist_pushup",
+          1,
+          10,
           null,
-          15,
-          "controlled",
-          null
+          20,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "scapular_pushup",
@@ -1263,11 +1308,11 @@
         ],
         [
           "pause_squat",
-          2,
-          18,
+          3,
+          12,
           null,
-          50,
-          "32X0",
+          90,
+          "32X1",
           "box_squat"
         ]
       ],
@@ -1335,22 +1380,22 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "shoulder_cars",
-          2,
-          6,
+          "wall_shoulder_flexion",
+          1,
           null,
-          15,
-          "slow",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "active_hang",
@@ -1466,13 +1511,13 @@
         "en": "Wrist-and-Shoulder Reset"
       },
       "description": {
-        "en": "A gentle mobility day restores the joints used by levers, transitions, and forward supports."
+        "en": "Foot-assisted hang and 90/90 hip switch first, then the weekly skill-mobility block: 35-second wall shoulder openers and bench thoracic extensions for the handstand line, and pancake compression lifts for the L-sit and the press."
       },
       "schedule": {
         "week": 2,
         "day": 4,
         "day_type": "joint_recovery",
-        "minutes": 50,
+        "minutes": 25,
         "rpe": 3,
         "focus": [
           "wrists",
@@ -1485,14 +1530,14 @@
           "easy_walk",
           1,
           null,
-          960,
+          240,
           0,
           null,
           null
         ],
         [
           "wrist_circles",
-          2,
+          1,
           10,
           null,
           10,
@@ -1501,7 +1546,7 @@
         ],
         [
           "ankle_rocks",
-          2,
+          1,
           "10/side",
           null,
           10,
@@ -1511,35 +1556,8 @@
       ],
       "main": [
         [
-          "wall_slide",
-          3,
-          10,
-          null,
-          30,
-          "slow",
-          null
-        ],
-        [
-          "wrist_rocks",
-          3,
-          10,
-          null,
-          25,
-          "gentle",
-          null
-        ],
-        [
-          "thoracic_rotation",
-          3,
-          "8/side",
-          null,
-          25,
-          "slow",
-          null
-        ],
-        [
           "foot_assisted_hang",
-          3,
+          1,
           null,
           30,
           45,
@@ -1548,18 +1566,54 @@
         ],
         [
           "ninety_ninety_hip_switch",
-          3,
+          1,
           10,
           null,
           30,
           "controlled",
           null
+        ],
+        [
+          "wrist_pushup",
+          2,
+          12,
+          null,
+          30,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          2,
+          null,
+          35,
+          30,
+          null,
+          "wall_slide"
+        ],
+        [
+          "pancake_compression",
+          2,
+          8,
+          null,
+          30,
+          "slow",
+          "seated_pike_lift"
+        ],
+        [
+          "thoracic_extension",
+          2,
+          6,
+          null,
+          30,
+          "2-second_pause",
+          "cat_cow"
         ]
       ],
       "cooldown": [
         [
           "forearm_stretch",
-          2,
+          1,
           null,
           45,
           10,
@@ -1568,7 +1622,7 @@
         ],
         [
           "lat_stretch",
-          2,
+          1,
           null,
           45,
           10,
@@ -1579,7 +1633,7 @@
           "slow_breathing",
           1,
           null,
-          300,
+          150,
           0,
           null,
           null
@@ -1620,22 +1674,22 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "shoulder_cars",
-          2,
-          6,
+          "wall_shoulder_flexion",
+          1,
           null,
-          15,
-          "slow",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "active_hang",
@@ -1748,7 +1802,7 @@
         "week": 2,
         "day": 6,
         "day_type": "dragon_eccentric",
-        "minutes": 52,
+        "minutes": 53,
         "rpe": 8,
         "focus": [
           "dragon_flag",
@@ -1762,19 +1816,28 @@
           "march",
           1,
           null,
-          120,
+          90,
           0,
           null,
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "cat_cow",
@@ -1926,13 +1989,13 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
           "leg_swings",
@@ -1944,13 +2007,13 @@
           null
         ],
         [
-          "arm_swings",
+          "wall_shoulder_flexion",
           1,
-          15,
           null,
-          10,
-          "controlled",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "squat_jump",
@@ -2073,22 +2136,22 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "arm_swings",
+          "wall_shoulder_flexion",
           1,
-          12,
           null,
-          10,
-          "controlled",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "scapular_pull",
@@ -2201,7 +2264,7 @@
         "week": 3,
         "day": 2,
         "day_type": "planche_tension_progression",
-        "minutes": 49,
+        "minutes": 50,
         "rpe": 8,
         "focus": [
           "planche_lean",
@@ -2215,19 +2278,28 @@
           "march",
           1,
           null,
-          90,
+          60,
           0,
           null,
           null
         ],
         [
-          "wrist_rocks",
-          2,
-          8,
+          "wrist_pushup",
+          1,
+          10,
           null,
-          15,
-          "gentle",
-          null
+          20,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "scapular_pushup",
@@ -2278,11 +2350,11 @@
         ],
         [
           "pause_squat",
-          2,
-          19,
+          3,
+          12,
           null,
-          50,
-          "32X0",
+          90,
+          "32X1",
           "box_squat"
         ]
       ],
@@ -2350,22 +2422,22 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "shoulder_cars",
-          2,
-          5,
+          "wall_shoulder_flexion",
+          1,
           null,
-          15,
-          "slow",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "active_hang",
@@ -2481,13 +2553,13 @@
         "en": "Long Mobility Day"
       },
       "description": {
-        "en": "A longer recovery sequence restores wrists, shoulders, spine, hips, and ankles."
+        "en": "90/90 hip switch and supported deep-squat hold first, then the weekly skill-mobility block: 35-second wall shoulder openers and bench thoracic extensions for the handstand line, and pancake compression lifts for the L-sit and the press."
       },
       "schedule": {
         "week": 3,
         "day": 4,
         "day_type": "long_recovery",
-        "minutes": 54,
+        "minutes": 25,
         "rpe": 2,
         "focus": [
           "walking",
@@ -2500,14 +2572,14 @@
           "easy_walk",
           1,
           null,
-          1200,
+          240,
           0,
           null,
           null
         ],
         [
           "wrist_circles",
-          2,
+          1,
           10,
           null,
           10,
@@ -2516,7 +2588,7 @@
         ],
         [
           "ankle_rocks",
-          2,
+          1,
           "10/side",
           null,
           10,
@@ -2526,35 +2598,8 @@
       ],
       "main": [
         [
-          "shoulder_cars",
-          3,
-          6,
-          null,
-          20,
-          "slow",
-          null
-        ],
-        [
-          "cat_cow",
-          3,
-          10,
-          null,
-          25,
-          "slow",
-          null
-        ],
-        [
-          "thoracic_rotation",
-          3,
-          "8/side",
-          null,
-          25,
-          "slow",
-          null
-        ],
-        [
           "ninety_ninety_hip_switch",
-          3,
+          1,
           10,
           null,
           30,
@@ -2563,18 +2608,54 @@
         ],
         [
           "deep_squat_hold",
-          3,
+          1,
           null,
           45,
           30,
           null,
           "box_squat"
+        ],
+        [
+          "wrist_pushup",
+          2,
+          12,
+          null,
+          30,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          2,
+          null,
+          35,
+          30,
+          null,
+          "wall_slide"
+        ],
+        [
+          "pancake_compression",
+          2,
+          8,
+          null,
+          30,
+          "slow",
+          "seated_pike_lift"
+        ],
+        [
+          "thoracic_extension",
+          2,
+          6,
+          null,
+          30,
+          "2-second_pause",
+          "cat_cow"
         ]
       ],
       "cooldown": [
         [
           "lat_stretch",
-          2,
+          1,
           null,
           45,
           10,
@@ -2583,7 +2664,7 @@
         ],
         [
           "hip_flexor_stretch",
-          2,
+          1,
           null,
           45,
           10,
@@ -2594,7 +2675,7 @@
           "slow_breathing",
           1,
           null,
-          360,
+          150,
           0,
           null,
           null
@@ -2635,22 +2716,22 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "shoulder_cars",
-          2,
-          5,
+          "wall_shoulder_flexion",
+          1,
           null,
-          15,
-          "slow",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "active_hang",
@@ -2763,7 +2844,7 @@
         "week": 3,
         "day": 6,
         "day_type": "dragon_eccentric_progression",
-        "minutes": 51,
+        "minutes": 52,
         "rpe": 8,
         "focus": [
           "dragon_flag",
@@ -2777,19 +2858,28 @@
           "march",
           1,
           null,
-          90,
+          60,
           0,
           null,
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "cat_cow",
@@ -2941,13 +3031,13 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
           "leg_swings",
@@ -2959,13 +3049,13 @@
           null
         ],
         [
-          "arm_swings",
+          "wall_shoulder_flexion",
           1,
-          12,
           null,
-          10,
-          "controlled",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ]
       ],
       "main": [
@@ -3080,12 +3170,30 @@
         ],
         [
           "wrist_circles",
-          2,
+          1,
           12,
           null,
           10,
           "each_direction",
           null
+        ],
+        [
+          "wrist_pushup",
+          1,
+          10,
+          null,
+          20,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "scapular_pull",
@@ -3212,19 +3320,28 @@
           "march",
           1,
           null,
-          120,
+          90,
           0,
           null,
           null
         ],
         [
-          "wrist_rocks",
-          3,
-          12,
+          "wrist_pushup",
+          1,
+          10,
           null,
-          15,
-          "controlled",
-          null
+          20,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "scapular_pushup",
@@ -3276,10 +3393,10 @@
         [
           "pause_squat",
           1,
-          18,
+          12,
           null,
-          50,
-          "32X0",
+          90,
+          "32X1",
           "box_squat"
         ],
         [
@@ -3365,22 +3482,22 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "shoulder_cars",
-          2,
-          6,
+          "wall_shoulder_flexion",
+          1,
           null,
-          15,
-          "slow",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "active_hang",
@@ -3505,13 +3622,13 @@
         "en": "Recovery Through Rotation"
       },
       "description": {
-        "en": "Gentle rotations and walking restore range before the back-line half of the week."
+        "en": "90/90 hip switch and foot-assisted hang first, then the weekly skill-mobility block: 35-second wall shoulder openers and bench thoracic extensions for the handstand line, and pancake compression lifts for the L-sit and the press."
       },
       "schedule": {
         "week": 4,
         "day": 4,
         "day_type": "rotation_recovery",
-        "minutes": 51,
+        "minutes": 25,
         "rpe": 3,
         "focus": [
           "spine_mobility",
@@ -3524,14 +3641,14 @@
           "easy_walk",
           1,
           null,
-          960,
+          240,
           0,
           null,
           null
         ],
         [
           "wrist_circles",
-          2,
+          1,
           10,
           null,
           10,
@@ -3540,7 +3657,7 @@
         ],
         [
           "ankle_rocks",
-          2,
+          1,
           "10/side",
           null,
           10,
@@ -3550,26 +3667,8 @@
       ],
       "main": [
         [
-          "thoracic_rotation",
-          3,
-          "10/side",
-          null,
-          25,
-          "slow",
-          null
-        ],
-        [
-          "cat_cow",
-          3,
-          10,
-          null,
-          25,
-          "slow",
-          null
-        ],
-        [
           "ninety_ninety_hip_switch",
-          3,
+          1,
           12,
           null,
           30,
@@ -3577,28 +3676,55 @@
           null
         ],
         [
-          "wall_slide",
-          3,
-          10,
-          null,
-          30,
-          "slow",
-          null
-        ],
-        [
           "foot_assisted_hang",
-          3,
+          1,
           null,
           30,
           45,
           null,
           null
+        ],
+        [
+          "wrist_pushup",
+          2,
+          12,
+          null,
+          30,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          2,
+          null,
+          35,
+          30,
+          null,
+          "wall_slide"
+        ],
+        [
+          "pancake_compression",
+          2,
+          8,
+          null,
+          30,
+          "slow",
+          "seated_pike_lift"
+        ],
+        [
+          "thoracic_extension",
+          2,
+          6,
+          null,
+          30,
+          "2-second_pause",
+          "cat_cow"
         ]
       ],
       "cooldown": [
         [
           "lat_stretch",
-          2,
+          1,
           null,
           45,
           10,
@@ -3607,7 +3733,7 @@
         ],
         [
           "supine_twist",
-          2,
+          1,
           null,
           45,
           10,
@@ -3618,7 +3744,7 @@
           "slow_breathing",
           1,
           null,
-          300,
+          120,
           0,
           null,
           null
@@ -3659,22 +3785,22 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "shoulder_cars",
-          2,
-          6,
+          "wall_shoulder_flexion",
+          1,
           null,
-          15,
-          "slow",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "active_hang",
@@ -3810,19 +3936,28 @@
           "march",
           1,
           null,
-          120,
+          90,
           0,
           null,
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "cat_cow",
@@ -3965,13 +4100,13 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
           "leg_swings",
@@ -3983,13 +4118,13 @@
           null
         ],
         [
-          "arm_swings",
+          "wall_shoulder_flexion",
           1,
-          15,
           null,
-          10,
-          "controlled",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ]
       ],
       "main": [
@@ -4113,12 +4248,30 @@
         ],
         [
           "wrist_circles",
-          2,
+          1,
           12,
           null,
           10,
           "each_direction",
           null
+        ],
+        [
+          "wrist_pushup",
+          1,
+          10,
+          null,
+          20,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "scapular_pull",
@@ -4151,7 +4304,7 @@
         ],
         [
           "chest_to_bar",
-          3,
+          2,
           5,
           null,
           120,
@@ -4244,19 +4397,28 @@
           "march",
           1,
           null,
-          120,
+          90,
           0,
           null,
           null
         ],
         [
-          "wrist_rocks",
-          3,
-          12,
+          "wrist_pushup",
+          1,
+          10,
           null,
-          15,
-          "controlled",
-          null
+          20,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "scapular_pushup",
@@ -4388,22 +4550,22 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "shoulder_cars",
-          2,
-          6,
+          "wall_shoulder_flexion",
+          1,
           null,
-          15,
-          "slow",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "active_hang",
@@ -4528,13 +4690,13 @@
         "en": "Elbow-and-Wrist Recharge"
       },
       "description": {
-        "en": "Walking and gentle upper-limb mobility unload the joints after a dense skill sequence."
+        "en": "Wall slide and 90/90 hip switch first, then the weekly skill-mobility block: 36-second wall shoulder openers and bench thoracic extensions for the handstand line, and pancake compression lifts for the L-sit and the press."
       },
       "schedule": {
         "week": 5,
         "day": 4,
         "day_type": "upper_limb_recovery",
-        "minutes": 51,
+        "minutes": 25,
         "rpe": 3,
         "focus": [
           "elbows",
@@ -4547,14 +4709,14 @@
           "easy_walk",
           1,
           null,
-          1020,
+          240,
           0,
           null,
           null
         ],
         [
           "wrist_circles",
-          2,
+          1,
           10,
           null,
           10,
@@ -4563,7 +4725,7 @@
         ],
         [
           "ankle_rocks",
-          2,
+          1,
           "10/side",
           null,
           10,
@@ -4574,54 +4736,63 @@
       "main": [
         [
           "wall_slide",
-          3,
+          1,
           10,
           null,
           30,
           "slow",
           null
-        ],
-        [
-          "wrist_rocks",
-          3,
-          10,
-          null,
-          25,
-          "gentle",
-          null
-        ],
-        [
-          "scapular_pull",
-          3,
-          5,
-          null,
-          35,
-          "2111",
-          "dead_hang"
-        ],
-        [
-          "bird_dog",
-          3,
-          "8/side",
-          null,
-          30,
-          "slow",
-          "dead_bug"
         ],
         [
           "ninety_ninety_hip_switch",
-          3,
+          1,
           10,
           null,
           30,
           "controlled",
           null
+        ],
+        [
+          "wrist_pushup",
+          2,
+          12,
+          null,
+          30,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          2,
+          null,
+          36,
+          30,
+          null,
+          "wall_slide"
+        ],
+        [
+          "pancake_compression",
+          2,
+          8,
+          null,
+          30,
+          "slow",
+          "seated_pike_lift"
+        ],
+        [
+          "thoracic_extension",
+          2,
+          6,
+          null,
+          30,
+          "2-second_pause",
+          "cat_cow"
         ]
       ],
       "cooldown": [
         [
           "forearm_stretch",
-          2,
+          1,
           null,
           45,
           10,
@@ -4630,7 +4801,7 @@
         ],
         [
           "lat_stretch",
-          2,
+          1,
           null,
           45,
           10,
@@ -4641,7 +4812,7 @@
           "slow_breathing",
           1,
           null,
-          330,
+          150,
           0,
           null,
           null
@@ -4682,22 +4853,22 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "shoulder_cars",
-          2,
-          6,
+          "wall_shoulder_flexion",
+          1,
           null,
-          15,
-          "slow",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "active_hang",
@@ -4819,7 +4990,7 @@
         "week": 5,
         "day": 6,
         "day_type": "dragon_quality",
-        "minutes": 51,
+        "minutes": 52,
         "rpe": 8,
         "focus": [
           "dragon_flag",
@@ -4833,19 +5004,28 @@
           "march",
           1,
           null,
-          120,
+          90,
           0,
           null,
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "cat_cow",
@@ -4997,13 +5177,13 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
           "leg_swings",
@@ -5015,13 +5195,13 @@
           null
         ],
         [
-          "arm_swings",
+          "wall_shoulder_flexion",
           1,
-          15,
           null,
-          10,
-          "controlled",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ]
       ],
       "main": [
@@ -5116,7 +5296,7 @@
         "week": 6,
         "day": 1,
         "day_type": "muscleup_quality_progression",
-        "minutes": 52,
+        "minutes": 55,
         "rpe": 6,
         "focus": [
           "muscle_up",
@@ -5142,6 +5322,24 @@
           10,
           "each_direction",
           null
+        ],
+        [
+          "wrist_pushup",
+          1,
+          10,
+          null,
+          20,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "scapular_pull",
@@ -5267,19 +5465,28 @@
           "march",
           1,
           null,
-          90,
+          60,
           0,
           null,
           null
         ],
         [
-          "wrist_rocks",
-          2,
-          8,
+          "wrist_pushup",
+          1,
+          10,
           null,
-          15,
-          "gentle",
-          null
+          20,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "scapular_pushup",
@@ -5402,22 +5609,22 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "shoulder_cars",
-          2,
-          5,
+          "wall_shoulder_flexion",
+          1,
           null,
-          15,
-          "slow",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "active_hang",
@@ -5533,13 +5740,13 @@
         "en": "Full Reset"
       },
       "description": {
-        "en": "Long walking, gentle mobility, and slow breathing close the first half of the mastery block."
+        "en": "Foot-assisted hang and 90/90 hip switch first, then the weekly skill-mobility block: 36-second wall shoulder openers and bench thoracic extensions for the handstand line, and pancake compression lifts for the L-sit and the press."
       },
       "schedule": {
         "week": 6,
         "day": 4,
         "day_type": "full_recovery",
-        "minutes": 54,
+        "minutes": 25,
         "rpe": 2,
         "focus": [
           "walking",
@@ -5552,14 +5759,14 @@
           "easy_walk",
           1,
           null,
-          1320,
+          240,
           0,
           null,
           null
         ],
         [
           "wrist_circles",
-          2,
+          1,
           10,
           null,
           10,
@@ -5568,7 +5775,7 @@
         ],
         [
           "ankle_rocks",
-          2,
+          1,
           "10/side",
           null,
           10,
@@ -5579,7 +5786,7 @@
       "main": [
         [
           "foot_assisted_hang",
-          2,
+          1,
           null,
           30,
           45,
@@ -5587,26 +5794,8 @@
           null
         ],
         [
-          "wall_slide",
-          2,
-          10,
-          null,
-          30,
-          "slow",
-          null
-        ],
-        [
-          "cat_cow",
-          2,
-          10,
-          null,
-          25,
-          "slow",
-          null
-        ],
-        [
           "ninety_ninety_hip_switch",
-          2,
+          1,
           12,
           null,
           30,
@@ -5614,19 +5803,46 @@
           null
         ],
         [
-          "bird_dog",
-          3,
-          "8/side",
+          "wrist_pushup",
+          2,
+          13,
           null,
           30,
           "slow",
-          "dead_bug"
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          2,
+          null,
+          36,
+          30,
+          null,
+          "wall_slide"
+        ],
+        [
+          "pancake_compression",
+          2,
+          8,
+          null,
+          30,
+          "slow",
+          "seated_pike_lift"
+        ],
+        [
+          "thoracic_extension",
+          2,
+          7,
+          null,
+          30,
+          "2-second_pause",
+          "cat_cow"
         ]
       ],
       "cooldown": [
         [
           "lat_stretch",
-          2,
+          1,
           null,
           45,
           10,
@@ -5635,7 +5851,7 @@
         ],
         [
           "hip_flexor_stretch",
-          2,
+          1,
           null,
           45,
           10,
@@ -5646,7 +5862,7 @@
           "slow_breathing",
           1,
           null,
-          420,
+          120,
           0,
           null,
           null
@@ -5687,22 +5903,22 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "shoulder_cars",
-          2,
-          5,
+          "wall_shoulder_flexion",
+          1,
           null,
-          15,
-          "slow",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "active_hang",
@@ -5824,7 +6040,7 @@
         "week": 6,
         "day": 6,
         "day_type": "dragon_quality_progression",
-        "minutes": 50,
+        "minutes": 51,
         "rpe": 6,
         "focus": [
           "dragon_flag",
@@ -5838,19 +6054,28 @@
           "march",
           1,
           null,
-          90,
+          60,
           0,
           null,
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "cat_cow",
@@ -6002,13 +6227,13 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
           "leg_swings",
@@ -6020,13 +6245,13 @@
           null
         ],
         [
-          "arm_swings",
+          "wall_shoulder_flexion",
           1,
-          12,
           null,
-          10,
-          "controlled",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "squat_jump",
@@ -6159,12 +6384,30 @@
         ],
         [
           "wrist_circles",
-          2,
+          1,
           12,
           null,
           10,
           "each_direction",
           null
+        ],
+        [
+          "wrist_pushup",
+          1,
+          10,
+          null,
+          20,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "scapular_pull",
@@ -6197,7 +6440,7 @@
         ],
         [
           "chest_to_bar",
-          3,
+          2,
           5,
           null,
           120,
@@ -6291,19 +6534,28 @@
           "march",
           1,
           null,
-          120,
+          90,
           0,
           null,
           null
         ],
         [
-          "wrist_rocks",
-          3,
-          12,
+          "wrist_pushup",
+          1,
+          10,
           null,
-          15,
-          "controlled",
-          null
+          20,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "scapular_pushup",
@@ -6336,7 +6588,7 @@
         ],
         [
           "pseudo_planche_pushup",
-          3,
+          2,
           7,
           null,
           80,
@@ -6354,11 +6606,11 @@
         ],
         [
           "pause_squat",
-          2,
-          20,
+          3,
+          12,
           null,
-          50,
-          "32X0",
+          90,
+          "32X1",
           "box_squat"
         ],
         [
@@ -6435,22 +6687,22 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "shoulder_cars",
-          2,
-          6,
+          "wall_shoulder_flexion",
+          1,
           null,
-          15,
-          "slow",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "active_hang",
@@ -6575,13 +6827,13 @@
         "en": "Shoulder-Extension Recovery"
       },
       "description": {
-        "en": "Gentle range work and walking restore the shoulders before back-lever practice."
+        "en": "Foot-assisted hang and 90/90 hip switch first, then the weekly skill-mobility block: 37-second wall shoulder openers and bench thoracic extensions for the handstand line, and pancake compression lifts for the L-sit and the press."
       },
       "schedule": {
         "week": 7,
         "day": 4,
         "day_type": "shoulder_recovery",
-        "minutes": 51,
+        "minutes": 25,
         "rpe": 3,
         "focus": [
           "shoulder_mobility",
@@ -6594,14 +6846,14 @@
           "easy_walk",
           1,
           null,
-          1020,
+          240,
           0,
           null,
           null
         ],
         [
           "wrist_circles",
-          2,
+          1,
           10,
           null,
           10,
@@ -6610,7 +6862,7 @@
         ],
         [
           "ankle_rocks",
-          2,
+          1,
           "10/side",
           null,
           10,
@@ -6620,26 +6872,8 @@
       ],
       "main": [
         [
-          "wall_slide",
-          3,
-          10,
-          null,
-          30,
-          "slow",
-          null
-        ],
-        [
-          "shoulder_cars",
-          3,
-          6,
-          null,
-          25,
-          "slow",
-          null
-        ],
-        [
           "foot_assisted_hang",
-          3,
+          1,
           null,
           30,
           45,
@@ -6648,7 +6882,7 @@
         ],
         [
           "ninety_ninety_hip_switch",
-          3,
+          1,
           10,
           null,
           30,
@@ -6656,19 +6890,46 @@
           null
         ],
         [
-          "bird_dog",
-          3,
-          "8/side",
+          "wrist_pushup",
+          2,
+          13,
           null,
           30,
           "slow",
-          "dead_bug"
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          2,
+          null,
+          37,
+          30,
+          null,
+          "wall_slide"
+        ],
+        [
+          "pancake_compression",
+          2,
+          8,
+          null,
+          30,
+          "slow",
+          "seated_pike_lift"
+        ],
+        [
+          "thoracic_extension",
+          2,
+          7,
+          null,
+          30,
+          "2-second_pause",
+          "cat_cow"
         ]
       ],
       "cooldown": [
         [
           "forearm_stretch",
-          2,
+          1,
           null,
           45,
           10,
@@ -6677,7 +6938,7 @@
         ],
         [
           "lat_stretch",
-          2,
+          1,
           null,
           45,
           10,
@@ -6688,7 +6949,7 @@
           "slow_breathing",
           1,
           null,
-          330,
+          120,
           0,
           null,
           null
@@ -6729,22 +6990,22 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "shoulder_cars",
-          2,
-          6,
+          "wall_shoulder_flexion",
+          1,
           null,
-          15,
-          "slow",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "active_hang",
@@ -6885,22 +7146,22 @@
           null
         ],
         [
-          "arm_swings",
+          "wall_shoulder_flexion",
           1,
-          15,
           null,
-          10,
-          "controlled",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          15,
-          "gentle",
-          null
+          20,
+          "slow",
+          "wrist_rocks"
         ]
       ],
       "main": [
@@ -7031,7 +7292,7 @@
         "week": 7,
         "day": 7,
         "day_type": "dragon_push_strength",
-        "minutes": 47,
+        "minutes": 48,
         "rpe": 6,
         "focus": [
           "dragon_flag",
@@ -7045,19 +7306,28 @@
           "march",
           1,
           null,
-          120,
+          90,
           0,
           null,
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "cat_cow",
@@ -7217,12 +7487,30 @@
         ],
         [
           "wrist_circles",
-          2,
+          1,
           12,
           null,
           10,
           "each_direction",
           null
+        ],
+        [
+          "wrist_pushup",
+          1,
+          10,
+          null,
+          20,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "scapular_pull",
@@ -7349,19 +7637,28 @@
           "march",
           1,
           null,
-          120,
+          90,
           0,
           null,
           null
         ],
         [
-          "wrist_rocks",
-          3,
-          12,
+          "wrist_pushup",
+          1,
+          10,
           null,
-          15,
-          "controlled",
-          null
+          20,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "scapular_pushup",
@@ -7413,10 +7710,10 @@
         [
           "pause_squat",
           1,
-          18,
+          12,
           null,
-          50,
-          "32X0",
+          90,
+          "32X1",
           "box_squat"
         ],
         [
@@ -7494,22 +7791,22 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "shoulder_cars",
-          2,
-          6,
+          "wall_shoulder_flexion",
+          1,
           null,
-          15,
-          "slow",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "active_hang",
@@ -7616,13 +7913,13 @@
         "en": "Walking Recovery Circuit"
       },
       "description": {
-        "en": "Alternate easy walking with mobility stops to recover without becoming sedentary."
+        "en": "Foot-assisted hang and supported deep-squat hold first, then the weekly skill-mobility block: 37-second wall shoulder openers and bench thoracic extensions for the handstand line, and pancake compression lifts for the L-sit and the press."
       },
       "schedule": {
         "week": 8,
         "day": 4,
         "day_type": "walking_recovery",
-        "minutes": 54,
+        "minutes": 25,
         "rpe": 3,
         "focus": [
           "walking",
@@ -7635,14 +7932,14 @@
           "easy_walk",
           1,
           null,
-          1080,
+          240,
           0,
           null,
           null
         ],
         [
           "wrist_circles",
-          2,
+          1,
           10,
           null,
           10,
@@ -7651,7 +7948,7 @@
         ],
         [
           "ankle_rocks",
-          2,
+          1,
           "10/side",
           null,
           10,
@@ -7661,35 +7958,8 @@
       ],
       "main": [
         [
-          "wall_slide",
-          3,
-          10,
-          null,
-          30,
-          "slow",
-          null
-        ],
-        [
-          "thoracic_rotation",
-          3,
-          "8/side",
-          null,
-          25,
-          "slow",
-          null
-        ],
-        [
-          "ninety_ninety_hip_switch",
-          3,
-          12,
-          null,
-          30,
-          "controlled",
-          null
-        ],
-        [
           "foot_assisted_hang",
-          3,
+          1,
           null,
           30,
           45,
@@ -7698,18 +7968,54 @@
         ],
         [
           "deep_squat_hold",
-          3,
+          1,
           null,
           45,
           30,
           null,
           "box_squat"
+        ],
+        [
+          "wrist_pushup",
+          2,
+          13,
+          null,
+          30,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          2,
+          null,
+          37,
+          30,
+          null,
+          "wall_slide"
+        ],
+        [
+          "pancake_compression",
+          2,
+          8,
+          null,
+          30,
+          "slow",
+          "seated_pike_lift"
+        ],
+        [
+          "thoracic_extension",
+          2,
+          7,
+          null,
+          30,
+          "2-second_pause",
+          "cat_cow"
         ]
       ],
       "cooldown": [
         [
           "lat_stretch",
-          2,
+          1,
           null,
           45,
           10,
@@ -7718,7 +8024,7 @@
         ],
         [
           "hip_flexor_stretch",
-          2,
+          1,
           null,
           45,
           10,
@@ -7729,7 +8035,7 @@
           "slow_breathing",
           1,
           null,
-          330,
+          120,
           0,
           null,
           null
@@ -7770,22 +8076,22 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "shoulder_cars",
-          2,
-          6,
+          "wall_shoulder_flexion",
+          1,
           null,
-          15,
-          "slow",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "active_hang",
@@ -7912,19 +8218,28 @@
           "march",
           1,
           null,
-          120,
+          90,
           0,
           null,
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "cat_cow",
@@ -8067,13 +8382,13 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
           "leg_swings",
@@ -8085,13 +8400,13 @@
           null
         ],
         [
-          "arm_swings",
+          "wall_shoulder_flexion",
           1,
-          15,
           null,
-          10,
-          "controlled",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "squat_jump",
@@ -8204,7 +8519,7 @@
         "week": 9,
         "day": 1,
         "day_type": "muscleup_efficiency_progression",
-        "minutes": 52,
+        "minutes": 54,
         "rpe": 8,
         "focus": [
           "muscle_up",
@@ -8230,6 +8545,24 @@
           10,
           "each_direction",
           null
+        ],
+        [
+          "wrist_pushup",
+          1,
+          10,
+          null,
+          20,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "scapular_pull",
@@ -8342,7 +8675,7 @@
         "week": 9,
         "day": 2,
         "day_type": "advanced_tuck_planche_volume_progression",
-        "minutes": 47,
+        "minutes": 50,
         "rpe": 7,
         "focus": [
           "straddle_planche",
@@ -8356,19 +8689,28 @@
           "march",
           1,
           null,
-          90,
+          60,
           0,
           null,
           null
         ],
         [
-          "wrist_rocks",
-          2,
-          8,
+          "wrist_pushup",
+          1,
+          10,
           null,
-          15,
-          "gentle",
-          null
+          20,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "scapular_pushup",
@@ -8410,11 +8752,11 @@
         ],
         [
           "pause_squat",
-          2,
-          19,
+          3,
+          12,
           null,
-          50,
-          "32X0",
+          90,
+          "32X1",
           "box_squat"
         ],
         [
@@ -8492,22 +8834,22 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "shoulder_cars",
-          2,
-          5,
+          "wall_shoulder_flexion",
+          1,
           null,
-          15,
-          "slow",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "active_hang",
@@ -8614,13 +8956,13 @@
         "en": "Deep Recovery Day"
       },
       "description": {
-        "en": "A deliberately quiet day lowers fatigue before the final three-week mastery block."
+        "en": "An easy start with foot-assisted hang and supported deep-squat hold, then the skill-mobility block: 37-second wall shoulder openers and bench thoracic extensions for the handstand line, and pancake compression lifts for the L-sit and the press."
       },
       "schedule": {
         "week": 9,
         "day": 4,
         "day_type": "deep_recovery",
-        "minutes": 55,
+        "minutes": 25,
         "rpe": 2,
         "focus": [
           "walking",
@@ -8633,14 +8975,14 @@
           "easy_walk",
           1,
           null,
-          1380,
+          210,
           0,
           null,
           null
         ],
         [
           "wrist_circles",
-          2,
+          1,
           10,
           null,
           10,
@@ -8649,7 +8991,7 @@
         ],
         [
           "ankle_rocks",
-          2,
+          1,
           "10/side",
           null,
           10,
@@ -8659,26 +9001,8 @@
       ],
       "main": [
         [
-          "shoulder_cars",
-          3,
-          6,
-          null,
-          20,
-          "slow",
-          null
-        ],
-        [
-          "wall_slide",
-          2,
-          10,
-          null,
-          30,
-          "slow",
-          null
-        ],
-        [
           "foot_assisted_hang",
-          2,
+          1,
           null,
           30,
           45,
@@ -8687,7 +9011,7 @@
         ],
         [
           "deep_squat_hold",
-          3,
+          1,
           null,
           45,
           30,
@@ -8695,19 +9019,46 @@
           "box_squat"
         ],
         [
-          "dead_bug",
+          "wrist_pushup",
           2,
-          "8/side",
+          13,
           null,
           30,
           "slow",
-          null
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          2,
+          null,
+          37,
+          30,
+          null,
+          "wall_slide"
+        ],
+        [
+          "pancake_compression",
+          2,
+          8,
+          null,
+          30,
+          "slow",
+          "seated_pike_lift"
+        ],
+        [
+          "thoracic_extension",
+          2,
+          7,
+          null,
+          35,
+          "2-second_pause",
+          "cat_cow"
         ]
       ],
       "cooldown": [
         [
           "lat_stretch",
-          2,
+          1,
           null,
           45,
           10,
@@ -8716,7 +9067,7 @@
         ],
         [
           "hip_flexor_stretch",
-          2,
+          1,
           null,
           45,
           10,
@@ -8727,7 +9078,7 @@
           "slow_breathing",
           1,
           null,
-          420,
+          120,
           0,
           null,
           null
@@ -8768,22 +9119,22 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "shoulder_cars",
-          2,
-          5,
+          "wall_shoulder_flexion",
+          1,
           null,
-          15,
-          "slow",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "active_hang",
@@ -8896,7 +9247,7 @@
         "week": 9,
         "day": 6,
         "day_type": "dragon_quality_progression",
-        "minutes": 50,
+        "minutes": 51,
         "rpe": 7,
         "focus": [
           "dragon_flag",
@@ -8910,19 +9261,28 @@
           "march",
           1,
           null,
-          90,
+          60,
           0,
           null,
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "cat_cow",
@@ -9065,13 +9425,13 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
           "leg_swings",
@@ -9083,13 +9443,13 @@
           null
         ],
         [
-          "arm_swings",
+          "wall_shoulder_flexion",
           1,
-          12,
           null,
-          10,
-          "controlled",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ]
       ],
       "main": [
@@ -9204,7 +9564,7 @@
         ],
         [
           "wrist_circles",
-          2,
+          1,
           12,
           null,
           10,
@@ -9212,8 +9572,26 @@
           null
         ],
         [
+          "wrist_pushup",
+          1,
+          10,
+          null,
+          20,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
+        ],
+        [
           "scapular_pull",
-          3,
+          2,
           2,
           null,
           105,
@@ -9336,19 +9714,28 @@
           "march",
           1,
           null,
-          120,
+          90,
           0,
           null,
           null
         ],
         [
-          "wrist_rocks",
-          3,
+          "wrist_pushup",
+          1,
           10,
           null,
-          15,
-          "controlled",
-          null
+          20,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "scapular_pushup",
@@ -9481,22 +9868,22 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "shoulder_cars",
-          2,
-          6,
+          "wall_shoulder_flexion",
+          1,
           null,
-          15,
-          "slow",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "active_hang",
@@ -9603,13 +9990,13 @@
         "en": "Peak Recovery Walk"
       },
       "description": {
-        "en": "A long easy walk and joint-care sequence separate the two halves of peak week."
+        "en": "Foot-assisted hang and supported deep-squat hold first, then the weekly skill-mobility block: 38-second wall shoulder openers and bench thoracic extensions for the handstand line, and pancake compression lifts for the L-sit and the press."
       },
       "schedule": {
         "week": 10,
         "day": 4,
         "day_type": "peak_recovery",
-        "minutes": 55,
+        "minutes": 25,
         "rpe": 2,
         "focus": [
           "walking",
@@ -9622,14 +10009,14 @@
           "easy_walk",
           1,
           null,
-          1320,
+          240,
           0,
           null,
           null
         ],
         [
           "wrist_circles",
-          2,
+          1,
           10,
           null,
           10,
@@ -9638,7 +10025,7 @@
         ],
         [
           "ankle_rocks",
-          2,
+          1,
           "10/side",
           null,
           10,
@@ -9648,35 +10035,8 @@
       ],
       "main": [
         [
-          "wall_slide",
-          3,
-          10,
-          null,
-          30,
-          "slow",
-          null
-        ],
-        [
-          "cat_cow",
-          2,
-          10,
-          null,
-          25,
-          "slow",
-          null
-        ],
-        [
-          "thoracic_rotation",
-          2,
-          "8/side",
-          null,
-          25,
-          "slow",
-          null
-        ],
-        [
           "foot_assisted_hang",
-          2,
+          1,
           null,
           30,
           45,
@@ -9685,18 +10045,54 @@
         ],
         [
           "deep_squat_hold",
-          3,
+          1,
           null,
           45,
           30,
           null,
           "box_squat"
+        ],
+        [
+          "wrist_pushup",
+          2,
+          13,
+          null,
+          30,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          2,
+          null,
+          38,
+          30,
+          null,
+          "wall_slide"
+        ],
+        [
+          "pancake_compression",
+          2,
+          8,
+          null,
+          30,
+          "slow",
+          "seated_pike_lift"
+        ],
+        [
+          "thoracic_extension",
+          2,
+          7,
+          null,
+          30,
+          "2-second_pause",
+          "cat_cow"
         ]
       ],
       "cooldown": [
         [
           "lat_stretch",
-          2,
+          1,
           null,
           45,
           10,
@@ -9705,7 +10101,7 @@
         ],
         [
           "hip_flexor_stretch",
-          2,
+          1,
           null,
           45,
           10,
@@ -9716,7 +10112,7 @@
           "slow_breathing",
           1,
           null,
-          420,
+          120,
           0,
           null,
           null
@@ -9757,22 +10153,22 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "shoulder_cars",
-          2,
-          6,
+          "wall_shoulder_flexion",
+          1,
           null,
-          15,
-          "slow",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "active_hang",
@@ -10037,13 +10433,13 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
           "leg_swings",
@@ -10055,13 +10451,13 @@
           null
         ],
         [
-          "arm_swings",
+          "wall_shoulder_flexion",
           1,
-          15,
           null,
-          10,
-          "controlled",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "squat_jump",
@@ -10203,12 +10599,30 @@
         ],
         [
           "wrist_circles",
-          2,
+          1,
           12,
           null,
           10,
           "each_direction",
           null
+        ],
+        [
+          "wrist_pushup",
+          1,
+          10,
+          null,
+          20,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "scapular_pull",
@@ -10250,7 +10664,7 @@
         ],
         [
           "archer_pullup",
-          3,
+          2,
           "4/side",
           null,
           120,
@@ -10335,19 +10749,28 @@
           "march",
           1,
           null,
-          120,
+          90,
           0,
           null,
           null
         ],
         [
-          "wrist_rocks",
-          3,
+          "wrist_pushup",
+          1,
           10,
           null,
-          15,
-          "controlled",
-          null
+          20,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "scapular_pushup",
@@ -10398,11 +10821,11 @@
         ],
         [
           "pause_squat",
-          2,
-          18,
+          3,
+          12,
           null,
-          50,
-          "32X0",
+          90,
+          "32X1",
           "box_squat"
         ],
         [
@@ -10489,22 +10912,22 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "shoulder_cars",
-          2,
-          6,
+          "wall_shoulder_flexion",
+          1,
           null,
-          15,
-          "slow",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "active_hang",
@@ -10629,13 +11052,13 @@
         "en": "Long Recovery Before Gates"
       },
       "description": {
-        "en": "A quiet walk and complete mobility sequence lower fatigue before the final mastery checks."
+        "en": "90/90 hip switch and supported deep-squat hold first, then the weekly skill-mobility block: 38-second wall shoulder openers and bench thoracic extensions for the handstand line, and pancake compression lifts for the L-sit and the press."
       },
       "schedule": {
         "week": 11,
         "day": 4,
         "day_type": "pre_gate_recovery",
-        "minutes": 54,
+        "minutes": 25,
         "rpe": 2,
         "focus": [
           "walking",
@@ -10648,14 +11071,14 @@
           "easy_walk",
           1,
           null,
-          1440,
+          240,
           0,
           null,
           null
         ],
         [
           "wrist_circles",
-          2,
+          1,
           10,
           null,
           10,
@@ -10664,7 +11087,7 @@
         ],
         [
           "ankle_rocks",
-          2,
+          1,
           "10/side",
           null,
           10,
@@ -10674,35 +11097,8 @@
       ],
       "main": [
         [
-          "shoulder_cars",
-          2,
-          6,
-          null,
-          20,
-          "slow",
-          null
-        ],
-        [
-          "cat_cow",
-          2,
-          10,
-          null,
-          25,
-          "slow",
-          null
-        ],
-        [
-          "thoracic_rotation",
-          2,
-          "8/side",
-          null,
-          25,
-          "slow",
-          null
-        ],
-        [
           "ninety_ninety_hip_switch",
-          2,
+          1,
           12,
           null,
           30,
@@ -10711,18 +11107,54 @@
         ],
         [
           "deep_squat_hold",
-          2,
+          1,
           null,
           45,
           30,
           null,
           "box_squat"
+        ],
+        [
+          "wrist_pushup",
+          2,
+          13,
+          null,
+          30,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          2,
+          null,
+          38,
+          30,
+          null,
+          "wall_slide"
+        ],
+        [
+          "pancake_compression",
+          2,
+          8,
+          null,
+          30,
+          "slow",
+          "seated_pike_lift"
+        ],
+        [
+          "thoracic_extension",
+          2,
+          7,
+          null,
+          30,
+          "2-second_pause",
+          "cat_cow"
         ]
       ],
       "cooldown": [
         [
           "lat_stretch",
-          2,
+          1,
           null,
           50,
           10,
@@ -10731,7 +11163,7 @@
         ],
         [
           "hip_flexor_stretch",
-          2,
+          1,
           null,
           45,
           10,
@@ -10742,7 +11174,7 @@
           "slow_breathing",
           1,
           null,
-          420,
+          120,
           0,
           null,
           null
@@ -10783,22 +11215,22 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "shoulder_cars",
-          2,
-          6,
+          "wall_shoulder_flexion",
+          1,
           null,
-          15,
-          "slow",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "active_hang",
@@ -10920,7 +11352,7 @@
         "week": 11,
         "day": 6,
         "day_type": "dragon_bridge",
-        "minutes": 53,
+        "minutes": 54,
         "rpe": 8,
         "focus": [
           "dragon_flag",
@@ -10934,19 +11366,28 @@
           "march",
           1,
           null,
-          120,
+          90,
           0,
           null,
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "cat_cow",
@@ -11107,13 +11548,13 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
           "leg_swings",
@@ -11125,13 +11566,13 @@
           null
         ],
         [
-          "arm_swings",
+          "wall_shoulder_flexion",
           1,
-          12,
           null,
-          10,
-          "controlled",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ]
       ],
       "main": [
@@ -11217,7 +11658,7 @@
         "week": 12,
         "day": 1,
         "day_type": "muscleup_gate",
-        "minutes": 46,
+        "minutes": 48,
         "rpe": 8,
         "focus": [
           "muscle_up_test",
@@ -11237,12 +11678,30 @@
         ],
         [
           "wrist_circles",
-          2,
+          1,
           12,
           null,
           10,
           "each_direction",
           null
+        ],
+        [
+          "wrist_pushup",
+          1,
+          10,
+          null,
+          20,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "scapular_pull",
@@ -11369,19 +11828,28 @@
           "march",
           1,
           null,
-          120,
+          90,
           0,
           null,
           null
         ],
         [
-          "wrist_rocks",
-          3,
+          "wrist_pushup",
+          1,
           10,
           null,
-          15,
-          "controlled",
-          null
+          20,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "scapular_pushup",
@@ -11431,13 +11899,13 @@
           "incline_pushup"
         ],
         [
-          "squat",
+          "bulgarian_split_squat",
           2,
-          32,
+          "10/side",
           null,
-          45,
+          75,
           "3010",
-          "box_squat"
+          "split_squat"
         ],
         [
           "elevated_pike_pushup",
@@ -11513,22 +11981,22 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "shoulder_cars",
-          2,
-          6,
+          "wall_shoulder_flexion",
+          1,
           null,
-          15,
-          "slow",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "active_hang",
@@ -11653,13 +12121,13 @@
         "en": "Recovery Between Skill Checks"
       },
       "description": {
-        "en": "Complete the prescribed walking, mobility, and breathing sequence to lower fatigue between skill checks."
+        "en": "An easy start with 90/90 hip switch and supported deep-squat hold, then the skill-mobility block: 38-second wall shoulder openers and bench thoracic extensions for the handstand line, and pancake compression lifts for the L-sit and the press."
       },
       "schedule": {
         "week": 12,
         "day": 4,
         "day_type": "intertest_recovery",
-        "minutes": 55,
+        "minutes": 25,
         "rpe": 2,
         "focus": [
           "walking",
@@ -11672,14 +12140,14 @@
           "easy_walk",
           1,
           null,
-          1320,
+          210,
           0,
           null,
           null
         ],
         [
           "wrist_circles",
-          2,
+          1,
           10,
           null,
           10,
@@ -11688,7 +12156,7 @@
         ],
         [
           "ankle_rocks",
-          2,
+          1,
           "10/side",
           null,
           10,
@@ -11698,35 +12166,8 @@
       ],
       "main": [
         [
-          "wall_slide",
-          3,
-          10,
-          null,
-          30,
-          "slow",
-          null
-        ],
-        [
-          "shoulder_cars",
-          3,
-          6,
-          null,
-          25,
-          "slow",
-          null
-        ],
-        [
-          "thoracic_rotation",
-          2,
-          "8/side",
-          null,
-          25,
-          "slow",
-          null
-        ],
-        [
           "ninety_ninety_hip_switch",
-          2,
+          1,
           12,
           null,
           30,
@@ -11735,18 +12176,54 @@
         ],
         [
           "deep_squat_hold",
-          3,
+          1,
           null,
           45,
           30,
           null,
           "box_squat"
+        ],
+        [
+          "wrist_pushup",
+          2,
+          13,
+          null,
+          30,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          2,
+          null,
+          38,
+          30,
+          null,
+          "wall_slide"
+        ],
+        [
+          "pancake_compression",
+          2,
+          8,
+          null,
+          30,
+          "slow",
+          "seated_pike_lift"
+        ],
+        [
+          "thoracic_extension",
+          2,
+          7,
+          null,
+          35,
+          "2-second_pause",
+          "cat_cow"
         ]
       ],
       "cooldown": [
         [
           "lat_stretch",
-          2,
+          1,
           null,
           45,
           10,
@@ -11755,7 +12232,7 @@
         ],
         [
           "hip_flexor_stretch",
-          2,
+          1,
           null,
           45,
           10,
@@ -11766,7 +12243,7 @@
           "slow_breathing",
           1,
           null,
-          420,
+          120,
           0,
           null,
           null
@@ -11807,22 +12284,22 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "shoulder_cars",
-          2,
-          6,
+          "wall_shoulder_flexion",
+          1,
           null,
-          15,
-          "slow",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "active_hang",
@@ -11953,7 +12430,7 @@
         "week": 12,
         "day": 6,
         "day_type": "dragon_gate",
-        "minutes": 55,
+        "minutes": 56,
         "rpe": 7,
         "focus": [
           "dragon_flag_test",
@@ -11966,19 +12443,28 @@
           "march",
           1,
           null,
-          120,
+          90,
           0,
           null,
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "cat_cow",
@@ -12109,7 +12595,7 @@
         "week": 12,
         "day": 7,
         "day_type": "review_recovery",
-        "minutes": 52,
+        "minutes": 30,
         "rpe": 4,
         "focus": [
           "review",
@@ -12123,7 +12609,7 @@
           "easy_walk",
           1,
           null,
-          900,
+          300,
           0,
           null,
           null
@@ -12150,7 +12636,7 @@
       "main": [
         [
           "feet_elevated_row",
-          2,
+          1,
           7,
           null,
           75,
@@ -12159,7 +12645,7 @@
         ],
         [
           "parallel_dip",
-          2,
+          1,
           10,
           null,
           75,
@@ -12168,7 +12654,7 @@
         ],
         [
           "pushup",
-          2,
+          1,
           14,
           null,
           50,
@@ -12177,7 +12663,7 @@
         ],
         [
           "squat",
-          2,
+          1,
           20,
           null,
           50,
@@ -12186,7 +12672,7 @@
         ],
         [
           "dead_bug",
-          2,
+          1,
           "10/side",
           null,
           45,
@@ -12226,7 +12712,7 @@
           "slow_breathing",
           1,
           null,
-          360,
+          180,
           0,
           null,
           null
@@ -12270,12 +12756,30 @@
         ],
         [
           "wrist_circles",
-          2,
+          1,
           10,
           null,
           10,
           "each_direction",
           null
+        ],
+        [
+          "wrist_pushup",
+          1,
+          10,
+          null,
+          20,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "active_hang",
@@ -12345,7 +12849,7 @@
         [
           "squat",
           2,
-          22,
+          20,
           null,
           50,
           "3010",
@@ -12421,19 +12925,28 @@
           "march",
           1,
           null,
-          120,
+          90,
           0,
           "brisk",
           null
         ],
         [
-          "wrist_rocks",
-          3,
+          "wrist_pushup",
+          1,
           10,
           null,
-          15,
-          "controlled",
-          null
+          20,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "scapular_pushup",
@@ -12485,10 +12998,10 @@
         [
           "pause_squat",
           1,
-          18,
+          12,
           null,
-          50,
-          "32X0",
+          90,
+          "32X1",
           "box_squat"
         ],
         [
@@ -12567,22 +13080,22 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "shoulder_cars",
-          2,
-          6,
+          "wall_shoulder_flexion",
+          1,
           null,
-          15,
-          "slow",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "scapular_pull",
@@ -12716,13 +13229,13 @@
         "en": "Joint-Space Recovery Walk"
       },
       "description": {
-        "en": "Follow a relaxed walk with a complete shoulder, spine, hip, squat, and trunk mobility sequence to restore training range."
+        "en": "90/90 hip switch and supported deep-squat hold first, then the weekly skill-mobility block: 39-second wall shoulder openers and bench thoracic extensions for the handstand line, and pancake compression lifts for the L-sit and the press."
       },
       "schedule": {
         "week": 13,
         "day": 4,
         "day_type": "full_mobility_recovery",
-        "minutes": 46,
+        "minutes": 25,
         "rpe": 3,
         "focus": [
           "walking",
@@ -12736,14 +13249,14 @@
           "easy_walk",
           1,
           null,
-          900,
+          240,
           0,
           "relaxed",
           null
         ],
         [
           "wrist_circles",
-          2,
+          1,
           10,
           null,
           10,
@@ -12752,7 +13265,7 @@
         ],
         [
           "ankle_rocks",
-          2,
+          1,
           "10/side",
           null,
           10,
@@ -12762,35 +13275,8 @@
       ],
       "main": [
         [
-          "wall_slide",
-          2,
-          10,
-          null,
-          30,
-          "slow",
-          null
-        ],
-        [
-          "shoulder_cars",
-          2,
-          6,
-          null,
-          25,
-          "slow",
-          null
-        ],
-        [
-          "thoracic_rotation",
-          2,
-          "8/side",
-          null,
-          25,
-          "slow",
-          null
-        ],
-        [
           "ninety_ninety_hip_switch",
-          2,
+          1,
           10,
           null,
           30,
@@ -12799,7 +13285,7 @@
         ],
         [
           "deep_squat_hold",
-          2,
+          1,
           null,
           40,
           30,
@@ -12807,19 +13293,46 @@
           "box_squat"
         ],
         [
-          "bird_dog",
+          "wrist_pushup",
           2,
-          "6/side",
+          13,
           null,
           30,
-          "pause",
-          "dead_bug"
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          2,
+          null,
+          39,
+          30,
+          null,
+          "wall_slide"
+        ],
+        [
+          "pancake_compression",
+          2,
+          8,
+          null,
+          30,
+          "slow",
+          "seated_pike_lift"
+        ],
+        [
+          "thoracic_extension",
+          2,
+          7,
+          null,
+          30,
+          "2-second_pause",
+          "cat_cow"
         ]
       ],
       "cooldown": [
         [
           "child_pose",
-          2,
+          1,
           null,
           50,
           10,
@@ -12828,7 +13341,7 @@
         ],
         [
           "hip_flexor_stretch",
-          2,
+          1,
           null,
           45,
           10,
@@ -12839,7 +13352,7 @@
           "slow_breathing",
           1,
           null,
-          300,
+          120,
           0,
           "nasal",
           null
@@ -12881,22 +13394,22 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "shoulder_cars",
-          2,
-          6,
+          "wall_shoulder_flexion",
+          1,
           null,
-          15,
-          "slow",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "active_hang",
@@ -13041,19 +13554,28 @@
           "march",
           1,
           null,
-          120,
+          90,
           0,
           "brisk",
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "cat_cow",
@@ -13233,22 +13755,22 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "arm_swings",
+          "wall_shoulder_flexion",
           1,
-          12,
           null,
-          10,
-          "controlled",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "leg_swings",
@@ -13401,7 +13923,7 @@
         ],
         [
           "wrist_circles",
-          2,
+          1,
           12,
           null,
           10,
@@ -13409,8 +13931,26 @@
           null
         ],
         [
+          "wrist_pushup",
+          1,
+          10,
+          null,
+          20,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
+        ],
+        [
           "active_hang",
-          2,
+          1,
           null,
           22,
           30,
@@ -13437,7 +13977,7 @@
         ],
         [
           "squat_jump",
-          2,
+          1,
           5,
           null,
           45,
@@ -13466,7 +14006,7 @@
         ],
         [
           "chest_to_bar",
-          2,
+          1,
           5,
           null,
           105,
@@ -13485,10 +14025,10 @@
         [
           "pause_squat",
           2,
-          18,
+          12,
           null,
-          50,
-          "32X0",
+          90,
+          "32X1",
           "box_squat"
         ],
         [
@@ -13561,19 +14101,28 @@
           "march",
           1,
           null,
-          120,
+          90,
           0,
           "brisk",
           null
         ],
         [
-          "wrist_rocks",
-          3,
+          "wrist_pushup",
+          1,
           10,
           null,
-          15,
-          "controlled",
-          null
+          20,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "scapular_pushup",
@@ -13707,22 +14256,22 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "shoulder_cars",
-          2,
-          6,
+          "wall_shoulder_flexion",
+          1,
           null,
-          15,
-          "slow",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "scapular_pull",
@@ -13865,13 +14414,13 @@
         "en": "Spine-and-Hip Unload Flow"
       },
       "description": {
-        "en": "Use an easy walk and a slow six-movement mobility flow to unload the wrists, shoulders, spine, hips, knees, and ankles."
+        "en": "An easy start with 90/90 hip switch and supported deep-squat hold, then the skill-mobility block: 39-second wall shoulder openers and bench thoracic extensions for the handstand line, and pancake compression lifts for the L-sit and the press."
       },
       "schedule": {
         "week": 14,
         "day": 4,
         "day_type": "mobility_unload",
-        "minutes": 52,
+        "minutes": 25,
         "rpe": 3,
         "focus": [
           "walking",
@@ -13885,7 +14434,7 @@
           "easy_walk",
           1,
           null,
-          1080,
+          240,
           0,
           "relaxed",
           null
@@ -13911,35 +14460,8 @@
       ],
       "main": [
         [
-          "cat_cow",
-          3,
-          10,
-          null,
-          25,
-          "slow",
-          null
-        ],
-        [
-          "wall_slide",
-          3,
-          10,
-          null,
-          30,
-          "slow",
-          null
-        ],
-        [
-          "thoracic_rotation",
-          3,
-          "8/side",
-          null,
-          25,
-          "slow",
-          null
-        ],
-        [
           "ninety_ninety_hip_switch",
-          3,
+          1,
           10,
           null,
           30,
@@ -13948,7 +14470,7 @@
         ],
         [
           "deep_squat_hold",
-          2,
+          1,
           null,
           45,
           30,
@@ -13956,19 +14478,46 @@
           "box_squat"
         ],
         [
-          "calf_raise",
+          "wrist_pushup",
           2,
-          15,
+          13,
           null,
           30,
           "slow",
-          null
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          2,
+          null,
+          39,
+          30,
+          null,
+          "wall_slide"
+        ],
+        [
+          "pancake_compression",
+          2,
+          8,
+          null,
+          30,
+          "slow",
+          "seated_pike_lift"
+        ],
+        [
+          "thoracic_extension",
+          2,
+          7,
+          null,
+          30,
+          "2-second_pause",
+          "cat_cow"
         ]
       ],
       "cooldown": [
         [
           "ninety_ninety_hip_stretch",
-          2,
+          1,
           null,
           50,
           10,
@@ -13977,7 +14526,7 @@
         ],
         [
           "calf_stretch",
-          2,
+          1,
           null,
           45,
           10,
@@ -13988,7 +14537,7 @@
           "slow_breathing",
           1,
           null,
-          300,
+          150,
           0,
           "nasal",
           null
@@ -14031,22 +14580,22 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "shoulder_cars",
-          2,
-          6,
+          "wall_shoulder_flexion",
+          1,
           null,
-          15,
-          "slow",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "active_hang",
@@ -14209,19 +14758,28 @@
           "march",
           1,
           null,
-          120,
+          90,
           0,
           "brisk",
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "cat_cow",
@@ -14308,7 +14866,7 @@
         ],
         [
           "nordic_negative",
-          2,
+          1,
           5,
           null,
           120,
@@ -14383,13 +14941,13 @@
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
           "leg_swings",
@@ -14401,13 +14959,13 @@
           null
         ],
         [
-          "arm_swings",
+          "wall_shoulder_flexion",
           1,
-          12,
           null,
-          10,
-          "controlled",
-          null
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "ankle_rocks",
@@ -14511,7 +15069,7 @@
         "week": 15,
         "day": 1,
         "day_type": "five_skill_relay",
-        "minutes": 60,
+        "minutes": 61,
         "rpe": 7,
         "focus": [
           "muscle_up",
@@ -14533,13 +15091,22 @@
           null
         ],
         [
-          "wrist_rocks",
-          2,
+          "wrist_pushup",
+          1,
           10,
           null,
-          15,
-          "controlled",
-          null
+          20,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
         ],
         [
           "active_hang",
@@ -14706,7 +15273,7 @@
         "week": 15,
         "day": 2,
         "day_type": "century_recovery",
-        "minutes": 55,
+        "minutes": 30,
         "rpe": 4,
         "focus": [
           "fundamentals",
@@ -14720,7 +15287,7 @@
           "easy_walk",
           1,
           null,
-          900,
+          300,
           0,
           "relaxed",
           null
@@ -14756,7 +15323,7 @@
       "main": [
         [
           "assisted_pullup",
-          2,
+          1,
           8,
           null,
           60,
@@ -14765,7 +15332,7 @@
         ],
         [
           "assisted_dip",
-          2,
+          1,
           10,
           null,
           60,
@@ -14774,7 +15341,7 @@
         ],
         [
           "incline_pushup",
-          2,
+          1,
           12,
           null,
           45,
@@ -14783,7 +15350,7 @@
         ],
         [
           "box_squat",
-          2,
+          1,
           15,
           null,
           45,
@@ -14792,7 +15359,7 @@
         ],
         [
           "reverse_lunge",
-          2,
+          1,
           "8/side",
           null,
           45,
@@ -14801,7 +15368,7 @@
         ],
         [
           "dead_bug",
-          2,
+          1,
           "8/side",
           null,
           35,
@@ -14821,7 +15388,7 @@
       "cooldown": [
         [
           "child_pose",
-          2,
+          1,
           null,
           50,
           10,
@@ -14830,7 +15397,7 @@
         ],
         [
           "chest_stretch",
-          2,
+          1,
           null,
           45,
           10,
@@ -14850,7 +15417,7 @@
           "slow_breathing",
           1,
           null,
-          360,
+          180,
           0,
           "nasal",
           null

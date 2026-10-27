@@ -100,15 +100,18 @@ import com.justdataplease.streetgym.data.progress.LevelReplay
 import com.justdataplease.streetgym.data.progress.Placement
 import com.justdataplease.streetgym.data.progress.SharedPreferencesProgressRepository
 import com.justdataplease.streetgym.data.progress.WorkoutSession
+import com.justdataplease.streetgym.data.skills.OverallScore
 import com.justdataplease.streetgym.data.skills.SkillBook
 import com.justdataplease.streetgym.data.skills.SkillCurriculumReader
 import com.justdataplease.streetgym.data.skills.SkillGroup
+import com.justdataplease.streetgym.data.skills.SkillProgress
 import java.text.DateFormat
 import java.text.NumberFormat
 import java.util.ArrayDeque
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.Executors
+import kotlin.math.roundToInt
 import kotlin.random.Random
 
 /**
@@ -135,11 +138,15 @@ open class HomeActivity : Activity() {
     )
 
     private lateinit var settings: AppSettings
+    /** Counts taps on the Settings version line for the hidden developer settings. */
+    private val developerMenu by lazy { DeveloperMenu(this, settings) }
     private lateinit var progressRepository: SharedPreferencesProgressRepository
     private lateinit var library: LibraryRepository
     private var exerciseLibrary: ExerciseLibrary? = null
     /** Training's tabs: 0 Levels, 1 My workouts, 2 Parks. */
     private var trainingTab = 0
+    /** The list open in My workouts (Plus); null for Favorites, everything the athlete keeps. */
+    private var workoutListId: String? = null
     private var draft: CustomDay? = null
     /** The first-launch placement's picks, one band per question (-1 for none), kept through a redraw. */
     private var placementAnswers = IntArray(Placement.Question.entries.size) { -1 }
@@ -251,6 +258,7 @@ open class HomeActivity : Activity() {
         library.onChange = ::cloudChanged
         draft = savedInstanceState?.getString(STATE_DRAFT)?.let { runCatching { LibraryCodec.decodeDay(JSONObject(it)) }.getOrNull() }
         trainingTab = savedInstanceState?.getInt(STATE_TRAINING_TAB) ?: 0
+        workoutListId = savedInstanceState?.getString(STATE_WORKOUT_LIST)
         savedInstanceState?.getIntArray(STATE_PLACEMENT)?.takeIf { it.size == placementAnswers.size }?.let { placementAnswers = it }
         billing = TierBilling(this)
         tier = Entitlement.tier(this)
@@ -330,6 +338,7 @@ open class HomeActivity : Activity() {
         }
         draft?.let { outState.putString(STATE_DRAFT, LibraryCodec.encodeDay(it).toString()) }
         outState.putInt(STATE_TRAINING_TAB, trainingTab)
+        workoutListId?.let { outState.putString(STATE_WORKOUT_LIST, it) }
         outState.putIntArray(STATE_PLACEMENT, placementAnswers)
         restEndsAtEpochMillis?.let { outState.putLong(STATE_REST_END, it) }
         restProgramId?.let { outState.putString(STATE_REST_PROGRAM, it) }
@@ -357,10 +366,10 @@ open class HomeActivity : Activity() {
             "${Countries.flag(country)} ${Countries.name(country)}"), if (boardInCountry) 1 else 0) {
             boardInCountry = it == 1; renderProgress()
         }, width = ViewGroup.LayoutParams.WRAP_CONTENT, topDp = 12)
-        val skills = book.families.flatMap { it.skills }
-        val skillName = skills.firstOrNull { it.id == boardSkill }?.name ?: run { boardSkill = null; getString(R.string.leaderboard_overall) }
-        page.addWithMargins(secondaryButton(getString(R.string.leaderboard_board, skillName)) {
-            val choices = listOf<Pair<String?, String>>(null to getString(R.string.leaderboard_overall)) + skills.map { it.id to it.name }
+        val families = book.families.map { it.spec }
+        val boardName = families.firstOrNull { it.id == boardSkill }?.name ?: run { boardSkill = null; getString(R.string.leaderboard_overall) }
+        page.addWithMargins(secondaryButton(getString(R.string.leaderboard_board, boardName)) {
+            val choices = listOf<Pair<String?, String>>(null to getString(R.string.leaderboard_overall)) + families.map { it.id to it.name }
             AlertDialog.Builder(this).setTitle(R.string.leaderboard_pick)
                 .setItems(choices.map { it.second }.toTypedArray()) { _, which -> boardSkill = choices[which].first; renderProgress() }
                 .setNegativeButton(R.string.cancel, null).show()
@@ -369,7 +378,12 @@ open class HomeActivity : Activity() {
         val holder = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         page.addWithMargins(holder, topDp = 12)
         page.addWithMargins(bodyText(getString(R.string.leaderboard_how), 12f), topDp = 14)
-        val score = if (uid != null && profile != null) currentScore(book).let { if (boardSkill == null) it.overall else it.skills[boardSkill] ?: 0 } else 0
+        val score = if (uid != null && profile != null) currentScore(book).let { if (boardSkill == null) it.overall else it.families[boardSkill] ?: 0 } else 0
+        // Family boards rank ten times the family's raw value; they read on the same 1000 scale as Skills.
+        val scoreMax = book.families.sumOf { it.ceiling }
+        val overallBoard = boardSkill == null
+        fun shown(points: Int): String = NumberFormat.getIntegerInstance()
+            .format(if (overallBoard || scoreMax == 0) points else (points * 100.0 / scoreMax).roundToInt())
         fun show(board: Board?, loading: Boolean) {
             holder.removeAllViews()
             if (board == null) { holder.addView(bodyText(getString(if (loading) R.string.leaderboard_loading else R.string.leaderboard_offline), 14f)); return }
@@ -383,8 +397,8 @@ open class HomeActivity : Activity() {
                     profile == null -> addView(bodyText(getString(R.string.account_pick_name), 14f))
                     !profile.visible -> addView(bodyText(getString(R.string.leaderboard_hidden), 14f))
                     else -> addView(titleText(when (val standing = Boards.standing(board, profile.username, score)) {
-                        is Standing.Rank -> getString(R.string.leaderboard_you_rank, standing.rank, NumberFormat.getIntegerInstance().format(score))
-                        is Standing.TopPercent -> getString(R.string.leaderboard_you_top, standing.percent, NumberFormat.getIntegerInstance().format(score))
+                        is Standing.Rank -> getString(R.string.leaderboard_you_rank, standing.rank, shown(score))
+                        is Standing.TopPercent -> getString(R.string.leaderboard_you_top, standing.percent, shown(score))
                         null -> getString(R.string.leaderboard_you_none)
                     }, 16f))
                 }
@@ -400,7 +414,8 @@ open class HomeActivity : Activity() {
                     addView(bodyText(getString(R.string.leaderboard_rank, index + 1), 14f), LinearLayout.LayoutParams(dp(48), ViewGroup.LayoutParams.WRAP_CONTENT))
                     addView(oneLineText("${Countries.flag(entry.country)} ${entry.username}", bold = mine),
                         LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
-                    addView(titleText(NumberFormat.getIntegerInstance().format(entry.score), 15f))
+                    if (overallBoard) addView(bodyText(tierName(OverallScore.Tier.of(entry.score)), 12f).apply { setPadding(0, 0, dp(10), 0) })
+                    addView(titleText(shown(entry.score), 15f))
                 }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { bottomMargin = dp(4) })
             }
             if (board.updatedAt > 0) holder.addView(bodyText(getString(R.string.leaderboard_updated,
@@ -449,8 +464,35 @@ open class HomeActivity : Activity() {
         leaderboard.publish(uid, profile, score) { ok -> if (ok) accountStore.savePublishedScore(uid, score, now) }
     }
 
-    private fun currentScore(book: SkillBook): Score =
-        Scores.from(book.progress(Scores.trainedDays(progressRepository.sessionHistory())))
+    /** Skills from the classes that count ([Scores.credits]) and the tests passed: the Skills tab and the board agree. */
+    private fun skillProgress(book: SkillBook, history: List<WorkoutSession> = progressRepository.sessionHistory()): SkillProgress =
+        book.progress(Scores.credits(history), progressRepository.skillTests().passed.keys)
+
+    private fun currentScore(book: SkillBook): Score = Scores.from(skillProgress(book))
+
+    /** A test from the skill sheet or a readiness check in class: logged, synced and shown. */
+    private fun recordSkillTest(skillId: String, name: String, passed: Boolean) {
+        progressRepository.recordSkillTest(skillId, passed)
+        cloudChanged()
+        Toast.makeText(this, if (passed) getString(R.string.skills_test_logged_pass, name)
+            else getString(R.string.skills_test_logged_fail), Toast.LENGTH_SHORT).show()
+        if (currentScreen == Screen.Progress) renderProgress()
+    }
+
+    /** After a class: each ticked readiness check asks "Did you hit it?"; a Yes counts as a passed test. */
+    private fun askReadiness(checks: List<TrainingExercise>) {
+        val book = skillBook ?: return
+        val exercise = checks.firstOrNull() ?: return
+        val locale = uiLocale()
+        val id = book.movementOf(exercise.movementId, exercise.name.resolve(locale), exercise.description.resolve(locale))
+            ?: return askReadiness(checks.drop(1))
+        val name = displayName(exercise, locale)
+        val test = book.families.firstNotNullOfOrNull { family -> family.skills.firstOrNull { it.id == id } }?.test
+        askSkillTest(getString(R.string.readiness_question_title, name), testStandard(test)) { passed ->
+            recordSkillTest(id, name, passed)
+            askReadiness(checks.drop(1))
+        }
+    }
 
     override fun onDestroy() {
         cloudHandler.removeCallbacks(cloudCatchUp)
@@ -676,6 +718,7 @@ open class HomeActivity : Activity() {
             addView(
                 ImageView(context).apply {
                     setImageResource(R.drawable.logo)
+                    imageTintList = ColorStateList.valueOf(AppColors.MARK)
                     adjustViewBounds = true
                     contentDescription = getString(R.string.logo_content_description)
                 },
@@ -854,7 +897,7 @@ open class HomeActivity : Activity() {
 
     /**
      * The placement's answer. A start past Level 1, day 1 marks every earlier day complete exactly as "Complete level"
-     * does: skill points, no leaderboard points ([Scores.trainedDays]), and the same sync.
+     * does: done, but no skill or leaderboard points ([Scores.credits]), and the same sync.
      */
     private fun startPlacement(start: Placement.Start) {
         val skipped = Placement.skipped(orderedPrograms, start, TrainingProgram::levelNumber, TrainingProgram::number)
@@ -901,10 +944,15 @@ open class HomeActivity : Activity() {
         setBody(scroll(page))
     }
 
-    /** Saved program days and custom days, which share the tier's limit. */
+    /**
+     * Saved program days and custom days, which share the tier's limit. Favorites holds them all; Plus and Pro also
+     * sort them into lists of their own. On Free the lists are kept but hidden, and come back with Plus.
+     */
     private fun renderMyWorkouts(page: LinearLayout, locale: Locale) {
         val tier = Entitlement.tier(this)
         val state = library.state()
+        val lists = if (tier.lists) state.activeLists else emptyList()
+        val open = lists.firstOrNull { it.id == workoutListId }.also { if (it == null) workoutListId = null }
         page.addView(bodyText(getString(R.string.library_intro)))
         page.addWithMargins(bodyText(getString(R.string.library_usage, state.used, tier.savedDays), 13f).apply {
             setTextColor(AppColors.PRIMARY)
@@ -912,27 +960,59 @@ open class HomeActivity : Activity() {
         if (SavedLimit.overLimit(tier, state.used)) {
             page.addWithMargins(bodyText(getString(R.string.library_over_limit, tier.savedDays), 13f), topDp = 4)
         }
+        page.addWithMargins(listChips(listOf(getString(R.string.lists_default)) + lists.map { it.name },
+            open?.let { lists.indexOf(it) + 1 } ?: 0, { index -> workoutListId = lists.getOrNull(index - 1)?.id; renderLevels() },
+            locked = !tier.lists, onNew = ::requestNewList), topDp = 14, bottomDp = 4)
+        if (open != null) {
+            page.addWithMargins(listActions(onRename = {
+                listNameDialog(getString(R.string.lists_rename_title, open.name), library, open.id, open.name) { name ->
+                    library.renameList(open.id, name); renderLevels()
+                }
+            }, onDelete = {
+                AlertDialog.Builder(this).setTitle(getString(R.string.lists_delete_title, open.name))
+                    .setMessage(R.string.lists_delete_message)
+                    .setNegativeButton(R.string.cancel, null)
+                    .setPositiveButton(R.string.delete) { _, _ -> library.deleteList(open.id); workoutListId = null; renderLevels() }
+                    .show()
+            }), topDp = 10, bottomDp = 14)
+            val days = state.daysIn(open).mapNotNull(::programById)
+            if (days.isEmpty()) page.addView(bodyText(getString(R.string.lists_empty), 14f))
+            days.forEach { page.addWithMargins(libraryCard(it, locale), bottomDp = 10) }
+            return
+        }
         page.addWithMargins(primaryButton(getString(R.string.library_create)) { requestNewDay() }, topDp = 14, bottomDp = 18)
         page.addView(sectionLabel(getString(R.string.library_custom)))
         if (state.customDays.isEmpty()) page.addWithMargins(bodyText(getString(R.string.library_empty), 14f), bottomDp = 12)
-        state.customDays.forEach { day ->
-            page.addWithMargins(card(clickable = true).apply {
-                addView(titleText(day.name, 18f))
-                addWithMargins(bodyText(customMeta(day.exercises.size, CustomDays.estimatedMinutes(day)), 13f), topDp = 4)
-                setOnClickListener { navigate(Screen.Overview(day.id)) }
-            }, bottomDp = 10)
-        }
+        state.customDays.forEach { page.addWithMargins(libraryCard(CustomDays.toProgram(it), locale), bottomDp = 10) }
         page.addWithMargins(sectionLabel(getString(R.string.library_saved)), topDp = 8)
         val saved = state.savedIds.mapNotNull(::programById)
         if (saved.isEmpty()) page.addView(bodyText(getString(R.string.library_empty), 14f))
-        saved.forEach { program ->
-            page.addWithMargins(card(clickable = true).apply {
-                addView(titleText(displayName(program, locale), 18f))
-                addWithMargins(bodyText(listOf(getString(R.string.level_number, program.levelNumber), programMeta(program))
-                    .joinToString(" • "), 13f), topDp = 4)
-                setOnClickListener { navigate(Screen.Overview(program.id)) }
-            }, bottomDp = 10)
+        saved.forEach { page.addWithMargins(libraryCard(it, locale), bottomDp = 10) }
+    }
+
+    /** A saved or custom day in My workouts: its name and what it holds, opening its overview. */
+    private fun libraryCard(program: TrainingProgram, locale: Locale): LinearLayout = card(clickable = true).apply {
+        addView(titleText(displayName(program, locale), 18f))
+        addWithMargins(bodyText(if (CustomDays.isCustom(program.id)) customMeta(program.exercises.size, program.estimatedMinutes ?: 1)
+            else listOf(getString(R.string.level_number, program.levelNumber), programMeta(program)).joinToString(" • "), 13f), topDp = 4)
+        setOnClickListener { navigate(Screen.Overview(program.id)) }
+    }
+
+    /** A new list from My workouts, opened at once; Free and a full tier see what gives more. */
+    private fun requestNewList() {
+        if (!roomForAnotherList()) return
+        listNameDialog(getString(R.string.lists_new), library) { name ->
+            workoutListId = library.createList(name).id
+            renderLevels()
         }
+    }
+
+    private fun roomForAnotherList(): Boolean {
+        val tier = Entitlement.tier(this)
+        if (SavedLimit.canAddList(tier, library.state().activeLists.size)) return true
+        if (tier == Tier.PRO) Toast.makeText(this, R.string.lists_limit_pro, Toast.LENGTH_LONG).show()
+        else showPaywall(Paywall.Lists(tier.workoutLists))
+        return false
     }
 
     /**
@@ -1503,7 +1583,10 @@ open class HomeActivity : Activity() {
         val program = programById(programId) ?: return
         val locale = uiLocale()
         val page = verticalPage()
-        if (levelLocked(program.levelNumber) && !progressRepository.isProgramCompleted(program.id)) {
+        // Developer inspection opens a day not reached yet (or behind the paywall) read-only: no Start, Complete or save.
+        val inspecting = settings.inspectAllDays && !progressRepository.isProgramCompleted(program.id) &&
+            (levelLocked(program.levelNumber) || !canStart(program.id))
+        if (!inspecting && levelLocked(program.levelNumber) && !progressRepository.isProgramCompleted(program.id)) {
             page.addWithMargins(card().apply {
                 addView(titleText(displayName(program, locale), 25f))
                 addWithMargins(bodyText(listOf(getString(R.string.level_number, program.levelNumber), programMeta(program))
@@ -1513,7 +1596,7 @@ open class HomeActivity : Activity() {
             setBody(scroll(page))
             return
         }
-        if (!canStart(program.id) && !progressRepository.isProgramCompleted(program.id)) {
+        if (!inspecting && !canStart(program.id) && !progressRepository.isProgramCompleted(program.id)) {
             page.addView(card().apply {
                 addView(titleText(displayName(program, locale), 25f))
                 addWithMargins(bodyText("This daily plan is locked."), topDp = 12)
@@ -1530,8 +1613,9 @@ open class HomeActivity : Activity() {
         val repeatable = !custom && assigned?.id != program.id && canRepeat(program.id)
         val repeatResume = active?.programId == program.id && active.repeat
         val hero = card()
+        if (inspecting) hero.addWithMargins(badge(getString(R.string.inspect_only)), width = ViewGroup.LayoutParams.WRAP_CONTENT, bottomDp = 8)
         val title = titleText(displayName(program, locale), 25f)
-        if (custom) hero.addView(title) else hero.addView(LinearLayout(this).apply {
+        if (inspecting || (custom && !Entitlement.tier(this).lists)) hero.addView(title) else hero.addView(LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             addView(title, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
             addView(heartButton(program.id))
@@ -1578,7 +1662,12 @@ open class HomeActivity : Activity() {
             sections.filter { it.exercises.isNotEmpty() }.forEach { section ->
                 addExerciseSection(page, section, locale)
             }
-            if (custom || assigned?.id == program.id) {
+            if (inspecting) {
+                page.addWithMargins(bodyText(getString(R.string.inspect_only_note), 14f), topDp = 8)
+                page.addWithMargins(primaryButton(getString(R.string.inspect_only), AppColors.TEXT_SECONDARY) {}.apply {
+                    isEnabled = false
+                }, topDp = 8)
+            } else if (custom || assigned?.id == program.id) {
                 val isResume = active?.programId == program.id && !active.repeat
                 page.addWithMargins(workoutViewSetting(settings), topDp = 4)
                 val start = primaryButton(
@@ -1833,6 +1922,20 @@ open class HomeActivity : Activity() {
                 exercise.description.resolve(locale).takeIf(String::isNotBlank)?.let {
                     exerciseCard.addWithMargins(bodyText(it, 13f), topDp = 4)
                 }
+                exercise.easier?.takeIf { section.key in WorkoutFlow.CREDITED_SECTIONS && !exercise.readinessCheck }?.let { option ->
+                    val key = WorkoutFlow.exerciseKey(section.key, exercise, exerciseIndex)
+                    val holder = FrameLayout(this)
+                    fun bindEasier() {
+                        holder.removeAllViews()
+                        val on = key in progressRepository.activeWorkout()?.easierExercises.orEmpty()
+                        holder.addView(easierToggle(option.name.resolve(locale), on) { next ->
+                            progressRepository.setEasier(key, next)
+                            bindEasier()
+                        }, FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+                    }
+                    bindEasier()
+                    exerciseCard.addWithMargins(holder, width = ViewGroup.LayoutParams.WRAP_CONTENT, topDp = 8)
+                }
                 exercise.sets.forEachIndexed { setIndex, set ->
                     val setKey = WorkoutFlow.setKey(program.id, section.key, exercise, exerciseIndex, set, setIndex)
                     val checked = setKey in active.completedSetIds
@@ -1929,6 +2032,8 @@ open class HomeActivity : Activity() {
                 TimingAlerts.vibrate(this@HomeActivity)
             }
             override fun finish(completedSets: Int, totalSets: Int) = requestFinish(program, completedSets, totalSets)
+            override fun easierExercises() = progressRepository.activeWorkout()?.easierExercises.orEmpty()
+            override fun setEasier(exerciseKey: String, easier: Boolean) = progressRepository.setEasier(exerciseKey, easier)
         }
         val titles = sections(program).associate { it.key to getString(it.titleRes) }
         setBody(FocusWorkoutView(this, program, workoutFlow(program), titles, active.startedAtEpochMillis, uiLocale(), host))
@@ -1982,8 +2087,16 @@ open class HomeActivity : Activity() {
             .setSingleChoiceItems(labels, selected) { _, which -> selected = which }
             .setNegativeButton(R.string.cancel, null)
             .setPositiveButton(R.string.finish) { _, _ ->
+                // Only the ticked sets count toward skills, with an easier option credited to the easier movement.
+                val active = progressRepository.activeWorkout()
+                val flow = workoutFlow(program)
+                val ticked = active?.completedSetIds.orEmpty()
+                val book = skillBook
+                val credits = if (book == null) emptyMap() else flow.credits(ticked, active?.easierExercises.orEmpty()) { exercise ->
+                    book.movementOf(exercise.movementId, exercise.name.resolve(Locale.ENGLISH), exercise.description.resolve(Locale.ENGLISH))
+                }
                 // A repeat's rating is kept on its own history entry only; see WorkoutSession.
-                val session = progressRepository.finishWorkout(effortRating = values[selected])
+                val session = progressRepository.finishWorkout(effortRating = values[selected], credits = credits)
                 cloudChanged()
                 clearRest()
                 Toast.makeText(this, if (session?.repeat == true) R.string.repeat_saved else R.string.workout_saved,
@@ -1993,6 +2106,7 @@ open class HomeActivity : Activity() {
                     Screen.Progress,
                     pushCurrent = false,
                 )
+                if (session != null && !session.repeat) askReadiness(flow.readinessChecks(ticked))
             }
             .show()
     }
@@ -2090,15 +2204,23 @@ open class HomeActivity : Activity() {
                 return
             }
             if (progressTab == 0) {
+                val history = progressRepository.sessionHistory()
+                val progress = skillProgress(skills, history)
                 page.addWithMargins(
                     skillsContent(
-                        skills.progress(completedIds),
+                        progress,
+                        Scores.placedPast(history),
                         skillGroup,
                         onGroup = { group ->
                             skillGroup = group
                             renderProgress()
                         },
-                        onOpen = { status, family, statuses -> showSkillSheet(status, family, statuses) },
+                        onOpen = { status, family, statuses ->
+                            val nextTest = progressRepository.skillTests().nextAttemptAt(status.skill.id, System.currentTimeMillis())
+                            showSkillSheet(status, family, statuses, progress.overall, nextTest) { skill, passed ->
+                                recordSkillTest(skill.id, skill.name, passed)
+                            }
+                        },
                     ),
                     topDp = 14,
                 )
@@ -2225,7 +2347,9 @@ open class HomeActivity : Activity() {
         val about = card().apply {
             addView(titleText(getString(R.string.about_title), 19f))
             addWithMargins(bodyText(getString(R.string.about_body), 14f), topDp = 7)
-            addWithMargins(bodyText(getString(R.string.version_format, version), 12f), topDp = 10)
+            addWithMargins(bodyText(getString(R.string.version_format, version), 12f).apply {
+                setOnClickListener { developerMenu.onVersionTapped() }
+            }, topDp = 10)
             addWithMargins(bodyText(getString(R.string.theme_fonts_notice), 12f), topDp = 6)
         }
         about.addWithMargins(secondaryButton("Ad privacy") { NativeAds.showPrivacy(this, BuildConfig.ADMOB_NATIVE_ID) }, topDp = 12)
@@ -2305,27 +2429,46 @@ open class HomeActivity : Activity() {
         }
     }
 
-    /** The heart at the top right of a day's overview: saves the day to My workouts, or removes it. */
+    /**
+     * The heart at the top right of a day's overview. On Free it saves the day to Favorites, or removes it; Plus and
+     * Pro pick the lists in [showListPicker] (a custom day is always saved, so its heart only picks lists).
+     */
     private fun heartButton(programId: String): ImageView = ImageView(this).apply {
         layoutParams = LinearLayout.LayoutParams(dp(48), dp(48)).apply { topMargin = -dp(8); marginEnd = -dp(10) }
         setPadding(dp(10), dp(10), dp(10), dp(10))
         val ripple = TypedValue()
         if (theme.resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, ripple, true)) setBackgroundResource(ripple.resourceId)
+        val custom = CustomDays.isCustom(programId)
+        fun saved() = custom || library.isSaved(programId)
         fun show(saved: Boolean) {
             setImageResource(if (saved) R.drawable.ic_heart else R.drawable.ic_heart_outline)
             imageTintList = ColorStateList.valueOf(if (saved) AppColors.HEART else AppColors.TEXT_SECONDARY)
-            contentDescription = getString(if (saved) R.string.saved_day else R.string.save_day)
+            contentDescription = getString(when {
+                !saved -> R.string.save_day
+                Entitlement.tier(this@HomeActivity).lists -> R.string.saved_day_lists
+                else -> R.string.saved_day
+            })
         }
-        show(library.isSaved(programId))
+        fun pop() {
+            if (!systemAnimationsEnabled()) return
+            scaleX = 0.6f; scaleY = 0.6f
+            animate().scaleX(1f).scaleY(1f).setInterpolator(OvershootInterpolator(3f)).setDuration(260).start()
+        }
+        show(saved())
         setOnClickListener {
-            val saved = library.isSaved(programId)
+            val saved = saved()
             if (!saved && !roomForAnother()) return@setOnClickListener
+            val tier = Entitlement.tier(this@HomeActivity)
+            if (tier.lists) {
+                showListPicker(library, programId, tier, onMoreLists = { roomForAnotherList() }) { now ->
+                    show(now)
+                    if (now && !saved) pop()
+                }
+                return@setOnClickListener
+            }
             library.setSaved(programId, !saved)
             show(!saved)
-            if (!saved && systemAnimationsEnabled()) {
-                scaleX = 0.6f; scaleY = 0.6f
-                animate().scaleX(1f).scaleY(1f).setInterpolator(OvershootInterpolator(3f)).setDuration(260).start()
-            }
+            if (!saved) pop()
             Toast.makeText(this@HomeActivity, if (saved) R.string.day_removed else R.string.day_saved, Toast.LENGTH_SHORT).show()
         }
     }
@@ -2462,6 +2605,7 @@ open class HomeActivity : Activity() {
         private const val NEARBY_ON_MAP = 5
         private const val STATE_DRAFT = "draft_day"
         private const val STATE_TRAINING_TAB = "training_tab"
+        private const val STATE_WORKOUT_LIST = "workout_list"
         private const val STATE_PLACEMENT = "placement_answers"
         private const val STATE_SCREEN = "screen"
         private const val STATE_LEVEL = "level"

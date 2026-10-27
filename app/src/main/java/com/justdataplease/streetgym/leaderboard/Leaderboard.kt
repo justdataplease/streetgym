@@ -2,6 +2,7 @@ package com.justdataplease.streetgym.leaderboard
 
 import com.justdataplease.streetgym.data.library.CustomDays
 import com.justdataplease.streetgym.data.progress.WorkoutSession
+import com.justdataplease.streetgym.data.skills.SkillCredit
 import com.justdataplease.streetgym.data.skills.SkillProgress
 import org.json.JSONArray
 import org.json.JSONObject
@@ -28,15 +29,24 @@ sealed interface Standing {
     data class TopPercent(val percent: Int) : Standing
 }
 
-/** A Pro athlete's points: the overall total and each skill's. */
-data class Score(val overall: Int, val skills: Map<String, Int>)
+/**
+ * A Pro athlete's public score ([com.justdataplease.streetgym.data.skills.OverallScore]): the overall score out of 1000,
+ * each skill family's points (ten times its raw value, so the server can check the overall), and the rungs they
+ * passed a test for.
+ */
+data class Score(val overall: Int, val families: Map<String, Int>, val verified: List<String> = emptyList()) {
+    companion object {
+        /** The score document's version; the server drops any other. */
+        const val VERSION = 2
+    }
+}
 
 object Boards {
     const val WORLD = "world"
 
-    /** "overall_world", "overall_GR", "skill_<skill id>_world", "skill_<skill id>_GR". */
-    fun id(skillId: String?, country: String?): String =
-        (if (skillId == null) "overall" else "skill_$skillId") + "_" + (country ?: WORLD)
+    /** "overall_world", "overall_GR", "family_<family id>_world", "family_<family id>_GR". */
+    fun id(familyId: String?, country: String?): String =
+        (if (familyId == null) "overall" else "family_$familyId") + "_" + (country ?: WORLD)
 
     /** How long a board stays on the phone before it's read again; the server rebuilds boards every 6 hours. */
     const val CACHE_MILLIS = 6 * 60 * 60_000L
@@ -75,16 +85,24 @@ object Boards {
 
 object Scores {
     /**
-     * The program days that count: finished in a real workout. "Complete day" and "Complete level" marks, repeats
-     * and custom days earn no leaderboard points, so the board reflects training, not taps.
+     * The classes that count, for Skills and the leaderboard alike: finished in a real workout, with the sets ticked.
+     * "Complete day" and "Complete level" marks, placement, repeats and custom days earn nothing, so both reflect
+     * training, not taps.
      */
-    fun trainedDays(sessions: List<WorkoutSession>): Set<String> = sessions
+    fun credits(sessions: List<WorkoutSession>): List<SkillCredit> = sessions
         .filter { !it.manuallyCompleted && !it.repeat && !CustomDays.isCustom(it.programId) }
-        .map { it.programId }.toSet()
+        .sortedBy { it.completedAtEpochMillis }
+        .map { SkillCredit(it.programId, it.credits, it.durationSeconds) }
+
+    /** Program days placed past or marked complete: done, but worth no points. */
+    fun placedPast(sessions: List<WorkoutSession>): Int = sessions
+        .filter { it.manuallyCompleted && !CustomDays.isCustom(it.programId) }.map { it.programId }.toSet().size
 
     fun from(progress: SkillProgress): Score = Score(
-        overall = progress.statuses.sumOf { it.points },
-        skills = progress.statuses.filter { it.points > 0 }.associate { it.skill.id to it.points },
+        overall = progress.overall.score,
+        families = progress.overall.families.filter { it.points > 0 }
+            .associate { it.family.spec.id to Math.round(it.points * 10).toInt() },
+        verified = progress.statuses.filter { it.verified }.map { it.skill.id }.sorted(),
     )
 
     /** The score goes up after a change, at most every [PUBLISH_MILLIS], so a burst of workouts costs one write. */

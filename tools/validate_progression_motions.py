@@ -154,7 +154,7 @@ if top["head"][1] > 12:
 
 # 2 archer push-up: toes and near hand planted, far hand slides on the floor with a straight arm.
 pinned("archer_pushup", "foot_near", (146, 101))
-pinned("archer_pushup", "hand_near", (96, HAND_FLOOR))
+pinned("archer_pushup", "hand_near", (101, HAND_FLOOR))
 on_level("archer_pushup", "hand_far", 1, HAND_FLOOR)
 straight("archer_pushup", "far", 25.5)
 low = at("archer_pushup", 1.0)
@@ -218,13 +218,19 @@ knees = [j["knee_far"][1] for _, _, j in frames("bulgarian_split_squat")]
 if max(knees) > ANKLE or max(knees) < 98:
     fail("bulgarian_split_squat", f"the back knee must lower toward but not through the floor (lowest {max(knees):.1f})")
 
-# 10 sliding leg curl: shoulders down, heels on the floor, hips lifted, legs nearly straight when extended.
+# 10 sliding leg curl: shoulders down, heels on the floor, hips lifted, legs nearly straight when extended. Since
+#    round 5 the hips stay off the floor without arching: shoulders, hips and knees in one line in the curl, and the
+#    hips never more than 8 degrees past it.
 pinned("sliding_leg_curl", "neck", (70, 100))
 on_level("sliding_leg_curl", "foot_near", 1, ANKLE)
 on_level("sliding_leg_curl", "foot_far", 1, ANKLE)
 for i, t, j in frames("sliding_leg_curl"):
-    if j["hip"][1] > 95:
+    arch = signed(angle(j["hip"], j["knee_near"]) - angle(j["neck"], j["hip"]))
+    if j["hip"][1] > 98:
         fail("sliding_leg_curl", f"the hips drop at sample {i}")
+        break
+    if arch < -8:
+        fail("sliding_leg_curl", f"the hips arch past the shoulder-knee line ({arch:.1f} deg) at sample {i}")
         break
 out = at("sliding_leg_curl", 1.0)
 if dist(out["hip"], out["foot_near"]) < 30.5:
