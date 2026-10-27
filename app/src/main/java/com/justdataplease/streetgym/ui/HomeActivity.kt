@@ -158,8 +158,10 @@ open class HomeActivity : Activity() {
     private var parkOrigin: Pair<Double, Double>? = null
     private var parkQuery = ""
     private var parkResults: List<NearbyPark>? = null
-    /** The Parks map while it's on screen; null in the list, on other screens, or where MapLibre can't start. */
+    /** The Parks map once opened; null before that, after low memory, or where MapLibre can't start. */
     private var parksMap: ParksMap? = null
+    /** The map is kept, stopped, while another screen is shown ([setBody]); the lifecycle calls leave it alone then. */
+    private var parksMapHidden = false
     private var parksMapFailed = false
     private var parksGeoJson: Pair<List<Park>, String>? = null
     private var parksGeoJsonBuilding: List<Park>? = null
@@ -291,7 +293,7 @@ open class HomeActivity : Activity() {
         timingHandler.removeCallbacks(timingTick)
         timingHandler.post(timingTick)
         activityResumed = true
-        parksMap?.resume()
+        parksMap?.takeUnless { parksMapHidden }?.resume()
     }
 
     override fun onPause() {
@@ -585,14 +587,14 @@ open class HomeActivity : Activity() {
         restTimer?.cancel()
         toneGenerator?.release()
         worker.shutdownNow()
-        parksMap?.destroy(); parksMap = null
+        parksMap?.destroy(); parksMap = null; parksMapHidden = false
         parksWorker.shutdownNow()
         super.onDestroy()
     }
 
     override fun onStart() {
         super.onStart()
-        parksMap?.start()
+        parksMap?.takeUnless { parksMapHidden }?.start()
     }
 
     override fun onStop() {
@@ -603,7 +605,8 @@ open class HomeActivity : Activity() {
     @Deprecated("Deprecated in Java")
     override fun onLowMemory() {
         super.onLowMemory()
-        parksMap?.lowMemory()
+        // A map kept off screen goes when memory runs short; Parks builds a new one when it's opened again.
+        if (parksMapHidden) { parksMap?.destroy(); parksMap = null; parksMapHidden = false } else parksMap?.lowMemory()
     }
 
     @Deprecated("Uses platform back navigation for minSdk 23 compatibility")
@@ -748,12 +751,16 @@ open class HomeActivity : Activity() {
         worker.execute {
             // The catalog asset is read and parsed once, for the program, the exercise library and Skills.
             val root = AssetCurriculumRepository(this).readRoot()
+            // On a second thread meanwhile, as neither reads what the other makes: the clips that Today's park scene
+            // and every movement guide use, then Skills, which read the movement library and schedule from the same
+            // JSON (both only read it). A Skills failure only hides the Skills tab.
+            val side = parksWorker.submit<SkillBook?> {
+                runCatching { MotionClip.preload(this) }
+                root.getOrNull()?.let { runCatching { SkillCurriculumReader.read(it) }.getOrNull() }
+            }
             val result = root.mapCatching(CurriculumJsonParser::parse)
             val exercises = result.getOrNull()?.let { runCatching { ExerciseLibrary.from(it) }.getOrNull() }
-            // Skills read the movement library and schedule from the same JSON; a failure only hides the Skills tab.
-            val skills = root.getOrNull()?.let { runCatching { SkillCurriculumReader.read(it) }.getOrNull() }
-            // Today's park scene and every movement guide use the clips; parse them here, not on the main thread.
-            runCatching { MotionClip.preload(this) }
+            val skills = runCatching { side.get() }.getOrNull()
             val parsed = result.getOrNull()?.let { LoadedCatalog(it, exercises, skills) }?.also { loaded = it }
             runOnUiThread {
                 if (isFinishing || isDestroyed) return@runOnUiThread
@@ -1233,7 +1240,8 @@ open class HomeActivity : Activity() {
                 else Parks.search(all, query, origin)
             runOnUiThread {
                 parkResults = results
-                val map = parksMap
+                // A map kept off screen (the list, another tab) doesn't take the results; the list shows them.
+                val map = parksMap?.takeUnless { parksMapHidden }
                 when {
                     map == null -> if (currentScreen == Screen.Levels && trainingTab == 2) renderLevels()
                     query.isBlank() -> origin?.let { map.showNearby(it.first, it.second, results.take(NEARBY_ON_MAP).map(NearbyPark::park)) }
@@ -2656,10 +2664,18 @@ open class HomeActivity : Activity() {
                 ViewGroup.LayoutParams.MATCH_PARENT,
             ),
         )
-        // The Parks map lives only while it's on screen.
-        parksMap?.takeIf { map -> generateSequence(map.view as View?) { it.parent as? View }.none { it === view } }?.let {
-            it.destroy()
-            parksMap = null
+        // Off screen the Parks map is stopped, not destroyed, so coming back to Parks shows it at once, as it was,
+        // instead of loading the style and clustering every park again.
+        parksMap?.let { map ->
+            val shown = generateSequence(map.view as View?) { it.parent as? View }.any { it === view }
+            if (!shown && !parksMapHidden) {
+                (map.view.parent as? ViewGroup)?.removeView(map.view)
+                map.stop()
+                parksMapHidden = true
+            } else if (shown && parksMapHidden) {
+                parksMapHidden = false
+                if (activityResumed) map.resume() else map.start()
+            }
         }
     }
 
