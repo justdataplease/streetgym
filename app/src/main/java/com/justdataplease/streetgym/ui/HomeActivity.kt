@@ -96,6 +96,7 @@ import com.justdataplease.streetgym.data.model.TrainingLevel
 import com.justdataplease.streetgym.data.model.TrainingProgram
 import com.justdataplease.streetgym.data.progress.ActiveWorkout
 import com.justdataplease.streetgym.data.progress.DayAssignment
+import com.justdataplease.streetgym.data.progress.ExamResult
 import com.justdataplease.streetgym.data.progress.LevelReplay
 import com.justdataplease.streetgym.data.progress.Placement
 import com.justdataplease.streetgym.data.progress.SharedPreferencesProgressRepository
@@ -494,6 +495,85 @@ open class HomeActivity : Activity() {
         }
     }
 
+    /**
+     * After an exam class: the athlete ticks the targets reached (a fully ticked set starts ticked). The result is
+     * logged and synced; a missed target offers to repeat the block since the previous exam, when [offerRepeat].
+     */
+    private fun askExam(exam: TrainingProgram, tests: List<Pair<TrainingExercise, Boolean>>, offerRepeat: Boolean) {
+        if (tests.isEmpty()) return
+        val locale = uiLocale()
+        val reached = BooleanArray(tests.size) { tests[it].second }
+        AlertDialog.Builder(this)
+            .setTitle(R.string.exam_results_title)
+            .setMultiChoiceItems(tests.map { examTarget(it.first, locale) }.toTypedArray(), reached) { _, which, checked ->
+                reached[which] = checked
+            }
+            .setCancelable(false)
+            .setPositiveButton(R.string.exam_save) { _, _ ->
+                val ids = tests.map { (exercise, _) -> exercise.movementId ?: exercise.id }
+                val result = ExamResult(exam.id, System.currentTimeMillis(),
+                    ids.filterIndexed { index, _ -> reached[index] }, ids.filterIndexed { index, _ -> !reached[index] })
+                progressRepository.recordExam(result)
+                cloudChanged()
+                val missed = tests.filterIndexed { index, _ -> !reached[index] }.map { displayName(it.first, locale) }
+                when {
+                    result.passed -> AlertDialog.Builder(this).setTitle(R.string.exam_passed_title)
+                        .setMessage(R.string.exam_passed_message).setPositiveButton(android.R.string.ok, null).show()
+                    offerRepeat -> askRepeatBlock(exam, missed)
+                    else -> Toast.makeText(this, R.string.exam_saved_not_yet, Toast.LENGTH_SHORT).show()
+                }
+            }
+            .show()
+    }
+
+    /** "Strict Pull-Up · 10 reps", "Front Lever · 8 s · per side": a test as the class prescribes it. */
+    private fun examTarget(exercise: TrainingExercise, locale: Locale): String {
+        val set = exercise.sets.firstOrNull()
+        val dose = when {
+            set?.repetitions != null -> getString(R.string.repetitions_format, set.repetitions)
+            set?.durationSeconds != null -> getString(R.string.focus_seconds, set.durationSeconds)
+            else -> null
+        }
+        val sides = set?.let { SetNotes.parse(it.description.resolve(locale)).sides }.orEmpty()
+        return (listOfNotNull(displayName(exercise, locale), dose) + sides).joinToString(" · ")
+    }
+
+    /** A missed target: Today can go back to the first class after the previous exam and come through this exam again. */
+    private fun askRepeatBlock(exam: TrainingProgram, missed: List<String>) {
+        val index = orderedPrograms.indexOfFirst { it.id == exam.id }.takeIf { it >= 0 } ?: return
+        val start = (index - 1 downTo 0).firstOrNull { orderedPrograms[it].isExam }?.plus(1) ?: 0
+        val first = orderedPrograms[start]
+        val count = index - start + 1
+        AlertDialog.Builder(this)
+            .setTitle(R.string.exam_missed_title)
+            .setMessage(getString(R.string.exam_missed_message, missed.joinToString(", "), count,
+                getString(R.string.exam_class_label, first.levelNumber, first.number)))
+            .setPositiveButton(getString(R.string.exam_repeat_block, count)) { _, _ ->
+                progressRepository.startLevelReplay(first.levelNumber, fromProgramId = first.id)
+                clearRest(); openRoot(Screen.Dashboard)
+            }
+            .setNegativeButton(R.string.exam_continue, null)
+            .show()
+    }
+
+    /** An exam day's page: what the test asks, or how the last attempt went. */
+    private fun examCard(exam: TrainingProgram, locale: Locale): LinearLayout = card().apply {
+        addView(titleText(getString(R.string.exam_badge), 18f))
+        val latest = progressRepository.examLog().latest(exam.id)
+        val text = if (latest == null) getString(R.string.exam_card_untaken) else {
+            val date = DateFormat.getDateInstance(DateFormat.MEDIUM, locale).format(Date(latest.at))
+            val total = latest.reached.size + latest.missed.size
+            if (latest.passed) getString(R.string.exam_card_passed, date) + " " +
+                getString(R.string.exam_card_result, date, latest.reached.size, total)
+            else {
+                val names = exam.exercises.filter { (it.movementId ?: it.id) in latest.missed }.map { displayName(it, locale) }
+                getString(R.string.exam_card_result, date, latest.reached.size, total) + " " +
+                    getString(R.string.exam_card_missed, names.joinToString(", "))
+            }
+        }
+        addWithMargins(bodyText(text, 14f), topDp = 6)
+    }
+
     override fun onDestroy() {
         cloudHandler.removeCallbacks(cloudCatchUp)
         Entitlement.prefs(this).unregisterOnSharedPreferenceChangeListener(entitlementChanged)
@@ -855,7 +935,9 @@ open class HomeActivity : Activity() {
                     all.indexOfFirst { it.id == next.id } + 1, all.size)
             }?.let(today::addView)
             val label = if (repeating) getString(R.string.repeat_note)
-                else levelReplay()?.let { getString(R.string.replay_today, it.levelNumber) }
+                else levelReplay()?.let {
+                    if (it.fromProgramId != null) getString(R.string.exam_replay_today) else getString(R.string.replay_today, it.levelNumber)
+                }
             label?.let {
                 today.addWithMargins(bodyText(it, 12f).apply { setTextColor(AppColors.PRIMARY) }, bottomDp = 4)
             }
@@ -1490,12 +1572,17 @@ open class HomeActivity : Activity() {
     }
 
     private fun replayCard(replay: LevelReplay, locale: Locale): LinearLayout = card().apply {
-        addView(titleText(getString(R.string.replay_card_title, replay.levelNumber), 18f))
+        val block = replay.fromProgramId != null
+        addView(titleText(if (block) getString(R.string.exam_replay_title)
+            else getString(R.string.replay_card_title, replay.levelNumber), 18f))
         val furthest = furthestProgram()
+        val stopped = furthest?.let { "${getString(R.string.level_number, it.levelNumber)} · ${displayName(it, locale)}" }
         addWithMargins(bodyText(
-            if (furthest == null) getString(R.string.replay_card_body_complete)
-            else getString(R.string.replay_card_body,
-                "${getString(R.string.level_number, furthest.levelNumber)} · ${displayName(furthest, locale)}"),
+            when {
+                stopped == null -> getString(R.string.replay_card_body_complete)
+                block -> getString(R.string.exam_replay_body, stopped)
+                else -> getString(R.string.replay_card_body, stopped)
+            },
             14f,
         ), topDp = 6)
         addWithMargins(secondaryButton(getString(R.string.replay_return)) {
@@ -1566,7 +1653,7 @@ open class HomeActivity : Activity() {
         val programs = level.programs.sortedBy { it.number }
         val list = ListView(this).apply {
             addHeaderView(summary, null, false)
-            adapter = ProgramListAdapter(context, programs, completed, assigned?.id, locale)
+            adapter = ProgramListAdapter(context, programs, completed, assigned?.id, locale, progressRepository.examLog())
             divider = ColorDrawable(Color.TRANSPARENT)
             dividerHeight = 0
             clipToPadding = false
@@ -1654,6 +1741,7 @@ open class HomeActivity : Activity() {
             hero.addWithMargins(repeatButton(program, repeatResume), topDp = 10)
         }
         page.addWithMargins(hero, bottomDp = 14)
+        if (program.isExam) page.addWithMargins(examCard(program, locale), bottomDp = 14)
 
         val sections = sections(program)
         if (sections.all { it.exercises.isEmpty() }) {
@@ -2106,7 +2194,8 @@ open class HomeActivity : Activity() {
                     Screen.Progress,
                     pushCurrent = false,
                 )
-                if (session != null && !session.repeat) askReadiness(flow.readinessChecks(ticked))
+                if (session != null && program.isExam) askExam(program, flow.examTests(ticked), offerRepeat = !session.repeat)
+                else if (session != null && !session.repeat) askReadiness(flow.readinessChecks(ticked))
             }
             .show()
     }

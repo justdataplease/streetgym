@@ -27,13 +27,14 @@ class PlacementTest {
     }
 
     @Test fun theStartsFromBestToFirst() {
-        assertEquals(listOf(Start(3), Start(2), Start(1, 41), Start(1, 22), Start(1)), Placement.STARTS.map { it.start })
+        assertEquals(listOf(Start(2, 71), Start(2), Start(1, 41), Start(1, 22), Start(1)), Placement.STARTS.map { it.start })
         // Each row's own minimums reach exactly that row.
         Placement.STARTS.forEach { row -> assertEquals(row.start, start(row.pushUps, row.pullUps, row.squats)) }
     }
 
-    @Test fun levelThreeDayOneTakesEveryTopBand() {
-        assertEquals(Start(3), start(30, 10, 50))
+    @Test fun theLevelTwoTailTakesEveryTopBand() {
+        // Round 6: the strongest answers meet Level 3's German hangs, tuck levers and negatives first.
+        assertEquals(Start(2, 71), start(30, 10, 50))
         // one band short on any question drops to Level 2
         assertEquals(Start(2), start(20, 10, 50))
         assertEquals(Start(2), start(30, 5, 50))
@@ -81,7 +82,7 @@ class PlacementTest {
     @Test fun everyAnswerFollowsTheTable() {
         every().forEach { (p, u, s) ->
             val expected = when {
-                p >= 30 && u >= 10 && s >= 50 -> Start(3)
+                p >= 30 && u >= 10 && s >= 50 -> Start(2, 71)
                 p >= 20 && u >= 5 && s >= 30 -> Start(2)
                 p >= 20 && u <= 4 && s >= 30 -> Start(1, 41)
                 p >= 10 && s >= 30 -> Start(1, 22)
@@ -102,7 +103,7 @@ class PlacementTest {
 
     @Test fun theStartStopsAtLevelThreeAndNeverAtAPaywall() {
         assertEquals(3, Placement.MAX_LEVEL)
-        assertEquals(Start(3), start(500, 100, 1000))
+        assertEquals(Start(2, 71), start(500, 100, 1000))
         every().forEach { (p, u, s) ->
             val level = start(p, u, s).level
             assertTrue(level in 1..Placement.MAX_LEVEL)

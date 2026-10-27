@@ -45,5 +45,5 @@ data class SkillTestLog(val passed: Map<String, Long> = emptyMap(), val attempts
     }
 }
 
-/** The merged copy of Pro's cloud progress: completed days, history and skill tests, as uploaded. */
-data class CloudProgress(val completed: Set<String>, val sessions: String, val tests: String)
+/** The merged copy of Pro's cloud progress: completed days, history, skill tests and exam results, as uploaded. */
+data class CloudProgress(val completed: Set<String>, val sessions: String, val tests: String, val exams: String)

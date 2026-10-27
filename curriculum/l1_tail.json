@@ -2703,22 +2703,25 @@
       "level": 1,
       "number": 60,
       "title": {
-        "en": "Four-Corner Strength Checkpoint"
+        "en": "Exam 3: Foundations"
       },
       "description": {
-        "en": "Balance upper and lower body with a compact circuit that never sacrifices range control. Today the basics are one recorded set each, a little above your best so far. Clean reps up to the number shown: stop at the first form break and note it; don't top up with the easier option."
+        "en": "Exam day for classes L1:041-L1:059: handstand, pull-ups, push-ups, dips, legs, core hold. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
       },
       "schedule": {
         "week": 3,
         "day": 6,
-        "day_type": "mixed_fundamentals_checkpoint",
-        "minutes": 32,
+        "day_type": "exam_assessment",
+        "minutes": 30,
         "rpe": 6,
         "focus": [
-          "row",
-          "pushup",
+          "exam",
+          "handstand",
+          "pull_up",
+          "push_up",
+          "dip",
           "legs",
-          "trunk"
+          "core"
         ]
       },
       "warmup": [
@@ -2761,49 +2764,58 @@
       ],
       "main": [
         [
-          "inverted_row",
-          2,
-          7,
+          "pike_handstand_hold",
+          1,
           null,
-          55,
-          "3011",
-          "high_inverted_row"
+          12,
+          120,
+          "assessment",
+          "overhead_line"
+        ],
+        [
+          "eccentric_pullup",
+          1,
+          6,
+          null,
+          120,
+          "assessment",
+          "assisted_pullup"
         ],
         [
           "pushup",
           1,
           12,
           null,
-          55,
+          120,
           "assessment",
           "incline_pushup"
         ],
         [
-          "reverse_lunge",
-          2,
+          "parallel_dip",
+          1,
+          7,
+          null,
+          120,
+          "assessment",
+          "assisted_dip"
+        ],
+        [
+          "split_squat",
+          1,
           "6/side",
           null,
-          55,
-          "3011",
-          "split_squat"
+          120,
+          "assessment",
+          "box_squat"
         ],
         [
-          "glute_bridge",
-          2,
-          14,
+          "hollow_hold",
+          1,
           null,
-          50,
-          "2021",
-          null
-        ],
-        [
-          "plank",
-          2,
-          null,
-          25,
-          45,
-          "isometric",
-          "incline_plank"
+          20,
+          120,
+          "assessment",
+          "dead_bug"
         ]
       ],
       "cooldown": [
@@ -5533,21 +5545,25 @@
       "level": 1,
       "number": 81,
       "title": {
-        "en": "Tempo Around the Body"
+        "en": "Exam 4: Foundations"
       },
       "description": {
-        "en": "Rotate slow lowers through rows, presses, squats, and bridges for full-body control."
+        "en": "Exam day for classes L1:061-L1:080: handstand, pull-ups, push-ups, dips, legs, core hold. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
       },
       "schedule": {
         "week": 6,
         "day": 6,
-        "day_type": "mixed_tempo",
-        "minutes": 35,
+        "day_type": "exam_assessment",
+        "minutes": 31,
         "rpe": 6,
         "focus": [
-          "tempo",
-          "full_body",
-          "control"
+          "exam",
+          "handstand",
+          "pull_up",
+          "push_up",
+          "dip",
+          "legs",
+          "core"
         ]
       },
       "warmup": [
@@ -5590,49 +5606,58 @@
       ],
       "main": [
         [
-          "inverted_row",
-          2,
-          8,
+          "wall_handstand",
+          1,
           null,
-          60,
-          "4011",
-          "high_inverted_row"
+          10,
+          120,
+          "assessment",
+          "pike_handstand_hold"
+        ],
+        [
+          "chinup",
+          1,
+          1,
+          null,
+          120,
+          "assessment",
+          "assisted_pullup"
         ],
         [
           "pushup",
-          3,
-          10,
+          1,
+          12,
           null,
-          60,
-          "4011",
+          120,
+          "assessment",
           "incline_pushup"
         ],
         [
-          "tempo_squat",
-          2,
-          10,
+          "parallel_dip",
+          1,
+          8,
           null,
-          60,
-          "5011",
+          120,
+          "assessment",
+          "assisted_dip"
+        ],
+        [
+          "split_squat",
+          1,
+          "8/side",
+          null,
+          120,
+          "assessment",
           "box_squat"
         ],
         [
-          "glute_bridge",
-          2,
-          12,
-          null,
-          50,
-          "3031",
-          null
-        ],
-        [
-          "side_plank",
+          "hollow_hold",
           1,
           null,
-          "18/side",
-          40,
-          "isometric",
-          null
+          24,
+          120,
+          "assessment",
+          "dead_bug"
         ]
       ],
       "cooldown": [
@@ -7842,21 +7867,25 @@
       "level": 1,
       "number": 98,
       "title": {
-        "en": "Squat Around a Stable Centre"
+        "en": "Exam 5: Foundations"
       },
       "description": {
-        "en": "Keep the trunk stacked while legs move through squats, lunges, and bridges."
+        "en": "Exam day for classes L1:082-L1:097: handstand, pull-ups, push-ups, dips, legs, core hold. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
       },
       "schedule": {
         "week": 9,
         "day": 2,
-        "day_type": "legs_bodyline",
-        "minutes": 37,
+        "day_type": "exam_assessment",
+        "minutes": 30,
         "rpe": 6,
         "focus": [
-          "squat",
-          "trunk_control",
-          "posterior_chain"
+          "exam",
+          "handstand",
+          "pull_up",
+          "push_up",
+          "dip",
+          "legs",
+          "core"
         ]
       },
       "warmup": [
@@ -7899,49 +7928,58 @@
       ],
       "main": [
         [
-          "tempo_squat",
-          4,
-          11,
+          "wall_handstand",
+          1,
           null,
-          65,
-          "3111",
+          10,
+          120,
+          "assessment",
+          "pike_handstand_hold"
+        ],
+        [
+          "pullup",
+          1,
+          3,
+          null,
+          120,
+          "assessment",
+          "eccentric_pullup"
+        ],
+        [
+          "pushup",
+          1,
+          12,
+          null,
+          120,
+          "assessment",
+          "incline_pushup"
+        ],
+        [
+          "parallel_dip",
+          1,
+          8,
+          null,
+          120,
+          "assessment",
+          "assisted_dip"
+        ],
+        [
+          "split_squat",
+          1,
+          "8/side",
+          null,
+          120,
+          "assessment",
           "box_squat"
         ],
         [
-          "reverse_lunge",
-          3,
-          "8/side",
+          "tuck_lsit",
+          1,
           null,
-          70,
-          "3011",
-          "split_squat"
-        ],
-        [
-          "single_leg_bridge",
-          3,
-          "8/side",
-          null,
-          50,
-          "2022",
-          "glute_bridge"
-        ],
-        [
-          "side_plank",
-          3,
-          null,
-          "20/side",
-          40,
-          "isometric",
-          null
-        ],
-        [
-          "dead_bug",
-          3,
-          "8/side",
-          null,
-          35,
-          "slow",
-          null
+          10,
+          120,
+          "assessment",
+          "support_hold"
         ]
       ],
       "cooldown": [

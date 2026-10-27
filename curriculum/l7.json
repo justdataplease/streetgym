@@ -701,7 +701,7 @@
         ],
         [
           "german_hang",
-          2,
+          1,
           null,
           20,
           45,
@@ -719,7 +719,7 @@
         ],
         [
           "one_leg_back",
-          2,
+          1,
           null,
           "8/side",
           135,
@@ -1793,7 +1793,7 @@
         ],
         [
           "german_hang",
-          2,
+          1,
           null,
           20,
           45,
@@ -1811,7 +1811,7 @@
         ],
         [
           "one_leg_back",
-          2,
+          1,
           null,
           "8/side",
           135,
@@ -1873,22 +1873,29 @@
       "level": 7,
       "number": 13,
       "title": {
-        "en": "Four Sets of Dragon Doubles"
+        "en": "Exam 1: Mastery"
       },
       "description": {
-        "en": "A planche lean and archer pull-ups lead into dragon-flag doubles, slow full negatives, Nordic negatives and Bulgarian split squats."
+        "en": "Exam day for classes L6:098-L7:012: handstand, handstand push-up, muscle-up, front lever, back lever, planche, dragon flag, dips, toes-to-bar, hamstrings. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
       },
       "schedule": {
         "week": 2,
         "day": 6,
-        "day_type": "dragon_legs_build",
-        "minutes": 51,
+        "day_type": "exam_assessment",
+        "minutes": 48,
         "rpe": 7,
         "focus": [
-          "dragon_flag",
+          "exam",
+          "handstand",
+          "vertical_push",
+          "muscle_up",
+          "front_lever",
+          "back_lever",
           "planche",
-          "hamstrings",
-          "legs"
+          "dragon_flag",
+          "dip",
+          "core",
+          "hinge"
         ]
       },
       "warmup": [
@@ -1920,22 +1927,13 @@
           "wall_slide"
         ],
         [
-          "cat_cow",
+          "scapular_pushup",
           2,
-          8,
+          10,
           null,
-          15,
-          "slow",
-          null
-        ],
-        [
-          "hollow_hold",
-          2,
-          null,
-          20,
-          30,
-          "braced",
-          "dead_bug"
+          25,
+          "2111",
+          "elevated_scapular_pushup"
         ],
         [
           "squat_jump",
@@ -1945,62 +1943,116 @@
           45,
           "soft_landing",
           "squat"
+        ],
+        [
+          "active_hang",
+          2,
+          null,
+          15,
+          30,
+          "slow",
+          "dead_hang"
         ]
       ],
       "main": [
         [
-          "planche_lean",
+          "freestanding_handstand",
           1,
           null,
-          22,
-          75,
-          "controlled",
-          "elevated_plank"
+          10,
+          120,
+          "assessment",
+          "wall_handstand"
+        ],
+        [
+          "wall_hspu",
+          1,
+          4,
+          null,
+          120,
+          "assessment",
+          "wall_hspu_negative"
+        ],
+        [
+          "strict_muscleup",
+          1,
+          5,
+          null,
+          180,
+          "assessment",
+          "band_muscleup"
+        ],
+        [
+          "straddle_front",
+          1,
+          null,
+          6,
+          150,
+          "assessment",
+          "one_leg_front"
+        ],
+        [
+          "german_hang",
+          1,
+          null,
+          10,
+          45,
+          "slow",
+          "skin_cat_partial"
+        ],
+        [
+          "straddle_back",
+          1,
+          null,
+          6,
+          150,
+          "assessment",
+          "one_leg_back"
+        ],
+        [
+          "advanced_tuck_planche",
+          1,
+          null,
+          7,
+          150,
+          "assessment",
+          "tuck_planche"
         ],
         [
           "dragon_flag",
-          3,
+          1,
           3,
           null,
           120,
-          "controlled",
+          "assessment",
           "full_dragon_negative"
         ],
         [
-          "full_dragon_negative",
-          2,
-          2,
+          "straight_bar_dip",
+          1,
+          11,
           null,
           120,
-          "7000",
-          "one_leg_dragon_negative"
+          "assessment",
+          "straight_bar_support"
+        ],
+        [
+          "toes_to_bar",
+          1,
+          9,
+          null,
+          120,
+          "assessment",
+          "hanging_leg_raise"
         ],
         [
           "nordic_negative",
-          2,
-          5,
-          null,
-          105,
-          "5010",
-          "sliding_leg_curl"
-        ],
-        [
-          "bulgarian_split_squat",
           1,
-          "10/side",
+          6,
           null,
-          60,
-          "3010",
-          "split_squat"
-        ],
-        [
-          "hanging_leg_raise",
-          2,
-          8,
-          null,
-          60,
-          "2120",
-          "knee_raise"
+          120,
+          "assessment",
+          "sliding_leg_curl"
         ]
       ],
       "cooldown": [
@@ -2346,10 +2398,10 @@
       "level": 7,
       "number": 16,
       "title": {
-        "en": "Seven-Second Straddle Front"
+        "en": "Straddle Front Eight-Second Primer"
       },
       "description": {
-        "en": "Four seven-second straddle front levers and one one-leg front lever per side lead into an advanced-tuck hold, pull-ups, single-leg deadlifts and hollow holds; the full front lever waits for eight-second straddles."
+        "en": "Four eight-second straddle front levers and one one-leg front lever per side lead into an advanced-tuck hold, pull-ups, single-leg deadlifts and hollow holds; the full front lever waits for eight-second straddles."
       },
       "schedule": {
         "week": 3,
@@ -2416,7 +2468,7 @@
           "straddle_front",
           3,
           null,
-          7,
+          8,
           120,
           "isometric",
           "one_leg_front"
@@ -2807,10 +2859,10 @@
       "level": 7,
       "number": 19,
       "title": {
-        "en": "Seven-Second Straddle Back"
+        "en": "Straddle Back Eight-Second Primer"
       },
       "description": {
-        "en": "German hangs, four seven-second straddle back levers and one one-leg back lever per side lead into a straddle front lever, feet-elevated rows and wall handstand push-ups; the full back lever waits for eight-second straddles."
+        "en": "German hangs, four eight-second straddle back levers and one one-leg back lever per side lead into a straddle front lever, feet-elevated rows and wall handstand push-ups; the full back lever waits for eight-second straddles."
       },
       "schedule": {
         "week": 3,
@@ -2875,7 +2927,7 @@
         ],
         [
           "german_hang",
-          2,
+          1,
           null,
           25,
           45,
@@ -2886,14 +2938,14 @@
           "straddle_back",
           4,
           null,
-          7,
+          8,
           120,
           "isometric",
           "one_leg_back"
         ],
         [
           "one_leg_back",
-          2,
+          1,
           null,
           "8/side",
           135,
@@ -2904,7 +2956,7 @@
           "straddle_front",
           1,
           null,
-          6,
+          7,
           120,
           "isometric",
           "one_leg_front"
@@ -3058,15 +3110,6 @@
           "one_leg_dragon_negative"
         ],
         [
-          "nordic_negative",
-          2,
-          6,
-          null,
-          105,
-          "5010",
-          "sliding_leg_curl"
-        ],
-        [
           "nordic_curl",
           1,
           1,
@@ -3074,6 +3117,15 @@
           120,
           "readiness_check",
           "nordic_negative"
+        ],
+        [
+          "nordic_negative",
+          2,
+          6,
+          null,
+          105,
+          "5010",
+          "sliding_leg_curl"
         ],
         [
           "pistol_squat",
@@ -4534,15 +4586,6 @@
       ],
       "main": [
         [
-          "straddle_front",
-          3,
-          null,
-          8,
-          120,
-          "isometric",
-          "one_leg_front"
-        ],
-        [
           "full_front",
           1,
           null,
@@ -4550,6 +4593,15 @@
           150,
           "readiness_check",
           "straddle_front"
+        ],
+        [
+          "straddle_front",
+          3,
+          null,
+          8,
+          120,
+          "isometric",
+          "one_leg_front"
         ],
         [
           "one_leg_front",
@@ -4996,21 +5048,12 @@
         ],
         [
           "german_hang",
-          2,
+          1,
           null,
           25,
           45,
           "slow",
           "skin_cat_partial"
-        ],
-        [
-          "straddle_back",
-          3,
-          null,
-          8,
-          120,
-          "isometric",
-          "one_leg_back"
         ],
         [
           "full_back",
@@ -5022,8 +5065,17 @@
           "straddle_back"
         ],
         [
+          "straddle_back",
+          3,
+          null,
+          8,
+          120,
+          "isometric",
+          "one_leg_back"
+        ],
+        [
           "one_leg_back",
-          2,
+          1,
           null,
           "8/side",
           135,
@@ -5085,22 +5137,29 @@
       "level": 7,
       "number": 34,
       "title": {
-        "en": "Four Sets of Dragon Triples"
+        "en": "Exam 2: Mastery"
       },
       "description": {
-        "en": "A planche lean and typewriter pull-ups lead into dragon-flag triples, slow full negatives, Nordic negatives and pistol squats."
+        "en": "Exam day for classes L7:014-L7:033: handstand, handstand push-up, muscle-up, front lever, back lever, planche, dragon flag, dips, toes-to-bar, hamstrings. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
       },
       "schedule": {
         "week": 5,
         "day": 6,
-        "day_type": "dragon_legs_four_sets",
-        "minutes": 53,
+        "day_type": "exam_assessment",
+        "minutes": 48,
         "rpe": 7,
         "focus": [
-          "dragon_flag",
+          "exam",
+          "handstand",
+          "vertical_push",
+          "muscle_up",
+          "front_lever",
+          "back_lever",
           "planche",
-          "hamstrings",
-          "single_leg_squat"
+          "dragon_flag",
+          "dip",
+          "core",
+          "hinge"
         ]
       },
       "warmup": [
@@ -5132,22 +5191,13 @@
           "wall_slide"
         ],
         [
-          "cat_cow",
+          "scapular_pushup",
           2,
-          8,
+          10,
           null,
-          15,
-          "slow",
-          null
-        ],
-        [
-          "hollow_hold",
-          2,
-          null,
-          20,
-          30,
-          "braced",
-          "dead_bug"
+          25,
+          "2111",
+          "elevated_scapular_pushup"
         ],
         [
           "squat_jump",
@@ -5157,62 +5207,116 @@
           45,
           "soft_landing",
           "squat"
+        ],
+        [
+          "active_hang",
+          2,
+          null,
+          15,
+          30,
+          "slow",
+          "dead_hang"
         ]
       ],
       "main": [
         [
-          "planche_lean",
+          "freestanding_handstand",
           1,
           null,
-          25,
-          75,
-          "controlled",
-          "elevated_plank"
+          10,
+          120,
+          "assessment",
+          "wall_handstand"
+        ],
+        [
+          "wall_hspu",
+          1,
+          5,
+          null,
+          120,
+          "assessment",
+          "wall_hspu_negative"
+        ],
+        [
+          "strict_muscleup",
+          1,
+          5,
+          null,
+          180,
+          "assessment",
+          "band_muscleup"
+        ],
+        [
+          "straddle_front",
+          1,
+          null,
+          8,
+          150,
+          "assessment",
+          "one_leg_front"
+        ],
+        [
+          "german_hang",
+          1,
+          null,
+          10,
+          45,
+          "slow",
+          "skin_cat_partial"
+        ],
+        [
+          "straddle_back",
+          1,
+          null,
+          8,
+          150,
+          "assessment",
+          "one_leg_back"
+        ],
+        [
+          "advanced_tuck_planche",
+          1,
+          null,
+          8,
+          150,
+          "assessment",
+          "tuck_planche"
         ],
         [
           "dragon_flag",
-          3,
+          1,
           3,
           null,
           120,
-          "controlled",
+          "assessment",
           "full_dragon_negative"
         ],
         [
-          "full_dragon_negative",
-          2,
-          2,
+          "straight_bar_dip",
+          1,
+          11,
           null,
           120,
-          "7000",
-          "one_leg_dragon_negative"
+          "assessment",
+          "straight_bar_support"
+        ],
+        [
+          "toes_to_bar",
+          1,
+          10,
+          null,
+          120,
+          "assessment",
+          "hanging_leg_raise"
         ],
         [
           "nordic_negative",
-          2,
+          1,
           6,
           null,
-          105,
-          "5010",
+          120,
+          "assessment",
           "sliding_leg_curl"
-        ],
-        [
-          "pistol_squat",
-          2,
-          "6/side",
-          null,
-          75,
-          "3010",
-          "assisted_pistol_squat"
-        ],
-        [
-          "hanging_leg_raise",
-          2,
-          8,
-          null,
-          60,
-          "2120",
-          "knee_raise"
         ]
       ],
       "cooldown": [
@@ -6096,7 +6200,7 @@
         ],
         [
           "german_hang",
-          2,
+          1,
           null,
           25,
           45,
@@ -6114,7 +6218,7 @@
         ],
         [
           "straddle_back",
-          4,
+          3,
           null,
           8,
           120,
@@ -6123,7 +6227,7 @@
         ],
         [
           "one_leg_back",
-          2,
+          1,
           null,
           "8/side",
           135,
@@ -6568,15 +6672,6 @@
       ],
       "main": [
         [
-          "advanced_tuck_planche",
-          3,
-          null,
-          10,
-          105,
-          "isometric",
-          "tuck_planche"
-        ],
-        [
           "straddle_planche",
           1,
           null,
@@ -6584,6 +6679,15 @@
           150,
           "readiness_check",
           "advanced_tuck_planche"
+        ],
+        [
+          "advanced_tuck_planche",
+          3,
+          null,
+          10,
+          105,
+          "isometric",
+          "tuck_planche"
         ],
         [
           "planche_lean",
@@ -7214,7 +7318,7 @@
         ],
         [
           "german_hang",
-          2,
+          1,
           null,
           25,
           45,
@@ -7232,7 +7336,7 @@
         ],
         [
           "straddle_back",
-          4,
+          3,
           null,
           8,
           120,
@@ -7241,7 +7345,7 @@
         ],
         [
           "one_leg_back",
-          2,
+          1,
           null,
           "8/side",
           135,
@@ -7406,15 +7510,6 @@
           "one_leg_dragon_negative"
         ],
         [
-          "nordic_negative",
-          2,
-          6,
-          null,
-          105,
-          "5010",
-          "sliding_leg_curl"
-        ],
-        [
           "nordic_curl",
           1,
           1,
@@ -7422,6 +7517,15 @@
           120,
           "readiness_check",
           "nordic_negative"
+        ],
+        [
+          "nordic_negative",
+          2,
+          6,
+          null,
+          105,
+          "5010",
+          "sliding_leg_curl"
         ],
         [
           "pistol_squat",
@@ -7713,7 +7817,7 @@
         ],
         [
           "elevated_pike_pushup",
-          2,
+          1,
           8,
           null,
           75,
@@ -7722,7 +7826,7 @@
         ],
         [
           "parallel_dip",
-          2,
+          1,
           10,
           null,
           75,
@@ -8390,21 +8494,29 @@
       "level": 7,
       "number": 55,
       "title": {
-        "en": "Dragon Triples Deload"
+        "en": "Exam 3: Mastery"
       },
       "description": {
-        "en": "A planche lean, light typewriter pull-ups, two easy dragon-flag triples, light Nordic negatives and pistols keep the trunk sharp."
+        "en": "Exam day for classes L7:035-L7:054: handstand, handstand push-up, muscle-up, front lever, back lever, planche, dragon flag, dips, toes-to-bar, hamstrings. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
       },
       "schedule": {
         "week": 8,
         "day": 6,
-        "day_type": "dragon_legs_deload",
-        "minutes": 42,
-        "rpe": 5,
+        "day_type": "exam_assessment",
+        "minutes": 50,
+        "rpe": 7,
         "focus": [
+          "exam",
+          "handstand",
+          "vertical_push",
+          "muscle_up",
+          "front_lever",
+          "back_lever",
+          "planche",
           "dragon_flag",
-          "hamstrings",
-          "deload"
+          "dip",
+          "core",
+          "hinge"
         ]
       },
       "warmup": [
@@ -8461,44 +8573,116 @@
           45,
           "soft_landing",
           "squat"
+        ],
+        [
+          "active_hang",
+          2,
+          null,
+          15,
+          30,
+          "slow",
+          "dead_hang"
         ]
       ],
       "main": [
         [
-          "planche_lean",
+          "freestanding_handstand",
           1,
           null,
-          20,
-          75,
-          "controlled",
-          "elevated_plank"
+          15,
+          120,
+          "assessment",
+          "wall_handstand"
         ],
         [
-          "dragon_flag",
-          2,
+          "deficit_wall_hspu",
+          1,
           3,
           null,
           120,
-          "controlled",
+          "assessment",
+          "wall_hspu"
+        ],
+        [
+          "strict_muscleup",
+          1,
+          5,
+          null,
+          180,
+          "assessment",
+          "band_muscleup"
+        ],
+        [
+          "full_front",
+          1,
+          null,
+          2,
+          150,
+          "assessment",
+          "straddle_front"
+        ],
+        [
+          "german_hang",
+          1,
+          null,
+          10,
+          45,
+          "slow",
+          "skin_cat_partial"
+        ],
+        [
+          "full_back",
+          1,
+          null,
+          2,
+          150,
+          "assessment",
+          "straddle_back"
+        ],
+        [
+          "advanced_tuck_planche",
+          1,
+          null,
+          10,
+          150,
+          "assessment",
+          "tuck_planche"
+        ],
+        [
+          "dragon_flag",
+          1,
+          4,
+          null,
+          120,
+          "assessment",
           "full_dragon_negative"
         ],
         [
-          "nordic_negative",
-          2,
-          5,
+          "straight_bar_dip",
+          1,
+          11,
           null,
-          105,
-          "5010",
-          "sliding_leg_curl"
+          120,
+          "assessment",
+          "straight_bar_support"
         ],
         [
-          "pistol_squat",
-          2,
-          "5/side",
+          "toes_to_bar",
+          1,
+          10,
           null,
-          75,
-          "3010",
-          "assisted_pistol_squat"
+          120,
+          "assessment",
+          "hanging_leg_raise"
+        ],
+        [
+          "nordic_negative",
+          1,
+          6,
+          null,
+          120,
+          "assessment",
+          "sliding_leg_curl"
         ]
       ],
       "cooldown": [
@@ -9371,7 +9555,7 @@
         ],
         [
           "german_hang",
-          2,
+          1,
           null,
           30,
           45,
@@ -9380,7 +9564,7 @@
         ],
         [
           "full_back",
-          3,
+          2,
           null,
           2,
           135,
@@ -9398,7 +9582,7 @@
         ],
         [
           "one_leg_back",
-          2,
+          1,
           null,
           "8/side",
           135,
@@ -9842,15 +10026,6 @@
       ],
       "main": [
         [
-          "advanced_tuck_planche",
-          3,
-          null,
-          10,
-          105,
-          "isometric",
-          "tuck_planche"
-        ],
-        [
           "straddle_planche",
           1,
           null,
@@ -9858,6 +10033,15 @@
           150,
           "readiness_check",
           "advanced_tuck_planche"
+        ],
+        [
+          "advanced_tuck_planche",
+          3,
+          null,
+          10,
+          105,
+          "isometric",
+          "tuck_planche"
         ],
         [
           "planche_lean",
@@ -10470,7 +10654,7 @@
         ],
         [
           "german_hang",
-          2,
+          1,
           null,
           30,
           45,
@@ -10479,7 +10663,7 @@
         ],
         [
           "full_back",
-          3,
+          2,
           null,
           3,
           135,
@@ -10497,7 +10681,7 @@
         ],
         [
           "one_leg_back",
-          2,
+          1,
           null,
           "8/side",
           135,
@@ -11570,7 +11754,7 @@
         ],
         [
           "german_hang",
-          2,
+          1,
           null,
           30,
           45,
@@ -11579,7 +11763,7 @@
         ],
         [
           "full_back",
-          3,
+          2,
           null,
           3,
           135,
@@ -11597,7 +11781,7 @@
         ],
         [
           "one_leg_back",
-          2,
+          1,
           null,
           "8/side",
           135,
@@ -11659,22 +11843,29 @@
       "level": 7,
       "number": 76,
       "title": {
-        "en": "Full Flags, Dragon Fours and Nordic Check"
+        "en": "Exam 4: Mastery"
       },
       "description": {
-        "en": "Full, straddle and tuck flags in practice lead into a planche lean, typewriters and assisted one-arm pulls, dragon flags, one slow negative set, Nordic negatives with one full curl check and pistols."
+        "en": "Exam day for classes L7:056-L7:075: handstand, handstand push-up, muscle-up, front lever, back lever, planche, dragon flag, dips, toes-to-bar, hamstrings. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
       },
       "schedule": {
         "week": 11,
         "day": 6,
-        "day_type": "dragon_legs_full_flag",
-        "minutes": 48,
+        "day_type": "exam_assessment",
+        "minutes": 49,
         "rpe": 7,
         "focus": [
+          "exam",
+          "handstand",
+          "vertical_push",
+          "muscle_up",
+          "front_lever",
+          "back_lever",
+          "planche",
           "dragon_flag",
-          "human_flag",
-          "hamstrings",
-          "single_leg_squat"
+          "dip",
+          "core",
+          "hinge"
         ]
       },
       "warmup": [
@@ -11706,22 +11897,13 @@
           "wall_slide"
         ],
         [
-          "cat_cow",
+          "scapular_pushup",
           2,
-          8,
+          10,
           null,
-          15,
-          "slow",
-          null
-        ],
-        [
-          "hollow_hold",
-          2,
-          null,
-          20,
-          30,
-          "braced",
-          "dead_bug"
+          25,
+          "2111",
+          "elevated_scapular_pushup"
         ],
         [
           "squat_jump",
@@ -11731,71 +11913,116 @@
           45,
           "soft_landing",
           "squat"
+        ],
+        [
+          "active_hang",
+          2,
+          null,
+          15,
+          30,
+          "slow",
+          "dead_hang"
         ]
       ],
       "main": [
         [
-          "planche_lean",
+          "freestanding_handstand",
           1,
           null,
-          25,
-          75,
-          "controlled",
-          "elevated_plank"
+          20,
+          120,
+          "assessment",
+          "wall_handstand"
         ],
         [
-          "dragon_flag",
-          2,
+          "deficit_wall_hspu",
+          1,
           4,
           null,
           120,
-          "controlled",
+          "assessment",
+          "wall_hspu"
+        ],
+        [
+          "strict_muscleup",
+          1,
+          5,
+          null,
+          180,
+          "assessment",
+          "band_muscleup"
+        ],
+        [
+          "full_front",
+          1,
+          null,
+          3,
+          150,
+          "assessment",
+          "straddle_front"
+        ],
+        [
+          "german_hang",
+          1,
+          null,
+          10,
+          45,
+          "slow",
+          "skin_cat_partial"
+        ],
+        [
+          "full_back",
+          1,
+          null,
+          3,
+          150,
+          "assessment",
+          "straddle_back"
+        ],
+        [
+          "advanced_tuck_planche",
+          1,
+          null,
+          10,
+          150,
+          "assessment",
+          "tuck_planche"
+        ],
+        [
+          "dragon_flag",
+          1,
+          4,
+          null,
+          120,
+          "assessment",
           "full_dragon_negative"
         ],
         [
-          "full_dragon_negative",
+          "straight_bar_dip",
           1,
-          3,
+          12,
           null,
           120,
-          "6000",
-          "one_leg_dragon_negative"
+          "assessment",
+          "straight_bar_support"
+        ],
+        [
+          "toes_to_bar",
+          1,
+          12,
+          null,
+          120,
+          "assessment",
+          "hanging_leg_raise"
         ],
         [
           "nordic_negative",
           1,
-          8,
-          null,
-          105,
-          "5010",
-          "sliding_leg_curl"
-        ],
-        [
-          "nordic_curl",
-          1,
-          1,
+          7,
           null,
           120,
-          "readiness_check",
-          "nordic_negative"
-        ],
-        [
-          "pistol_squat",
-          1,
-          "8/side",
-          null,
-          75,
-          "3010",
-          "assisted_pistol_squat"
-        ],
-        [
-          "hanging_leg_raise",
-          2,
-          8,
-          null,
-          60,
-          "2120",
-          "knee_raise"
+          "assessment",
+          "sliding_leg_curl"
         ]
       ],
       "cooldown": [
@@ -12059,7 +12286,7 @@
         ],
         [
           "elevated_pike_pushup",
-          2,
+          1,
           8,
           null,
           75,
@@ -12232,17 +12459,8 @@
           "assisted_pullup"
         ],
         [
-          "one_arm_pullup_negative",
-          1,
-          "1/side",
-          null,
-          120,
-          "4-second_lowering",
-          "assisted_one_arm_pullup"
-        ],
-        [
           "assisted_one_arm_pullup",
-          2,
+          1,
           "2/side",
           null,
           120,
@@ -12389,7 +12607,7 @@
         ],
         [
           "typewriter_pullup",
-          2,
+          1,
           "2/side",
           null,
           105,
@@ -12839,7 +13057,7 @@
         ],
         [
           "nordic_negative",
-          2,
+          1,
           5,
           null,
           105,
@@ -13098,15 +13316,6 @@
       ],
       "main": [
         [
-          "advanced_tuck_planche",
-          3,
-          null,
-          10,
-          105,
-          "isometric",
-          "tuck_planche"
-        ],
-        [
           "straddle_planche",
           1,
           null,
@@ -13114,6 +13323,15 @@
           150,
           "readiness_check",
           "advanced_tuck_planche"
+        ],
+        [
+          "advanced_tuck_planche",
+          3,
+          null,
+          10,
+          105,
+          "isometric",
+          "tuck_planche"
         ],
         [
           "planche_lean",
@@ -13744,7 +13962,7 @@
         ],
         [
           "german_hang",
-          2,
+          1,
           null,
           30,
           45,
@@ -13753,7 +13971,7 @@
         ],
         [
           "full_back",
-          3,
+          2,
           null,
           3,
           135,
@@ -13771,7 +13989,7 @@
         ],
         [
           "one_leg_back",
-          2,
+          1,
           null,
           "8/side",
           135,
@@ -13842,7 +14060,7 @@
         "week": 13,
         "day": 6,
         "day_type": "dragon_legs_peak",
-        "minutes": 50,
+        "minutes": 52,
         "rpe": 7,
         "focus": [
           "dragon_flag",
@@ -14205,15 +14423,6 @@
       ],
       "main": [
         [
-          "advanced_tuck_planche",
-          2,
-          null,
-          12,
-          150,
-          "isometric",
-          "tuck_planche"
-        ],
-        [
           "straddle_planche",
           1,
           null,
@@ -14221,6 +14430,15 @@
           150,
           "readiness_check",
           "advanced_tuck_planche"
+        ],
+        [
+          "advanced_tuck_planche",
+          2,
+          null,
+          12,
+          150,
+          "isometric",
+          "tuck_planche"
         ],
         [
           "planche_lean",
@@ -14946,21 +15164,29 @@
       "level": 7,
       "number": 97,
       "title": {
-        "en": "Mastery Dragon, Nordic and One-Arm Benchmark"
+        "en": "Exam 5: Mastery"
       },
       "description": {
-        "en": "Full and straddle flags in practice lead into a planche lean, recorded one-arm negatives on each side and assisted one-arm pulls, then six dragon flags, a slow negative, Nordic negatives with a full curl check and pistols. Clean reps up to the number shown: stop at the first form break and note it; don't top up with the easier option."
+        "en": "Exam day for classes L7:077-L7:096: handstand, handstand push-up, muscle-up, front lever, back lever, planche, dragon flag, dips, toes-to-bar, hamstrings. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
       },
       "schedule": {
         "week": 14,
         "day": 6,
-        "day_type": "dragon_nordic_benchmark",
-        "minutes": 48,
+        "day_type": "exam_assessment",
+        "minutes": 50,
         "rpe": 7,
         "focus": [
-          "dragon_flag_test",
-          "human_flag_test",
-          "hamstrings"
+          "exam",
+          "handstand",
+          "vertical_push",
+          "muscle_up",
+          "front_lever",
+          "back_lever",
+          "planche",
+          "dragon_flag",
+          "dip",
+          "core",
+          "hinge"
         ]
       },
       "warmup": [
@@ -15017,71 +15243,116 @@
           45,
           "soft_landing",
           "squat"
+        ],
+        [
+          "active_hang",
+          2,
+          null,
+          15,
+          30,
+          "slow",
+          "dead_hang"
         ]
       ],
       "main": [
         [
-          "planche_lean",
+          "freestanding_handstand",
           1,
           null,
-          30,
-          75,
-          "controlled",
-          "elevated_plank"
+          20,
+          120,
+          "assessment",
+          "wall_handstand"
+        ],
+        [
+          "wall_hspu",
+          1,
+          6,
+          null,
+          120,
+          "assessment",
+          "wall_hspu_negative"
+        ],
+        [
+          "strict_muscleup",
+          1,
+          6,
+          null,
+          180,
+          "assessment",
+          "band_muscleup"
+        ],
+        [
+          "full_front",
+          1,
+          null,
+          3,
+          150,
+          "assessment",
+          "straddle_front"
+        ],
+        [
+          "german_hang",
+          1,
+          null,
+          10,
+          45,
+          "slow",
+          "skin_cat_partial"
+        ],
+        [
+          "full_back",
+          1,
+          null,
+          3,
+          150,
+          "assessment",
+          "straddle_back"
+        ],
+        [
+          "advanced_tuck_planche",
+          1,
+          null,
+          12,
+          150,
+          "assessment",
+          "tuck_planche"
         ],
         [
           "dragon_flag",
           1,
-          6,
+          4,
           null,
-          240,
-          "controlled",
+          120,
+          "assessment",
           "full_dragon_negative"
         ],
         [
-          "full_dragon_negative",
+          "straight_bar_dip",
           1,
-          1,
+          15,
           null,
           120,
-          "8000",
-          "one_leg_dragon_negative"
+          "assessment",
+          "straight_bar_support"
+        ],
+        [
+          "toes_to_bar",
+          1,
+          12,
+          null,
+          120,
+          "assessment",
+          "hanging_leg_raise"
         ],
         [
           "nordic_negative",
           1,
           8,
           null,
-          105,
-          "5010",
-          "sliding_leg_curl"
-        ],
-        [
-          "nordic_curl",
-          1,
-          1,
-          null,
           120,
-          "readiness_check",
-          "nordic_negative"
-        ],
-        [
-          "pistol_squat",
-          1,
-          "10/side",
-          null,
-          75,
-          "3010",
-          "assisted_pistol_squat"
-        ],
-        [
-          "hanging_leg_raise",
-          2,
-          8,
-          null,
-          60,
-          "2120",
-          "knee_raise"
+          "assessment",
+          "sliding_leg_curl"
         ]
       ],
       "cooldown": [

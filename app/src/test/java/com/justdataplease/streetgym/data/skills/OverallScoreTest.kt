@@ -2,6 +2,7 @@ package com.justdataplease.streetgym.data.skills
 
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.File
@@ -56,7 +57,8 @@ class OverallScoreTest {
         assertEquals(OverallScore.Tier.ELITE, graduate.tier)
         // What's left: the rungs past the program, the full planche worth the most of them.
         val left = book.families.flatMap { it.skills }.filter { it.id !in taught }.map { it.id }.toSet()
-        assertTrue(left.containsAll(setOf("full_planche", "one_arm_pullup", "one_arm_pushup", "freestanding_handstand", "v_sit")))
+        assertTrue(left.containsAll(setOf("full_planche", "one_arm_pullup", "one_arm_pushup", "v_sit")))
+        assertFalse("freestanding_handstand" in left)  // round 6: practised from Level 5 and tested in the exams
     }
 
     @Test fun aTrainedRungShowsItsTestAsTheNextBigGain() {

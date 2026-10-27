@@ -2499,12 +2499,21 @@
                 ],
                 [
                   "handstand_balance",
-                  4,
+                  3,
                   null,
                   20,
                   45,
                   "easy technique",
                   "handstand_toe_pull"
+                ],
+                [
+                  "freestanding_handstand",
+                  1,
+                  null,
+                  5,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ],
                 [
                   "handstand_toe_pull",
@@ -2522,12 +2531,21 @@
               "practice": [
                 [
                   "handstand_balance",
-                  4,
+                  3,
                   null,
                   20,
                   45,
                   "easy technique",
                   "handstand_toe_pull"
+                ],
+                [
+                  "freestanding_handstand",
+                  1,
+                  null,
+                  5,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ],
                 [
                   "handstand_toe_pull",
@@ -2572,12 +2590,21 @@
               "practice": [
                 [
                   "handstand_balance",
-                  3,
+                  2,
                   null,
                   20,
                   45,
                   "easy technique",
                   "handstand_toe_pull"
+                ],
+                [
+                  "freestanding_handstand",
+                  1,
+                  null,
+                  5,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ],
                 [
                   "handstand_toe_pull",
@@ -2595,12 +2622,21 @@
               "practice": [
                 [
                   "handstand_balance",
-                  4,
+                  3,
                   null,
                   20,
                   45,
                   "easy technique",
                   "handstand_toe_pull"
+                ],
+                [
+                  "freestanding_handstand",
+                  1,
+                  null,
+                  5,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ],
                 [
                   "handstand_toe_pull",
@@ -2627,12 +2663,21 @@
                 ],
                 [
                   "handstand_balance",
-                  4,
+                  3,
                   null,
                   20,
                   45,
                   "easy technique",
                   "handstand_toe_pull"
+                ],
+                [
+                  "freestanding_handstand",
+                  1,
+                  null,
+                  5,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ],
                 [
                   "handstand_toe_pull",
@@ -2650,12 +2695,21 @@
               "practice": [
                 [
                   "handstand_balance",
-                  3,
+                  2,
                   null,
                   20,
                   45,
                   "easy technique",
                   "handstand_toe_pull"
+                ],
+                [
+                  "freestanding_handstand",
+                  1,
+                  null,
+                  5,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ],
                 [
                   "handstand_toe_pull",
@@ -2673,12 +2727,21 @@
               "practice": [
                 [
                   "handstand_balance",
-                  4,
+                  3,
                   null,
                   20,
                   45,
                   "easy technique",
                   "handstand_toe_pull"
+                ],
+                [
+                  "freestanding_handstand",
+                  1,
+                  null,
+                  5,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ],
                 [
                   "handstand_toe_pull",
@@ -2715,12 +2778,21 @@
                 ],
                 [
                   "handstand_balance",
-                  4,
+                  2,
                   null,
                   20,
                   45,
                   "easy technique",
                   null
+                ],
+                [
+                  "freestanding_handstand",
+                  2,
+                  null,
+                  5,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ]
               ]
             },
@@ -2729,7 +2801,7 @@
               "practice": [
                 [
                   "handstand_balance",
-                  4,
+                  2,
                   null,
                   20,
                   45,
@@ -2737,13 +2809,13 @@
                   null
                 ],
                 [
-                  "tuck_flag",
+                  "freestanding_handstand",
                   2,
                   null,
-                  "4/side",
-                  60,
+                  5,
+                  45,
                   "easy technique",
-                  null
+                  "handstand_balance"
                 ],
                 [
                   "straight_side_plank",
@@ -2761,12 +2833,21 @@
               "practice": [
                 [
                   "handstand_balance",
-                  4,
+                  2,
                   null,
                   20,
                   45,
                   "easy technique",
                   null
+                ],
+                [
+                  "freestanding_handstand",
+                  2,
+                  null,
+                  5,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ]
               ]
             },
@@ -2775,12 +2856,21 @@
               "practice": [
                 [
                   "handstand_balance",
-                  4,
+                  2,
                   null,
                   20,
                   45,
                   "easy technique",
                   null
+                ],
+                [
+                  "freestanding_handstand",
+                  2,
+                  null,
+                  5,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ]
               ]
             },
@@ -2798,12 +2888,21 @@
                 ],
                 [
                   "handstand_balance",
-                  4,
+                  2,
                   null,
                   20,
                   45,
                   "easy technique",
                   null
+                ],
+                [
+                  "freestanding_handstand",
+                  2,
+                  null,
+                  5,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ]
               ]
             },
@@ -2812,12 +2911,21 @@
               "practice": [
                 [
                   "handstand_balance",
-                  4,
+                  2,
                   null,
                   20,
                   45,
                   "easy technique",
                   null
+                ],
+                [
+                  "freestanding_handstand",
+                  2,
+                  null,
+                  5,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ],
                 [
                   "tuck_flag",
@@ -2844,12 +2952,21 @@
               "practice": [
                 [
                   "handstand_balance",
-                  4,
+                  2,
                   null,
                   20,
                   45,
                   "easy technique",
                   null
+                ],
+                [
+                  "freestanding_handstand",
+                  2,
+                  null,
+                  5,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ]
               ]
             }
@@ -2881,12 +2998,21 @@
                 ],
                 [
                   "handstand_balance",
-                  4,
+                  2,
                   null,
                   25,
                   45,
                   "easy technique",
                   null
+                ],
+                [
+                  "freestanding_handstand",
+                  2,
+                  null,
+                  8,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ]
               ]
             },
@@ -2895,7 +3021,7 @@
               "practice": [
                 [
                   "handstand_balance",
-                  3,
+                  1,
                   null,
                   25,
                   45,
@@ -2903,13 +3029,13 @@
                   null
                 ],
                 [
-                  "tuck_flag",
-                  3,
+                  "freestanding_handstand",
+                  2,
                   null,
-                  "5/side",
-                  60,
+                  8,
+                  45,
                   "easy technique",
-                  null
+                  "handstand_balance"
                 ],
                 [
                   "straight_side_plank",
@@ -2927,12 +3053,21 @@
               "practice": [
                 [
                   "handstand_balance",
-                  4,
+                  2,
                   null,
                   25,
                   45,
                   "easy technique",
                   null
+                ],
+                [
+                  "freestanding_handstand",
+                  2,
+                  null,
+                  8,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ]
               ]
             },
@@ -2941,12 +3076,21 @@
               "practice": [
                 [
                   "handstand_balance",
-                  4,
+                  2,
                   null,
                   25,
                   45,
                   "easy technique",
                   null
+                ],
+                [
+                  "freestanding_handstand",
+                  2,
+                  null,
+                  8,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ]
               ]
             },
@@ -2973,12 +3117,21 @@
                 ],
                 [
                   "handstand_balance",
-                  4,
+                  2,
                   null,
                   25,
                   45,
                   "easy technique",
                   null
+                ],
+                [
+                  "freestanding_handstand",
+                  2,
+                  null,
+                  8,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ]
               ]
             },
@@ -2987,12 +3140,21 @@
               "practice": [
                 [
                   "handstand_balance",
-                  3,
+                  1,
                   null,
                   25,
                   45,
                   "easy technique",
                   null
+                ],
+                [
+                  "freestanding_handstand",
+                  2,
+                  null,
+                  8,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ],
                 [
                   "tuck_flag",
@@ -3019,12 +3181,21 @@
               "practice": [
                 [
                   "handstand_balance",
-                  4,
+                  2,
                   null,
                   25,
                   45,
                   "easy technique",
                   null
+                ],
+                [
+                  "freestanding_handstand",
+                  2,
+                  null,
+                  8,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ]
               ]
             }
@@ -3047,12 +3218,21 @@
                 ],
                 [
                   "handstand_balance",
-                  4,
+                  2,
                   null,
                   30,
                   45,
                   "easy technique",
                   null
+                ],
+                [
+                  "freestanding_handstand",
+                  2,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ]
               ]
             },
@@ -3067,24 +3247,6 @@
                   45,
                   "easy technique",
                   null
-                ],
-                [
-                  "tuck_flag",
-                  2,
-                  null,
-                  "6/side",
-                  60,
-                  "easy technique",
-                  "assisted_tuck_flag"
-                ],
-                [
-                  "straddle_flag",
-                  2,
-                  null,
-                  "3/side",
-                  75,
-                  "easy technique",
-                  "tuck_flag"
                 ],
                 [
                   "straight_side_plank",
@@ -3102,12 +3264,21 @@
               "practice": [
                 [
                   "handstand_balance",
-                  4,
+                  2,
                   null,
                   30,
                   45,
                   "easy technique",
                   null
+                ],
+                [
+                  "freestanding_handstand",
+                  2,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ]
               ]
             },
@@ -3116,12 +3287,21 @@
               "practice": [
                 [
                   "handstand_balance",
-                  4,
+                  2,
                   null,
                   30,
                   45,
                   "easy technique",
                   null
+                ],
+                [
+                  "freestanding_handstand",
+                  2,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ]
               ]
             },
@@ -3148,12 +3328,21 @@
                 ],
                 [
                   "handstand_balance",
-                  4,
+                  2,
                   null,
                   30,
                   45,
                   "easy technique",
                   null
+                ],
+                [
+                  "freestanding_handstand",
+                  2,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ]
               ]
             },
@@ -3203,12 +3392,21 @@
               "practice": [
                 [
                   "handstand_balance",
-                  4,
+                  2,
                   null,
                   30,
                   45,
                   "easy technique",
                   null
+                ],
+                [
+                  "freestanding_handstand",
+                  2,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ]
               ]
             }
@@ -3235,15 +3433,6 @@
                   null
                 ],
                 [
-                  "straddle_flag",
-                  3,
-                  null,
-                  "4/side",
-                  75,
-                  "easy technique",
-                  "tuck_flag"
-                ],
-                [
                   "straight_side_plank",
                   1,
                   null,
@@ -3259,12 +3448,21 @@
               "practice": [
                 [
                   "handstand_balance",
-                  4,
+                  2,
                   null,
                   30,
                   45,
                   "easy technique",
                   null
+                ],
+                [
+                  "freestanding_handstand",
+                  2,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ]
               ]
             },
@@ -3282,12 +3480,21 @@
                 ],
                 [
                   "handstand_balance",
-                  4,
+                  2,
                   null,
                   30,
                   45,
                   "easy technique",
                   null
+                ],
+                [
+                  "freestanding_handstand",
+                  2,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ]
               ]
             },
@@ -3296,12 +3503,21 @@
               "practice": [
                 [
                   "handstand_balance",
-                  4,
+                  2,
                   null,
                   30,
                   45,
                   "easy technique",
                   null
+                ],
+                [
+                  "freestanding_handstand",
+                  2,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ]
               ]
             },
@@ -3319,12 +3535,21 @@
                 ],
                 [
                   "handstand_balance",
-                  4,
+                  2,
                   null,
                   30,
                   45,
                   "easy technique",
                   null
+                ],
+                [
+                  "freestanding_handstand",
+                  2,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ]
               ]
             },
@@ -3374,12 +3599,21 @@
               "practice": [
                 [
                   "handstand_balance",
-                  4,
+                  2,
                   null,
                   30,
                   45,
                   "easy technique",
                   null
+                ],
+                [
+                  "freestanding_handstand",
+                  2,
+                  null,
+                  10,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ]
               ]
             }
@@ -3401,15 +3635,6 @@
                   null
                 ],
                 [
-                  "straddle_flag",
-                  3,
-                  null,
-                  "5/side",
-                  75,
-                  "easy technique",
-                  "tuck_flag"
-                ],
-                [
                   "straight_side_plank",
                   1,
                   null,
@@ -3425,12 +3650,21 @@
               "practice": [
                 [
                   "handstand_balance",
-                  4,
+                  2,
                   null,
                   35,
                   45,
                   "easy technique",
                   null
+                ],
+                [
+                  "freestanding_handstand",
+                  2,
+                  null,
+                  15,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ]
               ]
             },
@@ -3448,12 +3682,21 @@
                 ],
                 [
                   "handstand_balance",
-                  4,
+                  2,
                   null,
                   35,
                   45,
                   "easy technique",
                   null
+                ],
+                [
+                  "freestanding_handstand",
+                  2,
+                  null,
+                  15,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ]
               ]
             },
@@ -3462,12 +3705,21 @@
               "practice": [
                 [
                   "handstand_balance",
-                  4,
+                  2,
                   null,
                   35,
                   45,
                   "easy technique",
                   null
+                ],
+                [
+                  "freestanding_handstand",
+                  2,
+                  null,
+                  15,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ]
               ]
             },
@@ -3485,12 +3737,21 @@
                 ],
                 [
                   "handstand_balance",
-                  4,
+                  2,
                   null,
                   35,
                   45,
                   "easy technique",
                   null
+                ],
+                [
+                  "freestanding_handstand",
+                  2,
+                  null,
+                  15,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ]
               ]
             },
@@ -3540,12 +3801,21 @@
               "practice": [
                 [
                   "handstand_balance",
-                  4,
+                  2,
                   null,
                   35,
                   45,
                   "easy technique",
                   null
+                ],
+                [
+                  "freestanding_handstand",
+                  2,
+                  null,
+                  15,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ]
               ]
             }
@@ -3567,33 +3837,6 @@
                   null
                 ],
                 [
-                  "full_flag",
-                  1,
-                  null,
-                  "2/side",
-                  90,
-                  "readiness_check",
-                  "straddle_flag"
-                ],
-                [
-                  "straddle_flag",
-                  2,
-                  null,
-                  "5/side",
-                  75,
-                  "easy technique",
-                  "tuck_flag"
-                ],
-                [
-                  "tuck_flag",
-                  1,
-                  null,
-                  "6/side",
-                  60,
-                  "easy technique",
-                  "assisted_tuck_flag"
-                ],
-                [
                   "straight_side_plank",
                   1,
                   null,
@@ -3609,12 +3852,21 @@
               "practice": [
                 [
                   "handstand_balance",
-                  4,
+                  2,
                   null,
                   40,
                   45,
                   "easy technique",
                   null
+                ],
+                [
+                  "freestanding_handstand",
+                  2,
+                  null,
+                  20,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ]
               ]
             },
@@ -3632,12 +3884,21 @@
                 ],
                 [
                   "handstand_balance",
-                  4,
+                  2,
                   null,
                   40,
                   45,
                   "easy technique",
                   null
+                ],
+                [
+                  "freestanding_handstand",
+                  2,
+                  null,
+                  20,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ]
               ]
             },
@@ -3646,12 +3907,21 @@
               "practice": [
                 [
                   "handstand_balance",
-                  4,
+                  2,
                   null,
                   40,
                   45,
                   "easy technique",
                   null
+                ],
+                [
+                  "freestanding_handstand",
+                  2,
+                  null,
+                  20,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ]
               ]
             },
@@ -3669,12 +3939,21 @@
                 ],
                 [
                   "handstand_balance",
-                  4,
+                  2,
                   null,
                   40,
                   45,
                   "easy technique",
                   null
+                ],
+                [
+                  "freestanding_handstand",
+                  2,
+                  null,
+                  20,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ]
               ]
             },
@@ -3689,6 +3968,15 @@
                   45,
                   "easy technique",
                   null
+                ],
+                [
+                  "full_flag",
+                  1,
+                  null,
+                  "2/side",
+                  90,
+                  "readiness_check",
+                  "straddle_flag"
                 ],
                 [
                   "full_flag",
@@ -3733,12 +4021,21 @@
               "practice": [
                 [
                   "handstand_balance",
-                  4,
+                  2,
                   null,
                   40,
                   45,
                   "easy technique",
                   null
+                ],
+                [
+                  "freestanding_handstand",
+                  2,
+                  null,
+                  20,
+                  45,
+                  "easy technique",
+                  "handstand_balance"
                 ]
               ]
             }

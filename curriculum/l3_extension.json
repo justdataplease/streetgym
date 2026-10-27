@@ -1885,107 +1885,187 @@
       "level": 3,
       "number": 84,
       "title": {
-        "en": "Front Lever Hold and Row"
+        "en": "Exam 4: Skill Transition"
       },
       "description": {
-        "en": "Combine controlled front-lever holds and rows with strict pulling and squats, moving to each listed regression at the first lost bodyline."
+        "en": "Exam day for classes L3:065-L3:083: handstand, handstand push-up, muscle-up, front lever, back lever, planche, dragon flag, pull-ups, dips, legs, core hold. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
       },
       "schedule": {
         "week": 10,
         "day": 1,
-        "day_type": "front_lever_strength",
-        "minutes": 48,
+        "day_type": "exam_assessment",
+        "minutes": 50,
         "rpe": 7,
         "focus": [
+          "exam",
+          "handstand",
+          "vertical_push",
+          "muscle_up",
           "front_lever",
-          "horizontal_pull",
+          "back_lever",
+          "planche",
+          "dragon_flag",
           "pull_up",
-          "legs"
+          "dip",
+          "legs",
+          "core"
         ]
       },
       "warmup": [
         [
-          "march",
+          "low_jack",
           1,
+          42,
           null,
-          130,
-          0,
+          20,
           "easy",
-          null
+          "march"
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "shoulder_cars",
-          1,
-          7,
-          null,
-          10,
-          "slow",
-          null
-        ],
-        [
-          "scapular_pull",
+          "scapular_pushup",
           2,
           7,
           null,
-          30,
+          25,
           "2111",
-          "active_hang"
+          "elevated_scapular_pushup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "active_hang",
+          2,
+          null,
+          15,
+          30,
+          "slow",
+          "dead_hang"
         ]
       ],
       "main": [
         [
-          "advanced_tuck_front",
-          3,
+          "handstand_toe_pull",
+          1,
           null,
           8,
-          90,
-          "isometric",
+          120,
+          "assessment",
+          "wall_handstand"
+        ],
+        [
+          "elevated_pike_pushup",
+          1,
+          8,
+          null,
+          120,
+          "assessment",
+          "pike_pushup"
+        ],
+        [
+          "strict_muscleup",
+          1,
+          2,
+          null,
+          180,
+          "assessment",
+          "band_muscleup"
+        ],
+        [
+          "advanced_tuck_front",
+          1,
+          null,
+          10,
+          150,
+          "assessment",
           "tuck_front_hold"
         ],
         [
-          "tuck_front_hold",
-          3,
+          "german_hang",
+          1,
           null,
-          12,
-          75,
-          "isometric",
-          "tuck_front_row"
+          10,
+          45,
+          "slow",
+          "skin_cat_partial"
         ],
         [
-          "tuck_front_row",
-          3,
-          7,
+          "tuck_back_hold",
+          1,
           null,
-          75,
-          "2111",
-          "inverted_row"
+          12,
+          150,
+          "assessment",
+          "tuck_back_entry"
+        ],
+        [
+          "planche_lean",
+          1,
+          null,
+          20,
+          150,
+          "assessment",
+          "elevated_plank"
+        ],
+        [
+          "bent_dragon_negative",
+          1,
+          2,
+          null,
+          120,
+          "assessment",
+          "candlestick"
         ],
         [
           "pullup",
-          3,
-          8,
+          1,
+          10,
           null,
-          105,
-          "21X1",
+          120,
+          "assessment",
           "assisted_pullup"
         ],
         [
+          "straight_bar_dip",
+          1,
+          11,
+          null,
+          120,
+          "assessment",
+          "straight_bar_support"
+        ],
+        [
           "assisted_pistol_squat",
-          3,
+          1,
           "6/side",
           null,
-          75,
-          "3111",
+          120,
+          "assessment",
           "split_squat"
+        ],
+        [
+          "tuck_lsit",
+          1,
+          null,
+          25,
+          120,
+          "assessment",
+          "support_hold"
         ]
       ],
       "cooldown": [
@@ -4238,21 +4318,29 @@
       "level": 3,
       "number": 100,
       "title": {
-        "en": "Hundredth-Day Bar Benchmark"
+        "en": "Exam 5: Skill Transition"
       },
       "description": {
-        "en": "Complete four clean muscle-up pairs, four sets of three chest-to-bar pulls, four sets of eight pull-ups, four sets of ten bar dips, and three sets of twelve knee raises with one repetition in reserve; use the listed regression at the first unclean repetition. Clean reps up to the number shown: stop at the first form break and note it; don't top up with the easier option."
+        "en": "Exam day for classes L3:085-L3:099: handstand, handstand push-up, muscle-up, front lever, back lever, planche, dragon flag, pull-ups, dips, legs, core hold. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
       },
       "schedule": {
         "week": 12,
         "day": 3,
-        "day_type": "submaximal_bar_benchmark",
-        "minutes": 56,
+        "day_type": "exam_assessment",
+        "minutes": 53,
         "rpe": 7,
         "focus": [
+          "exam",
+          "handstand",
+          "vertical_push",
           "muscle_up",
-          "vertical_pull",
+          "front_lever",
+          "back_lever",
+          "planche",
+          "dragon_flag",
+          "pull_up",
           "dip",
+          "legs",
           "core"
         ]
       },
@@ -4260,38 +4348,29 @@
         [
           "low_jack",
           1,
-          50,
+          48,
           null,
           0,
           "easy",
           "march"
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "arm_swings",
-          1,
-          16,
-          null,
-          10,
-          "controlled",
-          null
-        ],
-        [
-          "hollow_arch_swing",
+          "cat_cow",
           2,
           8,
           null,
-          30,
-          "controlled",
-          "hollow_hold"
+          15,
+          "slow",
+          null
         ],
         [
           "prone_ytw",
@@ -4301,53 +4380,134 @@
           15,
           "slow",
           "wall_slide"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
+        ],
+        [
+          "active_hang",
+          2,
+          null,
+          15,
+          30,
+          "slow",
+          "dead_hang"
         ]
       ],
       "main": [
         [
+          "handstand_toe_pull",
+          1,
+          null,
+          8,
+          120,
+          "assessment",
+          "wall_handstand"
+        ],
+        [
+          "elevated_pike_pushup",
+          1,
+          8,
+          null,
+          120,
+          "assessment",
+          "pike_pushup"
+        ],
+        [
           "strict_muscleup",
-          3,
+          1,
           2,
           null,
           180,
-          "explosive",
+          "assessment",
           "band_muscleup"
         ],
         [
-          "chest_to_bar",
-          3,
-          4,
+          "advanced_tuck_front",
+          1,
           null,
-          135,
-          "explosive",
-          "pullup"
+          10,
+          150,
+          "assessment",
+          "tuck_front_hold"
+        ],
+        [
+          "german_hang",
+          1,
+          null,
+          10,
+          45,
+          "slow",
+          "skin_cat_partial"
+        ],
+        [
+          "advanced_tuck_back",
+          1,
+          null,
+          7,
+          150,
+          "assessment",
+          "tuck_back_hold"
+        ],
+        [
+          "planche_lean",
+          1,
+          null,
+          20,
+          150,
+          "assessment",
+          "elevated_plank"
+        ],
+        [
+          "bent_dragon_negative",
+          1,
+          3,
+          null,
+          120,
+          "assessment",
+          "candlestick"
         ],
         [
           "pullup",
-          3,
-          8,
+          1,
+          10,
           null,
-          105,
-          "controlled",
+          120,
+          "assessment",
           "assisted_pullup"
         ],
         [
           "straight_bar_dip",
-          3,
-          10,
+          1,
+          11,
           null,
-          90,
-          "controlled",
+          120,
+          "assessment",
           "straight_bar_support"
         ],
         [
-          "hanging_leg_raise",
-          3,
-          8,
+          "assisted_pistol_squat",
+          1,
+          "6/side",
           null,
-          55,
-          "controlled",
-          "knee_raise"
+          120,
+          "assessment",
+          "split_squat"
+        ],
+        [
+          "tuck_lsit",
+          1,
+          null,
+          25,
+          120,
+          "assessment",
+          "support_hold"
         ]
       ],
       "cooldown": [

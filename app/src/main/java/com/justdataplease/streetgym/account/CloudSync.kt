@@ -7,11 +7,12 @@ import com.google.firebase.firestore.FieldValue
 import com.justdataplease.streetgym.billing.Entitlement
 import com.justdataplease.streetgym.data.library.LibraryCodec
 import com.justdataplease.streetgym.data.library.LibraryRepository
+import com.justdataplease.streetgym.data.progress.ExamLog
 import com.justdataplease.streetgym.data.progress.SharedPreferencesProgressRepository
 import org.json.JSONObject
 
 /**
- * Pro's cloud progress: users/{uid}/data/progress (completed days, history, skill tests) and users/{uid}/data/library
+ * Pro's cloud progress: users/{uid}/data/progress (completed days, history, skill tests, exam results) and users/{uid}/data/library
  * (My workouts).
  * A sync reads both documents, merges them into the phone and writes back only what changed: two reads and at most
  * two writes. It's forced after a change on the phone (sign-in, a finished workout, My workouts, Sync now); otherwise
@@ -43,18 +44,20 @@ class CloudSync(
             val cloudLibrary = reads[1].result as DocumentSnapshot
             val cloudSessions = cloudProgress.getString("sessions")
             val cloudTests = cloudProgress.getString("tests")
+            val cloudExams = cloudProgress.getString("exams")
             @Suppress("UNCHECKED_CAST")
             val cloudCompleted = (cloudProgress.get("completed") as? List<String>).orEmpty()
-            val (completed, sessions, tests) = progress.mergeCloud(cloudCompleted, cloudSessions, cloudTests)
+            val (completed, sessions, tests, exams) = progress.mergeCloud(cloudCompleted, cloudSessions, cloudTests, cloudExams)
             val cloudLibraryJson = cloudLibrary.getString("library")
             val mergedLibrary = library.state().merge(LibraryCodec.decode(cloudLibraryJson?.let { runCatching { JSONObject(it) }.getOrNull() }))
             library.replace(mergedLibrary)
             val libraryJson = LibraryCodec.encode(mergedLibrary).toString()
             val batch = db.batch()
             var writes = 0
-            if (sessions != cloudSessions || tests != cloudTests || completed != cloudCompleted.toSet()) {
+            if (sessions != cloudSessions || tests != cloudTests || exams != (cloudExams ?: ExamLog().encode()) ||
+                completed != cloudCompleted.toSet()) {
                 batch.set(progressDoc, mapOf("completed" to completed.sorted(), "sessions" to sessions, "tests" to tests,
-                    "updated_at" to FieldValue.serverTimestamp())); writes++
+                    "exams" to exams, "updated_at" to FieldValue.serverTimestamp())); writes++
             }
             if (cloudLibraryJson == null || LibraryCodec.decode(JSONObject(cloudLibraryJson)) != mergedLibrary) {
                 batch.set(libraryDoc, mapOf("library" to libraryJson, "updated_at" to FieldValue.serverTimestamp())); writes++

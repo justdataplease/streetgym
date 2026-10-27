@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="exam_badge">Exam</string>
+    <string name="exam_results_title">Exam: tick the targets you reached</string>
+    <string name="exam_save">Save results</string>
+    <string name="exam_passed_title">Exam passed</string>
+    <string name="exam_passed_message">Every target reached. The next block starts with your next class.</string>
+    <string name="exam_missed_title">Not every target yet</string>
+    <string name="exam_missed_message">Not yet: %1$s.\n\nRepeat the %2$d classes from %3$s and take this exam again? Completed days, history and skills are kept. Or keep going with the next block.</string>
+    <string name="exam_repeat_block">Repeat %1$d classes</string>
+    <string name="exam_continue">Keep going</string>
+    <string name="exam_saved_not_yet">Exam saved: not every target yet.</string>
+    <string name="exam_class_label">Level %1$d, class %2$d</string>
+    <string name="exam_replay_title">Repeating a block before its exam</string>
+    <string name="exam_replay_today">Repeating for the exam</string>
+    <string name="exam_replay_body">You stopped at %1$s. Today brings you through the block and its exam again, then back there. Completed days and history are kept.</string>
+    <string name="exam_card_untaken">A test day: one fresh set of each skill at the number shown. After the class you tick the targets you reached; if one is missed, you can repeat the block before moving on.</string>
+    <string name="exam_card_result">Last taken %1$s: %2$d of %3$d targets reached.</string>
+    <string name="exam_card_missed">Not yet: %1$s.</string>
+    <string name="exam_card_passed">Passed on %1$s.</string>
+    <string name="exam_list_passed">Exam · passed</string>
+    <string name="exam_list_not_yet">Exam · not yet</string>
+</resources>

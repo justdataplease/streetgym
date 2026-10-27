@@ -117,16 +117,19 @@ class SharedPreferencesProgressRepository(
     fun levelReplay(): LevelReplay? = synchronized(lock) {
         val level = preferences.getInt(KEY_REPLAY_LEVEL, 0)
         if (level <= 0) null
-        else LevelReplay(level, preferences.getStringSet(KEY_REPLAY_REPEATED_IDS, emptySet()).orEmpty().toSet())
+        else LevelReplay(level, preferences.getStringSet(KEY_REPLAY_REPEATED_IDS, emptySet()).orEmpty().toSet(),
+            preferences.getString(KEY_REPLAY_FROM, null))
     }
 
-    fun startLevelReplay(levelNumber: Int) = synchronized(lock) {
+    /** Goes back to [levelNumber]'s first day, or to [fromProgramId] in it (an exam's block). */
+    fun startLevelReplay(levelNumber: Int, fromProgramId: String? = null) = synchronized(lock) {
         require(levelNumber > 0)
-        preferences.edit().putInt(KEY_REPLAY_LEVEL, levelNumber).remove(KEY_REPLAY_REPEATED_IDS).apply()
+        preferences.edit().putInt(KEY_REPLAY_LEVEL, levelNumber).remove(KEY_REPLAY_REPEATED_IDS)
+            .putString(KEY_REPLAY_FROM, fromProgramId).apply()
     }
 
     fun endLevelReplay() = synchronized(lock) {
-        preferences.edit().remove(KEY_REPLAY_LEVEL).remove(KEY_REPLAY_REPEATED_IDS).apply()
+        preferences.edit().remove(KEY_REPLAY_LEVEL).remove(KEY_REPLAY_REPEATED_IDS).remove(KEY_REPLAY_FROM).apply()
     }
 
     /** During a replay, also records [programIds] as repeated, so Today moves on. */
@@ -142,16 +145,24 @@ class SharedPreferencesProgressRepository(
         preferences.edit().putString(KEY_SKILL_TESTS, skillTests().record(skillId, passed, at).encode()).apply()
     }
 
-    /** Pro: merges the cloud copy into this device ([ProgressMerge]) and returns the merged copy to upload. */
-    fun mergeCloud(completed: Collection<String>, sessionsJson: String?, testsJson: String?): CloudProgress = synchronized(lock) {
-        val mergedCompleted = ProgressMerge.completed(completedProgramIds(), completed)
-        val merged = encodeSessions(ProgressMerge.sessions(
-            decodeSessions(preferences.getString(KEY_SESSION_HISTORY, null)), decodeSessions(sessionsJson))).toString()
-        val tests = skillTests().merge(SkillTestLog.decode(testsJson)).encode()
-        preferences.edit().putStringSet(KEY_COMPLETED_PROGRAM_IDS, mergedCompleted).putString(KEY_SESSION_HISTORY, merged)
-            .putString(KEY_SKILL_TESTS, tests).apply()
-        CloudProgress(mergedCompleted, merged, tests)
+    override fun examLog(): ExamLog = synchronized(lock) { ExamLog.decode(preferences.getString(KEY_EXAMS, null)) }
+
+    override fun recordExam(result: ExamResult) = synchronized(lock) {
+        preferences.edit().putString(KEY_EXAMS, examLog().record(result).encode()).apply()
     }
+
+    /** Pro: merges the cloud copy into this device ([ProgressMerge]) and returns the merged copy to upload. */
+    fun mergeCloud(completed: Collection<String>, sessionsJson: String?, testsJson: String?, examsJson: String? = null): CloudProgress =
+        synchronized(lock) {
+            val mergedCompleted = ProgressMerge.completed(completedProgramIds(), completed)
+            val merged = encodeSessions(ProgressMerge.sessions(
+                decodeSessions(preferences.getString(KEY_SESSION_HISTORY, null)), decodeSessions(sessionsJson))).toString()
+            val tests = skillTests().merge(SkillTestLog.decode(testsJson)).encode()
+            val exams = examLog().merge(ExamLog.decode(examsJson)).encode()
+            preferences.edit().putStringSet(KEY_COMPLETED_PROGRAM_IDS, mergedCompleted).putString(KEY_SESSION_HISTORY, merged)
+                .putString(KEY_SKILL_TESTS, tests).putString(KEY_EXAMS, exams).apply()
+            CloudProgress(mergedCompleted, merged, tests, exams)
+        }
 
     override fun abandonWorkout() {
         preferences.edit().remove(KEY_ACTIVE_WORKOUT).apply()
@@ -248,5 +259,7 @@ class SharedPreferencesProgressRepository(
         private const val KEY_REPLAY_LEVEL = "replay_level"
         private const val KEY_REPLAY_REPEATED_IDS = "replay_repeated_ids"
         private const val KEY_SKILL_TESTS = "skill_tests"
+        private const val KEY_EXAMS = "exam_results"
+        private const val KEY_REPLAY_FROM = "replay_from_program_id"
     }
 }

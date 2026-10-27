@@ -30,6 +30,7 @@ def dose_values(value, sets):
     return [(v, bool(match[2])) for v in (values * sets if len(values) == 1 else values)]
 new_ids = {"overhead_line", "kneeling_side_plank", "pike_handstand_hold", "wall_handstand", "handstand_toe_pull", "handstand_balance", "flag_ground_support", "assisted_tuck_flag", "tuck_flag"}
 FLAG_PRACTICE_IDS = {"flag_ground_support", "assisted_tuck_flag", "tuck_flag", "straddle_flag", "full_flag"}
+HARD_FLAG_IDS = {"tuck_flag", "straddle_flag", "full_flag"}
 LEVER_AND_MUSCLE_UP_IDS = {"tuck_front_hold", "advanced_tuck_front", "one_leg_front", "straddle_front", "full_front", "tuck_back_hold",
                            "advanced_tuck_back", "one_leg_back", "straddle_back", "full_back", "strict_muscleup", "band_muscleup",
                            "negative_muscleup", "jump_muscleup"}
@@ -82,8 +83,8 @@ for level in catalog["levels"]:
     level_plan = plan["levels"][level["number"]-1]
     assert [ph["through_program"] for ph in level_plan["phases"]] == [35, 70, 100]
     # Everyday small practice: handstand in every class (recovery classes drop it), flag twice
-    # a week (once in Levels 4-5, beside the planche work: round 5b), and both doses rise from phase to phase.
-    for goal, days in (("handstand", 7), ("human_flag", 1 if level["number"] in (4, 5) else 2)):
+    # a week (once from Level 4, never beside the planche work: rounds 5b and 6), and both doses rise from phase to phase.
+    for goal, days in (("handstand", 7), ("human_flag", 1 if level["number"] >= 4 else 2)):
         phases = level_plan["phases"]
         for earlier, later in zip(phases, phases[1:]):
             assert progresses(earlier, later, goal), (level["number"], goal, later["through_program"])
@@ -100,6 +101,9 @@ for level in catalog["levels"]:
         expected = phase_for(level_plan, p["number"])["days"][day-1]["practice"]
         if (p["schedule"]["rpe"] is not None and p["schedule"]["rpe"] <= 4) or p.get("morning_recovery"):
             expected = []
+        # An exam day tests the handstand in its main work and has no practice block (round 6).
+        if p["schedule"]["day_type"].startswith("exam"):
+            expected = []
         # Authored classes that train levers or muscle-ups leave flag practice out (pulling-tendon load).
         if p["origin"] != "apk_authentic" and {s[0] for s in p.get("main", [])} & LEVER_AND_MUSCLE_UP_IDS:
             expected = [s for s in expected if s[0] not in FLAG_PRACTICE_IDS]
@@ -109,9 +113,15 @@ for level in catalog["levels"]:
         # Original-source training classes add the level's source practice (pike push-ups, round 5b).
         if p["origin"] == "apk_authentic" and expected:
             expected = expected + next((d["practice"] for d in level_plan.get("source_practice", []) if d["day"] == day), [])
+        # Tuck-or-harder flags lead the main work of authored classes instead (round 6).
+        if p["origin"] != "apk_authentic":
+            hard = [s for s in expected if s[0] in HARD_FLAG_IDS]
+            expected = [s for s in expected if s[0] not in HARD_FLAG_IDS]
+            assert p["training_main"][:len(hard)] == hard, p["id"]
         assert practice == expected, p["id"]
         assert sum(s[1] for s in practice) <= 8, p["id"]
-        for step in practice:
+        # The tuck-or-harder flags that lead the main work are still the class's flag practice (round 6).
+        for step in practice + [s for s in p.get("training_main") or [] if s[0] in HARD_FLAG_IDS]:
             mid, sets, reps, seconds, rest, tempo, regression = step
             assert mid in movements and mid in asset["movements"]
             # Near-maximal straddle and full flag holds get longer rests.
@@ -157,7 +167,7 @@ for level in catalog["levels"]:
                         assert dose["break_seconds"] >= 60
 
         if p["origin"] != "apk_authentic":
-            working = p["training_main"]
+            working = [s for s in p["training_main"] if s[0] not in HARD_FLAG_IDS]  # flags lead the main work
             original = p["main"]
             assert len(working) == len(original), p["id"]
             assert sum(s[1] for s in working + practice) <= limits["main_sets_including_practice"], p["id"]
@@ -172,10 +182,11 @@ for level in catalog["levels"]:
         assert len(overlay["cooldown"]) >= 3
         assert sum(movements[s[0]]["category"] in ("static_stretch", "static_cooldown") for s in overlay["cooldown"]) >= 2
 
-    assert min(counts.values()) >= 10, (level["number"], counts)
+    # Round 6: the flag comes once a week from Level 4, and an exam day sometimes takes its place.
+    assert min(counts.values()) >= 8, (level["number"], counts)
 # The 2.4.0 pro-athlete reviews added the straight side plank, cartwheel exits, the straddle and full flag and
-# (round 2) the kick-up to the wall; round 5b the source blocks' pike push-ups.
-assert seen == new_ids | {"straight_side_plank", "handstand_exit", "straddle_flag", "full_flag", "wall_kickup", "pike_pushup"}, seen ^ new_ids
+# (round 2) the kick-up to the wall; round 5b the source blocks' pike push-ups; round 6 the freestanding handstand.
+assert seen == new_ids | {"straight_side_plank", "handstand_exit", "straddle_flag", "full_flag", "wall_kickup", "pike_pushup", "freestanding_handstand"}, seen ^ new_ids
 prescribed = {step[0] for level in catalog["levels"] for p in level["programs"] for step in p.get("main", [])}
 # Since the 2.4.0 reviews the full planche lies beyond Level 6: its readiness check became a straddle planche check.
 assert {"straddle_planche", "full_front", "straddle_front", "full_back", "straddle_back", "dragon_flag"} <= prescribed

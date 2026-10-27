@@ -690,6 +690,9 @@ if ($baselineDetailedCount -ne 90 -or $baselinePlaceholderCount -ne 289) {
 # App position -> source slot (catalog_metadata.json app_slot_order; Level 2 runs slots 31-70 before 1-30).
 $sourceSlotByPosition = @{}
 $catalogMetadata = Get-Content -Raw -Encoding UTF8 -LiteralPath $CatalogMetadataPath | ConvertFrom-Json
+# App positions where an authored class takes the place of an original-source class (round 6 exam days).
+$replacedSourceSlots = @($catalogMetadata.replaced_source_slots | ForEach-Object { [string]$_ })
+$replacedSourceCount = $replacedSourceSlots.Count
 foreach ($slotOrder in @($catalogMetadata.app_slot_order.levels)) {
     $orderLevel = [int]$slotOrder.level
     $orderSlots = @(foreach ($range in @($slotOrder.source_slots)) { [int]$range[0]..[int]$range[1] })
@@ -788,7 +791,7 @@ foreach ($level in $levels) {
         if ($levelNumber -le 3) {
             if ($baselineBySlot.ContainsKey($slot)) {
                 $baselineProgram = $baselineBySlot[$slot]
-                if ([bool]$baselineProgram.has_details) { $expectedOrigin = "apk_authentic" }
+                if ([bool]$baselineProgram.has_details -and "$levelNumber-$programNumber" -notin $replacedSourceSlots) { $expectedOrigin = "apk_authentic" }
                 else { $expectedOrigin = "reconstructed_placeholder" }
             } elseif ($levelNumber -eq 3 -and $programNumber -ge 71 -and $programNumber -le 100) {
                 $expectedOrigin = "llm_extension"
@@ -1066,7 +1069,10 @@ foreach ($level in $levels) {
         }
     }
 
-    $authoredPrograms = @($programs | Where-Object { [string]$_.origin -ne "apk_authentic" } | Sort-Object number)
+    # Replaced original-source positions keep the original block's calendar, outside the authored sequence.
+    $authoredPrograms = @($programs | Where-Object {
+        [string]$_.origin -ne "apk_authentic" -and "$levelNumber-$([int]$_.number)" -notin $replacedSourceSlots
+    } | Sort-Object number)
     $consecutiveHardPrograms = 0
     $hardRunStartNumber = 0
     for ($authoredIndex = 0; $authoredIndex -lt $authoredPrograms.Count; $authoredIndex++) {
@@ -1265,11 +1271,11 @@ foreach ($requiredLevel in 1..7) {
 }
 if ($totalPrograms -ne 700) { Add-Error "Expected 700 total programs, found $totalPrograms" }
 if ($programIds.Count -ne 700) { Add-Error "Expected 700 unique program ids, found $($programIds.Count)" }
-if ([int]$originCounts.apk_authentic -ne 90) {
-    Add-Error "Expected 90 apk_authentic programs, found $($originCounts.apk_authentic)"
+if ([int]$originCounts.apk_authentic -ne 90 - $replacedSourceCount) {
+    Add-Error "Expected $(90 - $replacedSourceCount) apk_authentic programs, found $($originCounts.apk_authentic)"
 }
-if ([int]$originCounts.reconstructed_placeholder -ne 180) {
-    Add-Error "Expected 180 reconstructed_placeholder programs, found $($originCounts.reconstructed_placeholder)"
+if ([int]$originCounts.reconstructed_placeholder -ne 180 + $replacedSourceCount) {
+    Add-Error "Expected $(180 + $replacedSourceCount) reconstructed_placeholder programs (placeholders and replaced original-source classes), found $($originCounts.reconstructed_placeholder)"
 }
 if ([int]$originCounts.llm_extension -ne 30) {
     Add-Error "Expected 30 llm_extension programs, found $($originCounts.llm_extension)"
@@ -1281,8 +1287,9 @@ if ([int]$originCounts.new_level -ne 400) {
 $expectedSummary = [ordered]@{
     level_count = 7
     program_count = 700
-    authentic_program_count = 90
+    authentic_program_count = 90 - $replacedSourceCount
     reconstructed_placeholder_count = 180
+    replaced_source_program_count = $replacedSourceCount
     new_extension_program_count = 30
     new_level_program_count = 400
     archived_legacy_placeholder_count = 109

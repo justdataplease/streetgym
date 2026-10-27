@@ -35,6 +35,7 @@ WALL_HSPU = {"wall_hspu", "wall_hspu_negative", "deficit_wall_hspu", "freestandi
 LSITS = {"tuck_lsit", "one_leg_lsit", "lsit"}
 HINGE = {"glute_bridge", "single_leg_bridge", "sliding_leg_curl", "nordic_negative", "single_leg_rdl"}
 WRIST = {"wrist_circles", "wrist_rocks", "wrist_pushup"}
+HARD_FLAGS = {"tuck_flag", "straddle_flag", "full_flag"}
 
 
 def effective(p):
@@ -47,6 +48,11 @@ def effective(p):
     for e in (p.get("training_content") or p["content"])["exercises"]:
         rows.append((e.get("movement_id") or "", len(e["sets"]), None))
     return rows
+
+
+def practice_rows(p):
+    """The practice plus the tuck-or-harder flags, which lead the main work from round 6."""
+    return list(p["practice"]) + [s for _, _, s in effective(p) if s is not None and s[0] in HARD_FLAGS]
 
 
 def warmup(p):
@@ -88,8 +94,8 @@ for p in classes:
     present = {mid for mid, _, _ in rows}
     trained_here = {mid for mid, _, s in rows if s is not None and s[5] != "readiness_check"}
     for mid, sets, step in rows:
-        if mid not in READINESS:
-            continue
+        if mid not in READINESS or (step is not None and step[5] == "assessment"):
+            continue  # round 6: an exam's single test set of the trained shape is neither a check nor training
         if mid in FULL_HOLDS and p["level"] == 7 and step[5] != "readiness_check":
             secs = numbers(step[3])
             if sets > 3 or step[2] is not None or not secs or not 1 <= min(secs) <= max(secs) <= 3 or step[6] != FULL_HOLDS[mid]:
@@ -127,7 +133,7 @@ for i in range(len(classes) - 2):
 
 # 4. Planche is a supporting goal: at most five planche hold sets per class from Level 4
 #    (assigned checks and baselines keep their authored test content).
-TEST_DAY = re.compile(r"(check|assessment|audit|gate|baseline|benchmark)")
+TEST_DAY = re.compile(r"(check|assessment|audit|gate|baseline|benchmark|exam)")
 for p in classes:
     if p["level"] >= 4 and not TEST_DAY.search(p["schedule"]["day_type"]):
         sets = sum(n for mid, n, _ in effective(p) if mid in PLANCHE_HOLDS)
@@ -145,7 +151,8 @@ def test_week(week):
 
 for level in catalog["levels"]:
     for calendar in (False, True):
-        rows = level["programs"] if calendar else [p for p in level["programs"] if p["origin"] != "apk_authentic"]
+        rows = level["programs"] if calendar else [p for p in level["programs"] if p["origin"] != "apk_authentic"
+                                                   and not (p.get("legacy") or {}).get("has_details")]
         for w in range(0, len(rows) - 6, 7):
             week = rows[w:w + 7]
             if test_week(week):
@@ -171,7 +178,8 @@ for p in classes:
 # 7. Everyday handstand practice: every class except recovery classes.
 for p in classes:
     recovery = p.get("morning_recovery") or (p["schedule"]["rpe"] is not None and p["schedule"]["rpe"] <= 4)
-    if not recovery and not any("handstand" in movements[s[0]]["patterns"] for s in p["practice"]):
+    rows = list(p["practice"]) + ([s for _, _, s in effective(p) if s is not None] if p["schedule"]["day_type"].startswith("exam") else [])
+    if not recovery and not any("handstand" in movements[s[0]]["patterns"] for s in rows):
         errors.append(f"{p['id']} is a training class without handstand practice")
 
 # 8. Harder basics keep strength rising with the skills.
@@ -212,7 +220,8 @@ def recovery(p):
 
 def weeks(level):
     """Stored seven-class authored weeks of a level, skipping test and deload weeks."""
-    rows = [p for p in level["programs"] if p["origin"] != "apk_authentic"]
+    # Round 6: an authored class in an original-source position (an exam day) keeps the original block's calendar.
+    rows = [p for p in level["programs"] if p["origin"] != "apk_authentic" and not (p.get("legacy") or {}).get("has_details")]
     for w in range(0, len(rows) - 6, 7):
         week = rows[w:w + 7]
         training = [p for p in week if not recovery(p)]
@@ -301,21 +310,21 @@ for p in classes:
 FLAG = {"flag_ground_support", "assisted_tuck_flag", "tuck_flag", "straddle_flag", "full_flag"}
 LEVER_MU = set(LADDERS["front lever"]) | set(LADDERS["back lever"]) | set(FULL_HOLDS) | {"strict_muscleup", "band_muscleup", "negative_muscleup", "jump_muscleup"}
 for p in authored:
-    if {s[0] for s in p["practice"]} & FLAG and {mid for mid, _, _ in effective(p)} & LEVER_MU:
+    if {s[0] for s in practice_rows(p)} & FLAG and {mid for mid, _, _ in effective(p)} & LEVER_MU:
         errors.append(f"{p['id']} pairs flag practice with lever or muscle-up work")
-if not any(s[0] == "straddle_flag" for p in classes for s in p["practice"]) or \
-        not any(s[0] == "full_flag" and s[5] == RC for p in classes for s in p["practice"]):
+if not any(s[0] == "straddle_flag" for p in classes for s in practice_rows(p)) or \
+        not any(s[0] == "full_flag" and s[5] == RC for p in classes for s in practice_rows(p)):
     errors.append("the human-flag ladder must train the straddle flag and check the full flag")
 for easier, harder in zip(["assisted_tuck_flag", "tuck_flag"], ["tuck_flag", "straddle_flag"]):
-    starts = {m: min((index[p["id"]] for p in classes for s in p["practice"] if s[0] == m), default=None) for m in (easier, harder)}
+    starts = {m: min((index[p["id"]] for p in classes for s in practice_rows(p) if s[0] == m), default=None) for m in (easier, harder)}
     if None in starts.values() or starts[harder] < starts[easier] + GAP:
         errors.append(f"human flag: {harder} must start at least {GAP} classes after {easier}")
 # The full flag is a readiness check until the last phase of Level 7, which trains it as brief holds (at most
 # 3 sets of 1-3 s per side) with the straddle flag trained in the same class as the fallback.
 full_flag_first = None
 for p in classes:
-    trained_flags = {s[0] for s in p["practice"] if s[5] != RC}
-    for s in p["practice"]:
+    trained_flags = {s[0] for s in practice_rows(p) if s[5] != RC}
+    for s in practice_rows(p):
         if s[0] != "full_flag" or s[5] == RC:
             continue
         secs = numbers(s[3])
@@ -327,7 +336,7 @@ for p in classes:
             errors.append(f"{p['id']} trains the full flag without the straddle flag in the same class")
         if full_flag_first is None:
             full_flag_first = index[p["id"]]
-straddle_flag_first = min((index[p["id"]] for p in classes for s in p["practice"] if s[0] == "straddle_flag"), default=None)
+straddle_flag_first = min((index[p["id"]] for p in classes for s in practice_rows(p) if s[0] == "straddle_flag"), default=None)
 if full_flag_first is None or straddle_flag_first is None or full_flag_first < straddle_flag_first + GAP:
     errors.append(f"human flag: trained full flags must start at least {GAP} classes after the straddle flag")
 for level in catalog["levels"]:
@@ -387,6 +396,8 @@ for a, b in zip(classes, classes[1:]):
         errors.append(f"{b['id']} holds a planche the day after {a['id']}")
 for p in classes:
     ids = {mid for mid, _, _ in effective(p)}
+    if p["schedule"]["day_type"].startswith("exam"):
+        continue  # an exam day tests each skill once (round 6)
     if ids & {"tuck_planche", "advanced_tuck_planche"} and ids & WALL_HSPU:
         errors.append(f"{p['id']} combines wall handstand push-ups with planche holds")
 
@@ -683,9 +694,9 @@ for w in range(0, len(level7) - 6, 7):
         errors.append(f"Level 7 classes {w + 1}-{w + 7} drop the wall handstand push-up")
 
 # 31. The full-flag readiness checks start at L7:071, after twice-weekly straddle-flag work.
-first_flag = next((p for p in classes for s in p["practice"] if s[0] == "full_flag"), None)
+first_flag = next((p for p in classes for s in practice_rows(p) if s[0] == "full_flag"), None)
 if first_flag is None or (first_flag["level"], first_flag["number"]) < (7, 71) or \
-        next(s for s in first_flag["practice"] if s[0] == "full_flag")[5] != RC:
+        next(s for s in practice_rows(first_flag) if s[0] == "full_flag")[5] != RC:
     errors.append("the first full flag must be a readiness check at L7:071 or later")
 
 # ---- Calibration (26 October 2026): progression from easiest to hardest, and visible milestones ----
@@ -746,7 +757,9 @@ for p in classes:
         if s[5] == RC or movements[s[0]]["category"] in RATCHET_SKIP or slow_tempo(s[5]):
             continue
         # Benchmarks (assessment sets, single sets on benchmark, audit and checkpoint days) form their own series.
-        series = "test" if s[5] == "assessment" or (re.search(r"(benchmark|assessment|audit|checkpoint)", dt) and s[1] == 1)             else "build"
+        series = "test" if s[5] == "assessment" or (re.search(r"(benchmark|assessment|audit|checkpoint)", dt) and s[1] == 1) else "build"
+        if dt.startswith("exam"):
+            series = "exam"  # round 6: exam targets follow the block's trained dose and never fall from exam to exam
         k = 3 if s[3] is not None else 2
         dose = per_set(s[k])
         if dose is None:
@@ -850,15 +863,15 @@ for p in classes:
         errors.append(f"{p['id']} is day 7 of a Level {p['level']} build week but not an easy day")
 
 # ---- Round 5 (27 October 2026): the curriculum review by a former gymnast and adult calisthenics coach ----
-# 38. Before Level 6 a class holds at most eight straight-arm lever sets (front and back lever rungs, German hangs and
-#     tuck-or-harder planche holds; per-side sets count twice).
+# 38. A class holds at most eight straight-arm lever sets (front and back lever rungs, German hangs and
+#     tuck-or-harder planche holds; per-side sets count twice). Round 6: in every level, Levels 6-7 included.
 LEVER_SETS = LEVER_HOLDS | {"german_hang"} | TUCK_PLANCHE_UP
 for p in classes:
-    if p["level"] >= 6 or p["origin"] == "apk_authentic":
+    if p["origin"] == "apk_authentic":
         continue
     holds = sum(s[1] * (2 if "/side" in str(s[3] if s[3] is not None else s[2]) else 1) for s in work(p) if s[0] in LEVER_SETS)
     if holds > 8:
-        errors.append(f"{p['id']} holds {holds} straight-arm lever sets; at most 8 before Level 6")
+        errors.append(f"{p['id']} holds {holds} straight-arm lever sets; at most 8")
 
 # 39. Recovery classes at RPE 3 or easier stay short: 25 minutes or less, walks of 8 minutes or less and 3 minutes of
 #     slow breathing or less. Round 5b: RPE 4 classes too, within 30 minutes.
@@ -922,6 +935,79 @@ for i in range(1, len(classes)):
     if classes[i]["level"] >= 3 and flag_days[i] and flag_days[i - 1]:
         errors.append(f"{classes[i]['id']} trains the flag the day after {classes[i - 1]['id']}")
 
+# ---- Round 6 (27 October 2026): exam days and the three-coach panel ----
+# 44. An exam day about every 20 classes: the first by class 20, then at most 25 classes apart. Each tests one set of
+#     each skill its block trained (a movement the block prescribed outside checks and tests), with no practice block,
+#     and a German hang directly before its back-lever test.
+EXAMS = [p for p in classes if p["schedule"]["day_type"].startswith("exam")]
+exam_positions = [index[p["id"]] for p in EXAMS]
+if not exam_positions or exam_positions[0] > 20:
+    errors.append("the first exam day must come by class 20")
+exam_gaps = [b - a for a, b in zip(exam_positions, exam_positions[1:])]
+for gap, p in zip(exam_gaps, EXAMS[1:]):
+    if gap > 25:
+        errors.append(f"{p['id']} comes {gap} classes after the previous exam; at most 25")
+block_start = 1
+for p in EXAMS:
+    tests = [s for _, _, s in effective(p) if s is not None and s[5] == "assessment"]
+    if len(tests) < 3 or p["practice"]:
+        errors.append(f"{p['id']} is an exam day with fewer than three tests or with a practice block")
+    trained = set()
+    for q in classes[block_start - 1:index[p["id"]] - 1]:
+        trained |= {s[0] for s in work(q) if s[5] not in (RC, "assessment")}
+        trained |= {mid for mid, _, s in effective(q) if s is None and mid}
+        trained |= {st.get("movement_id") or dict(SOURCE_NAMES, Squat="squat").get(st["name"]["en"] or e["name"]["en"])
+                    for e in (q.get("training_content") or {}).get("exercises", []) for st in e["sets"]}
+    for s in tests:
+        if s[1] != 1 or s[0] not in trained:
+            errors.append(f"{p['id']} tests {s[0]}, which its block did not train, or in more than one set")
+    ids = [s[0] for _, _, s in effective(p) if s is not None]
+    for i, mid in enumerate(ids):
+        if mid in BL_HOLDS and (i == 0 or ids[i - 1] != "german_hang"):
+            errors.append(f"{p['id']} tests the back lever without a German hang directly before it")
+    block_start = index[p["id"]] + 1
+
+# 45. From Level 4 no advanced rung first appears inside a deload class, except as a readiness check.
+ADVANCED = {"advanced_skill", "advanced_strength", "mastery_skill"}
+seen = set()
+for p in classes:
+    for s in work(p):
+        if s[0] in seen or movements[s[0]]["category"] not in ADVANCED:
+            continue
+        seen.add(s[0])
+        if p["level"] >= 4 and "deload" in p["schedule"]["day_type"] and s[5] != RC:
+            errors.append(f"{p['id']} debuts {s[0]} inside a deload")
+
+# 46. A readiness check comes before the training sets of its own skill in the class: the attempt is made fresh.
+CHECK_FAMILY = {m: name for name, ladder in {
+    "front": ["tuck_front_row", "tuck_front_hold", "advanced_tuck_front", "one_leg_front", "straddle_front", "full_front"],
+    "back": ["tuck_back_entry", "tuck_back_hold", "advanced_tuck_back", "one_leg_back", "straddle_back", "full_back"],
+    "planche": ["planche_lean", "tuck_planche", "advanced_tuck_planche", "straddle_planche", "full_planche"],
+    "nordic": ["nordic_negative", "nordic_curl"],
+    "muscle-up": ["jump_muscleup", "negative_muscleup", "band_muscleup", "strict_muscleup"],
+    "pull": ["assisted_pullup", "eccentric_pullup", "chinup", "pullup"],
+}.items() for m in ladder}
+for p in authored:
+    rows = [s for _, _, s in effective(p) if s is not None]
+    for i, s in enumerate(rows):
+        if s[5] == RC and s[0] in CHECK_FAMILY and any(
+                r[5] != RC and CHECK_FAMILY.get(r[0]) == CHECK_FAMILY[s[0]] for r in rows[:i]):
+            errors.append(f"{p['id']} checks {s[0]} after training sets of the same skill")
+
+# 47. Tuck-or-harder flags lead the main work and never share a class with a tuck-or-harder planche hold (a single
+#     light planche lean may stay: it keeps the planche twice a week in Levels 6-7).
+for p in authored:
+    if {s[0] for s in p["practice"]} & HARD_FLAGS:
+        errors.append(f"{p['id']} keeps a tuck-or-harder flag in the practice block")
+    if {s[0] for s in practice_rows(p)} & HARD_FLAGS and {mid for mid, _, _ in effective(p)} & TUCK_PLANCHE_UP:
+        errors.append(f"{p['id']} pairs the human flag with planche work")
+
+# 48. Freestanding handstand holds of 5 s or more are practised before the freestanding handstand push-up negatives.
+freestanding_first = min((index[p["id"]] for p in classes for s in p["practice"]
+                          if s[0] == "freestanding_handstand" and max(numbers(s[3]) or [0]) >= 5), default=None)
+if freestanding_first is None or first_trained.get("freestanding_hspu_negative", 0) <= freestanding_first:
+    errors.append("freestanding_hspu_negative starts before 5-second freestanding handstand practice")
+
 if errors:
     print(f"Progression checks failed with {len(errors)} error(s):")
     for e in errors[:int(__import__("os").environ.get("SHOW_ERRORS", 60))]:
@@ -948,4 +1034,7 @@ print(f"Progression checks passed: rung gaps {gaps}; {len(GATES)} start gates; n
       "Level 2 and twice weekly from Level 3; planche 48 hours apart; squat and push-up sets at 20 or fewer; short "
       "recovery days; wrist push-ups before planche and balance work; a weekly skill-mobility class. "
       "Round 5b: overhead and hinge work in every calendar week; elbow runs across level ends; wall handstand push-ups "
-      "before straight-arm shoulder work; flag work never on consecutive days; RPE 4 classes within 30 minutes.")
+      "before straight-arm shoulder work; flag work never on consecutive days; RPE 4 classes within 30 minutes. "
+      f"Round 6: {len(EXAMS)} exam days at most {max(exam_gaps)} classes apart; no advanced rung debuts in a deload from "
+      "Level 4; readiness checks before their skill's training sets; at most eight lever sets a class in every level; "
+      "hard flags in the main work and never with planche; freestanding holds before the freestanding negatives.")

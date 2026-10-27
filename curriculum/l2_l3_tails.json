@@ -2767,21 +2767,25 @@
       "level": 2,
       "number": 20,
       "title": {
-        "en": "Technique Relay"
+        "en": "Exam 1: Bar Strength"
       },
       "description": {
-        "en": "Rotate through short stations and make every repetition look the same."
+        "en": "Exam day for classes L1:099-L2:019: handstand, pull-ups, push-ups, dips, legs, core hold. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
       },
       "schedule": {
         "week": 3,
         "day": 6,
-        "day_type": "technique_stations",
-        "minutes": 32,
-        "rpe": 5,
+        "day_type": "exam_assessment",
+        "minutes": 33,
+        "rpe": 7,
         "focus": [
-          "variety",
-          "quality",
-          "coordination"
+          "exam",
+          "handstand",
+          "pull_up",
+          "push_up",
+          "dip",
+          "legs",
+          "core"
         ]
       },
       "warmup": [
@@ -2829,62 +2833,71 @@
           15,
           "slow",
           "wall_slide"
+        ],
+        [
+          "active_hang",
+          2,
+          null,
+          15,
+          30,
+          "slow",
+          "dead_hang"
         ]
       ],
       "main": [
         [
-          "inverted_row",
-          3,
-          9,
+          "wall_handstand",
+          1,
           null,
-          25,
-          "2111",
-          "high_inverted_row"
+          15,
+          120,
+          "assessment",
+          "pike_handstand_hold"
         ],
         [
-          "incline_pushup",
-          3,
-          12,
+          "pullup",
+          1,
+          4,
           null,
-          25,
-          "2111",
-          "wall_pushup"
+          120,
+          "assessment",
+          "assisted_pullup"
         ],
         [
-          "squat",
-          2,
-          16,
+          "pushup",
+          1,
+          13,
           null,
-          25,
-          "3010",
+          120,
+          "assessment",
+          "incline_pushup"
+        ],
+        [
+          "straight_bar_dip",
+          1,
+          6,
+          null,
+          120,
+          "assessment",
+          "straight_bar_support"
+        ],
+        [
+          "split_squat",
+          1,
+          "10/side",
+          null,
+          120,
+          "assessment",
           "box_squat"
         ],
         [
-          "parallel_bar_walk",
-          2,
+          "tuck_lsit",
           1,
           null,
-          25,
-          "controlled",
+          10,
+          120,
+          "assessment",
           "support_hold"
-        ],
-        [
-          "sliding_leg_curl",
-          2,
-          8,
-          null,
-          25,
-          "3011",
-          "glute_bridge"
-        ],
-        [
-          "dead_bug",
-          2,
-          "8/side",
-          null,
-          75,
-          "slow",
-          null
         ]
       ],
       "cooldown": [
@@ -5584,21 +5597,25 @@
       "level": 2,
       "number": 40,
       "title": {
-        "en": "Foundation Audit"
+        "en": "Exam 2: Bar Strength"
       },
       "description": {
-        "en": "Moderate sets audit clean pull-ups, dips, push-ups, squats, and raises before the source workouts begin."
+        "en": "Exam day for classes L2:021-L2:039: handstand, pull-ups, push-ups, dips, legs, core hold. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
       },
       "schedule": {
         "week": 6,
         "day": 5,
-        "day_type": "fundamentals_audit",
-        "minutes": 48,
-        "rpe": 6,
+        "day_type": "exam_assessment",
+        "minutes": 37,
+        "rpe": 7,
         "focus": [
-          "basics",
-          "form",
-          "readiness"
+          "exam",
+          "handstand",
+          "pull_up",
+          "push_up",
+          "dip",
+          "legs",
+          "core"
         ]
       },
       "warmup": [
@@ -5646,62 +5663,71 @@
           45,
           "soft_landing",
           "squat"
+        ],
+        [
+          "active_hang",
+          2,
+          null,
+          15,
+          30,
+          "slow",
+          "dead_hang"
         ]
       ],
       "main": [
         [
+          "wall_handstand",
+          1,
+          null,
+          20,
+          120,
+          "assessment",
+          "pike_handstand_hold"
+        ],
+        [
           "pullup",
-          3,
-          6,
+          1,
+          5,
           null,
           120,
-          "21X1",
+          "assessment",
           "assisted_pullup"
         ],
         [
-          "parallel_dip",
-          3,
-          9,
-          null,
-          105,
-          "2111",
-          "assisted_dip"
-        ],
-        [
           "pushup",
-          3,
+          1,
           14,
           null,
-          60,
-          "2010",
+          120,
+          "assessment",
           "incline_pushup"
         ],
         [
-          "pike_pushup",
-          2,
-          8,
+          "straight_bar_dip",
+          1,
+          6,
           null,
-          90,
-          "2111",
-          "incline_pushup"
+          120,
+          "assessment",
+          "straight_bar_support"
         ],
         [
-          "squat",
-          3,
-          20,
+          "split_squat",
+          1,
+          "10/side",
           null,
-          50,
-          "3010",
+          120,
+          "assessment",
           "box_squat"
         ],
         [
-          "knee_raise",
-          3,
-          10,
+          "hollow_hold",
+          1,
           null,
-          55,
-          "2020",
-          "lying_knee_raise"
+          25,
+          120,
+          "assessment",
+          "dead_bug"
         ]
       ],
       "cooldown": [
@@ -7573,22 +7599,26 @@
       "level": 2,
       "number": 84,
       "title": {
-        "en": "Pull-Dip Pyramid Checkpoint"
+        "en": "Exam 4: Bar Strength"
       },
       "description": {
-        "en": "A small pyramid makes familiar basics engaging without asking for failure. Today the basics are one recorded set each, a little above your best so far. Clean reps up to the number shown: stop at the first form break and note it; don't top up with the easier option."
+        "en": "Exam day for classes L2:063-L2:083: handstand, front lever, pull-ups, push-ups, dips, legs, core hold. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
       },
       "schedule": {
         "week": 8,
         "day": 5,
-        "day_type": "fundamentals_pyramid_checkpoint",
-        "minutes": 35,
+        "day_type": "exam_assessment",
+        "minutes": 36,
         "rpe": 7,
         "focus": [
+          "exam",
+          "handstand",
+          "front_lever",
           "pull_up",
-          "dip",
           "push_up",
-          "legs"
+          "dip",
+          "legs",
+          "core"
         ]
       },
       "warmup": [
@@ -7627,53 +7657,80 @@
           20,
           "controlled",
           "box_squat"
+        ],
+        [
+          "active_hang",
+          2,
+          null,
+          15,
+          30,
+          "slow",
+          "dead_hang"
         ]
       ],
       "main": [
         [
+          "wall_handstand",
+          1,
+          null,
+          30,
+          120,
+          "assessment",
+          "pike_handstand_hold"
+        ],
+        [
+          "tuck_front_hold",
+          1,
+          null,
+          7,
+          150,
+          "assessment",
+          "tuck_front_row"
+        ],
+        [
           "pullup",
           1,
-          8,
+          6,
           null,
           120,
           "assessment",
           "assisted_pullup"
         ],
         [
-          "parallel_dip",
+          "pushup",
           1,
-          11,
+          14,
           null,
-          105,
+          120,
           "assessment",
-          "assisted_dip"
+          "incline_pushup"
         ],
         [
-          "close_pushup",
+          "straight_bar_dip",
           1,
-          13,
+          7,
           null,
-          60,
+          120,
           "assessment",
-          "pushup"
+          "straight_bar_support"
         ],
         [
-          "reverse_lunge",
-          2,
-          "11/side",
+          "assisted_pistol_squat",
+          1,
+          "4/side",
           null,
-          60,
-          "3010",
-          "box_squat"
+          120,
+          "assessment",
+          "split_squat"
         ],
         [
-          "candlestick",
-          2,
-          6,
+          "tuck_lsit",
+          1,
           null,
-          50,
-          "3010",
-          "lying_knee_raise"
+          15,
+          120,
+          "assessment",
+          "support_hold"
         ]
       ],
       "cooldown": [
@@ -9516,22 +9573,25 @@
       "level": 2,
       "number": 98,
       "title": {
-        "en": "Foundation Strength Ladder Checkpoint"
+        "en": "Exam 5: Bar Strength"
       },
       "description": {
-        "en": "Ascending basics build capacity while every top set retains clean form. Today the basics are one recorded set each, a little above your best so far. Clean reps up to the number shown: stop at the first form break and note it; don't top up with the easier option."
+        "en": "Exam day for classes L2:085-L2:097: handstand, front lever, pull-ups, push-ups, dips, legs, core hold. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
       },
       "schedule": {
         "week": 10,
         "day": 5,
-        "day_type": "fundamentals_ladder_checkpoint",
-        "minutes": 36,
+        "day_type": "exam_assessment",
+        "minutes": 39,
         "rpe": 7,
         "focus": [
+          "exam",
+          "handstand",
+          "front_lever",
           "pull_up",
-          "dip",
           "push_up",
-          "squat",
+          "dip",
+          "legs",
           "core"
         ]
       },
@@ -9580,53 +9640,80 @@
           45,
           "soft_landing",
           "squat"
+        ],
+        [
+          "active_hang",
+          2,
+          null,
+          15,
+          30,
+          "slow",
+          "dead_hang"
         ]
       ],
       "main": [
         [
+          "wall_handstand",
+          1,
+          null,
+          30,
+          120,
+          "assessment",
+          "pike_handstand_hold"
+        ],
+        [
+          "tuck_front_hold",
+          1,
+          null,
+          7,
+          150,
+          "assessment",
+          "tuck_front_row"
+        ],
+        [
           "pullup",
           1,
-          10,
+          7,
           null,
           120,
           "assessment",
           "assisted_pullup"
         ],
         [
-          "parallel_dip",
-          1,
-          11,
-          null,
-          105,
-          "assessment",
-          "assisted_dip"
-        ],
-        [
           "pushup",
           1,
-          16,
+          14,
           null,
-          60,
+          120,
           "assessment",
           "incline_pushup"
         ],
         [
-          "squat",
+          "straight_bar_dip",
           1,
-          22,
+          8,
           null,
-          55,
+          120,
           "assessment",
-          "box_squat"
+          "straight_bar_support"
         ],
         [
-          "knee_raise",
+          "assisted_pistol_squat",
           1,
-          14,
+          "5/side",
           null,
-          55,
+          120,
           "assessment",
-          "lying_knee_raise"
+          "split_squat"
+        ],
+        [
+          "tuck_lsit",
+          1,
+          null,
+          18,
+          120,
+          "assessment",
+          "support_hold"
         ]
       ],
       "cooldown": [
@@ -16861,59 +16948,68 @@
       "level": 3,
       "number": 40,
       "title": {
-        "en": "Dragon Negative Ladder"
+        "en": "Exam 2: Skill Transition"
       },
       "description": {
-        "en": "A controlled eccentric ladder adds time under tension without forcing full flags."
+        "en": "Exam day for classes L3:021-L3:039: handstand, handstand push-up, muscle-up, front lever, back lever, planche, dragon flag, pull-ups, dips, legs, core hold. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
       },
       "schedule": {
         "week": 3,
         "day": 6,
-        "day_type": "dragon_ladder",
-        "minutes": 48,
+        "day_type": "exam_assessment",
+        "minutes": 55,
         "rpe": 7,
         "focus": [
+          "exam",
+          "handstand",
+          "vertical_push",
+          "muscle_up",
+          "front_lever",
+          "back_lever",
+          "planche",
           "dragon_flag",
-          "core",
-          "basics"
+          "pull_up",
+          "dip",
+          "legs",
+          "core"
         ]
       },
       "warmup": [
         [
-          "march",
+          "low_jack",
           1,
+          45,
           null,
-          120,
-          0,
-          null,
+          20,
+          "easy",
           null
         ],
         [
-          "wrist_rocks",
+          "wrist_pushup",
           1,
           10,
           null,
-          10,
+          20,
           "slow",
-          "wrist_circles"
+          "wrist_rocks"
         ],
         [
-          "cat_cow",
-          2,
+          "scapular_pushup",
+          3,
           8,
+          null,
+          25,
+          "2111",
+          "elevated_scapular_pushup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
           null,
           15,
           "slow",
-          null
-        ],
-        [
-          "hollow_hold",
-          2,
-          null,
-          18,
-          30,
-          null,
-          "dead_bug"
+          "wall_slide"
         ],
         [
           "squat_jump",
@@ -16923,53 +17019,125 @@
           45,
           "soft_landing",
           "squat"
+        ],
+        [
+          "active_hang",
+          2,
+          null,
+          15,
+          30,
+          "slow",
+          "dead_hang"
         ]
       ],
       "main": [
         [
-          "bent_dragon_negative",
-          3,
-          "2-2-2",
+          "wall_handstand",
+          1,
           null,
-          105,
-          "7000",
-          "candlestick"
-        ],
-        [
-          "hollow_body_hold",
-          4,
-          null,
-          15,
-          45,
-          null,
-          "hollow_hold"
-        ],
-        [
-          "sliding_leg_curl",
-          4,
-          8,
-          null,
-          60,
-          "3011",
-          "glute_bridge"
+          40,
+          120,
+          "assessment",
+          "pike_handstand_hold"
         ],
         [
           "pike_pushup",
-          3,
-          9,
+          1,
+          10,
           null,
-          75,
-          "2111",
+          120,
+          "assessment",
           "incline_pushup"
         ],
         [
-          "pause_squat",
+          "band_muscleup",
+          1,
           3,
+          null,
+          180,
+          "assessment",
+          "jump_muscleup"
+        ],
+        [
+          "advanced_tuck_front",
+          1,
+          null,
+          4,
+          150,
+          "assessment",
+          "tuck_front_hold"
+        ],
+        [
+          "german_hang",
+          1,
+          null,
+          10,
+          45,
+          "slow",
+          "skin_cat_partial"
+        ],
+        [
+          "tuck_back_hold",
+          1,
+          null,
+          6,
+          150,
+          "assessment",
+          "tuck_back_entry"
+        ],
+        [
+          "planche_lean",
+          1,
+          null,
+          15,
+          150,
+          "assessment",
+          "elevated_plank"
+        ],
+        [
+          "bent_dragon_negative",
+          1,
+          2,
+          null,
+          120,
+          "assessment",
+          "candlestick"
+        ],
+        [
+          "pullup",
+          1,
+          8,
+          null,
+          120,
+          "assessment",
+          "assisted_pullup"
+        ],
+        [
+          "straight_bar_dip",
+          1,
           10,
           null,
-          90,
-          "32X1",
-          "box_squat"
+          120,
+          "assessment",
+          "straight_bar_support"
+        ],
+        [
+          "bulgarian_split_squat",
+          1,
+          "8/side",
+          null,
+          120,
+          "assessment",
+          "split_squat"
+        ],
+        [
+          "tuck_lsit",
+          1,
+          null,
+          18,
+          120,
+          "assessment",
+          "support_hold"
         ]
       ],
       "cooldown": [
@@ -20197,22 +20365,30 @@
       "level": 3,
       "number": 64,
       "title": {
-        "en": "Level 4 Push Bridge"
+        "en": "Exam 3: Skill Transition"
       },
       "description": {
-        "en": "Strong dips and controlled planche leans prepare the next level without sacrificing legs."
+        "en": "Exam day for classes L3:041-L3:063: handstand, handstand push-up, muscle-up, front lever, back lever, planche, dragon flag, pull-ups, dips, legs, core hold. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
       },
       "schedule": {
         "week": 7,
         "day": 2,
-        "day_type": "push_bridge",
-        "minutes": 50,
+        "day_type": "exam_assessment",
+        "minutes": 52,
         "rpe": 7,
         "focus": [
-          "planche_lean",
+          "exam",
+          "handstand",
+          "vertical_push",
+          "muscle_up",
+          "front_lever",
+          "back_lever",
+          "planche",
+          "dragon_flag",
+          "pull_up",
           "dip",
-          "push_up",
-          "legs"
+          "legs",
+          "core"
         ]
       },
       "warmup": [
@@ -20253,60 +20429,123 @@
           "wall_slide"
         ],
         [
-          "squat_jump",
+          "active_hang",
           2,
-          5,
           null,
-          45,
-          "soft_landing",
-          "squat"
+          15,
+          30,
+          "slow",
+          "dead_hang"
         ]
       ],
       "main": [
         [
-          "planche_lean",
+          "wall_handstand",
+          1,
+          null,
+          40,
+          120,
+          "assessment",
+          "pike_handstand_hold"
+        ],
+        [
+          "elevated_pike_pushup",
+          1,
+          8,
+          null,
+          120,
+          "assessment",
+          "pike_pushup"
+        ],
+        [
+          "band_muscleup",
+          1,
           3,
           null,
-          20,
-          75,
+          180,
+          "assessment",
+          "jump_muscleup"
+        ],
+        [
+          "advanced_tuck_front",
+          1,
           null,
+          8,
+          150,
+          "assessment",
+          "tuck_front_hold"
+        ],
+        [
+          "german_hang",
+          1,
+          null,
+          10,
+          45,
+          "slow",
+          "skin_cat_partial"
+        ],
+        [
+          "tuck_back_hold",
+          1,
+          null,
+          8,
+          150,
+          "assessment",
+          "tuck_back_entry"
+        ],
+        [
+          "planche_lean",
+          1,
+          null,
+          20,
+          150,
+          "assessment",
           "elevated_plank"
         ],
         [
-          "pseudo_planche_pushup",
-          3,
-          7,
+          "bent_dragon_negative",
+          1,
+          2,
           null,
-          90,
-          "31X1",
-          "pushup"
+          120,
+          "assessment",
+          "candlestick"
         ],
         [
-          "parallel_dip",
-          2,
-          12,
+          "pullup",
+          1,
+          10,
           null,
-          105,
-          "2111",
-          "assisted_dip"
+          120,
+          "assessment",
+          "assisted_pullup"
         ],
         [
           "straight_bar_dip",
-          2,
-          9,
+          1,
+          11,
           null,
-          90,
-          "2111",
+          120,
+          "assessment",
           "straight_bar_support"
         ],
         [
-          "split_squat",
-          2,
-          "14/side",
+          "bulgarian_split_squat",
+          1,
+          "8/side",
           null,
-          60,
-          "3010",
-          "box_squat"
+          120,
+          "assessment",
+          "split_squat"
+        ],
+        [
+          "tuck_lsit",
+          1,
+          null,
+          20,
+          120,
+          "assessment",
+          "support_hold"
         ]
       ],
       "cooldown": [
@@ -20348,7 +20587,7 @@
         "en": "Level 3 Pull-and-Muscle-up Readiness Check"
       },
       "description": {
-        "en": "Complete one set of five muscle-ups, one set of three, one set of ten pull-ups, and 2x8 bar dips with one or two reps in reserve. Use each listed regression at the first form break; this is one required part of the collective Level 3 check."
+        "en": "Readiness checks for the bar: one strict muscle-up attempt, then two band-assisted muscle-ups, ten strict pull-ups and two sets of nine straight-bar dips, each with one or two reps in reserve. Use each listed regression at the first form break; this is one required part of the collective Level 3 check."
       },
       "schedule": {
         "week": 7,

@@ -49,6 +49,9 @@ interface ProgressRepository {
     /** Logged skill tests and readiness checks ([SkillTestLog]). */
     fun skillTests(): SkillTestLog
     fun recordSkillTest(skillId: String, passed: Boolean, at: Long = System.currentTimeMillis())
+    /** Exam results ([ExamLog]); a repository without them keeps none. */
+    fun examLog(): ExamLog = ExamLog()
+    fun recordExam(result: ExamResult) {}
     fun abandonWorkout()
     fun markProgramIncomplete(programId: String)
 }

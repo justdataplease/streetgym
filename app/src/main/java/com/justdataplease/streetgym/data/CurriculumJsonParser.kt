@@ -22,6 +22,7 @@ import org.json.JSONObject
 object CurriculumJsonParser {
     private const val EASIER_RUNGS = 3
     private const val READINESS_CHECK = "readiness_check"
+    private const val ASSESSMENT = "assessment"
 
     fun parse(json: String): CurriculumCatalog = parse(JSONObject(json))
 
@@ -234,6 +235,7 @@ object CurriculumJsonParser {
                             movementLibrary[id]?.let { EasierOption(id, it.optLocalized("name")) }
                         },
                         readinessCheck = tempo == READINESS_CHECK,
+                        assessment = tempo == ASSESSMENT,
                     ),
                 )
             }

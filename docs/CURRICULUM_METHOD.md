@@ -1,5 +1,28 @@
 # StreetGym curriculum method
 
+## Round 6 (27 October 2026): exam days and the three-coach panel
+
+A panel of three coaches (a street-workout group coach, a gymnastics strength coach and a strength coach with a physiotherapy degree) debated round 5b over three rounds. All three scored the curriculum 5.5/10. They scored "the strong advance, the weak stay, like a normal class" 2.5–3/10: the app moved everyone forward one class per class finished. The owner chose exam days. Validator rules 44–48 and wider rules 3, 5, 7, 11, 13, 31, 32 and 38 hold the changes; one deterministic pass made them.
+
+- *Exam days.* An exam comes about every 20 classes, 35 in all:
+  - L1: 20, 40, 60, 81, 98
+  - L2: 20, 40, 62, 84, 98
+  - L3: 20, 40, 64, 84, 100
+  - L4–L7: day 6 of weeks 2, 5, 8, 11 and 14 (13, 34, 55, 76, 97)
+
+  An exam is a normal class: warm-up, one fresh set of each skill the block trained, cool-down, and no practice block. Each target is the best per-set dose the block prescribed, so someone who did the classes passes. A target never falls below the previous exam's target for the same movement, and a block that moved nothing on raises one repetition target. A German hang comes directly before the back-lever test. Rule 44 keeps exams at most 25 classes apart, each testing only what its block trained.
+- *The app.* After an exam class the athlete ticks the targets reached. The result is kept and synced with the other cloud progress. If a target was missed, the app offers to repeat the classes since the previous exam and take the exam again. It is the athlete's choice; Today runs the block as a level replay from its first class. Exam classes are marked in the level list and show their last result.
+- *Original-source positions.* Four exams (L1:020, L1:040, L2:062, L3:020) take the place of original-source classes. `catalog_metadata.json` lists them as `replaced_source_slots`, and the authored classes live in `source_replacements.json`. They keep the original block's calendar, and the original content stays in the forensic export.
+- *No advanced rung debuts inside a deload (rule 45).* The straddle levers start at L6:031 and L6:033 (2 × 3 s), no longer in the L6:024 and L6:026 deloads. The one-arm negative leaves the L7:079 deload.
+- *Readiness checks come first among their skill's sets (rule 46).* The full-lever checks at L7:030 and L7:033 now come before the straddle sets. Their 3 × 8 s straddle gate moves a week earlier, to L7:016 and L7:019.
+- *At most eight lever sets a class in every level (rule 38).* Nineteen Level 6–7 classes come down one set at a time. The German hang goes first, then one-leg holds (never below the straddle's 3 × 8 s gate), then straddle and advanced-tuck sets (never below two), then brief full holds. Every step stays, so the second weekly front-lever exposure stays.
+- *Flags (rule 47).* Tuck-or-harder flags are maximal straight-arm holds, so they lead the main work rather than the practice. They never share a class with a tuck-or-harder planche hold. Levels 6–7 train the flag on day 6 only (it was also on the planche day), and from L7:076 day 6 checks the full flag before its brief holds.
+- *Freestanding handstand (rule 48).* Holds join the balance practice: 1 × 5 s from L5:071, 2 × 5–10 s through Level 6 and 2 × 10–20 s in Level 7, in place of two balance-attempt sets. They come before the freestanding handstand push-up negatives.
+- *Placement.* The strongest answers start at L2:071, so Level 2's German hangs, tuck levers and negatives come before Level 3.
+- *Copy.* L3:065 describes the sets it prescribes. The Level 6–7 descriptions say most adults need two to four years for the full shapes.
+- *Knock-on fixes.* Archer push-ups start at L4:069, a build class. The wall-HSPU gate (negatives 3 × 5) moves to a Level 5 build class. Level 7 deload weeks give up supporting sets so they stay at 70% of the build week. The validators leave replaced positions out of the authored weeks.
+- *Left for the next round.* The panel also asked for a stored working rung per skill, with promotion by test, and for the original-source blocks (L1:001–040, L2:041–070, L3:001–020) to be rebuilt in the authored format.
+
 ## Round 5b (27 October 2026)
 
 Round 5 was audited before release by three reviewers: a gymnastics coach (skill progression), a sports physiotherapist (tissue load) and a strength coach for beginners. All three said "ship after fixes". Where they disagreed, the physiotherapist's tissue-safety view decided. New rules 42–43 and wider rules 5, 13, 29, 32 and 39 hold the fixes.

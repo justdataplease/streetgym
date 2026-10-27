@@ -27,6 +27,17 @@ class DayAssignmentTest {
         assertTrue(replaying(completed, LevelReplay(2)))
     }
 
+    @Test fun anExamBlockReplayStartsAtItsFirstClassAndComesThroughTheExamAgain() {
+        // Round 6: a missed exam at 2-4 repeats its block from 2-2, then the exam, then back to the furthest day.
+        val completed = ids(1, 2) + "3-1"
+        assertEquals("2-2", next(completed, LevelReplay(2, fromProgramId = "2-2")))
+        assertEquals("2-4", next(completed, LevelReplay(2, setOf("2-2", "2-3"), fromProgramId = "2-2")))
+        assertEquals("3-1", next(completed, LevelReplay(2, setOf("2-2", "2-3", "2-4"), fromProgramId = "2-2")))
+        assertFalse(replaying(completed, LevelReplay(2, ids(2) + "3-1", fromProgramId = "2-2")))
+        // an unknown start falls back to the level's first day
+        assertEquals("2-1", next(completed, LevelReplay(2, fromProgramId = "9-9")))
+    }
+
     @Test fun aReplayMovesForwardThroughTheDaysRepeated() {
         val completed = ids(1, 2) + "3-1"
         assertEquals("2-3", next(completed, LevelReplay(2, setOf("2-1", "2-2"))))

@@ -736,7 +736,7 @@
         "en": "Five-Pattern Circuit"
       },
       "description": {
-        "en": "Two short planche leans open the class, then cycle through the essential pull, press, dip, squat, and trunk patterns without failure. The week\u2019s back-lever work opens the class while the shoulders are fresh: feet-supported German hang and tuck back lever. Feet-elevated rows stand in for the pull-ups."
+        "en": "Two short planche leans open the class, then cycle through the essential pull, press, dip, squat, and trunk patterns without failure. The week’s back-lever work opens the class while the shoulders are fresh: feet-supported German hang and tuck back lever. Feet-elevated rows stand in for the pull-ups."
       },
       "schedule": {
         "week": 1,
@@ -1752,30 +1752,36 @@
       "level": 4,
       "number": 13,
       "title": {
-        "en": "Tempo Essentials"
+        "en": "Exam 1: Skill Control"
       },
       "description": {
-        "en": "Two short planche leans come first, then slow down four familiar basics so moderate repetitions still demand precision. The week\u2019s back-lever work opens the class while the shoulders are fresh: feet-supported German hang and advanced-tuck back lever. Feet-elevated rows stand in for the pull-ups."
+        "en": "Exam day for classes L4:001-L4:012: handstand, handstand push-up, muscle-up, front lever, back lever, planche, dragon flag, pull-ups, dips, hamstrings. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
       },
       "schedule": {
         "week": 2,
         "day": 6,
-        "day_type": "fundamentals_tempo",
-        "minutes": 46,
+        "day_type": "exam_assessment",
+        "minutes": 48,
         "rpe": 7,
         "focus": [
+          "exam",
+          "handstand",
+          "vertical_push",
+          "muscle_up",
+          "front_lever",
+          "back_lever",
+          "planche",
+          "dragon_flag",
           "pull_up",
-          "push_up",
           "dip",
-          "legs",
-          "tempo"
+          "hinge"
         ]
       },
       "warmup": [
         [
           "low_jack",
           1,
-          35,
+          30,
           null,
           15,
           "easy",
@@ -1791,28 +1797,82 @@
           "wrist_rocks"
         ],
         [
-          "arm_swings",
+          "wall_shoulder_flexion",
           1,
-          16,
           null,
-          10,
-          "smooth",
-          "shoulder_cars"
+          30,
+          15,
+          "slow",
+          null
         ],
         [
-          "tempo_squat",
-          1,
-          8,
+          "elevated_scapular_pushup",
+          2,
+          10,
           null,
-          25,
-          "3111",
-          "box_squat"
+          30,
+          "2111",
+          null
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "active_hang",
+          2,
+          null,
+          15,
+          30,
+          "slow",
+          "dead_hang"
         ]
       ],
       "main": [
         [
-          "german_hang",
+          "handstand_toe_pull",
+          1,
+          null,
+          10,
+          120,
+          "assessment",
+          "wall_handstand"
+        ],
+        [
+          "elevated_pike_pushup",
+          1,
+          8,
+          null,
+          120,
+          "assessment",
+          "pike_pushup"
+        ],
+        [
+          "strict_muscleup",
+          1,
           2,
+          null,
+          180,
+          "assessment",
+          "band_muscleup"
+        ],
+        [
+          "advanced_tuck_front",
+          1,
+          null,
+          10,
+          150,
+          "assessment",
+          "tuck_front_hold"
+        ],
+        [
+          "german_hang",
+          1,
           null,
           10,
           45,
@@ -1820,67 +1880,58 @@
           "skin_cat_partial"
         ],
         [
-          "advanced_tuck_back",
-          3,
+          "tuck_back_hold",
+          1,
           null,
-          6,
-          95,
-          "isometric",
-          "tuck_back_hold"
+          12,
+          150,
+          "assessment",
+          "tuck_back_entry"
         ],
         [
           "planche_lean",
-          2,
-          null,
-          16,
-          90,
-          "isometric",
-          "elevated_plank"
-        ],
-        [
-          "elevated_pike_pushup",
-          2,
-          8,
-          null,
-          90,
-          "2111",
-          "pike_pushup"
-        ],
-        [
-          "feet_elevated_row",
-          2,
-          10,
-          null,
-          105,
-          "2111",
-          "inverted_row"
-        ],
-        [
-          "parallel_dip",
-          2,
-          12,
-          null,
-          100,
-          "31X1",
-          "assisted_dip"
-        ],
-        [
-          "single_leg_rdl",
-          2,
-          "8/side",
-          null,
-          70,
-          "3011",
-          "single_leg_bridge"
-        ],
-        [
-          "hollow_body_hold",
           1,
           null,
           20,
-          50,
-          "braced",
-          "hollow_hold"
+          150,
+          "assessment",
+          "elevated_plank"
+        ],
+        [
+          "one_leg_dragon_negative",
+          1,
+          "1/side",
+          null,
+          120,
+          "assessment",
+          "bent_dragon_negative"
+        ],
+        [
+          "pullup",
+          1,
+          10,
+          null,
+          120,
+          "assessment",
+          "assisted_pullup"
+        ],
+        [
+          "straight_bar_dip",
+          1,
+          11,
+          null,
+          120,
+          "assessment",
+          "straight_bar_support"
+        ],
+        [
+          "single_leg_rdl",
+          1,
+          "8/side",
+          null,
+          120,
+          "assessment",
+          "single_leg_bridge"
         ]
       ],
       "cooldown": [
@@ -2774,7 +2825,7 @@
         "en": "Pause-and-Go Basics"
       },
       "description": {
-        "en": "Two short planche leans come first, then alternate pauses with smooth repetitions across the four permanent strength patterns. The week\u2019s back-lever work opens the class while the shoulders are fresh: feet-supported German hang and advanced-tuck back lever. Feet-elevated rows stand in for the pull-ups."
+        "en": "Two short planche leans come first, then alternate pauses with smooth repetitions across the four permanent strength patterns. The week’s back-lever work opens the class while the shoulders are fresh: feet-supported German hang and advanced-tuck back lever. Feet-elevated rows stand in for the pull-ups."
       },
       "schedule": {
         "week": 3,
@@ -3765,7 +3816,7 @@
         "en": "Half-Volume Foundations"
       },
       "description": {
-        "en": "Touch every basic pattern with half the usual work and finish feeling fresher. The week\u2019s back-lever work opens the class while the shoulders are fresh: feet-assisted tuck back-lever entry. Feet-elevated rows stand in for the pull-ups."
+        "en": "Touch every basic pattern with half the usual work and finish feeling fresher. The week’s back-lever work opens the class while the shoulders are fresh: feet-assisted tuck back-lever entry. Feet-elevated rows stand in for the pull-ups."
       },
       "schedule": {
         "week": 4,
@@ -4754,23 +4805,29 @@
       "level": 4,
       "number": 34,
       "title": {
-        "en": "Ascending Five"
+        "en": "Exam 2: Skill Control"
       },
       "description": {
-        "en": "Two short tuck planche holds come first, then build an ascending circuit around five basics and stop while every repetition is still crisp. The week\u2019s back-lever work opens the class while the shoulders are fresh: feet-supported German hang and advanced-tuck back lever. Feet-elevated rows stand in for the pull-ups."
+        "en": "Exam day for classes L4:014-L4:033: handstand, handstand push-up, muscle-up, front lever, back lever, planche, dragon flag, pull-ups, dips, hamstrings. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
       },
       "schedule": {
         "week": 5,
         "day": 6,
-        "day_type": "fundamentals_ladder",
-        "minutes": 46,
+        "day_type": "exam_assessment",
+        "minutes": 48,
         "rpe": 7,
         "focus": [
+          "exam",
+          "handstand",
+          "vertical_push",
+          "muscle_up",
+          "front_lever",
+          "back_lever",
+          "planche",
+          "dragon_flag",
           "pull_up",
-          "push_up",
           "dip",
-          "squat",
-          "core"
+          "hinge"
         ]
       },
       "warmup": [
@@ -4793,28 +4850,82 @@
           "wrist_rocks"
         ],
         [
-          "arm_swings",
+          "wall_shoulder_flexion",
           1,
-          15,
           null,
-          10,
-          "smooth",
-          "shoulder_cars"
+          30,
+          15,
+          "slow",
+          null
         ],
         [
-          "squat",
-          1,
-          10,
+          "scapular_pushup",
+          2,
+          9,
           null,
-          20,
-          "controlled",
-          "box_squat"
+          30,
+          "2111",
+          "elevated_scapular_pushup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "active_hang",
+          2,
+          null,
+          15,
+          30,
+          "slow",
+          "dead_hang"
         ]
       ],
       "main": [
         [
-          "german_hang",
+          "handstand_toe_pull",
+          1,
+          null,
+          10,
+          120,
+          "assessment",
+          "wall_handstand"
+        ],
+        [
+          "elevated_pike_pushup",
+          1,
+          9,
+          null,
+          120,
+          "assessment",
+          "pike_pushup"
+        ],
+        [
+          "strict_muscleup",
+          1,
           2,
+          null,
+          180,
+          "assessment",
+          "band_muscleup"
+        ],
+        [
+          "advanced_tuck_front",
+          1,
+          null,
+          10,
+          150,
+          "assessment",
+          "tuck_front_hold"
+        ],
+        [
+          "german_hang",
+          1,
           null,
           10,
           45,
@@ -4823,66 +4934,57 @@
         ],
         [
           "advanced_tuck_back",
-          3,
+          1,
           null,
-          "5-7-5",
-          95,
-          "isometric",
+          7,
+          150,
+          "assessment",
           "tuck_back_hold"
         ],
         [
           "tuck_planche",
-          2,
+          1,
           null,
-          4,
-          90,
-          "isometric",
+          5,
+          150,
+          "assessment",
           "frog_stand"
         ],
         [
-          "elevated_pike_pushup",
-          2,
-          9,
+          "one_leg_dragon_negative",
+          1,
+          "1/side",
           null,
-          90,
-          "2111",
-          "pike_pushup"
+          120,
+          "assessment",
+          "bent_dragon_negative"
         ],
         [
-          "feet_elevated_row",
-          2,
+          "pullup",
+          1,
           10,
           null,
-          105,
-          "2111",
-          "inverted_row"
+          120,
+          "assessment",
+          "assisted_pullup"
         ],
         [
-          "parallel_dip",
-          2,
-          "12-12",
+          "straight_bar_dip",
+          1,
+          11,
           null,
-          75,
-          "2111",
-          "assisted_dip"
+          120,
+          "assessment",
+          "straight_bar_support"
         ],
         [
           "single_leg_rdl",
-          2,
+          1,
           "8/side",
           null,
-          60,
-          "3011",
+          120,
+          "assessment",
           "single_leg_bridge"
-        ],
-        [
-          "hanging_leg_raise",
-          1,
-          8,
-          null,
-          100,
-          "2020",
-          "knee_raise"
         ]
       ],
       "cooldown": [
@@ -5766,7 +5868,7 @@
         "en": "Left-Right Foundations Checkpoint"
       },
       "description": {
-        "en": "Keep the classic basics while unilateral legs and side planks expose asymmetries safely. Today the basics are one recorded set each, a little above your best so far. Clean reps up to the number shown: stop at the first form break and note it; don't top up with the easier option. The week\u2019s back-lever work opens the class while the shoulders are fresh: feet-supported German hang and advanced-tuck back lever."
+        "en": "Keep the classic basics while unilateral legs and side planks expose asymmetries safely. Today the basics are one recorded set each, a little above your best so far. Clean reps up to the number shown: stop at the first form break and note it; don't top up with the easier option. The week’s back-lever work opens the class while the shoulders are fresh: feet-supported German hang and advanced-tuck back lever."
       },
       "schedule": {
         "week": 6,
@@ -6812,7 +6914,7 @@
         "en": "Park Strength Stations"
       },
       "description": {
-        "en": "Two short tuck planche holds come first, then rotate through six familiar stations at a steady pace, preserving two clean reps in reserve. The week\u2019s back-lever work opens the class while the shoulders are fresh: feet-supported German hang and advanced-tuck back lever. Feet-elevated rows stand in for the pull-ups."
+        "en": "Two short tuck planche holds come first, then rotate through six familiar stations at a steady pace, preserving two clean reps in reserve. The week’s back-lever work opens the class while the shoulders are fresh: feet-supported German hang and advanced-tuck back lever. Feet-elevated rows stand in for the pull-ups."
       },
       "schedule": {
         "week": 7,
@@ -7828,30 +7930,36 @@
       "level": 4,
       "number": 55,
       "title": {
-        "en": "Simple Five Deload"
+        "en": "Exam 3: Skill Control"
       },
       "description": {
-        "en": "Revisit five permanent basics with fewer sets and no urge to chase the previous week's pace. The week\u2019s back-lever work opens the class while the shoulders are fresh: feet-assisted tuck back-lever entry, feet-supported German hang and tuck back lever. Feet-elevated rows stand in for the pull-ups."
+        "en": "Exam day for classes L4:035-L4:054: handstand, handstand push-up, muscle-up, front lever, back lever, planche, dragon flag, pull-ups, dips, hamstrings. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
       },
       "schedule": {
         "week": 8,
         "day": 6,
-        "day_type": "fundamentals_deload",
-        "minutes": 41,
-        "rpe": 5,
+        "day_type": "exam_assessment",
+        "minutes": 46,
+        "rpe": 7,
         "focus": [
+          "exam",
+          "handstand",
+          "vertical_push",
+          "muscle_up",
+          "front_lever",
+          "back_lever",
+          "planche",
+          "dragon_flag",
           "pull_up",
-          "push_up",
           "dip",
-          "squat",
-          "core"
+          "hinge"
         ]
       },
       "warmup": [
         [
           "low_jack",
           1,
-          25,
+          40,
           null,
           15,
           "easy",
@@ -7878,26 +7986,62 @@
         [
           "squat",
           1,
-          8,
+          12,
           null,
           20,
-          "easy",
+          "controlled",
           "box_squat"
+        ],
+        [
+          "active_hang",
+          2,
+          null,
+          15,
+          30,
+          "slow",
+          "dead_hang"
         ]
       ],
       "main": [
         [
-          "tuck_back_entry",
-          3,
-          2,
+          "handstand_toe_pull",
+          1,
           null,
-          85,
-          "controlled",
-          "skin_cat_partial"
+          10,
+          120,
+          "assessment",
+          "wall_handstand"
+        ],
+        [
+          "elevated_pike_pushup",
+          1,
+          9,
+          null,
+          120,
+          "assessment",
+          "pike_pushup"
+        ],
+        [
+          "strict_muscleup",
+          1,
+          3,
+          null,
+          180,
+          "assessment",
+          "band_muscleup"
+        ],
+        [
+          "advanced_tuck_front",
+          1,
+          null,
+          10,
+          150,
+          "assessment",
+          "tuck_front_hold"
         ],
         [
           "german_hang",
-          2,
+          1,
           null,
           10,
           45,
@@ -7905,58 +8049,58 @@
           "skin_cat_partial"
         ],
         [
-          "tuck_back_hold",
-          2,
+          "advanced_tuck_back",
+          1,
           null,
-          6,
-          90,
-          "isometric",
-          "tuck_back_entry"
+          8,
+          150,
+          "assessment",
+          "tuck_back_hold"
         ],
         [
-          "feet_elevated_row",
-          2,
+          "tuck_planche",
+          1,
+          null,
+          5,
+          150,
+          "assessment",
+          "frog_stand"
+        ],
+        [
+          "one_leg_dragon_negative",
+          1,
+          "1/side",
+          null,
+          120,
+          "assessment",
+          "bent_dragon_negative"
+        ],
+        [
+          "pullup",
+          1,
           10,
           null,
-          90,
-          "2111",
-          "inverted_row"
+          120,
+          "assessment",
+          "assisted_pullup"
         ],
         [
-          "pushup",
-          2,
-          10,
+          "straight_bar_dip",
+          1,
+          11,
           null,
-          55,
-          "2111",
-          "incline_pushup"
-        ],
-        [
-          "assisted_dip",
-          2,
-          7,
-          null,
-          70,
-          "2111",
-          "support_hold"
+          120,
+          "assessment",
+          "straight_bar_support"
         ],
         [
           "single_leg_rdl",
-          2,
+          1,
           "8/side",
           null,
-          60,
-          "3011",
+          120,
+          "assessment",
           "single_leg_bridge"
-        ],
-        [
-          "lying_leg_raise",
-          1,
-          9,
-          null,
-          45,
-          "3010",
-          "lying_knee_raise"
         ]
       ],
       "cooldown": [
@@ -8859,7 +9003,7 @@
         "en": "Pull-Push Contrast Circuit"
       },
       "description": {
-        "en": "Two planche-lean holds follow the back-lever work, then alternate opposite basics before a controlled leg-and-core finish, never racing the clock. Wall handstand push-up negatives open the class while the shoulders are fresh, and the week\u2019s back-lever work follows: feet-supported German hang and advanced-tuck back lever. Feet-elevated rows stand in for the pull-ups."
+        "en": "Two planche-lean holds follow the back-lever work, then alternate opposite basics before a controlled leg-and-core finish, never racing the clock. Wall handstand push-up negatives open the class while the shoulders are fresh, and the week’s back-lever work follows: feet-supported German hang and advanced-tuck back lever. Feet-elevated rows stand in for the pull-ups."
       },
       "schedule": {
         "week": 9,
@@ -9878,7 +10022,7 @@
         "en": "Controlled-Power Basics"
       },
       "description": {
-        "en": "Two planche-lean holds follow the back-lever work; then move the concentric phase crisply while every landing, lockout, and lowering remains quiet. Wall handstand push-up negatives open the class while the shoulders are fresh, and the week\u2019s back-lever work follows: feet-supported German hang and advanced-tuck back lever. Feet-elevated rows stand in for the pull-ups."
+        "en": "Two planche-lean holds follow the back-lever work; then move the concentric phase crisply while every landing, lockout, and lowering remains quiet. Wall handstand push-up negatives open the class while the shoulders are fresh, and the week’s back-lever work follows: feet-supported German hang and advanced-tuck back lever. Feet-elevated rows stand in for the pull-ups."
       },
       "schedule": {
         "week": 10,
@@ -9997,13 +10141,13 @@
           "single_leg_bridge"
         ],
         [
-          "hollow_body_hold",
+          "archer_pushup",
           1,
+          "5/side",
           null,
-          25,
-          50,
-          "braced",
-          "hollow_hold"
+          75,
+          "2111",
+          "pushup"
         ]
       ],
       "cooldown": [
@@ -10886,24 +11030,29 @@
       "level": 4,
       "number": 76,
       "title": {
-        "en": "Full-Body Fundamentals Run"
+        "en": "Exam 4: Skill Control"
       },
       "description": {
-        "en": "Rehearse every permanent basic in a steady full-body session before the assessment week. Wall handstand push-up negatives open the class while the shoulders are fresh, and the week\u2019s back-lever work follows: feet-supported German hang and advanced-tuck back lever. Feet-elevated rows stand in for the pull-ups."
+        "en": "Exam day for classes L4:056-L4:075: handstand, handstand push-up, muscle-up, front lever, back lever, planche, dragon flag, pull-ups, dips, hamstrings. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
       },
       "schedule": {
         "week": 11,
         "day": 6,
-        "day_type": "fundamentals_integration",
-        "minutes": 45,
+        "day_type": "exam_assessment",
+        "minutes": 46,
         "rpe": 7,
         "focus": [
+          "exam",
+          "handstand",
+          "vertical_push",
+          "muscle_up",
+          "front_lever",
+          "back_lever",
+          "planche",
+          "dragon_flag",
           "pull_up",
-          "push_up",
           "dip",
-          "squat",
-          "row",
-          "core"
+          "hinge"
         ]
       },
       "warmup": [
@@ -10911,7 +11060,7 @@
           "march",
           1,
           null,
-          120,
+          80,
           0,
           "easy",
           null
@@ -10935,28 +11084,73 @@
           "wall_slide"
         ],
         [
-          "squat",
-          1,
-          12,
+          "scapular_pushup",
+          2,
+          11,
           null,
-          20,
-          "controlled",
-          "box_squat"
+          30,
+          "2111",
+          "elevated_scapular_pushup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "active_hang",
+          2,
+          null,
+          15,
+          30,
+          "slow",
+          "dead_hang"
         ]
       ],
       "main": [
         [
+          "handstand_toe_pull",
+          1,
+          null,
+          12,
+          120,
+          "assessment",
+          "wall_handstand"
+        ],
+        [
           "wall_hspu_negative",
-          2,
+          1,
           3,
           null,
           120,
-          "5010",
+          "assessment",
           "elevated_pike_pushup"
         ],
         [
+          "strict_muscleup",
+          1,
+          3,
+          null,
+          180,
+          "assessment",
+          "band_muscleup"
+        ],
+        [
+          "advanced_tuck_front",
+          1,
+          null,
+          10,
+          150,
+          "assessment",
+          "tuck_front_hold"
+        ],
+        [
           "german_hang",
-          2,
+          1,
           null,
           10,
           45,
@@ -10965,57 +11159,57 @@
         ],
         [
           "advanced_tuck_back",
-          2,
+          1,
           null,
-          10,
-          100,
-          "isometric",
+          9,
+          150,
+          "assessment",
           "tuck_back_hold"
         ],
         [
-          "planche_lean",
-          2,
-          null,
-          20,
-          75,
-          "controlled",
-          "elevated_plank"
-        ],
-        [
-          "parallel_dip",
+          "tuck_planche",
           1,
-          12,
           null,
-          95,
-          "2111",
-          "assisted_dip"
+          5,
+          150,
+          "assessment",
+          "frog_stand"
         ],
         [
-          "single_leg_rdl",
-          2,
-          "8/side",
+          "one_leg_dragon_negative",
+          1,
+          "1/side",
           null,
-          60,
-          "3011",
-          "single_leg_bridge"
+          120,
+          "assessment",
+          "bent_dragon_negative"
         ],
         [
-          "feet_elevated_row",
-          3,
+          "pullup",
+          1,
+          10,
+          null,
+          120,
+          "assessment",
+          "assisted_pullup"
+        ],
+        [
+          "straight_bar_dip",
+          1,
           11,
           null,
-          70,
-          "2111",
-          "inverted_row"
+          120,
+          "assessment",
+          "straight_bar_support"
         ],
         [
-          "hollow_body_hold",
+          "nordic_negative",
           1,
+          3,
           null,
-          25,
-          50,
-          "braced",
-          "hollow_hold"
+          120,
+          "assessment",
+          "sliding_leg_curl"
         ]
       ],
       "cooldown": [
@@ -11940,7 +12134,7 @@
         "en": "Permanent Basics Sequence Check"
       },
       "description": {
-        "en": "Complete every fundamental check in order with clean submaximal form, using the listed regression whenever the prescribed repetition is not clean. Clean reps up to the number shown: stop at the first form break and note it; don't top up with the easier option. The week\u2019s back-lever work opens the class while the shoulders are fresh: feet-supported German hang and advanced-tuck back lever."
+        "en": "Complete every fundamental check in order with clean submaximal form, using the listed regression whenever the prescribed repetition is not clean. Clean reps up to the number shown: stop at the first form break and note it; don't top up with the easier option. The week’s back-lever work opens the class while the shoulders are fresh: feet-supported German hang and advanced-tuck back lever."
       },
       "schedule": {
         "week": 12,
@@ -13971,30 +14165,37 @@
       "level": 5,
       "number": 13,
       "title": {
-        "en": "Long-Tempo Foundations Checkpoint"
+        "en": "Exam 1: Intermediate Strength"
       },
       "description": {
-        "en": "Slow the permanent basics without adding failure or unnecessary novelty. Today the basics are one recorded set each, a little above your best so far. Clean reps up to the number shown: stop at the first form break and note it; don't top up with the easier option. Wall handstand push-up negatives open the class while the shoulders are fresh, and the week\u2019s back-lever work follows: feet-supported German hang and one-leg back lever."
+        "en": "Exam day for classes L4:098-L5:012: handstand, handstand push-up, muscle-up, front lever, back lever, planche, dragon flag, pull-ups, dips, toes-to-bar, hamstrings. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
       },
       "schedule": {
         "week": 2,
         "day": 6,
-        "day_type": "fundamentals_tempo_checkpoint",
-        "minutes": 53,
+        "day_type": "exam_assessment",
+        "minutes": 50,
         "rpe": 7,
         "focus": [
+          "exam",
+          "handstand",
+          "vertical_push",
+          "muscle_up",
+          "front_lever",
+          "back_lever",
+          "planche",
+          "dragon_flag",
           "pull_up",
-          "push_up",
           "dip",
-          "legs",
-          "tempo"
+          "core",
+          "hinge"
         ]
       },
       "warmup": [
         [
           "low_jack",
           1,
-          40,
+          35,
           null,
           15,
           "easy",
@@ -14019,114 +14220,141 @@
           "wall_slide"
         ],
         [
-          "tempo_squat",
-          1,
-          8,
+          "scapular_pushup",
+          2,
+          11,
           null,
-          25,
-          "3111",
-          "box_squat"
+          30,
+          "2111",
+          "elevated_scapular_pushup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "active_hang",
+          2,
+          null,
+          15,
+          30,
+          "slow",
+          "dead_hang"
         ]
       ],
       "main": [
         [
+          "handstand_toe_pull",
+          1,
+          null,
+          12,
+          120,
+          "assessment",
+          "wall_handstand"
+        ],
+        [
           "wall_hspu_negative",
-          2,
+          1,
           3,
           null,
           120,
-          "5010",
+          "assessment",
           "elevated_pike_pushup"
         ],
         [
-          "planche_lean",
-          2,
+          "strict_muscleup",
+          1,
+          3,
           null,
-          20,
-          75,
-          "isometric",
-          "elevated_plank"
+          180,
+          "assessment",
+          "band_muscleup"
+        ],
+        [
+          "one_leg_front",
+          1,
+          null,
+          "5/side",
+          150,
+          "assessment",
+          "advanced_tuck_front"
         ],
         [
           "german_hang",
-          2,
+          1,
           null,
-          15,
+          10,
           45,
           "slow",
           "skin_cat_partial"
         ],
         [
-          "one_leg_back",
-          2,
-          null,
-          "5/side",
-          115,
-          "isometric",
-          "advanced_tuck_back"
-        ],
-        [
           "advanced_tuck_back",
           1,
           null,
-          11,
-          105,
-          "isometric",
+          10,
+          150,
+          "assessment",
           "tuck_back_hold"
         ],
         [
-          "archer_pullup",
+          "tuck_planche",
+          1,
+          null,
+          8,
+          150,
+          "assessment",
+          "frog_stand"
+        ],
+        [
+          "full_dragon_negative",
+          1,
           2,
-          "3/side",
           null,
           120,
-          "2111",
-          "pullup"
-        ],
-        [
-          "pause_pushup",
-          1,
-          17,
-          null,
-          75,
           "assessment",
-          "incline_pushup"
+          "one_leg_dragon_negative"
         ],
         [
-          "parallel_dip",
+          "pullup",
           1,
-          19,
+          10,
           null,
-          105,
+          120,
           "assessment",
-          "assisted_dip"
+          "assisted_pullup"
         ],
         [
-          "single_leg_rdl",
-          2,
-          "10/side",
+          "straight_bar_dip",
+          1,
+          11,
           null,
-          75,
-          "3011",
-          "single_leg_bridge"
-        ],
-        [
-          "hollow_body_hold",
-          2,
-          null,
-          25,
-          55,
-          "braced",
-          "hollow_hold"
+          120,
+          "assessment",
+          "straight_bar_support"
         ],
         [
           "toes_to_bar",
           1,
-          7,
+          6,
           null,
-          90,
+          120,
           "assessment",
           "hanging_leg_raise"
+        ],
+        [
+          "nordic_negative",
+          1,
+          3,
+          null,
+          120,
+          "assessment",
+          "sliding_leg_curl"
         ]
       ],
       "cooldown": [
@@ -15020,7 +15248,7 @@
         "en": "Strong Basics in Stops"
       },
       "description": {
-        "en": "Use clear pauses to test ownership of the basics without adding a maximal set. Wall handstand push-up negatives open the class while the shoulders are fresh, and the week\u2019s back-lever work follows: feet-supported German hang, one-leg back lever and advanced-tuck back lever. Feet-elevated rows stand in for the pull-ups."
+        "en": "Use clear pauses to test ownership of the basics without adding a maximal set. Wall handstand push-up negatives open the class while the shoulders are fresh, and the week’s back-lever work follows: feet-supported German hang, one-leg back lever and advanced-tuck back lever. Feet-elevated rows stand in for the pull-ups."
       },
       "schedule": {
         "week": 3,
@@ -16039,7 +16267,7 @@
         "en": "Foundation Maintenance"
       },
       "description": {
-        "en": "Touch every permanent movement with reduced sets and generous rests. The week\u2019s back-lever work opens the class while the shoulders are fresh: feet-supported German hang, advanced-tuck back lever and feet-assisted tuck back-lever entry. Feet-elevated rows stand in for the pull-ups."
+        "en": "Touch every permanent movement with reduced sets and generous rests. The week’s back-lever work opens the class while the shoulders are fresh: feet-supported German hang, advanced-tuck back lever and feet-assisted tuck back-lever entry. Feet-elevated rows stand in for the pull-ups."
       },
       "schedule": {
         "week": 4,
@@ -17046,24 +17274,30 @@
       "level": 5,
       "number": 34,
       "title": {
-        "en": "Six Basics Ascend Checkpoint"
+        "en": "Exam 2: Intermediate Strength"
       },
       "description": {
-        "en": "Raise the repetitions across six foundational stations while keeping the circuit unhurried. Today the basics are one recorded set each, a little above your best so far. Clean reps up to the number shown: stop at the first form break and note it; don't top up with the easier option. Wall handstand push-up negatives open the class while the shoulders are fresh, and the week\u2019s back-lever work follows: feet-supported German hang and one-leg back lever. Feet-elevated rows stand in for the pull-ups."
+        "en": "Exam day for classes L5:014-L5:033: handstand, handstand push-up, muscle-up, front lever, back lever, planche, dragon flag, pull-ups, dips, toes-to-bar, hamstrings. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
       },
       "schedule": {
         "week": 5,
         "day": 6,
-        "day_type": "fundamentals_ladder_checkpoint",
-        "minutes": 52,
+        "day_type": "exam_assessment",
+        "minutes": 50,
         "rpe": 7,
         "focus": [
+          "exam",
+          "handstand",
+          "vertical_push",
+          "muscle_up",
+          "front_lever",
+          "back_lever",
+          "planche",
+          "dragon_flag",
           "pull_up",
-          "push_up",
           "dip",
-          "squat",
-          "row",
-          "core"
+          "core",
+          "hinge"
         ]
       },
       "warmup": [
@@ -17095,114 +17329,141 @@
           "wall_slide"
         ],
         [
-          "squat",
-          1,
-          12,
+          "scapular_pushup",
+          2,
+          11,
           null,
-          20,
-          "controlled",
-          "box_squat"
+          30,
+          "2111",
+          "elevated_scapular_pushup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "active_hang",
+          2,
+          null,
+          15,
+          30,
+          "slow",
+          "dead_hang"
         ]
       ],
       "main": [
         [
+          "handstand_toe_pull",
+          1,
+          null,
+          12,
+          120,
+          "assessment",
+          "wall_handstand"
+        ],
+        [
           "wall_hspu_negative",
-          2,
-          4,
+          1,
+          3,
           null,
           120,
-          "5010",
+          "assessment",
           "elevated_pike_pushup"
         ],
         [
-          "planche_lean",
-          2,
+          "strict_muscleup",
+          1,
+          3,
           null,
-          20,
-          75,
-          "isometric",
-          "elevated_plank"
+          180,
+          "assessment",
+          "band_muscleup"
+        ],
+        [
+          "one_leg_front",
+          1,
+          null,
+          "6/side",
+          150,
+          "assessment",
+          "advanced_tuck_front"
         ],
         [
           "german_hang",
-          2,
+          1,
           null,
-          15,
+          10,
           45,
           "slow",
           "skin_cat_partial"
         ],
         [
           "one_leg_back",
-          2,
+          1,
           null,
-          "5-4/side",
-          115,
-          "isometric",
+          "6/side",
+          150,
+          "assessment",
           "advanced_tuck_back"
         ],
         [
-          "advanced_tuck_back",
+          "advanced_tuck_planche",
           1,
           null,
-          10,
-          105,
-          "isometric",
-          "tuck_back_hold"
+          3,
+          150,
+          "assessment",
+          "tuck_planche"
         ],
         [
-          "archer_pullup",
+          "full_dragon_negative",
+          1,
           2,
-          "3/side",
           null,
           120,
-          "2111",
-          "pullup"
-        ],
-        [
-          "pushup",
-          1,
-          31,
-          null,
-          30,
           "assessment",
-          "incline_pushup"
+          "one_leg_dragon_negative"
         ],
         [
-          "parallel_dip",
+          "pullup",
           1,
-          19,
+          10,
           null,
-          75,
+          120,
           "assessment",
-          "assisted_dip"
+          "assisted_pullup"
         ],
         [
-          "single_leg_rdl",
-          2,
-          "10/side",
+          "straight_bar_dip",
+          1,
+          11,
           null,
-          60,
-          "3011",
-          "single_leg_bridge"
-        ],
-        [
-          "feet_elevated_row",
-          2,
-          "9-10",
-          null,
-          30,
-          "2111",
-          "inverted_row"
+          120,
+          "assessment",
+          "straight_bar_support"
         ],
         [
           "toes_to_bar",
           1,
-          7,
+          6,
           null,
-          105,
+          120,
           "assessment",
           "hanging_leg_raise"
+        ],
+        [
+          "nordic_negative",
+          1,
+          3,
+          null,
+          120,
+          "assessment",
+          "sliding_leg_curl"
         ]
       ],
       "cooldown": [
@@ -18087,7 +18348,7 @@
         "en": "Unilateral Foundation Mix"
       },
       "description": {
-        "en": "Keep bilateral pulling and pressing while pistols and side planks train each side honestly. Wall handstand push-up negatives open the class while the shoulders are fresh, and the week\u2019s back-lever work follows: feet-supported German hang and one-leg back lever. Feet-elevated rows stand in for the pull-ups."
+        "en": "Keep bilateral pulling and pressing while pistols and side planks train each side honestly. Wall handstand push-up negatives open the class while the shoulders are fresh, and the week’s back-lever work follows: feet-supported German hang and one-leg back lever. Feet-elevated rows stand in for the pull-ups."
       },
       "schedule": {
         "week": 6,
@@ -19115,7 +19376,7 @@
         "en": "Advanced Basics Stations"
       },
       "description": {
-        "en": "Rotate through six stronger variations at a sustainable pace and finish every station with reserve. Wall handstand push-up negatives open the class while the shoulders are fresh, and the week\u2019s back-lever work follows: feet-supported German hang and one-leg back lever. Feet-elevated rows stand in for the pull-ups."
+        "en": "Rotate through six stronger variations at a sustainable pace and finish every station with reserve. Wall handstand push-up negatives open the class while the shoulders are fresh, and the week’s back-lever work follows: feet-supported German hang and one-leg back lever. Feet-elevated rows stand in for the pull-ups."
       },
       "schedule": {
         "week": 7,
@@ -19182,8 +19443,8 @@
       "main": [
         [
           "wall_hspu_negative",
-          2,
-          4,
+          3,
+          5,
           null,
           120,
           "5010",
@@ -19236,7 +19497,7 @@
         ],
         [
           "feet_elevated_row",
-          4,
+          3,
           12,
           null,
           25,
@@ -20131,31 +20392,37 @@
       "level": 5,
       "number": 55,
       "title": {
-        "en": "Basics Volume Cut"
+        "en": "Exam 3: Intermediate Strength"
       },
       "description": {
-        "en": "Retain the six core patterns at roughly half volume and finish eager rather than drained. The week\u2019s back-lever work opens the class while the shoulders are fresh: feet-supported German hang, advanced-tuck back lever and feet-assisted tuck back-lever entry. Feet-elevated rows stand in for the pull-ups."
+        "en": "Exam day for classes L5:035-L5:054: handstand, handstand push-up, muscle-up, front lever, back lever, planche, dragon flag, pull-ups, dips, toes-to-bar, hamstrings. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
       },
       "schedule": {
         "week": 8,
         "day": 6,
-        "day_type": "fundamentals_deload",
-        "minutes": 44,
-        "rpe": 5,
+        "day_type": "exam_assessment",
+        "minutes": 51,
+        "rpe": 7,
         "focus": [
+          "exam",
+          "handstand",
+          "vertical_push",
+          "muscle_up",
+          "front_lever",
+          "back_lever",
+          "planche",
+          "dragon_flag",
           "pull_up",
-          "push_up",
           "dip",
-          "squat",
-          "row",
-          "core"
+          "core",
+          "hinge"
         ]
       },
       "warmup": [
         [
           "low_jack",
           1,
-          25,
+          45,
           null,
           15,
           "easy",
@@ -20180,96 +20447,141 @@
           "wall_slide"
         ],
         [
-          "squat",
+          "pause_squat",
           1,
-          8,
+          10,
           null,
           20,
-          "easy",
+          "22X1",
           "box_squat"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
+        ],
+        [
+          "active_hang",
+          2,
+          null,
+          15,
+          30,
+          "slow",
+          "dead_hang"
         ]
       ],
       "main": [
         [
-          "german_hang",
-          2,
+          "handstand_toe_pull",
+          1,
           null,
-          15,
+          12,
+          120,
+          "assessment",
+          "wall_handstand"
+        ],
+        [
+          "wall_hspu_negative",
+          1,
+          5,
+          null,
+          120,
+          "assessment",
+          "elevated_pike_pushup"
+        ],
+        [
+          "strict_muscleup",
+          1,
+          3,
+          null,
+          180,
+          "assessment",
+          "band_muscleup"
+        ],
+        [
+          "one_leg_front",
+          1,
+          null,
+          "6/side",
+          150,
+          "assessment",
+          "advanced_tuck_front"
+        ],
+        [
+          "german_hang",
+          1,
+          null,
+          10,
           45,
           "slow",
           "skin_cat_partial"
         ],
         [
-          "advanced_tuck_back",
-          2,
+          "one_leg_back",
+          1,
           null,
-          9,
-          110,
-          "isometric",
-          "tuck_back_hold"
+          "6/side",
+          150,
+          "assessment",
+          "advanced_tuck_back"
         ],
         [
-          "tuck_back_entry",
-          2,
-          2,
+          "advanced_tuck_planche",
+          1,
           null,
-          95,
-          "controlled",
-          "skin_cat_partial"
+          4,
+          150,
+          "assessment",
+          "tuck_planche"
         ],
         [
-          "feet_elevated_row",
+          "full_dragon_negative",
+          1,
           2,
+          null,
+          120,
+          "assessment",
+          "one_leg_dragon_negative"
+        ],
+        [
+          "pullup",
+          1,
           11,
           null,
-          100,
-          "2111",
-          "inverted_row"
+          120,
+          "assessment",
+          "assisted_pullup"
         ],
         [
-          "pushup",
-          2,
-          12,
-          null,
-          60,
-          "2111",
-          "incline_pushup"
-        ],
-        [
-          "assisted_dip",
-          2,
-          8,
-          null,
-          75,
-          "2111",
-          "support_hold"
-        ],
-        [
-          "single_leg_rdl",
-          2,
-          "10/side",
-          null,
-          60,
-          "3011",
-          "single_leg_bridge"
-        ],
-        [
-          "inverted_row",
+          "straight_bar_dip",
           1,
-          10,
+          11,
           null,
-          60,
-          "2111",
-          "high_inverted_row"
+          120,
+          "assessment",
+          "straight_bar_support"
         ],
         [
-          "lying_leg_raise",
+          "toes_to_bar",
           1,
-          10,
+          6,
           null,
-          50,
-          "3010",
-          "lying_knee_raise"
+          120,
+          "assessment",
+          "hanging_leg_raise"
+        ],
+        [
+          "nordic_negative",
+          1,
+          4,
+          null,
+          120,
+          "assessment",
+          "sliding_leg_curl"
         ]
       ],
       "cooldown": [
@@ -21172,7 +21484,7 @@
         "en": "Antagonist Foundations"
       },
       "description": {
-        "en": "Alternate pulling and pressing pairs, then finish with single-leg strength and strict trunk work. Wall handstand push-up negatives open the class while the shoulders are fresh, and the week\u2019s back-lever work follows: feet-supported German hang and one-leg back lever. Feet-elevated rows stand in for the pull-ups."
+        "en": "Alternate pulling and pressing pairs, then finish with single-leg strength and strict trunk work. Wall handstand push-up negatives open the class while the shoulders are fresh, and the week’s back-lever work follows: feet-supported German hang and one-leg back lever. Feet-elevated rows stand in for the pull-ups."
       },
       "schedule": {
         "week": 9,
@@ -22192,7 +22504,7 @@
         "en": "Power Basics, Not Failure"
       },
       "description": {
-        "en": "Move the upward phase with intent while keeping two clean repetitions available in every basic. Wall handstand push-up negatives open the class while the shoulders are fresh, and the week\u2019s back-lever work follows: feet-supported German hang and one-leg back lever. Feet-elevated rows stand in for the pull-ups."
+        "en": "Move the upward phase with intent while keeping two clean repetitions available in every basic. Wall handstand push-up negatives open the class while the shoulders are fresh, and the week’s back-lever work follows: feet-supported German hang and one-leg back lever. Feet-elevated rows stand in for the pull-ups."
       },
       "schedule": {
         "week": 10,
@@ -23227,24 +23539,30 @@
       "level": 5,
       "number": 76,
       "title": {
-        "en": "Foundation Dress Rehearsal"
+        "en": "Exam 4: Intermediate Strength"
       },
       "description": {
-        "en": "Rehearse the permanent basics at strong but nonmaximal numbers before gate week. Wall handstand push-up negatives open the class while the shoulders are fresh, and the week\u2019s back-lever work follows: feet-supported German hang and one-leg back lever. Feet-elevated rows stand in for the pull-ups."
+        "en": "Exam day for classes L5:056-L5:075: handstand, handstand push-up, muscle-up, front lever, back lever, planche, dragon flag, pull-ups, dips, toes-to-bar, hamstrings. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
       },
       "schedule": {
         "week": 11,
         "day": 6,
-        "day_type": "fundamentals_integration",
-        "minutes": 54,
+        "day_type": "exam_assessment",
+        "minutes": 50,
         "rpe": 7,
         "focus": [
+          "exam",
+          "handstand",
+          "vertical_push",
+          "muscle_up",
+          "front_lever",
+          "back_lever",
+          "planche",
+          "dragon_flag",
           "pull_up",
-          "push_up",
           "dip",
-          "pistol_squat",
-          "row",
-          "core"
+          "core",
+          "hinge"
         ]
       },
       "warmup": [
@@ -23252,7 +23570,7 @@
           "march",
           1,
           null,
-          120,
+          80,
           0,
           "easy",
           null
@@ -23276,96 +23594,141 @@
           "wall_slide"
         ],
         [
-          "squat",
-          1,
+          "scapular_pushup",
+          2,
           12,
           null,
-          20,
-          "controlled",
-          "box_squat"
+          30,
+          "2111",
+          "elevated_scapular_pushup"
         ],
         [
-          "squat_jump",
-          2,
-          5,
+          "prone_ytw",
+          1,
+          6,
           null,
-          45,
-          "soft_landing",
-          "squat"
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "active_hang",
+          2,
+          null,
+          15,
+          30,
+          "slow",
+          "dead_hang"
         ]
       ],
       "main": [
         [
+          "freestanding_handstand",
+          1,
+          null,
+          5,
+          120,
+          "assessment",
+          "wall_handstand"
+        ],
+        [
           "wall_hspu_negative",
-          2,
-          4,
+          1,
+          5,
           null,
           120,
-          "5010",
+          "assessment",
           "elevated_pike_pushup"
         ],
         [
-          "german_hang",
-          2,
+          "strict_muscleup",
+          1,
+          3,
           null,
-          15,
+          180,
+          "assessment",
+          "band_muscleup"
+        ],
+        [
+          "one_leg_front",
+          1,
+          null,
+          "7/side",
+          150,
+          "assessment",
+          "advanced_tuck_front"
+        ],
+        [
+          "german_hang",
+          1,
+          null,
+          10,
           45,
           "slow",
           "skin_cat_partial"
         ],
         [
           "one_leg_back",
-          3,
+          1,
           null,
           "7/side",
-          120,
-          "isometric",
+          150,
+          "assessment",
           "advanced_tuck_back"
         ],
         [
-          "planche_lean",
-          2,
+          "advanced_tuck_planche",
+          1,
           null,
-          20,
-          75,
-          "controlled",
-          "elevated_plank"
+          4,
+          150,
+          "assessment",
+          "tuck_planche"
         ],
         [
-          "parallel_dip",
+          "dragon_flag",
+          1,
           2,
-          12,
           null,
-          110,
-          "2111",
-          "assisted_dip"
+          120,
+          "assessment",
+          "full_dragon_negative"
         ],
         [
-          "pistol_squat",
-          2,
-          "7/side",
+          "pullup",
+          1,
+          11,
           null,
-          100,
-          "31X1",
-          "assisted_pistol_squat"
+          120,
+          "assessment",
+          "assisted_pullup"
         ],
         [
-          "feet_elevated_row",
-          3,
-          12,
+          "straight_bar_dip",
+          1,
+          11,
           null,
-          80,
-          "2111",
-          "inverted_row"
+          120,
+          "assessment",
+          "straight_bar_support"
         ],
         [
           "toes_to_bar",
           1,
-          7,
+          6,
           null,
-          80,
-          "3010",
+          120,
+          "assessment",
           "hanging_leg_raise"
+        ],
+        [
+          "nordic_negative",
+          1,
+          5,
+          null,
+          120,
+          "assessment",
+          "sliding_leg_curl"
         ]
       ],
       "cooldown": [
@@ -24290,7 +24653,7 @@
         "en": "Level Five Basics Sequence Check"
       },
       "description": {
-        "en": "Complete every pulling, pressing, leg, and trunk check in order, using the listed regression whenever the prescribed repetition is not clean. Clean reps up to the number shown: stop at the first form break and note it; don't top up with the easier option. The week\u2019s back-lever work opens the class while the shoulders are fresh: feet-supported German hang, one-leg back lever and advanced-tuck back lever."
+        "en": "Complete every pulling, pressing, leg, and trunk check in order, using the listed regression whenever the prescribed repetition is not clean. Clean reps up to the number shown: stop at the first form break and note it; don't top up with the easier option. The week’s back-lever work opens the class while the shoulders are fresh: feet-supported German hang, one-leg back lever and advanced-tuck back lever."
       },
       "schedule": {
         "week": 12,
@@ -25330,7 +25693,7 @@
         "en": "Permanent Five Strength Circuit"
       },
       "description": {
-        "en": "Rehearse pull, push, dip, squat, and trunk strength in a steady five-station circuit without failed repetitions. Wall handstand push-up negatives open the class while the shoulders are fresh, and the week\u2019s back-lever work follows: feet-supported German hang and advanced-tuck back lever. Feet-elevated rows stand in for the pull-ups."
+        "en": "Rehearse pull, push, dip, squat, and trunk strength in a steady five-station circuit without failed repetitions. Wall handstand push-up negatives open the class while the shoulders are fresh, and the week’s back-lever work follows: feet-supported German hang and advanced-tuck back lever. Feet-elevated rows stand in for the pull-ups."
       },
       "schedule": {
         "week": 13,
@@ -26356,23 +26719,29 @@
       "level": 4,
       "number": 97,
       "title": {
-        "en": "Pause-Tempo Foundations"
+        "en": "Exam 5: Skill Control"
       },
       "description": {
-        "en": "Revisit the permanent basics with deliberate pauses and steady tempos so skill practice rests on dependable strength. Wall handstand push-up negatives open the class while the shoulders are fresh, and the week\u2019s back-lever work follows: feet-supported German hang and advanced-tuck back lever. Feet-elevated rows stand in for the pull-ups."
+        "en": "Exam day for classes L4:077-L4:096: handstand, handstand push-up, muscle-up, front lever, back lever, planche, dragon flag, pull-ups, dips, hamstrings. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
       },
       "schedule": {
         "week": 14,
         "day": 6,
-        "day_type": "fundamentals_tempo",
-        "minutes": 49,
-        "rpe": 6,
+        "day_type": "exam_assessment",
+        "minutes": 47,
+        "rpe": 7,
         "focus": [
+          "exam",
+          "handstand",
+          "vertical_push",
+          "muscle_up",
+          "front_lever",
+          "back_lever",
+          "planche",
+          "dragon_flag",
           "pull_up",
-          "push_up",
           "dip",
-          "squat",
-          "core"
+          "hinge"
         ]
       },
       "warmup": [
@@ -26380,7 +26749,7 @@
           "march",
           1,
           null,
-          120,
+          80,
           0,
           "easy",
           null
@@ -26404,28 +26773,73 @@
           "wall_slide"
         ],
         [
-          "tempo_squat",
-          1,
+          "scapular_pushup",
+          2,
           10,
           null,
-          25,
-          "3111",
-          "box_squat"
+          30,
+          "2111",
+          "elevated_scapular_pushup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "active_hang",
+          2,
+          null,
+          15,
+          30,
+          "slow",
+          "dead_hang"
         ]
       ],
       "main": [
         [
+          "handstand_toe_pull",
+          1,
+          null,
+          12,
+          120,
+          "assessment",
+          "wall_handstand"
+        ],
+        [
           "wall_hspu_negative",
-          2,
+          1,
           3,
           null,
           120,
-          "5010",
+          "assessment",
           "elevated_pike_pushup"
         ],
         [
+          "strict_muscleup",
+          1,
+          3,
+          null,
+          180,
+          "assessment",
+          "band_muscleup"
+        ],
+        [
+          "one_leg_front",
+          1,
+          null,
+          "5/side",
+          150,
+          "assessment",
+          "advanced_tuck_front"
+        ],
+        [
           "german_hang",
-          2,
+          1,
           null,
           10,
           45,
@@ -26434,66 +26848,57 @@
         ],
         [
           "advanced_tuck_back",
-          3,
+          1,
           null,
           10,
-          140,
-          "isometric",
+          150,
+          "assessment",
           "tuck_back_hold"
         ],
         [
-          "feet_elevated_row",
-          2,
+          "tuck_planche",
+          1,
+          null,
+          6,
+          150,
+          "assessment",
+          "frog_stand"
+        ],
+        [
+          "one_leg_dragon_negative",
+          1,
+          "2/side",
+          null,
+          120,
+          "assessment",
+          "bent_dragon_negative"
+        ],
+        [
+          "pullup",
+          1,
           10,
           null,
           120,
-          "2111",
-          "inverted_row"
+          "assessment",
+          "assisted_pullup"
         ],
         [
-          "planche_lean",
+          "straight_bar_dip",
           1,
+          11,
           null,
-          20,
-          75,
-          "controlled",
-          "elevated_plank"
+          120,
+          "assessment",
+          "straight_bar_support"
         ],
         [
-          "parallel_dip",
+          "nordic_negative",
           1,
-          12,
+          3,
           null,
-          110,
-          "31X1",
-          "assisted_dip"
-        ],
-        [
-          "single_leg_rdl",
-          2,
-          "8/side",
-          null,
-          75,
-          "3011",
-          "single_leg_bridge"
-        ],
-        [
-          "hanging_leg_raise",
-          1,
-          10,
-          null,
-          70,
-          "3010",
-          "knee_raise"
-        ],
-        [
-          "calf_raise",
-          2,
-          20,
-          null,
-          40,
-          "2111",
-          null
+          120,
+          "assessment",
+          "sliding_leg_curl"
         ]
       ],
       "cooldown": [
@@ -27014,7 +27419,7 @@
         "week": 13,
         "day": 1,
         "day_type": "front_lever_consolidation_deload",
-        "minutes": 37,
+        "minutes": 38,
         "rpe": 5,
         "focus": [
           "front_lever",
@@ -27162,7 +27567,7 @@
         "week": 13,
         "day": 2,
         "day_type": "dragon_legs_consolidation_deload",
-        "minutes": 45,
+        "minutes": 46,
         "rpe": 5,
         "focus": [
           "dragon_flag",
@@ -27739,7 +28144,7 @@
         "en": "Enduring Five-Pattern Circuit"
       },
       "description": {
-        "en": "Cycle through the permanent pull, push, dip, squat, and trunk patterns at a sustainable advanced pace. Wall handstand push-up negatives open the class while the shoulders are fresh, and the week\u2019s back-lever work follows: feet-supported German hang and one-leg back lever. Feet-elevated rows stand in for the pull-ups."
+        "en": "Cycle through the permanent pull, push, dip, squat, and trunk patterns at a sustainable advanced pace. Wall handstand push-up negatives open the class while the shoulders are fresh, and the week’s back-lever work follows: feet-supported German hang and one-leg back lever. Feet-elevated rows stand in for the pull-ups."
       },
       "schedule": {
         "week": 13,
@@ -28748,23 +29153,30 @@
       "level": 5,
       "number": 97,
       "title": {
-        "en": "Advanced Basics Tempo Round"
+        "en": "Exam 5: Intermediate Strength"
       },
       "description": {
-        "en": "Reinforce permanent strength with strict chin-ups, paused presses, steady squats, compression, and calf work. Wall handstand push-up negatives open the class while the shoulders are fresh, and the week\u2019s back-lever work follows: feet-supported German hang and one-leg back lever. Feet-elevated rows stand in for the pull-ups."
+        "en": "Exam day for classes L5:077-L5:096: handstand, handstand push-up, muscle-up, front lever, back lever, planche, dragon flag, pull-ups, dips, toes-to-bar, hamstrings. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
       },
       "schedule": {
         "week": 14,
         "day": 6,
-        "day_type": "fundamentals_tempo",
-        "minutes": 53,
+        "day_type": "exam_assessment",
+        "minutes": 50,
         "rpe": 7,
         "focus": [
+          "exam",
+          "handstand",
+          "vertical_push",
+          "muscle_up",
+          "front_lever",
+          "back_lever",
+          "planche",
+          "dragon_flag",
           "pull_up",
-          "push_up",
           "dip",
-          "squat",
-          "core"
+          "core",
+          "hinge"
         ]
       },
       "warmup": [
@@ -28772,7 +29184,7 @@
           "march",
           1,
           null,
-          120,
+          80,
           0,
           "easy",
           null
@@ -28796,87 +29208,141 @@
           "wall_slide"
         ],
         [
-          "tempo_squat",
-          1,
+          "scapular_pushup",
+          2,
           10,
           null,
-          25,
-          "3111",
-          "box_squat"
+          30,
+          "2111",
+          "elevated_scapular_pushup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "active_hang",
+          2,
+          null,
+          15,
+          30,
+          "slow",
+          "dead_hang"
         ]
       ],
       "main": [
         [
+          "freestanding_handstand",
+          1,
+          null,
+          5,
+          120,
+          "assessment",
+          "wall_handstand"
+        ],
+        [
           "wall_hspu_negative",
-          2,
+          1,
           5,
           null,
           120,
-          "5010",
+          "assessment",
           "elevated_pike_pushup"
         ],
         [
-          "german_hang",
-          2,
+          "strict_muscleup",
+          1,
+          3,
           null,
-          15,
+          180,
+          "assessment",
+          "band_muscleup"
+        ],
+        [
+          "one_leg_front",
+          1,
+          null,
+          "8/side",
+          150,
+          "assessment",
+          "advanced_tuck_front"
+        ],
+        [
+          "german_hang",
+          1,
+          null,
+          10,
           45,
           "slow",
           "skin_cat_partial"
         ],
         [
           "one_leg_back",
-          2,
+          1,
           null,
-          "8/side",
-          155,
-          "isometric",
+          "7/side",
+          150,
+          "assessment",
           "advanced_tuck_back"
         ],
         [
-          "feet_elevated_row",
-          2,
+          "advanced_tuck_planche",
+          1,
+          null,
+          5,
+          150,
+          "assessment",
+          "tuck_planche"
+        ],
+        [
+          "dragon_flag",
+          1,
+          3,
+          null,
+          120,
+          "assessment",
+          "full_dragon_negative"
+        ],
+        [
+          "pullup",
+          1,
           11,
           null,
-          135,
-          "2111",
-          "inverted_row"
+          120,
+          "assessment",
+          "assisted_pullup"
         ],
         [
-          "planche_lean",
-          2,
-          null,
-          20,
-          75,
-          "controlled",
-          "elevated_plank"
-        ],
-        [
-          "parallel_dip",
+          "straight_bar_dip",
           1,
-          13,
+          11,
           null,
-          130,
-          "31X1",
-          "assisted_dip"
-        ],
-        [
-          "single_leg_rdl",
-          2,
-          "10/side",
-          null,
-          85,
-          "3011",
-          "single_leg_bridge"
+          120,
+          "assessment",
+          "straight_bar_support"
         ],
         [
           "toes_to_bar",
           1,
-          8,
+          6,
           null,
-          90,
-          "3010",
+          120,
+          "assessment",
           "hanging_leg_raise"
+        ],
+        [
+          "nordic_negative",
+          1,
+          5,
+          null,
+          120,
+          "assessment",
+          "sliding_leg_curl"
         ]
       ],
       "cooldown": [

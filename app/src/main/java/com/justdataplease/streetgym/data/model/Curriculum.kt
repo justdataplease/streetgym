@@ -43,11 +43,15 @@ data class TrainingProgram(
     val practice: List<TrainingExercise> = emptyList(),
     val warmup: List<TrainingExercise> = emptyList(),
     val cooldown: List<TrainingExercise> = emptyList(),
-)
+) {
+    /** An exam day (about every 20 classes): its [TrainingExercise.assessment] sets are the targets to reach. */
+    val isExam: Boolean get() = dayType?.startsWith("exam") == true
+}
 
 /**
  * One exercise of a class. [easier]: the step's easier rung, which the athlete may do instead and is credited for.
  * [readinessCheck]: a single test set, answered "Did you hit it?" rather than credited as training.
+ * [assessment]: one recorded set at the number shown; on an exam day it is one of the exam's targets.
  */
 data class TrainingExercise(
     val id: String,
@@ -60,6 +64,7 @@ data class TrainingExercise(
     val equipment: List<String> = emptyList(),
     val easier: EasierOption? = null,
     val readinessCheck: Boolean = false,
+    val assessment: Boolean = false,
 )
 
 data class EasierOption(val movementId: String, val name: LocalizedText)

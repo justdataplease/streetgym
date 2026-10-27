@@ -59,6 +59,12 @@ class WorkoutFlow(val steps: List<WorkoutStep>) {
         return credits
     }
 
+    /** An exam class's targets (its assessment sets in the main work), each with whether all its sets were ticked. */
+    fun examTests(completed: Set<String>): List<Pair<TrainingExercise, Boolean>> = steps
+        .filter { it.section == "main" && it.exercise.assessment }
+        .groupBy(WorkoutStep::exercise)
+        .map { (exercise, sets) -> exercise to sets.all { it.key in completed } }
+
     /** Readiness checks with a ticked set: each asks "Did you hit it?" when the class is finished. */
     fun readinessChecks(completed: Set<String>): List<TrainingExercise> = steps
         .filter { it.section in CREDITED_SECTIONS && it.exercise.readinessCheck && it.key in completed }

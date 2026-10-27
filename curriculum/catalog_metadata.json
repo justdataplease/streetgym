@@ -53,7 +53,7 @@
         "en": "Confident Calisthenics"
       },
       "description": {
-        "en": "Consolidate strong basics and explore handstand, flag, lever and planche variations at your current ability. Use regressions freely; there is no mastery deadline."
+        "en": "Consolidate strong basics and train handstand, flag, lever and planche variations at your current ability. Straddle levers and the straddle flag take most adults years, not weeks: when a shape isn't clean yet, train the rung below it for the same sets."
       }
     },
     {
@@ -62,7 +62,7 @@
         "en": "Mastery"
       },
       "description": {
-        "en": "Train brief full front and back levers, the full human flag, freestanding handstand push-up negatives and one-arm pull-up groundwork in small daily doses, with the straddle shapes and assisted rungs always in the same class to step back to."
+        "en": "Train brief full front and back levers, the full human flag, freestanding handstand push-up negatives and one-arm pull-up groundwork in small daily doses, with the straddle shapes and assisted rungs always in the same class to step back to. Most adults need two to four years of steady training to hold these full shapes; the rung below is the class until then."
       }
     }
   ],
@@ -102,5 +102,11 @@
         ]
       }
     ]
-  }
+  },
+  "replaced_source_slots": [
+    "1-20",
+    "1-40",
+    "2-62",
+    "3-20"
+  ]
 }

@@ -2,6 +2,7 @@ package com.justdataplease.streetgym.data.skills
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -214,7 +215,9 @@ class SkillBookTest {
         listOf("one_arm_pullup", "one_arm_pushup", "freestanding_handstand", "v_sit").forEach { top ->
             val skill = real.families.flatMap { it.skills }.first { it.id == top }
             assertTrue("$top tops its ladder", real.families.any { it.skills.last() == skill })
-            assertNull("$top is beyond the program", skill.expected)
+            // Round 6: freestanding holds join the Level 5-7 practice and exams; the others stay beyond the program.
+            if (top == "freestanding_handstand") assertNotNull("$top is taught", skill.expected)
+            else assertNull("$top is beyond the program", skill.expected)
         }
         // Following every class fills the prep of every rung the program teaches.
         val levels = org.json.JSONObject(file.readText()).getJSONArray("levels")

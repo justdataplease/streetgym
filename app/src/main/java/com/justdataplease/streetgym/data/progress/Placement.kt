@@ -32,11 +32,13 @@ object Placement {
     data class Row(val start: Start, val pushUps: Int, val pullUps: Int, val squats: Int)
 
     /**
-     * Every start, best first. Level 1, day 41 opens the rebuilt Level 1 block for a fit adult still short on pull-ups
-     * (0–4: five or more reach Level 2); day 22 is where full push-ups first appear.
+     * Every start, best first. The strongest answers start at Level 2, day 71: three counts measure muscle, not the
+     * tendons Level 3's levers and muscle-ups load, so its last 30 classes (German hangs, tuck levers, negatives) come
+     * first (round 6). Level 1, day 41 opens the rebuilt Level 1 block for a fit adult still short on pull-ups (0–4:
+     * five or more reach Level 2); day 22 is where full push-ups first appear.
      */
     val STARTS = listOf(
-        Row(Start(3), pushUps = 30, pullUps = 10, squats = 50),
+        Row(Start(2, 71), pushUps = 30, pullUps = 10, squats = 50),
         Row(Start(2), pushUps = 20, pullUps = 5, squats = 30),
         Row(Start(1, 41), pushUps = 20, pullUps = 0, squats = 30),
         Row(Start(1, 22), pushUps = 10, pullUps = 0, squats = 30),

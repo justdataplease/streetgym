@@ -23,6 +23,8 @@ function Localized([string]$English) {
 }
 
 $script:flagPracticeIds = @("flag_ground_support", "assisted_tuck_flag", "tuck_flag", "straddle_flag", "full_flag")
+# Round 6: tuck-or-harder flags are maximal straight-arm holds, so they lead the main work rather than the practice.
+$script:hardFlagIds = @("tuck_flag", "straddle_flag", "full_flag")
 $script:leverAndMuscleUpIds = @("tuck_front_hold", "advanced_tuck_front", "one_leg_front", "straddle_front", "full_front", "tuck_back_hold",
     "advanced_tuck_back", "one_leg_back", "straddle_back", "full_back", "strict_muscleup", "band_muscleup", "negative_muscleup", "jump_muscleup")
 $script:lowerBodyPatterns = @("legs", "squat", "lunge", "lateral_lunge", "single_leg", "single_leg_squat", "hinge",
@@ -209,6 +211,8 @@ $catalogMetadata = Read-JsonFile (Join-Path $CurriculumDirectory "catalog_metada
 $authenticTitles = (Read-JsonFile (Join-Path $CurriculumDirectory "authentic_titles.json")).titles
 $morningClass = Read-JsonFile (Join-Path $CurriculumDirectory "morning_class.json")
 $classProgression = Read-JsonFile (Join-Path $CurriculumDirectory "class_progression.json")
+# App positions ("level-number") where an authored class takes the place of an original-source class (round 6 exam days).
+$replacedSourceSlots = @($catalogMetadata.replaced_source_slots | ForEach-Object { [string]$_ })
 $authoredBySlot = @{}
 $movementById = [ordered]@{}
 $coachingProfiles = New-Object System.Collections.ArrayList
@@ -243,6 +247,7 @@ $levelDefinitions = @($catalogMetadata.level_definitions)
 $assembledLevels = New-Object System.Collections.ArrayList
 $authenticCount = 0
 $reconstructedCount = 0
+$replacedSourceCount = 0
 $newLevelCount = 0
 $newExtensionCount = 0
 $archivedLegacyPlaceholderCount = 0
@@ -287,6 +292,36 @@ foreach ($levelDefinition in $levelDefinitions) {
             $sourceSlot = [int]$legacyProgram.number
             $number = $position
             $stableId = Stable-ProgramId $levelNumber $number
+            $slot = "$levelNumber-$number"
+
+            if ([bool]$legacyProgram.has_details -and $slot -in $replacedSourceSlots) {
+                # An authored class takes this original-source position; the original stays in the forensic export.
+                if (-not $authoredBySlot.ContainsKey($slot)) { throw "No authored class replaces original-source slot $slot" }
+                $authored = $authoredBySlot[$slot]
+                $assembled = [ordered]@{
+                    id = $stableId
+                    authored_id = [string]$authored.id
+                    origin = "reconstructed_placeholder"
+                    level = $levelNumber
+                    number = $number
+                    title = $authored.title
+                    description = $authored.description
+                    schedule = $authored.schedule
+                    legacy = [ordered]@{
+                        workout_id = [string]$legacyProgram.id
+                        pro = [bool]$legacyProgram.pro
+                        has_details = $true
+                    }
+                    warmup = $authored.warmup
+                    main = $authored.main
+                    cooldown = $authored.cooldown
+                    readiness = $(if ($null -ne $authored.readiness) { $authored.readiness } else { $catalogMetadata.progression_readiness })
+                    safety = $(if ($null -ne $authored.safety) { $authored.safety } else { $catalogMetadata.training_recovery })
+                }
+                [void]$programs.Add($assembled)
+                $replacedSourceCount++
+                continue
+            }
 
             if ([bool]$legacyProgram.has_details) {
                 Remove-AppOnlyMetadata $legacyProgram
@@ -326,7 +361,6 @@ foreach ($levelDefinition in $levelDefinitions) {
                 continue
             }
 
-            $slot = "$levelNumber-$number"
             if (-not $authoredBySlot.ContainsKey($slot)) {
                 throw "No LLM-authored replacement exists for legacy placeholder $slot"
             }
@@ -566,12 +600,25 @@ foreach ($levelDefinition in $levelDefinitions) {
         if ($null -ne $program.schedule.rpe -and [int]$program.schedule.rpe -le 4) {
             $program["practice"] = @()
         }
+        # An exam day tests the handstand in its main work, so it skips the practice block (round 6).
+        if ([string]$program.schedule.day_type -match "^exam") {
+            $program["practice"] = @()
+        }
         if ($program.origin -ne "apk_authentic") {
+            # Tuck-or-harder flags lead the main work; the set budget still counts them as before.
+            $leading = New-Object System.Collections.ArrayList
+            $kept = New-Object System.Collections.ArrayList
+            foreach ($step in @($program.practice)) {
+                if ([string]$step[0] -in $script:hardFlagIds) { [void]$leading.Add($step) } else { [void]$kept.Add($step) }
+            }
+            $program["practice"] = $kept.ToArray()
             $practiceSets = 0
-            foreach ($step in @($program.practice)) { $practiceSets += [int]$step[1] }
-            $program["training_main"] = Limit-TrainingSteps $program.main `
+            foreach ($step in @($program.practice) + $leading.ToArray()) { $practiceSets += [int]$step[1] }
+            $limited = Limit-TrainingSteps $program.main `
                 ([int]$progressionLimits.main_sets_including_practice - $practiceSets) `
                 ([int]$progressionLimits.sets_per_exercise)
+            foreach ($step in @($limited)) { [void]$leading.Add($step) }
+            $program["training_main"] = $leading.ToArray()
         }
     }
 
@@ -608,9 +655,10 @@ $result = [ordered]@{
     }
     summary = [ordered]@{
         level_count = $assembledLevels.Count
-        program_count = $authenticCount + $reconstructedCount + $newExtensionCount + $newLevelCount
+        program_count = $authenticCount + $reconstructedCount + $replacedSourceCount + $newExtensionCount + $newLevelCount
         authentic_program_count = $authenticCount
         reconstructed_placeholder_count = $reconstructedCount
+        replaced_source_program_count = $replacedSourceCount
         new_extension_program_count = $newExtensionCount
         new_level_program_count = $newLevelCount
         archived_legacy_placeholder_count = $archivedLegacyPlaceholderCount
@@ -631,7 +679,7 @@ $utf8WithoutBom = New-Object System.Text.UTF8Encoding($false)
 [System.IO.File]::WriteAllText((Join-Path (Get-Location) $OutputPath), $json + [Environment]::NewLine, $utf8WithoutBom)
 
 Write-Host "Assembled $($result.summary.program_count) programs across $($result.summary.level_count) levels."
-Write-Host "Authentic: $authenticCount; reconstructed placeholders: $reconstructedCount; new-level: $newLevelCount."
+Write-Host "Authentic: $authenticCount; reconstructed placeholders: $reconstructedCount; replaced original-source classes: $replacedSourceCount; new-level: $newLevelCount."
 Write-Host "LLM extensions: $newExtensionCount; archived legacy placeholders retained in forensic export: $archivedLegacyPlaceholderCount."
 Write-Host "Movement definitions: $($movementById.Count); coaching profiles: $($coachingProfiles.Count)."
 Write-Host "Output: $OutputPath"

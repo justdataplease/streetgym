@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.justdataplease.streetgym.R
 import com.justdataplease.streetgym.data.model.TrainingProgram
+import com.justdataplease.streetgym.data.progress.ExamLog
 import java.util.Locale
 
 class ProgramListAdapter(
@@ -18,6 +19,7 @@ class ProgramListAdapter(
     private val completedIds: Set<String>,
     private val assignedProgramId: String?,
     private val locale: Locale,
+    private val exams: ExamLog = ExamLog(),
 ) : BaseAdapter() {
     override fun getCount(): Int = programs.size
 
@@ -65,6 +67,12 @@ class ProgramListAdapter(
                 }
             }
             if (unlocked) addView(context.bodyText(meta, 13f).apply { maxLines = 2 })
+            // An exam day says so, with how its latest attempt went.
+            if (program.isExam) addView(context.bodyText(when (exams.latest(program.id)?.passed) {
+                true -> context.getString(R.string.exam_list_passed)
+                false -> context.getString(R.string.exam_list_not_yet)
+                null -> context.getString(R.string.exam_badge)
+            }, 13f).apply { setTextColor(AppColors.ACTION) })
         }
         row.addView(copy, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
 
