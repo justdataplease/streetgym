@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="repeat_day">Repeat this day</string>
-    <string name="repeat_note">Repeat: doesn’t change your progress or skill points.</string>
+    <string name="repeat_note">Repeat: your ticked sets earn skill points; your place in the program stays.</string>
     <string name="repeat_active_title">Repeat workout</string>
     <string name="repeat_saved">Repeat saved to history</string>
+    <string name="history_placed">Placed by your test · %1$s</string>
     <string name="history_repeat">Repeat · %1$s</string>
 </resources>

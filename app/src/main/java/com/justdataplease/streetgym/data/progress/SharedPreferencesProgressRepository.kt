@@ -34,10 +34,10 @@ class SharedPreferencesProgressRepository(
         decodeActiveWorkout(preferences.getString(KEY_ACTIVE_WORKOUT, null))
     }
 
-    override fun startWorkout(programId: String, startedAtEpochMillis: Long, repeat: Boolean) {
+    override fun startWorkout(programId: String, startedAtEpochMillis: Long, repeat: Boolean, intensity: Intensity) {
         require(programId.isNotBlank()) { "programId cannot be blank" }
         require(!repeat || isProgramCompleted(programId)) { "only a completed day can be repeated" }
-        val workout = ActiveWorkout(programId, startedAtEpochMillis, repeat = repeat)
+        val workout = ActiveWorkout(programId, startedAtEpochMillis, repeat = repeat, intensity = intensity)
         preferences.edit().putString(KEY_ACTIVE_WORKOUT, encode(workout).toString()).apply()
     }
 
@@ -65,6 +65,11 @@ class SharedPreferencesProgressRepository(
             .apply()
     }
 
+    override fun setIntensity(intensity: Intensity) = synchronized(lock) {
+        val active = activeWorkout() ?: return@synchronized
+        preferences.edit().putString(KEY_ACTIVE_WORKOUT, encode(active.copy(intensity = intensity)).toString()).apply()
+    }
+
     override fun finishWorkout(
         completedAtEpochMillis: Long,
         effortRating: Int?,
@@ -83,6 +88,7 @@ class SharedPreferencesProgressRepository(
             effortRating = effortRating,
             repeat = active.repeat,
             credits = credits?.filterValues { it > 0 },
+            intensity = active.intensity,
         )
         val sessions = decodeSessions(preferences.getString(KEY_SESSION_HISTORY, null)) + session
         val edit = preferences.edit()
@@ -98,14 +104,17 @@ class SharedPreferencesProgressRepository(
         session
     }
 
-    /** Explicit bulk completion: no invented effort or workout duration. */
-    fun completePrograms(programIds: Collection<String>, at: Long = System.currentTimeMillis()) = synchronized(lock) {
+    /**
+     * Explicit bulk completion: no invented effort or workout duration. [placed]: by the placement test, whose days
+     * count as trained for skills; "Complete day" and "Complete level" count for nothing.
+     */
+    fun completePrograms(programIds: Collection<String>, at: Long = System.currentTimeMillis(), placed: Boolean = false) = synchronized(lock) {
         require(programIds.all(String::isNotBlank))
         val completed = completedProgramIds().toMutableSet()
         val newIds = programIds.filter { it !in completed }.distinct()
         val active = activeWorkout()
         val sessions = sessionHistory() + newIds.map { id ->
-            WorkoutSession(id, at, at, 0L, manuallyCompleted = true)
+            WorkoutSession(id, at, at, 0L, manuallyCompleted = true, placed = placed)
         }
         completed.addAll(newIds)
         val edit = preferences.edit().putStringSet(KEY_COMPLETED_PROGRAM_IDS, completed)
@@ -204,6 +213,7 @@ class SharedPreferencesProgressRepository(
             // Saved before repeats existed: a normal workout.
             repeat = json.optBoolean("repeat", false),
             easierExercises = json.optJSONArray("easier_exercises").toStringSet(),
+            intensity = Intensity.fromName(json.optString("intensity", "")),
         )
     }.getOrNull()
 
@@ -221,6 +231,8 @@ class SharedPreferencesProgressRepository(
                         durationSeconds = json.optLong("duration_seconds", 0L),
                         manuallyCompleted = json.optBoolean("manually_completed", false),
                         repeat = json.optBoolean("repeat", false),
+                        placed = json.optBoolean("placed", false),
+                        intensity = Intensity.fromName(json.optString("intensity", "")),
                         credits = json.optJSONObject("credits")?.let { credits ->
                             credits.keys().asSequence().associateWith { credits.optInt(it) }.filterValues { it > 0 }
                         },
@@ -241,6 +253,7 @@ class SharedPreferencesProgressRepository(
         .put("completed_set_ids", JSONArray(active.completedSetIds.sorted()))
         .put("repeat", active.repeat)
         .put("easier_exercises", JSONArray(active.easierExercises.sorted()))
+        .put("intensity", active.intensity.name)
 
     private fun encodeSessions(sessions: List<WorkoutSession>): JSONArray = JSONArray().apply {
         sessions.forEach { session ->
@@ -253,7 +266,10 @@ class SharedPreferencesProgressRepository(
                     .put("manually_completed", session.manuallyCompleted)
                     .put("repeat", session.repeat)
                     .put("effort_rating", session.effortRating ?: JSONObject.NULL)
-                    .apply { session.credits?.let { put("credits", JSONObject(it.toSortedMap())) } },
+                    .apply { session.credits?.let { put("credits", JSONObject(it.toSortedMap())) } }
+                    // Written only when set, so the cloud copy of every older session stays as it was.
+                    .apply { if (session.placed) put("placed", true) }
+                    .apply { if (session.intensity != Intensity.NORMAL) put("intensity", session.intensity.name) },
             )
         }
     }

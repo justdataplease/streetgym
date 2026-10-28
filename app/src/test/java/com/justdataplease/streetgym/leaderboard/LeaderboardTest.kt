@@ -1,5 +1,6 @@
 package com.justdataplease.streetgym.leaderboard
 
+import com.justdataplease.streetgym.data.progress.Intensity
 import com.justdataplease.streetgym.data.progress.ProgressMerge
 import com.justdataplease.streetgym.data.progress.WorkoutSession
 import com.justdataplease.streetgym.data.skills.SkillCredit
@@ -10,18 +11,25 @@ class LeaderboardTest {
     private fun session(id: String, at: Long = 1, manual: Boolean = false, repeat: Boolean = false) =
         WorkoutSession(id, at, at + 60_000, 60, manuallyCompleted = manual, repeat = repeat)
 
-    @Test fun onlyFinishedProgramWorkoutsEarnPoints() {
+    @Test fun everyTrainedClassEarnsPointsAndCompleteDayNothing() {
         val sessions = listOf(
-            session("sg:l01:p0003", at = 9).copy(credits = mapOf("pullup" to 2)),
+            session("sg:l01:p0003", at = 9).copy(credits = mapOf("pullup" to 2), intensity = Intensity.HARDER),
             session("sg:l01:p0001"),
             session("sg:l01:p0002", manual = true),
+            session("sg:l01:p0004", at = 0, manual = true).copy(placed = true),
             session("sg:l01:p0001", at = 5, repeat = true),
-            session("custom:abc"),
+            session("custom:abc", at = 7).copy(credits = mapOf("pushup" to 3)),
         )
-        // In the order they were trained, with their ticks and length.
-        assertEquals(listOf(SkillCredit("sg:l01:p0001", null, 60), SkillCredit("sg:l01:p0003", mapOf("pullup" to 2), 60)),
-            Scores.credits(sessions))
-        assertEquals(1, Scores.placedPast(sessions))
+        // In the order they were trained, with their ticks, length and the day's factor; a placed day by its
+        // prescription; an own day with its planned length when it still exists. Complete day is left out.
+        assertEquals(listOf(
+            SkillCredit("sg:l01:p0004"),
+            SkillCredit("sg:l01:p0001", null, 60),
+            SkillCredit("sg:l01:p0001", null, 60),
+            SkillCredit("custom:abc", mapOf("pushup" to 3), 60, minutes = 12),
+            SkillCredit("sg:l01:p0003", mapOf("pullup" to 2), 60, factor = 1.25),
+        ), Scores.credits(sessions) { if (it == "custom:abc") 12 else null })
+        assertEquals(1, Scores.markedComplete(sessions))
     }
 
     @Test fun aScoreIsPublishedWhenItChangesAndAtMostEveryTenMinutes() {

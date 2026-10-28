@@ -14168,7 +14168,7 @@
         "en": "Exam 1: Intermediate Strength"
       },
       "description": {
-        "en": "Exam day for classes L4:098-L5:012: handstand, handstand push-up, muscle-up, front lever, back lever, planche, dragon flag, pull-ups, dips, toes-to-bar, hamstrings. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
+        "en": "Exam day for classes L5:001-L5:012: handstand, handstand push-up, muscle-up, front lever, back lever, planche, dragon flag, pull-ups, dips, toes-to-bar, hamstrings. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
       },
       "schedule": {
         "week": 2,
@@ -26449,22 +26449,22 @@
       "level": 4,
       "number": 95,
       "title": {
-        "en": "Forearm and Ankle Rebalance"
+        "en": "Spine-Led Full-Body Reset"
       },
       "description": {
-        "en": "Settle pressing fatigue with gentle wrist loading, shoulder circles, lateral hip motion, and patient ankle range."
+        "en": "90/90 hip switch and foot-assisted hang first, then the weekly skill-mobility block: 29-second wall shoulder openers and bench thoracic extensions for the handstand line, and pancake compression lifts for the L-sit and the press."
       },
       "schedule": {
         "week": 14,
         "day": 4,
-        "day_type": "joint_recovery",
-        "minutes": 29,
-        "rpe": 4,
+        "day_type": "full_body_recovery",
+        "minutes": 25,
+        "rpe": 3,
         "focus": [
           "recovery",
-          "forearms",
-          "ankles",
-          "hips"
+          "spine",
+          "hips",
+          "shoulders"
         ]
       },
       "warmup": [
@@ -26472,24 +26472,24 @@
           "easy_walk",
           1,
           null,
-          480,
+          420,
           0,
           "easy",
           "march"
         ],
         [
-          "wrist_circles",
+          "cat_cow",
           1,
-          14,
+          10,
           null,
           10,
-          "each_direction",
+          "breath_led",
           null
         ],
         [
           "shoulder_cars",
           1,
-          6,
+          5,
           null,
           10,
           "slow",
@@ -26498,86 +26498,77 @@
       ],
       "main": [
         [
-          "wrist_rocks",
-          2,
-          9,
+          "ninety_ninety_hip_switch",
+          1,
+          "8/side",
           null,
           25,
-          "gentle",
-          "wrist_circles"
-        ],
-        [
-          "cossack_squat",
-          2,
-          "6/side",
-          null,
-          35,
-          "controlled",
-          "split_squat"
-        ],
-        [
-          "ankle_rocks",
-          1,
-          "10/side",
-          null,
-          20,
           "smooth",
-          null
+          "hip_circles"
         ],
         [
-          "cat_cow",
-          2,
-          9,
-          null,
-          20,
-          "breath_led",
-          null
-        ],
-        [
-          "bird_dog",
+          "foot_assisted_hang",
           1,
-          "7/side",
           null,
-          30,
-          "pause",
-          "dead_bug"
+          22,
+          45,
+          "relaxed",
+          null
         ],
         [
-          "wrist_pushup",
+          "wall_shoulder_flexion",
           2,
-          11,
+          null,
+          29,
+          30,
+          null,
+          "wall_slide"
+        ],
+        [
+          "pancake_compression",
+          2,
+          6,
           null,
           30,
           "slow",
-          "wrist_rocks"
+          "seated_pike_lift"
+        ],
+        [
+          "thoracic_extension",
+          2,
+          6,
+          null,
+          30,
+          "2-second_pause",
+          "cat_cow"
         ]
       ],
       "cooldown": [
         [
-          "forearm_stretch",
-          2,
-          null,
-          30,
-          10,
-          "relaxed",
-          null
-        ],
-        [
-          "calf_stretch",
-          2,
-          null,
-          30,
-          10,
-          "relaxed",
-          null
-        ],
-        [
-          "child_pose",
-          2,
+          "hamstring_stretch",
+          1,
           null,
           35,
           10,
           "relaxed",
+          null
+        ],
+        [
+          "lat_stretch",
+          1,
+          null,
+          30,
+          10,
+          "relaxed",
+          null
+        ],
+        [
+          "slow_breathing",
+          1,
+          null,
+          180,
+          0,
+          "easy",
           null
         ]
       ]
@@ -26719,510 +26710,14 @@
       "level": 4,
       "number": 97,
       "title": {
-        "en": "Exam 5: Skill Control"
+        "en": "Level Four Goal Integration"
       },
       "description": {
-        "en": "Exam day for classes L4:077-L4:096: handstand, handstand push-up, muscle-up, front lever, back lever, planche, dragon flag, pull-ups, dips, hamstrings. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
+        "en": "All five goal stations in one fixed sequence (muscle-up, back lever, dragon flag, front lever and planche), then pull-ups and a hollow-body hold."
       },
       "schedule": {
         "week": 14,
         "day": 6,
-        "day_type": "exam_assessment",
-        "minutes": 47,
-        "rpe": 7,
-        "focus": [
-          "exam",
-          "handstand",
-          "vertical_push",
-          "muscle_up",
-          "front_lever",
-          "back_lever",
-          "planche",
-          "dragon_flag",
-          "pull_up",
-          "dip",
-          "hinge"
-        ]
-      },
-      "warmup": [
-        [
-          "march",
-          1,
-          null,
-          80,
-          0,
-          "easy",
-          null
-        ],
-        [
-          "wrist_pushup",
-          1,
-          10,
-          null,
-          20,
-          "slow",
-          "wrist_rocks"
-        ],
-        [
-          "wall_shoulder_flexion",
-          1,
-          null,
-          30,
-          20,
-          null,
-          "wall_slide"
-        ],
-        [
-          "scapular_pushup",
-          2,
-          10,
-          null,
-          30,
-          "2111",
-          "elevated_scapular_pushup"
-        ],
-        [
-          "prone_ytw",
-          1,
-          6,
-          null,
-          15,
-          "slow",
-          "wall_slide"
-        ],
-        [
-          "active_hang",
-          2,
-          null,
-          15,
-          30,
-          "slow",
-          "dead_hang"
-        ]
-      ],
-      "main": [
-        [
-          "handstand_toe_pull",
-          1,
-          null,
-          12,
-          120,
-          "assessment",
-          "wall_handstand"
-        ],
-        [
-          "wall_hspu_negative",
-          1,
-          3,
-          null,
-          120,
-          "assessment",
-          "elevated_pike_pushup"
-        ],
-        [
-          "strict_muscleup",
-          1,
-          3,
-          null,
-          180,
-          "assessment",
-          "band_muscleup"
-        ],
-        [
-          "one_leg_front",
-          1,
-          null,
-          "5/side",
-          150,
-          "assessment",
-          "advanced_tuck_front"
-        ],
-        [
-          "german_hang",
-          1,
-          null,
-          10,
-          45,
-          "slow",
-          "skin_cat_partial"
-        ],
-        [
-          "advanced_tuck_back",
-          1,
-          null,
-          10,
-          150,
-          "assessment",
-          "tuck_back_hold"
-        ],
-        [
-          "tuck_planche",
-          1,
-          null,
-          6,
-          150,
-          "assessment",
-          "frog_stand"
-        ],
-        [
-          "one_leg_dragon_negative",
-          1,
-          "2/side",
-          null,
-          120,
-          "assessment",
-          "bent_dragon_negative"
-        ],
-        [
-          "pullup",
-          1,
-          10,
-          null,
-          120,
-          "assessment",
-          "assisted_pullup"
-        ],
-        [
-          "straight_bar_dip",
-          1,
-          11,
-          null,
-          120,
-          "assessment",
-          "straight_bar_support"
-        ],
-        [
-          "nordic_negative",
-          1,
-          3,
-          null,
-          120,
-          "assessment",
-          "sliding_leg_curl"
-        ]
-      ],
-      "cooldown": [
-        [
-          "lat_stretch",
-          2,
-          null,
-          30,
-          10,
-          "relaxed",
-          null
-        ],
-        [
-          "chest_stretch",
-          2,
-          null,
-          30,
-          10,
-          "relaxed",
-          null
-        ],
-        [
-          "quad_stretch",
-          2,
-          null,
-          30,
-          10,
-          "relaxed",
-          null
-        ]
-      ]
-    },
-    {
-      "id": "new-l4-w098",
-      "origin": "new_level",
-      "level": 4,
-      "number": 98,
-      "title": {
-        "en": "Spine-Led Full-Body Reset"
-      },
-      "description": {
-        "en": "90/90 hip switch and foot-assisted hang first, then the weekly skill-mobility block: 29-second wall shoulder openers and bench thoracic extensions for the handstand line, and pancake compression lifts for the L-sit and the press."
-      },
-      "schedule": {
-        "week": 14,
-        "day": 7,
-        "day_type": "full_body_recovery",
-        "minutes": 25,
-        "rpe": 3,
-        "focus": [
-          "recovery",
-          "spine",
-          "hips",
-          "shoulders"
-        ]
-      },
-      "warmup": [
-        [
-          "easy_walk",
-          1,
-          null,
-          420,
-          0,
-          "easy",
-          "march"
-        ],
-        [
-          "cat_cow",
-          1,
-          10,
-          null,
-          10,
-          "breath_led",
-          null
-        ],
-        [
-          "shoulder_cars",
-          1,
-          5,
-          null,
-          10,
-          "slow",
-          null
-        ]
-      ],
-      "main": [
-        [
-          "ninety_ninety_hip_switch",
-          1,
-          "8/side",
-          null,
-          25,
-          "smooth",
-          "hip_circles"
-        ],
-        [
-          "foot_assisted_hang",
-          1,
-          null,
-          22,
-          45,
-          "relaxed",
-          null
-        ],
-        [
-          "wall_shoulder_flexion",
-          2,
-          null,
-          29,
-          30,
-          null,
-          "wall_slide"
-        ],
-        [
-          "pancake_compression",
-          2,
-          6,
-          null,
-          30,
-          "slow",
-          "seated_pike_lift"
-        ],
-        [
-          "thoracic_extension",
-          2,
-          6,
-          null,
-          30,
-          "2-second_pause",
-          "cat_cow"
-        ]
-      ],
-      "cooldown": [
-        [
-          "hamstring_stretch",
-          1,
-          null,
-          35,
-          10,
-          "relaxed",
-          null
-        ],
-        [
-          "lat_stretch",
-          1,
-          null,
-          30,
-          10,
-          "relaxed",
-          null
-        ],
-        [
-          "slow_breathing",
-          1,
-          null,
-          180,
-          0,
-          "easy",
-          null
-        ]
-      ]
-    },
-    {
-      "id": "new-l4-w099",
-      "origin": "new_level",
-      "level": 4,
-      "number": 99,
-      "title": {
-        "en": "Lever and Dragon Line Pairing"
-      },
-      "description": {
-        "en": "Complete front-lever shapes before dragon descents, then reinforce the shared pulling and hollow-body foundation."
-      },
-      "schedule": {
-        "week": 15,
-        "day": 1,
-        "day_type": "front_dragon_integration",
-        "minutes": 50,
-        "rpe": 7,
-        "focus": [
-          "front_lever",
-          "dragon_flag",
-          "pull_up",
-          "core"
-        ]
-      },
-      "warmup": [
-        [
-          "low_jack",
-          1,
-          40,
-          null,
-          15,
-          "easy",
-          "march"
-        ],
-        [
-          "wrist_pushup",
-          1,
-          10,
-          null,
-          20,
-          "slow",
-          "wrist_rocks"
-        ],
-        [
-          "wall_shoulder_flexion",
-          1,
-          null,
-          30,
-          20,
-          null,
-          "wall_slide"
-        ],
-        [
-          "scapular_pull",
-          2,
-          8,
-          null,
-          30,
-          "2111",
-          "active_hang"
-        ],
-        [
-          "prone_ytw",
-          1,
-          6,
-          null,
-          15,
-          "slow",
-          "wall_slide"
-        ]
-      ],
-      "main": [
-        [
-          "one_leg_front",
-          2,
-          null,
-          "5/side",
-          145,
-          "isometric",
-          "advanced_tuck_front"
-        ],
-        [
-          "advanced_tuck_front",
-          3,
-          null,
-          10,
-          135,
-          "isometric",
-          "tuck_front_hold"
-        ],
-        [
-          "one_leg_dragon_negative",
-          3,
-          "2/side",
-          null,
-          135,
-          "6010",
-          "bent_dragon_negative"
-        ],
-        [
-          "pullup",
-          2,
-          10,
-          null,
-          120,
-          "2111",
-          "assisted_pullup"
-        ],
-        [
-          "hollow_body_hold",
-          2,
-          null,
-          25,
-          55,
-          "braced",
-          "hollow_hold"
-        ]
-      ],
-      "cooldown": [
-        [
-          "lat_stretch",
-          2,
-          null,
-          35,
-          10,
-          "relaxed",
-          null
-        ],
-        [
-          "hamstring_stretch",
-          2,
-          null,
-          30,
-          10,
-          "relaxed",
-          null
-        ],
-        [
-          "supine_twist",
-          2,
-          null,
-          30,
-          10,
-          "breath_led",
-          null
-        ]
-      ]
-    },
-    {
-      "id": "new-l4-w100",
-      "origin": "new_level",
-      "level": 4,
-      "number": 100,
-      "title": {
-        "en": "Level Four Hundredth-Day Integration"
-      },
-      "description": {
-        "en": "Complete all five goal stations followed by pull, push, dip, squat, and trunk basics in one fixed centennial sequence."
-      },
-      "schedule": {
-        "week": 15,
-        "day": 2,
         "day_type": "five_goal_fundamentals_integration",
         "minutes": 56,
         "rpe": 7,
@@ -27400,6 +26895,512 @@
           180,
           0,
           "easy",
+          null
+        ]
+      ]
+    },
+    {
+      "id": "new-l4-w098",
+      "origin": "new_level",
+      "level": 4,
+      "number": 98,
+      "title": {
+        "en": "Lever and Dragon Line Pairing"
+      },
+      "description": {
+        "en": "Wall handstand push-up negatives open the class while the shoulders are fresh, then front-lever shapes come before dragon descents and the shared pulling foundation."
+      },
+      "schedule": {
+        "week": 14,
+        "day": 7,
+        "day_type": "front_dragon_integration",
+        "minutes": 50,
+        "rpe": 7,
+        "focus": [
+          "vertical_push",
+          "front_lever",
+          "dragon_flag",
+          "pull_up",
+          "core"
+        ]
+      },
+      "warmup": [
+        [
+          "low_jack",
+          1,
+          40,
+          null,
+          15,
+          "easy",
+          "march"
+        ],
+        [
+          "wrist_pushup",
+          1,
+          10,
+          null,
+          20,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
+        ],
+        [
+          "scapular_pull",
+          2,
+          8,
+          null,
+          30,
+          "2111",
+          "active_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ]
+      ],
+      "main": [
+        [
+          "wall_hspu_negative",
+          2,
+          3,
+          null,
+          120,
+          "5010",
+          "elevated_pike_pushup"
+        ],
+        [
+          "one_leg_front",
+          2,
+          null,
+          "5/side",
+          145,
+          "isometric",
+          "advanced_tuck_front"
+        ],
+        [
+          "advanced_tuck_front",
+          3,
+          null,
+          10,
+          135,
+          "isometric",
+          "tuck_front_hold"
+        ],
+        [
+          "one_leg_dragon_negative",
+          3,
+          "2/side",
+          null,
+          135,
+          "6010",
+          "bent_dragon_negative"
+        ],
+        [
+          "pullup",
+          2,
+          10,
+          null,
+          120,
+          "2111",
+          "assisted_pullup"
+        ]
+      ],
+      "cooldown": [
+        [
+          "lat_stretch",
+          2,
+          null,
+          35,
+          10,
+          "relaxed",
+          null
+        ],
+        [
+          "hamstring_stretch",
+          2,
+          null,
+          30,
+          10,
+          "relaxed",
+          null
+        ],
+        [
+          "supine_twist",
+          2,
+          null,
+          30,
+          10,
+          "breath_led",
+          null
+        ]
+      ]
+    },
+    {
+      "id": "new-l4-w099",
+      "origin": "new_level",
+      "level": 4,
+      "number": 99,
+      "title": {
+        "en": "Forearm and Ankle Rebalance"
+      },
+      "description": {
+        "en": "Settle pressing fatigue with gentle wrist loading, shoulder circles, lateral hip motion, and patient ankle range."
+      },
+      "schedule": {
+        "week": 15,
+        "day": 1,
+        "day_type": "joint_recovery",
+        "minutes": 29,
+        "rpe": 4,
+        "focus": [
+          "recovery",
+          "forearms",
+          "ankles",
+          "hips"
+        ]
+      },
+      "warmup": [
+        [
+          "easy_walk",
+          1,
+          null,
+          480,
+          0,
+          "easy",
+          "march"
+        ],
+        [
+          "wrist_circles",
+          1,
+          14,
+          null,
+          10,
+          "each_direction",
+          null
+        ],
+        [
+          "shoulder_cars",
+          1,
+          6,
+          null,
+          10,
+          "slow",
+          null
+        ]
+      ],
+      "main": [
+        [
+          "wrist_rocks",
+          2,
+          9,
+          null,
+          25,
+          "gentle",
+          "wrist_circles"
+        ],
+        [
+          "cossack_squat",
+          2,
+          "6/side",
+          null,
+          35,
+          "controlled",
+          "split_squat"
+        ],
+        [
+          "ankle_rocks",
+          1,
+          "10/side",
+          null,
+          20,
+          "smooth",
+          null
+        ],
+        [
+          "cat_cow",
+          2,
+          9,
+          null,
+          20,
+          "breath_led",
+          null
+        ],
+        [
+          "bird_dog",
+          1,
+          "7/side",
+          null,
+          30,
+          "pause",
+          "dead_bug"
+        ],
+        [
+          "wrist_pushup",
+          2,
+          11,
+          null,
+          30,
+          "slow",
+          "wrist_rocks"
+        ]
+      ],
+      "cooldown": [
+        [
+          "forearm_stretch",
+          2,
+          null,
+          30,
+          10,
+          "relaxed",
+          null
+        ],
+        [
+          "calf_stretch",
+          2,
+          null,
+          30,
+          10,
+          "relaxed",
+          null
+        ],
+        [
+          "child_pose",
+          2,
+          null,
+          35,
+          10,
+          "relaxed",
+          null
+        ]
+      ]
+    },
+    {
+      "id": "new-l4-w100",
+      "origin": "new_level",
+      "level": 4,
+      "number": 100,
+      "title": {
+        "en": "Exam 5: Skill Control"
+      },
+      "description": {
+        "en": "Exam day for classes L4:077-L4:099: handstand, handstand push-up, muscle-up, front lever, back lever, planche, dragon flag, pull-ups, dips, hamstrings. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
+      },
+      "schedule": {
+        "week": 15,
+        "day": 2,
+        "day_type": "exam_assessment",
+        "minutes": 47,
+        "rpe": 7,
+        "focus": [
+          "exam",
+          "handstand",
+          "vertical_push",
+          "muscle_up",
+          "front_lever",
+          "back_lever",
+          "planche",
+          "dragon_flag",
+          "pull_up",
+          "dip",
+          "hinge"
+        ]
+      },
+      "warmup": [
+        [
+          "march",
+          1,
+          null,
+          80,
+          0,
+          "easy",
+          null
+        ],
+        [
+          "wrist_pushup",
+          1,
+          10,
+          null,
+          20,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
+        ],
+        [
+          "scapular_pushup",
+          2,
+          10,
+          null,
+          30,
+          "2111",
+          "elevated_scapular_pushup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "active_hang",
+          2,
+          null,
+          15,
+          30,
+          "slow",
+          "dead_hang"
+        ]
+      ],
+      "main": [
+        [
+          "handstand_toe_pull",
+          1,
+          null,
+          12,
+          120,
+          "assessment",
+          "wall_handstand"
+        ],
+        [
+          "wall_hspu_negative",
+          1,
+          3,
+          null,
+          120,
+          "assessment",
+          "elevated_pike_pushup"
+        ],
+        [
+          "strict_muscleup",
+          1,
+          3,
+          null,
+          180,
+          "assessment",
+          "band_muscleup"
+        ],
+        [
+          "one_leg_front",
+          1,
+          null,
+          "5/side",
+          150,
+          "assessment",
+          "advanced_tuck_front"
+        ],
+        [
+          "german_hang",
+          1,
+          null,
+          10,
+          45,
+          "slow",
+          "skin_cat_partial"
+        ],
+        [
+          "advanced_tuck_back",
+          1,
+          null,
+          10,
+          150,
+          "assessment",
+          "tuck_back_hold"
+        ],
+        [
+          "tuck_planche",
+          1,
+          null,
+          7,
+          150,
+          "assessment",
+          "frog_stand"
+        ],
+        [
+          "one_leg_dragon_negative",
+          1,
+          "2/side",
+          null,
+          120,
+          "assessment",
+          "bent_dragon_negative"
+        ],
+        [
+          "pullup",
+          1,
+          10,
+          null,
+          120,
+          "assessment",
+          "assisted_pullup"
+        ],
+        [
+          "straight_bar_dip",
+          1,
+          11,
+          null,
+          120,
+          "assessment",
+          "straight_bar_support"
+        ],
+        [
+          "nordic_negative",
+          1,
+          3,
+          null,
+          120,
+          "assessment",
+          "sliding_leg_curl"
+        ]
+      ],
+      "cooldown": [
+        [
+          "lat_stretch",
+          2,
+          null,
+          30,
+          10,
+          "relaxed",
+          null
+        ],
+        [
+          "chest_stretch",
+          2,
+          null,
+          30,
+          10,
+          "relaxed",
+          null
+        ],
+        [
+          "quad_stretch",
+          2,
+          null,
+          30,
+          10,
+          "relaxed",
           null
         ]
       ]
@@ -28883,22 +28884,22 @@
       "level": 5,
       "number": 95,
       "title": {
-        "en": "Quiet Hands, Open Hips"
+        "en": "Long-Range Trunk Restore"
       },
       "description": {
-        "en": "Unload the upper body through gentle hand motion, lateral hip range, ankle work, and controlled trunk patterns."
+        "en": "90/90 hip switch and foot-assisted hang first, then the weekly skill-mobility block: 34-second wall shoulder openers and bench thoracic extensions for the handstand line, and pancake compression lifts for the L-sit and the press."
       },
       "schedule": {
         "week": 14,
         "day": 4,
-        "day_type": "joint_recovery",
-        "minutes": 30,
-        "rpe": 4,
+        "day_type": "full_body_recovery",
+        "minutes": 25,
+        "rpe": 3,
         "focus": [
           "recovery",
-          "wrists",
-          "hips",
-          "ankles"
+          "walking",
+          "spine",
+          "hips"
         ]
       },
       "warmup": [
@@ -28906,112 +28907,103 @@
           "easy_walk",
           1,
           null,
-          480,
+          420,
           0,
           "easy",
           "march"
         ],
         [
-          "wrist_circles",
+          "cat_cow",
           1,
-          14,
+          10,
           null,
           10,
-          "each_direction",
+          "breath_led",
           null
         ],
         [
-          "hip_circles",
+          "shoulder_cars",
           1,
-          10,
+          6,
           null,
           10,
-          "each_direction",
+          "slow",
           null
         ]
       ],
       "main": [
         [
-          "wrist_rocks",
-          2,
-          10,
+          "ninety_ninety_hip_switch",
+          1,
+          "9/side",
           null,
           25,
-          "gentle",
-          "wrist_circles"
-        ],
-        [
-          "cossack_squat",
-          1,
-          "7/side",
-          null,
-          35,
-          "controlled",
-          "split_squat"
-        ],
-        [
-          "ankle_rocks",
-          1,
-          "11/side",
-          null,
-          20,
           "smooth",
-          null
+          "hip_circles"
         ],
         [
-          "cat_cow",
-          2,
-          10,
-          null,
-          20,
-          "breath_led",
-          null
-        ],
-        [
-          "bird_dog",
+          "foot_assisted_hang",
           1,
-          "8/side",
           null,
-          30,
-          "pause",
-          "dead_bug"
+          25,
+          45,
+          "relaxed",
+          null
         ],
         [
-          "wrist_pushup",
+          "wall_shoulder_flexion",
           2,
-          12,
+          null,
+          34,
+          30,
+          null,
+          "wall_slide"
+        ],
+        [
+          "pancake_compression",
+          2,
+          7,
           null,
           30,
           "slow",
-          "wrist_rocks"
+          "seated_pike_lift"
+        ],
+        [
+          "thoracic_extension",
+          2,
+          6,
+          null,
+          30,
+          "2-second_pause",
+          "cat_cow"
         ]
       ],
       "cooldown": [
         [
-          "forearm_stretch",
-          2,
-          null,
-          35,
-          10,
-          "relaxed",
-          null
-        ],
-        [
-          "hip_flexor_stretch",
-          2,
-          null,
-          35,
-          10,
-          "relaxed",
-          null
-        ],
-        [
-          "child_pose",
-          2,
+          "hamstring_stretch",
+          1,
           null,
           40,
           10,
           "relaxed",
+          null
+        ],
+        [
+          "lat_stretch",
+          1,
+          null,
+          35,
+          10,
+          "relaxed",
+          null
+        ],
+        [
+          "slow_breathing",
+          1,
+          null,
+          180,
+          0,
+          "easy",
           null
         ]
       ]
@@ -29153,513 +29145,16 @@
       "level": 5,
       "number": 97,
       "title": {
-        "en": "Exam 5: Intermediate Strength"
+        "en": "Level Five Goal Integration"
       },
       "description": {
-        "en": "Exam day for classes L5:077-L5:096: handstand, handstand push-up, muscle-up, front lever, back lever, planche, dragon flag, pull-ups, dips, toes-to-bar, hamstrings. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
+        "en": "All five advanced goal stations in one fixed sequence, then pull-ups, squats and toes-to-bar."
       },
       "schedule": {
         "week": 14,
         "day": 6,
-        "day_type": "exam_assessment",
-        "minutes": 50,
-        "rpe": 7,
-        "focus": [
-          "exam",
-          "handstand",
-          "vertical_push",
-          "muscle_up",
-          "front_lever",
-          "back_lever",
-          "planche",
-          "dragon_flag",
-          "pull_up",
-          "dip",
-          "core",
-          "hinge"
-        ]
-      },
-      "warmup": [
-        [
-          "march",
-          1,
-          null,
-          80,
-          0,
-          "easy",
-          null
-        ],
-        [
-          "wrist_pushup",
-          1,
-          10,
-          null,
-          20,
-          "slow",
-          "wrist_rocks"
-        ],
-        [
-          "wall_shoulder_flexion",
-          1,
-          null,
-          30,
-          20,
-          null,
-          "wall_slide"
-        ],
-        [
-          "scapular_pushup",
-          2,
-          10,
-          null,
-          30,
-          "2111",
-          "elevated_scapular_pushup"
-        ],
-        [
-          "prone_ytw",
-          1,
-          6,
-          null,
-          15,
-          "slow",
-          "wall_slide"
-        ],
-        [
-          "active_hang",
-          2,
-          null,
-          15,
-          30,
-          "slow",
-          "dead_hang"
-        ]
-      ],
-      "main": [
-        [
-          "freestanding_handstand",
-          1,
-          null,
-          5,
-          120,
-          "assessment",
-          "wall_handstand"
-        ],
-        [
-          "wall_hspu_negative",
-          1,
-          5,
-          null,
-          120,
-          "assessment",
-          "elevated_pike_pushup"
-        ],
-        [
-          "strict_muscleup",
-          1,
-          3,
-          null,
-          180,
-          "assessment",
-          "band_muscleup"
-        ],
-        [
-          "one_leg_front",
-          1,
-          null,
-          "8/side",
-          150,
-          "assessment",
-          "advanced_tuck_front"
-        ],
-        [
-          "german_hang",
-          1,
-          null,
-          10,
-          45,
-          "slow",
-          "skin_cat_partial"
-        ],
-        [
-          "one_leg_back",
-          1,
-          null,
-          "7/side",
-          150,
-          "assessment",
-          "advanced_tuck_back"
-        ],
-        [
-          "advanced_tuck_planche",
-          1,
-          null,
-          5,
-          150,
-          "assessment",
-          "tuck_planche"
-        ],
-        [
-          "dragon_flag",
-          1,
-          3,
-          null,
-          120,
-          "assessment",
-          "full_dragon_negative"
-        ],
-        [
-          "pullup",
-          1,
-          11,
-          null,
-          120,
-          "assessment",
-          "assisted_pullup"
-        ],
-        [
-          "straight_bar_dip",
-          1,
-          11,
-          null,
-          120,
-          "assessment",
-          "straight_bar_support"
-        ],
-        [
-          "toes_to_bar",
-          1,
-          6,
-          null,
-          120,
-          "assessment",
-          "hanging_leg_raise"
-        ],
-        [
-          "nordic_negative",
-          1,
-          5,
-          null,
-          120,
-          "assessment",
-          "sliding_leg_curl"
-        ]
-      ],
-      "cooldown": [
-        [
-          "lat_stretch",
-          2,
-          null,
-          35,
-          10,
-          "relaxed",
-          null
-        ],
-        [
-          "chest_stretch",
-          2,
-          null,
-          35,
-          10,
-          "relaxed",
-          null
-        ],
-        [
-          "quad_stretch",
-          2,
-          null,
-          35,
-          10,
-          "relaxed",
-          null
-        ]
-      ]
-    },
-    {
-      "id": "new-l5-w098",
-      "origin": "new_level",
-      "level": 5,
-      "number": 98,
-      "title": {
-        "en": "Long-Range Trunk Restore"
-      },
-      "description": {
-        "en": "90/90 hip switch and foot-assisted hang first, then the weekly skill-mobility block: 34-second wall shoulder openers and bench thoracic extensions for the handstand line, and pancake compression lifts for the L-sit and the press."
-      },
-      "schedule": {
-        "week": 14,
-        "day": 7,
-        "day_type": "full_body_recovery",
-        "minutes": 25,
-        "rpe": 3,
-        "focus": [
-          "recovery",
-          "walking",
-          "spine",
-          "hips"
-        ]
-      },
-      "warmup": [
-        [
-          "easy_walk",
-          1,
-          null,
-          420,
-          0,
-          "easy",
-          "march"
-        ],
-        [
-          "cat_cow",
-          1,
-          10,
-          null,
-          10,
-          "breath_led",
-          null
-        ],
-        [
-          "shoulder_cars",
-          1,
-          6,
-          null,
-          10,
-          "slow",
-          null
-        ]
-      ],
-      "main": [
-        [
-          "ninety_ninety_hip_switch",
-          1,
-          "9/side",
-          null,
-          25,
-          "smooth",
-          "hip_circles"
-        ],
-        [
-          "foot_assisted_hang",
-          1,
-          null,
-          25,
-          45,
-          "relaxed",
-          null
-        ],
-        [
-          "wall_shoulder_flexion",
-          2,
-          null,
-          34,
-          30,
-          null,
-          "wall_slide"
-        ],
-        [
-          "pancake_compression",
-          2,
-          7,
-          null,
-          30,
-          "slow",
-          "seated_pike_lift"
-        ],
-        [
-          "thoracic_extension",
-          2,
-          6,
-          null,
-          30,
-          "2-second_pause",
-          "cat_cow"
-        ]
-      ],
-      "cooldown": [
-        [
-          "hamstring_stretch",
-          1,
-          null,
-          40,
-          10,
-          "relaxed",
-          null
-        ],
-        [
-          "lat_stretch",
-          1,
-          null,
-          35,
-          10,
-          "relaxed",
-          null
-        ],
-        [
-          "slow_breathing",
-          1,
-          null,
-          180,
-          0,
-          "easy",
-          null
-        ]
-      ]
-    },
-    {
-      "id": "new-l5-w099",
-      "origin": "new_level",
-      "level": 5,
-      "number": 99,
-      "title": {
-        "en": "One-Leg Lever and Dragon Flag Pairing"
-      },
-      "description": {
-        "en": "Complete straddle and one-leg front holds before full dragon repetitions, then reinforce pulling and hollow-body control."
-      },
-      "schedule": {
-        "week": 15,
-        "day": 1,
-        "day_type": "front_dragon_integration",
-        "minutes": 55,
-        "rpe": 7,
-        "focus": [
-          "straddle_front",
-          "dragon_flag",
-          "pull_up",
-          "core"
-        ]
-      },
-      "warmup": [
-        [
-          "low_jack",
-          1,
-          45,
-          null,
-          15,
-          "easy",
-          "march"
-        ],
-        [
-          "wrist_pushup",
-          1,
-          10,
-          null,
-          20,
-          "slow",
-          "wrist_rocks"
-        ],
-        [
-          "wall_shoulder_flexion",
-          1,
-          null,
-          30,
-          20,
-          null,
-          "wall_slide"
-        ],
-        [
-          "scapular_pull",
-          2,
-          9,
-          null,
-          30,
-          "2111",
-          "active_hang"
-        ],
-        [
-          "prone_ytw",
-          1,
-          6,
-          null,
-          15,
-          "slow",
-          "wall_slide"
-        ]
-      ],
-      "main": [
-        [
-          "one_leg_front",
-          3,
-          null,
-          "8/side",
-          160,
-          "isometric",
-          "advanced_tuck_front"
-        ],
-        [
-          "dragon_flag",
-          3,
-          3,
-          null,
-          175,
-          "controlled",
-          "full_dragon_negative"
-        ],
-        [
-          "pullup",
-          3,
-          11,
-          null,
-          140,
-          "2111",
-          "assisted_pullup"
-        ],
-        [
-          "hollow_body_hold",
-          3,
-          null,
-          30,
-          60,
-          "braced",
-          "hollow_hold"
-        ]
-      ],
-      "cooldown": [
-        [
-          "lat_stretch",
-          2,
-          null,
-          40,
-          10,
-          "relaxed",
-          null
-        ],
-        [
-          "hamstring_stretch",
-          2,
-          null,
-          35,
-          10,
-          "relaxed",
-          null
-        ],
-        [
-          "supine_twist",
-          2,
-          null,
-          35,
-          10,
-          "breath_led",
-          null
-        ]
-      ]
-    },
-    {
-      "id": "new-l5-w100",
-      "origin": "new_level",
-      "level": 5,
-      "number": 100,
-      "title": {
-        "en": "Level Five Hundredth-Day Integration"
-      },
-      "description": {
-        "en": "Complete all five advanced goal stations followed by pull, push, dip, squat, and trunk basics in one fixed centennial sequence."
-      },
-      "schedule": {
-        "week": 15,
-        "day": 2,
         "day_type": "five_goal_fundamentals_integration",
-        "minutes": 66,
+        "minutes": 62,
         "rpe": 8,
         "focus": [
           "front_lever",
@@ -29800,13 +29295,13 @@
           "box_squat"
         ],
         [
-          "hollow_body_hold",
+          "toes_to_bar",
           1,
+          6,
           null,
-          30,
-          60,
-          "braced",
-          "hollow_hold"
+          105,
+          "3010",
+          "hanging_leg_raise"
         ]
       ],
       "cooldown": [
@@ -29844,6 +29339,513 @@
           210,
           0,
           "easy",
+          null
+        ]
+      ]
+    },
+    {
+      "id": "new-l5-w098",
+      "origin": "new_level",
+      "level": 5,
+      "number": 98,
+      "title": {
+        "en": "One-Leg Lever and Dragon Flag Pairing"
+      },
+      "description": {
+        "en": "Wall handstand push-up negatives open the class while the shoulders are fresh, then one-leg front holds come before full dragon flags and pull-ups."
+      },
+      "schedule": {
+        "week": 14,
+        "day": 7,
+        "day_type": "front_dragon_integration",
+        "minutes": 54,
+        "rpe": 7,
+        "focus": [
+          "vertical_push",
+          "straddle_front",
+          "dragon_flag",
+          "pull_up",
+          "core"
+        ]
+      },
+      "warmup": [
+        [
+          "low_jack",
+          1,
+          45,
+          null,
+          15,
+          "easy",
+          "march"
+        ],
+        [
+          "wrist_pushup",
+          1,
+          10,
+          null,
+          20,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
+        ],
+        [
+          "scapular_pull",
+          2,
+          9,
+          null,
+          30,
+          "2111",
+          "active_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ]
+      ],
+      "main": [
+        [
+          "wall_hspu_negative",
+          2,
+          5,
+          null,
+          120,
+          "5010",
+          "elevated_pike_pushup"
+        ],
+        [
+          "one_leg_front",
+          3,
+          null,
+          "8/side",
+          160,
+          "isometric",
+          "advanced_tuck_front"
+        ],
+        [
+          "dragon_flag",
+          3,
+          3,
+          null,
+          175,
+          "controlled",
+          "full_dragon_negative"
+        ],
+        [
+          "pullup",
+          3,
+          11,
+          null,
+          140,
+          "2111",
+          "assisted_pullup"
+        ]
+      ],
+      "cooldown": [
+        [
+          "lat_stretch",
+          2,
+          null,
+          40,
+          10,
+          "relaxed",
+          null
+        ],
+        [
+          "hamstring_stretch",
+          2,
+          null,
+          35,
+          10,
+          "relaxed",
+          null
+        ],
+        [
+          "supine_twist",
+          2,
+          null,
+          35,
+          10,
+          "breath_led",
+          null
+        ]
+      ]
+    },
+    {
+      "id": "new-l5-w099",
+      "origin": "new_level",
+      "level": 5,
+      "number": 99,
+      "title": {
+        "en": "Quiet Hands, Open Hips"
+      },
+      "description": {
+        "en": "Unload the upper body through gentle hand motion, lateral hip range, ankle work, and controlled trunk patterns."
+      },
+      "schedule": {
+        "week": 15,
+        "day": 1,
+        "day_type": "joint_recovery",
+        "minutes": 30,
+        "rpe": 4,
+        "focus": [
+          "recovery",
+          "wrists",
+          "hips",
+          "ankles"
+        ]
+      },
+      "warmup": [
+        [
+          "easy_walk",
+          1,
+          null,
+          480,
+          0,
+          "easy",
+          "march"
+        ],
+        [
+          "wrist_circles",
+          1,
+          14,
+          null,
+          10,
+          "each_direction",
+          null
+        ],
+        [
+          "hip_circles",
+          1,
+          10,
+          null,
+          10,
+          "each_direction",
+          null
+        ]
+      ],
+      "main": [
+        [
+          "wrist_rocks",
+          2,
+          10,
+          null,
+          25,
+          "gentle",
+          "wrist_circles"
+        ],
+        [
+          "cossack_squat",
+          1,
+          "7/side",
+          null,
+          35,
+          "controlled",
+          "split_squat"
+        ],
+        [
+          "ankle_rocks",
+          1,
+          "11/side",
+          null,
+          20,
+          "smooth",
+          null
+        ],
+        [
+          "cat_cow",
+          2,
+          10,
+          null,
+          20,
+          "breath_led",
+          null
+        ],
+        [
+          "bird_dog",
+          1,
+          "8/side",
+          null,
+          30,
+          "pause",
+          "dead_bug"
+        ],
+        [
+          "wrist_pushup",
+          2,
+          12,
+          null,
+          30,
+          "slow",
+          "wrist_rocks"
+        ]
+      ],
+      "cooldown": [
+        [
+          "forearm_stretch",
+          2,
+          null,
+          35,
+          10,
+          "relaxed",
+          null
+        ],
+        [
+          "hip_flexor_stretch",
+          2,
+          null,
+          35,
+          10,
+          "relaxed",
+          null
+        ],
+        [
+          "child_pose",
+          2,
+          null,
+          40,
+          10,
+          "relaxed",
+          null
+        ]
+      ]
+    },
+    {
+      "id": "new-l5-w100",
+      "origin": "new_level",
+      "level": 5,
+      "number": 100,
+      "title": {
+        "en": "Exam 5: Intermediate Strength"
+      },
+      "description": {
+        "en": "Exam day for classes L5:077-L5:099: handstand, handstand push-up, muscle-up, front lever, back lever, planche, dragon flag, pull-ups, dips, toes-to-bar, hamstrings. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
+      },
+      "schedule": {
+        "week": 15,
+        "day": 2,
+        "day_type": "exam_assessment",
+        "minutes": 50,
+        "rpe": 7,
+        "focus": [
+          "exam",
+          "handstand",
+          "vertical_push",
+          "muscle_up",
+          "front_lever",
+          "back_lever",
+          "planche",
+          "dragon_flag",
+          "pull_up",
+          "dip",
+          "core",
+          "hinge"
+        ]
+      },
+      "warmup": [
+        [
+          "march",
+          1,
+          null,
+          80,
+          0,
+          "easy",
+          null
+        ],
+        [
+          "wrist_pushup",
+          1,
+          10,
+          null,
+          20,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
+        ],
+        [
+          "scapular_pushup",
+          2,
+          10,
+          null,
+          30,
+          "2111",
+          "elevated_scapular_pushup"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "active_hang",
+          2,
+          null,
+          15,
+          30,
+          "slow",
+          "dead_hang"
+        ]
+      ],
+      "main": [
+        [
+          "freestanding_handstand",
+          1,
+          null,
+          5,
+          120,
+          "assessment",
+          "wall_handstand"
+        ],
+        [
+          "wall_hspu_negative",
+          1,
+          5,
+          null,
+          120,
+          "assessment",
+          "elevated_pike_pushup"
+        ],
+        [
+          "strict_muscleup",
+          1,
+          3,
+          null,
+          180,
+          "assessment",
+          "band_muscleup"
+        ],
+        [
+          "one_leg_front",
+          1,
+          null,
+          "8/side",
+          150,
+          "assessment",
+          "advanced_tuck_front"
+        ],
+        [
+          "german_hang",
+          1,
+          null,
+          10,
+          45,
+          "slow",
+          "skin_cat_partial"
+        ],
+        [
+          "one_leg_back",
+          1,
+          null,
+          "8/side",
+          150,
+          "assessment",
+          "advanced_tuck_back"
+        ],
+        [
+          "advanced_tuck_planche",
+          1,
+          null,
+          5,
+          150,
+          "assessment",
+          "tuck_planche"
+        ],
+        [
+          "dragon_flag",
+          1,
+          3,
+          null,
+          120,
+          "assessment",
+          "full_dragon_negative"
+        ],
+        [
+          "pullup",
+          1,
+          11,
+          null,
+          120,
+          "assessment",
+          "assisted_pullup"
+        ],
+        [
+          "straight_bar_dip",
+          1,
+          11,
+          null,
+          120,
+          "assessment",
+          "straight_bar_support"
+        ],
+        [
+          "toes_to_bar",
+          1,
+          6,
+          null,
+          120,
+          "assessment",
+          "hanging_leg_raise"
+        ],
+        [
+          "nordic_negative",
+          1,
+          5,
+          null,
+          120,
+          "assessment",
+          "sliding_leg_curl"
+        ]
+      ],
+      "cooldown": [
+        [
+          "lat_stretch",
+          2,
+          null,
+          35,
+          10,
+          "relaxed",
+          null
+        ],
+        [
+          "chest_stretch",
+          2,
+          null,
+          35,
+          10,
+          "relaxed",
+          null
+        ],
+        [
+          "quad_stretch",
+          2,
+          null,
+          35,
+          10,
+          "relaxed",
           null
         ]
       ]

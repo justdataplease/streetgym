@@ -1,14 +1,34 @@
 # StreetGym curriculum method
 
+## Round 6b (28 October 2026): the last exam on day 100, and day names
+
+The owner asked for two fixes. One deterministic pass made them, and every validator rule still holds.
+
+- *The last exam is day 100 in every level*, the level's last class, as it already was in Level 3. The few classes before it move up, with an easy or recovery day right before the exam. Program ids follow position.
+  - L1: Elevated Plank Lines on day 98, Spine and Scapula Reset 99.
+  - L2: Skill Trail 98, Elbow-Friendly Reset 99.
+  - L4–L5: the week's skill-mobility recovery moves to day 95, the five-goal integration to 97, the lever-and-dragon class to 98 and the joint recovery to 99.
+  - L6: the relay 97 (the mosaic stays on 98), the easy reset 99.
+  - L7: the handstand benchmark 97, the relay 98, the walk 99.
+- *Knock-on changes the rules asked for.*
+  - Week 14 of Levels 4–6 lost what its exam brought (rule 13). The lever-and-dragon class of Levels 4–5 trades its hollow-body holds for wall handstand push-up negatives, Level 5's five-goal class trades its hollow hold for toes-to-bar, and Level 6's relay closes with one set of Nordic negatives.
+  - L6:100's exam now comes the day before Level 7. L7:001 becomes an easy re-entry class, RPE 5, as L6:001 did in round 5b: planche leans, elevated pike push-ups, dips and pistol squats, with no advanced-tuck planche the day after the exam (rules 3, 13 and 29, and no four RPE 7+ classes in a row).
+  - L1:100's exam runs straight into Level 2, whose first easy day is day 7 (rule 27). L2:003, the inversion technique class, becomes RPE 4 with two sets of each step.
+  - L7:091 adds one set of candlesticks, so every seven Level 7 classes still train the dragon flag. The handstand benchmark, now L7:097, falls on day 6 and leads with that day's flag work.
+- *Exam targets.* A level's first exam no longer reaches back into the previous level's last classes. L2:020 tests the hollow hold (25 s) its block trained instead of the tuck L-sit, and L6:013 tests the tuck planche (8 s) and full dragon negatives (2) instead of the advanced-tuck planche and the dragon flag. The moved exams' blocks now run to day 99, so L4:100's tuck planche target rises to 7 s and L5:100's one-leg back lever to 8 s a side. Every target is still the block's best per-set dose and never below the previous exam's.
+- *Day names.* The 25 original-source recovery days had generated names such as "Mobility & Recovery - Session 4". Each now has its own name, kept in `morning_class.json` (`early_recovery_titles`) and unique in its level. The 18 Level 6 ": Progression Week" titles have proper names, and classes that left day 100 dropped their "hundredth" names.
+
 ## Round 6 (27 October 2026): exam days and the three-coach panel
 
 A panel of three coaches (a street-workout group coach, a gymnastics strength coach and a strength coach with a physiotherapy degree) debated round 5b over three rounds. All three scored the curriculum 5.5/10. They scored "the strong advance, the weak stay, like a normal class" 2.5–3/10: the app moved everyone forward one class per class finished. The owner chose exam days. Validator rules 44–48 and wider rules 3, 5, 7, 11, 13, 31, 32 and 38 hold the changes; one deterministic pass made them.
 
 - *Exam days.* An exam comes about every 20 classes, 35 in all:
-  - L1: 20, 40, 60, 81, 98
-  - L2: 20, 40, 62, 84, 98
+  - L1: 20, 40, 60, 81, 100
+  - L2: 20, 40, 62, 84, 100
   - L3: 20, 40, 64, 84, 100
-  - L4–L7: day 6 of weeks 2, 5, 8, 11 and 14 (13, 34, 55, 76, 97)
+  - L4–L7: day 6 of weeks 2, 5, 8 and 11, then day 100 (13, 34, 55, 76, 100)
+
+  Round 6b (above) moved each level's last exam to day 100.
 
   An exam is a normal class: warm-up, one fresh set of each skill the block trained, cool-down, and no practice block. Each target is the best per-set dose the block prescribed, so someone who did the classes passes. A target never falls below the previous exam's target for the same movement, and a block that moved nothing on raises one repetition target. A German hang comes directly before the back-lever test. Rule 44 keeps exams at most 25 classes apart, each testing only what its block trained.
 - *The app.* After an exam class the athlete ticks the targets reached. The result is kept and synced with the other cloud progress. If a target was missed, the app offers to repeat the classes since the previous exam and take the exam again. It is the athlete's choice; Today runs the block as a level replay from its first class. Exam classes are marked in the level list and show their last result.

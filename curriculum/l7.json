@@ -6,17 +6,17 @@
       "level": 7,
       "number": 1,
       "title": {
-        "en": "Advanced-Tuck Press Bridge"
+        "en": "Level 7 Re-Entry Press"
       },
       "description": {
-        "en": "Three advanced-tuck planche holds and two leans come first, then planche push-ups, elevated pike push-ups, dips and pistol squats."
+        "en": "An easy first class after the Level 6 exam: two planche leans, elevated pike push-ups, dips and pistol squats, all with reserve. The advanced-tuck planche returns next week."
       },
       "schedule": {
         "week": 1,
         "day": 1,
         "day_type": "planche_press_bridge",
-        "minutes": 50,
-        "rpe": 7,
+        "minutes": 36,
+        "rpe": 5,
         "focus": [
           "planche",
           "overhead_press",
@@ -73,15 +73,6 @@
       ],
       "main": [
         [
-          "advanced_tuck_planche",
-          3,
-          null,
-          6,
-          105,
-          "isometric",
-          "tuck_planche"
-        ],
-        [
           "planche_lean",
           2,
           null,
@@ -89,15 +80,6 @@
           75,
           "controlled",
           "elevated_plank"
-        ],
-        [
-          "pseudo_planche_pushup",
-          2,
-          8,
-          null,
-          75,
-          "31X1",
-          "pushup"
         ],
         [
           "elevated_pike_pushup",
@@ -1876,7 +1858,7 @@
         "en": "Exam 1: Mastery"
       },
       "description": {
-        "en": "Exam day for classes L6:098-L7:012: handstand, handstand push-up, muscle-up, front lever, back lever, planche, dragon flag, dips, toes-to-bar, hamstrings. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
+        "en": "Exam day for classes L7:001-L7:012: handstand, handstand push-up, muscle-up, front lever, back lever, planche, dragon flag, dips, toes-to-bar, hamstrings. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
       },
       "schedule": {
         "week": 2,
@@ -14220,13 +14202,13 @@
         "en": "Peak Freestanding Negatives"
       },
       "description": {
-        "en": "Pairs of freestanding handstand negatives lead into dips, split squats and toes-to-bar."
+        "en": "Pairs of freestanding handstand negatives lead into dips, split squats, toes-to-bar and one easy set of candlesticks for the dragon-flag line."
       },
       "schedule": {
         "week": 13,
         "day": 7,
         "day_type": "easy_fundamentals_peak",
-        "minutes": 40,
+        "minutes": 42,
         "rpe": 5,
         "focus": [
           "freestanding_hspu",
@@ -14319,6 +14301,15 @@
           60,
           "2020",
           "hanging_leg_raise"
+        ],
+        [
+          "candlestick",
+          1,
+          6,
+          null,
+          60,
+          "controlled",
+          "lying_knee_raise"
         ]
       ],
       "cooldown": [
@@ -15164,14 +15155,485 @@
       "level": 7,
       "number": 97,
       "title": {
-        "en": "Exam 5: Mastery"
+        "en": "Mastery Handstand Benchmark"
       },
       "description": {
-        "en": "Exam day for classes L7:077-L7:096: handstand, handstand push-up, muscle-up, front lever, back lever, planche, dragon flag, dips, toes-to-bar, hamstrings. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
+        "en": "Record two five-second freestanding negatives, then single sets of deficit handstand push-ups, dips and toes-to-bar. Clean reps up to the number shown: stop at the first form break and note it; don't top up with the easier option."
       },
       "schedule": {
         "week": 14,
         "day": 6,
+        "day_type": "one_arm_hspu_benchmark",
+        "minutes": 41,
+        "rpe": 6,
+        "focus": [
+          "one_arm_pull_test",
+          "freestanding_hspu_test",
+          "quality_gate"
+        ]
+      },
+      "warmup": [
+        [
+          "easy_walk",
+          1,
+          null,
+          150,
+          0,
+          "relaxed",
+          null
+        ],
+        [
+          "wrist_pushup",
+          1,
+          10,
+          null,
+          20,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
+        ],
+        [
+          "leg_swings",
+          1,
+          "8/side",
+          null,
+          10,
+          "controlled",
+          null
+        ],
+        [
+          "scapular_pull",
+          1,
+          5,
+          null,
+          30,
+          "controlled",
+          "active_hang"
+        ]
+      ],
+      "main": [
+        [
+          "freestanding_hspu_negative",
+          2,
+          2,
+          null,
+          120,
+          "5-second_lowering",
+          "deficit_wall_hspu"
+        ],
+        [
+          "deficit_wall_hspu",
+          1,
+          6,
+          null,
+          120,
+          "2111",
+          "wall_hspu"
+        ],
+        [
+          "parallel_dip",
+          1,
+          18,
+          null,
+          75,
+          "2111",
+          "assisted_dip"
+        ],
+        [
+          "toes_to_bar",
+          1,
+          12,
+          null,
+          60,
+          "2020",
+          "hanging_leg_raise"
+        ]
+      ],
+      "cooldown": [
+        [
+          "forearm_stretch",
+          2,
+          null,
+          40,
+          10,
+          null,
+          null
+        ],
+        [
+          "quad_stretch",
+          2,
+          null,
+          45,
+          10,
+          null,
+          null
+        ],
+        [
+          "adductor_stretch",
+          2,
+          null,
+          45,
+          10,
+          null,
+          null
+        ]
+      ]
+    },
+    {
+      "id": "new-l7-w098",
+      "origin": "new_level",
+      "level": 7,
+      "number": 98,
+      "title": {
+        "en": "Seven-Level Mastery Relay"
+      },
+      "description": {
+        "en": "Move through German hangs, full back and front levers with their straddles, muscle-up triples, advanced-tuck planches and dragon flags, then finish with pull-ups and dips."
+      },
+      "schedule": {
+        "week": 14,
+        "day": 7,
+        "day_type": "five_skill_mastery_relay",
+        "minutes": 54,
+        "rpe": 7,
+        "focus": [
+          "back_lever",
+          "front_lever",
+          "muscle_up",
+          "planche",
+          "dragon_flag",
+          "fundamentals"
+        ]
+      },
+      "warmup": [
+        [
+          "low_jack",
+          1,
+          30,
+          null,
+          20,
+          "easy",
+          "march"
+        ],
+        [
+          "wrist_circles",
+          1,
+          12,
+          null,
+          10,
+          "each_direction",
+          null
+        ],
+        [
+          "wrist_pushup",
+          1,
+          10,
+          null,
+          20,
+          "slow",
+          "wrist_rocks"
+        ],
+        [
+          "wall_shoulder_flexion",
+          1,
+          null,
+          30,
+          20,
+          null,
+          "wall_slide"
+        ],
+        [
+          "scapular_pull",
+          2,
+          5,
+          null,
+          30,
+          "controlled",
+          "active_hang"
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ]
+      ],
+      "main": [
+        [
+          "german_hang",
+          1,
+          null,
+          30,
+          45,
+          "slow",
+          "skin_cat_partial"
+        ],
+        [
+          "full_back",
+          1,
+          null,
+          3,
+          135,
+          "brief_hold",
+          "straddle_back"
+        ],
+        [
+          "straddle_back",
+          1,
+          null,
+          10,
+          120,
+          "isometric",
+          "one_leg_back"
+        ],
+        [
+          "full_front",
+          1,
+          null,
+          3,
+          135,
+          "brief_hold",
+          "straddle_front"
+        ],
+        [
+          "straddle_front",
+          1,
+          null,
+          10,
+          120,
+          "isometric",
+          "one_leg_front"
+        ],
+        [
+          "strict_muscleup",
+          2,
+          3,
+          null,
+          180,
+          "clean",
+          "band_muscleup"
+        ],
+        [
+          "advanced_tuck_planche",
+          2,
+          null,
+          10,
+          105,
+          "isometric",
+          "tuck_planche"
+        ],
+        [
+          "dragon_flag",
+          2,
+          4,
+          null,
+          120,
+          "controlled",
+          "full_dragon_negative"
+        ],
+        [
+          "pullup",
+          1,
+          10,
+          null,
+          105,
+          "21X1",
+          "assisted_pullup"
+        ],
+        [
+          "parallel_dip",
+          1,
+          12,
+          null,
+          75,
+          "2111",
+          "assisted_dip"
+        ]
+      ],
+      "cooldown": [
+        [
+          "forearm_stretch",
+          2,
+          null,
+          45,
+          10,
+          null,
+          null
+        ],
+        [
+          "lat_stretch",
+          2,
+          null,
+          45,
+          10,
+          null,
+          null
+        ],
+        [
+          "chest_stretch",
+          2,
+          null,
+          45,
+          10,
+          null,
+          null
+        ]
+      ]
+    },
+    {
+      "id": "new-l7-w099",
+      "origin": "new_level",
+      "level": 7,
+      "number": 99,
+      "title": {
+        "en": "Pre-Exam Mastery Walk"
+      },
+      "description": {
+        "en": "An easy day before the final exam: an easy walk, light assisted basics, gentle mobility and slow breathing."
+      },
+      "schedule": {
+        "week": 15,
+        "day": 1,
+        "day_type": "pre_exam_recovery",
+        "minutes": 25,
+        "rpe": 3,
+        "focus": [
+          "fundamentals",
+          "mobility",
+          "recovery"
+        ]
+      },
+      "warmup": [
+        [
+          "easy_walk",
+          1,
+          null,
+          420,
+          0,
+          "relaxed",
+          null
+        ],
+        [
+          "wrist_circles",
+          1,
+          10,
+          null,
+          10,
+          "each_direction",
+          null
+        ],
+        [
+          "ankle_rocks",
+          1,
+          "10/side",
+          null,
+          10,
+          "controlled",
+          null
+        ]
+      ],
+      "main": [
+        [
+          "assisted_pullup",
+          1,
+          10,
+          null,
+          60,
+          "controlled",
+          "inverted_row"
+        ],
+        [
+          "assisted_dip",
+          1,
+          10,
+          null,
+          60,
+          "controlled",
+          "support_hold"
+        ],
+        [
+          "incline_pushup",
+          1,
+          15,
+          null,
+          45,
+          "2111",
+          null
+        ],
+        [
+          "box_squat",
+          1,
+          15,
+          null,
+          45,
+          "3010",
+          null
+        ]
+      ],
+      "cooldown": [
+        [
+          "child_pose",
+          1,
+          null,
+          50,
+          10,
+          null,
+          null
+        ],
+        [
+          "chest_stretch",
+          1,
+          null,
+          45,
+          10,
+          null,
+          null
+        ],
+        [
+          "hamstring_stretch",
+          1,
+          null,
+          45,
+          10,
+          null,
+          null
+        ],
+        [
+          "slow_breathing",
+          1,
+          null,
+          180,
+          0,
+          "nasal",
+          null
+        ]
+      ]
+    },
+    {
+      "id": "new-l7-w100",
+      "origin": "new_level",
+      "level": 7,
+      "number": 100,
+      "title": {
+        "en": "Exam 5: Mastery"
+      },
+      "description": {
+        "en": "Exam day for classes L7:077-L7:099: handstand, handstand push-up, muscle-up, front lever, back lever, planche, dragon flag, dips, toes-to-bar, hamstrings. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
+      },
+      "schedule": {
+        "week": 15,
+        "day": 2,
         "day_type": "exam_assessment",
         "minutes": 50,
         "rpe": 7,
@@ -15381,478 +15843,6 @@
           45,
           10,
           null,
-          null
-        ]
-      ]
-    },
-    {
-      "id": "new-l7-w098",
-      "origin": "new_level",
-      "level": 7,
-      "number": 98,
-      "title": {
-        "en": "Mastery Handstand Benchmark"
-      },
-      "description": {
-        "en": "Record two five-second freestanding negatives, then single sets of deficit handstand push-ups, dips and toes-to-bar. Clean reps up to the number shown: stop at the first form break and note it; don't top up with the easier option."
-      },
-      "schedule": {
-        "week": 14,
-        "day": 7,
-        "day_type": "one_arm_hspu_benchmark",
-        "minutes": 33,
-        "rpe": 6,
-        "focus": [
-          "one_arm_pull_test",
-          "freestanding_hspu_test",
-          "quality_gate"
-        ]
-      },
-      "warmup": [
-        [
-          "easy_walk",
-          1,
-          null,
-          150,
-          0,
-          "relaxed",
-          null
-        ],
-        [
-          "wrist_pushup",
-          1,
-          10,
-          null,
-          20,
-          "slow",
-          "wrist_rocks"
-        ],
-        [
-          "wall_shoulder_flexion",
-          1,
-          null,
-          30,
-          20,
-          null,
-          "wall_slide"
-        ],
-        [
-          "leg_swings",
-          1,
-          "8/side",
-          null,
-          10,
-          "controlled",
-          null
-        ],
-        [
-          "scapular_pull",
-          1,
-          5,
-          null,
-          30,
-          "controlled",
-          "active_hang"
-        ]
-      ],
-      "main": [
-        [
-          "freestanding_hspu_negative",
-          2,
-          2,
-          null,
-          120,
-          "5-second_lowering",
-          "deficit_wall_hspu"
-        ],
-        [
-          "deficit_wall_hspu",
-          1,
-          6,
-          null,
-          120,
-          "2111",
-          "wall_hspu"
-        ],
-        [
-          "parallel_dip",
-          1,
-          18,
-          null,
-          75,
-          "2111",
-          "assisted_dip"
-        ],
-        [
-          "toes_to_bar",
-          1,
-          12,
-          null,
-          60,
-          "2020",
-          "hanging_leg_raise"
-        ]
-      ],
-      "cooldown": [
-        [
-          "forearm_stretch",
-          2,
-          null,
-          40,
-          10,
-          null,
-          null
-        ],
-        [
-          "quad_stretch",
-          2,
-          null,
-          45,
-          10,
-          null,
-          null
-        ],
-        [
-          "adductor_stretch",
-          2,
-          null,
-          45,
-          10,
-          null,
-          null
-        ]
-      ]
-    },
-    {
-      "id": "new-l7-w099",
-      "origin": "new_level",
-      "level": 7,
-      "number": 99,
-      "title": {
-        "en": "Seven-Level Mastery Relay"
-      },
-      "description": {
-        "en": "Move through German hangs, full back and front levers with their straddles, muscle-up triples, advanced-tuck planches and dragon flags, then finish with pull-ups and dips."
-      },
-      "schedule": {
-        "week": 15,
-        "day": 1,
-        "day_type": "five_skill_mastery_relay",
-        "minutes": 54,
-        "rpe": 7,
-        "focus": [
-          "back_lever",
-          "front_lever",
-          "muscle_up",
-          "planche",
-          "dragon_flag",
-          "fundamentals"
-        ]
-      },
-      "warmup": [
-        [
-          "low_jack",
-          1,
-          30,
-          null,
-          20,
-          "easy",
-          "march"
-        ],
-        [
-          "wrist_circles",
-          1,
-          12,
-          null,
-          10,
-          "each_direction",
-          null
-        ],
-        [
-          "wrist_pushup",
-          1,
-          10,
-          null,
-          20,
-          "slow",
-          "wrist_rocks"
-        ],
-        [
-          "wall_shoulder_flexion",
-          1,
-          null,
-          30,
-          20,
-          null,
-          "wall_slide"
-        ],
-        [
-          "scapular_pull",
-          2,
-          5,
-          null,
-          30,
-          "controlled",
-          "active_hang"
-        ],
-        [
-          "prone_ytw",
-          1,
-          6,
-          null,
-          15,
-          "slow",
-          "wall_slide"
-        ]
-      ],
-      "main": [
-        [
-          "german_hang",
-          1,
-          null,
-          30,
-          45,
-          "slow",
-          "skin_cat_partial"
-        ],
-        [
-          "full_back",
-          1,
-          null,
-          3,
-          135,
-          "brief_hold",
-          "straddle_back"
-        ],
-        [
-          "straddle_back",
-          1,
-          null,
-          10,
-          120,
-          "isometric",
-          "one_leg_back"
-        ],
-        [
-          "full_front",
-          1,
-          null,
-          3,
-          135,
-          "brief_hold",
-          "straddle_front"
-        ],
-        [
-          "straddle_front",
-          1,
-          null,
-          10,
-          120,
-          "isometric",
-          "one_leg_front"
-        ],
-        [
-          "strict_muscleup",
-          2,
-          3,
-          null,
-          180,
-          "clean",
-          "band_muscleup"
-        ],
-        [
-          "advanced_tuck_planche",
-          2,
-          null,
-          10,
-          105,
-          "isometric",
-          "tuck_planche"
-        ],
-        [
-          "dragon_flag",
-          2,
-          4,
-          null,
-          120,
-          "controlled",
-          "full_dragon_negative"
-        ],
-        [
-          "pullup",
-          1,
-          10,
-          null,
-          105,
-          "21X1",
-          "assisted_pullup"
-        ],
-        [
-          "parallel_dip",
-          1,
-          12,
-          null,
-          75,
-          "2111",
-          "assisted_dip"
-        ]
-      ],
-      "cooldown": [
-        [
-          "forearm_stretch",
-          2,
-          null,
-          45,
-          10,
-          null,
-          null
-        ],
-        [
-          "lat_stretch",
-          2,
-          null,
-          45,
-          10,
-          null,
-          null
-        ],
-        [
-          "chest_stretch",
-          2,
-          null,
-          45,
-          10,
-          null,
-          null
-        ]
-      ]
-    },
-    {
-      "id": "new-l7-w100",
-      "origin": "new_level",
-      "level": 7,
-      "number": 100,
-      "title": {
-        "en": "Mastery Completion Walk"
-      },
-      "description": {
-        "en": "Close the seven-level program with an easy walk, light assisted basics, gentle mobility and slow breathing."
-      },
-      "schedule": {
-        "week": 15,
-        "day": 2,
-        "day_type": "mastery_completion_recovery",
-        "minutes": 25,
-        "rpe": 3,
-        "focus": [
-          "fundamentals",
-          "mobility",
-          "recovery",
-          "reflection"
-        ]
-      },
-      "warmup": [
-        [
-          "easy_walk",
-          1,
-          null,
-          420,
-          0,
-          "relaxed",
-          null
-        ],
-        [
-          "wrist_circles",
-          1,
-          10,
-          null,
-          10,
-          "each_direction",
-          null
-        ],
-        [
-          "ankle_rocks",
-          1,
-          "10/side",
-          null,
-          10,
-          "controlled",
-          null
-        ]
-      ],
-      "main": [
-        [
-          "assisted_pullup",
-          1,
-          10,
-          null,
-          60,
-          "controlled",
-          "inverted_row"
-        ],
-        [
-          "assisted_dip",
-          1,
-          10,
-          null,
-          60,
-          "controlled",
-          "support_hold"
-        ],
-        [
-          "incline_pushup",
-          1,
-          15,
-          null,
-          45,
-          "2111",
-          null
-        ],
-        [
-          "box_squat",
-          1,
-          15,
-          null,
-          45,
-          "3010",
-          null
-        ]
-      ],
-      "cooldown": [
-        [
-          "child_pose",
-          1,
-          null,
-          50,
-          10,
-          null,
-          null
-        ],
-        [
-          "chest_stretch",
-          1,
-          null,
-          45,
-          10,
-          null,
-          null
-        ],
-        [
-          "hamstring_stretch",
-          1,
-          null,
-          45,
-          10,
-          null,
-          null
-        ],
-        [
-          "slow_breathing",
-          1,
-          null,
-          180,
-          0,
-          "nasal",
           null
         ]
       ]

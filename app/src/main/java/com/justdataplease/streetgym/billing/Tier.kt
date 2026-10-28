@@ -8,7 +8,6 @@ enum class Tier(val savedDays: Int, val workoutLists: Int, val daysPerList: Int)
     // The lists can hold every saved day: 3 lists of 10 on Plus, 10 lists of 30 on Pro.
     FREE(3, 0, 0), PLUS(30, 3, 10), PRO(300, 10, 30);
 
-    val allLevels: Boolean get() = this >= PLUS
     val adFree: Boolean get() = this >= PLUS
     val renameLevels: Boolean get() = this >= PLUS
     val parks: Boolean get() = this >= PLUS

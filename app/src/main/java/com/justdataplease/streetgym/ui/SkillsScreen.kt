@@ -22,6 +22,7 @@ import android.widget.TextView
 import com.justdataplease.streetgym.R
 import com.justdataplease.streetgym.billing.Entitlement
 import com.justdataplease.streetgym.billing.LevelAccess
+import com.justdataplease.streetgym.billing.Tier
 import com.justdataplease.streetgym.data.skills.OverallScore
 import com.justdataplease.streetgym.data.skills.Skill
 import com.justdataplease.streetgym.data.skills.SkillFamily
@@ -73,22 +74,37 @@ private val GROUPS = listOf(
 
 /**
  * Skills tab: the overall score with its tier and the four group scores, the strongest families and the next step,
- * the skills closest to achieving, a group filter and one ladder per family. [placedPast]: days marked complete
+ * the skills closest to achieving, a group filter and one ladder per family. [markedComplete]: days marked complete
  * without training, which earn nothing.
  */
 fun Context.skillsContent(
     progress: SkillProgress,
-    placedPast: Int,
+    markedComplete: Int,
     group: SkillGroup?,
     onGroup: (SkillGroup?) -> Unit,
     onOpen: (SkillStatus, SkillFamily, List<SkillStatus>) -> Unit,
 ): LinearLayout = LinearLayout(this).apply {
     orientation = LinearLayout.VERTICAL
     val closest = progress.closest(3)
-    val owned = Entitlement.allLevels(context)
+    val tier = Entitlement.tier(context)
     val overall = progress.overall
     val faint = blendColor(Color.WHITE, AppColors.PRIMARY_DARK, 0.25f)
 
+    // How points are earned, one tap away above the score.
+    addWithMargins(TextView(context).apply {
+        text = getString(R.string.skills_help)
+        textSize = 14f
+        typeface = Typeface.DEFAULT_BOLD
+        setTextColor(AppColors.PRIMARY)
+        setPadding(dp(4), dp(8), dp(4), dp(8))
+        background = tappable(Color.TRANSPARENT, dp(10).toFloat())
+        isClickable = true
+        isFocusable = true
+        setOnClickListener {
+            AlertDialog.Builder(context).setTitle(R.string.skills_help).setMessage(R.string.skills_how_points)
+                .setPositiveButton(android.R.string.ok, null).show()
+        }
+    }, width = LinearLayout.LayoutParams.WRAP_CONTENT, bottomDp = 6)
     addView(LinearLayout(context).apply {
         orientation = LinearLayout.VERTICAL
         setPadding(dp(18), dp(18), dp(18), dp(18))
@@ -152,7 +168,7 @@ fun Context.skillsContent(
         addWithMargins(bodyText(getString(R.string.skills_rungs, progress.achievedCount, progress.totalCount), 12f).apply {
             setTextColor(faint)
         }, topDp = 6)
-        if (placedPast > 0) addView(bodyText(getString(R.string.skills_placed_past, placedPast), 12f).apply { setTextColor(faint) })
+        if (markedComplete > 0) addView(bodyText(getString(R.string.skills_marked_complete, markedComplete), 12f).apply { setTextColor(faint) })
     })
 
     addWithMargins(sectionLabel(getString(R.string.skills_closest)), topDp = 14)
@@ -190,13 +206,12 @@ fun Context.skillsContent(
             addView(LinearLayout(context).apply {
                 orientation = LinearLayout.HORIZONTAL
                 statuses.forEach { status ->
-                    addWithMargins(skillCell(status, lockedFor(status, owned)) { onOpen(status, family, statuses) },
+                    addWithMargins(skillCell(status, lockFor(status, tier)) { onOpen(status, family, statuses) },
                         width = dp(82), rightDp = 10)
                 }
             })
         })
     }
-    addWithMargins(bodyText(getString(R.string.skills_how_points), 12f), topDp = 18)
 }
 
 /**
@@ -213,7 +228,7 @@ fun Context.showSkillSheet(
     onTest: (Skill, Boolean) -> Unit,
 ) {
     val skill = status.skill
-    val locked = lockedFor(status, Entitlement.allLevels(this))
+    val lock = lockFor(status, Entitlement.tier(this))
     val content = LinearLayout(this).apply {
         orientation = LinearLayout.VERTICAL
         setPadding(dp(20), dp(16), dp(20), dp(8))
@@ -223,7 +238,7 @@ fun Context.showSkillSheet(
         addWithMargins(bodyText(getString(R.string.skills_ladder_rung, family.spec.name, skill.rung + 1, statuses.size), 13f), topDp = 2)
         val pill = when {
             status.achieved -> badge(getString(R.string.skills_achieved), AppColors.SUCCESS)
-            locked -> lockBadge(getString(R.string.skills_plus))
+            lock != null -> lockBadge(partOf(lock))
             status.trained -> badge(getString(R.string.skills_trained_test), AppColors.PRIMARY)
             status.own > 0 -> badge(getString(R.string.skills_in_progress, status.score), AppColors.PRIMARY)
             else -> badge(getString(R.string.skills_locked), AppColors.TEXT_SECONDARY)
@@ -343,14 +358,14 @@ private fun Context.closestRow(status: SkillStatus, onClick: () -> Unit): View =
     addView(titleText(state, 14f).apply { setTextColor(AppColors.PRIMARY) })
 }
 
-private fun Context.skillCell(status: SkillStatus, locked: Boolean, onClick: () -> Unit): View = LinearLayout(this).apply {
+private fun Context.skillCell(status: SkillStatus, lock: Tier?, onClick: () -> Unit): View = LinearLayout(this).apply {
     orientation = LinearLayout.VERTICAL
     isClickable = true
     isFocusable = true
     background = tappable(Color.TRANSPARENT, dp(14).toFloat())
     val state = when {
         status.achieved -> getString(R.string.skills_achieved)
-        locked -> getString(R.string.skills_plus)
+        lock != null -> partOf(lock)
         status.trained -> getString(R.string.skills_trained)
         else -> getString(R.string.skills_points_short, status.score)
     }
@@ -387,11 +402,11 @@ private fun Context.skillCell(status: SkillStatus, locked: Boolean, onClick: () 
         minLines = 2
         ellipsize = TextUtils.TruncateAt.END
     }, topDp = 4)
-    if (!status.achieved && !locked) {
+    if (!status.achieved && lock == null) {
         addWithMargins(horizontalProgress(status.score), width = dp(78), height = dp(4), topDp = 4)
     }
-    if (locked) {
-        addWithMargins(lockBadge(), width = LinearLayout.LayoutParams.WRAP_CONTENT, topDp = 4)
+    if (lock != null) {
+        addWithMargins(lockBadge(getString(if (lock == Tier.PRO) R.string.tier_pro else R.string.tier_plus)), width = LinearLayout.LayoutParams.WRAP_CONTENT, topDp = 4)
     } else {
         addWithMargins(bodyText(state, 11f).apply {
             if (status.achieved || status.trained) {
@@ -425,9 +440,14 @@ private fun Context.groupScoreTile(label: String, score: Int, ceiling: Int, sele
         })
     }
 
-/** Skills the program first teaches in Levels 4 and up stay locked until Plus. */
-private fun lockedFor(status: SkillStatus, owned: Boolean): Boolean =
-    !status.achieved && status.skill.expected?.let { LevelAccess.locked(it.level, owned) } == true
+/**
+ * The tier a skill waits for: one the program first teaches in Levels 4 and up stays locked until the tier that opens
+ * that level. Null when it is open.
+ */
+private fun lockFor(status: SkillStatus, tier: Tier): Tier? =
+    status.skill.expected?.level?.takeIf { !status.achieved && LevelAccess.locked(it, tier) }?.let(LevelAccess::tierFor)
+
+private fun Context.partOf(tier: Tier): String = getString(if (tier == Tier.PRO) R.string.skills_pro else R.string.skills_plus)
 
 /** Difficulty runs green, blue, amber, orange, red from Beginner to Elite, like trail grades. */
 private fun difficultyColor(level: Int): Int {

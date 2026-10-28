@@ -1,5 +1,6 @@
 package com.justdataplease.streetgym.data.skills
 
+import com.justdataplease.streetgym.data.progress.Intensity
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
@@ -29,10 +30,18 @@ data class SkillProgram(
 
 /**
  * One finished class as skills credit it. [sets]: the sets ticked per movement, with a set done as the easier option
- * credited to the easier movement and readiness checks left out; null for a class saved before ticks were kept, whose
- * prescription counts. [seconds]: how long the class took.
+ * credited to the easier movement and readiness checks left out; null for a class saved before ticks were kept, or a
+ * day the placement test placed past, whose prescription counts. [seconds]: how long the class took. [factor]: the
+ * day's Easier (0.75), Normal or Harder (1.25), applied to strength movements, whose reps it scaled. [minutes]: the
+ * planned length of a class outside the program (the athlete's own day), when known.
  */
-data class SkillCredit(val programId: String, val sets: Map<String, Int>? = null, val seconds: Long = Long.MAX_VALUE)
+data class SkillCredit(
+    val programId: String,
+    val sets: Map<String, Int>? = null,
+    val seconds: Long = Long.MAX_VALUE,
+    val factor: Double = 1.0,
+    val minutes: Int? = null,
+)
 
 enum class SkillGroup { PULL, PUSH, LEGS, CORE }
 
@@ -139,20 +148,24 @@ class SkillBook private constructor(
 
     private fun compute(credits: List<SkillCredit>, verified: Set<String>): SkillProgress {
         val classes = credits.mapNotNull { credit ->
-            val program = programs[credit.programId] ?: return@mapNotNull null
+            val program = programs[credit.programId]
+            // A class outside the program (the athlete's own day) counts its ticks as they are.
+            if (program == null && credit.sets == null) return@mapNotNull null
             // A class counts once it ran at least [MIN_SHARE_PERCENT] of its planned length.
-            val minutes = program.minutes
+            val minutes = program?.minutes ?: credit.minutes
             if (minutes != null && credit.seconds < minutes * 60L * MIN_SHARE_PERCENT / 100) return@mapNotNull null
-            creditedSets(credit, program)
+            val sets = if (program == null) credit.sets.orEmpty().filter { (id, count) -> count > 0 && id in movements }
+                else creditedSets(credit, program)
+            sets to credit.factor
         }
         val result = families.map { family ->
             val own = family.skills.map { skill ->
                 val parts = HashMap<String, Double>()
                 var sessions = 0
-                for (sets in classes) {
+                for ((sets, factor) in classes) {
                     for ((id, count) in sets) {
                         val weight = skill.weights[id] ?: continue
-                        parts[id] = (parts[id] ?: 0.0) + count * setPoints(id) * weight
+                        parts[id] = (parts[id] ?: 0.0) + count * setPoints(id) * weight * scaled(id, factor)
                     }
                     if ((sets[skill.id] ?: 0) > 0) sessions++
                 }
@@ -187,13 +200,17 @@ class SkillBook private constructor(
 
     private fun setPoints(movementId: String): Double = setPoints(movements[movementId], grades)
 
+    /** A day's factor reaches the movements whose reps it scaled ([Intensity]); skill work keeps its points. */
+    private fun scaled(movementId: String, factor: Double): Double =
+        if (movements[movementId]?.category in Intensity.STRENGTH) factor else 1.0
+
     companion object {
         const val POINTS_PER_SET = 10.0
         const val PREP_POINTS = 50
         const val PRACTICE_POINTS = 25
         const val PRACTICE_SESSIONS = 2
         /** A class counts toward skills when it took at least this share of its planned minutes. */
-        const val MIN_SHARE_PERCENT = 40
+        const val MIN_SHARE_PERCENT = 20
         private const val BEYOND_STEP = 1.6
         private const val MIN_THRESHOLD = 40
 

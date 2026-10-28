@@ -99,6 +99,7 @@ import com.justdataplease.streetgym.data.model.TrainingProgram
 import com.justdataplease.streetgym.data.progress.ActiveWorkout
 import com.justdataplease.streetgym.data.progress.DayAssignment
 import com.justdataplease.streetgym.data.progress.ExamResult
+import com.justdataplease.streetgym.data.progress.Intensity
 import com.justdataplease.streetgym.data.progress.LevelReplay
 import com.justdataplease.streetgym.data.progress.Placement
 import com.justdataplease.streetgym.data.progress.SharedPreferencesProgressRepository
@@ -150,8 +151,8 @@ open class HomeActivity : Activity() {
     /** The list open in My workouts (Plus); null for Favorites, everything the athlete keeps. */
     private var workoutListId: String? = null
     private var draft: CustomDay? = null
-    /** The first-launch placement's picks, one band per question (-1 for none), kept through a redraw. */
-    private var placementAnswers = IntArray(Placement.Question.entries.size) { -1 }
+    /** The placement test's counts, one per test (-1 for none), kept through a redraw. */
+    private var placementAnswers = IntArray(Placement.Test.entries.size) { -1 }
     private var parks: List<Park>? = null
     private var parksLoading = false
     private var parkOrigin: Pair<Double, Double>? = null
@@ -188,6 +189,8 @@ open class HomeActivity : Activity() {
         }
     private var orderedPrograms: List<TrainingProgram> = emptyList()
     private var programIndex: Map<String, TrainingProgram> = emptyMap()
+    /** The Easier, Normal or Harder [catalog] is scaled to ([syncIntensity]). */
+    private var scaledFor = Intensity.NORMAL
     private var skillBook: SkillBook? = null
     /** Progress's tabs: 0 Skills, 1 History, 2 Leaderboard. */
     private var progressTab = 0
@@ -470,7 +473,8 @@ open class HomeActivity : Activity() {
 
     /** Skills from the classes that count ([Scores.credits]) and the tests passed: the Skills tab and the board agree. */
     private fun skillProgress(book: SkillBook, history: List<WorkoutSession> = progressRepository.sessionHistory()): SkillProgress =
-        book.progress(Scores.credits(history), progressRepository.skillTests().passed.keys)
+        book.progress(Scores.credits(history) { id -> library.customDay(id)?.let(CustomDays::estimatedMinutes) },
+            progressRepository.skillTests().passed.keys)
 
     private fun currentScore(book: SkillBook): Score = Scores.from(skillProgress(book))
 
@@ -770,7 +774,8 @@ open class HomeActivity : Activity() {
     private fun showLoaded(parsed: LoadedCatalog) {
         skillBook = parsed.skills
         exerciseLibrary = parsed.exercises
-        catalog = parsed.catalog
+        scaledFor = currentIntensity()
+        catalog = scaledFor.scale(parsed.catalog)
         val destination = restoredScreen?.takeIf(::isValidScreen) ?: Screen.Dashboard
         restoredScreen = null
         showScreen(destination, pushCurrent = false)
@@ -870,6 +875,7 @@ open class HomeActivity : Activity() {
             restStatusView = null
         }
 
+        syncIntensity()
         when (screen) {
             Screen.Dashboard -> renderDashboard()
             Screen.Levels -> renderLevels()
@@ -973,10 +979,14 @@ open class HomeActivity : Activity() {
             today.addView(titleText(displayName(next, uiLocale()), if (compact) 20f else 23f))
             today.addWithMargins(bodyText(programMeta(next), 13f), topDp = 6)
             if (paywallLevel == null) {
+                if (!CustomDays.isCustom(next.id)) today.addWithMargins(intensityRow(::renderDashboard), topDp = 14)
                 today.addWithMargins(primaryButton(getString(if (active?.programId == next.id) R.string.resume_workout else R.string.start_today)) {
                     requestStart(next, repeat = repeating)
                 }, topDp = 16)
-                if (canStart(next.id) && !repeating) today.addWithMargins(secondaryButton("Complete day") { requestCompleteDay(next) }, topDp = 8)
+                if (canStart(next.id) && !repeating) {
+                    today.addWithMargins(secondaryButton("Complete day") { requestCompleteDay(next) }, topDp = 8)
+                    today.addWithMargins(noPointsNote(R.string.complete_day_no_points), topDp = 6)
+                }
             }
             today.setOnClickListener { navigate(Screen.Overview(next.id)) }
         } else {
@@ -984,8 +994,8 @@ open class HomeActivity : Activity() {
             today.addWithMargins(bodyText(getString(R.string.all_complete_body)), topDp = 8)
         }
         // A new athlete first says where to start; Today's day card follows once that's answered or skipped.
-        page.addWithMargins(if (askPlacement(completed, active)) placementCard(catalog?.levels.orEmpty(), uiLocale(),
-            placementAnswers, ::startPlacement) else today, bottomDp = 16)
+        page.addWithMargins(if (askPlacement(completed, active)) placementCard(orderedPrograms, catalog?.levels.orEmpty(),
+            uiLocale(), placementAnswers, ::startPlacement) else today, bottomDp = 16)
         if (paywallLevel != null) page.addWithMargins(TiersPanel(this, billing, Paywall.Level(paywallLevel)), bottomDp = 16)
         val done = all.count { it.id in completed }
         page.addWithMargins(card(clickable = true).apply {
@@ -1007,20 +1017,53 @@ open class HomeActivity : Activity() {
     }
 
     /**
-     * The placement's answer. A start past Level 1, day 1 marks every earlier day complete exactly as "Complete level"
-     * does: done, but no skill or leaderboard points ([Scores.credits]), and the same sync.
+     * The placement's answer. A start past Level 1, day 1 marks every earlier day complete, credited as trained for
+     * skills and the leaderboard ([Scores.credits]), unlike "Complete level", with the same sync.
      */
     private fun startPlacement(start: Placement.Start) {
         val skipped = Placement.skipped(orderedPrograms, start, TrainingProgram::levelNumber, TrainingProgram::number)
             .map(TrainingProgram::id)
         if (skipped.isNotEmpty()) {
-            progressRepository.completePrograms(skipped)
+            progressRepository.completePrograms(skipped, placed = true)
             cloudChanged()
         }
         settings.placementDone = true
         placementAnswers.fill(-1)
         clearRest(); openRoot(Screen.Dashboard)
     }
+
+    /** The day's Easier, Normal or Harder: the active workout's, or today's pick for the next class. */
+    private fun currentIntensity(): Intensity = progressRepository.activeWorkout()?.intensity ?: settings.intensityToday()
+
+    /** Shows the program at [currentIntensity]: rescaled only when it changed (a pick, a start or finish, a new day). */
+    private fun syncIntensity() {
+        val now = currentIntensity()
+        if (now == scaledFor) return
+        scaledFor = now
+        loaded?.let { catalog = now.scale(it.catalog) }
+    }
+
+    /** "How do you feel today?": today's pick, and the active workout's too, so its reps follow at once. */
+    private fun setIntensity(value: Intensity) {
+        settings.setIntensityToday(value)
+        if (progressRepository.activeWorkout() != null) progressRepository.setIntensity(value)
+        syncIntensity()
+    }
+
+    /** The day's Easier, Normal or Harder over a class that can be started; [redraw] shows the new reps. */
+    private fun intensityRow(redraw: () -> Unit): LinearLayout = LinearLayout(this).apply {
+        orientation = LinearLayout.VERTICAL
+        addView(bodyText(getString(R.string.intensity_title), 13f).apply { setTextColor(AppColors.TEXT) })
+        val selected = currentIntensity().ordinal
+        addWithMargins(segmentedSwitch(intensityLabels(), selected) { index ->
+            setIntensity(Intensity.entries[index])
+            redraw()
+        }.apply { getChildAt(selected).isSelected = true }, width = ViewGroup.LayoutParams.WRAP_CONTENT, topDp = 6)
+        addWithMargins(bodyText(getString(R.string.intensity_note), 12f), topDp = 4)
+    }
+
+    private fun intensityLabels(): List<String> =
+        listOf(R.string.intensity_easier, R.string.intensity_normal, R.string.intensity_harder).map(::getString)
 
     private fun renderLevels() {
         val catalog = catalog ?: return
@@ -1592,7 +1635,8 @@ open class HomeActivity : Activity() {
         }
         header.addView(text, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
         val locked = levelLocked(level.number)
-        if (locked) header.addView(lockBadge())
+        val tier = getString(if (LevelAccess.tierFor(level.number) == Tier.PRO) R.string.tier_pro else R.string.tier_plus)
+        if (locked) header.addView(lockBadge(tier))
         addView(header)
         val complete = level.programs.count { it.id in completedIds }
         val percent = percentage(complete, level.programs.size)
@@ -1602,7 +1646,7 @@ open class HomeActivity : Activity() {
         )
         addWithMargins(horizontalProgress(percent), topDp = 7, height = dp(8))
         contentDescription = "${displayName(level, locale)}, ${getString(R.string.level_progress_format, complete, level.programs.size)}" +
-            if (locked) ", ${getString(R.string.tier_plus)}" else ""
+            if (locked) ", $tier" else ""
         setOnClickListener { navigate(Screen.Workouts(level.number)) }
     }
 
@@ -1670,7 +1714,8 @@ open class HomeActivity : Activity() {
             }
             summary.addWithMargins(secondaryButton("Complete level") {
                 AlertDialog.Builder(this).setTitle("Complete this level?")
-                    .setMessage("Mark all ${level.programs.size} days in ${displayName(level, locale)} complete.")
+                    .setMessage("Mark all ${level.programs.size} days in ${displayName(level, locale)} complete.\n\n" +
+                        getString(R.string.complete_level_no_points))
                     .setNegativeButton("Cancel", null)
                     .setPositiveButton("Complete") { _, _ ->
                         progressRepository.completePrograms(level.programs.map { it.id })
@@ -1678,6 +1723,7 @@ open class HomeActivity : Activity() {
                         clearRest(); openRoot(Screen.Levels)
                     }.show()
             }, topDp = 10)
+            summary.addWithMargins(noPointsNote(R.string.complete_level_no_points), topDp = 6)
         }
         // Any level before the furthest day can be trained again; nothing completed is undone.
         val furthestLevel = furthestProgram()?.levelNumber ?: Int.MAX_VALUE
@@ -1746,6 +1792,9 @@ open class HomeActivity : Activity() {
         else buildList {
             add(getString(R.string.level_number, program.levelNumber))
             programMeta(program).takeIf(String::isNotBlank)?.let(::add)
+            // Easier or Harder, on a day whose strength work it changed.
+            currentIntensity().takeIf { it != Intensity.NORMAL && !program.isExam && program.exercises.any(Intensity::scales) }
+                ?.let { add(intensityLabels()[it.ordinal]) }
         }.joinToString(" • ")
         hero.addWithMargins(bodyText(meta, 14f), topDp = 4)
         if (!custom) hero.addWithMargins(
@@ -1793,6 +1842,7 @@ open class HomeActivity : Activity() {
             } else if (custom || assigned?.id == program.id) {
                 val isResume = active?.programId == program.id && !active.repeat
                 page.addWithMargins(workoutViewSetting(settings), topDp = 4)
+                if (!custom) page.addWithMargins(intensityRow { renderOverview(program.id) }, topDp = 8)
                 val start = primaryButton(
                     getString(when {
                         isResume -> R.string.resume_workout
@@ -1803,10 +1853,14 @@ open class HomeActivity : Activity() {
                 start.compoundDrawablePadding = dp(8)
                 page.addWithMargins(start, topDp = 8)
                 // Complete day moves the sequence on, so only the assigned day offers it.
-                if (!custom) page.addWithMargins(secondaryButton("Complete day") { requestCompleteDay(program) }, topDp = 8)
+                if (!custom) {
+                    page.addWithMargins(secondaryButton("Complete day") { requestCompleteDay(program) }, topDp = 8)
+                    page.addWithMargins(noPointsNote(R.string.complete_day_no_points), topDp = 6)
+                }
             } else if (repeatable) {
                 page.addWithMargins(bodyText(getString(R.string.sequence_completed_note), 14f), topDp = 8)
                 page.addWithMargins(workoutViewSetting(settings), topDp = 4)
+                page.addWithMargins(intensityRow { renderOverview(program.id) }, topDp = 8)
                 page.addWithMargins(repeatButton(program, repeatResume), topDp = 8)
                 page.addWithMargins(bodyText(getString(R.string.repeat_note), 13f), topDp = 8)
             } else {
@@ -1927,15 +1981,19 @@ open class HomeActivity : Activity() {
                 .setPositiveButton(R.string.replace) { _, _ ->
                     clearRest()
                     progressRepository.abandonWorkout()
-                    progressRepository.startWorkout(program.id, repeat = repeat)
+                    progressRepository.startWorkout(program.id, repeat = repeat, intensity = intensityFor(program))
                     navigate(Screen.Active(program.id))
                 }
                 .show()
             return
         }
-        if (current == null) progressRepository.startWorkout(program.id, repeat = repeat)
+        if (current == null) progressRepository.startWorkout(program.id, repeat = repeat, intensity = intensityFor(program))
         navigate(Screen.Active(program.id))
     }
+
+    /** Today's pick for a program day; an own day runs as the athlete wrote it. */
+    private fun intensityFor(program: TrainingProgram): Intensity =
+        if (CustomDays.isCustom(program.id)) Intensity.NORMAL else settings.intensityToday()
 
     private fun renderActive(programId: String) {
         val program = programById(programId) ?: return
@@ -1995,7 +2053,10 @@ open class HomeActivity : Activity() {
             addWithMargins(restStatusView!!, topDp = 12)
         }
         // A repeated day is already complete; it ends with Finish or End session.
-        if (!active.repeat) status.addWithMargins(secondaryButton("Complete day") { requestCompleteDay(program) }, topDp = 12)
+        if (!active.repeat) {
+            status.addWithMargins(secondaryButton("Complete day") { requestCompleteDay(program) }, topDp = 12)
+            status.addWithMargins(noPointsNote(R.string.complete_day_no_points), topDp = 6)
+        }
         page.addWithMargins(status, bottomDp = 6)
         page.addWithMargins(safetyLine(program), leftDp = 4, rightDp = 4, bottomDp = 10)
 
@@ -2178,7 +2239,7 @@ open class HomeActivity : Activity() {
     private fun requestCompleteDay(program: TrainingProgram) {
         if (!canStart(program.id)) return
         AlertDialog.Builder(this).setTitle("Complete this day?")
-            .setMessage(displayName(program, uiLocale()))
+            .setMessage(displayName(program, uiLocale()) + "\n\n" + getString(R.string.complete_day_no_points))
             .setNegativeButton("Cancel", null)
             .setPositiveButton("Complete") { _, _ ->
                 progressRepository.completePrograms(listOf(program.id))
@@ -2186,6 +2247,9 @@ open class HomeActivity : Activity() {
                 clearRest(); openRoot(Screen.Dashboard)
             }.show()
     }
+
+    /** Under Complete day and Complete level: marking days done skips the training, and with it the skill points. */
+    private fun noPointsNote(text: Int): TextView = bodyText(getString(text), 12f)
 
     private fun requestFinish(program: TrainingProgram, completedSets: Int, totalSets: Int) {
         val finishAction = { askEffortAndFinish(program) }
@@ -2328,7 +2392,7 @@ open class HomeActivity : Activity() {
                 page.addWithMargins(
                     skillsContent(
                         progress,
-                        Scores.placedPast(history),
+                        Scores.markedComplete(history),
                         skillGroup,
                         onGroup = { group ->
                             skillGroup = group
@@ -2400,12 +2464,14 @@ open class HomeActivity : Activity() {
             )
             addWithMargins(
                 bodyText(
-                    if (session.manuallyCompleted) "Marked complete \u00b7 ${formatter.format(Date(session.completedAtEpochMillis))}"
+                    if (session.placed) getString(R.string.history_placed, formatter.format(Date(session.completedAtEpochMillis)))
+                    else if (session.manuallyCompleted) "Marked complete · ${formatter.format(Date(session.completedAtEpochMillis))}"
                     else getString(
                         R.string.completed_on,
                         formatter.format(Date(session.completedAtEpochMillis)),
                         session.durationSeconds / 60L,
-                    ).let { if (session.repeat) getString(R.string.history_repeat, it) else it },
+                    ).let { if (session.repeat) getString(R.string.history_repeat, it) else it }
+                        .let { if (session.intensity != Intensity.NORMAL) "$it · ${intensityLabels()[session.intensity.ordinal]}" else it },
                     13f,
                 ).apply { if (session.repeat) setTextColor(AppColors.PRIMARY) },
                 topDp = 3,
@@ -2637,7 +2703,7 @@ open class HomeActivity : Activity() {
     private fun canRun(active: ActiveWorkout): Boolean =
         if (active.repeat) canRepeat(active.programId) else canStart(active.programId)
 
-    private fun levelLocked(levelNumber: Int): Boolean = LevelAccess.locked(levelNumber, Entitlement.allLevels(this))
+    private fun levelLocked(levelNumber: Int): Boolean = LevelAccess.locked(levelNumber, Entitlement.tier(this))
 
     private fun allPrograms(catalog: CurriculumCatalog): List<TrainingProgram> =
         catalog.levels.sortedBy { it.number }.flatMap { level -> level.programs.sortedBy { it.number } }

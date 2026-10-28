@@ -97,11 +97,42 @@ class SkillBookTest {
 
     @Test
     fun aClassCountsOnlyWhenItRanLongEnough() {
-        // p6 plans 50 minutes: 40% is 20.
-        assertEquals(0, book.progress(listOf(SkillCredit("p6", seconds = 19 * 60L))).status("pullup").sessions)
-        assertEquals(1, book.progress(listOf(SkillCredit("p6", seconds = 20 * 60L))).status("pullup").sessions)
+        // p6 plans 50 minutes: 20% is 10.
+        assertEquals(0, book.progress(listOf(SkillCredit("p6", seconds = 9 * 60L))).status("pullup").sessions)
+        assertEquals(1, book.progress(listOf(SkillCredit("p6", seconds = 10 * 60L))).status("pullup").sessions)
         // Classes without a planned length always count.
         assertEquals(1, book.progress(listOf(SkillCredit("p3", seconds = 0))).status("pullup").sessions)
+    }
+
+    @Test
+    fun anOwnDayCountsItsTicksAsTheyAre() {
+        // Not in the program: four pull-up sets count, with no prescription to cap them.
+        val own = book.progress(listOf(SkillCredit("custom:a", mapOf("pullup" to 4), seconds = 600, minutes = 20)))
+        assertEquals(1, own.status("pullup").sessions)
+        assertTrue(own.status("pullup").prep > book.progress(listOf(SkillCredit("p3", mapOf("pullup" to 2)))).status("pullup").prep)
+        // It still has to run 20% of its length, and an own day without ticks counts nothing.
+        assertEquals(0, book.progress(listOf(SkillCredit("custom:a", mapOf("pullup" to 4), seconds = 200, minutes = 20))).status("pullup").sessions)
+        assertEquals(0, book.progress(listOf(SkillCredit("custom:b"))).status("pullup").sessions)
+        // Unknown movements are left out.
+        assertEquals(book.progress(emptyList()), book.progress(listOf(SkillCredit("custom:c", mapOf("burpee" to 9)))))
+    }
+
+    @Test
+    fun harderDaysEarnMoreForStrengthAndEasierLess() {
+        fun prep(factor: Double) = book.progress(listOf(SkillCredit("p1", mapOf("assisted_pullup" to 1), factor = factor)))
+            .status("pullup").prep
+        assertTrue(prep(1.25) > prep(1.0))
+        assertTrue(prep(0.75) < prep(1.0))
+        // Practice (a class that trained the rung) doesn't change with the day's factor.
+        assertEquals(1, book.progress(listOf(SkillCredit("p3", mapOf("pullup" to 2), factor = 0.75))).status("pullup").sessions)
+    }
+
+    @Test
+    fun skillWorkKeepsItsPointsOnAHarderDay() {
+        // The front lever is skill work: its reps never scale, so neither do its points.
+        val credit = mapOf("full_front" to 1)
+        assertEquals(book.progress(listOf(SkillCredit("custom:a", credit))).status("full_front").prep,
+            book.progress(listOf(SkillCredit("custom:a", credit, factor = 1.25))).status("full_front").prep)
     }
 
     @Test

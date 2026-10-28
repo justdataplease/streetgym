@@ -1,7 +1,9 @@
 package com.justdataplease.streetgym.ui
 
 import android.content.Context
+import com.justdataplease.streetgym.data.progress.Intensity
 import java.util.Locale
+import java.util.TimeZone
 
 enum class WorkoutView(val key: String) { FOCUS("focus"), LIST("list") }
 
@@ -39,7 +41,18 @@ class AppSettings(context: Context) {
         get() = preferences.getBoolean(KEY_PLACEMENT_DONE, false)
         set(value) = preferences.edit().putBoolean(KEY_PLACEMENT_DONE, value).apply()
 
-    /** The developer settings' passcode was accepted ([DeveloperMenu]); one tap on the version then opens them. */
+    /** "How do you feel today?": the pick for today's classes, Normal again the next day. */
+    fun intensityToday(now: Long = System.currentTimeMillis()): Intensity =
+        if (preferences.getLong(KEY_INTENSITY_DAY, -1L) == localDay(now)) Intensity.fromName(preferences.getString(KEY_INTENSITY, null))
+        else Intensity.NORMAL
+
+    fun setIntensityToday(value: Intensity, now: Long = System.currentTimeMillis()) =
+        preferences.edit().putString(KEY_INTENSITY, value.name).putLong(KEY_INTENSITY_DAY, localDay(now)).apply()
+
+    /** Days since the epoch on this phone's clock and time zone. */
+    private fun localDay(now: Long): Long = (now + TimeZone.getDefault().getOffset(now)) / DAY_MILLIS
+
+    /** The tenth tap on the version opened the developer settings ([DeveloperMenu]); one tap then opens them again. */
     var developerUnlocked: Boolean
         get() = preferences.getBoolean(KEY_DEVELOPER_UNLOCKED, false)
         set(value) = preferences.edit().putBoolean(KEY_DEVELOPER_UNLOCKED, value).apply()
@@ -62,5 +75,8 @@ class AppSettings(context: Context) {
         private const val KEY_SOUND_CUES = "sound_cues"
         private const val KEY_WORKOUT_VIEW = "workout_view"
         private const val KEY_PLACEMENT_DONE = "placement_done"
+        private const val KEY_INTENSITY = "intensity"
+        private const val KEY_INTENSITY_DAY = "intensity_day"
+        private const val DAY_MILLIS = 24 * 60 * 60 * 1000L
     }
 }

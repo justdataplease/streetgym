@@ -1,115 +1,105 @@
 package com.justdataplease.streetgym.data.progress
 
 import com.justdataplease.streetgym.billing.LevelAccess
+import com.justdataplease.streetgym.billing.Tier
+import com.justdataplease.streetgym.data.CurriculumJsonParser
 import com.justdataplease.streetgym.data.model.ContentOrigin
 import com.justdataplease.streetgym.data.model.LocalizedText
 import com.justdataplease.streetgym.data.model.TrainingExercise
 import com.justdataplease.streetgym.data.model.TrainingProgram
 import com.justdataplease.streetgym.data.model.TrainingSet
-import com.justdataplease.streetgym.data.progress.Placement.Question
 import com.justdataplease.streetgym.data.progress.Placement.Start
 import org.junit.Assert.*
 import org.junit.Test
+import java.io.File
 
 class PlacementTest {
-    private val push = Question.PUSH_UPS.bands
-    private val pull = Question.PULL_UPS.bands
-    private val squat = Question.SQUATS.bands
-    private fun every(): List<Triple<Int, Int, Int>> =
-        push.flatMap { p -> pull.flatMap { u -> squat.map { s -> Triple(p, u, s) } } }
-    private fun start(pushUps: Int, pullUps: Int, squats: Int) = Placement.start(pushUps, pullUps, squats)
+    /** The block starts once every level's last exam is on day 100: Levels 1 and 2 after each exam, Level 3 at day 1. */
+    private val starts = listOf(Start(1), Start(1, 21), Start(1, 41), Start(1, 61), Start(1, 82),
+        Start(2), Start(2, 21), Start(2, 41), Start(2, 63), Start(2, 85), Start(3))
+    private fun start(pullUps: Int, pushUps: Int, squats: Int) = Placement.start(pullUps, pushUps, squats, starts)
     private val order = compareBy<Start>({ it.level }, { it.day })
+    private fun grid() = (0..16).flatMap { u -> (0..45 step 5).flatMap { p -> (0..60 step 10).map { s -> Triple(u, p, s) } } }
 
-    @Test fun eachQuestionOffersItsBands() {
-        assertEquals(listOf("0–9", "10–19", "20–29", "30+"), push.indices.map(Question.PUSH_UPS::label))
-        assertEquals(listOf("0", "1–4", "5–9", "10+"), pull.indices.map(Question.PULL_UPS::label))
-        assertEquals(listOf("0–29", "30–49", "50+"), squat.indices.map(Question.SQUATS::label))
+    @Test fun theScoreWeighsPullUpsMostAndSquatsLeast() {
+        assertEquals(0.0, Placement.score(0, 0, 0), 1e-9)
+        assertEquals(1.0, Placement.score(12, 35, 50), 1e-9)
+        assertEquals(1.0, Placement.score(100, 100, 100), 1e-9)
+        assertEquals(0.5, Placement.score(12, 0, 0), 1e-9)
+        assertEquals(0.35, Placement.score(0, 35, 0), 1e-9)
+        assertEquals(0.15, Placement.score(0, 0, 50), 1e-9)
+        assertEquals(1.0, Placement.Test.entries.sumOf { it.weight }, 1e-9)
     }
 
-    @Test fun theStartsFromBestToFirst() {
-        assertEquals(listOf(Start(2, 71), Start(2), Start(1, 41), Start(1, 22), Start(1)), Placement.STARTS.map { it.start })
-        // Each row's own minimums reach exactly that row.
-        Placement.STARTS.forEach { row -> assertEquals(row.start, start(row.pushUps, row.pullUps, row.squats)) }
+    @Test fun theOwnersCaseStartsInLevelTwo() {
+        // Ten pull-ups and thirty push-ups with squats never counted.
+        assertEquals(Start(2, 41), start(10, 30, 0))
+        assertEquals(Start(2, 85), start(10, 30, 50))
     }
 
-    @Test fun theLevelTwoTailTakesEveryTopBand() {
-        // Round 6: the strongest answers meet Level 3's German hangs, tuck levers and negatives first.
-        assertEquals(Start(2, 71), start(30, 10, 50))
-        // one band short on any question drops to Level 2
-        assertEquals(Start(2), start(20, 10, 50))
-        assertEquals(Start(2), start(30, 5, 50))
-        assertEquals(Start(2), start(30, 10, 30))
-    }
-
-    @Test fun levelTwoDayOneTakesTwentyFiveAndThirty() {
-        assertEquals(Start(2), start(20, 5, 30))
-        assertEquals(Start(2), start(30, 5, 30))
-        // short on push-ups: full push-ups but not enough for Level 1's later block
-        assertEquals(Start(1, 22), start(10, 5, 30))
-        // short on pull-ups: the fit adult who can't pull yet
-        assertEquals(Start(1, 41), start(20, 1, 30))
-        // short on squats
-        assertEquals(Start(1), start(20, 5, 0))
-    }
-
-    @Test fun levelOneDayFortyOneIsTheFitAdultShortOnPullUps() {
-        assertEquals(Start(1, 41), start(20, 0, 30))
-        assertEquals(Start(1, 41), start(20, 1, 30))
-        assertEquals(Start(1, 41), start(30, 1, 50))
-        assertEquals(Start(1, 41), start(30, 0, 50))
-        // pull-ups 5+ is Level 2
-        assertEquals(Start(2), start(20, 5, 30))
-        assertEquals(Start(1, 22), start(10, 1, 30))
-        assertEquals(Start(1), start(20, 1, 0))
-    }
-
-    @Test fun levelOneDayTwentyTwoTakesTenPushUpsAndThirtySquats() {
-        assertEquals(Start(1, 22), start(10, 0, 30))
-        // pull-ups don't matter here
-        assertEquals(Start(1, 22), start(10, 10, 50))
-        assertEquals(Start(1, 22), start(10, 5, 50))
-        assertEquals(Start(1), start(0, 0, 30))
-        assertEquals(Start(1), start(10, 0, 0))
-    }
-
-    @Test fun levelOneDayOneIsEveryoneElse() {
+    @Test fun anchorsAlongTheProgram() {
         assertEquals(Start(1), start(0, 0, 0))
-        assertEquals(Start(1), start(0, 10, 50))
-        assertEquals(Start(1), start(30, 10, 0))
-        assertEquals(Start(1), start(30, 0, 0))
+        assertEquals(Start(1, 21), start(0, 10, 20))
+        assertEquals(Start(2), start(5, 20, 30))
+        assertEquals(Start(2, 85), start(9, 35, 50))
+        assertEquals(Start(3), start(12, 35, 50))
+        assertEquals(Start(3), start(30, 60, 80))
     }
 
-    @Test fun everyAnswerFollowsTheTable() {
-        every().forEach { (p, u, s) ->
-            val expected = when {
-                p >= 30 && u >= 10 && s >= 50 -> Start(2, 71)
-                p >= 20 && u >= 5 && s >= 30 -> Start(2)
-                p >= 20 && u <= 4 && s >= 30 -> Start(1, 41)
-                p >= 10 && s >= 30 -> Start(1, 22)
-                else -> Start(1)
-            }
-            assertEquals("$p/$u/$s", expected, start(p, u, s))
+    @Test fun pullUpsAndPushUpsGateTheLevels() {
+        // No pull-up: Level 1's first 41 classes at most, however many push-ups and squats.
+        assertEquals(Start(1, 41), start(0, 20, 30))
+        assertEquals(Start(1, 41), start(0, 100, 100))
+        // Pull-ups alone don't open Level 2 without 15 push-ups.
+        assertEquals(Start(1, 82), start(30, 0, 0))
+        // Level 3 takes ten pull-ups and 25 push-ups.
+        assertEquals(Start(2, 85), start(9, 100, 100))
+        assertEquals(Start(2, 85), start(12, 24, 50))
+        every { u, p, s ->
+            val (pull, push) = Placement.gate(start(u, p, s))
+            assertTrue("$u/$p/$s", u >= pull && p >= push)
         }
     }
 
-    @Test fun aBetterAnswerNeverMovesTheStartBack() {
-        every().forEach { (p, u, s) ->
-            val here = start(p, u, s)
-            push.filter { it > p }.forEach { assertTrue(order.compare(start(it, u, s), here) >= 0) }
-            pull.filter { it > u }.forEach { assertTrue(order.compare(start(p, it, s), here) >= 0) }
-            squat.filter { it > s }.forEach { assertTrue(order.compare(start(p, u, it), here) >= 0) }
+    @Test fun moreRepsNeverMoveTheStartBack() {
+        every { u, p, s ->
+            val here = start(u, p, s)
+            assertTrue(order.compare(start(u + 1, p, s), here) >= 0)
+            assertTrue(order.compare(start(u, p + 5, s), here) >= 0)
+            assertTrue(order.compare(start(u, p, s + 10), here) >= 0)
         }
     }
 
-    @Test fun theStartStopsAtLevelThreeAndNeverAtAPaywall() {
+    @Test fun theStartIsAlwaysABlockStartInTheFreeLevels() {
         assertEquals(3, Placement.MAX_LEVEL)
-        assertEquals(Start(2, 71), start(500, 100, 1000))
-        every().forEach { (p, u, s) ->
-            val level = start(p, u, s).level
-            assertTrue(level in 1..Placement.MAX_LEVEL)
-            assertFalse(LevelAccess.locked(level, owned = false))
+        every { u, p, s ->
+            val at = start(u, p, s)
+            assertTrue(at in starts)
+            assertFalse(LevelAccess.locked(at.level, Tier.FREE))
         }
     }
+
+    @Test fun theCardSaysWhatAFewMoreRepsWouldChange() {
+        assertEquals(Placement.Better(Placement.Test.PULL_UPS, 1, Start(2, 63)), Placement.better(10, 30, 0, starts))
+        assertNull(Placement.better(12, 35, 50, starts))
+        every { u, p, s ->
+            val better = Placement.better(u, p, s, starts) ?: return@every
+            assertTrue("$u/$p/$s", order.compare(better.start, start(u, p, s)) > 0)
+        }
+    }
+
+    @Test fun startsFollowTheExamsOfTheShippedProgram() {
+        val catalog = CurriculumJsonParser.parse(File("src/main/assets/curriculum.json").readText())
+        val programs = catalog.levels.sortedBy { it.number }.flatMap { level -> level.programs.sortedBy { it.number } }
+        val shipped = Placement.starts(programs, TrainingProgram::levelNumber, TrainingProgram::number, TrainingProgram::isExam)
+        val exams = programs.filter { it.isExam }.map { Start(it.levelNumber, it.number) }.toSet()
+        assertEquals(listOf(Start(1), Start(2), Start(3)), shipped.filter { it.day == 1 })
+        assertEquals(Start(3), shipped.last())
+        shipped.filter { it.day > 1 }.forEach { assertTrue("$it", Start(it.level, it.day - 1) in exams) }
+        assertTrue(shipped.size >= 9)
+    }
+
+    private fun every(check: (Int, Int, Int) -> Unit) = grid().forEach { (u, p, s) -> check(u, p, s) }
 
     @Test fun onlyANewAthleteIsAsked() {
         assertTrue("new athlete", Placement.shouldAsk(recorded = false, completedDays = 0, workoutActive = false))

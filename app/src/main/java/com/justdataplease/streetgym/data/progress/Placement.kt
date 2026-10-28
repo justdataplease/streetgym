@@ -6,44 +6,24 @@ import com.justdataplease.streetgym.data.model.TrainingSet
 import java.util.Locale
 
 /**
- * First-launch placement: three questions about the athlete's best clean set decide where the program starts.
- * Each answer is a band of reps, kept as its lowest count. The start is the first row of [STARTS] that all three
- * answers reach, so the weakest answer decides.
+ * First-launch placement, taken like an exam: one set each of strict pull-ups, push-ups and squats, as many as the
+ * athlete can with good form. A weighted [score] (pull-ups count most, squats least) picks one of the block starts of
+ * Levels 1–3 ([starts]), and the [gate]s keep pull-ups honest: Level 2 needs five and Level 3 ten. Every day before the
+ * start is credited as trained for skills, unlike "Complete day".
  */
 object Placement {
-    /** Each question's bands, as their lowest counts. */
-    enum class Question(val bands: List<Int>) {
-        PUSH_UPS(listOf(0, 10, 20, 30)),
-        PULL_UPS(listOf(0, 1, 5, 10)),
-        SQUATS(listOf(0, 30, 50));
-
-        /** "0–9", "10–19", "30+"; a band of one count is just that count ("0"). */
-        fun label(band: Int): String {
-            val low = bands[band]
-            val high = bands.getOrNull(band + 1)?.minus(1) ?: return "$low+"
-            return if (high == low) "$low" else "$low–$high"
-        }
+    /** The tests, in the card's order. [full] is the count that earns all of a test's [weight]. */
+    enum class Test(val weight: Double, val full: Int) {
+        PULL_UPS(0.5, 12),
+        PUSH_UPS(0.35, 35),
+        SQUATS(0.15, 50),
     }
 
     /** Where the program starts: a level and a day within it (its program number). */
     data class Start(val level: Int, val day: Int = 1)
 
-    /** A start and the least of each answer it takes. */
-    data class Row(val start: Start, val pushUps: Int, val pullUps: Int, val squats: Int)
-
-    /**
-     * Every start, best first. The strongest answers start at Level 2, day 71: three counts measure muscle, not the
-     * tendons Level 3's levers and muscle-ups load, so its last 30 classes (German hangs, tuck levers, negatives) come
-     * first (round 6). Level 1, day 41 opens the rebuilt Level 1 block for a fit adult still short on pull-ups (0–4:
-     * five or more reach Level 2); day 22 is where full push-ups first appear.
-     */
-    val STARTS = listOf(
-        Row(Start(2, 71), pushUps = 30, pullUps = 10, squats = 50),
-        Row(Start(2), pushUps = 20, pullUps = 5, squats = 30),
-        Row(Start(1, 41), pushUps = 20, pullUps = 0, squats = 30),
-        Row(Start(1, 22), pushUps = 10, pullUps = 0, squats = 30),
-        Row(Start(1), pushUps = 0, pullUps = 0, squats = 0),
-    )
+    /** One test that, alone and [more] reps higher, would move the start on to [start]. */
+    data class Better(val test: Test, val more: Int, val start: Start)
 
     /**
      * The highest level a start reaches. Levels 4 and up need skills these counts can't measure, and Levels 1–3 are
@@ -51,9 +31,61 @@ object Placement {
      */
     val MAX_LEVEL = LevelAccess.FIRST_PAID_LEVEL - 1
 
-    /** The start for the lowest count of each band picked: the first row all three answers reach. */
-    fun start(pushUps: Int, pullUps: Int, squats: Int): Start =
-        STARTS.first { pushUps >= it.pushUps && pullUps >= it.pullUps && squats >= it.squats }.start
+    /** 0 to 1: each test's share of its [Test.full] count, weighted. */
+    fun score(pullUps: Int, pushUps: Int, squats: Int): Double = listOf(
+        Test.PULL_UPS to pullUps, Test.PUSH_UPS to pushUps, Test.SQUATS to squats,
+    ).sumOf { (test, count) -> test.weight * count.coerceIn(0, test.full) / test.full }
+
+    /** The least pull-ups and push-ups a start takes: Level 3 ten and 25, Level 2 five and 15, Level 1 past day 41 one pull-up. */
+    fun gate(start: Start): Pair<Int, Int> = when {
+        start.level >= 3 -> 10 to 25
+        start.level == 2 -> 5 to 15
+        start.day > 41 -> 1 to 0
+        else -> 0 to 0
+    }
+
+    /**
+     * Where a placement may start, in program order: the first class of Levels 1 and 2 and the class after each of
+     * their exams, so the athlete joins a block fresh; Level 3 only at its first class, as three counts don't measure
+     * the tendons its levers and muscle-ups load.
+     */
+    fun <T> starts(ordered: List<T>, levelOf: (T) -> Int, dayOf: (T) -> Int, isExam: (T) -> Boolean): List<Start> {
+        val days = ordered.filter { levelOf(it) <= MAX_LEVEL }.map { Start(levelOf(it), dayOf(it)) }.toSet()
+        val afterExams = ordered.filter { levelOf(it) < MAX_LEVEL && isExam(it) }
+            .map { Start(levelOf(it), dayOf(it) + 1) }.filter { it in days }
+        return ((1..MAX_LEVEL).map { Start(it) }.filter { it in days } + afterExams)
+            .distinct().sortedWith(compareBy({ it.level }, { it.day }))
+    }
+
+    /**
+     * The start for these counts: the score picks a place along [starts] (a perfect score the last), and the gates
+     * hold it back to the furthest start the pull-ups and push-ups reach.
+     */
+    fun start(pullUps: Int, pushUps: Int, squats: Int, starts: List<Start>): Start {
+        val picked = (score(pullUps, pushUps, squats) * starts.size).toInt().coerceIn(0, starts.lastIndex)
+        return starts.take(picked + 1).last { gate(it).let { (pull, push) -> pullUps >= pull && pushUps >= push } }
+    }
+
+    /**
+     * What would move the start on soonest: the first test, in the card's order, that a few more reps alone would
+     * take to a later start, with the fewest reps that do. Null at the last start, or when no single test would.
+     */
+    fun better(pullUps: Int, pushUps: Int, squats: Int, starts: List<Start>): Better? {
+        val here = starts.indexOf(start(pullUps, pushUps, squats, starts))
+        return Test.entries.firstNotNullOfOrNull { test ->
+            (1..MAX_MORE).firstNotNullOfOrNull { more ->
+                val moved = when (test) {
+                    Test.PULL_UPS -> start(pullUps + more, pushUps, squats, starts)
+                    Test.PUSH_UPS -> start(pullUps, pushUps + more, squats, starts)
+                    Test.SQUATS -> start(pullUps, pushUps, squats + more, starts)
+                }
+                Better(test, more, moved).takeIf { starts.indexOf(moved) > here }
+            }
+        }
+    }
+
+    /** A hint names at most this many more reps. */
+    private const val MAX_MORE = 15
 
     /**
      * Only a new athlete is asked: nothing answered or skipped yet, no day completed and no workout under way. Anyone

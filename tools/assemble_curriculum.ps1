@@ -496,7 +496,10 @@ foreach ($levelDefinition in $levelDefinitions) {
                 foreach ($step in @($morningClass.early_recovery_hinge.steps)) { [void]$recoveryMain.Add($step) }
             }
             $program["main"] = $recoveryMain.ToArray()
-            $program["title"] = Localized ("Mobility & Recovery - Session {0}" -f $program.number)
+            # Each recovery day has its own display name (morning_class.json early_recovery_titles, by app position).
+            $recoveryTitle = $morningClass.early_recovery_titles.titles.PSObject.Properties["$levelNumber-$($program.number)"]
+            if ($null -eq $recoveryTitle) { throw "morning_class.json early_recovery_titles has no name for $levelNumber-$($program.number)" }
+            $program["title"] = Localized ([string]$recoveryTitle.Value)
             $program["description"] = Localized "An easy morning class: gentle walking, shoulder mobility and trunk control. Finish feeling fresher for the next strength session."
             $program["safety"] = $catalogMetadata.training_recovery
         }

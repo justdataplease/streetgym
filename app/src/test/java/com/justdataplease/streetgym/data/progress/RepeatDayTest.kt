@@ -4,14 +4,13 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.content.SharedPreferences
 import com.justdataplease.streetgym.data.skills.SkillCurriculumReader
-import com.justdataplease.streetgym.data.skills.SkillGroup
 import com.justdataplease.streetgym.leaderboard.Scores
 import org.json.JSONObject
 import org.junit.Assert.*
 import org.junit.Test
 import java.io.File
 
-/** Repeating a completed day, on the real repository and the shipped curriculum: history only, nothing it counts toward. */
+/** Repeating a completed day, on the real repository and the shipped curriculum: practice for skills, nothing else moves. */
 class RepeatDayTest {
     private data class Day(val id: String, val level: Int)
 
@@ -28,23 +27,42 @@ class RepeatDayTest {
     private fun skills() = book.progress(Scores.credits(repository.sessionHistory()), repository.skillTests().passed.keys)
     private fun levelProgress(level: Int) = days.count { it.level == level && it.id in repository.completedProgramIds() }
 
-    @Test fun aRepeatChangesNoCompletedDayTodayLevelProgressOrSkillPoints() {
+    @Test fun aRepeatEarnsSkillPointsButChangesNoCompletedDayTodayOrLevelProgress() {
         days.take(12).forEachIndexed { index, day -> train(day, index * DAY) }
         val completed = repository.completedProgramIds()
         val today = today()
         val points = skills()
         val level = levelProgress(1)
 
-        train(days[3], 20 * DAY, repeat = true, effort = 9)
+        train(days[2], 20 * DAY, repeat = true, effort = 9)
 
         assertEquals(completed, repository.completedProgramIds())
         assertEquals(today, today())
         assertEquals(days[12], today())
         assertEquals(level, levelProgress(1))
-        assertEquals(points, skills())
-        assertEquals(points.achievedCount, skills().achievedCount)
-        assertEquals(points.overall.score, skills().overall.score)
-        SkillGroup.entries.forEach { assertEquals(it.name, points.overall.group(it), skills().overall.group(it)) }
+        // The repeat is practice: its sets add to the skills it trains, and nothing goes down.
+        val after = skills()
+        assertTrue(after.statuses.sumOf { it.own } > points.statuses.sumOf { it.own })
+        points.statuses.zip(after.statuses).forEach { (before, now) -> assertTrue(before.skill.id, now.own >= before.own) }
+        assertTrue(after.overall.score >= points.overall.score)
+    }
+
+    @Test fun theDaysIntensityAndThePlacementAreKeptWithTheirSessions() {
+        repository.startWorkout(days[0].id, DAY, intensity = Intensity.EASIER)
+        repository.setIntensity(Intensity.HARDER)
+        assertEquals(Intensity.HARDER, repository.activeWorkout()!!.intensity)
+        repository.finishWorkout(DAY + 30 * MINUTE, 7)
+        repository.completePrograms(listOf(days[1].id, days[2].id), 2 * DAY, placed = true)
+        repository.completePrograms(listOf(days[3].id), 3 * DAY)
+        // Read back from the stored JSON, as after a restart or a sync.
+        val reloaded = SharedPreferencesProgressRepository(PreferencesContext(preferences)).sessionHistory().associateBy { it.programId }
+        assertEquals(Intensity.HARDER, reloaded.getValue(days[0].id).intensity)
+        assertTrue(reloaded.getValue(days[1].id).placed && reloaded.getValue(days[2].id).placed)
+        assertFalse(reloaded.getValue(days[3].id).placed)
+        assertTrue(reloaded.values.filter { it.programId != days[0].id }.all { it.manuallyCompleted && it.intensity == Intensity.NORMAL })
+        // Placed days count as trained; Complete day doesn't.
+        assertEquals(listOf(days[1].id, days[2].id, days[0].id).toSet(),
+            Scores.credits(repository.sessionHistory()).map { it.programId }.toSet())
     }
 
     @Test fun historyKeepsTheRepeatFlaggedWithItsOwnRating() {

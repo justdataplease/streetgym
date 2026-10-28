@@ -70,10 +70,10 @@ class EntitlementTest {
     }
     @Test fun tiersUnlockInOrder() {
         assertEquals(listOf(3, 30, 300), Tier.entries.map { it.savedDays })
-        assertFalse(Tier.FREE.allLevels || Tier.FREE.adFree || Tier.FREE.parks || Tier.FREE.renameLevels)
-        assertTrue(Tier.PLUS.allLevels && Tier.PLUS.adFree && Tier.PLUS.parks && Tier.PLUS.renameLevels)
+        assertFalse(Tier.FREE.adFree || Tier.FREE.parks || Tier.FREE.renameLevels)
+        assertTrue(Tier.PLUS.adFree && Tier.PLUS.parks && Tier.PLUS.renameLevels)
         assertFalse(Tier.FREE.account || Tier.PLUS.account)
-        assertTrue(Tier.PRO.allLevels && Tier.PRO.adFree && Tier.PRO.account)
+        assertTrue(Tier.PRO.adFree && Tier.PRO.account)
     }
     @Test fun savedDaysShareOneLimitAndNothingIsRemovedAboveIt() {
         assertTrue(SavedLimit.canAdd(Tier.FREE, 2))

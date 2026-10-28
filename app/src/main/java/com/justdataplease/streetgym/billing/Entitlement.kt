@@ -28,9 +28,6 @@ object Entitlement {
         tierFor(it.getBoolean(PLUS_OWNED, false), it.getBoolean(PRO_ACTIVE, false), BuildConfig.DEBUG, simulatedTier(context))
     }
 
-    /** Every level, from Plus up. */
-    fun allLevels(context: Context): Boolean = tier(context).allLevels
-
     fun adFree(context: Context): Boolean = tier(context).adFree
 
     fun simulatedTier(context: Context): Tier? =

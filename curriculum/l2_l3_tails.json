@@ -334,8 +334,8 @@
         "week": 1,
         "day": 3,
         "day_type": "inversion_technique",
-        "minutes": 36,
-        "rpe": 5,
+        "minutes": 30,
+        "rpe": 4,
         "focus": [
           "inverted_hang",
           "bodyline",
@@ -410,7 +410,7 @@
       "main": [
         [
           "skin_cat_partial",
-          3,
+          2,
           2,
           null,
           75,
@@ -419,7 +419,7 @@
         ],
         [
           "hollow_hold",
-          3,
+          2,
           null,
           20,
           45,
@@ -428,7 +428,7 @@
         ],
         [
           "arch_hold",
-          3,
+          2,
           null,
           20,
           45,
@@ -2770,7 +2770,7 @@
         "en": "Exam 1: Bar Strength"
       },
       "description": {
-        "en": "Exam day for classes L1:099-L2:019: handstand, pull-ups, push-ups, dips, legs, core hold. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
+        "en": "Exam day for classes L2:001-L2:019: handstand, pull-ups, push-ups, dips, legs, core hold. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
       },
       "schedule": {
         "week": 3,
@@ -2891,13 +2891,13 @@
           "box_squat"
         ],
         [
-          "tuck_lsit",
+          "hollow_hold",
           1,
           null,
-          10,
+          25,
           120,
           "assessment",
-          "support_hold"
+          "dead_bug"
         ]
       ],
       "cooldown": [
@@ -9573,14 +9573,299 @@
       "level": 2,
       "number": 98,
       "title": {
-        "en": "Exam 5: Bar Strength"
+        "en": "Skill Trail"
       },
       "description": {
-        "en": "Exam day for classes L2:085-L2:097: handstand, front lever, pull-ups, push-ups, dips, legs, core hold. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
+        "en": "Follow a varied trail from rows to support, legs, crawling, and trunk control."
       },
       "schedule": {
         "week": 10,
         "day": 5,
+        "day_type": "skill_trail",
+        "minutes": 38,
+        "rpe": 6,
+        "focus": [
+          "variety",
+          "coordination",
+          "full_body"
+        ]
+      },
+      "warmup": [
+        [
+          "easy_walk",
+          1,
+          null,
+          180,
+          0,
+          null,
+          null
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          10,
+          "slow",
+          "wrist_circles"
+        ],
+        [
+          "leg_swings",
+          1,
+          "10/side",
+          null,
+          10,
+          "controlled",
+          null
+        ],
+        [
+          "arm_swings",
+          1,
+          15,
+          null,
+          10,
+          "controlled",
+          null
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ],
+        [
+          "squat_jump",
+          2,
+          5,
+          null,
+          45,
+          "soft_landing",
+          "squat"
+        ]
+      ],
+      "main": [
+        [
+          "feet_elevated_row",
+          3,
+          9,
+          null,
+          20,
+          "2111",
+          "inverted_row"
+        ],
+        [
+          "parallel_bar_walk",
+          3,
+          2,
+          null,
+          20,
+          "controlled",
+          "support_hold"
+        ],
+        [
+          "cossack_squat",
+          3,
+          "8/side",
+          null,
+          20,
+          "3010",
+          "squat"
+        ],
+        [
+          "bear_crawl",
+          3,
+          null,
+          30,
+          20,
+          "controlled",
+          "plank"
+        ],
+        [
+          "side_plank",
+          2,
+          null,
+          "24/side",
+          90,
+          null,
+          "dead_bug"
+        ]
+      ],
+      "cooldown": [
+        [
+          "adductor_stretch",
+          2,
+          null,
+          30,
+          10,
+          null,
+          null
+        ],
+        [
+          "chest_stretch",
+          2,
+          null,
+          25,
+          10,
+          null,
+          null
+        ],
+        [
+          "supine_twist",
+          2,
+          null,
+          35,
+          10,
+          null,
+          null
+        ]
+      ]
+    },
+    {
+      "id": "recon-l2-w099",
+      "origin": "reconstructed_placeholder",
+      "level": 2,
+      "number": 99,
+      "title": {
+        "en": "Elbow-Friendly Reset"
+      },
+      "description": {
+        "en": "Walking, light scapular work, and mobility unload the elbows after clean attempts."
+      },
+      "schedule": {
+        "week": 10,
+        "day": 6,
+        "day_type": "upper_body_recovery",
+        "minutes": 25,
+        "rpe": 3,
+        "focus": [
+          "elbow_care",
+          "shoulders",
+          "walking"
+        ]
+      },
+      "warmup": [
+        [
+          "easy_walk",
+          1,
+          null,
+          480,
+          0,
+          null,
+          null
+        ],
+        [
+          "wrist_circles",
+          1,
+          10,
+          null,
+          10,
+          "each_direction",
+          null
+        ],
+        [
+          "shoulder_cars",
+          2,
+          5,
+          null,
+          15,
+          "slow",
+          null
+        ]
+      ],
+      "main": [
+        [
+          "foot_assisted_hang",
+          1,
+          null,
+          25,
+          45,
+          null,
+          null
+        ],
+        [
+          "scapular_pull",
+          1,
+          5,
+          null,
+          35,
+          "2111",
+          "dead_hang"
+        ],
+        [
+          "wall_slide",
+          1,
+          10,
+          null,
+          30,
+          "slow",
+          null
+        ],
+        [
+          "bird_dog",
+          1,
+          "8/side",
+          null,
+          30,
+          "slow",
+          "dead_bug"
+        ],
+        [
+          "ninety_ninety_hip_switch",
+          1,
+          10,
+          null,
+          30,
+          "controlled",
+          null
+        ]
+      ],
+      "cooldown": [
+        [
+          "forearm_stretch",
+          2,
+          null,
+          35,
+          10,
+          null,
+          null
+        ],
+        [
+          "lat_stretch",
+          2,
+          null,
+          30,
+          10,
+          null,
+          null
+        ],
+        [
+          "slow_breathing",
+          1,
+          null,
+          180,
+          0,
+          null,
+          null
+        ]
+      ]
+    },
+    {
+      "id": "recon-l2-w100",
+      "origin": "reconstructed_placeholder",
+      "level": 2,
+      "number": 100,
+      "title": {
+        "en": "Exam 5: Bar Strength"
+      },
+      "description": {
+        "en": "Exam day for classes L2:085-L2:099: handstand, front lever, pull-ups, push-ups, dips, legs, core hold. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
+      },
+      "schedule": {
+        "week": 10,
+        "day": 7,
         "day_type": "exam_assessment",
         "minutes": 39,
         "rpe": 7,
@@ -9740,291 +10025,6 @@
           1,
           null,
           120,
-          0,
-          null,
-          null
-        ]
-      ]
-    },
-    {
-      "id": "recon-l2-w099",
-      "origin": "reconstructed_placeholder",
-      "level": 2,
-      "number": 99,
-      "title": {
-        "en": "Skill Trail"
-      },
-      "description": {
-        "en": "Follow a varied trail from rows to support, legs, crawling, and trunk control."
-      },
-      "schedule": {
-        "week": 10,
-        "day": 6,
-        "day_type": "skill_trail",
-        "minutes": 36,
-        "rpe": 6,
-        "focus": [
-          "variety",
-          "coordination",
-          "full_body"
-        ]
-      },
-      "warmup": [
-        [
-          "easy_walk",
-          1,
-          null,
-          180,
-          0,
-          null,
-          null
-        ],
-        [
-          "wrist_rocks",
-          1,
-          10,
-          null,
-          10,
-          "slow",
-          "wrist_circles"
-        ],
-        [
-          "leg_swings",
-          1,
-          "10/side",
-          null,
-          10,
-          "controlled",
-          null
-        ],
-        [
-          "arm_swings",
-          1,
-          15,
-          null,
-          10,
-          "controlled",
-          null
-        ],
-        [
-          "prone_ytw",
-          1,
-          6,
-          null,
-          15,
-          "slow",
-          "wall_slide"
-        ],
-        [
-          "squat_jump",
-          2,
-          5,
-          null,
-          45,
-          "soft_landing",
-          "squat"
-        ]
-      ],
-      "main": [
-        [
-          "feet_elevated_row",
-          3,
-          9,
-          null,
-          20,
-          "2111",
-          "inverted_row"
-        ],
-        [
-          "parallel_bar_walk",
-          3,
-          2,
-          null,
-          20,
-          "controlled",
-          "support_hold"
-        ],
-        [
-          "cossack_squat",
-          3,
-          "8/side",
-          null,
-          20,
-          "3010",
-          "squat"
-        ],
-        [
-          "bear_crawl",
-          3,
-          null,
-          30,
-          20,
-          "controlled",
-          "plank"
-        ],
-        [
-          "side_plank",
-          2,
-          null,
-          "24/side",
-          90,
-          null,
-          "dead_bug"
-        ]
-      ],
-      "cooldown": [
-        [
-          "adductor_stretch",
-          2,
-          null,
-          30,
-          10,
-          null,
-          null
-        ],
-        [
-          "chest_stretch",
-          2,
-          null,
-          25,
-          10,
-          null,
-          null
-        ],
-        [
-          "supine_twist",
-          2,
-          null,
-          35,
-          10,
-          null,
-          null
-        ]
-      ]
-    },
-    {
-      "id": "recon-l2-w100",
-      "origin": "reconstructed_placeholder",
-      "level": 2,
-      "number": 100,
-      "title": {
-        "en": "Elbow-Friendly Reset"
-      },
-      "description": {
-        "en": "Walking, light scapular work, and mobility unload the elbows after clean attempts."
-      },
-      "schedule": {
-        "week": 10,
-        "day": 7,
-        "day_type": "upper_body_recovery",
-        "minutes": 25,
-        "rpe": 3,
-        "focus": [
-          "elbow_care",
-          "shoulders",
-          "walking"
-        ]
-      },
-      "warmup": [
-        [
-          "easy_walk",
-          1,
-          null,
-          480,
-          0,
-          null,
-          null
-        ],
-        [
-          "wrist_circles",
-          1,
-          10,
-          null,
-          10,
-          "each_direction",
-          null
-        ],
-        [
-          "shoulder_cars",
-          2,
-          5,
-          null,
-          15,
-          "slow",
-          null
-        ]
-      ],
-      "main": [
-        [
-          "foot_assisted_hang",
-          1,
-          null,
-          25,
-          45,
-          null,
-          null
-        ],
-        [
-          "scapular_pull",
-          1,
-          5,
-          null,
-          35,
-          "2111",
-          "dead_hang"
-        ],
-        [
-          "wall_slide",
-          1,
-          10,
-          null,
-          30,
-          "slow",
-          null
-        ],
-        [
-          "bird_dog",
-          1,
-          "8/side",
-          null,
-          30,
-          "slow",
-          "dead_bug"
-        ],
-        [
-          "ninety_ninety_hip_switch",
-          1,
-          10,
-          null,
-          30,
-          "controlled",
-          null
-        ]
-      ],
-      "cooldown": [
-        [
-          "forearm_stretch",
-          2,
-          null,
-          35,
-          10,
-          null,
-          null
-        ],
-        [
-          "lat_stretch",
-          2,
-          null,
-          30,
-          10,
-          null,
-          null
-        ],
-        [
-          "slow_breathing",
-          1,
-          null,
-          180,
           0,
           null,
           null

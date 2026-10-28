@@ -5185,5 +5185,35 @@
         "glute_bridge"
       ]
     ]
+  },
+  "early_recovery_titles": {
+    "purpose": "Display names for the original-source recovery days (source weekdays 4 and 7), by app position (level-number). Each stays unique in its level; the routine is early_recovery, plus early_recovery_hinge from Level 2.",
+    "titles": {
+      "1-4": "Mobility & Recovery",
+      "1-7": "Easy Walk & Wall Slides",
+      "1-11": "Walk, Slide, Brace",
+      "1-14": "Shoulders and Trunk Recovery",
+      "1-18": "Gentle Walk & Dead Bugs",
+      "1-21": "Easy Recovery Walk",
+      "1-25": "Loose Shoulders, Calm Trunk",
+      "1-28": "Walk and Wall-Slide Reset",
+      "1-32": "Fresh-Legs Recovery Walk",
+      "1-35": "Shoulder Glide and Walk",
+      "1-39": "Quiet Trunk Recovery",
+      "2-42": "Mobility, Hinge & Recovery",
+      "2-46": "Walk, Bridge & Wall Slides",
+      "2-49": "Single-Leg Bridge Recovery",
+      "2-53": "Hips, Shoulders & Trunk",
+      "2-56": "Easy Walk & Glute Work",
+      "2-60": "Bridge-and-Slide Reset",
+      "2-63": "Easy Walk, Steady Hips",
+      "2-67": "Hip and Shoulder Unload",
+      "2-70": "Light Hinge Recovery",
+      "3-4": "Walk, Slide & Bridge",
+      "3-7": "Recovery Walk and Bridges",
+      "3-11": "Hip Hinge and Shoulder Glide",
+      "3-14": "Easy Hips and Shoulders",
+      "3-18": "Unhurried Hinge Recovery"
+    }
   }
 }

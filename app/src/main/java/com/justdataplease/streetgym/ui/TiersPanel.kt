@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.justdataplease.streetgym.R
 import com.justdataplease.streetgym.billing.Entitlement
+import com.justdataplease.streetgym.billing.LevelAccess
 import com.justdataplease.streetgym.billing.Tier
 import com.justdataplease.streetgym.billing.TierBilling
 
@@ -30,9 +31,11 @@ class TiersPanel(
     private val billing: TierBilling,
     private val paywall: Paywall? = null,
 ) : LinearLayout(activity) {
+    /** Only Pro opens it: the account, and Levels 6 and 7. */
+    private val proOnly = paywall == Paywall.Account || paywall is Paywall.Level && LevelAccess.tierFor(paywall.number) == Tier.PRO
     private val heading = activity.titleText(activity.getString(when (paywall) {
         null -> R.string.tiers_title
-        is Paywall.Level -> R.string.paywall_level
+        is Paywall.Level -> if (proOnly) R.string.paywall_level_pro else R.string.paywall_level
         Paywall.Parks -> R.string.paywall_parks
         Paywall.Rename -> R.string.paywall_rename
         Paywall.Leaderboard -> R.string.paywall_leaderboard
@@ -74,10 +77,11 @@ class TiersPanel(
         background = roundedDrawable(AppColors.SURFACE, activity.dp(24).toFloat(), AppColors.DIVIDER, activity.dp(1))
         // Past Plus, a paywall offers only Pro.
         if (paywall != null) addWithMargins(activity.lockBadge(activity.getString(
-            if (paywall == Paywall.Account || Entitlement.tier(activity) >= Tier.PLUS) R.string.tier_pro else R.string.tier_plus)),
+            if (proOnly || Entitlement.tier(activity) >= Tier.PLUS) R.string.tier_pro else R.string.tier_plus)),
             width = ViewGroup.LayoutParams.WRAP_CONTENT, bottomDp = 10)
         addView(heading)
-        if (paywall is Paywall.Level) addWithMargins(activity.bodyText(activity.getString(R.string.paywall_level_body), 14f), topDp = 6)
+        if (paywall is Paywall.Level) addWithMargins(activity.bodyText(activity.getString(
+            if (proOnly) R.string.paywall_level_pro_body else R.string.paywall_level_body), 14f), topDp = 6)
         addWithMargins(current, topDp = 6)
         plusBlock.addView(activity.titleText(activity.getString(R.string.plus_title), 17f))
         plusBlock.addWithMargins(features(R.array.plus_features), topDp = 6)
@@ -133,7 +137,7 @@ class TiersPanel(
         })
         current.visibility = if (paywall == null) View.VISIBLE else View.GONE
         // A paywall offers only what unlocks the feature; Settings always shows both, with what's owned.
-        plusBlock.visibility = if (paywall == Paywall.Account || paywall != null && tier >= Tier.PLUS) View.GONE else View.VISIBLE
+        plusBlock.visibility = if (proOnly || paywall != null && tier >= Tier.PLUS) View.GONE else View.VISIBLE
         proBlock.visibility = if (paywall != null && tier == Tier.PRO) View.GONE else View.VISIBLE
         proWhy.visibility = proBlock.visibility
         val ready = billing.status == TierBilling.Status.Ready

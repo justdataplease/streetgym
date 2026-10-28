@@ -11,10 +11,13 @@ import android.view.ViewGroup
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.AdapterView
 import android.widget.CheckBox
+import android.widget.EditText
 import android.widget.TextView
 import com.justdataplease.streetgym.billing.Entitlement
 import com.justdataplease.streetgym.billing.Tier
 import com.justdataplease.streetgym.data.AssetCurriculumRepository
+import com.justdataplease.streetgym.data.model.TrainingProgram
+import com.justdataplease.streetgym.data.progress.Intensity
 import com.justdataplease.streetgym.data.progress.SharedPreferencesProgressRepository
 import com.justdataplease.streetgym.data.skills.SkillCurriculumReader
 import com.justdataplease.streetgym.leaderboard.Scores
@@ -26,6 +29,7 @@ import com.justdataplease.streetgym.ui.StreetTheme
 import com.justdataplease.streetgym.ui.HistoryView
 import com.justdataplease.streetgym.ui.ParkSceneView
 import com.justdataplease.streetgym.ui.WorkoutView
+import com.justdataplease.streetgym.ui.setPrescription
 import com.justdataplease.streetgym.ui.systemAnimationsEnabled
 import com.justdataplease.streetgym.timer.*
 import com.justdataplease.monetization.NativeAdSlot
@@ -39,6 +43,8 @@ import android.widget.ScrollView
  * Runs only through the test APK. Restores every preference it touches. Purchases are cached-ownership
  * fixtures, never a transaction. Only the free-tier checks let Google demo ad slots attach.
  */
+import java.util.Locale
+
 class TrainingInstrumentation : Instrumentation() {
     private lateinit var activity: Activity
     private val basketball = false
@@ -413,14 +419,14 @@ class TrainingInstrumentation : Instrumentation() {
             check(billing.edit().clear().commit())
             // Billing replies arrive on their own schedule under load: poll instead of a fixed settle.
             await { Entitlement.tier(targetContext) == Tier.PRO }
-            check(Entitlement.tier(targetContext) == Tier.PRO && Entitlement.allLevels(targetContext) && Entitlement.adFree(targetContext))
+            check(Entitlement.tier(targetContext) == Tier.PRO && Entitlement.adFree(targetContext))
             nav(R.string.nav_today)
             check(shown(R.string.resume_workout) && !shown(paywall) && find { it is NativeAdSlot } == null)
             nav(R.string.nav_settings)
             check(shown(R.string.pro_active) && shown(R.string.tier_current_pro))
             clickText(R.string.tier_free)
             await { Entitlement.tier(targetContext) == Tier.FREE && shown(R.string.tier_current_free) }
-            check(Entitlement.tier(targetContext) == Tier.FREE && !Entitlement.allLevels(targetContext) && !Entitlement.adFree(targetContext))
+            check(Entitlement.tier(targetContext) == Tier.FREE && !Entitlement.adFree(targetContext))
             check(!shown(R.string.pro_active) && shown(R.string.tier_current_free))
             report("Debug builds get Pro by default and Simulate tier drops them to Free")
 
@@ -431,8 +437,9 @@ class TrainingInstrumentation : Instrumentation() {
             check(find { it is NativeAdSlot } != null)
             check(repository.activeWorkout() == lockedActive)
             nav(R.string.nav_levels)
-            // Levels 1-3 are free; every later level carries the badge.
-            check(findAll { it is TextView && it.text.toString() == targetContext.getString(R.string.tier_plus).uppercase() }.size == catalog.levels.size - 3)
+            // Levels 1-3 are free; Levels 4 and 5 carry the Plus badge and 6 and 7 the Pro one.
+            fun badges(tier: Int) = findAll { it is TextView && it.text.toString() == targetContext.getString(tier).uppercase() }.size
+            check(badges(R.string.tier_plus) == 2 && badges(R.string.tier_pro) == catalog.levels.size - 5)
             clickLabel(catalog.levels[3].name.resolve())
             check(shown(paywall) && !shown("Complete level"))
             nav(R.string.nav_today); clickLabel(levelFour.name.resolve())
@@ -441,7 +448,7 @@ class TrainingInstrumentation : Instrumentation() {
             report("Free tier: Today, Training and Overview show the paywall, Complete level is hidden and ads show")
 
             check(billing.edit().putBoolean(Entitlement.PLUS_OWNED, true).commit())
-            await { Entitlement.allLevels(targetContext) }
+            await { Entitlement.tier(targetContext) == Tier.PLUS }
             nav(R.string.nav_today); await { shown(R.string.resume_workout) }; clickText(R.string.resume_workout)
             check(shown(R.string.finish_workout))
             val completedBefore = repository.completedProgramIds()
@@ -455,6 +462,18 @@ class TrainingInstrumentation : Instrumentation() {
             await { !shown(paywall) }
             check(!shown(paywall) && find { it is NativeAdSlot } == null)
             report("A refunded cache returns an active Level 4 class to Today's paywall and keeps its sets and history")
+
+            // The clear above also dropped the simulated tier, so this debug build is Pro again: simulate Plus.
+            Entitlement.setSimulatedTier(targetContext, Tier.PLUS)
+            await { Entitlement.tier(targetContext) == Tier.PLUS }
+            nav(R.string.nav_levels)
+            check(badges(R.string.tier_plus) == 0 && badges(R.string.tier_pro) == catalog.levels.size - 5)
+            clickLabel(catalog.levels[5].name.resolve())
+            // The Plus block is built but hidden.
+            val plusOffer = find { it is TextView && it.text.toString() == targetContext.getString(R.string.plus_title) && it.isShown }
+            check(shown(targetContext.getString(R.string.paywall_level_pro, 6)) && plusOffer == null && !shown("Complete level"))
+            Entitlement.setSimulatedTier(targetContext, null)
+            report("Plus opens Levels 4 and 5; Levels 6 and 7 offer Pro only")
 
             nav(R.string.nav_timer); clickLabel("30 sec"); clickLabel("Start")
             val timing = TimingStore(targetContext)
@@ -532,39 +551,65 @@ class TrainingInstrumentation : Instrumentation() {
             val levelTwoFirst = levelTwo.programs.minBy { it.number }
             val atDayFortyOne = targetContext.getString(R.string.placement_level_day, 1, 41)
             val atLevelTwo = targetContext.getString(R.string.level_number, 2)
-            // Placed days count like Complete level: done, but worth no skill or leaderboard points.
-            fun placedOnly(days: Int) = repository.sessionHistory().let { it.size == days && it.all { session -> session.manuallyCompleted } } &&
-                Scores.credits(repository.sessionHistory()).isEmpty() && skills().statuses.all { it.own == 0 } &&
-                Scores.from(skills()).overall == 0 && Scores.placedPast(repository.sessionHistory()) == days
-            // A fit adult short on pull-ups starts inside Level 1, at day 41.
-            clickLabel("20–29"); clickLabel("1–4")
-            check(shown(R.string.placement_skip) && !shown(targetContext.getString(R.string.placement_confirm, atDayFortyOne)))
-            clickLabel("30–49")
+            // Placed days are done and count as trained: skill points, and none marked complete for nothing.
+            fun placedAsTrained(days: Int) = repository.sessionHistory().let { it.size == days && it.all { session -> session.placed } } &&
+                Scores.credits(repository.sessionHistory()).size == days && skills().statuses.any { it.own > 0 } &&
+                Scores.markedComplete(repository.sessionHistory()) == 0
+            fun enter(test: Int, count: Int) {
+                val field = checkNotNull(find { it is EditText && it.contentDescription == targetContext.getString(test) }) as EditText
+                runOnMainSync { field.setText(count.toString()) }; settle()
+            }
+            // A fit adult who can't pull up yet starts inside Level 1, at day 41.
+            enter(R.string.placement_pull_ups, 0); enter(R.string.placement_push_ups, 20)
+            check(shown(R.string.placement_skip) && shown(R.string.placement_answer_all) &&
+                !shown(targetContext.getString(R.string.placement_confirm, atDayFortyOne)))
+            enter(R.string.placement_squats, 30)
             check(shown(targetContext.getString(R.string.placement_result_day, atDayFortyOne)))
-            check(shown(R.string.placement_scratch) && !shown(R.string.placement_skip))
-            clickLabel("5–9")
+            check(shown(R.string.placement_scratch) && shown(R.string.placement_credit) && !shown(R.string.placement_skip) &&
+                !shown(R.string.placement_answer_all))
+            enter(R.string.placement_pull_ups, 5)
             check(shown(targetContext.getString(R.string.placement_result, 2, levelTwo.name.resolve())))
             check(shown(targetContext.getString(R.string.placement_confirm, atLevelTwo)))
-            clickLabel("1–4")
+            enter(R.string.placement_pull_ups, 0)
             clickLabel(targetContext.getString(R.string.placement_confirm, atDayFortyOne))
             check(AppSettings(targetContext).placementDone &&
                 repository.completedProgramIds() == levelOneDays.filter { it.number < 41 }.map { it.id }.toSet())
-            check(placedOnly(40))
+            check(placedAsTrained(40))
             check(!shown(R.string.placement_title) && shown(dayFortyOne.name.resolve()) && shown(R.string.start_today))
             nav(R.string.nav_levels)
             check(shown(targetContext.getString(R.string.level_progress_format, 40, 100)))
             clickLabel(catalog.levels.first().name.resolve())
-            check(shown(R.string.placement_level_one_hint) && shown("Complete level"))
-            // A new athlete again, placed at Level 2: the whole of Level 1 is marked complete.
+            check(shown(R.string.placement_level_one_hint) && shown("Complete level") && shown(R.string.complete_level_no_points))
+            // A new athlete again. The owner's case, ten pull-ups and thirty push-ups with squats never counted, starts at
+            // Level 2, day 41, and the card says what one more pull-up would change.
             check(preferences("streetgym_progress").edit().clear().commit())
             AppSettings(targetContext).placementDone = false
             nav(R.string.nav_today)
             check(shown(R.string.placement_title))
-            clickLabel("20–29"); clickLabel("5–9"); clickLabel("30–49")
+            enter(R.string.placement_pull_ups, 10); enter(R.string.placement_push_ups, 30); enter(R.string.placement_squats, 0)
+            check(shown(targetContext.getString(R.string.placement_confirm, targetContext.getString(R.string.placement_level_day, 2, 41))))
+            check(shown(targetContext.getString(R.string.placement_better,
+                targetContext.resources.getQuantityString(R.plurals.placement_more_pull_ups, 1, 1),
+                targetContext.getString(R.string.placement_level_day, 2, 63))))
+            // Five pull-ups and twenty push-ups: Level 2's first class, with the whole of Level 1 credited.
+            enter(R.string.placement_pull_ups, 5); enter(R.string.placement_push_ups, 20); enter(R.string.placement_squats, 30)
             clickLabel(targetContext.getString(R.string.placement_confirm, atLevelTwo))
             check(AppSettings(targetContext).placementDone && repository.completedProgramIds() == levelOne)
-            check(placedOnly(levelOne.size))
+            check(placedAsTrained(levelOne.size))
             check(!shown(R.string.placement_title) && shown(levelTwoFirst.name.resolve()) && shown(R.string.start_today))
+            // Harder for today, from Today's card: the day's strength reps go up a quarter and its overview says so; the
+            // overview sets it back.
+            check(AppSettings(targetContext).intensityToday() == Intensity.NORMAL && shown(R.string.complete_day_no_points))
+            clickText(R.string.intensity_harder)
+            check(AppSettings(targetContext).intensityToday() == Intensity.HARDER)
+            clickLabel(levelTwoFirst.name.resolve())
+            check(find { it is TextView && it.text.toString().endsWith(" • " + targetContext.getString(R.string.intensity_harder)) } != null)
+            fun pullUps(day: TrainingProgram) = checkNotNull(day.exercises.firstOrNull { it.movementId == "pullup" }).sets.first()
+            val harder = targetContext.setPrescription(pullUps(Intensity.HARDER.scale(levelTwoFirst)), Locale.ENGLISH)
+            check(harder != targetContext.setPrescription(pullUps(levelTwoFirst), Locale.ENGLISH) && shown(harder))
+            clickText(R.string.intensity_normal)
+            check(AppSettings(targetContext).intensityToday() == Intensity.NORMAL &&
+                shown(targetContext.setPrescription(pullUps(levelTwoFirst), Locale.ENGLISH)))
             nav(R.string.nav_levels)
             check(levelOne.size == 100 && shown(targetContext.getString(R.string.level_progress_format, 100, 100)))
             clickLabel(catalog.levels.first().name.resolve())
@@ -575,7 +620,7 @@ class TrainingInstrumentation : Instrumentation() {
             check(!shown(R.string.placement_title) && AppSettings(targetContext).placementDone)
             clickText(R.string.start_today)
             check(repository.activeWorkout()?.programId == levelTwoFirst.id)
-            report("First launch places by the weakest answer: a skip keeps Level 1 and its hint, Level 1 day 41 and Level 2 mark the days before complete without skill or leaderboard points, and placement never returns")
+            report("First launch is a placement test: the weighted counts and pull-up gates pick a block start, a skip keeps Level 1 and its hint, placed days count as trained, Harder for today scales strength reps, and placement never returns")
 
             // Settings' Reset progress, with Level 1 complete and a Level 2 class in progress.
             nav(R.string.nav_settings)

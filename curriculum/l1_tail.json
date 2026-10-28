@@ -7867,14 +7867,283 @@
       "level": 1,
       "number": 98,
       "title": {
-        "en": "Exam 5: Foundations"
+        "en": "Elevated Plank Lines"
       },
       "description": {
-        "en": "Exam day for classes L1:082-L1:097: handstand, pull-ups, push-ups, dips, legs, core hold. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
+        "en": "Learn to push the support away while preserving a long, breathing body line."
       },
       "schedule": {
         "week": 9,
         "day": 2,
+        "day_type": "push_bodyline",
+        "minutes": 36,
+        "rpe": 6,
+        "focus": [
+          "elevated_plank",
+          "scapular_push",
+          "support"
+        ]
+      },
+      "warmup": [
+        [
+          "march",
+          1,
+          null,
+          190,
+          0,
+          "easy",
+          null
+        ],
+        [
+          "wrist_rocks",
+          1,
+          10,
+          null,
+          15,
+          "smooth",
+          "wrist_circles"
+        ],
+        [
+          "elevated_scapular_pushup",
+          2,
+          10,
+          null,
+          40,
+          "2112",
+          null
+        ],
+        [
+          "prone_ytw",
+          1,
+          6,
+          null,
+          15,
+          "slow",
+          "wall_slide"
+        ]
+      ],
+      "main": [
+        [
+          "elevated_plank",
+          1,
+          null,
+          25,
+          45,
+          "isometric",
+          "incline_plank"
+        ],
+        [
+          "tuck_lsit",
+          1,
+          null,
+          10,
+          60,
+          "isometric",
+          "support_hold"
+        ],
+        [
+          "pause_pushup",
+          3,
+          8,
+          null,
+          60,
+          "3211",
+          "incline_pushup"
+        ],
+        [
+          "parallel_dip",
+          3,
+          8,
+          null,
+          80,
+          "2111",
+          "assisted_dip"
+        ],
+        [
+          "pike_pushup",
+          2,
+          6,
+          null,
+          75,
+          "2111",
+          "incline_pushup"
+        ]
+      ],
+      "cooldown": [
+        [
+          "forearm_stretch",
+          1,
+          null,
+          45,
+          10,
+          "relaxed",
+          null
+        ],
+        [
+          "chest_stretch",
+          1,
+          null,
+          45,
+          10,
+          "relaxed",
+          null
+        ],
+        [
+          "child_pose",
+          1,
+          null,
+          55,
+          0,
+          "relaxed",
+          null
+        ]
+      ]
+    },
+    {
+      "id": "sg:l01:p0099",
+      "legacy_placeholder_id": "365",
+      "origin": "reconstructed_placeholder",
+      "level": 1,
+      "number": 99,
+      "title": {
+        "en": "Spine and Scapula Reset"
+      },
+      "description": {
+        "en": "Restore smooth upper-back motion and let the shoulder blades glide without load."
+      },
+      "schedule": {
+        "week": 9,
+        "day": 3,
+        "day_type": "active_recovery",
+        "minutes": 29,
+        "rpe": 4,
+        "focus": [
+          "thoracic_mobility",
+          "scapula",
+          "recovery"
+        ]
+      },
+      "warmup": [
+        [
+          "easy_walk",
+          1,
+          null,
+          420,
+          0,
+          "easy",
+          "march"
+        ],
+        [
+          "cat_cow",
+          1,
+          9,
+          null,
+          10,
+          "smooth",
+          null
+        ],
+        [
+          "shoulder_cars",
+          1,
+          7,
+          null,
+          10,
+          "smooth",
+          null
+        ]
+      ],
+      "main": [
+        [
+          "thoracic_rotation",
+          2,
+          "6/side",
+          null,
+          20,
+          "smooth",
+          "cat_cow"
+        ],
+        [
+          "elevated_scapular_pushup",
+          2,
+          8,
+          null,
+          40,
+          "2121",
+          null
+        ],
+        [
+          "high_inverted_row",
+          2,
+          8,
+          null,
+          50,
+          "2121",
+          null
+        ],
+        [
+          "box_squat",
+          2,
+          10,
+          null,
+          45,
+          "3031",
+          null
+        ],
+        [
+          "bird_dog",
+          2,
+          "6/side",
+          null,
+          35,
+          "slow",
+          "dead_bug"
+        ]
+      ],
+      "cooldown": [
+        [
+          "lat_stretch",
+          1,
+          null,
+          45,
+          10,
+          "relaxed",
+          null
+        ],
+        [
+          "chest_stretch",
+          1,
+          null,
+          40,
+          10,
+          "relaxed",
+          null
+        ],
+        [
+          "slow_breathing",
+          1,
+          null,
+          165,
+          0,
+          "calm",
+          null
+        ]
+      ]
+    },
+    {
+      "id": "sg:l01:p0100",
+      "legacy_placeholder_id": "366",
+      "origin": "reconstructed_placeholder",
+      "level": 1,
+      "number": 100,
+      "title": {
+        "en": "Exam 5: Foundations"
+      },
+      "description": {
+        "en": "Exam day for classes L1:082-L1:099: handstand, pull-ups, push-ups, dips, legs, core hold. One fresh set of each at the dose this block trained. Rest fully between tests, reach the number shown with clean form and stop at the first form break; the easier option doesn't count today. After the class the app asks which targets you reached."
+      },
+      "schedule": {
+        "week": 9,
+        "day": 4,
         "day_type": "exam_assessment",
         "minutes": 30,
         "rpe": 6,
@@ -8008,275 +8277,6 @@
           40,
           0,
           "relaxed",
-          null
-        ]
-      ]
-    },
-    {
-      "id": "sg:l01:p0099",
-      "legacy_placeholder_id": "365",
-      "origin": "reconstructed_placeholder",
-      "level": 1,
-      "number": 99,
-      "title": {
-        "en": "Elevated Plank Lines"
-      },
-      "description": {
-        "en": "Learn to push the support away while preserving a long, breathing body line."
-      },
-      "schedule": {
-        "week": 9,
-        "day": 3,
-        "day_type": "push_bodyline",
-        "minutes": 36,
-        "rpe": 6,
-        "focus": [
-          "elevated_plank",
-          "scapular_push",
-          "support"
-        ]
-      },
-      "warmup": [
-        [
-          "march",
-          1,
-          null,
-          190,
-          0,
-          "easy",
-          null
-        ],
-        [
-          "wrist_rocks",
-          1,
-          10,
-          null,
-          15,
-          "smooth",
-          "wrist_circles"
-        ],
-        [
-          "elevated_scapular_pushup",
-          2,
-          10,
-          null,
-          40,
-          "2112",
-          null
-        ],
-        [
-          "prone_ytw",
-          1,
-          6,
-          null,
-          15,
-          "slow",
-          "wall_slide"
-        ]
-      ],
-      "main": [
-        [
-          "elevated_plank",
-          1,
-          null,
-          25,
-          45,
-          "isometric",
-          "incline_plank"
-        ],
-        [
-          "tuck_lsit",
-          1,
-          null,
-          10,
-          60,
-          "isometric",
-          "support_hold"
-        ],
-        [
-          "pause_pushup",
-          3,
-          8,
-          null,
-          60,
-          "3211",
-          "incline_pushup"
-        ],
-        [
-          "parallel_dip",
-          3,
-          8,
-          null,
-          80,
-          "2111",
-          "assisted_dip"
-        ],
-        [
-          "pike_pushup",
-          2,
-          6,
-          null,
-          75,
-          "2111",
-          "incline_pushup"
-        ]
-      ],
-      "cooldown": [
-        [
-          "forearm_stretch",
-          1,
-          null,
-          45,
-          10,
-          "relaxed",
-          null
-        ],
-        [
-          "chest_stretch",
-          1,
-          null,
-          45,
-          10,
-          "relaxed",
-          null
-        ],
-        [
-          "child_pose",
-          1,
-          null,
-          55,
-          0,
-          "relaxed",
-          null
-        ]
-      ]
-    },
-    {
-      "id": "sg:l01:p0100",
-      "legacy_placeholder_id": "366",
-      "origin": "reconstructed_placeholder",
-      "level": 1,
-      "number": 100,
-      "title": {
-        "en": "Spine and Scapula Reset"
-      },
-      "description": {
-        "en": "Restore smooth upper-back motion and let the shoulder blades glide without load."
-      },
-      "schedule": {
-        "week": 9,
-        "day": 4,
-        "day_type": "active_recovery",
-        "minutes": 29,
-        "rpe": 4,
-        "focus": [
-          "thoracic_mobility",
-          "scapula",
-          "recovery"
-        ]
-      },
-      "warmup": [
-        [
-          "easy_walk",
-          1,
-          null,
-          420,
-          0,
-          "easy",
-          "march"
-        ],
-        [
-          "cat_cow",
-          1,
-          9,
-          null,
-          10,
-          "smooth",
-          null
-        ],
-        [
-          "shoulder_cars",
-          1,
-          7,
-          null,
-          10,
-          "smooth",
-          null
-        ]
-      ],
-      "main": [
-        [
-          "thoracic_rotation",
-          2,
-          "6/side",
-          null,
-          20,
-          "smooth",
-          "cat_cow"
-        ],
-        [
-          "elevated_scapular_pushup",
-          2,
-          8,
-          null,
-          40,
-          "2121",
-          null
-        ],
-        [
-          "high_inverted_row",
-          2,
-          8,
-          null,
-          50,
-          "2121",
-          null
-        ],
-        [
-          "box_squat",
-          2,
-          10,
-          null,
-          45,
-          "3031",
-          null
-        ],
-        [
-          "bird_dog",
-          2,
-          "6/side",
-          null,
-          35,
-          "slow",
-          "dead_bug"
-        ]
-      ],
-      "cooldown": [
-        [
-          "lat_stretch",
-          1,
-          null,
-          45,
-          10,
-          "relaxed",
-          null
-        ],
-        [
-          "chest_stretch",
-          1,
-          null,
-          40,
-          10,
-          "relaxed",
-          null
-        ],
-        [
-          "slow_breathing",
-          1,
-          null,
-          165,
-          0,
-          "calm",
           null
         ]
       ]

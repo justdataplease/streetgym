@@ -17,7 +17,7 @@
     <string name="skills_next_test">Next: test %1$s for +%2$s</string>
     <string name="skills_next">Next: %1$s</string>
     <string name="skills_rungs">Rungs achieved: %1$d of %2$d</string>
-    <string name="skills_placed_past">Days placed past or marked complete: %1$d, worth no points</string>
+    <string name="skills_marked_complete">Days marked complete without training: %1$d, worth no points</string>
     <string name="skills_group_score_of">%1$s /%2$s</string>
     <string name="skills_group_score_description">%1$s, %2$s of %3$s points</string>
     <string name="skills_closest">Closest to achieving</string>
@@ -35,6 +35,7 @@
     <string name="skills_in_progress">In progress · %1$d/100</string>
     <string name="skills_locked">Not started</string>
     <string name="skills_plus">Part of Plus</string>
+    <string name="skills_pro">Part of Pro</string>
     <string name="skills_ladder_rung">%1$s ladder · rung %2$d of %3$d</string>
     <string name="skills_points_line">%1$d of 100 skill points</string>
     <string name="skills_points_to_go">%1$d to go</string>
@@ -87,7 +88,10 @@
     <string name="skills_test_negative_side">Lower one rep over at least %1$d s on each side</string>
     <string name="skills_test_prescribed">The prescribed dose</string>
     <string name="readiness_question_title">Readiness check: %1$s</string>
-    <string name="skills_how_points" formatted="false">How skill points work. Only the sets you tick in a finished class count, and only when the class ran at least 40% of its planned time; days marked complete, placed past or repeated earn nothing. A set done as the easier option counts for the easier skill. Each skill has 100 points: up to 50 for prep, from its own sets, the easier rungs below it and basic strength work, measured against what the program gives you before it first asks for the skill; and 25 for each of the first two classes that train the skill itself. An easier rung is achieved at 100. Rungs worth 15 or more in the overall score also need a passed test, from the skill sheet or a readiness check in class; achieving a rung achieves the easier ones below it. The overall score, out of 100, counts each family\'s hardest achieved rung by how hard it is, plus half the gap to its next rung as you train it, so a full planche is worth twice a full front lever. Dots show a coach\'s grade, from one (Beginner, green) to five (Elite, red).</string>
+    <string name="complete_day_no_points">Marks the day done without training: it earns no skill points.</string>
+    <string name="complete_level_no_points">Marks every day of the level done without training: they earn no skill points.</string>
+    <string name="skills_help">How do I earn skill points?</string>
+    <string name="skills_how_points" formatted="false">• Train. Every set you tick counts toward its skill: program days, days you repeat and your own workouts in My workouts all count, and all show in the calendar. A class counts when it ran at least 20% of its planned time.\n\n• Each exercise counts on its own. Skip one and you only lose its points. A set done as the easier option counts for the easier skill.\n\n• Harder days earn a quarter more points for strength exercises, with a quarter more reps; Easier days a quarter less. Skill work is always as written.\n\n• Your placement test counts the days before your start as trained. Complete day and Complete level earn nothing.\n\n• Each skill has 100 points: up to 50 for prep, from its own sets, the easier rungs below it and basic strength work, and 25 for each of the first two classes that train the skill itself. An easier rung is achieved at 100.\n\n• Rungs worth 15 or more in the overall score also need a passed test, from the skill sheet or a readiness check in class. Achieving a rung achieves the easier ones below it.\n\n• The overall score, out of 100, counts each family\'s hardest achieved rung by how hard it is, plus half the gap to its next rung as you train it. Dots show a coach\'s grade, from one (Beginner, green) to five (Elite, red).</string>
     <string name="skills_badge_description">%1$s, %2$s</string>
     <string name="skills_close">Close</string>
     <string name="workout_easier_off">Easier option: %1$s</string>

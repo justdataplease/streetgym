@@ -85,18 +85,23 @@ object Boards {
 
 object Scores {
     /**
-     * The classes that count, for Skills and the leaderboard alike: finished in a real workout, with the sets ticked.
-     * "Complete day" and "Complete level" marks, placement, repeats and custom days earn nothing, so both reflect
-     * training, not taps.
+     * The classes that count, for Skills and the leaderboard alike: every class trained with its sets ticked, in the
+     * program, repeated or the athlete's own ([customMinutes] gives an own day's planned length, when it still exists),
+     * and the days the placement test placed past, credited as trained. "Complete day" and "Complete level" earn
+     * nothing, so both reflect training, not taps.
      */
-    fun credits(sessions: List<WorkoutSession>): List<SkillCredit> = sessions
-        .filter { !it.manuallyCompleted && !it.repeat && !CustomDays.isCustom(it.programId) }
+    fun credits(sessions: List<WorkoutSession>, customMinutes: (String) -> Int? = { null }): List<SkillCredit> = sessions
+        .filter { !it.manuallyCompleted || it.placed }
         .sortedBy { it.completedAtEpochMillis }
-        .map { SkillCredit(it.programId, it.credits, it.durationSeconds) }
+        .map { session ->
+            if (session.placed) SkillCredit(session.programId)
+            else SkillCredit(session.programId, session.credits, session.durationSeconds, session.intensity.factor,
+                if (CustomDays.isCustom(session.programId)) customMinutes(session.programId) else null)
+        }
 
-    /** Program days placed past or marked complete: done, but worth no points. */
-    fun placedPast(sessions: List<WorkoutSession>): Int = sessions
-        .filter { it.manuallyCompleted && !CustomDays.isCustom(it.programId) }.map { it.programId }.toSet().size
+    /** Program days marked complete without training: done, but worth no points. */
+    fun markedComplete(sessions: List<WorkoutSession>): Int = sessions
+        .filter { it.manuallyCompleted && !it.placed && !CustomDays.isCustom(it.programId) }.map { it.programId }.toSet().size
 
     fun from(progress: SkillProgress): Score = Score(
         overall = progress.overall.score,
