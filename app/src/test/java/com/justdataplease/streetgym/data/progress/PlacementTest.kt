@@ -14,35 +14,35 @@ import org.junit.Test
 import java.io.File
 
 class PlacementTest {
-    /** The block starts once every level's last exam is on day 100: Levels 1 and 2 after each exam, Level 3 at day 1. */
-    private val starts = listOf(Start(1), Start(1, 21), Start(1, 41), Start(1, 61), Start(1, 82),
-        Start(2), Start(2, 21), Start(2, 41), Start(2, 63), Start(2, 85), Start(3))
+    /** The block starts with an exam every 20 classes: Levels 1 and 2 after each exam, Level 3 at day 1. */
+    private val starts = listOf(Start(1), Start(1, 21), Start(1, 41), Start(1, 61), Start(1, 81),
+        Start(2), Start(2, 21), Start(2, 41), Start(2, 61), Start(2, 81), Start(3))
     private fun start(pullUps: Int, pushUps: Int, squats: Int) = Placement.start(pullUps, pushUps, squats, starts)
     private val order = compareBy<Start>({ it.level }, { it.day })
-    private fun grid() = (0..16).flatMap { u -> (0..45 step 5).flatMap { p -> (0..60 step 10).map { s -> Triple(u, p, s) } } }
+    private fun grid() = (0..24).flatMap { u -> (0..60 step 5).flatMap { p -> (0..80 step 10).map { s -> Triple(u, p, s) } } }
 
     @Test fun theScoreWeighsPullUpsMostAndSquatsLeast() {
         assertEquals(0.0, Placement.score(0, 0, 0), 1e-9)
-        assertEquals(1.0, Placement.score(12, 35, 50), 1e-9)
+        assertEquals(1.0, Placement.score(20, 50, 75), 1e-9)
         assertEquals(1.0, Placement.score(100, 100, 100), 1e-9)
-        assertEquals(0.5, Placement.score(12, 0, 0), 1e-9)
-        assertEquals(0.35, Placement.score(0, 35, 0), 1e-9)
-        assertEquals(0.15, Placement.score(0, 0, 50), 1e-9)
+        assertEquals(0.5, Placement.score(20, 0, 0), 1e-9)
+        assertEquals(0.35, Placement.score(0, 50, 0), 1e-9)
+        assertEquals(0.15, Placement.score(0, 0, 75), 1e-9)
         assertEquals(1.0, Placement.Test.entries.sumOf { it.weight }, 1e-9)
     }
 
-    @Test fun theOwnersCaseStartsInLevelTwo() {
+    @Test fun theOwnersCaseStartsAtLevelTwo() {
         // Ten pull-ups and thirty push-ups with squats never counted.
-        assertEquals(Start(2, 41), start(10, 30, 0))
-        assertEquals(Start(2, 85), start(10, 30, 50))
+        assertEquals(Start(2), start(10, 30, 0))
+        assertEquals(Start(2, 21), start(10, 30, 75))
     }
 
     @Test fun anchorsAlongTheProgram() {
         assertEquals(Start(1), start(0, 0, 0))
         assertEquals(Start(1, 21), start(0, 10, 20))
-        assertEquals(Start(2), start(5, 20, 30))
-        assertEquals(Start(2, 85), start(9, 35, 50))
-        assertEquals(Start(3), start(12, 35, 50))
+        assertEquals(Start(2), start(8, 25, 40))
+        assertEquals(Start(2, 81), start(15, 50, 75))
+        assertEquals(Start(3), start(20, 50, 75))
         assertEquals(Start(3), start(30, 60, 80))
     }
 
@@ -50,11 +50,13 @@ class PlacementTest {
         // No pull-up: Level 1's first 41 classes at most, however many push-ups and squats.
         assertEquals(Start(1, 41), start(0, 20, 30))
         assertEquals(Start(1, 41), start(0, 100, 100))
-        // Pull-ups alone don't open Level 2 without 15 push-ups.
-        assertEquals(Start(1, 82), start(30, 0, 0))
-        // Level 3 takes ten pull-ups and 25 push-ups.
-        assertEquals(Start(2, 85), start(9, 100, 100))
-        assertEquals(Start(2, 85), start(12, 24, 50))
+        assertEquals(Start(1, 41), start(2, 100, 100))
+        // Pull-ups alone don't open Level 2 without 20 push-ups, nor does a set of seven.
+        assertEquals(Start(1, 81), start(40, 0, 0))
+        assertEquals(Start(1, 81), start(7, 100, 100))
+        // Level 3 takes fifteen pull-ups and 35 push-ups.
+        assertEquals(Start(2, 81), start(14, 100, 100))
+        assertEquals(Start(2, 81), start(20, 34, 100))
         every { u, p, s ->
             val (pull, push) = Placement.gate(start(u, p, s))
             assertTrue("$u/$p/$s", u >= pull && p >= push)
@@ -80,8 +82,8 @@ class PlacementTest {
     }
 
     @Test fun theCardSaysWhatAFewMoreRepsWouldChange() {
-        assertEquals(Placement.Better(Placement.Test.PULL_UPS, 1, Start(2, 63)), Placement.better(10, 30, 0, starts))
-        assertNull(Placement.better(12, 35, 50, starts))
+        assertEquals(Placement.Better(Placement.Test.PULL_UPS, 4, Start(2, 21)), Placement.better(10, 30, 0, starts))
+        assertNull(Placement.better(20, 50, 75, starts))
         every { u, p, s ->
             val better = Placement.better(u, p, s, starts) ?: return@every
             assertTrue("$u/$p/$s", order.compare(better.start, start(u, p, s)) > 0)

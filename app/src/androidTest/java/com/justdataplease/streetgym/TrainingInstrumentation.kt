@@ -567,10 +567,10 @@ class TrainingInstrumentation : Instrumentation() {
             check(shown(targetContext.getString(R.string.placement_result_day, atDayFortyOne)))
             check(shown(R.string.placement_scratch) && shown(R.string.placement_credit) && !shown(R.string.placement_skip) &&
                 !shown(R.string.placement_answer_all))
-            enter(R.string.placement_pull_ups, 5)
+            enter(R.string.placement_pull_ups, 10); enter(R.string.placement_push_ups, 30)
             check(shown(targetContext.getString(R.string.placement_result, 2, levelTwo.name.resolve())))
             check(shown(targetContext.getString(R.string.placement_confirm, atLevelTwo)))
-            enter(R.string.placement_pull_ups, 0)
+            enter(R.string.placement_pull_ups, 0); enter(R.string.placement_push_ups, 20)
             clickLabel(targetContext.getString(R.string.placement_confirm, atDayFortyOne))
             check(AppSettings(targetContext).placementDone &&
                 repository.completedProgramIds() == levelOneDays.filter { it.number < 41 }.map { it.id }.toSet())
@@ -581,18 +581,15 @@ class TrainingInstrumentation : Instrumentation() {
             clickLabel(catalog.levels.first().name.resolve())
             check(shown(R.string.placement_level_one_hint) && shown("Complete level") && shown(R.string.complete_level_no_points))
             // A new athlete again. The owner's case, ten pull-ups and thirty push-ups with squats never counted, starts at
-            // Level 2, day 41, and the card says what one more pull-up would change.
+            // Level 2, and the card says what four more pull-ups would change; the whole of Level 1 is credited.
             check(preferences("streetgym_progress").edit().clear().commit())
             AppSettings(targetContext).placementDone = false
             nav(R.string.nav_today)
             check(shown(R.string.placement_title))
             enter(R.string.placement_pull_ups, 10); enter(R.string.placement_push_ups, 30); enter(R.string.placement_squats, 0)
-            check(shown(targetContext.getString(R.string.placement_confirm, targetContext.getString(R.string.placement_level_day, 2, 41))))
             check(shown(targetContext.getString(R.string.placement_better,
-                targetContext.resources.getQuantityString(R.plurals.placement_more_pull_ups, 1, 1),
-                targetContext.getString(R.string.placement_level_day, 2, 63))))
-            // Five pull-ups and twenty push-ups: Level 2's first class, with the whole of Level 1 credited.
-            enter(R.string.placement_pull_ups, 5); enter(R.string.placement_push_ups, 20); enter(R.string.placement_squats, 30)
+                targetContext.resources.getQuantityString(R.plurals.placement_more_pull_ups, 4, 4),
+                targetContext.getString(R.string.placement_level_day, 2, 21))))
             clickLabel(targetContext.getString(R.string.placement_confirm, atLevelTwo))
             check(AppSettings(targetContext).placementDone && repository.completedProgramIds() == levelOne)
             check(placedAsTrained(levelOne.size))

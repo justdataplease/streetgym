@@ -8,15 +8,15 @@ import java.util.Locale
 /**
  * First-launch placement, taken like an exam: one set each of strict pull-ups, push-ups and squats, as many as the
  * athlete can with good form. A weighted [score] (pull-ups count most, squats least) picks one of the block starts of
- * Levels 1–3 ([starts]), and the [gate]s keep pull-ups honest: Level 2 needs five and Level 3 ten. Every day before the
+ * Levels 1–3 ([starts]), and the [gate]s keep pull-ups honest: Level 2 needs eight and Level 3 fifteen. Every day before the
  * start is credited as trained for skills, unlike "Complete day".
  */
 object Placement {
     /** The tests, in the card's order. [full] is the count that earns all of a test's [weight]. */
     enum class Test(val weight: Double, val full: Int) {
-        PULL_UPS(0.5, 12),
-        PUSH_UPS(0.35, 35),
-        SQUATS(0.15, 50),
+        PULL_UPS(0.5, 20),
+        PUSH_UPS(0.35, 50),
+        SQUATS(0.15, 75),
     }
 
     /** Where the program starts: a level and a day within it (its program number). */
@@ -36,11 +36,11 @@ object Placement {
         Test.PULL_UPS to pullUps, Test.PUSH_UPS to pushUps, Test.SQUATS to squats,
     ).sumOf { (test, count) -> test.weight * count.coerceIn(0, test.full) / test.full }
 
-    /** The least pull-ups and push-ups a start takes: Level 3 ten and 25, Level 2 five and 15, Level 1 past day 41 one pull-up. */
+    /** The least pull-ups and push-ups a start takes: Level 3 fifteen and 35, Level 2 eight and 20, Level 1 past day 41 three pull-ups. */
     fun gate(start: Start): Pair<Int, Int> = when {
-        start.level >= 3 -> 10 to 25
-        start.level == 2 -> 5 to 15
-        start.day > 41 -> 1 to 0
+        start.level >= 3 -> 15 to 35
+        start.level == 2 -> 8 to 20
+        start.day > 41 -> 3 to 0
         else -> 0 to 0
     }
 
