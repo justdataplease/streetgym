@@ -5,10 +5,6 @@
         <item quantity="one">%1$d tap to developer settings</item>
         <item quantity="other">%1$d taps to developer settings</item>
     </plurals>
-    <string name="developer_passcode_message">Enter the passcode.</string>
-    <string name="developer_passcode_hint">Passcode</string>
-    <string name="developer_unlock">Unlock</string>
-    <string name="developer_wrong_passcode">Wrong passcode</string>
     <string name="developer_inspect_all">Inspect all days</string>
     <string name="developer_inspect_note">Open every day of every level to read its exercises, doses and guides. Days you haven\'t reached are inspect only: they can\'t be started or completed, and nothing is recorded.</string>
     <string name="developer_hide">Hide developer settings</string>

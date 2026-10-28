@@ -29,6 +29,17 @@ import com.justdataplease.streetgym.data.skills.SkillGroup
 import com.justdataplease.streetgym.data.skills.SkillProgress
 import com.justdataplease.streetgym.data.skills.SkillStatus
 import com.justdataplease.streetgym.data.skills.SkillTest
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.Locale
+
+/**
+ * An overall-score amount as the athlete sees it. The score is kept out of [OverallScore.MAX] (1000), so the smallest
+ * rungs still count, and shown out of 100 with one decimal: 425 reads "42.5", 200 reads "20".
+ */
+internal fun scoreText(points: Number): String = SCORE_FORMAT.format(points.toDouble() * 100 / OverallScore.MAX)
+
+private val SCORE_FORMAT = DecimalFormat("0.#", DecimalFormatSymbols(Locale.ENGLISH))
 
 /** A row of options with one selected: the tabs of Training and Progress, and other small choices. */
 fun Context.segmentedSwitch(labels: List<String>, selected: Int, onSelect: (Int) -> Unit): LinearLayout =
@@ -91,15 +102,16 @@ fun Context.skillsContent(
         addWithMargins(LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.BOTTOM
-            contentDescription = getString(R.string.skills_score_description, overall.score, OverallScore.MAX, tierName(tier))
-            addView(titleText(overall.score.toString(), 38f).apply { setTextColor(Color.WHITE) })
-            addWithMargins(bodyText(getString(R.string.skills_score_of, OverallScore.MAX), 15f).apply {
+            contentDescription = getString(R.string.skills_score_description, scoreText(overall.score),
+                scoreText(OverallScore.MAX), tierName(tier))
+            addView(titleText(scoreText(overall.score), 38f).apply { setTextColor(Color.WHITE) })
+            addWithMargins(bodyText(getString(R.string.skills_score_of, scoreText(OverallScore.MAX)), 15f).apply {
                 setTextColor(blendColor(Color.WHITE, AppColors.PRIMARY_DARK, 0.3f))
             }, width = LinearLayout.LayoutParams.WRAP_CONTENT, leftDp = 8, bottomDp = 6)
         }, topDp = 4)
         val next = tier.next
         addView(bodyText(if (next == null) getString(R.string.skills_tier_top, tierName(tier))
-            else getString(R.string.skills_tier_next, tierName(tier), next.floor - overall.score, tierName(next)), 14f).apply {
+            else getString(R.string.skills_tier_next, tierName(tier), scoreText(next.floor - overall.score), tierName(next)), 14f).apply {
             setTextColor(Color.WHITE)
             typeface = Typeface.DEFAULT_BOLD
         })
@@ -123,11 +135,11 @@ fun Context.skillsContent(
         overall.families.filter { it.points > 0 }.sortedByDescending { it.points }.take(3).forEachIndexed { index, family ->
             val rung = (family.base ?: family.next)?.skill?.name ?: return@forEachIndexed
             addWithMargins(bodyText(getString(R.string.skills_family_line, family.family.spec.name, rung,
-                overall.scaled(family.points)), 13f).apply { setTextColor(faint) }, topDp = if (index == 0) 12 else 2)
+                scoreText(overall.scaled(family.points))), 13f).apply { setTextColor(faint) }, topDp = if (index == 0) 12 else 2)
         }
         val test = overall.bestTest()
         val nextLine = when {
-            test != null -> getString(R.string.skills_next_test, test.first.skill.name, test.second)
+            test != null -> getString(R.string.skills_next_test, test.first.skill.name, scoreText(test.second))
             closest.isNotEmpty() -> getString(R.string.skills_next, closest.first().skill.name)
             else -> null
         }
@@ -230,10 +242,10 @@ fun Context.showSkillSheet(
                 getString(R.string.skills_practice_value, status.practice, minOf(status.sessions, 2))))
         }
         addWithMargins(detailRow(getString(R.string.skills_value), getString(R.string.skills_value_line,
-            overall.scaled(skill.value.toDouble()), family.spec.name, overall.scaled(family.ceiling.toDouble()))),
+            scoreText(overall.scaled(skill.value.toDouble())), family.spec.name, scoreText(overall.scaled(family.ceiling.toDouble())))),
             topDp = if (status.achieved) 8 else 0)
         overall.gain(skill).takeIf { it > 0 && !status.achieved }?.let {
-            addView(detailRow(getString(R.string.skills_gain), getString(R.string.skills_gain_value, it)))
+            addView(detailRow(getString(R.string.skills_gain), getString(R.string.skills_gain_value, scoreText(it))))
         }
         skill.test?.let { test ->
             addView(detailRow(getString(R.string.skills_test),
@@ -394,7 +406,7 @@ private fun Context.skillCell(status: SkillStatus, locked: Boolean, onClick: () 
     }, topDp = 6)
 }
 
-/** One of the four group scores in the summary card, out of the group's share of 1000; tapping filters the ladders. */
+/** One of the four group scores in the summary card, out of the group's share of 100; tapping filters the ladders. */
 private fun Context.groupScoreTile(label: String, score: Int, ceiling: Int, selected: Boolean, onClick: () -> Unit): View =
     LinearLayout(this).apply {
         orientation = LinearLayout.VERTICAL
@@ -403,10 +415,10 @@ private fun Context.groupScoreTile(label: String, score: Int, ceiling: Int, sele
         background = tappable(blendColor(AppColors.ACCENT, AppColors.PRIMARY_DARK, if (selected) 0.55f else 0.85f), dp(14).toFloat())
         isClickable = true
         isFocusable = true
-        contentDescription = getString(R.string.skills_group_score_description, label, score, ceiling)
+        contentDescription = getString(R.string.skills_group_score_description, label, scoreText(score), scoreText(ceiling))
         setOnClickListener { onClick() }
-        addView(titleText(score.toString(), 20f).apply { setTextColor(Color.WHITE) })
-        addView(bodyText(getString(R.string.skills_group_score_of, label, ceiling), 11f).apply {
+        addView(titleText(scoreText(score), 20f).apply { setTextColor(Color.WHITE) })
+        addView(bodyText(getString(R.string.skills_group_score_of, label, scoreText(ceiling)), 11f).apply {
             setTextColor(blendColor(Color.WHITE, AppColors.PRIMARY_DARK, 0.25f))
             maxLines = 1
             ellipsize = TextUtils.TruncateAt.END

@@ -66,7 +66,14 @@ class CloudSync(
         val cloudExams = cloudProgress.getString("exams")
         @Suppress("UNCHECKED_CAST")
         val cloudCompleted = (cloudProgress.get("completed") as? List<String>).orEmpty()
-        val (completed, sessions, tests, exams) = progress.mergeCloud(cloudCompleted, cloudSessions, cloudTests, cloudExams)
+        // A merge never removes anything, so a reset travels as its time: one made on another device since this one
+        // last synced starts this phone over too, and one made here keeps the cloud's older progress out.
+        val cloudResetAt = cloudProgress.getLong("reset_at") ?: 0L
+        if (cloudResetAt > progress.resetAt()) progress.reset(cloudResetAt, keepActiveWorkout = true)
+        val resetAt = progress.resetAt()
+        val (completed, sessions, tests, exams) = if (cloudResetAt == resetAt)
+            progress.mergeCloud(cloudCompleted, cloudSessions, cloudTests, cloudExams)
+            else progress.mergeCloud(emptyList(), null, null, null)
         val cloudLibraryObject = cloudLibrary.getString("library")?.let { runCatching { JSONObject(it) }.getOrNull() }
         val cloudLibraryState = LibraryCodec.decode(cloudLibraryObject)
         val mergedLibrary = library.state().merge(cloudLibraryState)
@@ -75,9 +82,9 @@ class CloudSync(
         val batch = db.batch()
         var writes = 0
         if (sessions != cloudSessions || tests != cloudTests || exams != (cloudExams ?: ExamLog().encode()) ||
-            completed != cloudCompleted.toSet()) {
+            completed != cloudCompleted.toSet() || resetAt != cloudResetAt) {
             batch.set(progressDoc, mapOf("completed" to completed.sorted(), "sessions" to sessions, "tests" to tests,
-                "exams" to exams, "updated_at" to FieldValue.serverTimestamp())); writes++
+                "exams" to exams, "reset_at" to resetAt, "updated_at" to FieldValue.serverTimestamp())); writes++
         }
         // Missing or unreadable in the cloud: the merged copy replaces it.
         if (cloudLibraryObject == null || cloudLibraryState != mergedLibrary) {

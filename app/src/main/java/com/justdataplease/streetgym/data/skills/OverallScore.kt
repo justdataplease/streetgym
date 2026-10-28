@@ -20,7 +20,8 @@ data class FamilyScore(val family: SkillFamily, val base: SkillStatus?, val next
  * rung, at that rung's value ([SKILL_VALUES]: a strict pull-up is 10, a full front lever 100, a full planche 200),
  * plus half the gap to the next rung in proportion to how far the athlete has trained it. The families' values add
  * up and scale to 1000 against the sum of every family's top value. Training alone never reaches the next value:
- * rungs worth [TEST_GATE] or more count only after a passed test.
+ * rungs worth [TEST_GATE] or more count only after a passed test. The app shows it out of 100 with one decimal
+ * (425 reads 42.5); the leaderboard keeps the 1000 scale.
  */
 class OverallScore private constructor(val families: List<FamilyScore>) {
     /** M: every family's top value added up; 1000 overall means every family at its top rung. */

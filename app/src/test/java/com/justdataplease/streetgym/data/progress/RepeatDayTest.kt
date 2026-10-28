@@ -166,13 +166,13 @@ class RepeatDayTest {
     }
 }
 
-private class PreferencesContext(private val preferences: SharedPreferences) : ContextWrapper(null) {
+internal class PreferencesContext(private val preferences: SharedPreferences) : ContextWrapper(null) {
     override fun getApplicationContext(): Context = this
     override fun getSharedPreferences(name: String?, mode: Int): SharedPreferences = preferences
 }
 
 /** SharedPreferences in memory, as much as the repository uses: every edit lands at once. */
-private class MemoryPreferences : SharedPreferences {
+internal class MemoryPreferences : SharedPreferences {
     private val stored = HashMap<String, Any>()
 
     override fun getAll(): Map<String, *> = HashMap(stored)

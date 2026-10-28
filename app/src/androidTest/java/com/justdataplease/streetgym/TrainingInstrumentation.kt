@@ -136,10 +136,9 @@ class TrainingInstrumentation : Instrumentation() {
             val versionLine = targetContext.getString(R.string.version_format,
                 targetContext.packageManager.getPackageInfo(targetContext.packageName, 0).versionName)
             nav(R.string.nav_settings)
-            repeat(10) { clickLabel(versionLine) }
-            typeInDialog("1234"); clickDialog(R.string.developer_unlock)
+            repeat(9) { clickLabel(versionLine) }
             check(!AppSettings(targetContext).developerUnlocked)
-            clickLabel(versionLine); typeInDialog("0002"); clickDialog(R.string.developer_unlock)
+            clickLabel(versionLine)
             check(AppSettings(targetContext).developerUnlocked && !AppSettings(targetContext).inspectAllDays)
             clickDialog(R.string.developer_inspect_all); clickDialog(R.string.developer_done)
             check(AppSettings(targetContext).inspectAllDays)
@@ -158,7 +157,7 @@ class TrainingInstrumentation : Instrumentation() {
             clickLabel(programs[2].name.resolve())
             check(find { it is TextView && it.text == targetContext.getString(R.string.assigned_later) && !it.isEnabled } != null)
             check(!shown(R.string.inspect_only_note))
-            report("Ten taps on the version and passcode 0002 open developer settings; Inspect all days shows a future day read-only")
+            report("Ten taps on the version open developer settings; Inspect all days shows a future day read-only")
 
             nav(R.string.nav_today); clickText(R.string.resume_workout)
             clickText(R.string.finish_workout); clickDialog(R.string.finish); clickDialog(R.string.finish)
@@ -577,6 +576,14 @@ class TrainingInstrumentation : Instrumentation() {
             clickText(R.string.start_today)
             check(repository.activeWorkout()?.programId == levelTwoFirst.id)
             report("First launch places by the weakest answer: a skip keeps Level 1 and its hint, Level 1 day 41 and Level 2 mark the days before complete without skill or leaderboard points, and placement never returns")
+
+            // Settings' Reset progress, with Level 1 complete and a Level 2 class in progress.
+            nav(R.string.nav_settings)
+            clickText(R.string.reset_button); clickDialog(R.string.reset_confirm)
+            check(repository.completedProgramIds().isEmpty() && repository.sessionHistory().isEmpty())
+            check(repository.activeWorkout() == null && repository.resetAt() > 0)
+            check(!AppSettings(targetContext).placementDone && shown(R.string.placement_title))
+            report("Reset progress in Settings erases finished classes, history and the class in progress, and asks where to start again")
         } catch (error: Throwable) { failure=error }
         finally {
             if (displayFontScale != null) runCatching { restoreDisplay() }
@@ -677,24 +684,6 @@ class TrainingInstrumentation : Instrumentation() {
         error("Missing dialog action: $label. Visible text: $labels")
     }
     private fun shown(label: String) = find { it is TextView && it.text.toString() == label } != null
-    /** Types into the open dialog's text field, which lives outside the activity's views. */
-    private fun typeInDialog(text: String) {
-        fun field(node: AccessibilityNodeInfo?): AccessibilityNodeInfo? {
-            if (node == null) return null
-            if (node.className?.toString() == "android.widget.EditText") return node
-            for (i in 0 until node.childCount) field(node.getChild(i))?.let { return it }
-            return null
-        }
-        repeat(40) {
-            val target = field(uiAutomation.rootInActiveWindow)
-            if (target != null) {
-                val arguments = Bundle().apply { putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, text) }
-                check(target.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments)); settle(); return
-            }
-            SystemClock.sleep(100)
-        }
-        error("No text field in the open dialog")
-    }
     private fun shown(resource: Int) = shown(targetContext.getString(resource))
     private fun findAll(predicate: (View) -> Boolean): List<View> {
         val result = mutableListOf<View>()

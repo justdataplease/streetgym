@@ -2,24 +2,22 @@ package com.justdataplease.streetgym.ui
 
 import android.app.AlertDialog
 import android.content.Context
-import android.text.InputType
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Switch
 import android.widget.Toast
 import com.justdataplease.streetgym.R
 
-/** Android's build-number trick on the Settings version line: [TAPS] taps ask for the passcode. */
+/** Android's build-number trick on the Settings version line: the [TAPS]th tap opens the developer settings. */
 class VersionTaps {
     private var taps = 0
 
-    /** What one more tap shows: nothing at first, a countdown from [COUNTDOWN_FROM], then the passcode on every tap. */
+    /** What one more tap shows: nothing at first, a countdown from [COUNTDOWN_FROM], then the menu. */
     fun tap(): Step {
         taps = minOf(taps + 1, TAPS)
         val remaining = TAPS - taps
         return when {
-            remaining == 0 -> Step.Passcode
+            remaining == 0 -> Step.Open
             taps >= COUNTDOWN_FROM -> Step.Countdown(remaining)
             else -> Step.Quiet
         }
@@ -28,21 +26,18 @@ class VersionTaps {
     sealed interface Step {
         data object Quiet : Step
         data class Countdown(val remaining: Int) : Step
-        data object Passcode : Step
+        data object Open : Step
     }
 
     companion object {
         const val TAPS = 10
         const val COUNTDOWN_FROM = 4
-        private const val PASSCODE = "0002"
-
-        fun accepts(code: String): Boolean = code.trim() == PASSCODE
     }
 }
 
 /**
- * The hidden developer settings behind the version line ([VersionTaps]). Once the passcode is accepted a single tap
- * opens them, until they are hidden again. They live on this device only and never sync.
+ * The hidden developer settings behind the version line ([VersionTaps]). Once unlocked a single tap opens them, until
+ * they are hidden again. They live on this device only and never sync.
  */
 class DeveloperMenu(private val context: Context, private val settings: AppSettings) {
     private val taps = VersionTaps()
@@ -57,29 +52,11 @@ class DeveloperMenu(private val context: Context, private val settings: AppSetti
             VersionTaps.Step.Quiet -> Unit
             is VersionTaps.Step.Countdown ->
                 show(context.resources.getQuantityString(R.plurals.developer_taps_left, step.remaining, step.remaining))
-            VersionTaps.Step.Passcode -> askPasscode()
+            VersionTaps.Step.Open -> {
+                settings.developerUnlocked = true
+                open()
+            }
         }
-    }
-
-    private fun askPasscode() {
-        val field = EditText(context).apply {
-            hint = context.getString(R.string.developer_passcode_hint)
-            isSingleLine = true
-            inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
-            setTextColor(AppColors.TEXT)
-        }
-        AlertDialog.Builder(context).setTitle(R.string.developer_title)
-            .setMessage(R.string.developer_passcode_message)
-            .setView(padded(field))
-            .setNegativeButton(R.string.cancel, null)
-            .setPositiveButton(R.string.developer_unlock) { _, _ ->
-                if (VersionTaps.accepts(field.text.toString())) {
-                    settings.developerUnlocked = true
-                    open()
-                } else {
-                    show(context.getString(R.string.developer_wrong_passcode))
-                }
-            }.show()
     }
 
     private fun open() {

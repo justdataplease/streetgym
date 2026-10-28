@@ -3,9 +3,9 @@
     <string name="progress_tab_skills">Skills</string>
     <string name="progress_tab_history">History</string>
     <string name="skills_score_kicker">Overall score</string>
-    <string name="skills_score_of">/ %1$d</string>
-    <string name="skills_score_description">Overall score %1$d of %2$d, %3$s</string>
-    <string name="skills_tier_next">%1$s · %2$d to %3$s</string>
+    <string name="skills_score_of">/ %1$s</string>
+    <string name="skills_score_description">Overall score %1$s of %2$s, %3$s</string>
+    <string name="skills_tier_next">%1$s · %2$s to %3$s</string>
     <string name="skills_tier_top">%1$s · the top tier</string>
     <string name="skills_tier_beginner">Beginner</string>
     <string name="skills_tier_novice">Novice</string>
@@ -13,13 +13,13 @@
     <string name="skills_tier_advanced">Advanced</string>
     <string name="skills_tier_elite">Elite</string>
     <string name="skills_tier_world_class">World-class</string>
-    <string name="skills_family_line">%1$s · %2$s · %3$d</string>
-    <string name="skills_next_test">Next: test %1$s for +%2$d</string>
+    <string name="skills_family_line">%1$s · %2$s · %3$s</string>
+    <string name="skills_next_test">Next: test %1$s for +%2$s</string>
     <string name="skills_next">Next: %1$s</string>
     <string name="skills_rungs">Rungs achieved: %1$d of %2$d</string>
     <string name="skills_placed_past">Days placed past or marked complete: %1$d, worth no points</string>
-    <string name="skills_group_score_of">%1$s /%2$d</string>
-    <string name="skills_group_score_description">%1$s, %2$d of %3$d points</string>
+    <string name="skills_group_score_of">%1$s /%2$s</string>
+    <string name="skills_group_score_description">%1$s, %2$s of %3$s points</string>
     <string name="skills_closest">Closest to achieving</string>
     <string name="skills_closest_empty">Finish a workout and tick your sets to start earning points toward your first skills.</string>
     <string name="skills_filter_all">All</string>
@@ -43,9 +43,9 @@
     <string name="skills_practice">Practice</string>
     <string name="skills_practice_value">%1$d of 50 · %2$d of 2 classes</string>
     <string name="skills_value">Score value</string>
-    <string name="skills_value_line">%1$d of %2$s\'s %3$d</string>
+    <string name="skills_value_line">%1$s of %2$s\'s %3$s</string>
     <string name="skills_gain">Achieving it adds</string>
-    <string name="skills_gain_value">+%1$d</string>
+    <string name="skills_gain_value">+%1$s</string>
     <string name="skills_difficulty">Difficulty</string>
     <string name="skills_difficulty_1">Beginner</string>
     <string name="skills_difficulty_2">Novice</string>
@@ -87,7 +87,7 @@
     <string name="skills_test_negative_side">Lower one rep over at least %1$d s on each side</string>
     <string name="skills_test_prescribed">The prescribed dose</string>
     <string name="readiness_question_title">Readiness check: %1$s</string>
-    <string name="skills_how_points" formatted="false">How skill points work. Only the sets you tick in a finished class count, and only when the class ran at least 40% of its planned time; days marked complete, placed past or repeated earn nothing. A set done as the easier option counts for the easier skill. Each skill has 100 points: up to 50 for prep, from its own sets, the easier rungs below it and basic strength work, measured against what the program gives you before it first asks for the skill; and 25 for each of the first two classes that train the skill itself. An easier rung is achieved at 100. Rungs worth 15 or more in the overall score also need a passed test, from the skill sheet or a readiness check in class; achieving a rung achieves the easier ones below it. The overall score, out of 1000, counts each family\'s hardest achieved rung by how hard it is, plus half the gap to its next rung as you train it, so a full planche is worth twice a full front lever. Dots show a coach\'s grade, from one (Beginner, green) to five (Elite, red).</string>
+    <string name="skills_how_points" formatted="false">How skill points work. Only the sets you tick in a finished class count, and only when the class ran at least 40% of its planned time; days marked complete, placed past or repeated earn nothing. A set done as the easier option counts for the easier skill. Each skill has 100 points: up to 50 for prep, from its own sets, the easier rungs below it and basic strength work, measured against what the program gives you before it first asks for the skill; and 25 for each of the first two classes that train the skill itself. An easier rung is achieved at 100. Rungs worth 15 or more in the overall score also need a passed test, from the skill sheet or a readiness check in class; achieving a rung achieves the easier ones below it. The overall score, out of 100, counts each family\'s hardest achieved rung by how hard it is, plus half the gap to its next rung as you train it, so a full planche is worth twice a full front lever. Dots show a coach\'s grade, from one (Beginner, green) to five (Elite, red).</string>
     <string name="skills_badge_description">%1$s, %2$s</string>
     <string name="skills_close">Close</string>
     <string name="workout_easier_off">Easier option: %1$s</string>

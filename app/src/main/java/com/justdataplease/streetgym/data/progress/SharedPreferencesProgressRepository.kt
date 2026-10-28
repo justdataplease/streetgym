@@ -154,6 +154,19 @@ class SharedPreferencesProgressRepository(
         preferences.edit().putString(KEY_EXAMS, examLog().record(result).encode()).apply()
     }
 
+    /** When progress was last reset, here or on another of the athlete's devices; 0 if never. */
+    fun resetAt(): Long = preferences.getLong(KEY_RESET_AT, 0L)
+
+    /**
+     * Starts over: completed days, history, skill tests, exam results and any level replay go, and the workout in
+     * progress too unless [keepActiveWorkout] (a reset arriving from another device mustn't pull a class from under the
+     * athlete). [at] is kept, so a cloud copy from before it can't bring anything back ([resetAt]).
+     */
+    fun reset(at: Long, keepActiveWorkout: Boolean = false) = synchronized(lock) {
+        val active = preferences.getString(KEY_ACTIVE_WORKOUT, null).takeIf { keepActiveWorkout }
+        preferences.edit().clear().putLong(KEY_RESET_AT, at).apply { active?.let { putString(KEY_ACTIVE_WORKOUT, it) } }.apply()
+    }
+
     /** Pro: merges the cloud copy into this device ([ProgressMerge]) and returns the merged copy to upload. */
     fun mergeCloud(completed: Collection<String>, sessionsJson: String?, testsJson: String?, examsJson: String? = null): CloudProgress =
         synchronized(lock) {
@@ -264,5 +277,6 @@ class SharedPreferencesProgressRepository(
         private const val KEY_SKILL_TESTS = "skill_tests"
         private const val KEY_EXAMS = "exam_results"
         private const val KEY_REPLAY_FROM = "replay_from_program_id"
+        private const val KEY_RESET_AT = "reset_at"
     }
 }

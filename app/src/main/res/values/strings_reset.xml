@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reset_title">Start over</string>
+    <string name="reset_body">Erase your finished classes, history, skill tests and exam results, and choose where to start again. My workouts, your theme and purchases stay.</string>
+    <string name="reset_body_account">Erase your finished classes, history, skill tests and exam results, and choose where to start again. Your cloud copy and leaderboard score start over too. My workouts, your theme and purchases stay.</string>
+    <string name="reset_button">Reset progress</string>
+    <string name="reset_confirm_title">Reset all progress?</string>
+    <string name="reset_confirm_message">Every finished class, your history, skill tests and exam results are erased. This can\'t be undone.</string>
+    <string name="reset_confirm">Reset</string>
+    <string name="reset_done">Progress reset. Choose where to start.</string>
+</resources>

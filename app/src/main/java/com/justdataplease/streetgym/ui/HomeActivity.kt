@@ -114,7 +114,6 @@ import java.util.ArrayDeque
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.Executors
-import kotlin.math.roundToInt
 import kotlin.random.Random
 
 /**
@@ -385,11 +384,10 @@ open class HomeActivity : Activity() {
         page.addWithMargins(holder, topDp = 12)
         page.addWithMargins(bodyText(getString(R.string.leaderboard_how), 12f), topDp = 14)
         val score = if (uid != null && profile != null) currentScore(book).let { if (boardSkill == null) it.overall else it.families[boardSkill] ?: 0 } else 0
-        // Family boards rank ten times the family's raw value; they read on the same 1000 scale as Skills.
+        // Family boards rank ten times the family's raw value; they read on the same scale as Skills, out of 100.
         val scoreMax = book.families.sumOf { it.ceiling }
         val overallBoard = boardSkill == null
-        fun shown(points: Int): String = NumberFormat.getIntegerInstance()
-            .format(if (overallBoard || scoreMax == 0) points else (points * 100.0 / scoreMax).roundToInt())
+        fun shown(points: Int): String = scoreText(if (overallBoard || scoreMax == 0) points else points * 100.0 / scoreMax)
         fun show(board: Board?, loading: Boolean) {
             holder.removeAllViews()
             if (board == null) { holder.addView(bodyText(getString(if (loading) R.string.leaderboard_loading else R.string.leaderboard_offline), 14f)); return }
@@ -2457,6 +2455,12 @@ open class HomeActivity : Activity() {
         ) { settings.soundCues = it })
         preferencesCard.addView(workoutViewSetting(settings))
         page.addWithMargins(preferencesCard, bottomDp = 16)
+        page.addWithMargins(card().apply {
+            addView(titleText(getString(R.string.reset_title), 19f))
+            addWithMargins(bodyText(getString(if (Cloud.uid(this@HomeActivity) != null) R.string.reset_body_account
+                else R.string.reset_body), 14f), topDp = 7)
+            addWithMargins(secondaryButton(getString(R.string.reset_button)) { confirmReset() }, topDp = 12)
+        }, bottomDp = 16)
         val safety = card().apply {
             background = roundedDrawable(AppColors.WARNING_SURFACE, dp(24).toFloat())
             addView(titleText(getString(R.string.safety_title), 19f))
@@ -2476,6 +2480,27 @@ open class HomeActivity : Activity() {
         about.addWithMargins(secondaryButton("Ad privacy") { NativeAds.showPrivacy(this, BuildConfig.ADMOB_NATIVE_ID) }, topDp = 12)
         page.addView(about)
         setBody(scroll(page))
+    }
+
+    /**
+     * Settings' Reset progress: after a confirmation every finished class, the history, skill tests and exam results go,
+     * and the placement question comes back on Today. My workouts, the theme and purchases stay; signed in, the cloud
+     * copy and the leaderboard score follow at the sync this starts.
+     */
+    private fun confirmReset() {
+        AlertDialog.Builder(this).setTitle(R.string.reset_confirm_title).setMessage(R.string.reset_confirm_message)
+            .setNegativeButton(R.string.cancel, null)
+            .setPositiveButton(R.string.reset_confirm) { _, _ ->
+                clearRest()
+                progressRepository.reset(System.currentTimeMillis())
+                settings.placementDone = false
+                placementAnswers.fill(-1)
+                // The score goes up again from zero, at once rather than after the usual ten minutes.
+                Cloud.uid(this)?.let { accountStore.savePublishedScore(it, null, 0) }
+                cloudChanged()
+                Toast.makeText(this, R.string.reset_done, Toast.LENGTH_LONG).show()
+                openRoot(Screen.Dashboard)
+            }.show()
     }
 
     private fun settingSwitch(label: String, checked: Boolean, onChanged: (Boolean) -> Unit): Switch =
