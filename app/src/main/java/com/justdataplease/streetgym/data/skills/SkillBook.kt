@@ -273,10 +273,13 @@ class SkillBook private constructor(
         }
 
         /**
-         * The 37 belted skills in 14 families (round 9). The skills that left the belts stay as foundations, so they
-         * can't rejoin a ladder by their regression, and so do the drills the round-9 classes add (the tuck front raise,
-         * the one-arm hang and the like). The Nordic curl family left with its two rungs; its leaderboard weight stays
-         * in [OverallScore.RETIRED_CEILINGS] until the board function is redeployed.
+         * The 40 belted skills in 16 families (round 11: round 9's 37, the one-arm handstand at the top of the handstand
+         * ladder, and the shrimp squat and the Hefesto as families of their own). The skills that left the belts stay as
+         * foundations, so they can't rejoin a ladder by their regression, and so do the drills the classes add (the tuck
+         * front raise, the one-arm hang and the like) and the new skills' progressions. The shrimp squat's progressions
+         * share the pistol's single-leg-squat pattern, so they must stay foundations or they would join the pistol
+         * ladder. The Nordic curl family, retired in round 9, is gone from the leaderboard function too (score version
+         * 3).
          */
         val DEFAULT_FAMILIES = listOf(
             SkillFamilySpec("pullup", "Pull-up", SkillGroup.PULL,
@@ -297,9 +300,16 @@ class SkillBook private constructor(
                 setOf("front_lever")),
             SkillFamilySpec("back_lever", "Back lever", SkillGroup.PULL,
                 listOf("tuck_back_hold", "advanced_tuck_back", "straddle_back", "full_back"),
-                listOf("active_hang", "arch_hold", "chinup", "skin_cat_partial", "german_hang", "tuck_back_entry",
-                    "one_leg_back"),
+                listOf("active_hang", "arch_hold", "chinup", "skin_cat_partial", "german_hang", "skin_the_cat",
+                    "tuck_back_entry", "one_leg_back"),
                 setOf("back_lever")),
+            // The Hefesto: from a supinated German hang up behind the bar to straight-arm support above it. Its
+            // foot-assisted progressions start from the back lever's German hang.
+            SkillFamilySpec("hefesto", "Hefesto", SkillGroup.PULL,
+                listOf("hefesto"),
+                listOf("german_hang", "skin_cat_partial", "assisted_supinated_german_hang", "supinated_german_hang",
+                    "assisted_behind_bar_support", "assisted_korean_dip", "assisted_partial_hefesto", "assisted_hefesto"),
+                setOf("hefesto")),
             SkillFamilySpec("dip", "Dip", SkillGroup.PUSH,
                 listOf("parallel_dip"),
                 listOf("foot_assisted_support", "support_hold", "scapular_dip", "close_pushup", "assisted_dip",
@@ -320,11 +330,13 @@ class SkillBook private constructor(
                 listOf("support_hold", "straight_bar_support", "elevated_plank", "planche_lean", "frog_stand",
                     "tuck_planche_pushup", "straddle_planche_negative"),
                 setOf("planche")),
+            // The one-arm handstand tops the ladder; its straddle, weight-shift, fingertip and hover steps are movements.
             SkillFamilySpec("handstand", "Handstand", SkillGroup.PUSH,
-                listOf("wall_handstand", "freestanding_handstand"),
+                listOf("wall_handstand", "freestanding_handstand", "one_arm_handstand"),
                 listOf("pike_pushup", "wall_slide", "overhead_line", "pike_handstand_hold", "wall_kickup",
                     "handstand_exit", "handstand_toe_pull", "handstand_balance", "wall_handstand_shrug",
-                    "tuck_press_handstand"),
+                    "tuck_press_handstand", "straddle_handstand", "supported_handstand_shift", "handstand_weight_shift",
+                    "fingertip_one_arm_handstand", "one_arm_handstand_hover", "straddle_one_arm_handstand"),
                 setOf("handstand")),
             // The squat leads to the pistol; the hamstring work of the old Nordic curl family stays here as movements.
             SkillFamilySpec("pistol", "Pistol squat", SkillGroup.LEGS,
@@ -333,6 +345,11 @@ class SkillBook private constructor(
                     "split_squat", "assisted_pistol_squat", "glute_bridge", "single_leg_bridge", "single_leg_rdl",
                     "sliding_leg_curl", "nordic_negative", "nordic_curl"),
                 setOf("single_leg_squat")),
+            // The shrimp squat (rear foot held) is a ladder of its own beside the pistol, from the split squat up.
+            SkillFamilySpec("shrimp", "Shrimp squat", SkillGroup.LEGS,
+                listOf("shrimp_squat"),
+                listOf("assisted_partial_shrimp", "assisted_shrimp", "floating_shrimp", "assisted_held_shrimp"),
+                setOf("shrimp")),
             SkillFamilySpec("hanging_core", "Toes to bar", SkillGroup.CORE,
                 listOf("hanging_leg_raise", "toes_to_bar"),
                 listOf("lying_leg_raise", "hollow_hold", "seated_pike_lift", "knee_raise"), setOf("hanging_core")),
@@ -348,7 +365,7 @@ class SkillBook private constructor(
             SkillFamilySpec("human_flag", "Human flag", SkillGroup.CORE,
                 listOf("tuck_flag", "straddle_flag", "full_flag"),
                 listOf("straight_side_plank", "pullup", "pike_pushup", "kneeling_side_plank", "flag_ground_support",
-                    "assisted_tuck_flag", "flag_negative"),
+                    "assisted_tuck_flag", "vertical_flag", "flag_negative"),
                 setOf("human_flag")),
         )
     }

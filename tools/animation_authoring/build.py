@@ -3,6 +3,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import author
 for g in ["group_a", "group_b", "group_c", "group_d", "contact_corrections", "class_skills", "progressions", "group_e", "group_f", "group_g", "form_review"]:
     importlib.import_module(g)
+import focused_skills
+import flag_hang_skills
 import mappings as m
 heur = [{"contains": c, "animation": a} for c, a in m.HEURISTICS]
 missing = [t for t in list(m.MOVEMENTS.values()) + list(m.ALIASES.values()) + [h["animation"] for h in heur]

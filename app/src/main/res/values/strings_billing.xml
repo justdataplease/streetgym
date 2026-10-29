@@ -22,7 +22,7 @@
     <string name="pro_title">Pro · yearly*</string>
     <string-array name="pro_features">
         <item>Everything in Plus</item>
-        <item>Levels 6 to 10, up to the full levers, planche, flag and one-arm pull-up</item>
+        <item>Levels 6 to 10, up to the full levers, planche, flag, Hefesto and the one-arm pull-up and handstand</item>
         <item>300 saved and custom days in 10 lists of 30</item>
         <item>Leaderboard: overall and per skill</item>
         <item>Your progress saved to your Google account and on all your devices</item>
@@ -35,7 +35,7 @@
     <string name="paywall_level">Level %1$d is part of Plus</string>
     <string name="paywall_level_body">Lever, planche, flag and handstand work. Pro includes it too, and adds Levels 6 to 10.</string>
     <string name="paywall_level_pro">Level %1$d is part of Pro</string>
-    <string name="paywall_level_pro_body">Levels 6 to 10 build up to the full front and back lever, planche, flag and one-arm pull-up, through the last class.</string>
+    <string name="paywall_level_pro_body">Levels 6 to 10 build up to the full front and back lever, planche, flag, Hefesto and the one-arm pull-up and handstand, through the last class.</string>
     <string name="paywall_parks">Parks near you are part of Plus</string>
     <string name="paywall_rename">Renaming levels is part of Plus</string>
     <string name="paywall_saved">You’ve used all %1$d saved and custom days</string>

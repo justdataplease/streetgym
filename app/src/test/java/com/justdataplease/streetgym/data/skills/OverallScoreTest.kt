@@ -22,12 +22,16 @@ class OverallScoreTest {
 
     private fun elite(vararg ids: String) = score(ids.associateWith { SkillLevel.ELITE })
 
-    @Test fun nothingDoneIsZeroAndEliteOfEveryTopRungIsTheWholeScaleButTheRetiredFamilies() {
+    @Test fun nothingDoneIsZeroAndEliteOfEveryTopRungIsTheWholeScale() {
         assertEquals(0, score(emptyMap()).score)
         assertEquals(OverallScore.Tier.BEGINNER, score(emptyMap()).tier)
         val tops = book.families.map { it.skills.maxBy { skill -> skill.value }.id }
-        // The retired Nordic curl family's 24 stay in the maximum until the board function drops it: 743 of 767.
+        // Round 11 retires nothing (score version 3 drops the Nordic curl): the 16 families' tops add up to 887, and
+        // Elite on all of them is the whole 1000.
         val retired = OverallScore.RETIRED_CEILINGS.values.sum()
+        assertEquals(0, retired)
+        assertEquals(887, score(emptyMap()).max)
+        assertEquals(OverallScore.MAX, elite(*tops.toTypedArray()).score)
         val max = book.families.sumOf { it.ceiling } + retired
         assertEquals(max, score(emptyMap()).max)
         assertEquals((OverallScore.MAX * (max - retired).toDouble() / max).roundToInt(), elite(*tops.toTypedArray()).score)
@@ -92,13 +96,13 @@ class OverallScoreTest {
         val overall = elite(*tops.toTypedArray())
         val ceilings = SkillGroup.entries.map { overall.group(it) }
         ceilings.forEach { (points, ceiling) -> assertEquals(ceiling, points) }
-        // The four groups share the thousand, less the retired families' share.
+        // The four groups share the thousand (less the retired families' share, none since round 11).
         assertEquals(overall.scaled(overall.max - OverallScore.RETIRED_CEILINGS.values.sum().toDouble()).toDouble(),
             ceilings.sumOf { it.second }.toDouble(), 2.0)
     }
 
     private companion object {
-        /** Every family with all its rungs, as a curriculum that teaches the 37 skills gives them. */
+        /** Every family with all its rungs, as a curriculum that teaches the 40 skills gives them. */
         val book = SkillBook.build(
             SkillBook.DEFAULT_FAMILIES.flatMap { it.ladder }.associateWith { SkillMovement(it, it, "skill", emptySet(), null) },
             emptyList())

@@ -19,13 +19,13 @@ The only current curriculum has 10 levels, 100 sessions per level, 1,000 unique 
 
 Today assigns the next session. Sessions keep warm-up, practice, main and cooldown, explicit regressions, the difficulty toggle and exam/replay behavior. See [the program plan](CURRICULUM_PLAN.md), [skills and belts](SKILLS_SCORE.md) and [tiers](TIERS.md). Do not infer mastery from attendance or treat the level names as sporting qualifications.
 
-## How the classes are made (round 9, 29 October 2026)
+## How the classes are made (round 9, 29 October 2026; round 11 the same day)
 
 Every one of the 1,000 classes is written by `tools/build_curriculum.py` from one plan, into `curriculum/program.json`. Ids stay positional and frozen (`DayIdsTest`), so the classes are rewritten in place. The plan and its numbers are in [CURRICULUM_PLAN.md](CURRICULUM_PLAN.md):
-- circuits in Levels 1-2;
-- a fixed skill week from Level 3;
+- circuits in Level 1;
+- a fixed rotation of seven skill classes from Level 2, run at whatever pace the athlete chooses;
 - the full shapes in Levels 8-9 and records in Level 10;
-- 37 belted skills, each reaching its Elite target at least once inside the program.
+- 40 belted skills (37 until round 11), each reaching its Elite target at least once inside the program.
 
 The pipeline:
 1. `python tools/build_curriculum.py` writes the classes. It checks the validators' rules as it writes and prints where every belt lands if each set is done as written.

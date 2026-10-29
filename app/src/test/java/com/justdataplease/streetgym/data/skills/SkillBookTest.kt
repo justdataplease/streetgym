@@ -182,9 +182,10 @@ class SkillBookTest {
     }
 
     @Test
-    fun theBeltsAreTheThirtySevenSkillsOfRoundNine() {
+    fun theBeltsAreTheFortySkillsOfRoundEleven() {
         val skillIds = everyRung.families.flatMap { family -> family.skills.map { it.id } }
-        assertEquals(37, skillIds.size)
+        assertEquals(40, skillIds.size)
+        assertEquals(16, everyRung.families.size)
         assertEquals("each skill appears once", skillIds.size, skillIds.toSet().size)
         assertEquals(SkillStandards.ALL.keys, skillIds.toSet())
         // The skills that left the belts are movements now, kept as foundations so they can't rejoin a ladder.
@@ -193,12 +194,22 @@ class SkillBookTest {
             assertFalse("$id earns no belt", id in skillIds)
             assertTrue("$id stays a movement of its family", id in foundations)
         }
+        // Round 11's progressions are movements of their families too, never rungs.
+        ROUND_11_STEPS.forEach { id ->
+            assertFalse("$id earns no belt", id in skillIds)
+            assertTrue("$id is a foundation", id in foundations)
+        }
         assertEquals("no family is left without a rung", SkillBook.DEFAULT_FAMILIES.map { it.id }, everyRung.families.map { it.spec.id })
         fun ladder(id: String) = everyRung.families.first { it.spec.id == id }.skills.map { it.id }
         assertEquals(listOf("dead_hang", "pullup", "archer_pullup", "one_arm_pullup"), ladder("pullup"))
         assertEquals(listOf("pseudo_planche_pushup", "tuck_planche", "advanced_tuck_planche", "straddle_planche", "full_planche"),
             ladder("planche"))
         assertEquals(listOf("squat", "pistol_squat"), ladder("pistol"))
+        assertEquals(listOf("wall_handstand", "freestanding_handstand", "one_arm_handstand"), ladder("handstand"))
+        assertEquals(listOf("shrimp_squat"), ladder("shrimp"))
+        assertEquals(listOf("hefesto"), ladder("hefesto"))
+        assertEquals(SkillGroup.LEGS, everyRung.families.first { it.spec.id == "shrimp" }.spec.group)
+        assertEquals(SkillGroup.PULL, everyRung.families.first { it.spec.id == "hefesto" }.spec.group)
         assertEquals(listOf("hollow_body_hold", "dragon_flag"), ladder("dragon_flag"))
         assertEquals(listOf("parallel_dip"), ladder("dip"))
         // Working-set targets (a set at one or two reps in reserve), as the owner took them for round 9.
@@ -207,17 +218,23 @@ class SkillBookTest {
         assertEquals(listOf(15, 20, 25, 30, 40), SkillStandards.of("squat").targets)
         assertEquals(listOf(20, 30, 40, 50, 60), SkillStandards.of("hollow_body_hold").targets)
         // The rarest rungs stay reachable inside the program, so two levels may share a target and differ by their sets.
-        assertEquals(listOf(2, 2, 2, 3, 4), SkillStandards.of("full_planche").targets)
+        // Round 11 starts the hardest holds at 3 s.
+        assertEquals(listOf(3, 3, 4, 5, 6), SkillStandards.of("full_planche").targets)
         assertEquals(listOf(1, 1, 1, 2, 3), SkillStandards.of("one_arm_pullup").targets)
-        assertEquals(listOf(1, 2, 3, 4, 5), SkillStandards.of("strict_muscleup").targets)
-        // Beginner to Advanced share the full planche's 2 s and differ by their sets; Master and Elite each ask longer.
-        assertEquals(SkillLevel.INTERMEDIATE, everyRung.progress(listOf(sets("full_planche", 29, 2))).status("full_planche").level)
-        assertEquals(SkillLevel.ADVANCED, everyRung.progress(listOf(sets("full_planche", 30, 2))).status("full_planche").level)
+        assertEquals(listOf(1, 2, 4, 6, 8), SkillStandards.of("strict_muscleup").targets)
+        assertEquals(listOf(5, 15, 30, 45, 60), SkillStandards.of("freestanding_handstand").targets)
+        assertEquals(listOf(3, 4, 5, 7, 10), SkillStandards.of("one_arm_handstand").targets)
+        assertEquals(listOf(2, 3, 5, 7, 10), SkillStandards.of("shrimp_squat").targets)
+        assertEquals(listOf(1, 1, 2, 3, 4), SkillStandards.of("hefesto").targets)
+        // Beginner and Intermediate share the full planche's 3 s and differ by their sets; from Advanced each asks longer.
+        assertEquals(SkillLevel.BEGINNER, everyRung.progress(listOf(sets("full_planche", 19, 3))).status("full_planche").level)
+        assertEquals(SkillLevel.INTERMEDIATE, everyRung.progress(listOf(sets("full_planche", 30, 3))).status("full_planche").level)
+        assertEquals(SkillLevel.ADVANCED, everyRung.progress(listOf(sets("full_planche", 30, 4))).status("full_planche").level)
         // From Advanced up every level takes 30 sets, so no two of them may share a target.
         SkillStandards.ALL.forEach { (id, standard) -> assertTrue(id, standard.targets.drop(2).zipWithNext().all { (a, b) -> b > a }) }
-        assertEquals(setOf("archer_pullup", "one_arm_pullup", "one_arm_pushup", "pistol_squat", "tuck_flag", "straddle_flag", "full_flag"),
-            SkillStandards.ALL.filterValues { it.perSide }.keys)
-        assertEquals(setOf("dead_hang", "wall_handstand", "freestanding_handstand", "hollow_body_hold", "lsit", "v_sit",
+        assertEquals(setOf("archer_pullup", "one_arm_pullup", "one_arm_pushup", "pistol_squat", "shrimp_squat", "one_arm_handstand",
+            "tuck_flag", "straddle_flag", "full_flag"), SkillStandards.ALL.filterValues { it.perSide }.keys)
+        assertEquals(setOf("dead_hang", "wall_handstand", "freestanding_handstand", "one_arm_handstand", "hollow_body_hold", "lsit", "v_sit",
             "tuck_front_hold", "advanced_tuck_front", "straddle_front", "full_front", "tuck_back_hold", "advanced_tuck_back",
             "straddle_back", "full_back", "tuck_planche", "advanced_tuck_planche", "straddle_planche", "full_planche",
             "tuck_flag", "straddle_flag", "full_flag"), SkillStandards.ALL.filterValues { it.seconds }.keys)
@@ -245,19 +262,50 @@ class SkillBookTest {
         assertEquals(5, SkillStandards.of("one_arm_pullup").grade)
         listOf("straddle_planche", "full_front", "full_flag").forEach { assertTrue(it, SkillStandards.of(it).grade in 4..5) }
         listOf("strict_muscleup", "full_back").forEach { assertEquals(it, 4, SkillStandards.of(it).grade) }
+        listOf("one_arm_handstand", "hefesto").forEach { assertEquals(it, 5, SkillStandards.of(it).grade) }
+        assertEquals(3, SkillStandards.of("shrimp_squat").grade)
         assertEquals("full_planche", OverallScore.SKILL_VALUES.maxBy { it.value }.key)
+        // Round 11's values: the one-arm handstand tops the handstand family at the one-arm pull-up's 110.
+        assertEquals(mapOf("one_arm_handstand" to 110, "hefesto" to 50, "shrimp_squat" to 14),
+            listOf("one_arm_handstand", "hefesto", "shrimp_squat").associateWith { OverallScore.SKILL_VALUES.getValue(it) })
+    }
+
+    @Test
+    fun shrimpStepsStayOutOfThePistolLadder() {
+        // The authoritative movement library, as the next curriculum carries it: the shrimp squat's steps share the
+        // pistol's single-leg-squat pattern and regress from the split squat, a pistol foundation, so only their being
+        // foundations keeps them off the pistol ladder. Every ladder is exactly as specified.
+        val library = org.json.JSONObject(File("../curriculum/movement_library.json").readText()).getJSONArray("movements")
+        val book = SkillCurriculumReader.read(org.json.JSONObject().put("movement_library", library))
+        book.families.forEach { assertEquals(it.spec.id, it.spec.ladder.filter { id -> book.skill(id) != null }, it.skills.map { s -> s.id }) }
+        assertEquals(SkillBook.DEFAULT_FAMILIES.map { it.id }, book.families.map { it.spec.id })
+        assertEquals(SkillStandards.ALL.keys, book.families.flatMap { f -> f.skills.map { it.id } }.toSet())
+        assertEquals(listOf("squat", "pistol_squat"), book.families.first { it.spec.id == "pistol" }.skills.map { it.id })
+        // Every skill-level movement of the library is a rung or a family's foundation.
+        val skillCategories = setOf("skill", "skill_strength", "advanced_skill", "mastery_skill", "advanced_strength", "advanced_fundamental")
+        val foundations = SkillBook.DEFAULT_FAMILIES.flatMap { it.foundations }.toSet()
+        val loose = (0 until library.length()).map(library::getJSONObject)
+            .filter { it.optString("category") in skillCategories }.map { it.getString("id") }
+            .filterNot { book.skill(it) != null || it in foundations }
+        assertEquals("skill movements outside every ladder", emptyList<String>(), loose)
     }
 
     @Test
     fun theDeployedLeaderboardFunctionAcceptsEveryFamily() {
         // boards.py refuses a family it doesn't know or above its ceiling, and checks the overall against the sum of all
-        // its ceilings. So every family keeps its old top value, and the retired Nordic curl family's stays in the max.
+        // its ceilings. Score version 3 (round 11) knows the 16 families and nothing retired: the Nordic curl is gone.
         val boards = File("../firebase/functions/boards.py").readText()
         val ceilings = Regex("\"(\\w+)\": (\\d+)").findAll(boards.substringAfter("FAMILY_CEILINGS = {").substringBefore("}"))
             .associate { it.groupValues[1] to it.groupValues[2].toInt() }
         assertEquals(everyRung.families.associate { it.spec.id to it.ceiling } + OverallScore.RETIRED_CEILINGS, ceilings)
         assertTrue(OverallScore.RETIRED_CEILINGS.keys.none { id -> everyRung.families.any { it.spec.id == id } })
         assertEquals(ceilings.values.sum(), OverallScore.scoreMax(everyRung.families))
+        assertEquals(emptyMap<String, Int>(), OverallScore.RETIRED_CEILINGS)
+        assertFalse("nordic" in ceilings)
+        assertEquals(887, ceilings.values.sum())
+        assertEquals(mapOf("handstand" to 110, "shrimp" to 14, "hefesto" to 50), listOf("handstand", "shrimp", "hefesto").associateWith(ceilings::getValue))
+        assertEquals(3, Regex("(?m)^VERSION = (\\d+)").find(boards)?.groupValues?.get(1)?.toInt())
+        assertEquals(3, com.justdataplease.streetgym.leaderboard.Score.VERSION)
         // The parallel dip carries the dip family's old top value, the straight-bar dip's 12.
         assertEquals(12, OverallScore.SKILL_VALUES["parallel_dip"])
         // What the app publishes passes the function's check (boards.py _valid): known families, each within its
@@ -277,7 +325,7 @@ class SkillBookTest {
 
     @Test
     fun theShippedCurriculumCoversEverySkillMovement() {
-        // The curriculum is regenerated for round 9: these hold for any curriculum that teaches the 37 skills.
+        // The curriculum is regenerated for round 11: these hold for any curriculum that teaches the 40 skills.
         val file = File("src/main/assets/curriculum.json")
         val real = SkillCurriculumReader.read(file.readText())
         val skillIds = real.families.flatMap { family -> family.skills.map { it.id } }
@@ -304,10 +352,12 @@ class SkillBookTest {
         listOf("one_arm_pullup_negative", "negative_muscleup", "wall_hspu_negative", "freestanding_hspu_negative",
             "nordic_negative", "bent_dragon_negative", "one_leg_dragon_negative", "full_dragon_negative")
             .forEach { assertFalse("$it is a progression", it in skillIds) }
-        listOf("one_arm_pullup", "one_arm_pushup", "freestanding_handstand", "v_sit").forEach { top ->
+        ROUND_11_STEPS.forEach { assertFalse("$it is a progression", it in skillIds) }
+        listOf("one_arm_pullup", "one_arm_pushup", "one_arm_handstand", "v_sit", "shrimp_squat", "hefesto").forEach { top ->
             val skill = real.skill(top)!!
             assertTrue("$top tops its ladder", real.families.any { it.skills.last() == skill })
-            // Levels 8-10 teach every top shape, the one-arm pull-up and push-up and the V-sit included.
+            // Levels 8-10 teach every top shape, the one-arm pull-up, push-up and handstand, the V-sit and the Hefesto
+            // included.
             assertNotNull("$top is taught", skill.expected)
             assertFalse("$top is trained, not only checked", skill.beyondProgram)
         }
@@ -330,7 +380,7 @@ class SkillBookTest {
             .map { it.skill.id })
     }
 
-    /** Every ladder with each of its rungs in the library, as a curriculum that teaches all 37 skills gives them. */
+    /** Every ladder with each of its rungs in the library, as a curriculum that teaches all 40 skills gives them. */
     private val everyRung = SkillBook.build(
         SkillBook.DEFAULT_FAMILIES.flatMap { it.ladder }.associateWith { SkillMovement(it, it, "skill", emptySet(), null) },
         emptyList())
@@ -340,6 +390,12 @@ class SkillBookTest {
         val DROPPED = listOf("active_hang", "chinup", "typewriter_pullup", "chest_to_bar", "straight_bar_support", "support_hold",
             "straight_bar_dip", "pause_pushup", "close_pushup", "archer_pushup", "elevated_pike_pushup", "planche_lean", "frog_stand",
             "handstand_balance", "one_leg_front", "one_leg_back", "one_leg_lsit", "knee_raise", "sliding_leg_curl", "nordic_curl")
+
+        /** The steps toward round 11's three new skills: movements of their families, never belts. */
+        val ROUND_11_STEPS = listOf("straddle_handstand", "supported_handstand_shift", "handstand_weight_shift",
+            "fingertip_one_arm_handstand", "one_arm_handstand_hover", "straddle_one_arm_handstand", "assisted_partial_shrimp",
+            "assisted_shrimp", "floating_shrimp", "assisted_held_shrimp", "assisted_supinated_german_hang",
+            "assisted_behind_bar_support", "assisted_korean_dip", "assisted_partial_hefesto", "assisted_hefesto")
     }
 
     private fun SkillProgress.status(id: String) = statuses.first { it.skill.id == id }

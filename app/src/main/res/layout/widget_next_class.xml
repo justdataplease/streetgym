@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The "Next class" widget, design A "Compact card": a 96 dp card with a 2 dp outline and a hard 4 dp offset shadow,
+    the lead movement playing in a 76 dp tile, three lines of text and a 44 dp start square. NextClassWidget colours it
+    in the athlete's theme and fills the tile, the tape and the headline (drawn in the theme's display face).
+    The root is the widget's background view with clipToOutline set: launchers that round every widget's corners
+    (Launcher3 on Android 12+) leave a widget that does this alone, so the card keeps its square corners and outline.
+    widget_next_class_compact.xml is the same card for a cell under 100 dp tall.
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@android:id/background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToOutline="true">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_gravity="center_vertical">
+
+        <!-- The printed shadow, 4 dp down and right of the card. -->
+        <FrameLayout
+            android:id="@+id/widget_shadow"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:background="#FF121212" />
+
+        <FrameLayout
+            android:id="@+id/widget_outline"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="4dp"
+            android:background="#FF121212"
+            android:padding="2dp">
+
+            <LinearLayout
+                android:id="@+id/widget_card"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#FFF5F4F0"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="10dp"
+                android:paddingEnd="12dp">
+
+                <FrameLayout
+                    android:id="@+id/widget_tile"
+                    android:layout_width="76dp"
+                    android:layout_height="76dp"
+                    android:background="#FF121212"
+                    android:padding="2dp">
+
+                    <ViewFlipper
+                        android:id="@+id/widget_figure"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:autoStart="true"
+                        android:background="#FFE9E7E2"
+                        android:flipInterval="125" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/widget_tape"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="6dp"
+                            android:importantForAccessibility="no" />
+
+                        <TextView
+                            android:id="@+id/widget_meta"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:fontFamily="sans-serif"
+                            android:letterSpacing="0.06"
+                            android:maxLines="1"
+                            android:textColor="#FF4A4945"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/widget_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:adjustViewBounds="true"
+                        android:importantForAccessibility="no"
+                        android:scaleType="fitStart" />
+
+                    <TextView
+                        android:id="@+id/widget_detail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:ellipsize="end"
+                        android:fontFamily="sans-serif"
+                        android:maxLines="1"
+                        android:textColor="#FF4A4945"
+                        android:textSize="12.5sp" />
+                </LinearLayout>
+
+                <FrameLayout
+                    android:id="@+id/widget_action_outline"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="#FF121212"
+                    android:padding="2dp">
+
+                    <ImageView
+                        android:id="@+id/widget_action"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="#FFFFD60A"
+                        android:importantForAccessibility="no"
+                        android:scaleType="center"
+                        android:src="@drawable/widget_play" />
+                </FrameLayout>
+            </LinearLayout>
+        </FrameLayout>
+    </FrameLayout>
+</FrameLayout>

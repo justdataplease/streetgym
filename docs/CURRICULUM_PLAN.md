@@ -1,154 +1,146 @@
-# The Street Gymnastics program (round 9, 29 October 2026; round 10 review the same day)
+# The Street Gymnastics program (round 11, 29 October 2026)
 
-One fixed solo program: 10 levels × 100 daily classes, no choices, no freestyle, no group classes. It starts with easy circuits, moves to a fixed skill week, brings the full shapes in Levels 8–9 and spends Level 10 on records. Every class is written by `tools/build_curriculum.py` from the plan below; the numbers in this document are counted from those classes.
+One fixed solo program: 10 levels × 100 classes, no choices, no freestyle, no group classes. The athlete decides when to train: two classes a week, eight, or two in a day. The app keeps the place and the order; nothing in the program depends on a weekday or a date. Every class is written by `tools/build_curriculum.py` from the plan below, and the numbers in this document are counted from those classes.
 
-This is the final version of the round 9 proposals (`curiculum-proposals/`). It takes claude-combined-1 as the base and corrects it as follows:
-- **From the Codex proposals:**
-  - every class within the validator's set budget, counting practice and main together;
-  - exams that use today's all-targets pass rule;
-  - circuit stations each tested on their own;
-  - a lighter legs day;
-  - doses the app can run, and belt dates counted from the real classes instead of estimated.
-- **From the owner on 29 October:**
-  - the full front lever by the end of Level 8 and the full planche in Level 9;
-  - every full shape achieved by Level 9, and Level 10 for records;
-  - every skill's maximum reachable inside the program, even though its 30 Elite sets are not.
-- **From the research on realism:** the dates and the Elite targets of the rarest skills (see the realism check below).
+Round 11 builds on round 10 (2.5.1):
+- **Skills.** 40 belted skills in 16 families, up from 37 in 14. The one-arm handstand tops the handstand ladder; the shrimp squat and the Hefesto are new families, each with its own line of steps.
+- **Three coach-persona reviews.** AI reviewers playing a statics coach, an adult-class teacher and an S&C coach/physio reviewed the plan three times; all three answered "a very good calisthenics program", 9/10. Their fixes are in the load rules below. No human coach has reviewed this version.
+- **Batch 1, the coaches' last notes.** Exams at the trained dose, need-based bar-day leads, second exposures for the levers, overhead pressing near six sets per rotation, whole circuit rounds and the time cap.
+- **Batch 2, four new movements, animated in side and front view.** The vertical flag, the flag negative, the full skin-the-cat and the free supinated German hang.
 
 ## The frame
 
 | | |
 |---|---|
 | Levels | 10 × 100 classes; Free 1–3, Plus 4–5, Pro 6–10 |
-| Exam days (frozen) | L1 20/40/60/81/100 · L2 20/40/62/84/100 · L3 20/40/64/84/100 · L4–L10 13/34/55/76/100 |
-| Belts | 37 skills × Beginner–Elite, 10/20/30/30/30 sets at the target |
-| Class | warm-up, practice (the handstand line), main, cool-down; ≤55 minutes |
-| Set budget | practice + main ≤ 14 / 16 / 18 / 18 / 20 sets in Levels 1–5, 20 after; ≤3 sets a step in Levels 1–2, ≤4 after |
-| Pace | 1,000 classes ≈ 33 months at 7 a week, ≈ 38 at 6, ≈ 46 at 5 |
+| Exam classes (frozen) | L1 20/40/60/81/100 · L2 20/40/62/84/100 · L3 20/40/64/84/100 · L4–L10 13/34/55/76/100 |
+| Belts | 40 skills × Beginner–Elite, 10/20/30/30/30 sets at the target |
+| Class | warm-up (closing on a ramp-up set), practice (the handstand line), main, cool-down; 25–55 minutes |
+| Set budget | practice + main ≤ 14/14/15/16/18 sets in Levels 1–5 (`class_progression.json`), more after |
+| Pace | 1,000 classes ≈ 33 months at 7 a week, ≈ 38 at 6, ≈ 46 at 5; at 2 a week it simply takes longer |
 
-## The week
+## The rotation
 
-| Day | Levels 1–2: circuits | Levels 3–7: skill days | Levels 8–10: hardcore |
+Classes run in a fixed rotation of seven. The `schedule.week` and `schedule.day` fields are positions in that rotation, not calendar days.
+
+| Position | Level 1: circuits | Levels 2–7: skill classes | Levels 8–10: hardcore |
 |---|---|---|---|
 | 1 | Circuit A, pull & push | Front Lever & Pull | Front Lever & One-Arm |
-| 2 | Push line & wrists (easy) | Planche & Push | Planche & Push |
-| 3 | Circuit B, legs & core | Legs & Core (no arm work) | Legs & Core |
-| 4 | Bar line (easy) | Back Lever & Bar | Back Lever & Muscle-Up |
-| 5 | Easy handstand line | Handstand, Flag & Press | Handstand, Flag & Press |
-| 6 | Circuit C, engine | Basics Circuit | L8: Battle; L9–10: Statics Chain (week A), Battle (week B) |
+| 2 | Push line & wrists (easy) | Legs & Core (no arm work) | Legs & Core |
+| 3 | Circuit B, legs & core | Planche & Push | Planche & Push |
+| 4 | Bar line (easy) | Handstand & Press | Handstand & Press |
+| 5 | Core & balance line | Back Lever, Flag & Hefesto bar class | the same |
+| 6 | Circuit C, engine | Basics & Endurance | L8: Battle; L9–10: Statics Chain in week A, Battle otherwise |
 | 7 | Recovery | Recovery | Recovery |
 
-Level 2 hands over one day per block: the front-lever day from block 3, the planche and bar days from block 4, the handstand and basics days from block 5. A circuit is written as repeated one-set steps (A, B, C, then A, B, C again).
+A circuit is written as repeated one-set steps (A, B, C, then A, B, C again). When a class runs long, the fit drops a whole round, last first, never a station.
 
-The skill days:
-- **The ladder.** Each straight-arm day runs the top rung for 3–4 sets, then 2 back-off sets on the rung below, so lower rungs keep earning.
-- **New rungs.** A new rung starts with 2 short sets beside 3 sets of the rung below.
-- **Week B.** It steps up the lead steps by one rep or 1–2 seconds, never past the next block's dose.
-- **Levels 9–10.** In weeks with a Statics Chain, day 5 drops the flag ladder, so straight-arm work never runs three days in a row and the flag never runs two.
+The skill classes:
+- **The ladder.** A straight-arm line runs its top rung for 3 sets, then a back-off set on the rung below, so the lower rungs keep earning. A new rung enters with 2 short sets beside the rung below for its first two weeks.
+- **The bar class (position 5).** It rotates the back lever, the flag and, from Level 6, the Hefesto. The line whose next rung comes soonest leads with 3 sets; the others keep 2. With no rung due, the full flag leads for the two blocks after it starts, and otherwise the lines take turns.
+- **Second exposures.** Position 6 adds a lighter set of the front lever (from Level 3) and of the back lever, so each lever trains twice per rotation, and two pike or elevated-pike press sets from Level 3.
+- **Week B.** It steps up the lead steps by one rep or one dose step, never past the next block's dose; from Level 4 sets and dose never rise together.
 
 ## The blocks
 
-From Level 4 every block is three calendar weeks:
-1. **Re-entry**, an easy class after the exam.
-2. **Week A** at the block dose.
-3. **Week B**, one step up.
-4. **Exam week**:
-   - days 1–3 at no more than 70% of the sets of the week before;
-   - day 4 a light back-lever and bar class at 60%;
-   - day 5 the primer, one easy set of each line;
-   - day 6 the exam.
+From Level 4 every block runs from the recovery after one exam to the next exam:
+1. **Re-entry**, an easy class after the exam (block 1 opens with a re-entry and then carries the last level's end doses for five classes).
+2. **Week A** at the block dose, then **week B** one step up.
+3. **Hold and trim** classes in the longer blocks, and a deload in block 3.
+4. **Exam week:** position 4 is a light handstand-and-press class, position 5 a light bar class (no flag, at most 4 elbow-load sets), and the exam falls on position 6, its warm-up the primer.
 
-Two blocks differ:
-- **Block 1 (classes 1–13)** replays the last level's end doses, with one set fewer on the lead steps in classes 2–7.
-- **Block 5 (classes 77–100)** ends with a taper into the level exam on class 100: 92–94 lighter, 95–96 light, 97 easy, 98 recovery, 99 primer.
+Block 5 (classes 77–100) ends with a taper into the level exam on class 100: 92–94 deload, 95 hold, 96 light, 97 easy, 98 recovery, 99 primer.
 
-In Levels 1–3 the exam replaces that day's class. The class three before it is lighter, the next is easy, the one before the exam is the primer, and the class after is the re-entry.
+In Levels 1–3 the exam replaces that class. The class before it is the primer, an exam on a recovery position makes the class two before it easy, and the class after the exam is the re-entry.
 
-## When the skills start and the full shapes arrive
+## When the steps start and the full shapes arrive
 
-| Line | Rungs and their first class |
+The first class each movement appears in, counted from the program:
+
+| Line | Steps and their first class |
 |---|---|
-| Front lever | tuck L2:043 · advanced tuck L4:008 · straddle L7:015 · **full L8:015** |
-| Back lever | tuck L3:011 · advanced tuck L4:060 · straddle L5:081 · **full L6:046** |
-| Planche | lean and frog L2:065 · tuck L4:002 · advanced tuck L6:002 · straddle L8:037 · **full L9:016** |
-| Flag | ground support L3:005 · assisted tuck L3:047 · tuck L5:005 · straddle L6:061 · **full L7:061** |
-| Pull | eccentrics L1:022 · pull-up L1:043 · archer L5:008 · assisted one-arm L7:036 · negatives L8:036 · **one-arm L9:015** |
-| Muscle-up | low-bar transitions L2:040 · band and chest-to-bar L3:046 · negatives L3:067 · **strict L4:039** |
-| Handstand | wall L1:026 · balance windows L3:026 · **freestanding L4:005** |
-| Press | pike L1:044 · wall negatives L3:047 · wall HSPU L4:061 · deficit L8:005 · freestanding negatives L10:026 |
-| Core | L-sit L3:023 · toes-to-bar L4:015 · dragon flag L6:017 (negatives from L3:046) · V-sit L8:003 |
-| Legs | pistol L4:003 · Nordic negatives L4:017 · Nordic curl L7:017 |
+| Front lever | tuck front row L2:008 · tuck L2:022 · advanced tuck L4:008 · one-leg L5:036 · straddle L7:015 · **full L8:015** |
+| Back lever | German hang L2:025 · partial skin-the-cat L2:068 · tuck L3:012 · full skin-the-cat L3:067 · advanced tuck L4:061 · straddle L5:082 · **full L6:047** |
+| Planche | frog stand L1:044 · lean L2:066 · pseudo-planche push-up L3:003 · tuck L4:003 · advanced tuck L6:003 · straddle L8:003 · **full L9:059** |
+| Flag | ground support L3:005 · assisted tuck L3:047 · vertical flag L4:026 · tuck L5:005 · straddle L6:082 · flag negative L7:019 · **full L7:061** |
+| Pull | eccentrics L1:025 · pull-up L1:064 · archer L5:008 · assisted one-arm L7:036 · one-arm negatives L8:036 · **one-arm L9:015** |
+| Muscle-up | low-bar transitions L2:043 · band and chest-to-bar L3:050 · negatives L3:071 · **strict L4:043** |
+| Handstand | wall L1:022 · balance windows L3:027 · **freestanding L4:006** |
+| One-arm handstand | straddle handstand L6:020 · weight shift L7:041 · fingertip L8:041 · straddle one-arm L9:006 · **one-arm L9:069** |
+| Press | pike L1:044 · elevated pike L3:013 · wall negatives L3:053 · wall HSPU L4:067 · deficit L8:011 · freestanding negatives L10:039 |
+| Core | L-sit L3:023 · dragon negatives L3:051 · toes-to-bar L4:015 · dragon flag L6:023 · V-sit L8:009 |
+| Legs | pistol L4:009 · Nordic negatives L4:023 · Nordic curl L7:023 |
+| Shrimp | assisted partial L3:002 · assisted L5:016 · floating L6:037 · rear foot held, assisted L7:002 · **shrimp squat L7:058** |
+| Hefesto | supinated German hang, feet assisted L6:040 · free L7:025 · Korean dip, assisted L7:026 · partial Hefesto L8:005 · assisted Hefesto L8:061 · **Hefesto L9:040** |
 
-Straight-arm rungs on one ladder start at least 60 classes apart. No two start in the same week, and no level starts more than three.
+Straight-arm rungs on one ladder start at least 60 classes apart; no two start in the same week.
+
+The four batch-2 movements:
+- **Vertical flag** (seconds a side), hips stacked over the shoulders on the pole: the flag line's prep set from L4:026 until the tuck flag starts. It does not claim the bar class's lead, so the tuck back lever keeps its Level 4 volume.
+- **Flag negative** (reps a side), lowered from the vertical through the line: from L7:014 until the full flag starts, it takes the place of one straddle-flag set on each flag class, so the elbow count stays the same.
+- **Full skin-the-cat** (reps), through the German hang and back: the handstand-and-press class's shoulder-extension set from L3:067.
+- **Free supinated German hang** (seconds): the Korean dip's back-off once it starts, and the press class's shoulder-extension set while the Korean dip is the Hefesto line's top rung (L7:025 to L8).
 
 The exams that mark the plan:
-- **L7:100, Advanced Athlete.** Each a fresh set:
-  - freestanding handstand 20 s, strict muscle-up 3, advanced-tuck planche 8 s;
-  - straddle front lever 3 s, full back lever 5 s, full flag 2 s a side;
-  - wall HSPU 7, pull-ups 15, dips 20, push-ups 35, pistol 8 a side, L-sit 20 s.
-- **L8:100:** the first full front lever is tested.
-- **L9:100: every full shape.** Full planche, full front lever, full back lever, full flag and the one-arm pull-up, each at its first target or more, with the muscle-up and the freestanding handstand.
-- **L10:076, champion test part one.** Every full shape and the hardest strength skills, one fresh set each.
+- **L7:100, Advanced Athlete.** A fresh set of each standard, or what the athlete already trains when that is more.
+- **L9:100: every full shape.** The one-arm handstand, full planche, full front lever, Hefesto, full back lever, full flag and one-arm pull-up, with the strict muscle-up, the deficit wall HSPU and the V-sit.
+- **L10:076, champion test part one.** The one-arm handstand, every full shape, the Hefesto, the muscle-up, the one-arm pull-up and push-up and the shrimp squat, one fresh set each.
 - **L10:100, the Full Battle.** Five rounds of 10 pull-ups, 20 dips, 30 push-ups and 40 squats, with 30 s between stations and 90 s between rounds. Every station is its own test.
 
-Level 10 is for records: every skill reaches its Elite target. 34 reach it with their working sets. The one-arm pull-up gets one record set in a Level 10 class (L10:015), and the class says so. The tuck and advanced-tuck back levers hold Elite itself through the full back lever (L10:088). The 30 Elite sets come from block repeats and own training, by design.
+Exams test at the trained dose: the best of the last 21 classes. Only the headline item may go one step over, and only up to a belt target; a block exam keeps at most 8 items and a level exam 10. From Level 7, max-effort items rest 180 s and the warm-up ramps the levers.
 
-**Progressions peak while they are trained (round 10).** Until 2.5.0, the easier rungs reached their top only as Level 10 record sets, next to the full shape: a 20 s tuck back lever beside 4 × 11 s full back levers. Now each one peaks as the back-off of the next rung, before it leaves the classes:
-- advanced-tuck front lever 15 s at L7:078;
-- tuck flag 15 s a side at L6:082;
-- advanced-tuck planche 12 s at L8:079;
-- L-sit 30 s at L9:003, its back-off hold on the legs and core day once the V-sit takes the planche day;
-- wall handstand 75 s at L5:082, one endurance hold after the freestanding practice on the handstand day in Levels 4–5.
-
-A level held on a harder rung also holds on the easier rungs of its ladder, never higher, in the app and in these counts. So a progression never shows a lower belt than the shape above it.
+Level 10 is for records: every skill reaches its Elite target. 38 skills reach it in a set of their own. The one-arm handstand (L10:088), the shrimp squat (L10:086) and the Hefesto (L10:089) get record sets, and the classes say so. The dead hang and the hanging leg raise hold Elite through the pull-up and toes-to-bar. Progressions peak while they are still trained; no lever, planche or flag record sits beside a harder rung of its ladder.
 
 ## Where each belt lands
 
-The same table as a page, with milestones and the months at 5, 6 or 7 classes a week: [ACHIEVEMENTS.html](ACHIEVEMENTS.html), rebuilt by `tools/build_achievements_page.py`.
+The same table as a page, with milestones and the months at any pace: [ACHIEVEMENTS.html](ACHIEVEMENTS.html), rebuilt by `tools/build_achievements_page.py`.
 
-Counted from the classes, if every set is done as written on the Normal toggle. "own" means block repeats or own training.
+Counted from the classes, if every set is done as written on the Normal toggle. "own" means block repeats or the athlete's own training. A * marks a belt held through a harder rung of the same ladder: the level of the harder rung holds on the easier ones, never higher.
 
 | Family | Skill | Targets | First set | Beginner | Intermediate | Advanced | Master | Elite |
 |---|---|---|---|---|---|---|---|---|
-| Pull | dead_hang | 30/45/60/75/90 s | L1:001 | L1:067 | L2:032 | L4:029 | L8:015* | L10:078* |
-| Pull | pullup | 3/6/10/15/20 | L1:043 | L1:100 | L3:055 | L5:064 | L8:015 | L10:078 |
-| Pull | archer_pullup | 2/3/4/6/8 a side | L5:008 | L5:043 | L6:092 | L8:050 | L9:085 | L10:085 |
-| Pull | one_arm_pullup | 1/1/1/2/3 a side | L9:015 | L9:043 | L9:078 | L10:022 | own | own |
-| Bar | strict_muscleup | 1/2/3/4/5 | L4:039 | L4:053 | L5:067 | L8:018 | L8:088 | L10:018 |
-| Push | parallel_dip | 4/10/15/20/25 | L1:064 | L1:099 | L3:044 | L5:076 | L7:100 | L10:023 |
-| Push | pushup | 6/12/20/30/40 | L1:002 | L1:016 | L1:085 | L3:044 | L6:041 | L10:037 |
-| Push | pseudo_planche_pushup | 5/8/10/12/15 | L3:002 | L3:020 | L4:065 | L5:093 | L7:044 | L10:051 |
-| Push | one_arm_pushup | 1/3/5/7/10 a side | L7:002 | L7:037 | L9:016 | L10:058 | own | own |
-| Overhead | pike_pushup | 6/8/10/12/15 | L1:044 | L2:023 | L2:096 | L3:054 | L4:013 | own |
-| Overhead | wall_hspu | 2/4/6/8/10 | L4:061 | L5:005 | L6:019 | L8:026 | L9:089 | own |
-| Overhead | deficit_wall_hspu | 2/3/5/6/8 | L8:005 | L8:040 | L9:026 | L10:061 | own | own |
-| Handstand | wall_handstand | 20/30/45/60/75 s | L1:026 | L1:073 | L2:076 | L3:089 | L10:008* | own |
-| Handstand | freestanding_handstand | 5/10/20/30/45 s | L4:005 | L4:061 | L5:089 | L8:004 | L10:008 | own |
-| Front lever | tuck_front_hold | 5/8/12/16/20 s | L2:043 | L2:084 | L3:057 | L4:085 | L6:015 | own |
-| Front lever | advanced_tuck_front | 5/8/10/12/15 s | L4:008 | L4:085 | L6:008 | L7:008 | L10:078* | own |
-| Front lever | straddle_front | 3/5/6/8/10 s | L7:015 | L7:050 | L9:022 | L9:085 | L10:078* | own |
-| Front lever | full_front | 2/3/4/6/8 s | L8:015 | L8:064 | L9:057 | L10:008 | L10:078 | own |
-| Back lever | tuck_back_hold | 5/8/12/16/20 s | L3:011 | L3:032 | L3:081 | L4:060 | L9:081* | L10:088* |
-| Back lever | advanced_tuck_back | 5/8/10/15/20 s | L4:060 | L4:095 | L5:025 | L6:004 | L9:081* | L10:088* |
-| Back lever | straddle_back | 3/5/8/10/12 s | L5:081 | L6:011 | L6:060 | L8:088* | L9:081* | L10:088* |
-| Back lever | full_back | 3/5/8/10/12 s | L6:046 | L6:088 | L7:088 | L8:088 | L9:081 | L10:088 |
-| Planche | tuck_planche | 5/8/10/12/15 s | L4:002 | L4:044 | L5:002 | L6:002 | L7:058 | own |
-| Planche | advanced_tuck_planche | 3/5/8/10/12 s | L6:002 | L6:030 | L7:009 | L8:023 | own | own |
-| Planche | straddle_planche | 2/3/4/5/6 s | L8:037 | L8:072 | L9:079* | L10:002* | own | own |
-| Planche | full_planche | 2/2/2/3/4 s | L9:016 | L9:065 | L9:079 | L10:002 | own | own |
-| Flag | tuck_flag | 5/8/10/12/15 s a side | L5:005 | L5:047 | L6:026 | L7:026 | L10:089* | own |
-| Flag | straddle_flag | 2/4/6/8/10 s a side | L6:061 | L6:089 | L8:026 | L10:047* | L10:089* | own |
-| Flag | full_flag | 2/3/4/5/6 s a side | L7:061 | L8:005 | L8:089 | L10:047 | L10:089 | own |
-| Core | hollow_body_hold | 20/30/40/50/60 s | L1:001 | L1:015 | L2:020 | L3:064 | L4:038 | L5:068 |
-| Core | hanging_leg_raise | 5/8/10/12/15 | L2:025 | L2:073 | L3:071 | L5:060 | L6:025 | L7:039 |
-| Core | toes_to_bar | 3/6/8/12/15 | L4:015 | L4:076 | L6:078 | L8:015 | L9:078 | own |
-| Core | lsit | 5/10/15/20/30 s | L3:023 | L3:079 | L4:093 | L6:072 | own | own |
-| Core | v_sit | 2/3/4/5/6 s | L8:003 | L8:044 | L9:058 | L10:044 | own | own |
-| Core | dragon_flag | 1/3/5/6/8 | L6:017 | L6:038 | L7:087 | L9:017 | L9:038 | L10:038 |
-| Legs | squat | 15/20/25/30/40 | L1:001 | L1:010 | L2:020 | L3:010 | L3:059 | L6:059 |
-| Legs | pistol_squat | 2/4/6/8/10 a side | L4:003 | L4:038 | L5:059 | L6:094 | L8:024 | L10:010 |
+| Pull-up | dead_hang | 30/45/60/75/90 s | L1:001 | L1:018 | L2:054 | L5:071* | L8:029* | L10:085* |
+| Pull-up | pullup | 3/6/10/15/20 | L1:064 | L2:008 | L3:062 | L5:071 | L8:029 | L10:085 |
+| Pull-up | archer_pullup | 2/3/4/6/8 a side | L5:008 | L5:050 | L7:071 | L9:036 | L10:078 | own |
+| Pull-up | one_arm_pullup | 1/1/1/2/3 a side | L9:015 | L9:043 | L9:076 | L10:015 | own | own |
+| Muscle-up | strict_muscleup | 1/2/4/6/8 | L4:043 | L4:064 | L5:057 | L7:085 | L9:092 | own |
+| Front lever | tuck_front_hold | 5/8/12/16/20 s | L2:022 | L2:040 | L2:092 | L4:050 | L10:064* | own |
+| Front lever | advanced_tuck_front | 5/8/10/12/15 s | L4:008 | L4:029 | L5:076 | L9:071* | L10:064* | own |
+| Front lever | straddle_front | 3/5/7/10/12 s | L7:015 | L7:036 | L8:008 | L9:071* | L10:064* | own |
+| Front lever | full_front | 3/4/5/7/10 s | L8:015 | L8:036 | L8:078 | L9:071 | L10:064 | own |
+| Back lever | tuck_back_hold | 5/8/12/16/20 s | L3:012 | L3:033 | L3:075 | L4:019 | L4:054 | L4:061 |
+| Back lever | advanced_tuck_back | 5/8/10/15/20 s | L4:061 | L4:083 | L5:040 | L5:061 | L10:054* | own |
+| Back lever | straddle_back | 3/5/8/10/12 s | L5:082 | L6:006 | L7:027 | L8:082* | L10:054* | own |
+| Back lever | full_back | 3/5/8/12/15 s | L6:047 | L6:082 | L7:082 | L8:082 | L10:054 | own |
+| Dip | parallel_dip | 4/10/15/20/25 | L1:062 | L1:078 | L2:100 | L5:073 | L8:003 | L9:052 |
+| Push-up | pushup | 6/12/20/30/40 | L1:001 | L1:013 | L1:071 | L2:080 | L6:017 | L9:045 |
+| Push-up | one_arm_pushup | 1/3/5/7/10 a side | L7:006 | L8:006 | L10:020 | own | own | own |
+| Handstand push-up | pike_pushup | 6/8/10/12/15 | L1:044 | L1:079 | L2:011 | L2:094 | L10:095* | own |
+| Handstand push-up | wall_hspu | 2/4/6/8/10 | L4:067 | L4:095 | L5:095 | L7:095 | L10:095* | own |
+| Handstand push-up | deficit_wall_hspu | 2/3/5/6/8 | L8:011 | L8:039 | L9:018 | L10:046 | L10:095 | own |
+| Planche | pseudo_planche_pushup | 5/8/10/12/15 | L3:003 | L3:031 | L4:100* | L6:003* | L8:059 | L10:073 |
+| Planche | tuck_planche | 5/8/10/12/15 s | L4:003 | L4:017 | L4:100 | L6:003 | L9:094* | own |
+| Planche | advanced_tuck_planche | 5/6/8/10/12 s | L6:003 | L6:059 | L6:100 | L7:073 | L9:094* | own |
+| Planche | straddle_planche | 3/4/5/6/8 s | L8:003 | L8:024 | L8:059 | L9:017 | L9:094 | own |
+| Planche | full_planche | 3/3/4/5/6 s | L9:059 | L9:080 | L10:003 | L10:038 | L10:073 | own |
+| Handstand | wall_handstand | 20/30/45/60/75 s | L1:022 | L1:030 | L1:086 | L3:011 | L8:010* | L9:011* |
+| Handstand | freestanding_handstand | 5/15/30/45/60 s | L4:006 | L4:015 | L5:053 | L6:039 | L8:010 | L9:011 |
+| Handstand | one_arm_handstand | 3/4/5/7/10 s a side | L9:069 | L9:090 | L10:048 | L10:088 | own | own |
+| Pistol squat | squat | 15/20/25/30/40 | L1:003 | L1:013 | L1:052 | L3:051 | L8:030* | L10:044* |
+| Pistol squat | pistol_squat | 2/4/6/8/10 a side | L4:009 | L4:044 | L5:065 | L7:030 | L8:030 | L10:044 |
+| Toes to bar | hanging_leg_raise | 5/8/10/12/15 | L2:022 | L2:036 | L3:029 | L7:064* | L9:029* | L10:029* |
+| Toes to bar | toes_to_bar | 3/6/8/12/15 | L4:015 | L4:068 | L6:043 | L7:064 | L9:029 | L10:029 |
+| L-sit | lsit | 5/10/15/20/30 s | L3:023 | L3:051 | L4:065 | L6:037 | L10:037* | own |
+| L-sit | v_sit | 3/4/5/6/8 s | L8:009 | L8:030 | L8:065 | L10:002 | L10:037 | own |
+| Dragon flag | hollow_body_hold | 20/30/40/50/60 s | L1:001 | L1:011 | L1:071 | L4:002 | L5:023 | L6:023 |
+| Dragon flag | dragon_flag | 1/3/5/6/8 | L6:023 | L6:044 | L7:065 | L8:093 | L9:023 | L10:023 |
+| Human flag | tuck_flag | 5/8/10/12/15 s a side | L5:005 | L5:026 | L6:047 | L10:078* | own | own |
+| Human flag | straddle_flag | 3/4/6/8/10 s a side | L6:082 | L7:008 | L8:068 | L10:078* | own | own |
+| Human flag | full_flag | 3/4/5/6/8 s a side | L7:061 | L7:092 | L9:057 | L10:078 | own | own |
+| Shrimp squat | shrimp_squat | 2/3/5/7/10 a side | L7:058 | L7:081 | L8:044 | L9:072 | L10:072 | own |
+| Hefesto | hefesto | 1/1/2/3/4 | L9:040 | L9:076 | L10:013 | L10:082 | own | own |
 
-**156 of 185 belts land in classes.** By level, Levels 1–10 land 8, 8, 14, 14, 13, 19, 11, 19, 20 and 30. A * marks a belt held through a harder rung of the same ladder (round 10): the level of the harder rung holds on the easier ones, never higher. The first belt comes at class 10 (squat Beginner), the push-up and hollow follow by class 16, and every level brings new ones. Every skill earns its Beginner belt inside the plan, the last being the full planche at L9:065. Followed exactly, the program scores 12 by the end of Level 1, 193 by Level 7, 465 by Level 9 and 698 by Level 10, out of 1000.
+**166 of 200 belts land in classes.** By level, Levels 1–10 land 11, 9, 8, 16, 13, 13, 14, 22, 24 and 36. The first belt comes at class 11 (hollow body Beginner), and the push-up and squat follow at class 13. Every level brings new ones. Every skill earns its Beginner belt inside the plan, the last being the one-arm handstand at L9:090.
 
 ## The realism check
 
@@ -161,71 +153,56 @@ Sources and method: a research pass on 29 October 2026.
 
 No study gives median times, so the months below are estimates. They assume a motivated adult who starts with 0–3 pull-ups, trains 5–6 classes a week and weighs about 75 kg.
 
-**Difficulty order at the first target:**
-1. full planche;
-2. one-arm pull-up;
-3. straddle planche, full front lever and full flag;
-4. strict muscle-up, straddle flag and full back lever;
-5. advanced-tuck planche, straddle front lever, V-sit and one-arm push-up.
-
-The strict muscle-up sits below the full front lever in every source:
-- Overcoming Gravity, level 7 against 8;
-- Thenics, rung 8 against 12;
-- Calisteniapp's own guide, months 3–10 against 10–34.
-
-**Typical months to the first target** (median, with range), against the class where the plan first reaches that target:
+**Typical months to the first target** (median, with range), against the class where the plan lands Beginner:
 
 | Skill | Research | The plan (6 classes a week) |
 |---|---|---|
-| Full back lever | 14 (7–28) | L6:088 ≈ month 23 |
-| Full flag | 24 (12–42) | L8:005 ≈ month 27 |
-| Full front lever | 27 (15–48) | L8:064 ≈ month 29 |
-| Straddle planche | 36 (24–60); many never | L8:072 ≈ month 29 |
+| Strict muscle-up | 18 | L4:064 ≈ month 14 |
+| Full back lever | 14 (7–28) | L6:082 ≈ month 22 |
+| Full flag | 24 (12–42) | L7:092 ≈ month 27 |
+| Straddle planche | 36 (24–60); many never | L8:024 ≈ month 28 |
+| Full front lever | 27 (15–48) | L8:036 ≈ month 28 |
 | One-arm pull-up | 40 (24–72); many never | L9:043 ≈ month 32 |
-| Full planche | 60 (36–96); most never | L9:065 ≈ month 33 |
-
-**What the check changed:**
-- The full back lever moved from Level 7 to Level 6, and the full flag from Level 8 to Level 7. The full front lever stays in Level 8, its research median.
-- Seven Elite targets came down so that every skill's maximum is reachable inside the program. Before, they were past class 1,000 for a typical adult:
-  - full planche 8 → 4 s;
-  - straddle planche 10 → 6 s;
-  - one-arm pull-up 5 → 3 a side;
-  - full front lever 10 → 8 s;
-  - full flag 10 → 6 s a side;
-  - strict muscle-up 8 → 5;
-  - V-sit 10 → 6 s.
-- From Advanced up every level takes 30 sets, so no two of those levels share a target. The full planche is 2/2/2/3/4 s and the one-arm pull-up 1/1/1/2/3 a side: Beginner to Advanced differ by sets alone.
+| Full planche | 60 (36–96); most never | L9:080 ≈ month 34 |
 
 **What stays ambitious, honestly:**
-- **Full planche and one-arm pull-up.** The plan gives them their first holds and reps in Level 9, at about month 33. That is ahead of the research medians, so it is realistic for committed, lighter athletes. Many others will repeat blocks; the block repeat after a missed exam is the plan's answer, and nothing is locked.
-- **Heavier, taller, female and over-40 athletes.** Expect 20–50% longer on the one-arm pull-up, muscle-up, levers, flag and planche. Handstand, compression and legs are much less affected.
-- **The strict muscle-up.** Its first rep (L4:053, about month 14) is earlier than the research median of 18 months. The band, chest-to-bar and negative work from L3:046 is what makes it reachable.
+- **The full planche, the one-arm pull-up, the one-arm handstand and the Hefesto.** The plan gives them their first sets in Level 9, at about months 32–34. That is ahead of the research medians, so it is realistic for committed, lighter athletes. Many others will repeat blocks; the block repeat after a missed exam is the plan's answer, and nothing is locked.
+- **Heavier, taller, female and over-40 athletes.** Expect 20–50% longer on the one-arm skills, the muscle-up, the levers, the flag, the planche and the Hefesto. Handstand, compression and legs are much less affected.
+- **The strict muscle-up.** Its first rep (about month 14) is earlier than the research median of 18 months. The band, chest-to-bar and negative work from L3:050 is what makes it reachable.
+
+The targets keep every skill's maximum reachable inside the program, and no hold target starts under 3 s (round 11). From Advanced up every level takes 30 sets, so no two of those levels share a target.
 
 ## Load rules (`tools/validate_progressions.py`)
 
-- **Frame:** frozen exam days, a re-entry after every exam, and every class 55 minutes or less.
+- **Frame:** frozen exam classes, a re-entry after every exam, every class 55 minutes or less.
 - **Budget:** each class within its set budget and per-step limit, with rep caps of push-up 50, squat 40, dip 30, pull-up 21 and leg raises 15.
-- **Week:** the fixed week from Level 3.
-- **Easy classes:** RPE 4 or less, no practice part, no assessments, at most two sets of anything.
+- **Easy classes:** RPE 4 or less, no practice part, no assessments, at most two sets of anything. From Level 4, any 21 classes hold at most 6 lighter, primer, easy or re-entry classes.
 - **Lighter exam weeks:** at most 70% of the week before.
+- **Elbows:** at most 6 elbow-load sets a class (7 on a three-line bar class, 4 on position 6, which follows the bar class, and in the light bar class); heavy elbow classes never back to back.
 - **Spacing:**
   - straight-arm classes never three in a row;
-  - heavy elbow classes never back to back;
-  - the planche and the flag never on consecutive days, and never together outside an exam.
-- **Weekly coverage:** the hinge every week, and from Level 2 overhead pressing and compression.
+  - the planche and the flag never on consecutive classes, exams included, and never together outside an exam;
+  - the Hefesto never shares a class with the planche, nor the one-arm handstand lead with the planche lead.
+- **Weekly coverage:** the hinge every rotation, and from Level 2 overhead pressing and compression.
 - **Ladders:**
-  - rungs at least 60 classes apart, none starting in a lighter class, none two in a week, at most three a level;
-  - a build dose never under 80% of its best on the same day type.
+  - rungs at least 60 classes apart, none starting in a lighter class, none two in a rotation, at most three a level;
+  - the rung below gets at least 11 sets in the 40 classes before each new rung;
+  - straight-bar dips reach 10 before the Korean dip;
+  - a build dose never under 80% of its best on the same class type;
+  - sets and dose never rise together from Level 4.
+- **Exams:** at the trained dose, with at most two items a step over.
 - **Skills:**
-  - all 37 trained and each at its Elite target at least once, or holding Elite through a harder rung inside the program;
+  - all 40 trained, each at its Elite target at least once or holding Elite through a harder rung;
+  - minimum holds of 3 s for the full and straddle shapes, the V-sit, the advanced-tuck planche and the one-arm balance line, 5 s for the rest;
+  - no skill at the top of its ladder left more than 14 classes (16 across a level's taper and exam);
   - no lever, planche or flag record set beside a harder rung of its ladder;
-  - every full shape tested at L9:100;
-  - Level 10 record sets.
+  - every full shape tested at L9:100.
+- **Circuits:** whole rounds only.
 
-`tools/validate_curriculum.ps1` keeps the catalog rules: every rolling seven classes covers the basics, an easy recovery day and, from Level 3, the muscle-up, front lever, back lever, dragon flag and planche lines. It also checks the regressions practised before they are offered, unique class texts, and the time and set limits. `tools/validate_morning_class.py` checks the practice part and the animations' contacts.
+`tools/validate_curriculum.ps1` keeps the catalog rules: every rolling seven classes covers the basics, an easy recovery class and, from Level 3, the muscle-up, front lever, back lever, dragon flag and planche lines. It also checks the regressions practised before they are offered, unique class texts, and the time and set limits. `tools/validate_morning_class.py` checks the practice part and the animations' contacts, and `tools/validate_progression_motions.py` the progressions' motions (30 movements, the batch-2 four included).
 
 ## Not in this version
 
-- **A value retune.** The research suggests new rung values: front lever 70, flag 65, muscle-up 45 and deficit wall HSPU 21. Retuning means changing the leaderboard's family ceilings and a Firebase deploy, so the values stay as they were.
-- **The overall score tops out at 96.9.** The deployed board still counts the retired Nordic family. The next functions deploy can drop it (`OverallScore.RETIRED_CEILINGS`).
-- **New animations.** The plan uses only movements the app already animates, so the one-arm hang, band external rotation and half-straddle planche are left out.
+- **A real-athlete beta.** The 9/10 is a paper review by AI coach personas. The step to 10 is a real coach's read and a few real athletes running Levels 1–4, reporting where the doses or the order feel wrong; that needs people, not code.
+- **A value retune.** The research suggests new rung values: front lever 70, flag 65, muscle-up 45 and deficit wall HSPU 21. Retuning means changing the leaderboard's family ceilings and a Firebase deploy, so the values stay as they are.
+- **The leaderboard's version 3.** Round 11's families need the score document's version 3 (`firebase/functions/boards.py`, `firestore.rules`). It is written and tested but not deployed; the app and the deploy ship together. The GitHub builds have no Firebase configuration, so they are not affected.

@@ -8,4 +8,8 @@
     <instrumentation
         android:name="com.justdataplease.streetgym.AnimationGallery"
         android:targetPackage="com.justdataplease.streetgym.debug" />
+    <!-- Another review aid: hosts the "Next class" widget and saves what the host shows (see WidgetShots). -->
+    <instrumentation
+        android:name="com.justdataplease.streetgym.WidgetShots"
+        android:targetPackage="com.justdataplease.streetgym.debug" />
 </manifest>

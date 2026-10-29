@@ -32,20 +32,23 @@ data class SkillStandard(
 }
 
 /**
- * Every belted skill's standard: 37 skills (curriculum round 9, the owner's choice of 29 October 2026). A target is a
- * working set, what a trained athlete does for one set inside a class with one or two reps in reserve, never a single
- * all-out max: the pull-up asks 3, 6, 10, 15 and 20 reps, the push-up 6, 12, 20, 30 and 40, the dip 4, 10, 15, 20 and
- * 25, and the dead hang 30 s to 90 s. The rarest rungs stay realistic, so their top is reachable inside the program: the
- * one-arm pull-up asks 1, 1, 2, 2 and 3 reps a side, the full planche 2, 2, 3, 3 and 4 s, the strict muscle-up 1 to 5
- * reps. Where two levels share a target they differ only by their sets: Beginner takes 10 and Intermediate 20, while
- * Advanced and Master, at 30 each, come together. Each skill's Elite target is reached once inside the program, by the
- * end of Level 10, or the program gives its Elite through a harder rung of its ladder (the tuck and advanced tuck back
- * levers, through the full back lever); its 30 Elite sets come from repeated blocks and the athlete's own training. A
- * progression peaks while it is still trained, never as a record beside the harder rung. Everything else in the
- * classes (chin-ups, knee raises, Nordic curls, the one-leg levers, balance attempts and the like) is a progression or
- * a movement and earns no belt. Grades: 1 easy (the dead hang, push-up, squat and hollow body), 2 moderate (the first
- * strict benchmarks, pull-up and dip), 3 hard, 4 very hard (the strict muscle-up, full back lever and full flag), 5
- * extreme (the full front lever, straddle planche and, the hardest of all, the full planche and the one-arm pull-up).
+ * Every belted skill's standard: 40 skills (curriculum round 11, which added the one-arm handstand, the shrimp squat and
+ * the Hefesto to round 9's 37). A target is a working set, what a trained athlete does for one set inside a class with
+ * one or two reps in reserve, never a single all-out max: the pull-up asks 3, 6, 10, 15 and 20 reps, the push-up 6, 12,
+ * 20, 30 and 40, the dip 4, 10, 15, 20 and 25, and the dead hang 30 s to 90 s. The rarest rungs stay realistic, so their
+ * top is reachable inside the program: the one-arm pull-up asks 1, 1, 1, 2 and 3 reps a side, the Hefesto 1, 1, 2, 3 and
+ * 4, the full planche 3, 3, 4, 5 and 6 s, the one-arm handstand 3 to 10 s a side and the strict muscle-up 1 to 8 reps.
+ * Round 11 starts the hardest statics at 3 s, the plan's minimum hold for a full or straddle shape. Where two levels share
+ * a target they differ only by their sets: Beginner takes 10 and Intermediate 20, while Advanced and Master, at 30 each,
+ * come together. Each skill's Elite target is reached once inside the program, by the end of Level 10, or the program
+ * gives its Elite through a harder rung of its ladder (the tuck and advanced tuck back levers, through the full back
+ * lever); its 30 Elite sets come from repeated blocks and the athlete's own training. A progression peaks while it is
+ * still trained, never as a record beside the harder rung. Everything else in the classes (chin-ups, knee raises,
+ * Nordic curls, the one-leg levers, balance attempts, assisted shrimp squats and Hefestos and the like) is a progression
+ * or a movement and earns no belt. Grades: 1 easy (the dead hang, push-up, squat and hollow body), 2 moderate (the first
+ * strict benchmarks, pull-up and dip), 3 hard (the shrimp squat among them), 4 very hard (the strict muscle-up, full
+ * back lever and full flag), 5 extreme (the full front lever, straddle planche, Hefesto, one-arm handstand and, the
+ * hardest of all, the full planche and the one-arm pull-up).
  */
 object SkillStandards {
     private fun reps(grade: Int, vararg targets: Int) = SkillStandard(false, grade, targets.toList())
@@ -60,17 +63,19 @@ object SkillStandards {
         "archer_pullup" to repsSide(3, 2, 3, 4, 6, 8),
         "one_arm_pullup" to repsSide(5, 1, 1, 1, 2, 3),
         // Muscle-up
-        "strict_muscleup" to reps(4, 1, 2, 3, 4, 5),
+        "strict_muscleup" to reps(4, 1, 2, 4, 6, 8),
+        // Hefesto: from a supinated German hang behind the bar to straight-arm support above it.
+        "hefesto" to reps(5, 1, 1, 2, 3, 4),
         // Front lever
         "tuck_front_hold" to hold(2, 5, 8, 12, 16, 20),
         "advanced_tuck_front" to hold(3, 5, 8, 10, 12, 15),
-        "straddle_front" to hold(4, 3, 5, 6, 8, 10),
-        "full_front" to hold(5, 2, 3, 4, 6, 8),
+        "straddle_front" to hold(4, 3, 5, 7, 10, 12),
+        "full_front" to hold(5, 3, 4, 5, 7, 10),
         // Back lever
         "tuck_back_hold" to hold(2, 5, 8, 12, 16, 20),
         "advanced_tuck_back" to hold(3, 5, 8, 10, 15, 20),
         "straddle_back" to hold(4, 3, 5, 8, 10, 12),
-        "full_back" to hold(4, 3, 5, 8, 10, 12),
+        "full_back" to hold(4, 3, 5, 8, 12, 15),
         // Dip
         "parallel_dip" to reps(2, 4, 10, 15, 20, 25),
         // Push-up
@@ -83,28 +88,31 @@ object SkillStandards {
         // Planche
         "pseudo_planche_pushup" to reps(3, 5, 8, 10, 12, 15),
         "tuck_planche" to hold(3, 5, 8, 10, 12, 15),
-        "advanced_tuck_planche" to hold(4, 3, 5, 8, 10, 12),
-        "straddle_planche" to hold(5, 2, 3, 4, 5, 6),
-        "full_planche" to hold(5, 2, 2, 2, 3, 4),
-        // Handstand: the freestanding hold is a plain hold, its longest clean balance.
+        "advanced_tuck_planche" to hold(4, 5, 6, 8, 10, 12),
+        "straddle_planche" to hold(5, 3, 4, 5, 6, 8),
+        "full_planche" to hold(5, 3, 3, 4, 5, 6),
+        // Handstand: the freestanding hold is a plain hold, its longest clean balance; the one-arm handstand is held on
+        // each arm, the weaker side counting.
         "wall_handstand" to hold(2, 20, 30, 45, 60, 75),
-        "freestanding_handstand" to hold(4, 5, 10, 20, 30, 45),
-        // Legs (the pistol squat family)
+        "freestanding_handstand" to hold(4, 5, 15, 30, 45, 60),
+        "one_arm_handstand" to holdSide(5, 3, 4, 5, 7, 10),
+        // Legs: the pistol squat family, and the shrimp squat (rear foot held) as a family of its own
         "squat" to reps(1, 15, 20, 25, 30, 40),
         "pistol_squat" to repsSide(3, 2, 4, 6, 8, 10),
+        "shrimp_squat" to repsSide(3, 2, 3, 5, 7, 10),
         // Toes to bar
         "hanging_leg_raise" to reps(2, 5, 8, 10, 12, 15),
         "toes_to_bar" to reps(3, 3, 6, 8, 12, 15),
         // L-sit
         "lsit" to hold(3, 5, 10, 15, 20, 30),
-        "v_sit" to hold(4, 2, 3, 4, 5, 6),
+        "v_sit" to hold(4, 3, 4, 5, 6, 8),
         // Dragon flag: the hollow body is its first rung.
         "hollow_body_hold" to hold(1, 20, 30, 40, 50, 60),
         "dragon_flag" to reps(4, 1, 3, 5, 6, 8),
         // Human flag
         "tuck_flag" to holdSide(3, 5, 8, 10, 12, 15),
-        "straddle_flag" to holdSide(4, 2, 4, 6, 8, 10),
-        "full_flag" to holdSide(4, 2, 3, 4, 5, 6),
+        "straddle_flag" to holdSide(4, 3, 4, 6, 8, 10),
+        "full_flag" to holdSide(4, 3, 4, 5, 6, 8),
     )
 
     /** A rung without its own standard (one that joined a ladder by its regression): moderate, five to thirty reps. */

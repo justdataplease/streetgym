@@ -37,8 +37,11 @@ sealed interface Standing {
  */
 data class Score(val overall: Int, val families: Map<String, Int>, val verified: List<String> = emptyList()) {
     companion object {
-        /** The score document's version; the server drops any other. */
-        const val VERSION = 2
+        /**
+         * The score document's version; the server drops any other. Version 3 (round 11): the one-arm handstand tops the
+         * handstand family, the shrimp squat and the Hefesto families join, and the retired Nordic curl family is gone.
+         */
+        const val VERSION = 3
     }
 }
 

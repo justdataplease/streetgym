@@ -1,6 +1,6 @@
 """The leaderboard boards from the Pro scores: pure, so it can be tested without Firebase.
 
-Each score document (scores/{uid}, version 2) holds username, country, overall (the overall score, 0 to 1000),
+Each score document (scores/{uid}, version 3) holds username, country, overall (the overall score, 0 to 1000),
 families ({family id: ten times the family's points}) and verified (the rungs the athlete passed a test for). A
 hidden, older or inconsistent one is skipped: the overall must match the families it is made of. Every board is one
 document: the top TOP entries, the number of players and 100 percentiles (the score at each 1% step from the top), so
@@ -15,13 +15,16 @@ import re
 
 TOP = 100
 COUNTRY = re.compile(r"[A-Z]{2}")
-VERSION = 2
+# Version 3 (round 11): the one-arm handstand raises the handstand family to 110, the shrimp squat and Hefesto families
+# join, and the Nordic curl family, retired from the app in round 9, is gone. Older scores are dropped until the app
+# republishes them.
+VERSION = 3
 SCORE_MAX = 1000
 # Each family's top value, as the app's OverallScore.SKILL_VALUES gives it (SkillBookTest checks they agree): a
 # family's points never exceed it, and the overall is 1000 times the families' points over their sum.
 FAMILY_CEILINGS = {
-    "pullup": 110, "muscleup": 32, "front_lever": 100, "back_lever": 50, "dip": 12, "pushup": 24, "hspu": 55,
-    "planche": 200, "handstand": 30, "pistol": 12, "nordic": 24, "hanging_core": 10, "lsit": 30,
+    "pullup": 110, "muscleup": 32, "front_lever": 100, "back_lever": 50, "hefesto": 50, "dip": 12, "pushup": 24,
+    "hspu": 55, "planche": 200, "handstand": 110, "pistol": 12, "shrimp": 14, "hanging_core": 10, "lsit": 30,
     "dragon_flag": 18, "human_flag": 60,
 }
 # Each family is rounded on the phone before the server adds them up.

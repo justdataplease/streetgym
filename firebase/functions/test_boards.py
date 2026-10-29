@@ -1,9 +1,9 @@
 """The board builder without Firebase: python -m pytest streetgymnastics/firebase/functions"""
-from boards import FAMILY_CEILINGS, TOP, board_hash, build_boards, expected_overall
+from boards import FAMILY_CEILINGS, TOP, VERSION, board_hash, build_boards, expected_overall
 
 
-def score(name, country="GR", hidden=False, overall=None, v=2, **families):
-    """A version 2 score document; the overall adds up from the families unless given."""
+def score(name, country="GR", hidden=False, overall=None, v=VERSION, **families):
+    """A current (version 3) score document; the overall adds up from the families unless given."""
     return {"v": v, "username": name, "country": country, "families": families, "verified": [], "hidden": hidden,
             "overall": expected_overall(families) if overall is None else overall}
 
@@ -27,17 +27,29 @@ def test_hidden_old_malformed_and_inconsistent_scores_are_left_out():
         score("a", pullup=100),
         score("h", hidden=True, pullup=100),
         score("old", v=1, pullup=100),
+        score("v2", v=2, pullup=100),
         {**score("x", pullup=100), "country": "GRC"},
         {**score("slash", pullup=100), "country": "a/"},
         {**score("lower", pullup=100), "country": "gr"},
         {**score("n", pullup=100), "username": ""},
         score("inflated", overall=900, pullup=100),
         score("unknown", lever=100),
+        score("retired", nordic=100),
         score("over", dip=10 * FAMILY_CEILINGS["dip"] + 1),
         score("negative", pullup=-5),
         score("max", overall=1001, **{family: 10 * top for family, top in FAMILY_CEILINGS.items()}),
     ])
     assert [e["username"] for e in boards["overall_world"]["entries"]] == ["a"]
+
+
+def test_version_3_knows_round_11s_families():
+    assert VERSION == 3
+    assert len(FAMILY_CEILINGS) == 16 and "nordic" not in FAMILY_CEILINGS
+    assert (FAMILY_CEILINGS["handstand"], FAMILY_CEILINGS["shrimp"], FAMILY_CEILINGS["hefesto"]) == (110, 14, 50)
+    assert sum(FAMILY_CEILINGS.values()) == 887
+    boards = build_boards([score("s", shrimp=140, hefesto=500, handstand=1100)])
+    assert {"family_shrimp_world", "family_hefesto_world", "family_handstand_world"} <= boards.keys()
+    assert "overall_world" not in build_boards([score("over", handstand=1101)])
 
 
 def test_every_family_at_its_top_is_the_whole_thousand():

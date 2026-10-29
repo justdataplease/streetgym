@@ -602,6 +602,53 @@
     ],
     "filled": true
    }
+  ],
+  "shrimp_pad": [
+   {
+    "type": "round_rect",
+    "values": [
+     86,
+     103,
+     114,
+     106.0
+    ],
+    "filled": true
+   }
+  ],
+  "shrimp_block": [
+   {
+    "type": "round_rect",
+    "values": [
+     86,
+     96.5,
+     112,
+     106.0
+    ],
+    "filled": true
+   }
+  ],
+  "hefesto_box": [
+   {
+    "type": "round_rect",
+    "values": [
+     97,
+     76,
+     106,
+     106.0
+    ],
+    "filled": true
+   }
+  ],
+  "flag_pole_top": [
+   {
+    "type": "line",
+    "values": [
+     62,
+     2,
+     62,
+     18
+    ]
+   }
   ]
  },
  "poses": {
@@ -32570,6 +32617,7849 @@
     62.6,
     139.2
    ]
+  },
+  "oah_two_together": {
+   "facing": 1,
+   "torso": 180,
+   "head": 180,
+   "legs": [
+    357.0,
+    357.0
+   ],
+   "leg_far": [
+    3.0,
+    3.0
+   ],
+   "foot_near": 357.0,
+   "foot_far": 3.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     92.984,
+     104.996
+    ]
+   },
+   "arm_near": [
+    199.1,
+    192.0
+   ],
+   "arm_far": [
+    167.8,
+    160.7
+   ]
+  },
+  "oah_two_straddle": {
+   "facing": 1,
+   "torso": 180,
+   "head": 180,
+   "legs": [
+    330.0,
+    330.0
+   ],
+   "leg_far": [
+    30.0,
+    30.0
+   ],
+   "foot_near": 330.0,
+   "foot_far": 30.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     92.984,
+     104.996
+    ]
+   },
+   "arm_near": [
+    199.1,
+    192.0
+   ],
+   "arm_far": [
+    167.8,
+    160.7
+   ]
+  },
+  "oah_shift_wall": {
+   "facing": 1,
+   "torso": 166,
+   "head": 166,
+   "legs": [
+    7.0,
+    7.0
+   ],
+   "leg_far": [
+    10.0,
+    10.0
+   ],
+   "foot_near": 7.0,
+   "foot_far": 10.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     92.984,
+     104.996
+    ]
+   },
+   "arm_near": [
+    199.1,
+    192.0
+   ],
+   "arm_far": [
+    167.8,
+    160.7
+   ]
+  },
+  "oah_shift_free": {
+   "facing": 1,
+   "torso": 166,
+   "head": 166,
+   "legs": [
+    316.0,
+    316.0
+   ],
+   "leg_far": [
+    16.0,
+    16.0
+   ],
+   "foot_near": 316.0,
+   "foot_far": 16.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     92.984,
+     104.996
+    ]
+   },
+   "arm_near": [
+    199.1,
+    192.0
+   ],
+   "arm_far": [
+    167.8,
+    160.7
+   ]
+  },
+  "oah_fingertip": {
+   "facing": 1,
+   "torso": 168.46,
+   "head": 168.46,
+   "legs": [
+    330.0,
+    330.0
+   ],
+   "leg_far": [
+    30.0,
+    30.0
+   ],
+   "foot_near": 330.0,
+   "foot_far": 30.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     92.991,
+     104.999
+    ]
+   },
+   "arm_near": [
+    192.3,
+    185.2
+   ],
+   "arm_far": [
+    172.6,
+    160.1
+   ]
+  },
+  "oah_hover": {
+   "facing": 1,
+   "torso": 168.46,
+   "head": 168.46,
+   "legs": [
+    330.0,
+    330.0
+   ],
+   "leg_far": [
+    30.0,
+    30.0
+   ],
+   "foot_near": 330.0,
+   "foot_far": 30.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     92.991,
+     104.999
+    ]
+   },
+   "arm_near": [
+    192.3,
+    185.2
+   ],
+   "arm_far": [
+    142.7,
+    142.7
+   ]
+  },
+  "oah_one_straddle": {
+   "facing": 1,
+   "torso": 168.46,
+   "head": 168.46,
+   "legs": [
+    330.0,
+    330.0
+   ],
+   "leg_far": [
+    30.0,
+    30.0
+   ],
+   "foot_near": 330.0,
+   "foot_far": 30.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     92.991,
+     104.999
+    ]
+   },
+   "arm_near": [
+    192.3,
+    185.2
+   ],
+   "arm_far": [
+    115.0,
+    115.0
+   ]
+  },
+  "oah_one_closing": {
+   "facing": 1,
+   "torso": 168.46,
+   "head": 168.46,
+   "legs": [
+    345.0,
+    345.0
+   ],
+   "leg_far": [
+    15.0,
+    15.0
+   ],
+   "foot_near": 345.0,
+   "foot_far": 15.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     92.991,
+     104.999
+    ]
+   },
+   "arm_near": [
+    192.3,
+    185.2
+   ],
+   "arm_far": [
+    115.0,
+    115.0
+   ]
+  },
+  "oah_one": {
+   "facing": 1,
+   "torso": 168.46,
+   "head": 168.46,
+   "legs": [
+    357.0,
+    357.0
+   ],
+   "leg_far": [
+    3.0,
+    3.0
+   ],
+   "foot_near": 357.0,
+   "foot_far": 3.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     92.991,
+     104.999
+    ]
+   },
+   "arm_near": [
+    192.3,
+    185.2
+   ],
+   "arm_far": [
+    115.0,
+    115.0
+   ]
+  },
+  "shrimp_assisted_partial_shrimp_0": {
+   "facing": 1,
+   "torso": 12.0,
+   "head": 6.0,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    159.5,
+    75.7
+   ],
+   "foot_near": 90,
+   "foot_far": 320.0,
+   "leg_far": [
+    210.0,
+    320.0
+   ],
+   "leg_near": [
+    159.7,
+    182.1
+   ],
+   "arm_near": [
+    159.5,
+    75.7
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.001,
+     103.996
+    ]
+   }
+  },
+  "shrimp_assisted_partial_shrimp_1": {
+   "facing": 1,
+   "torso": 12.12,
+   "head": 6.12,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    159.3,
+    75.4
+   ],
+   "foot_near": 90,
+   "foot_far": 319.9,
+   "leg_far": [
+    209.9,
+    319.9
+   ],
+   "leg_near": [
+    159.0,
+    182.6
+   ],
+   "arm_near": [
+    159.3,
+    75.4
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     121.983,
+     104.004
+    ]
+   }
+  },
+  "shrimp_assisted_partial_shrimp_2": {
+   "facing": 1,
+   "torso": 12.45,
+   "head": 6.45,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    158.6,
+    74.4
+   ],
+   "foot_near": 90,
+   "foot_far": 319.7,
+   "leg_far": [
+    209.7,
+    319.7
+   ],
+   "leg_near": [
+    156.9,
+    183.8
+   ],
+   "arm_near": [
+    158.6,
+    74.4
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.015,
+     103.997
+    ]
+   }
+  },
+  "shrimp_assisted_partial_shrimp_3": {
+   "facing": 1,
+   "torso": 12.96,
+   "head": 6.96,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    157.6,
+    73.0
+   ],
+   "foot_near": 90,
+   "foot_far": 319.3,
+   "leg_far": [
+    209.3,
+    319.3
+   ],
+   "leg_near": [
+    154.1,
+    185.4
+   ],
+   "arm_near": [
+    157.6,
+    73.0
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.001,
+     103.998
+    ]
+   }
+  },
+  "shrimp_assisted_partial_shrimp_4": {
+   "facing": 1,
+   "torso": 13.62,
+   "head": 7.62,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    156.2,
+    71.1
+   ],
+   "foot_near": 90,
+   "foot_far": 318.8,
+   "leg_far": [
+    208.8,
+    318.8
+   ],
+   "leg_near": [
+    150.8,
+    187.0
+   ],
+   "arm_near": [
+    156.2,
+    71.1
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.003,
+     103.992
+    ]
+   }
+  },
+  "shrimp_assisted_partial_shrimp_5": {
+   "facing": 1,
+   "torso": 14.41,
+   "head": 8.41,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    154.5,
+    68.9
+   ],
+   "foot_near": 90,
+   "foot_far": 318.2,
+   "leg_far": [
+    208.2,
+    318.2
+   ],
+   "leg_near": [
+    147.3,
+    188.4
+   ],
+   "arm_near": [
+    154.5,
+    68.9
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.005,
+     103.992
+    ]
+   }
+  },
+  "shrimp_assisted_partial_shrimp_6": {
+   "facing": 1,
+   "torso": 15.29,
+   "head": 9.29,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    152.5,
+    66.5
+   ],
+   "foot_near": 90,
+   "foot_far": 317.5,
+   "leg_far": [
+    207.5,
+    317.5
+   ],
+   "leg_near": [
+    143.8,
+    189.5
+   ],
+   "arm_near": [
+    152.5,
+    66.5
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.0,
+     104.009
+    ]
+   }
+  },
+  "shrimp_assisted_partial_shrimp_7": {
+   "facing": 1,
+   "torso": 16.23,
+   "head": 10.23,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    150.2,
+    64.0
+   ],
+   "foot_near": 90,
+   "foot_far": 316.8,
+   "leg_far": [
+    206.8,
+    316.8
+   ],
+   "leg_near": [
+    140.2,
+    190.4
+   ],
+   "arm_near": [
+    150.2,
+    64.0
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     121.996,
+     104.007
+    ]
+   }
+  },
+  "shrimp_assisted_partial_shrimp_8": {
+   "facing": 1,
+   "torso": 17.2,
+   "head": 11.2,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    147.7,
+    61.6
+   ],
+   "foot_near": 90,
+   "foot_far": 316.1,
+   "leg_far": [
+    206.1,
+    316.1
+   ],
+   "leg_near": [
+    136.7,
+    191.0
+   ],
+   "arm_near": [
+    147.7,
+    61.6
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     121.991,
+     104.009
+    ]
+   }
+  },
+  "shrimp_assisted_partial_shrimp_9": {
+   "facing": 1,
+   "torso": 18.17,
+   "head": 12.17,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    145.1,
+    59.3
+   ],
+   "foot_near": 90,
+   "foot_far": 315.4,
+   "leg_far": [
+    205.4,
+    315.4
+   ],
+   "leg_near": [
+    133.3,
+    191.3
+   ],
+   "arm_near": [
+    145.1,
+    59.3
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.003,
+     104.001
+    ]
+   }
+  },
+  "shrimp_assisted_partial_shrimp_10": {
+   "facing": 1,
+   "torso": 19.11,
+   "head": 13.11,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    142.5,
+    57.1
+   ],
+   "foot_near": 90,
+   "foot_far": 314.7,
+   "leg_far": [
+    204.7,
+    314.7
+   ],
+   "leg_near": [
+    130.2,
+    191.4
+   ],
+   "arm_near": [
+    142.5,
+    57.1
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     121.99,
+     104.008
+    ]
+   }
+  },
+  "shrimp_assisted_partial_shrimp_11": {
+   "facing": 1,
+   "torso": 19.99,
+   "head": 13.99,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    139.9,
+    55.2
+   ],
+   "foot_near": 90,
+   "foot_far": 314.0,
+   "leg_far": [
+    204.0,
+    314.0
+   ],
+   "leg_near": [
+    127.3,
+    191.3
+   ],
+   "arm_near": [
+    139.9,
+    55.2
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     121.996,
+     103.997
+    ]
+   }
+  },
+  "shrimp_assisted_partial_shrimp_12": {
+   "facing": 1,
+   "torso": 20.77,
+   "head": 14.77,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    137.6,
+    53.6
+   ],
+   "foot_near": 90,
+   "foot_far": 313.4,
+   "leg_far": [
+    203.4,
+    313.4
+   ],
+   "leg_near": [
+    124.8,
+    191.0
+   ],
+   "arm_near": [
+    137.6,
+    53.6
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.011,
+     103.998
+    ]
+   }
+  },
+  "shrimp_assisted_partial_shrimp_13": {
+   "facing": 1,
+   "torso": 21.44,
+   "head": 15.44,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    135.6,
+    52.4
+   ],
+   "foot_near": 90,
+   "foot_far": 312.9,
+   "leg_far": [
+    202.9,
+    312.9
+   ],
+   "leg_near": [
+    122.7,
+    190.7
+   ],
+   "arm_near": [
+    135.6,
+    52.4
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.015,
+     103.991
+    ]
+   }
+  },
+  "shrimp_assisted_partial_shrimp_14": {
+   "facing": 1,
+   "torso": 21.95,
+   "head": 15.95,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    134.0,
+    51.5
+   ],
+   "foot_near": 90,
+   "foot_far": 312.5,
+   "leg_far": [
+    202.5,
+    312.5
+   ],
+   "leg_near": [
+    121.2,
+    190.4
+   ],
+   "arm_near": [
+    134.0,
+    51.5
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.006,
+     104.009
+    ]
+   }
+  },
+  "shrimp_assisted_partial_shrimp_15": {
+   "facing": 1,
+   "torso": 22.28,
+   "head": 16.28,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    132.9,
+    50.9
+   ],
+   "foot_near": 90,
+   "foot_far": 312.3,
+   "leg_far": [
+    202.3,
+    312.3
+   ],
+   "leg_near": [
+    120.2,
+    190.2
+   ],
+   "arm_near": [
+    132.9,
+    50.9
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.002,
+     104.009
+    ]
+   }
+  },
+  "shrimp_assisted_partial_shrimp_16": {
+   "facing": 1,
+   "torso": 22.4,
+   "head": 16.4,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    132.5,
+    50.7
+   ],
+   "foot_near": 90,
+   "foot_far": 312.2,
+   "leg_far": [
+    202.2,
+    312.2
+   ],
+   "leg_near": [
+    119.8,
+    190.1
+   ],
+   "arm_near": [
+    132.5,
+    50.7
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.014,
+     103.999
+    ]
+   }
+  },
+  "shrimp_assisted_shrimp_0": {
+   "facing": 1,
+   "torso": 12.0,
+   "head": 6.0,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    159.5,
+    75.7
+   ],
+   "foot_near": 90,
+   "foot_far": 320.0,
+   "leg_far": [
+    210.0,
+    320.0
+   ],
+   "leg_near": [
+    159.7,
+    182.1
+   ],
+   "arm_near": [
+    159.5,
+    75.7
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.001,
+     103.996
+    ]
+   }
+  },
+  "shrimp_assisted_shrimp_1": {
+   "facing": 1,
+   "torso": 12.22,
+   "head": 6.22,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    159.1,
+    75.1
+   ],
+   "foot_near": 90,
+   "foot_far": 319.8,
+   "leg_far": [
+    209.8,
+    319.8
+   ],
+   "leg_near": [
+    158.3,
+    183.0
+   ],
+   "arm_near": [
+    159.1,
+    75.1
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     121.996,
+     104.003
+    ]
+   }
+  },
+  "shrimp_assisted_shrimp_2": {
+   "facing": 1,
+   "torso": 12.86,
+   "head": 6.86,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    157.8,
+    73.2
+   ],
+   "foot_near": 90,
+   "foot_far": 319.4,
+   "leg_far": [
+    209.4,
+    319.4
+   ],
+   "leg_near": [
+    154.6,
+    185.1
+   ],
+   "arm_near": [
+    157.8,
+    73.2
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.014,
+     103.996
+    ]
+   }
+  },
+  "shrimp_assisted_shrimp_3": {
+   "facing": 1,
+   "torso": 13.85,
+   "head": 7.85,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    155.8,
+    70.4
+   ],
+   "foot_near": 90,
+   "foot_far": 318.6,
+   "leg_far": [
+    208.6,
+    318.6
+   ],
+   "leg_near": [
+    149.8,
+    187.4
+   ],
+   "arm_near": [
+    155.8,
+    70.4
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.009,
+     103.995
+    ]
+   }
+  },
+  "shrimp_assisted_shrimp_4": {
+   "facing": 1,
+   "torso": 15.12,
+   "head": 9.12,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    152.9,
+    66.9
+   ],
+   "foot_near": 90,
+   "foot_far": 317.7,
+   "leg_far": [
+    207.7,
+    317.7
+   ],
+   "leg_near": [
+    144.4,
+    189.3
+   ],
+   "arm_near": [
+    152.9,
+    66.9
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.015,
+     104.0
+    ]
+   }
+  },
+  "shrimp_assisted_shrimp_5": {
+   "facing": 1,
+   "torso": 16.64,
+   "head": 10.64,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    149.2,
+    63.0
+   ],
+   "foot_near": 90,
+   "foot_far": 316.5,
+   "leg_far": [
+    206.5,
+    316.5
+   ],
+   "leg_near": [
+    138.7,
+    190.7
+   ],
+   "arm_near": [
+    149.2,
+    63.0
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     121.992,
+     104.006
+    ]
+   }
+  },
+  "shrimp_assisted_shrimp_6": {
+   "facing": 1,
+   "torso": 18.33,
+   "head": 12.33,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    144.7,
+    58.9
+   ],
+   "foot_near": 90,
+   "foot_far": 315.3,
+   "leg_far": [
+    205.3,
+    315.3
+   ],
+   "leg_near": [
+    132.8,
+    191.3
+   ],
+   "arm_near": [
+    144.7,
+    58.9
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.004,
+     104.01
+    ]
+   }
+  },
+  "shrimp_assisted_shrimp_7": {
+   "facing": 1,
+   "torso": 20.13,
+   "head": 14.13,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    139.5,
+    54.9
+   ],
+   "foot_near": 90,
+   "foot_far": 313.9,
+   "leg_far": [
+    203.9,
+    313.9
+   ],
+   "leg_near": [
+    126.8,
+    191.2
+   ],
+   "arm_near": [
+    139.5,
+    54.9
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.017,
+     103.993
+    ]
+   }
+  },
+  "shrimp_assisted_shrimp_8": {
+   "facing": 1,
+   "torso": 22.0,
+   "head": 16.0,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    133.8,
+    51.4
+   ],
+   "foot_near": 90,
+   "foot_far": 312.5,
+   "leg_far": [
+    202.5,
+    312.5
+   ],
+   "leg_near": [
+    121.0,
+    190.4
+   ],
+   "arm_near": [
+    133.8,
+    51.4
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.007,
+     103.994
+    ]
+   }
+  },
+  "shrimp_assisted_shrimp_9": {
+   "facing": 1,
+   "torso": 23.87,
+   "head": 17.87,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    127.8,
+    48.5
+   ],
+   "foot_near": 90,
+   "foot_far": 311.1,
+   "leg_far": [
+    201.1,
+    311.1
+   ],
+   "leg_near": [
+    115.5,
+    188.9
+   ],
+   "arm_near": [
+    127.8,
+    48.5
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.002,
+     104.013
+    ]
+   }
+  },
+  "shrimp_assisted_shrimp_10": {
+   "facing": 1,
+   "torso": 25.67,
+   "head": 19.67,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    121.6,
+    46.4
+   ],
+   "foot_near": 90,
+   "foot_far": 309.7,
+   "leg_far": [
+    199.7,
+    309.7
+   ],
+   "leg_near": [
+    110.3,
+    186.9
+   ],
+   "arm_near": [
+    121.6,
+    46.4
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.001,
+     104.013
+    ]
+   }
+  },
+  "shrimp_assisted_shrimp_11": {
+   "facing": 1,
+   "torso": 27.36,
+   "head": 21.36,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    115.6,
+    45.1
+   ],
+   "foot_near": 90,
+   "foot_far": 308.5,
+   "leg_far": [
+    198.5,
+    308.5
+   ],
+   "leg_near": [
+    105.6,
+    184.6
+   ],
+   "arm_near": [
+    115.6,
+    45.1
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     121.991,
+     104.007
+    ]
+   }
+  },
+  "shrimp_assisted_shrimp_12": {
+   "facing": 1,
+   "torso": 28.88,
+   "head": 22.88,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    109.9,
+    44.6
+   ],
+   "foot_near": 90,
+   "foot_far": 307.3,
+   "leg_far": [
+    197.3,
+    307.3
+   ],
+   "leg_near": [
+    101.5,
+    182.1
+   ],
+   "arm_near": [
+    109.9,
+    44.6
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.004,
+     103.992
+    ]
+   }
+  },
+  "shrimp_assisted_shrimp_13": {
+   "facing": 1,
+   "torso": 30.15,
+   "head": 24.15,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    104.9,
+    44.7
+   ],
+   "foot_near": 90,
+   "foot_far": 306.4,
+   "leg_far": [
+    196.4,
+    306.4
+   ],
+   "leg_near": [
+    98.2,
+    179.8
+   ],
+   "arm_near": [
+    104.9,
+    44.7
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     121.996,
+     103.99
+    ]
+   }
+  },
+  "shrimp_assisted_shrimp_14": {
+   "facing": 1,
+   "torso": 31.14,
+   "head": 25.14,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    100.8,
+    45.3
+   ],
+   "foot_near": 90,
+   "foot_far": 305.6,
+   "leg_far": [
+    195.6,
+    305.6
+   ],
+   "leg_near": [
+    95.8,
+    177.8
+   ],
+   "arm_near": [
+    100.8,
+    45.3
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.01,
+     104.004
+    ]
+   }
+  },
+  "shrimp_assisted_shrimp_15": {
+   "facing": 1,
+   "torso": 31.78,
+   "head": 25.78,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    98.0,
+    45.8
+   ],
+   "foot_near": 90,
+   "foot_far": 305.2,
+   "leg_far": [
+    195.2,
+    305.2
+   ],
+   "leg_near": [
+    94.2,
+    176.5
+   ],
+   "arm_near": [
+    98.0,
+    45.8
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.008,
+     103.987
+    ]
+   }
+  },
+  "shrimp_assisted_shrimp_16": {
+   "facing": 1,
+   "torso": 32.0,
+   "head": 26.0,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    97.0,
+    46.1
+   ],
+   "foot_near": 90,
+   "foot_far": 305.0,
+   "leg_far": [
+    195.0,
+    305.0
+   ],
+   "leg_near": [
+    93.7,
+    176.0
+   ],
+   "arm_near": [
+    97.0,
+    46.1
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.013,
+     103.996
+    ]
+   }
+  },
+  "shrimp_floating_shrimp_0": {
+   "facing": 1,
+   "torso": 12.0,
+   "head": 6.0,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    78.0,
+    93.0
+   ],
+   "foot_near": 90,
+   "foot_far": 320.0,
+   "leg_far": [
+    210.0,
+    320.0
+   ],
+   "leg_near": [
+    159.7,
+    182.1
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.001,
+     103.996
+    ]
+   }
+  },
+  "shrimp_floating_shrimp_1": {
+   "facing": 1,
+   "torso": 12.22,
+   "head": 6.22,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    78.0,
+    93.0
+   ],
+   "foot_near": 90,
+   "foot_far": 319.8,
+   "leg_far": [
+    209.8,
+    319.8
+   ],
+   "leg_near": [
+    158.3,
+    183.0
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     121.996,
+     104.003
+    ]
+   }
+  },
+  "shrimp_floating_shrimp_2": {
+   "facing": 1,
+   "torso": 12.86,
+   "head": 6.86,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    78.0,
+    93.0
+   ],
+   "foot_near": 90,
+   "foot_far": 319.4,
+   "leg_far": [
+    209.4,
+    319.4
+   ],
+   "leg_near": [
+    154.6,
+    185.1
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.014,
+     103.996
+    ]
+   }
+  },
+  "shrimp_floating_shrimp_3": {
+   "facing": 1,
+   "torso": 13.85,
+   "head": 7.85,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    78.0,
+    93.0
+   ],
+   "foot_near": 90,
+   "foot_far": 318.6,
+   "leg_far": [
+    208.6,
+    318.6
+   ],
+   "leg_near": [
+    149.8,
+    187.4
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.009,
+     103.995
+    ]
+   }
+  },
+  "shrimp_floating_shrimp_4": {
+   "facing": 1,
+   "torso": 15.12,
+   "head": 9.12,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    78.0,
+    93.0
+   ],
+   "foot_near": 90,
+   "foot_far": 317.7,
+   "leg_far": [
+    207.7,
+    317.7
+   ],
+   "leg_near": [
+    144.4,
+    189.3
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.015,
+     104.0
+    ]
+   }
+  },
+  "shrimp_floating_shrimp_5": {
+   "facing": 1,
+   "torso": 16.64,
+   "head": 10.64,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    78.0,
+    93.0
+   ],
+   "foot_near": 90,
+   "foot_far": 316.5,
+   "leg_far": [
+    206.5,
+    316.5
+   ],
+   "leg_near": [
+    138.7,
+    190.7
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     121.992,
+     104.006
+    ]
+   }
+  },
+  "shrimp_floating_shrimp_6": {
+   "facing": 1,
+   "torso": 18.33,
+   "head": 12.33,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    78.0,
+    93.0
+   ],
+   "foot_near": 90,
+   "foot_far": 315.3,
+   "leg_far": [
+    205.3,
+    315.3
+   ],
+   "leg_near": [
+    132.8,
+    191.3
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.004,
+     104.01
+    ]
+   }
+  },
+  "shrimp_floating_shrimp_7": {
+   "facing": 1,
+   "torso": 20.13,
+   "head": 14.13,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    78.0,
+    93.0
+   ],
+   "foot_near": 90,
+   "foot_far": 313.9,
+   "leg_far": [
+    203.9,
+    313.9
+   ],
+   "leg_near": [
+    126.8,
+    191.2
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.017,
+     103.993
+    ]
+   }
+  },
+  "shrimp_floating_shrimp_8": {
+   "facing": 1,
+   "torso": 22.0,
+   "head": 16.0,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    78.0,
+    93.0
+   ],
+   "foot_near": 90,
+   "foot_far": 312.5,
+   "leg_far": [
+    202.5,
+    312.5
+   ],
+   "leg_near": [
+    121.0,
+    190.4
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.007,
+     103.994
+    ]
+   }
+  },
+  "shrimp_floating_shrimp_9": {
+   "facing": 1,
+   "torso": 23.87,
+   "head": 17.87,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    78.0,
+    93.0
+   ],
+   "foot_near": 90,
+   "foot_far": 311.1,
+   "leg_far": [
+    201.1,
+    311.1
+   ],
+   "leg_near": [
+    115.5,
+    188.9
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.002,
+     104.013
+    ]
+   }
+  },
+  "shrimp_floating_shrimp_10": {
+   "facing": 1,
+   "torso": 25.67,
+   "head": 19.67,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    78.0,
+    93.0
+   ],
+   "foot_near": 90,
+   "foot_far": 309.7,
+   "leg_far": [
+    199.7,
+    309.7
+   ],
+   "leg_near": [
+    110.3,
+    186.9
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.001,
+     104.013
+    ]
+   }
+  },
+  "shrimp_floating_shrimp_11": {
+   "facing": 1,
+   "torso": 27.36,
+   "head": 21.36,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    78.0,
+    93.0
+   ],
+   "foot_near": 90,
+   "foot_far": 308.5,
+   "leg_far": [
+    198.5,
+    308.5
+   ],
+   "leg_near": [
+    105.6,
+    184.6
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     121.991,
+     104.007
+    ]
+   }
+  },
+  "shrimp_floating_shrimp_12": {
+   "facing": 1,
+   "torso": 28.88,
+   "head": 22.88,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    78.0,
+    93.0
+   ],
+   "foot_near": 90,
+   "foot_far": 307.3,
+   "leg_far": [
+    197.3,
+    307.3
+   ],
+   "leg_near": [
+    101.5,
+    182.1
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.004,
+     103.992
+    ]
+   }
+  },
+  "shrimp_floating_shrimp_13": {
+   "facing": 1,
+   "torso": 30.15,
+   "head": 24.15,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    78.0,
+    93.0
+   ],
+   "foot_near": 90,
+   "foot_far": 306.4,
+   "leg_far": [
+    196.4,
+    306.4
+   ],
+   "leg_near": [
+    98.2,
+    179.8
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     121.996,
+     103.99
+    ]
+   }
+  },
+  "shrimp_floating_shrimp_14": {
+   "facing": 1,
+   "torso": 31.14,
+   "head": 25.14,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    78.0,
+    93.0
+   ],
+   "foot_near": 90,
+   "foot_far": 305.6,
+   "leg_far": [
+    195.6,
+    305.6
+   ],
+   "leg_near": [
+    95.8,
+    177.8
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.01,
+     104.004
+    ]
+   }
+  },
+  "shrimp_floating_shrimp_15": {
+   "facing": 1,
+   "torso": 31.78,
+   "head": 25.78,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    78.0,
+    93.0
+   ],
+   "foot_near": 90,
+   "foot_far": 305.2,
+   "leg_far": [
+    195.2,
+    305.2
+   ],
+   "leg_near": [
+    94.2,
+    176.5
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.008,
+     103.987
+    ]
+   }
+  },
+  "shrimp_floating_shrimp_16": {
+   "facing": 1,
+   "torso": 32.0,
+   "head": 26.0,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    78.0,
+    93.0
+   ],
+   "foot_near": 90,
+   "foot_far": 305.0,
+   "leg_far": [
+    195.0,
+    305.0
+   ],
+   "leg_near": [
+    93.7,
+    176.0
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.013,
+     103.996
+    ]
+   }
+  },
+  "shrimp_assisted_held_shrimp_0": {
+   "facing": 1,
+   "torso": 12.0,
+   "head": 6.0,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    234.5,
+    159.1
+   ],
+   "foot_near": 90,
+   "foot_far": 22.0,
+   "leg_far": [
+    210.0,
+    22.0
+   ],
+   "leg_near": [
+    159.7,
+    182.1
+   ],
+   "arm_near": [
+    159.5,
+    75.7
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.001,
+     103.996
+    ]
+   }
+  },
+  "shrimp_assisted_held_shrimp_1": {
+   "facing": 1,
+   "torso": 12.22,
+   "head": 6.22,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    234.7,
+    159.4
+   ],
+   "foot_near": 90,
+   "foot_far": 21.8,
+   "leg_far": [
+    209.8,
+    21.8
+   ],
+   "leg_near": [
+    158.3,
+    183.0
+   ],
+   "arm_near": [
+    159.1,
+    75.1
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     121.996,
+     104.003
+    ]
+   }
+  },
+  "shrimp_assisted_held_shrimp_2": {
+   "facing": 1,
+   "torso": 12.86,
+   "head": 6.86,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    235.1,
+    160.1
+   ],
+   "foot_near": 90,
+   "foot_far": 21.4,
+   "leg_far": [
+    209.4,
+    21.4
+   ],
+   "leg_near": [
+    154.6,
+    185.1
+   ],
+   "arm_near": [
+    157.8,
+    73.2
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.014,
+     103.996
+    ]
+   }
+  },
+  "shrimp_assisted_held_shrimp_3": {
+   "facing": 1,
+   "torso": 13.85,
+   "head": 7.85,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    235.8,
+    161.3
+   ],
+   "foot_near": 90,
+   "foot_far": 20.6,
+   "leg_far": [
+    208.6,
+    20.6
+   ],
+   "leg_near": [
+    149.8,
+    187.4
+   ],
+   "arm_near": [
+    155.8,
+    70.4
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.009,
+     103.995
+    ]
+   }
+  },
+  "shrimp_assisted_held_shrimp_4": {
+   "facing": 1,
+   "torso": 15.12,
+   "head": 9.12,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    236.7,
+    162.8
+   ],
+   "foot_near": 90,
+   "foot_far": 19.7,
+   "leg_far": [
+    207.7,
+    19.7
+   ],
+   "leg_near": [
+    144.4,
+    189.3
+   ],
+   "arm_near": [
+    152.9,
+    66.9
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.015,
+     104.0
+    ]
+   }
+  },
+  "shrimp_assisted_held_shrimp_5": {
+   "facing": 1,
+   "torso": 16.64,
+   "head": 10.64,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    237.8,
+    164.6
+   ],
+   "foot_near": 90,
+   "foot_far": 18.5,
+   "leg_far": [
+    206.5,
+    18.5
+   ],
+   "leg_near": [
+    138.7,
+    190.7
+   ],
+   "arm_near": [
+    149.2,
+    63.0
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     121.992,
+     104.006
+    ]
+   }
+  },
+  "shrimp_assisted_held_shrimp_6": {
+   "facing": 1,
+   "torso": 18.33,
+   "head": 12.33,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    238.9,
+    166.6
+   ],
+   "foot_near": 90,
+   "foot_far": 17.3,
+   "leg_far": [
+    205.3,
+    17.3
+   ],
+   "leg_near": [
+    132.8,
+    191.3
+   ],
+   "arm_near": [
+    144.7,
+    58.9
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.004,
+     104.01
+    ]
+   }
+  },
+  "shrimp_assisted_held_shrimp_7": {
+   "facing": 1,
+   "torso": 20.13,
+   "head": 14.13,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    240.1,
+    168.7
+   ],
+   "foot_near": 90,
+   "foot_far": 15.9,
+   "leg_far": [
+    203.9,
+    15.9
+   ],
+   "leg_near": [
+    126.8,
+    191.2
+   ],
+   "arm_near": [
+    139.5,
+    54.9
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.017,
+     103.993
+    ]
+   }
+  },
+  "shrimp_assisted_held_shrimp_8": {
+   "facing": 1,
+   "torso": 22.0,
+   "head": 16.0,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    241.4,
+    170.8
+   ],
+   "foot_near": 90,
+   "foot_far": 14.5,
+   "leg_far": [
+    202.5,
+    14.5
+   ],
+   "leg_near": [
+    121.0,
+    190.4
+   ],
+   "arm_near": [
+    133.8,
+    51.4
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.007,
+     103.994
+    ]
+   }
+  },
+  "shrimp_assisted_held_shrimp_9": {
+   "facing": 1,
+   "torso": 23.87,
+   "head": 17.87,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    242.7,
+    172.9
+   ],
+   "foot_near": 90,
+   "foot_far": 13.1,
+   "leg_far": [
+    201.1,
+    13.1
+   ],
+   "leg_near": [
+    115.5,
+    188.9
+   ],
+   "arm_near": [
+    127.8,
+    48.5
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.002,
+     104.013
+    ]
+   }
+  },
+  "shrimp_assisted_held_shrimp_10": {
+   "facing": 1,
+   "torso": 25.67,
+   "head": 19.67,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    243.8,
+    174.9
+   ],
+   "foot_near": 90,
+   "foot_far": 11.7,
+   "leg_far": [
+    199.7,
+    11.7
+   ],
+   "leg_near": [
+    110.3,
+    186.9
+   ],
+   "arm_near": [
+    121.6,
+    46.4
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.001,
+     104.013
+    ]
+   }
+  },
+  "shrimp_assisted_held_shrimp_11": {
+   "facing": 1,
+   "torso": 27.36,
+   "head": 21.36,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    245.0,
+    176.8
+   ],
+   "foot_near": 90,
+   "foot_far": 10.5,
+   "leg_far": [
+    198.5,
+    10.5
+   ],
+   "leg_near": [
+    105.6,
+    184.6
+   ],
+   "arm_near": [
+    115.6,
+    45.1
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     121.991,
+     104.007
+    ]
+   }
+  },
+  "shrimp_assisted_held_shrimp_12": {
+   "facing": 1,
+   "torso": 28.88,
+   "head": 22.88,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    246.0,
+    178.4
+   ],
+   "foot_near": 90,
+   "foot_far": 9.3,
+   "leg_far": [
+    197.3,
+    9.3
+   ],
+   "leg_near": [
+    101.5,
+    182.1
+   ],
+   "arm_near": [
+    109.9,
+    44.6
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.004,
+     103.992
+    ]
+   }
+  },
+  "shrimp_assisted_held_shrimp_13": {
+   "facing": 1,
+   "torso": 30.15,
+   "head": 24.15,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    246.9,
+    179.8
+   ],
+   "foot_near": 90,
+   "foot_far": 8.4,
+   "leg_far": [
+    196.4,
+    8.4
+   ],
+   "leg_near": [
+    98.2,
+    179.8
+   ],
+   "arm_near": [
+    104.9,
+    44.7
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     121.996,
+     103.99
+    ]
+   }
+  },
+  "shrimp_assisted_held_shrimp_14": {
+   "facing": 1,
+   "torso": 31.14,
+   "head": 25.14,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    247.5,
+    180.9
+   ],
+   "foot_near": 90,
+   "foot_far": 7.6,
+   "leg_far": [
+    195.6,
+    7.6
+   ],
+   "leg_near": [
+    95.8,
+    177.8
+   ],
+   "arm_near": [
+    100.8,
+    45.3
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.01,
+     104.004
+    ]
+   }
+  },
+  "shrimp_assisted_held_shrimp_15": {
+   "facing": 1,
+   "torso": 31.78,
+   "head": 25.78,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    248.0,
+    181.5
+   ],
+   "foot_near": 90,
+   "foot_far": 7.2,
+   "leg_far": [
+    195.2,
+    7.2
+   ],
+   "leg_near": [
+    94.2,
+    176.5
+   ],
+   "arm_near": [
+    98.0,
+    45.8
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.008,
+     103.987
+    ]
+   }
+  },
+  "shrimp_assisted_held_shrimp_16": {
+   "facing": 1,
+   "torso": 32.0,
+   "head": 26.0,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    248.1,
+    181.8
+   ],
+   "foot_near": 90,
+   "foot_far": 7.0,
+   "leg_far": [
+    195.0,
+    7.0
+   ],
+   "leg_near": [
+    93.7,
+    176.0
+   ],
+   "arm_near": [
+    97.0,
+    46.1
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.013,
+     103.996
+    ]
+   }
+  },
+  "shrimp_shrimp_squat_0": {
+   "facing": 1,
+   "torso": 12.0,
+   "head": 6.0,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    234.5,
+    159.1
+   ],
+   "foot_near": 90,
+   "foot_far": 22.0,
+   "leg_far": [
+    210.0,
+    22.0
+   ],
+   "leg_near": [
+    159.7,
+    182.1
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.001,
+     103.996
+    ]
+   }
+  },
+  "shrimp_shrimp_squat_1": {
+   "facing": 1,
+   "torso": 12.22,
+   "head": 6.22,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    234.7,
+    159.4
+   ],
+   "foot_near": 90,
+   "foot_far": 21.8,
+   "leg_far": [
+    209.8,
+    21.8
+   ],
+   "leg_near": [
+    158.3,
+    183.0
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     121.996,
+     104.003
+    ]
+   }
+  },
+  "shrimp_shrimp_squat_2": {
+   "facing": 1,
+   "torso": 12.86,
+   "head": 6.86,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    235.1,
+    160.1
+   ],
+   "foot_near": 90,
+   "foot_far": 21.4,
+   "leg_far": [
+    209.4,
+    21.4
+   ],
+   "leg_near": [
+    154.6,
+    185.1
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.014,
+     103.996
+    ]
+   }
+  },
+  "shrimp_shrimp_squat_3": {
+   "facing": 1,
+   "torso": 13.85,
+   "head": 7.85,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    235.8,
+    161.3
+   ],
+   "foot_near": 90,
+   "foot_far": 20.6,
+   "leg_far": [
+    208.6,
+    20.6
+   ],
+   "leg_near": [
+    149.8,
+    187.4
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.009,
+     103.995
+    ]
+   }
+  },
+  "shrimp_shrimp_squat_4": {
+   "facing": 1,
+   "torso": 15.12,
+   "head": 9.12,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    236.7,
+    162.8
+   ],
+   "foot_near": 90,
+   "foot_far": 19.7,
+   "leg_far": [
+    207.7,
+    19.7
+   ],
+   "leg_near": [
+    144.4,
+    189.3
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.015,
+     104.0
+    ]
+   }
+  },
+  "shrimp_shrimp_squat_5": {
+   "facing": 1,
+   "torso": 16.64,
+   "head": 10.64,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    237.8,
+    164.6
+   ],
+   "foot_near": 90,
+   "foot_far": 18.5,
+   "leg_far": [
+    206.5,
+    18.5
+   ],
+   "leg_near": [
+    138.7,
+    190.7
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     121.992,
+     104.006
+    ]
+   }
+  },
+  "shrimp_shrimp_squat_6": {
+   "facing": 1,
+   "torso": 18.33,
+   "head": 12.33,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    238.9,
+    166.6
+   ],
+   "foot_near": 90,
+   "foot_far": 17.3,
+   "leg_far": [
+    205.3,
+    17.3
+   ],
+   "leg_near": [
+    132.8,
+    191.3
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.004,
+     104.01
+    ]
+   }
+  },
+  "shrimp_shrimp_squat_7": {
+   "facing": 1,
+   "torso": 20.13,
+   "head": 14.13,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    240.1,
+    168.7
+   ],
+   "foot_near": 90,
+   "foot_far": 15.9,
+   "leg_far": [
+    203.9,
+    15.9
+   ],
+   "leg_near": [
+    126.8,
+    191.2
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.017,
+     103.993
+    ]
+   }
+  },
+  "shrimp_shrimp_squat_8": {
+   "facing": 1,
+   "torso": 22.0,
+   "head": 16.0,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    241.4,
+    170.8
+   ],
+   "foot_near": 90,
+   "foot_far": 14.5,
+   "leg_far": [
+    202.5,
+    14.5
+   ],
+   "leg_near": [
+    121.0,
+    190.4
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.007,
+     103.994
+    ]
+   }
+  },
+  "shrimp_shrimp_squat_9": {
+   "facing": 1,
+   "torso": 23.87,
+   "head": 17.87,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    242.7,
+    172.9
+   ],
+   "foot_near": 90,
+   "foot_far": 13.1,
+   "leg_far": [
+    201.1,
+    13.1
+   ],
+   "leg_near": [
+    115.5,
+    188.9
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.002,
+     104.013
+    ]
+   }
+  },
+  "shrimp_shrimp_squat_10": {
+   "facing": 1,
+   "torso": 25.67,
+   "head": 19.67,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    243.8,
+    174.9
+   ],
+   "foot_near": 90,
+   "foot_far": 11.7,
+   "leg_far": [
+    199.7,
+    11.7
+   ],
+   "leg_near": [
+    110.3,
+    186.9
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.001,
+     104.013
+    ]
+   }
+  },
+  "shrimp_shrimp_squat_11": {
+   "facing": 1,
+   "torso": 27.36,
+   "head": 21.36,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    245.0,
+    176.8
+   ],
+   "foot_near": 90,
+   "foot_far": 10.5,
+   "leg_far": [
+    198.5,
+    10.5
+   ],
+   "leg_near": [
+    105.6,
+    184.6
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     121.991,
+     104.007
+    ]
+   }
+  },
+  "shrimp_shrimp_squat_12": {
+   "facing": 1,
+   "torso": 28.88,
+   "head": 22.88,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    246.0,
+    178.4
+   ],
+   "foot_near": 90,
+   "foot_far": 9.3,
+   "leg_far": [
+    197.3,
+    9.3
+   ],
+   "leg_near": [
+    101.5,
+    182.1
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.004,
+     103.992
+    ]
+   }
+  },
+  "shrimp_shrimp_squat_13": {
+   "facing": 1,
+   "torso": 30.15,
+   "head": 24.15,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    246.9,
+    179.8
+   ],
+   "foot_near": 90,
+   "foot_far": 8.4,
+   "leg_far": [
+    196.4,
+    8.4
+   ],
+   "leg_near": [
+    98.2,
+    179.8
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     121.996,
+     103.99
+    ]
+   }
+  },
+  "shrimp_shrimp_squat_14": {
+   "facing": 1,
+   "torso": 31.14,
+   "head": 25.14,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    247.5,
+    180.9
+   ],
+   "foot_near": 90,
+   "foot_far": 7.6,
+   "leg_far": [
+    195.6,
+    7.6
+   ],
+   "leg_near": [
+    95.8,
+    177.8
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.01,
+     104.004
+    ]
+   }
+  },
+  "shrimp_shrimp_squat_15": {
+   "facing": 1,
+   "torso": 31.78,
+   "head": 25.78,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    248.0,
+    181.5
+   ],
+   "foot_near": 90,
+   "foot_far": 7.2,
+   "leg_far": [
+    195.2,
+    7.2
+   ],
+   "leg_near": [
+    94.2,
+    176.5
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.008,
+     103.987
+    ]
+   }
+  },
+  "shrimp_shrimp_squat_16": {
+   "facing": 1,
+   "torso": 32.0,
+   "head": 26.0,
+   "arms": [
+    75.0,
+    90.0
+   ],
+   "arm_far": [
+    248.1,
+    181.8
+   ],
+   "foot_near": 90,
+   "foot_far": 7.0,
+   "leg_far": [
+    195.0,
+    7.0
+   ],
+   "leg_near": [
+    93.7,
+    176.0
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     122.013,
+     103.996
+    ]
+   }
+  },
+  "hef_strict_0": {
+   "facing": 1,
+   "torso": 58.0,
+   "head": 58.0,
+   "feet": 240.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     94.997,
+     40.001
+    ]
+   },
+   "legs": [
+    225.0,
+    240.0
+   ],
+   "leg_far": [
+    227.0,
+    242.0
+   ],
+   "arm_near": [
+    354.0,
+    343.3
+   ],
+   "arm_far": [
+    354.0,
+    343.3
+   ]
+  },
+  "hef_strict_1": {
+   "facing": 1,
+   "torso": 57.64,
+   "head": 57.64,
+   "feet": 239.6,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     94.982,
+     40.004
+    ]
+   },
+   "legs": [
+    224.6,
+    239.6
+   ],
+   "leg_far": [
+    226.6,
+    241.6
+   ],
+   "arm_near": [
+    356.5,
+    339.8
+   ],
+   "arm_far": [
+    356.5,
+    339.8
+   ]
+  },
+  "hef_strict_2": {
+   "facing": 1,
+   "torso": 56.58,
+   "head": 56.58,
+   "feet": 238.4,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     95.001,
+     40.004
+    ]
+   },
+   "legs": [
+    223.4,
+    238.4
+   ],
+   "leg_far": [
+    225.4,
+    240.4
+   ],
+   "arm_near": [
+    0.7,
+    333.2
+   ],
+   "arm_far": [
+    0.7,
+    333.2
+   ]
+  },
+  "hef_strict_3": {
+   "facing": 1,
+   "torso": 54.91,
+   "head": 54.91,
+   "feet": 236.6,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     94.999,
+     39.996
+    ]
+   },
+   "legs": [
+    221.6,
+    236.6
+   ],
+   "leg_far": [
+    223.6,
+    238.6
+   ],
+   "arm_near": [
+    4.3,
+    325.7
+   ],
+   "arm_far": [
+    4.3,
+    325.7
+   ]
+  },
+  "hef_strict_4": {
+   "facing": 1,
+   "torso": 52.67,
+   "head": 52.67,
+   "feet": 234.1,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     95.002,
+     40.003
+    ]
+   },
+   "legs": [
+    219.1,
+    234.1
+   ],
+   "leg_far": [
+    221.1,
+    236.1
+   ],
+   "arm_near": [
+    7.1,
+    317.5
+   ],
+   "arm_far": [
+    7.1,
+    317.5
+   ]
+  },
+  "hef_strict_5": {
+   "facing": 1,
+   "torso": 49.93,
+   "head": 49.93,
+   "feet": 231.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     94.991,
+     40.007
+    ]
+   },
+   "legs": [
+    216.0,
+    231.0
+   ],
+   "leg_far": [
+    218.0,
+    233.0
+   ],
+   "arm_near": [
+    8.7,
+    308.8
+   ],
+   "arm_far": [
+    8.7,
+    308.8
+   ]
+  },
+  "hef_strict_6": {
+   "facing": 1,
+   "torso": 46.75,
+   "head": 46.75,
+   "feet": 227.5,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     95.004,
+     39.998
+    ]
+   },
+   "legs": [
+    212.5,
+    227.5
+   ],
+   "leg_far": [
+    214.5,
+    229.5
+   ],
+   "arm_near": [
+    9.0,
+    299.7
+   ],
+   "arm_far": [
+    9.0,
+    299.7
+   ]
+  },
+  "hef_strict_7": {
+   "facing": 1,
+   "torso": 43.2,
+   "head": 43.2,
+   "feet": 223.6,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     95.004,
+     39.996
+    ]
+   },
+   "legs": [
+    208.6,
+    223.6
+   ],
+   "leg_far": [
+    210.6,
+    225.6
+   ],
+   "arm_near": [
+    7.7,
+    290.1
+   ],
+   "arm_far": [
+    7.7,
+    290.1
+   ]
+  },
+  "hef_strict_8": {
+   "facing": 1,
+   "torso": 39.31,
+   "head": 39.31,
+   "feet": 219.3,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     94.991,
+     40.004
+    ]
+   },
+   "legs": [
+    204.1,
+    219.3
+   ],
+   "leg_far": [
+    206.1,
+    221.3
+   ],
+   "arm_near": [
+    5.0,
+    279.6
+   ],
+   "arm_far": [
+    5.0,
+    279.6
+   ]
+  },
+  "hef_strict_9": {
+   "facing": 1,
+   "torso": 35.02,
+   "head": 35.02,
+   "feet": 215.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     94.993,
+     39.995
+    ]
+   },
+   "legs": [
+    198.4,
+    215.0
+   ],
+   "leg_far": [
+    200.4,
+    217.0
+   ],
+   "arm_near": [
+    2.0,
+    266.3
+   ],
+   "arm_far": [
+    2.0,
+    266.3
+   ]
+  },
+  "hef_strict_10": {
+   "facing": 1,
+   "torso": 30.54,
+   "head": 30.54,
+   "feet": 210.5,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     95.012,
+     40.006
+    ]
+   },
+   "legs": [
+    192.4,
+    210.5
+   ],
+   "leg_far": [
+    194.4,
+    212.5
+   ],
+   "arm_near": [
+    355.9,
+    252.4
+   ],
+   "arm_far": [
+    355.9,
+    252.4
+   ]
+  },
+  "hef_strict_11": {
+   "facing": 1,
+   "torso": 25.93,
+   "head": 25.93,
+   "feet": 205.9,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     94.994,
+     40.004
+    ]
+   },
+   "legs": [
+    186.2,
+    205.9
+   ],
+   "leg_far": [
+    188.2,
+    207.9
+   ],
+   "arm_near": [
+    346.5,
+    238.6
+   ],
+   "arm_far": [
+    346.5,
+    238.6
+   ]
+  },
+  "hef_strict_12": {
+   "facing": 1,
+   "torso": 22.67,
+   "head": 22.67,
+   "feet": 200.7,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     94.997,
+     40.005
+    ]
+   },
+   "legs": [
+    182.7,
+    200.7
+   ],
+   "leg_far": [
+    184.7,
+    202.7
+   ],
+   "arm_near": [
+    336.5,
+    223.6
+   ],
+   "arm_far": [
+    336.5,
+    223.6
+   ]
+  },
+  "hef_strict_13": {
+   "facing": 1,
+   "torso": 19.76,
+   "head": 19.76,
+   "feet": 195.3,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     95.005,
+     39.995
+    ]
+   },
+   "legs": [
+    179.8,
+    195.3
+   ],
+   "leg_far": [
+    181.8,
+    197.3
+   ],
+   "arm_near": [
+    324.1,
+    209.1
+   ],
+   "arm_far": [
+    324.1,
+    209.1
+   ]
+  },
+  "hef_strict_14": {
+   "facing": 1,
+   "torso": 17.28,
+   "head": 17.28,
+   "feet": 191.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     95.005,
+     39.991
+    ]
+   },
+   "legs": [
+    177.5,
+    191.0
+   ],
+   "leg_far": [
+    179.5,
+    193.0
+   ],
+   "arm_near": [
+    310.2,
+    196.0
+   ],
+   "arm_far": [
+    310.2,
+    196.0
+   ]
+  },
+  "hef_strict_15": {
+   "facing": 1,
+   "torso": 15.49,
+   "head": 15.49,
+   "feet": 188.7,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     94.997,
+     40.007
+    ]
+   },
+   "legs": [
+    176.3,
+    188.7
+   ],
+   "leg_far": [
+    178.3,
+    190.7
+   ],
+   "arm_near": [
+    295.7,
+    184.6
+   ],
+   "arm_far": [
+    295.7,
+    184.6
+   ]
+  },
+  "hef_strict_16": {
+   "facing": 1,
+   "torso": 13.78,
+   "head": 13.78,
+   "feet": 186.4,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     95.006,
+     40.005
+    ]
+   },
+   "legs": [
+    175.2,
+    186.4
+   ],
+   "leg_far": [
+    177.2,
+    188.4
+   ],
+   "arm_near": [
+    281.7,
+    177.1
+   ],
+   "arm_far": [
+    281.7,
+    177.1
+   ]
+  },
+  "hef_strict_17": {
+   "facing": 1,
+   "torso": 12.17,
+   "head": 12.17,
+   "feet": 184.2,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     94.996,
+     40.007
+    ]
+   },
+   "legs": [
+    174.1,
+    184.2
+   ],
+   "leg_far": [
+    176.1,
+    186.2
+   ],
+   "arm_near": [
+    268.8,
+    173.4
+   ],
+   "arm_far": [
+    268.8,
+    173.4
+   ]
+  },
+  "hef_strict_18": {
+   "facing": 1,
+   "torso": 11.56,
+   "head": 11.56,
+   "feet": 183.1,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     95.011,
+     40.003
+    ]
+   },
+   "legs": [
+    174.0,
+    183.1
+   ],
+   "leg_far": [
+    176.0,
+    185.1
+   ],
+   "arm_near": [
+    256.7,
+    171.7
+   ],
+   "arm_far": [
+    256.7,
+    171.7
+   ]
+  },
+  "hef_strict_19": {
+   "facing": 1,
+   "torso": 11.12,
+   "head": 11.12,
+   "feet": 182.2,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     94.998,
+     40.008
+    ]
+   },
+   "legs": [
+    174.0,
+    182.2
+   ],
+   "leg_far": [
+    176.0,
+    184.2
+   ],
+   "arm_near": [
+    245.6,
+    172.6
+   ],
+   "arm_far": [
+    245.6,
+    172.6
+   ]
+  },
+  "hef_strict_20": {
+   "facing": 1,
+   "torso": 10.74,
+   "head": 10.74,
+   "feet": 181.5,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     94.988,
+     39.991
+    ]
+   },
+   "legs": [
+    174.0,
+    181.5
+   ],
+   "leg_far": [
+    176.0,
+    183.5
+   ],
+   "arm_near": [
+    235.5,
+    175.4
+   ],
+   "arm_far": [
+    235.5,
+    175.4
+   ]
+  },
+  "hef_strict_21": {
+   "facing": 1,
+   "torso": 10.43,
+   "head": 10.43,
+   "feet": 180.9,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     94.999,
+     40.006
+    ]
+   },
+   "legs": [
+    174.0,
+    180.9
+   ],
+   "leg_far": [
+    176.0,
+    182.9
+   ],
+   "arm_near": [
+    226.0,
+    179.7
+   ],
+   "arm_far": [
+    226.0,
+    179.7
+   ]
+  },
+  "hef_strict_22": {
+   "facing": 1,
+   "torso": 10.2,
+   "head": 10.2,
+   "feet": 180.4,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     95.003,
+     40.001
+    ]
+   },
+   "legs": [
+    174.0,
+    180.4
+   ],
+   "leg_far": [
+    176.0,
+    182.4
+   ],
+   "arm_near": [
+    217.3,
+    185.1
+   ],
+   "arm_far": [
+    217.3,
+    185.1
+   ]
+  },
+  "hef_strict_23": {
+   "facing": 1,
+   "torso": 10.05,
+   "head": 10.05,
+   "feet": 180.1,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     95.0,
+     39.998
+    ]
+   },
+   "legs": [
+    174.0,
+    180.1
+   ],
+   "leg_far": [
+    176.0,
+    182.1
+   ],
+   "arm_near": [
+    209.5,
+    191.2
+   ],
+   "arm_far": [
+    209.5,
+    191.2
+   ]
+  },
+  "hef_strict_24": {
+   "facing": 1,
+   "torso": 10.0,
+   "head": 10.0,
+   "feet": 180.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     94.997,
+     40.0
+    ]
+   },
+   "legs": [
+    174.0,
+    180.0
+   ],
+   "leg_far": [
+    176.0,
+    182.0
+   ],
+   "arm_near": [
+    204.8,
+    195.5
+   ],
+   "arm_far": [
+    204.8,
+    195.5
+   ]
+  },
+  "hef_gh_0": {
+   "facing": 1,
+   "torso": 5.0,
+   "head": 5.0,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     79.997,
+     46.005
+    ]
+   },
+   "leg_near": [
+    162.1,
+    208.9
+   ],
+   "leg_far": [
+    162.1,
+    208.9
+   ],
+   "arm_near": [
+    295.4,
+    288.3
+   ],
+   "arm_far": [
+    295.4,
+    288.3
+   ]
+  },
+  "hef_gh_1": {
+   "facing": 1,
+   "torso": 5.39,
+   "head": 5.39,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     80.003,
+     45.997
+    ]
+   },
+   "leg_near": [
+    160.4,
+    209.7
+   ],
+   "leg_far": [
+    160.4,
+    209.7
+   ],
+   "arm_near": [
+    296.1,
+    288.9
+   ],
+   "arm_far": [
+    296.1,
+    288.9
+   ]
+  },
+  "hef_gh_2": {
+   "facing": 1,
+   "torso": 6.48,
+   "head": 6.48,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     80.003,
+     45.993
+    ]
+   },
+   "leg_near": [
+    156.2,
+    211.5
+   ],
+   "leg_far": [
+    156.2,
+    211.5
+   ],
+   "arm_near": [
+    297.8,
+    290.7
+   ],
+   "arm_far": [
+    297.8,
+    290.7
+   ]
+  },
+  "hef_gh_3": {
+   "facing": 1,
+   "torso": 8.12,
+   "head": 8.12,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     79.997,
+     46.005
+    ]
+   },
+   "leg_near": [
+    150.2,
+    213.3
+   ],
+   "leg_far": [
+    150.2,
+    213.3
+   ],
+   "arm_near": [
+    300.4,
+    293.3
+   ],
+   "arm_far": [
+    300.4,
+    293.3
+   ]
+  },
+  "hef_gh_4": {
+   "facing": 1,
+   "torso": 10.19,
+   "head": 10.19,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     79.998,
+     46.004
+    ]
+   },
+   "leg_near": [
+    143.3,
+    214.2
+   ],
+   "leg_far": [
+    143.3,
+    214.2
+   ],
+   "arm_near": [
+    303.7,
+    296.6
+   ],
+   "arm_far": [
+    303.7,
+    296.6
+   ]
+  },
+  "hef_gh_5": {
+   "facing": 1,
+   "torso": 12.52,
+   "head": 12.52,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     80.001,
+     46.0
+    ]
+   },
+   "leg_near": [
+    135.8,
+    213.7
+   ],
+   "leg_far": [
+    135.8,
+    213.7
+   ],
+   "arm_near": [
+    307.5,
+    300.3
+   ],
+   "arm_far": [
+    307.5,
+    300.3
+   ]
+  },
+  "hef_gh_6": {
+   "facing": 1,
+   "torso": 15.0,
+   "head": 15.0,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     79.996,
+     46.004
+    ]
+   },
+   "leg_near": [
+    128.3,
+    211.5
+   ],
+   "leg_far": [
+    128.3,
+    211.5
+   ],
+   "arm_near": [
+    311.4,
+    304.3
+   ],
+   "arm_far": [
+    311.4,
+    304.3
+   ]
+  },
+  "hef_gh_7": {
+   "facing": 1,
+   "torso": 17.48,
+   "head": 17.48,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     80.007,
+     45.991
+    ]
+   },
+   "leg_near": [
+    121.2,
+    207.7
+   ],
+   "leg_far": [
+    121.2,
+    207.7
+   ],
+   "arm_near": [
+    315.4,
+    308.3
+   ],
+   "arm_far": [
+    315.4,
+    308.3
+   ]
+  },
+  "hef_gh_8": {
+   "facing": 1,
+   "torso": 19.81,
+   "head": 19.81,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     79.995,
+     46.005
+    ]
+   },
+   "leg_near": [
+    115.1,
+    202.9
+   ],
+   "leg_far": [
+    115.1,
+    202.9
+   ],
+   "arm_near": [
+    319.1,
+    312.0
+   ],
+   "arm_far": [
+    319.1,
+    312.0
+   ]
+  },
+  "hef_gh_9": {
+   "facing": 1,
+   "torso": 21.88,
+   "head": 21.88,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     79.996,
+     46.004
+    ]
+   },
+   "leg_near": [
+    110.4,
+    197.7
+   ],
+   "leg_far": [
+    110.4,
+    197.7
+   ],
+   "arm_near": [
+    322.4,
+    315.3
+   ],
+   "arm_far": [
+    322.4,
+    315.3
+   ]
+  },
+  "hef_gh_10": {
+   "facing": 1,
+   "torso": 23.52,
+   "head": 23.52,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     80.004,
+     45.998
+    ]
+   },
+   "leg_near": [
+    107.1,
+    193.2
+   ],
+   "leg_far": [
+    107.1,
+    193.2
+   ],
+   "arm_near": [
+    325.1,
+    317.9
+   ],
+   "arm_far": [
+    325.1,
+    317.9
+   ]
+  },
+  "hef_gh_11": {
+   "facing": 1,
+   "torso": 24.61,
+   "head": 24.61,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     80.006,
+     45.995
+    ]
+   },
+   "leg_near": [
+    105.3,
+    189.9
+   ],
+   "leg_far": [
+    105.3,
+    189.9
+   ],
+   "arm_near": [
+    326.8,
+    319.7
+   ],
+   "arm_far": [
+    326.8,
+    319.7
+   ]
+  },
+  "hef_gh_12": {
+   "facing": 1,
+   "torso": 25.0,
+   "head": 25.0,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     79.995,
+     46.003
+    ]
+   },
+   "leg_near": [
+    104.7,
+    188.7
+   ],
+   "leg_far": [
+    104.7,
+    188.7
+   ],
+   "arm_near": [
+    327.4,
+    320.3
+   ],
+   "arm_far": [
+    327.4,
+    320.3
+   ]
+  },
+  "hef_partial_0": {
+   "facing": 1,
+   "torso": 25.0,
+   "head": 25.0,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     79.995,
+     46.003
+    ]
+   },
+   "leg_near": [
+    104.7,
+    188.7
+   ],
+   "leg_far": [
+    104.7,
+    188.7
+   ],
+   "arm_near": [
+    327.4,
+    320.3
+   ],
+   "arm_far": [
+    327.4,
+    320.3
+   ]
+  },
+  "hef_partial_1": {
+   "facing": 1,
+   "torso": 24.96,
+   "head": 24.96,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     79.986,
+     46.011
+    ]
+   },
+   "leg_near": [
+    105.2,
+    188.7
+   ],
+   "leg_far": [
+    105.2,
+    188.7
+   ],
+   "arm_near": [
+    329.6,
+    317.4
+   ],
+   "arm_far": [
+    329.6,
+    317.4
+   ]
+  },
+  "hef_partial_2": {
+   "facing": 1,
+   "torso": 24.83,
+   "head": 24.83,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     80.005,
+     45.995
+    ]
+   },
+   "leg_near": [
+    106.5,
+    188.8
+   ],
+   "leg_far": [
+    106.5,
+    188.8
+   ],
+   "arm_near": [
+    333.0,
+    312.5
+   ],
+   "arm_far": [
+    333.0,
+    312.5
+   ]
+  },
+  "hef_partial_3": {
+   "facing": 1,
+   "torso": 24.65,
+   "head": 24.65,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     79.998,
+     46.0
+    ]
+   },
+   "leg_near": [
+    108.7,
+    188.7
+   ],
+   "leg_far": [
+    108.7,
+    188.7
+   ],
+   "arm_near": [
+    336.0,
+    307.1
+   ],
+   "arm_far": [
+    336.0,
+    307.1
+   ]
+  },
+  "hef_partial_4": {
+   "facing": 1,
+   "torso": 24.41,
+   "head": 24.41,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     80.005,
+     46.002
+    ]
+   },
+   "leg_near": [
+    111.4,
+    188.5
+   ],
+   "leg_far": [
+    111.4,
+    188.5
+   ],
+   "arm_near": [
+    338.5,
+    301.6
+   ],
+   "arm_far": [
+    338.5,
+    301.6
+   ]
+  },
+  "hef_partial_5": {
+   "facing": 1,
+   "torso": 24.13,
+   "head": 24.13,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     79.995,
+     45.997
+    ]
+   },
+   "leg_near": [
+    114.7,
+    188.2
+   ],
+   "leg_far": [
+    114.7,
+    188.2
+   ],
+   "arm_near": [
+    340.3,
+    296.2
+   ],
+   "arm_far": [
+    340.3,
+    296.2
+   ]
+  },
+  "hef_partial_6": {
+   "facing": 1,
+   "torso": 23.82,
+   "head": 23.82,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     79.994,
+     46.008
+    ]
+   },
+   "leg_near": [
+    118.3,
+    187.5
+   ],
+   "leg_far": [
+    118.3,
+    187.5
+   ],
+   "arm_near": [
+    341.6,
+    290.8
+   ],
+   "arm_far": [
+    341.6,
+    290.8
+   ]
+  },
+  "hef_partial_7": {
+   "facing": 1,
+   "torso": 23.5,
+   "head": 23.5,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     79.989,
+     46.004
+    ]
+   },
+   "leg_near": [
+    122.1,
+    186.5
+   ],
+   "leg_far": [
+    122.1,
+    186.5
+   ],
+   "arm_near": [
+    342.3,
+    285.7
+   ],
+   "arm_far": [
+    342.3,
+    285.7
+   ]
+  },
+  "hef_partial_8": {
+   "facing": 1,
+   "torso": 23.18,
+   "head": 23.18,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     80.0,
+     45.991
+    ]
+   },
+   "leg_near": [
+    126.2,
+    185.2
+   ],
+   "leg_far": [
+    126.2,
+    185.2
+   ],
+   "arm_near": [
+    342.6,
+    280.9
+   ],
+   "arm_far": [
+    342.6,
+    280.9
+   ]
+  },
+  "hef_partial_9": {
+   "facing": 1,
+   "torso": 22.87,
+   "head": 22.87,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     80.009,
+     45.999
+    ]
+   },
+   "leg_near": [
+    130.2,
+    183.6
+   ],
+   "leg_far": [
+    130.2,
+    183.6
+   ],
+   "arm_near": [
+    342.5,
+    276.4
+   ],
+   "arm_far": [
+    342.5,
+    276.4
+   ]
+  },
+  "hef_partial_10": {
+   "facing": 1,
+   "torso": 22.59,
+   "head": 22.59,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     79.994,
+     45.997
+    ]
+   },
+   "leg_near": [
+    134.2,
+    181.7
+   ],
+   "leg_far": [
+    134.2,
+    181.7
+   ],
+   "arm_near": [
+    342.0,
+    272.5
+   ],
+   "arm_far": [
+    342.0,
+    272.5
+   ]
+  },
+  "hef_partial_11": {
+   "facing": 1,
+   "torso": 22.35,
+   "head": 22.35,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     79.989,
+     46.001
+    ]
+   },
+   "leg_near": [
+    138.0,
+    179.6
+   ],
+   "leg_far": [
+    138.0,
+    179.6
+   ],
+   "arm_near": [
+    341.4,
+    269.2
+   ],
+   "arm_far": [
+    341.4,
+    269.2
+   ]
+  },
+  "hef_partial_12": {
+   "facing": 1,
+   "torso": 22.17,
+   "head": 22.17,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     80.006,
+     45.989
+    ]
+   },
+   "leg_near": [
+    141.2,
+    177.7
+   ],
+   "leg_far": [
+    141.2,
+    177.7
+   ],
+   "arm_near": [
+    340.9,
+    266.7
+   ],
+   "arm_far": [
+    340.9,
+    266.7
+   ]
+  },
+  "hef_partial_13": {
+   "facing": 1,
+   "torso": 22.04,
+   "head": 22.04,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     79.994,
+     46.01
+    ]
+   },
+   "leg_near": [
+    143.5,
+    176.2
+   ],
+   "leg_far": [
+    143.5,
+    176.2
+   ],
+   "arm_near": [
+    340.4,
+    265.0
+   ],
+   "arm_far": [
+    340.4,
+    265.0
+   ]
+  },
+  "hef_partial_14": {
+   "facing": 1,
+   "torso": 22.0,
+   "head": 22.0,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     80.007,
+     45.988
+    ]
+   },
+   "leg_near": [
+    144.4,
+    175.5
+   ],
+   "leg_far": [
+    144.4,
+    175.5
+   ],
+   "arm_near": [
+    340.3,
+    264.5
+   ],
+   "arm_far": [
+    340.3,
+    264.5
+   ]
+  },
+  "hef_assisted_0": {
+   "facing": 1,
+   "torso": 25.0,
+   "head": 25.0,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     79.995,
+     46.003
+    ]
+   },
+   "legs": [
+    150.0,
+    210.0
+   ],
+   "leg_far": [
+    104.7,
+    188.7
+   ],
+   "leg_near": [
+    104.7,
+    188.7
+   ],
+   "arm_near": [
+    327.4,
+    320.3
+   ],
+   "arm_far": [
+    327.4,
+    320.3
+   ]
+  },
+  "hef_assisted_1": {
+   "facing": 1,
+   "torso": 24.92,
+   "head": 24.92,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     79.991,
+     46.004
+    ]
+   },
+   "legs": [
+    150.3,
+    209.9
+   ],
+   "leg_far": [
+    105.5,
+    188.8
+   ],
+   "leg_near": [
+    105.5,
+    188.8
+   ],
+   "arm_near": [
+    330.7,
+    315.9
+   ],
+   "arm_far": [
+    330.7,
+    315.9
+   ]
+  },
+  "hef_assisted_2": {
+   "facing": 1,
+   "torso": 24.7,
+   "head": 24.7,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     79.993,
+     46.007
+    ]
+   },
+   "legs": [
+    151.0,
+    209.5
+   ],
+   "leg_far": [
+    108.0,
+    188.8
+   ],
+   "leg_near": [
+    108.0,
+    188.8
+   ],
+   "arm_near": [
+    335.2,
+    308.6
+   ],
+   "arm_far": [
+    335.2,
+    308.6
+   ]
+  },
+  "hef_assisted_3": {
+   "facing": 1,
+   "torso": 24.36,
+   "head": 24.36,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     80.009,
+     45.996
+    ]
+   },
+   "legs": [
+    152.1,
+    208.9
+   ],
+   "leg_far": [
+    112.0,
+    188.5
+   ],
+   "leg_near": [
+    112.0,
+    188.5
+   ],
+   "arm_near": [
+    338.9,
+    300.6
+   ],
+   "arm_far": [
+    338.9,
+    300.6
+   ]
+  },
+  "hef_assisted_4": {
+   "facing": 1,
+   "torso": 23.89,
+   "head": 23.89,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     80.004,
+     46.001
+    ]
+   },
+   "legs": [
+    153.7,
+    208.1
+   ],
+   "leg_far": [
+    117.4,
+    187.7
+   ],
+   "leg_near": [
+    117.4,
+    187.7
+   ],
+   "arm_near": [
+    341.4,
+    292.0
+   ],
+   "arm_far": [
+    341.4,
+    292.0
+   ]
+  },
+  "hef_assisted_5": {
+   "facing": 1,
+   "torso": 23.32,
+   "head": 23.32,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     80.01,
+     45.998
+    ]
+   },
+   "legs": [
+    155.6,
+    207.2
+   ],
+   "leg_far": [
+    124.4,
+    185.8
+   ],
+   "leg_near": [
+    124.4,
+    185.8
+   ],
+   "arm_near": [
+    342.6,
+    282.9
+   ],
+   "arm_far": [
+    342.6,
+    282.9
+   ]
+  },
+  "hef_assisted_6": {
+   "facing": 1,
+   "torso": 22.66,
+   "head": 22.66,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     79.989,
+     46.011
+    ]
+   },
+   "legs": [
+    157.8,
+    206.1
+   ],
+   "leg_far": [
+    133.3,
+    182.1
+   ],
+   "leg_near": [
+    133.3,
+    182.1
+   ],
+   "arm_near": [
+    342.1,
+    273.3
+   ],
+   "arm_far": [
+    342.1,
+    273.3
+   ]
+  },
+  "hef_assisted_7": {
+   "facing": 1,
+   "torso": 21.89,
+   "head": 21.89,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     79.996,
+     45.998
+    ]
+   },
+   "legs": [
+    160.2,
+    204.7
+   ],
+   "leg_far": [
+    145.9,
+    174.2
+   ],
+   "leg_near": [
+    145.9,
+    174.2
+   ],
+   "arm_near": [
+    340.2,
+    263.4
+   ],
+   "arm_far": [
+    340.2,
+    263.4
+   ]
+  },
+  "hef_assisted_8": {
+   "facing": 1,
+   "torso": 20.81,
+   "head": 20.81,
+   "feet": 95.9,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     80.004,
+     46.008
+    ]
+   },
+   "legs": [
+    162.4,
+    202.0
+   ],
+   "leg_far": [
+    161.1,
+    173.8
+   ],
+   "leg_near": [
+    160.6,
+    173.3
+   ],
+   "arm_near": [
+    338.8,
+    253.2
+   ],
+   "arm_far": [
+    338.8,
+    253.2
+   ]
+  },
+  "hef_assisted_9": {
+   "facing": 1,
+   "torso": 19.67,
+   "head": 19.67,
+   "feet": 101.9,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     80.003,
+     46.002
+    ]
+   },
+   "legs": [
+    164.7,
+    199.2
+   ],
+   "leg_far": [
+    164.7,
+    187.1
+   ],
+   "leg_near": [
+    163.5,
+    185.9
+   ],
+   "arm_near": [
+    335.5,
+    242.7
+   ],
+   "arm_far": [
+    335.5,
+    242.7
+   ]
+  },
+  "hef_assisted_10": {
+   "facing": 1,
+   "torso": 18.48,
+   "head": 18.48,
+   "feet": 106.1,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     80.001,
+     45.994
+    ]
+   },
+   "legs": [
+    167.0,
+    196.2
+   ],
+   "leg_far": [
+    169.0,
+    198.0
+   ],
+   "leg_near": [
+    167.0,
+    196.0
+   ],
+   "arm_near": [
+    330.2,
+    232.0
+   ],
+   "arm_far": [
+    330.2,
+    232.0
+   ]
+  },
+  "hef_assisted_11": {
+   "facing": 1,
+   "torso": 17.25,
+   "head": 17.25,
+   "feet": 102.7,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     80.002,
+     46.009
+    ]
+   },
+   "legs": [
+    169.0,
+    192.7
+   ],
+   "leg_far": [
+    171.0,
+    194.7
+   ],
+   "leg_near": [
+    169.0,
+    192.7
+   ],
+   "arm_near": [
+    323.2,
+    220.0
+   ],
+   "arm_far": [
+    323.2,
+    220.0
+   ]
+  },
+  "hef_assisted_12": {
+   "facing": 1,
+   "torso": 16.0,
+   "head": 16.0,
+   "feet": 99.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     79.995,
+     46.006
+    ]
+   },
+   "legs": [
+    170.7,
+    189.0
+   ],
+   "leg_far": [
+    172.7,
+    191.0
+   ],
+   "leg_near": [
+    170.7,
+    189.0
+   ],
+   "arm_near": [
+    314.1,
+    207.7
+   ],
+   "arm_far": [
+    314.1,
+    207.7
+   ]
+  },
+  "hef_assisted_13": {
+   "facing": 1,
+   "torso": 14.81,
+   "head": 14.81,
+   "feet": 95.8,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     80.004,
+     45.992
+    ]
+   },
+   "legs": [
+    172.0,
+    185.8
+   ],
+   "leg_far": [
+    174.0,
+    187.8
+   ],
+   "leg_near": [
+    172.0,
+    185.8
+   ],
+   "arm_near": [
+    303.4,
+    196.6
+   ],
+   "arm_far": [
+    303.4,
+    196.6
+   ]
+  },
+  "hef_assisted_14": {
+   "facing": 1,
+   "torso": 13.89,
+   "head": 13.89,
+   "feet": 94.5,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     80.002,
+     45.999
+    ]
+   },
+   "legs": [
+    172.0,
+    184.5
+   ],
+   "leg_far": [
+    174.0,
+    186.5
+   ],
+   "leg_near": [
+    172.0,
+    184.5
+   ],
+   "arm_near": [
+    292.1,
+    187.2
+   ],
+   "arm_far": [
+    292.1,
+    187.2
+   ]
+  },
+  "hef_assisted_15": {
+   "facing": 1,
+   "torso": 13.0,
+   "head": 13.0,
+   "feet": 93.3,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     79.995,
+     46.004
+    ]
+   },
+   "legs": [
+    172.0,
+    183.3
+   ],
+   "leg_far": [
+    174.0,
+    185.3
+   ],
+   "leg_near": [
+    172.0,
+    183.3
+   ],
+   "arm_near": [
+    280.6,
+    180.3
+   ],
+   "arm_far": [
+    280.6,
+    180.3
+   ]
+  },
+  "hef_assisted_16": {
+   "facing": 1,
+   "torso": 12.14,
+   "head": 12.14,
+   "feet": 92.2,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     80.01,
+     46.003
+    ]
+   },
+   "legs": [
+    172.0,
+    182.2
+   ],
+   "leg_far": [
+    174.0,
+    184.2
+   ],
+   "leg_near": [
+    172.0,
+    182.2
+   ],
+   "arm_near": [
+    269.5,
+    175.9
+   ],
+   "arm_far": [
+    269.5,
+    175.9
+   ]
+  },
+  "hef_assisted_17": {
+   "facing": 1,
+   "torso": 11.64,
+   "head": 11.64,
+   "feet": 92.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     79.998,
+     45.992
+    ]
+   },
+   "legs": [
+    172.0,
+    182.0
+   ],
+   "leg_far": [
+    174.0,
+    184.0
+   ],
+   "leg_near": [
+    172.0,
+    182.0
+   ],
+   "arm_near": [
+    259.0,
+    173.7
+   ],
+   "arm_far": [
+    259.0,
+    173.7
+   ]
+  },
+  "hef_assisted_18": {
+   "facing": 1,
+   "torso": 11.25,
+   "head": 11.25,
+   "feet": 92.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     79.991,
+     45.998
+    ]
+   },
+   "legs": [
+    172.0,
+    182.0
+   ],
+   "leg_far": [
+    174.0,
+    184.0
+   ],
+   "leg_near": [
+    172.0,
+    182.0
+   ],
+   "arm_near": [
+    249.1,
+    173.5
+   ],
+   "arm_far": [
+    249.1,
+    173.5
+   ]
+  },
+  "hef_assisted_19": {
+   "facing": 1,
+   "torso": 10.9,
+   "head": 10.9,
+   "feet": 92.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     80.013,
+     46.009
+    ]
+   },
+   "legs": [
+    172.0,
+    182.0
+   ],
+   "leg_far": [
+    174.0,
+    184.0
+   ],
+   "leg_near": [
+    172.0,
+    182.0
+   ],
+   "arm_near": [
+    239.8,
+    174.9
+   ],
+   "arm_far": [
+    239.8,
+    174.9
+   ]
+  },
+  "hef_assisted_20": {
+   "facing": 1,
+   "torso": 10.59,
+   "head": 10.59,
+   "feet": 92.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     79.996,
+     45.998
+    ]
+   },
+   "legs": [
+    172.0,
+    182.0
+   ],
+   "leg_far": [
+    174.0,
+    184.0
+   ],
+   "leg_near": [
+    172.0,
+    182.0
+   ],
+   "arm_near": [
+    231.2,
+    177.8
+   ],
+   "arm_far": [
+    231.2,
+    177.8
+   ]
+  },
+  "hef_assisted_21": {
+   "facing": 1,
+   "torso": 10.34,
+   "head": 10.34,
+   "feet": 92.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     79.985,
+     45.993
+    ]
+   },
+   "legs": [
+    172.0,
+    182.0
+   ],
+   "leg_far": [
+    174.0,
+    184.0
+   ],
+   "leg_near": [
+    172.0,
+    182.0
+   ],
+   "arm_near": [
+    223.1,
+    181.8
+   ],
+   "arm_far": [
+    223.1,
+    181.8
+   ]
+  },
+  "hef_assisted_22": {
+   "facing": 1,
+   "torso": 10.16,
+   "head": 10.16,
+   "feet": 92.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     79.999,
+     45.997
+    ]
+   },
+   "legs": [
+    172.0,
+    182.0
+   ],
+   "leg_far": [
+    174.0,
+    184.0
+   ],
+   "leg_near": [
+    172.0,
+    182.0
+   ],
+   "arm_near": [
+    215.5,
+    186.6
+   ],
+   "arm_far": [
+    215.5,
+    186.6
+   ]
+  },
+  "hef_assisted_23": {
+   "facing": 1,
+   "torso": 10.04,
+   "head": 10.04,
+   "feet": 92.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     79.989,
+     45.997
+    ]
+   },
+   "legs": [
+    172.0,
+    182.0
+   ],
+   "leg_far": [
+    174.0,
+    184.0
+   ],
+   "leg_near": [
+    172.0,
+    182.0
+   ],
+   "arm_near": [
+    208.7,
+    192.0
+   ],
+   "arm_far": [
+    208.7,
+    192.0
+   ]
+  },
+  "hef_assisted_24": {
+   "facing": 1,
+   "torso": 10.0,
+   "head": 10.0,
+   "feet": 92.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     79.997,
+     46.0
+    ]
+   },
+   "legs": [
+    172.0,
+    182.0
+   ],
+   "leg_far": [
+    174.0,
+    184.0
+   ],
+   "leg_near": [
+    172.0,
+    182.0
+   ],
+   "arm_near": [
+    204.8,
+    195.5
+   ],
+   "arm_far": [
+    204.8,
+    195.5
+   ]
+  },
+  "hef_support_0": {
+   "facing": 1,
+   "torso": 11.0,
+   "head": 11.0,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     70.006,
+     66.007
+    ]
+   },
+   "leg_near": [
+    86.2,
+    141.4
+   ],
+   "leg_far": [
+    86.2,
+    141.4
+   ],
+   "arm_near": [
+    223.4,
+    181.0
+   ],
+   "arm_far": [
+    223.4,
+    181.0
+   ]
+  },
+  "hef_support_1": {
+   "facing": 1,
+   "torso": 10.93,
+   "head": 10.93,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     69.994,
+     66.0
+    ]
+   },
+   "leg_near": [
+    86.7,
+    141.4
+   ],
+   "leg_far": [
+    86.7,
+    141.4
+   ],
+   "arm_near": [
+    222.5,
+    181.6
+   ],
+   "arm_far": [
+    222.5,
+    181.6
+   ]
+  },
+  "hef_support_2": {
+   "facing": 1,
+   "torso": 10.74,
+   "head": 10.74,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     69.995,
+     66.003
+    ]
+   },
+   "leg_near": [
+    88.0,
+    141.4
+   ],
+   "leg_far": [
+    88.0,
+    141.4
+   ],
+   "arm_near": [
+    220.0,
+    183.2
+   ],
+   "arm_far": [
+    220.0,
+    183.2
+   ]
+  },
+  "hef_support_3": {
+   "facing": 1,
+   "torso": 10.5,
+   "head": 10.5,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     69.997,
+     66.004
+    ]
+   },
+   "leg_near": [
+    89.8,
+    141.2
+   ],
+   "leg_far": [
+    89.8,
+    141.2
+   ],
+   "arm_near": [
+    216.4,
+    185.7
+   ],
+   "arm_far": [
+    216.4,
+    185.7
+   ]
+  },
+  "hef_support_4": {
+   "facing": 1,
+   "torso": 10.26,
+   "head": 10.26,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     70.001,
+     66.001
+    ]
+   },
+   "leg_near": [
+    91.6,
+    141.0
+   ],
+   "leg_far": [
+    91.6,
+    141.0
+   ],
+   "arm_near": [
+    212.1,
+    189.0
+   ],
+   "arm_far": [
+    212.1,
+    189.0
+   ]
+  },
+  "hef_support_5": {
+   "facing": 1,
+   "torso": 10.07,
+   "head": 10.07,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     69.992,
+     65.996
+    ]
+   },
+   "leg_near": [
+    93.0,
+    140.8
+   ],
+   "leg_far": [
+    93.0,
+    140.8
+   ],
+   "arm_near": [
+    207.6,
+    192.9
+   ],
+   "arm_far": [
+    207.6,
+    192.9
+   ]
+  },
+  "hef_support_6": {
+   "facing": 1,
+   "torso": 10.0,
+   "head": 10.0,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     69.997,
+     66.0
+    ]
+   },
+   "leg_near": [
+    93.6,
+    140.7
+   ],
+   "leg_far": [
+    93.6,
+    140.7
+   ],
+   "arm_near": [
+    204.8,
+    195.5
+   ],
+   "arm_far": [
+    204.8,
+    195.5
+   ]
+  },
+  "hef_korean_0": {
+   "facing": 1,
+   "torso": 10.0,
+   "head": 10.0,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     69.997,
+     66.0
+    ]
+   },
+   "leg_near": [
+    93.6,
+    140.7
+   ],
+   "leg_far": [
+    93.6,
+    140.7
+   ],
+   "arm_near": [
+    204.8,
+    195.5
+   ],
+   "arm_far": [
+    204.8,
+    195.5
+   ]
+  },
+  "hef_korean_1": {
+   "facing": 1,
+   "torso": 10.09,
+   "head": 10.09,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     69.993,
+     65.998
+    ]
+   },
+   "leg_near": [
+    92.8,
+    140.9
+   ],
+   "leg_far": [
+    92.8,
+    140.9
+   ],
+   "arm_near": [
+    208.0,
+    192.6
+   ],
+   "arm_far": [
+    208.0,
+    192.6
+   ]
+  },
+  "hef_korean_2": {
+   "facing": 1,
+   "torso": 10.33,
+   "head": 10.33,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     70.012,
+     66.004
+    ]
+   },
+   "leg_near": [
+    90.8,
+    141.4
+   ],
+   "leg_far": [
+    90.8,
+    141.4
+   ],
+   "arm_near": [
+    213.6,
+    188.0
+   ],
+   "arm_far": [
+    213.6,
+    188.0
+   ]
+  },
+  "hef_korean_3": {
+   "facing": 1,
+   "torso": 10.71,
+   "head": 10.71,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     70.002,
+     65.996
+    ]
+   },
+   "leg_near": [
+    87.8,
+    141.9
+   ],
+   "leg_far": [
+    87.8,
+    141.9
+   ],
+   "arm_near": [
+    219.8,
+    183.8
+   ],
+   "arm_far": [
+    219.8,
+    183.8
+   ]
+  },
+  "hef_korean_4": {
+   "facing": 1,
+   "torso": 11.19,
+   "head": 11.19,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     70.0,
+     65.999
+    ]
+   },
+   "leg_near": [
+    84.2,
+    142.3
+   ],
+   "leg_far": [
+    84.2,
+    142.3
+   ],
+   "arm_near": [
+    226.1,
+    180.3
+   ],
+   "arm_far": [
+    226.1,
+    180.3
+   ]
+  },
+  "hef_korean_5": {
+   "facing": 1,
+   "torso": 11.75,
+   "head": 11.75,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     70.001,
+     65.992
+    ]
+   },
+   "leg_near": [
+    80.1,
+    142.4
+   ],
+   "leg_far": [
+    80.1,
+    142.4
+   ],
+   "arm_near": [
+    232.5,
+    177.5
+   ],
+   "arm_far": [
+    232.5,
+    177.5
+   ]
+  },
+  "hef_korean_6": {
+   "facing": 1,
+   "torso": 12.36,
+   "head": 12.36,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     70.007,
+     65.996
+    ]
+   },
+   "leg_near": [
+    75.8,
+    142.2
+   ],
+   "leg_far": [
+    75.8,
+    142.2
+   ],
+   "arm_near": [
+    238.8,
+    175.5
+   ],
+   "arm_far": [
+    238.8,
+    175.5
+   ]
+  },
+  "hef_korean_7": {
+   "facing": 1,
+   "torso": 13.0,
+   "head": 13.0,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     70.006,
+     65.994
+    ]
+   },
+   "leg_near": [
+    71.5,
+    141.5
+   ],
+   "leg_far": [
+    71.5,
+    141.5
+   ],
+   "arm_near": [
+    245.0,
+    174.3
+   ],
+   "arm_far": [
+    245.0,
+    174.3
+   ]
+  },
+  "hef_korean_8": {
+   "facing": 1,
+   "torso": 13.64,
+   "head": 13.64,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     69.997,
+     66.006
+    ]
+   },
+   "leg_near": [
+    67.3,
+    140.5
+   ],
+   "leg_far": [
+    67.3,
+    140.5
+   ],
+   "arm_near": [
+    250.9,
+    173.9
+   ],
+   "arm_far": [
+    250.9,
+    173.9
+   ]
+  },
+  "hef_korean_9": {
+   "facing": 1,
+   "torso": 14.25,
+   "head": 14.25,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     69.992,
+     65.999
+    ]
+   },
+   "leg_near": [
+    63.4,
+    139.3
+   ],
+   "leg_far": [
+    63.4,
+    139.3
+   ],
+   "arm_near": [
+    256.5,
+    174.1
+   ],
+   "arm_far": [
+    256.5,
+    174.1
+   ]
+  },
+  "hef_korean_10": {
+   "facing": 1,
+   "torso": 14.81,
+   "head": 14.81,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     70.01,
+     66.004
+    ]
+   },
+   "leg_near": [
+    59.9,
+    137.9
+   ],
+   "leg_far": [
+    59.9,
+    137.9
+   ],
+   "arm_near": [
+    261.5,
+    174.7
+   ],
+   "arm_far": [
+    261.5,
+    174.7
+   ]
+  },
+  "hef_korean_11": {
+   "facing": 1,
+   "torso": 15.29,
+   "head": 15.29,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     70.001,
+     66.002
+    ]
+   },
+   "leg_near": [
+    57.0,
+    136.5
+   ],
+   "leg_far": [
+    57.0,
+    136.5
+   ],
+   "arm_near": [
+    265.8,
+    175.7
+   ],
+   "arm_far": [
+    265.8,
+    175.7
+   ]
+  },
+  "hef_korean_12": {
+   "facing": 1,
+   "torso": 15.67,
+   "head": 15.67,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     69.999,
+     66.01
+    ]
+   },
+   "leg_near": [
+    54.8,
+    135.3
+   ],
+   "leg_far": [
+    54.8,
+    135.3
+   ],
+   "arm_near": [
+    269.1,
+    176.7
+   ],
+   "arm_far": [
+    269.1,
+    176.7
+   ]
+  },
+  "hef_korean_13": {
+   "facing": 1,
+   "torso": 15.91,
+   "head": 15.91,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     69.991,
+     66.003
+    ]
+   },
+   "leg_near": [
+    53.3,
+    134.4
+   ],
+   "leg_far": [
+    53.3,
+    134.4
+   ],
+   "arm_near": [
+    271.3,
+    177.5
+   ],
+   "arm_far": [
+    271.3,
+    177.5
+   ]
+  },
+  "hef_korean_14": {
+   "facing": 1,
+   "torso": 16.0,
+   "head": 16.0,
+   "feet": 90,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     70.011,
+     65.995
+    ]
+   },
+   "leg_near": [
+    52.8,
+    134.1
+   ],
+   "leg_far": [
+    52.8,
+    134.1
+   ],
+   "arm_near": [
+    272.1,
+    177.7
+   ],
+   "arm_far": [
+    272.1,
+    177.7
+   ]
+  },
+  "vflag_straddle": {
+   "facing": 1,
+   "torso": 180,
+   "arm_far": [
+    316.2,
+    316.2
+   ],
+   "arm_near": [
+    223.8,
+    223.8
+   ],
+   "leg_near": [
+    15.0,
+    15.0
+   ],
+   "leg_far": [
+    345.0,
+    345.0
+   ],
+   "foot_near": 15,
+   "foot_far": 345,
+   "pin": {
+    "joint": "neck",
+    "at": [
+     80.0,
+     60.0
+    ]
+   }
+  },
+  "vflag_line": {
+   "facing": 1,
+   "torso": 180,
+   "arm_far": [
+    316.2,
+    316.2
+   ],
+   "arm_near": [
+    223.8,
+    223.8
+   ],
+   "leg_near": [
+    0.5,
+    0.5
+   ],
+   "leg_far": [
+    359.5,
+    359.5
+   ],
+   "foot_near": 0.5,
+   "foot_far": 359.5,
+   "pin": {
+    "joint": "neck",
+    "at": [
+     80.0,
+     60.0
+    ]
+   }
+  },
+  "flag_neg_0": {
+   "facing": 1,
+   "torso": 180.0,
+   "arm_far": [
+    316.2,
+    316.2
+   ],
+   "arm_near": [
+    223.8,
+    223.8
+   ],
+   "leg_near": [
+    0.5,
+    0.5
+   ],
+   "leg_far": [
+    359.5,
+    359.5
+   ],
+   "foot_near": 0.5,
+   "foot_far": 359.5,
+   "pin": {
+    "joint": "neck",
+    "at": [
+     80.0,
+     60.0
+    ]
+   }
+  },
+  "flag_neg_1": {
+   "facing": 1,
+   "torso": 186.04,
+   "arm_far": [
+    316.2,
+    316.2
+   ],
+   "arm_near": [
+    223.8,
+    223.8
+   ],
+   "leg_near": [
+    6.5,
+    6.5
+   ],
+   "leg_far": [
+    5.5,
+    5.5
+   ],
+   "foot_near": 6.54,
+   "foot_far": 5.54,
+   "pin": {
+    "joint": "neck",
+    "at": [
+     80.0,
+     60.0
+    ]
+   }
+  },
+  "flag_neg_2": {
+   "facing": 1,
+   "torso": 192.07,
+   "arm_far": [
+    316.2,
+    316.2
+   ],
+   "arm_near": [
+    223.8,
+    223.8
+   ],
+   "leg_near": [
+    12.6,
+    12.6
+   ],
+   "leg_far": [
+    11.6,
+    11.6
+   ],
+   "foot_near": 12.57,
+   "foot_far": 11.57,
+   "pin": {
+    "joint": "neck",
+    "at": [
+     80.0,
+     60.0
+    ]
+   }
+  },
+  "flag_neg_3": {
+   "facing": 1,
+   "torso": 198.11,
+   "arm_far": [
+    316.2,
+    316.2
+   ],
+   "arm_near": [
+    223.8,
+    223.8
+   ],
+   "leg_near": [
+    18.6,
+    18.6
+   ],
+   "leg_far": [
+    17.6,
+    17.6
+   ],
+   "foot_near": 18.61,
+   "foot_far": 17.61,
+   "pin": {
+    "joint": "neck",
+    "at": [
+     80.0,
+     60.0
+    ]
+   }
+  },
+  "flag_neg_4": {
+   "facing": 1,
+   "torso": 204.15,
+   "arm_far": [
+    316.2,
+    316.2
+   ],
+   "arm_near": [
+    223.8,
+    223.8
+   ],
+   "leg_near": [
+    24.6,
+    24.6
+   ],
+   "leg_far": [
+    23.6,
+    23.6
+   ],
+   "foot_near": 24.65,
+   "foot_far": 23.65,
+   "pin": {
+    "joint": "neck",
+    "at": [
+     80.0,
+     60.0
+    ]
+   }
+  },
+  "flag_neg_5": {
+   "facing": 1,
+   "torso": 210.18,
+   "arm_far": [
+    316.2,
+    316.2
+   ],
+   "arm_near": [
+    223.8,
+    223.8
+   ],
+   "leg_near": [
+    30.7,
+    30.7
+   ],
+   "leg_far": [
+    29.7,
+    29.7
+   ],
+   "foot_near": 30.68,
+   "foot_far": 29.68,
+   "pin": {
+    "joint": "neck",
+    "at": [
+     80.0,
+     60.0
+    ]
+   }
+  },
+  "flag_neg_6": {
+   "facing": 1,
+   "torso": 216.22,
+   "arm_far": [
+    316.2,
+    316.2
+   ],
+   "arm_near": [
+    223.8,
+    223.8
+   ],
+   "leg_near": [
+    36.7,
+    36.7
+   ],
+   "leg_far": [
+    35.7,
+    35.7
+   ],
+   "foot_near": 36.72,
+   "foot_far": 35.72,
+   "pin": {
+    "joint": "neck",
+    "at": [
+     80.0,
+     60.0
+    ]
+   }
+  },
+  "flag_neg_7": {
+   "facing": 1,
+   "torso": 222.25,
+   "arm_far": [
+    316.2,
+    316.2
+   ],
+   "arm_near": [
+    223.8,
+    223.8
+   ],
+   "leg_near": [
+    42.8,
+    42.8
+   ],
+   "leg_far": [
+    41.8,
+    41.8
+   ],
+   "foot_near": 42.75,
+   "foot_far": 41.75,
+   "pin": {
+    "joint": "neck",
+    "at": [
+     80.0,
+     60.0
+    ]
+   }
+  },
+  "flag_neg_8": {
+   "facing": 1,
+   "torso": 228.29,
+   "arm_far": [
+    316.2,
+    316.2
+   ],
+   "arm_near": [
+    223.8,
+    223.8
+   ],
+   "leg_near": [
+    48.8,
+    48.8
+   ],
+   "leg_far": [
+    47.8,
+    47.8
+   ],
+   "foot_near": 48.79,
+   "foot_far": 47.79,
+   "pin": {
+    "joint": "neck",
+    "at": [
+     80.0,
+     60.0
+    ]
+   }
+  },
+  "flag_neg_9": {
+   "facing": 1,
+   "torso": 234.33,
+   "arm_far": [
+    316.2,
+    316.2
+   ],
+   "arm_near": [
+    223.8,
+    223.8
+   ],
+   "leg_near": [
+    54.8,
+    54.8
+   ],
+   "leg_far": [
+    53.8,
+    53.8
+   ],
+   "foot_near": 54.83,
+   "foot_far": 53.83,
+   "pin": {
+    "joint": "neck",
+    "at": [
+     80.0,
+     60.0
+    ]
+   }
+  },
+  "flag_neg_10": {
+   "facing": 1,
+   "torso": 240.36,
+   "arm_far": [
+    316.2,
+    316.2
+   ],
+   "arm_near": [
+    223.8,
+    223.8
+   ],
+   "leg_near": [
+    60.9,
+    60.9
+   ],
+   "leg_far": [
+    59.9,
+    59.9
+   ],
+   "foot_near": 60.86,
+   "foot_far": 59.86,
+   "pin": {
+    "joint": "neck",
+    "at": [
+     80.0,
+     60.0
+    ]
+   }
+  },
+  "flag_neg_11": {
+   "facing": 1,
+   "torso": 246.4,
+   "arm_far": [
+    316.2,
+    316.2
+   ],
+   "arm_near": [
+    223.8,
+    223.8
+   ],
+   "leg_near": [
+    66.9,
+    66.9
+   ],
+   "leg_far": [
+    65.9,
+    65.9
+   ],
+   "foot_near": 66.9,
+   "foot_far": 65.9,
+   "pin": {
+    "joint": "neck",
+    "at": [
+     80.0,
+     60.0
+    ]
+   }
+  },
+  "flag_neg_12": {
+   "facing": 1,
+   "torso": 252.44,
+   "arm_far": [
+    316.2,
+    316.2
+   ],
+   "arm_near": [
+    223.8,
+    223.8
+   ],
+   "leg_near": [
+    72.9,
+    72.9
+   ],
+   "leg_far": [
+    71.9,
+    71.9
+   ],
+   "foot_near": 72.94,
+   "foot_far": 71.94,
+   "pin": {
+    "joint": "neck",
+    "at": [
+     80.0,
+     60.0
+    ]
+   }
+  },
+  "flag_neg_13": {
+   "facing": 1,
+   "torso": 258.47,
+   "arm_far": [
+    316.2,
+    316.2
+   ],
+   "arm_near": [
+    223.8,
+    223.8
+   ],
+   "leg_near": [
+    79.0,
+    79.0
+   ],
+   "leg_far": [
+    78.0,
+    78.0
+   ],
+   "foot_near": 78.97,
+   "foot_far": 77.97,
+   "pin": {
+    "joint": "neck",
+    "at": [
+     80.0,
+     60.0
+    ]
+   }
+  },
+  "flag_neg_14": {
+   "facing": 1,
+   "torso": 264.51,
+   "arm_far": [
+    316.2,
+    316.2
+   ],
+   "arm_near": [
+    223.8,
+    223.8
+   ],
+   "leg_near": [
+    85.0,
+    85.0
+   ],
+   "leg_far": [
+    84.0,
+    84.0
+   ],
+   "foot_near": 85.01,
+   "foot_far": 84.01,
+   "pin": {
+    "joint": "neck",
+    "at": [
+     80.0,
+     60.0
+    ]
+   }
+  },
+  "flag_neg_15": {
+   "facing": 1,
+   "torso": 270.54,
+   "arm_far": [
+    316.2,
+    316.2
+   ],
+   "arm_near": [
+    223.8,
+    223.8
+   ],
+   "leg_near": [
+    91.0,
+    91.0
+   ],
+   "leg_far": [
+    90.0,
+    90.0
+   ],
+   "foot_near": 91.04,
+   "foot_far": 90.04,
+   "pin": {
+    "joint": "neck",
+    "at": [
+     80.0,
+     60.0
+    ]
+   }
+  },
+  "flag_neg_16": {
+   "facing": 1,
+   "torso": 276.58,
+   "arm_far": [
+    316.2,
+    316.2
+   ],
+   "arm_near": [
+    223.8,
+    223.8
+   ],
+   "leg_near": [
+    97.1,
+    97.1
+   ],
+   "leg_far": [
+    96.1,
+    96.1
+   ],
+   "foot_near": 97.08,
+   "foot_far": 96.08,
+   "pin": {
+    "joint": "neck",
+    "at": [
+     80.0,
+     60.0
+    ]
+   }
+  },
+  "flag_neg_17": {
+   "facing": 1,
+   "torso": 282.62,
+   "arm_far": [
+    316.2,
+    316.2
+   ],
+   "arm_near": [
+    223.8,
+    223.8
+   ],
+   "leg_near": [
+    103.1,
+    103.1
+   ],
+   "leg_far": [
+    102.1,
+    102.1
+   ],
+   "foot_near": 103.12,
+   "foot_far": 102.12,
+   "pin": {
+    "joint": "neck",
+    "at": [
+     80.0,
+     60.0
+    ]
+   }
+  },
+  "flag_neg_18": {
+   "facing": 1,
+   "torso": 288.65,
+   "arm_far": [
+    316.2,
+    316.2
+   ],
+   "arm_near": [
+    223.8,
+    223.8
+   ],
+   "leg_near": [
+    109.2,
+    109.2
+   ],
+   "leg_far": [
+    108.2,
+    108.2
+   ],
+   "foot_near": 109.15,
+   "foot_far": 108.15,
+   "pin": {
+    "joint": "neck",
+    "at": [
+     80.0,
+     60.0
+    ]
+   }
+  },
+  "flag_neg_19": {
+   "facing": 1,
+   "torso": 294.69,
+   "arm_far": [
+    316.2,
+    316.2
+   ],
+   "arm_near": [
+    223.8,
+    223.8
+   ],
+   "leg_near": [
+    115.2,
+    115.2
+   ],
+   "leg_far": [
+    114.2,
+    114.2
+   ],
+   "foot_near": 115.19,
+   "foot_far": 114.19,
+   "pin": {
+    "joint": "neck",
+    "at": [
+     80.0,
+     60.0
+    ]
+   }
+  },
+  "flag_neg_20": {
+   "facing": 1,
+   "torso": 300.73,
+   "arm_far": [
+    316.2,
+    316.2
+   ],
+   "arm_near": [
+    223.8,
+    223.8
+   ],
+   "leg_near": [
+    121.2,
+    121.2
+   ],
+   "leg_far": [
+    120.2,
+    120.2
+   ],
+   "foot_near": 121.23,
+   "foot_far": 120.23,
+   "pin": {
+    "joint": "neck",
+    "at": [
+     80.0,
+     60.0
+    ]
+   }
+  },
+  "flag_neg_21": {
+   "facing": 1,
+   "torso": 306.76,
+   "arm_far": [
+    316.2,
+    316.2
+   ],
+   "arm_near": [
+    223.8,
+    223.8
+   ],
+   "leg_near": [
+    127.3,
+    127.3
+   ],
+   "leg_far": [
+    126.3,
+    126.3
+   ],
+   "foot_near": 127.26,
+   "foot_far": 126.26,
+   "pin": {
+    "joint": "neck",
+    "at": [
+     80.0,
+     60.0
+    ]
+   }
+  },
+  "flag_neg_22": {
+   "facing": 1,
+   "torso": 312.8,
+   "arm_far": [
+    316.2,
+    316.2
+   ],
+   "arm_near": [
+    223.8,
+    223.8
+   ],
+   "leg_near": [
+    133.3,
+    133.3
+   ],
+   "leg_far": [
+    132.3,
+    132.3
+   ],
+   "foot_near": 133.3,
+   "foot_far": 132.3,
+   "pin": {
+    "joint": "neck",
+    "at": [
+     80.0,
+     60.0
+    ]
+   }
+  },
+  "flag_neg_23": {
+   "facing": 1,
+   "torso": 318.83,
+   "arm_far": [
+    316.2,
+    316.2
+   ],
+   "arm_near": [
+    223.8,
+    223.8
+   ],
+   "leg_near": [
+    139.3,
+    139.3
+   ],
+   "leg_far": [
+    138.3,
+    138.3
+   ],
+   "foot_near": 139.33,
+   "foot_far": 138.33,
+   "pin": {
+    "joint": "neck",
+    "at": [
+     80.0,
+     60.0
+    ]
+   }
+  },
+  "flag_neg_24": {
+   "facing": 1,
+   "torso": 324.87,
+   "arm_far": [
+    316.2,
+    316.2
+   ],
+   "arm_near": [
+    223.8,
+    223.8
+   ],
+   "leg_near": [
+    145.4,
+    145.4
+   ],
+   "leg_far": [
+    144.4,
+    144.4
+   ],
+   "foot_near": 145.37,
+   "foot_far": 144.37,
+   "pin": {
+    "joint": "neck",
+    "at": [
+     80.0,
+     60.0
+    ]
+   }
+  },
+  "stc_0": {
+   "facing": 1,
+   "torso": 0.0,
+   "head": 0.0,
+   "arms": [
+    359.9,
+    359.9
+   ],
+   "legs": [
+    180.0,
+    180.0
+   ],
+   "leg_far": [
+    181.5,
+    181.5
+   ],
+   "feet": 180.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     100.0,
+     12.0
+    ]
+   }
+  },
+  "stc_1": {
+   "facing": 1,
+   "torso": 357.78,
+   "head": 357.78,
+   "arms": [
+    3.5,
+    3.5
+   ],
+   "legs": [
+    160.0,
+    181.1
+   ],
+   "leg_far": [
+    161.5,
+    182.6
+   ],
+   "feet": 181.1,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     100.0,
+     12.0
+    ]
+   }
+  },
+  "stc_2": {
+   "facing": 1,
+   "torso": 355.56,
+   "head": 355.56,
+   "arms": [
+    6.8,
+    6.8
+   ],
+   "legs": [
+    140.0,
+    182.2
+   ],
+   "leg_far": [
+    141.5,
+    183.7
+   ],
+   "feet": 182.2,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     100.0,
+     12.0
+    ]
+   }
+  },
+  "stc_3": {
+   "facing": 1,
+   "torso": 353.33,
+   "head": 353.33,
+   "arms": [
+    9.5,
+    9.5
+   ],
+   "legs": [
+    120.0,
+    183.3
+   ],
+   "leg_far": [
+    121.5,
+    184.8
+   ],
+   "feet": 183.3,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     100.0,
+     12.0
+    ]
+   }
+  },
+  "stc_4": {
+   "facing": 1,
+   "torso": 351.11,
+   "head": 351.11,
+   "arms": [
+    11.4,
+    11.4
+   ],
+   "legs": [
+    100.0,
+    184.4
+   ],
+   "leg_far": [
+    101.5,
+    185.9
+   ],
+   "feet": 184.4,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     100.0,
+     12.0
+    ]
+   }
+  },
+  "stc_5": {
+   "facing": 1,
+   "torso": 345.56,
+   "head": 345.56,
+   "arms": [
+    14.0,
+    14.0
+   ],
+   "legs": [
+    80.6,
+    181.1
+   ],
+   "leg_far": [
+    82.1,
+    182.6
+   ],
+   "feet": 181.1,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     100.0,
+     12.0
+    ]
+   }
+  },
+  "stc_6": {
+   "facing": 1,
+   "torso": 336.67,
+   "head": 336.67,
+   "arms": [
+    17.2,
+    17.2
+   ],
+   "legs": [
+    61.7,
+    173.3
+   ],
+   "leg_far": [
+    63.2,
+    174.8
+   ],
+   "feet": 173.3,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     100.0,
+     12.0
+    ]
+   }
+  },
+  "stc_7": {
+   "facing": 1,
+   "torso": 327.78,
+   "head": 327.78,
+   "arms": [
+    19.4,
+    19.4
+   ],
+   "legs": [
+    42.8,
+    165.6
+   ],
+   "leg_far": [
+    44.3,
+    167.1
+   ],
+   "feet": 165.6,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     100.0,
+     12.0
+    ]
+   }
+  },
+  "stc_8": {
+   "facing": 1,
+   "torso": 318.89,
+   "head": 318.89,
+   "arms": [
+    20.6,
+    20.6
+   ],
+   "legs": [
+    23.9,
+    157.8
+   ],
+   "leg_far": [
+    25.4,
+    159.3
+   ],
+   "feet": 157.8,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     100.0,
+     12.0
+    ]
+   }
+  },
+  "stc_9": {
+   "facing": 1,
+   "torso": 310.0,
+   "head": 310.0,
+   "arms": [
+    21.1,
+    21.1
+   ],
+   "legs": [
+    5.0,
+    150.0
+   ],
+   "leg_far": [
+    6.5,
+    151.5
+   ],
+   "feet": 150.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     100.0,
+     12.0
+    ]
+   }
+  },
+  "stc_10": {
+   "facing": 1,
+   "torso": 301.11,
+   "head": 301.11,
+   "arms": [
+    22.2,
+    22.2
+   ],
+   "legs": [
+    353.9,
+    140.0
+   ],
+   "leg_far": [
+    355.4,
+    141.5
+   ],
+   "feet": 140.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     100.0,
+     12.0
+    ]
+   }
+  },
+  "stc_11": {
+   "facing": 1,
+   "torso": 292.22,
+   "head": 292.22,
+   "arms": [
+    22.7,
+    22.7
+   ],
+   "legs": [
+    342.8,
+    130.0
+   ],
+   "leg_far": [
+    344.3,
+    131.5
+   ],
+   "feet": 130.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     100.0,
+     12.0
+    ]
+   }
+  },
+  "stc_12": {
+   "facing": 1,
+   "torso": 283.33,
+   "head": 283.33,
+   "arms": [
+    22.6,
+    22.6
+   ],
+   "legs": [
+    331.7,
+    120.0
+   ],
+   "leg_far": [
+    333.2,
+    121.5
+   ],
+   "feet": 120.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     100.0,
+     12.0
+    ]
+   }
+  },
+  "stc_13": {
+   "facing": 1,
+   "torso": 274.44,
+   "head": 274.44,
+   "arms": [
+    22.1,
+    22.1
+   ],
+   "legs": [
+    320.6,
+    110.0
+   ],
+   "leg_far": [
+    322.1,
+    111.5
+   ],
+   "feet": 110.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     100.0,
+     12.0
+    ]
+   }
+  },
+  "stc_14": {
+   "facing": 1,
+   "torso": 260.0,
+   "head": 260.0,
+   "arms": [
+    20.3,
+    20.3
+   ],
+   "legs": [
+    305.0,
+    95.0
+   ],
+   "leg_far": [
+    306.5,
+    96.5
+   ],
+   "feet": 95.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     100.0,
+     12.0
+    ]
+   }
+  },
+  "stc_15": {
+   "facing": 1,
+   "torso": 240.0,
+   "head": 240.0,
+   "arms": [
+    15.9,
+    15.9
+   ],
+   "legs": [
+    285.0,
+    75.0
+   ],
+   "leg_far": [
+    286.5,
+    76.5
+   ],
+   "feet": 75.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     100.0,
+     12.0
+    ]
+   }
+  },
+  "stc_16": {
+   "facing": 1,
+   "torso": 220.0,
+   "head": 220.0,
+   "arms": [
+    9.7,
+    9.7
+   ],
+   "legs": [
+    265.0,
+    55.0
+   ],
+   "leg_far": [
+    266.5,
+    56.5
+   ],
+   "feet": 55.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     100.0,
+     12.0
+    ]
+   }
+  },
+  "stc_17": {
+   "facing": 1,
+   "torso": 200.0,
+   "head": 200.0,
+   "arms": [
+    2.4,
+    2.4
+   ],
+   "legs": [
+    245.0,
+    35.0
+   ],
+   "leg_far": [
+    246.5,
+    36.5
+   ],
+   "feet": 35.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     100.0,
+     12.0
+    ]
+   }
+  },
+  "stc_18": {
+   "facing": 1,
+   "torso": 180.0,
+   "head": 180.0,
+   "arms": [
+    354.9,
+    354.9
+   ],
+   "legs": [
+    225.0,
+    15.0
+   ],
+   "leg_far": [
+    226.5,
+    16.5
+   ],
+   "feet": 15.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     100.0,
+     12.0
+    ]
+   }
+  },
+  "stc_19": {
+   "facing": 1,
+   "torso": 168.33,
+   "head": 168.33,
+   "arms": [
+    349.8,
+    349.8
+   ],
+   "legs": [
+    220.0,
+    356.7
+   ],
+   "leg_far": [
+    221.5,
+    358.2
+   ],
+   "feet": 356.7,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     100.0,
+     12.0
+    ]
+   }
+  },
+  "stc_20": {
+   "facing": 1,
+   "torso": 156.67,
+   "head": 156.67,
+   "arms": [
+    344.8,
+    344.8
+   ],
+   "legs": [
+    215.0,
+    338.3
+   ],
+   "leg_far": [
+    216.5,
+    339.8
+   ],
+   "feet": 338.3,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     100.0,
+     12.0
+    ]
+   }
+  },
+  "stc_21": {
+   "facing": 1,
+   "torso": 145.0,
+   "head": 145.0,
+   "arms": [
+    340.2,
+    340.2
+   ],
+   "legs": [
+    210.0,
+    320.0
+   ],
+   "leg_far": [
+    211.5,
+    321.5
+   ],
+   "feet": 320.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     100.0,
+     12.0
+    ]
+   }
+  },
+  "stc_22": {
+   "facing": 1,
+   "torso": 133.33,
+   "head": 133.33,
+   "arms": [
+    336.4,
+    336.4
+   ],
+   "legs": [
+    205.0,
+    301.7
+   ],
+   "leg_far": [
+    206.5,
+    303.2
+   ],
+   "feet": 301.7,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     100.0,
+     12.0
+    ]
+   }
+  },
+  "stc_23": {
+   "facing": 1,
+   "torso": 121.67,
+   "head": 121.67,
+   "arms": [
+    333.4,
+    333.4
+   ],
+   "legs": [
+    200.0,
+    283.3
+   ],
+   "leg_far": [
+    201.5,
+    284.8
+   ],
+   "feet": 283.3,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     100.0,
+     12.0
+    ]
+   }
+  },
+  "stc_24": {
+   "facing": 1,
+   "torso": 110.0,
+   "head": 110.0,
+   "arms": [
+    331.6,
+    331.6
+   ],
+   "legs": [
+    195.0,
+    265.0
+   ],
+   "leg_far": [
+    196.5,
+    266.5
+   ],
+   "feet": 265.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     100.0,
+     12.0
+    ]
+   }
+  },
+  "stc_25": {
+   "facing": 1,
+   "torso": 98.33,
+   "head": 98.33,
+   "arms": [
+    330.3,
+    330.3
+   ],
+   "legs": [
+    195.0,
+    253.3
+   ],
+   "leg_far": [
+    196.5,
+    254.8
+   ],
+   "feet": 253.3,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     100.0,
+     12.0
+    ]
+   }
+  },
+  "stc_26": {
+   "facing": 1,
+   "torso": 86.67,
+   "head": 86.67,
+   "arms": [
+    330.2,
+    330.2
+   ],
+   "legs": [
+    195.0,
+    241.7
+   ],
+   "leg_far": [
+    196.5,
+    243.2
+   ],
+   "feet": 241.7,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     100.0,
+     12.0
+    ]
+   }
+  },
+  "stc_27": {
+   "facing": 1,
+   "torso": 75.0,
+   "head": 75.0,
+   "arms": [
+    331.4,
+    331.4
+   ],
+   "legs": [
+    195.0,
+    230.0
+   ],
+   "leg_far": [
+    196.5,
+    231.5
+   ],
+   "feet": 230.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     100.0,
+     12.0
+    ]
+   }
+  },
+  "stc_28": {
+   "facing": 1,
+   "torso": 63.33,
+   "head": 63.33,
+   "arms": [
+    333.7,
+    333.7
+   ],
+   "legs": [
+    195.0,
+    218.3
+   ],
+   "leg_far": [
+    196.5,
+    219.8
+   ],
+   "feet": 218.3,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     100.0,
+     12.0
+    ]
+   }
+  },
+  "stc_29": {
+   "facing": 1,
+   "torso": 51.67,
+   "head": 51.67,
+   "arms": [
+    337.0,
+    337.0
+   ],
+   "legs": [
+    195.0,
+    206.7
+   ],
+   "leg_far": [
+    196.5,
+    208.2
+   ],
+   "feet": 206.7,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     100.0,
+     12.0
+    ]
+   }
+  },
+  "stc_30": {
+   "facing": 1,
+   "torso": 40.0,
+   "head": 40.0,
+   "arms": [
+    341.2,
+    341.2
+   ],
+   "legs": [
+    195.0,
+    195.0
+   ],
+   "leg_far": [
+    196.5,
+    196.5
+   ],
+   "feet": 195.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     100.0,
+     12.0
+    ]
+   }
+  },
+  "sgh_0": {
+   "facing": 1,
+   "torso": 62.0,
+   "head": 62.0,
+   "feet": 244.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     95.01,
+     39.997
+    ]
+   },
+   "legs": [
+    229.0,
+    244.0
+   ],
+   "leg_far": [
+    231.0,
+    246.0
+   ],
+   "arm_near": [
+    345.3,
+    338.2
+   ],
+   "arm_far": [
+    345.3,
+    338.2
+   ]
+  },
+  "sgh_1": {
+   "facing": 1,
+   "torso": 61.5,
+   "head": 61.5,
+   "feet": 243.5,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     95.0,
+     40.001
+    ]
+   },
+   "legs": [
+    228.5,
+    243.5
+   ],
+   "leg_far": [
+    230.5,
+    245.5
+   ],
+   "arm_near": [
+    346.2,
+    339.0
+   ],
+   "arm_far": [
+    346.2,
+    339.0
+   ]
+  },
+  "sgh_2": {
+   "facing": 1,
+   "torso": 61.0,
+   "head": 61.0,
+   "feet": 243.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     94.988,
+     40.003
+    ]
+   },
+   "legs": [
+    228.0,
+    243.0
+   ],
+   "leg_far": [
+    230.0,
+    245.0
+   ],
+   "arm_near": [
+    347.0,
+    339.9
+   ],
+   "arm_far": [
+    347.0,
+    339.9
+   ]
+  },
+  "sgh_3": {
+   "facing": 1,
+   "torso": 60.5,
+   "head": 60.5,
+   "feet": 242.5,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     94.999,
+     40.0
+    ]
+   },
+   "legs": [
+    227.5,
+    242.5
+   ],
+   "leg_far": [
+    229.5,
+    244.5
+   ],
+   "arm_near": [
+    347.9,
+    340.8
+   ],
+   "arm_far": [
+    347.9,
+    340.8
+   ]
+  },
+  "sgh_4": {
+   "facing": 1,
+   "torso": 60.0,
+   "head": 60.0,
+   "feet": 242.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     95.01,
+     39.997
+    ]
+   },
+   "legs": [
+    227.0,
+    242.0
+   ],
+   "leg_far": [
+    229.0,
+    244.0
+   ],
+   "arm_near": [
+    348.8,
+    341.7
+   ],
+   "arm_far": [
+    348.8,
+    341.7
+   ]
+  },
+  "sgh_5": {
+   "facing": 1,
+   "torso": 59.5,
+   "head": 59.5,
+   "feet": 241.5,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     95.0,
+     40.001
+    ]
+   },
+   "legs": [
+    226.5,
+    241.5
+   ],
+   "leg_far": [
+    228.5,
+    243.5
+   ],
+   "arm_near": [
+    349.7,
+    342.5
+   ],
+   "arm_far": [
+    349.7,
+    342.5
+   ]
+  },
+  "sgh_6": {
+   "facing": 1,
+   "torso": 59.0,
+   "head": 59.0,
+   "feet": 241.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     95.011,
+     39.998
+    ]
+   },
+   "legs": [
+    226.0,
+    241.0
+   ],
+   "leg_far": [
+    228.0,
+    243.0
+   ],
+   "arm_near": [
+    350.6,
+    343.4
+   ],
+   "arm_far": [
+    350.6,
+    343.4
+   ]
+  },
+  "sgh_7": {
+   "facing": 1,
+   "torso": 58.5,
+   "head": 58.5,
+   "feet": 240.5,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     94.999,
+     40.0
+    ]
+   },
+   "legs": [
+    225.5,
+    240.5
+   ],
+   "leg_far": [
+    227.5,
+    242.5
+   ],
+   "arm_near": [
+    351.4,
+    344.3
+   ],
+   "arm_far": [
+    351.4,
+    344.3
+   ]
+  },
+  "sgh_8": {
+   "facing": 1,
+   "torso": 58.0,
+   "head": 58.0,
+   "feet": 240.0,
+   "pin": {
+    "joint": "hand_near",
+    "at": [
+     95.01,
+     39.997
+    ]
+   },
+   "legs": [
+    225.0,
+    240.0
+   ],
+   "leg_far": [
+    227.0,
+    242.0
+   ],
+   "arm_near": [
+    352.3,
+    345.2
+   ],
+   "arm_far": [
+    352.3,
+    345.2
+   ]
   }
  },
  "templates": {
@@ -35057,30 +42947,270 @@
    ]
   },
   "skin_the_cat": {
-   "duration_ms": 3200,
-   "mode": "ping_pong",
-   "easing": "smooth",
+   "duration_ms": 6000,
+   "mode": "loop",
+   "easing": "linear",
    "reduced_motion_frame": 0.5,
    "apparatus": [
     "floor",
-    "mid_bar"
+    "high_bar"
    ],
    "keyframes": [
     {
      "at": 0,
-     "pose": "mu_hang"
+     "pose": "stc_0"
     },
     {
-     "at": 0.35,
-     "pose": "po_knees"
+     "at": 0.06,
+     "pose": "stc_0"
     },
     {
-     "at": 0.7,
-     "pose": "inv_tuck"
+     "at": 0.0727,
+     "pose": "stc_1"
+    },
+    {
+     "at": 0.0853,
+     "pose": "stc_2"
+    },
+    {
+     "at": 0.098,
+     "pose": "stc_3"
+    },
+    {
+     "at": 0.1107,
+     "pose": "stc_4"
+    },
+    {
+     "at": 0.1233,
+     "pose": "stc_5"
+    },
+    {
+     "at": 0.136,
+     "pose": "stc_6"
+    },
+    {
+     "at": 0.1487,
+     "pose": "stc_7"
+    },
+    {
+     "at": 0.1613,
+     "pose": "stc_8"
+    },
+    {
+     "at": 0.174,
+     "pose": "stc_9"
+    },
+    {
+     "at": 0.1867,
+     "pose": "stc_10"
+    },
+    {
+     "at": 0.1993,
+     "pose": "stc_11"
+    },
+    {
+     "at": 0.212,
+     "pose": "stc_12"
+    },
+    {
+     "at": 0.2247,
+     "pose": "stc_13"
+    },
+    {
+     "at": 0.2373,
+     "pose": "stc_14"
+    },
+    {
+     "at": 0.25,
+     "pose": "stc_15"
+    },
+    {
+     "at": 0.2627,
+     "pose": "stc_16"
+    },
+    {
+     "at": 0.2753,
+     "pose": "stc_17"
+    },
+    {
+     "at": 0.288,
+     "pose": "stc_18"
+    },
+    {
+     "at": 0.3007,
+     "pose": "stc_19"
+    },
+    {
+     "at": 0.3133,
+     "pose": "stc_20"
+    },
+    {
+     "at": 0.326,
+     "pose": "stc_21"
+    },
+    {
+     "at": 0.3387,
+     "pose": "stc_22"
+    },
+    {
+     "at": 0.3513,
+     "pose": "stc_23"
+    },
+    {
+     "at": 0.364,
+     "pose": "stc_24"
+    },
+    {
+     "at": 0.3767,
+     "pose": "stc_25"
+    },
+    {
+     "at": 0.3893,
+     "pose": "stc_26"
+    },
+    {
+     "at": 0.402,
+     "pose": "stc_27"
+    },
+    {
+     "at": 0.4147,
+     "pose": "stc_28"
+    },
+    {
+     "at": 0.4273,
+     "pose": "stc_29"
+    },
+    {
+     "at": 0.44,
+     "pose": "stc_30"
+    },
+    {
+     "at": 0.56,
+     "pose": "stc_30"
+    },
+    {
+     "at": 0.5727,
+     "pose": "stc_29"
+    },
+    {
+     "at": 0.5853,
+     "pose": "stc_28"
+    },
+    {
+     "at": 0.598,
+     "pose": "stc_27"
+    },
+    {
+     "at": 0.6107,
+     "pose": "stc_26"
+    },
+    {
+     "at": 0.6233,
+     "pose": "stc_25"
+    },
+    {
+     "at": 0.636,
+     "pose": "stc_24"
+    },
+    {
+     "at": 0.6487,
+     "pose": "stc_23"
+    },
+    {
+     "at": 0.6613,
+     "pose": "stc_22"
+    },
+    {
+     "at": 0.674,
+     "pose": "stc_21"
+    },
+    {
+     "at": 0.6867,
+     "pose": "stc_20"
+    },
+    {
+     "at": 0.6993,
+     "pose": "stc_19"
+    },
+    {
+     "at": 0.712,
+     "pose": "stc_18"
+    },
+    {
+     "at": 0.7247,
+     "pose": "stc_17"
+    },
+    {
+     "at": 0.7373,
+     "pose": "stc_16"
+    },
+    {
+     "at": 0.75,
+     "pose": "stc_15"
+    },
+    {
+     "at": 0.7627,
+     "pose": "stc_14"
+    },
+    {
+     "at": 0.7753,
+     "pose": "stc_13"
+    },
+    {
+     "at": 0.788,
+     "pose": "stc_12"
+    },
+    {
+     "at": 0.8007,
+     "pose": "stc_11"
+    },
+    {
+     "at": 0.8133,
+     "pose": "stc_10"
+    },
+    {
+     "at": 0.826,
+     "pose": "stc_9"
+    },
+    {
+     "at": 0.8387,
+     "pose": "stc_8"
+    },
+    {
+     "at": 0.8513,
+     "pose": "stc_7"
+    },
+    {
+     "at": 0.864,
+     "pose": "stc_6"
+    },
+    {
+     "at": 0.8767,
+     "pose": "stc_5"
+    },
+    {
+     "at": 0.8893,
+     "pose": "stc_4"
+    },
+    {
+     "at": 0.902,
+     "pose": "stc_3"
+    },
+    {
+     "at": 0.9147,
+     "pose": "stc_2"
+    },
+    {
+     "at": 0.9273,
+     "pose": "stc_1"
+    },
+    {
+     "at": 0.94,
+     "pose": "stc_0"
     },
     {
      "at": 1,
-     "pose": "gh_partial"
+     "pose": "stc_0"
     }
    ]
   },
@@ -41224,6 +49354,1537 @@
      "pose": "bench_t_10"
     }
    ]
+  },
+  "straddle_handstand": {
+   "duration_ms": 3200,
+   "mode": "ping_pong",
+   "easing": "smooth",
+   "reduced_motion_frame": 0.5,
+   "apparatus": [
+    "floor"
+   ],
+   "keyframes": [
+    {
+     "at": 0,
+     "pose": "oah_two_together"
+    },
+    {
+     "at": 0.6,
+     "pose": "oah_two_straddle"
+    },
+    {
+     "at": 1,
+     "pose": "oah_two_straddle"
+    }
+   ],
+   "phases": "hold"
+  },
+  "supported_handstand_shift": {
+   "duration_ms": 3600,
+   "mode": "ping_pong",
+   "easing": "smooth",
+   "reduced_motion_frame": 0.5,
+   "apparatus": [
+    "floor"
+   ],
+   "keyframes": [
+    {
+     "at": 0,
+     "pose": "oah_two_together"
+    },
+    {
+     "at": 0.6,
+     "pose": "oah_shift_wall"
+    },
+    {
+     "at": 1,
+     "pose": "oah_shift_wall"
+    }
+   ]
+  },
+  "handstand_weight_shift": {
+   "duration_ms": 3600,
+   "mode": "ping_pong",
+   "easing": "smooth",
+   "reduced_motion_frame": 0.5,
+   "apparatus": [
+    "floor"
+   ],
+   "keyframes": [
+    {
+     "at": 0,
+     "pose": "oah_two_straddle"
+    },
+    {
+     "at": 0.6,
+     "pose": "oah_shift_free"
+    },
+    {
+     "at": 1,
+     "pose": "oah_shift_free"
+    }
+   ]
+  },
+  "fingertip_one_arm_handstand": {
+   "duration_ms": 3600,
+   "mode": "ping_pong",
+   "easing": "smooth",
+   "reduced_motion_frame": 0.5,
+   "apparatus": [
+    "floor"
+   ],
+   "keyframes": [
+    {
+     "at": 0,
+     "pose": "oah_two_straddle"
+    },
+    {
+     "at": 0.6,
+     "pose": "oah_fingertip"
+    },
+    {
+     "at": 1,
+     "pose": "oah_fingertip"
+    }
+   ],
+   "phases": "hold"
+  },
+  "one_arm_handstand_hover": {
+   "duration_ms": 3200,
+   "mode": "ping_pong",
+   "easing": "smooth",
+   "reduced_motion_frame": 0.5,
+   "apparatus": [
+    "floor"
+   ],
+   "keyframes": [
+    {
+     "at": 0,
+     "pose": "oah_fingertip"
+    },
+    {
+     "at": 0.5,
+     "pose": "oah_hover"
+    },
+    {
+     "at": 1,
+     "pose": "oah_hover"
+    }
+   ]
+  },
+  "straddle_one_arm_handstand": {
+   "duration_ms": 3200,
+   "mode": "ping_pong",
+   "easing": "smooth",
+   "reduced_motion_frame": 0.5,
+   "apparatus": [
+    "floor"
+   ],
+   "keyframes": [
+    {
+     "at": 0,
+     "pose": "oah_hover"
+    },
+    {
+     "at": 0.6,
+     "pose": "oah_one_straddle"
+    },
+    {
+     "at": 1,
+     "pose": "oah_one_straddle"
+    }
+   ],
+   "phases": "hold"
+  },
+  "one_arm_handstand": {
+   "duration_ms": 3200,
+   "mode": "ping_pong",
+   "easing": "smooth",
+   "reduced_motion_frame": 0.5,
+   "apparatus": [
+    "floor"
+   ],
+   "keyframes": [
+    {
+     "at": 0,
+     "pose": "oah_one_closing"
+    },
+    {
+     "at": 0.6,
+     "pose": "oah_one"
+    },
+    {
+     "at": 1,
+     "pose": "oah_one"
+    }
+   ],
+   "phases": "hold"
+  },
+  "assisted_partial_shrimp": {
+   "duration_ms": 3000,
+   "mode": "ping_pong",
+   "easing": "linear",
+   "reduced_motion_frame": 0.5,
+   "apparatus": [
+    "floor",
+    "shrimp_block",
+    "post_right"
+   ],
+   "keyframes": [
+    {
+     "at": 0.0,
+     "pose": "shrimp_assisted_partial_shrimp_0"
+    },
+    {
+     "at": 0.0531,
+     "pose": "shrimp_assisted_partial_shrimp_1"
+    },
+    {
+     "at": 0.1062,
+     "pose": "shrimp_assisted_partial_shrimp_2"
+    },
+    {
+     "at": 0.1594,
+     "pose": "shrimp_assisted_partial_shrimp_3"
+    },
+    {
+     "at": 0.2125,
+     "pose": "shrimp_assisted_partial_shrimp_4"
+    },
+    {
+     "at": 0.2656,
+     "pose": "shrimp_assisted_partial_shrimp_5"
+    },
+    {
+     "at": 0.3187,
+     "pose": "shrimp_assisted_partial_shrimp_6"
+    },
+    {
+     "at": 0.3719,
+     "pose": "shrimp_assisted_partial_shrimp_7"
+    },
+    {
+     "at": 0.425,
+     "pose": "shrimp_assisted_partial_shrimp_8"
+    },
+    {
+     "at": 0.4781,
+     "pose": "shrimp_assisted_partial_shrimp_9"
+    },
+    {
+     "at": 0.5312,
+     "pose": "shrimp_assisted_partial_shrimp_10"
+    },
+    {
+     "at": 0.5844,
+     "pose": "shrimp_assisted_partial_shrimp_11"
+    },
+    {
+     "at": 0.6375,
+     "pose": "shrimp_assisted_partial_shrimp_12"
+    },
+    {
+     "at": 0.6906,
+     "pose": "shrimp_assisted_partial_shrimp_13"
+    },
+    {
+     "at": 0.7438,
+     "pose": "shrimp_assisted_partial_shrimp_14"
+    },
+    {
+     "at": 0.7969,
+     "pose": "shrimp_assisted_partial_shrimp_15"
+    },
+    {
+     "at": 0.85,
+     "pose": "shrimp_assisted_partial_shrimp_16"
+    },
+    {
+     "at": 1.0,
+     "pose": "shrimp_assisted_partial_shrimp_16"
+    }
+   ],
+   "marker": {
+    "joint": "knee_far",
+    "y": 96.09,
+    "label": "back_knee_down"
+   }
+  },
+  "assisted_shrimp": {
+   "duration_ms": 3000,
+   "mode": "ping_pong",
+   "easing": "linear",
+   "reduced_motion_frame": 0.5,
+   "apparatus": [
+    "floor",
+    "shrimp_pad",
+    "post_right"
+   ],
+   "keyframes": [
+    {
+     "at": 0.0,
+     "pose": "shrimp_assisted_shrimp_0"
+    },
+    {
+     "at": 0.0531,
+     "pose": "shrimp_assisted_shrimp_1"
+    },
+    {
+     "at": 0.1062,
+     "pose": "shrimp_assisted_shrimp_2"
+    },
+    {
+     "at": 0.1594,
+     "pose": "shrimp_assisted_shrimp_3"
+    },
+    {
+     "at": 0.2125,
+     "pose": "shrimp_assisted_shrimp_4"
+    },
+    {
+     "at": 0.2656,
+     "pose": "shrimp_assisted_shrimp_5"
+    },
+    {
+     "at": 0.3187,
+     "pose": "shrimp_assisted_shrimp_6"
+    },
+    {
+     "at": 0.3719,
+     "pose": "shrimp_assisted_shrimp_7"
+    },
+    {
+     "at": 0.425,
+     "pose": "shrimp_assisted_shrimp_8"
+    },
+    {
+     "at": 0.4781,
+     "pose": "shrimp_assisted_shrimp_9"
+    },
+    {
+     "at": 0.5312,
+     "pose": "shrimp_assisted_shrimp_10"
+    },
+    {
+     "at": 0.5844,
+     "pose": "shrimp_assisted_shrimp_11"
+    },
+    {
+     "at": 0.6375,
+     "pose": "shrimp_assisted_shrimp_12"
+    },
+    {
+     "at": 0.6906,
+     "pose": "shrimp_assisted_shrimp_13"
+    },
+    {
+     "at": 0.7438,
+     "pose": "shrimp_assisted_shrimp_14"
+    },
+    {
+     "at": 0.7969,
+     "pose": "shrimp_assisted_shrimp_15"
+    },
+    {
+     "at": 0.85,
+     "pose": "shrimp_assisted_shrimp_16"
+    },
+    {
+     "at": 1.0,
+     "pose": "shrimp_assisted_shrimp_16"
+    }
+   ],
+   "marker": {
+    "joint": "knee_far",
+    "y": 103.45,
+    "label": "back_knee_down"
+   }
+  },
+  "floating_shrimp": {
+   "duration_ms": 3000,
+   "mode": "ping_pong",
+   "easing": "linear",
+   "reduced_motion_frame": 0.5,
+   "apparatus": [
+    "floor",
+    "shrimp_pad"
+   ],
+   "keyframes": [
+    {
+     "at": 0.0,
+     "pose": "shrimp_floating_shrimp_0"
+    },
+    {
+     "at": 0.0531,
+     "pose": "shrimp_floating_shrimp_1"
+    },
+    {
+     "at": 0.1062,
+     "pose": "shrimp_floating_shrimp_2"
+    },
+    {
+     "at": 0.1594,
+     "pose": "shrimp_floating_shrimp_3"
+    },
+    {
+     "at": 0.2125,
+     "pose": "shrimp_floating_shrimp_4"
+    },
+    {
+     "at": 0.2656,
+     "pose": "shrimp_floating_shrimp_5"
+    },
+    {
+     "at": 0.3187,
+     "pose": "shrimp_floating_shrimp_6"
+    },
+    {
+     "at": 0.3719,
+     "pose": "shrimp_floating_shrimp_7"
+    },
+    {
+     "at": 0.425,
+     "pose": "shrimp_floating_shrimp_8"
+    },
+    {
+     "at": 0.4781,
+     "pose": "shrimp_floating_shrimp_9"
+    },
+    {
+     "at": 0.5312,
+     "pose": "shrimp_floating_shrimp_10"
+    },
+    {
+     "at": 0.5844,
+     "pose": "shrimp_floating_shrimp_11"
+    },
+    {
+     "at": 0.6375,
+     "pose": "shrimp_floating_shrimp_12"
+    },
+    {
+     "at": 0.6906,
+     "pose": "shrimp_floating_shrimp_13"
+    },
+    {
+     "at": 0.7438,
+     "pose": "shrimp_floating_shrimp_14"
+    },
+    {
+     "at": 0.7969,
+     "pose": "shrimp_floating_shrimp_15"
+    },
+    {
+     "at": 0.85,
+     "pose": "shrimp_floating_shrimp_16"
+    },
+    {
+     "at": 1.0,
+     "pose": "shrimp_floating_shrimp_16"
+    }
+   ],
+   "marker": {
+    "joint": "knee_far",
+    "y": 103.45,
+    "label": "back_knee_down"
+   }
+  },
+  "assisted_held_shrimp": {
+   "duration_ms": 3000,
+   "mode": "ping_pong",
+   "easing": "linear",
+   "reduced_motion_frame": 0.5,
+   "apparatus": [
+    "floor",
+    "shrimp_pad",
+    "post_right"
+   ],
+   "keyframes": [
+    {
+     "at": 0.0,
+     "pose": "shrimp_assisted_held_shrimp_0"
+    },
+    {
+     "at": 0.0531,
+     "pose": "shrimp_assisted_held_shrimp_1"
+    },
+    {
+     "at": 0.1062,
+     "pose": "shrimp_assisted_held_shrimp_2"
+    },
+    {
+     "at": 0.1594,
+     "pose": "shrimp_assisted_held_shrimp_3"
+    },
+    {
+     "at": 0.2125,
+     "pose": "shrimp_assisted_held_shrimp_4"
+    },
+    {
+     "at": 0.2656,
+     "pose": "shrimp_assisted_held_shrimp_5"
+    },
+    {
+     "at": 0.3187,
+     "pose": "shrimp_assisted_held_shrimp_6"
+    },
+    {
+     "at": 0.3719,
+     "pose": "shrimp_assisted_held_shrimp_7"
+    },
+    {
+     "at": 0.425,
+     "pose": "shrimp_assisted_held_shrimp_8"
+    },
+    {
+     "at": 0.4781,
+     "pose": "shrimp_assisted_held_shrimp_9"
+    },
+    {
+     "at": 0.5312,
+     "pose": "shrimp_assisted_held_shrimp_10"
+    },
+    {
+     "at": 0.5844,
+     "pose": "shrimp_assisted_held_shrimp_11"
+    },
+    {
+     "at": 0.6375,
+     "pose": "shrimp_assisted_held_shrimp_12"
+    },
+    {
+     "at": 0.6906,
+     "pose": "shrimp_assisted_held_shrimp_13"
+    },
+    {
+     "at": 0.7438,
+     "pose": "shrimp_assisted_held_shrimp_14"
+    },
+    {
+     "at": 0.7969,
+     "pose": "shrimp_assisted_held_shrimp_15"
+    },
+    {
+     "at": 0.85,
+     "pose": "shrimp_assisted_held_shrimp_16"
+    },
+    {
+     "at": 1.0,
+     "pose": "shrimp_assisted_held_shrimp_16"
+    }
+   ],
+   "marker": {
+    "joint": "knee_far",
+    "y": 103.45,
+    "label": "back_knee_down"
+   }
+  },
+  "shrimp_squat": {
+   "duration_ms": 3000,
+   "mode": "ping_pong",
+   "easing": "linear",
+   "reduced_motion_frame": 0.5,
+   "apparatus": [
+    "floor",
+    "shrimp_pad"
+   ],
+   "keyframes": [
+    {
+     "at": 0.0,
+     "pose": "shrimp_shrimp_squat_0"
+    },
+    {
+     "at": 0.0531,
+     "pose": "shrimp_shrimp_squat_1"
+    },
+    {
+     "at": 0.1062,
+     "pose": "shrimp_shrimp_squat_2"
+    },
+    {
+     "at": 0.1594,
+     "pose": "shrimp_shrimp_squat_3"
+    },
+    {
+     "at": 0.2125,
+     "pose": "shrimp_shrimp_squat_4"
+    },
+    {
+     "at": 0.2656,
+     "pose": "shrimp_shrimp_squat_5"
+    },
+    {
+     "at": 0.3187,
+     "pose": "shrimp_shrimp_squat_6"
+    },
+    {
+     "at": 0.3719,
+     "pose": "shrimp_shrimp_squat_7"
+    },
+    {
+     "at": 0.425,
+     "pose": "shrimp_shrimp_squat_8"
+    },
+    {
+     "at": 0.4781,
+     "pose": "shrimp_shrimp_squat_9"
+    },
+    {
+     "at": 0.5312,
+     "pose": "shrimp_shrimp_squat_10"
+    },
+    {
+     "at": 0.5844,
+     "pose": "shrimp_shrimp_squat_11"
+    },
+    {
+     "at": 0.6375,
+     "pose": "shrimp_shrimp_squat_12"
+    },
+    {
+     "at": 0.6906,
+     "pose": "shrimp_shrimp_squat_13"
+    },
+    {
+     "at": 0.7438,
+     "pose": "shrimp_shrimp_squat_14"
+    },
+    {
+     "at": 0.7969,
+     "pose": "shrimp_shrimp_squat_15"
+    },
+    {
+     "at": 0.85,
+     "pose": "shrimp_shrimp_squat_16"
+    },
+    {
+     "at": 1.0,
+     "pose": "shrimp_shrimp_squat_16"
+    }
+   ],
+   "marker": {
+    "joint": "knee_far",
+    "y": 103.45,
+    "label": "back_knee_down"
+   }
+  },
+  "hefesto": {
+   "duration_ms": 6000,
+   "mode": "loop",
+   "easing": "linear",
+   "reduced_motion_frame": 0.5,
+   "apparatus": [
+    "floor",
+    "mid_bar"
+   ],
+   "keyframes": [
+    {
+     "at": 0,
+     "pose": "hef_strict_0"
+    },
+    {
+     "at": 0.06,
+     "pose": "hef_strict_0"
+    },
+    {
+     "at": 0.0783,
+     "pose": "hef_strict_1"
+    },
+    {
+     "at": 0.0967,
+     "pose": "hef_strict_2"
+    },
+    {
+     "at": 0.115,
+     "pose": "hef_strict_3"
+    },
+    {
+     "at": 0.1333,
+     "pose": "hef_strict_4"
+    },
+    {
+     "at": 0.1517,
+     "pose": "hef_strict_5"
+    },
+    {
+     "at": 0.17,
+     "pose": "hef_strict_6"
+    },
+    {
+     "at": 0.1883,
+     "pose": "hef_strict_7"
+    },
+    {
+     "at": 0.2067,
+     "pose": "hef_strict_8"
+    },
+    {
+     "at": 0.225,
+     "pose": "hef_strict_9"
+    },
+    {
+     "at": 0.2433,
+     "pose": "hef_strict_10"
+    },
+    {
+     "at": 0.2617,
+     "pose": "hef_strict_11"
+    },
+    {
+     "at": 0.28,
+     "pose": "hef_strict_12"
+    },
+    {
+     "at": 0.2983,
+     "pose": "hef_strict_13"
+    },
+    {
+     "at": 0.3167,
+     "pose": "hef_strict_14"
+    },
+    {
+     "at": 0.335,
+     "pose": "hef_strict_15"
+    },
+    {
+     "at": 0.3533,
+     "pose": "hef_strict_16"
+    },
+    {
+     "at": 0.3717,
+     "pose": "hef_strict_17"
+    },
+    {
+     "at": 0.39,
+     "pose": "hef_strict_18"
+    },
+    {
+     "at": 0.4083,
+     "pose": "hef_strict_19"
+    },
+    {
+     "at": 0.4267,
+     "pose": "hef_strict_20"
+    },
+    {
+     "at": 0.445,
+     "pose": "hef_strict_21"
+    },
+    {
+     "at": 0.4633,
+     "pose": "hef_strict_22"
+    },
+    {
+     "at": 0.4817,
+     "pose": "hef_strict_23"
+    },
+    {
+     "at": 0.5,
+     "pose": "hef_strict_24"
+    },
+    {
+     "at": 0.6,
+     "pose": "hef_strict_24"
+    },
+    {
+     "at": 0.6142,
+     "pose": "hef_strict_23"
+    },
+    {
+     "at": 0.6283,
+     "pose": "hef_strict_22"
+    },
+    {
+     "at": 0.6425,
+     "pose": "hef_strict_21"
+    },
+    {
+     "at": 0.6567,
+     "pose": "hef_strict_20"
+    },
+    {
+     "at": 0.6708,
+     "pose": "hef_strict_19"
+    },
+    {
+     "at": 0.685,
+     "pose": "hef_strict_18"
+    },
+    {
+     "at": 0.6992,
+     "pose": "hef_strict_17"
+    },
+    {
+     "at": 0.7133,
+     "pose": "hef_strict_16"
+    },
+    {
+     "at": 0.7275,
+     "pose": "hef_strict_15"
+    },
+    {
+     "at": 0.7417,
+     "pose": "hef_strict_14"
+    },
+    {
+     "at": 0.7558,
+     "pose": "hef_strict_13"
+    },
+    {
+     "at": 0.77,
+     "pose": "hef_strict_12"
+    },
+    {
+     "at": 0.7842,
+     "pose": "hef_strict_11"
+    },
+    {
+     "at": 0.7983,
+     "pose": "hef_strict_10"
+    },
+    {
+     "at": 0.8125,
+     "pose": "hef_strict_9"
+    },
+    {
+     "at": 0.8267,
+     "pose": "hef_strict_8"
+    },
+    {
+     "at": 0.8408,
+     "pose": "hef_strict_7"
+    },
+    {
+     "at": 0.855,
+     "pose": "hef_strict_6"
+    },
+    {
+     "at": 0.8692,
+     "pose": "hef_strict_5"
+    },
+    {
+     "at": 0.8833,
+     "pose": "hef_strict_4"
+    },
+    {
+     "at": 0.8975,
+     "pose": "hef_strict_3"
+    },
+    {
+     "at": 0.9117,
+     "pose": "hef_strict_2"
+    },
+    {
+     "at": 0.9258,
+     "pose": "hef_strict_1"
+    },
+    {
+     "at": 0.94,
+     "pose": "hef_strict_0"
+    },
+    {
+     "at": 1,
+     "pose": "hef_strict_0"
+    }
+   ]
+  },
+  "assisted_supinated_german_hang": {
+   "duration_ms": 4800,
+   "mode": "ping_pong",
+   "easing": "linear",
+   "reduced_motion_frame": 0.5,
+   "apparatus": [
+    "floor",
+    "gh_bar"
+   ],
+   "keyframes": [
+    {
+     "at": 0.0,
+     "pose": "hef_gh_0"
+    },
+    {
+     "at": 0.0583,
+     "pose": "hef_gh_1"
+    },
+    {
+     "at": 0.1167,
+     "pose": "hef_gh_2"
+    },
+    {
+     "at": 0.175,
+     "pose": "hef_gh_3"
+    },
+    {
+     "at": 0.2333,
+     "pose": "hef_gh_4"
+    },
+    {
+     "at": 0.2917,
+     "pose": "hef_gh_5"
+    },
+    {
+     "at": 0.35,
+     "pose": "hef_gh_6"
+    },
+    {
+     "at": 0.4083,
+     "pose": "hef_gh_7"
+    },
+    {
+     "at": 0.4667,
+     "pose": "hef_gh_8"
+    },
+    {
+     "at": 0.525,
+     "pose": "hef_gh_9"
+    },
+    {
+     "at": 0.5833,
+     "pose": "hef_gh_10"
+    },
+    {
+     "at": 0.6417,
+     "pose": "hef_gh_11"
+    },
+    {
+     "at": 0.7,
+     "pose": "hef_gh_12"
+    },
+    {
+     "at": 1.0,
+     "pose": "hef_gh_12"
+    }
+   ],
+   "phases": "hold"
+  },
+  "assisted_partial_hefesto": {
+   "duration_ms": 4400,
+   "mode": "ping_pong",
+   "easing": "linear",
+   "reduced_motion_frame": 0.5,
+   "apparatus": [
+    "floor",
+    "gh_bar"
+   ],
+   "keyframes": [
+    {
+     "at": 0.0,
+     "pose": "hef_partial_0"
+    },
+    {
+     "at": 0.0607,
+     "pose": "hef_partial_1"
+    },
+    {
+     "at": 0.1214,
+     "pose": "hef_partial_2"
+    },
+    {
+     "at": 0.1821,
+     "pose": "hef_partial_3"
+    },
+    {
+     "at": 0.2429,
+     "pose": "hef_partial_4"
+    },
+    {
+     "at": 0.3036,
+     "pose": "hef_partial_5"
+    },
+    {
+     "at": 0.3643,
+     "pose": "hef_partial_6"
+    },
+    {
+     "at": 0.425,
+     "pose": "hef_partial_7"
+    },
+    {
+     "at": 0.4857,
+     "pose": "hef_partial_8"
+    },
+    {
+     "at": 0.5464,
+     "pose": "hef_partial_9"
+    },
+    {
+     "at": 0.6071,
+     "pose": "hef_partial_10"
+    },
+    {
+     "at": 0.6679,
+     "pose": "hef_partial_11"
+    },
+    {
+     "at": 0.7286,
+     "pose": "hef_partial_12"
+    },
+    {
+     "at": 0.7893,
+     "pose": "hef_partial_13"
+    },
+    {
+     "at": 0.85,
+     "pose": "hef_partial_14"
+    },
+    {
+     "at": 1.0,
+     "pose": "hef_partial_14"
+    }
+   ]
+  },
+  "assisted_hefesto": {
+   "duration_ms": 6000,
+   "mode": "loop",
+   "easing": "linear",
+   "reduced_motion_frame": 0.5,
+   "apparatus": [
+    "floor",
+    "gh_bar"
+   ],
+   "keyframes": [
+    {
+     "at": 0,
+     "pose": "hef_assisted_0"
+    },
+    {
+     "at": 0.06,
+     "pose": "hef_assisted_0"
+    },
+    {
+     "at": 0.0783,
+     "pose": "hef_assisted_1"
+    },
+    {
+     "at": 0.0967,
+     "pose": "hef_assisted_2"
+    },
+    {
+     "at": 0.115,
+     "pose": "hef_assisted_3"
+    },
+    {
+     "at": 0.1333,
+     "pose": "hef_assisted_4"
+    },
+    {
+     "at": 0.1517,
+     "pose": "hef_assisted_5"
+    },
+    {
+     "at": 0.17,
+     "pose": "hef_assisted_6"
+    },
+    {
+     "at": 0.1883,
+     "pose": "hef_assisted_7"
+    },
+    {
+     "at": 0.2067,
+     "pose": "hef_assisted_8"
+    },
+    {
+     "at": 0.225,
+     "pose": "hef_assisted_9"
+    },
+    {
+     "at": 0.2433,
+     "pose": "hef_assisted_10"
+    },
+    {
+     "at": 0.2617,
+     "pose": "hef_assisted_11"
+    },
+    {
+     "at": 0.28,
+     "pose": "hef_assisted_12"
+    },
+    {
+     "at": 0.2983,
+     "pose": "hef_assisted_13"
+    },
+    {
+     "at": 0.3167,
+     "pose": "hef_assisted_14"
+    },
+    {
+     "at": 0.335,
+     "pose": "hef_assisted_15"
+    },
+    {
+     "at": 0.3533,
+     "pose": "hef_assisted_16"
+    },
+    {
+     "at": 0.3717,
+     "pose": "hef_assisted_17"
+    },
+    {
+     "at": 0.39,
+     "pose": "hef_assisted_18"
+    },
+    {
+     "at": 0.4083,
+     "pose": "hef_assisted_19"
+    },
+    {
+     "at": 0.4267,
+     "pose": "hef_assisted_20"
+    },
+    {
+     "at": 0.445,
+     "pose": "hef_assisted_21"
+    },
+    {
+     "at": 0.4633,
+     "pose": "hef_assisted_22"
+    },
+    {
+     "at": 0.4817,
+     "pose": "hef_assisted_23"
+    },
+    {
+     "at": 0.5,
+     "pose": "hef_assisted_24"
+    },
+    {
+     "at": 0.6,
+     "pose": "hef_assisted_24"
+    },
+    {
+     "at": 0.6142,
+     "pose": "hef_assisted_23"
+    },
+    {
+     "at": 0.6283,
+     "pose": "hef_assisted_22"
+    },
+    {
+     "at": 0.6425,
+     "pose": "hef_assisted_21"
+    },
+    {
+     "at": 0.6567,
+     "pose": "hef_assisted_20"
+    },
+    {
+     "at": 0.6708,
+     "pose": "hef_assisted_19"
+    },
+    {
+     "at": 0.685,
+     "pose": "hef_assisted_18"
+    },
+    {
+     "at": 0.6992,
+     "pose": "hef_assisted_17"
+    },
+    {
+     "at": 0.7133,
+     "pose": "hef_assisted_16"
+    },
+    {
+     "at": 0.7275,
+     "pose": "hef_assisted_15"
+    },
+    {
+     "at": 0.7417,
+     "pose": "hef_assisted_14"
+    },
+    {
+     "at": 0.7558,
+     "pose": "hef_assisted_13"
+    },
+    {
+     "at": 0.77,
+     "pose": "hef_assisted_12"
+    },
+    {
+     "at": 0.7842,
+     "pose": "hef_assisted_11"
+    },
+    {
+     "at": 0.7983,
+     "pose": "hef_assisted_10"
+    },
+    {
+     "at": 0.8125,
+     "pose": "hef_assisted_9"
+    },
+    {
+     "at": 0.8267,
+     "pose": "hef_assisted_8"
+    },
+    {
+     "at": 0.8408,
+     "pose": "hef_assisted_7"
+    },
+    {
+     "at": 0.855,
+     "pose": "hef_assisted_6"
+    },
+    {
+     "at": 0.8692,
+     "pose": "hef_assisted_5"
+    },
+    {
+     "at": 0.8833,
+     "pose": "hef_assisted_4"
+    },
+    {
+     "at": 0.8975,
+     "pose": "hef_assisted_3"
+    },
+    {
+     "at": 0.9117,
+     "pose": "hef_assisted_2"
+    },
+    {
+     "at": 0.9258,
+     "pose": "hef_assisted_1"
+    },
+    {
+     "at": 0.94,
+     "pose": "hef_assisted_0"
+    },
+    {
+     "at": 1,
+     "pose": "hef_assisted_0"
+    }
+   ]
+  },
+  "assisted_behind_bar_support": {
+   "duration_ms": 3000,
+   "mode": "ping_pong",
+   "easing": "linear",
+   "reduced_motion_frame": 0.5,
+   "apparatus": [
+    "floor",
+    "low_bar",
+    "hefesto_box"
+   ],
+   "keyframes": [
+    {
+     "at": 0.0,
+     "pose": "hef_support_0"
+    },
+    {
+     "at": 0.1,
+     "pose": "hef_support_1"
+    },
+    {
+     "at": 0.2,
+     "pose": "hef_support_2"
+    },
+    {
+     "at": 0.3,
+     "pose": "hef_support_3"
+    },
+    {
+     "at": 0.4,
+     "pose": "hef_support_4"
+    },
+    {
+     "at": 0.5,
+     "pose": "hef_support_5"
+    },
+    {
+     "at": 0.6,
+     "pose": "hef_support_6"
+    },
+    {
+     "at": 1.0,
+     "pose": "hef_support_6"
+    }
+   ],
+   "phases": "hold"
+  },
+  "assisted_korean_dip": {
+   "duration_ms": 3200,
+   "mode": "ping_pong",
+   "easing": "linear",
+   "reduced_motion_frame": 0.5,
+   "apparatus": [
+    "floor",
+    "low_bar",
+    "hefesto_box"
+   ],
+   "keyframes": [
+    {
+     "at": 0.0,
+     "pose": "hef_korean_0"
+    },
+    {
+     "at": 0.0607,
+     "pose": "hef_korean_1"
+    },
+    {
+     "at": 0.1214,
+     "pose": "hef_korean_2"
+    },
+    {
+     "at": 0.1821,
+     "pose": "hef_korean_3"
+    },
+    {
+     "at": 0.2429,
+     "pose": "hef_korean_4"
+    },
+    {
+     "at": 0.3036,
+     "pose": "hef_korean_5"
+    },
+    {
+     "at": 0.3643,
+     "pose": "hef_korean_6"
+    },
+    {
+     "at": 0.425,
+     "pose": "hef_korean_7"
+    },
+    {
+     "at": 0.4857,
+     "pose": "hef_korean_8"
+    },
+    {
+     "at": 0.5464,
+     "pose": "hef_korean_9"
+    },
+    {
+     "at": 0.6071,
+     "pose": "hef_korean_10"
+    },
+    {
+     "at": 0.6679,
+     "pose": "hef_korean_11"
+    },
+    {
+     "at": 0.7286,
+     "pose": "hef_korean_12"
+    },
+    {
+     "at": 0.7893,
+     "pose": "hef_korean_13"
+    },
+    {
+     "at": 0.85,
+     "pose": "hef_korean_14"
+    },
+    {
+     "at": 1.0,
+     "pose": "hef_korean_14"
+    }
+   ]
+  },
+  "vertical_flag": {
+   "duration_ms": 3000,
+   "mode": "ping_pong",
+   "easing": "smooth",
+   "reduced_motion_frame": 0.5,
+   "apparatus": [
+    "floor",
+    "post_left",
+    "flag_pole_top"
+   ],
+   "keyframes": [
+    {
+     "at": 0,
+     "pose": "vflag_straddle"
+    },
+    {
+     "at": 0.55,
+     "pose": "vflag_line"
+    },
+    {
+     "at": 1,
+     "pose": "vflag_line"
+    }
+   ],
+   "phases": "hold"
+  },
+  "flag_negative": {
+   "duration_ms": 6000,
+   "mode": "loop",
+   "easing": "linear",
+   "reduced_motion_frame": 0.5,
+   "apparatus": [
+    "floor",
+    "post_left",
+    "flag_pole_top"
+   ],
+   "keyframes": [
+    {
+     "at": 0,
+     "pose": "flag_neg_0"
+    },
+    {
+     "at": 0.08,
+     "pose": "flag_neg_0"
+    },
+    {
+     "at": 0.1092,
+     "pose": "flag_neg_1"
+    },
+    {
+     "at": 0.1383,
+     "pose": "flag_neg_2"
+    },
+    {
+     "at": 0.1675,
+     "pose": "flag_neg_3"
+    },
+    {
+     "at": 0.1967,
+     "pose": "flag_neg_4"
+    },
+    {
+     "at": 0.2258,
+     "pose": "flag_neg_5"
+    },
+    {
+     "at": 0.255,
+     "pose": "flag_neg_6"
+    },
+    {
+     "at": 0.2842,
+     "pose": "flag_neg_7"
+    },
+    {
+     "at": 0.3133,
+     "pose": "flag_neg_8"
+    },
+    {
+     "at": 0.3425,
+     "pose": "flag_neg_9"
+    },
+    {
+     "at": 0.3717,
+     "pose": "flag_neg_10"
+    },
+    {
+     "at": 0.4008,
+     "pose": "flag_neg_11"
+    },
+    {
+     "at": 0.43,
+     "pose": "flag_neg_12"
+    },
+    {
+     "at": 0.4592,
+     "pose": "flag_neg_13"
+    },
+    {
+     "at": 0.4883,
+     "pose": "flag_neg_14"
+    },
+    {
+     "at": 0.5175,
+     "pose": "flag_neg_15"
+    },
+    {
+     "at": 0.5467,
+     "pose": "flag_neg_16"
+    },
+    {
+     "at": 0.5758,
+     "pose": "flag_neg_17"
+    },
+    {
+     "at": 0.605,
+     "pose": "flag_neg_18"
+    },
+    {
+     "at": 0.6342,
+     "pose": "flag_neg_19"
+    },
+    {
+     "at": 0.6633,
+     "pose": "flag_neg_20"
+    },
+    {
+     "at": 0.6925,
+     "pose": "flag_neg_21"
+    },
+    {
+     "at": 0.7217,
+     "pose": "flag_neg_22"
+    },
+    {
+     "at": 0.7508,
+     "pose": "flag_neg_23"
+    },
+    {
+     "at": 0.78,
+     "pose": "flag_neg_24"
+    },
+    {
+     "at": 1,
+     "pose": "flag_neg_24"
+    }
+   ],
+   "phases": [
+    [
+     0,
+     "lower_slow"
+    ],
+    [
+     0.78,
+     "come_down"
+    ]
+   ]
+  },
+  "supinated_german_hang": {
+   "duration_ms": 3400,
+   "mode": "ping_pong",
+   "easing": "linear",
+   "reduced_motion_frame": 0.5,
+   "apparatus": [
+    "floor",
+    "mid_bar"
+   ],
+   "keyframes": [
+    {
+     "at": 0.0,
+     "pose": "sgh_0"
+    },
+    {
+     "at": 0.075,
+     "pose": "sgh_1"
+    },
+    {
+     "at": 0.15,
+     "pose": "sgh_2"
+    },
+    {
+     "at": 0.225,
+     "pose": "sgh_3"
+    },
+    {
+     "at": 0.3,
+     "pose": "sgh_4"
+    },
+    {
+     "at": 0.375,
+     "pose": "sgh_5"
+    },
+    {
+     "at": 0.45,
+     "pose": "sgh_6"
+    },
+    {
+     "at": 0.525,
+     "pose": "sgh_7"
+    },
+    {
+     "at": 0.6,
+     "pose": "sgh_8"
+    },
+    {
+     "at": 1,
+     "pose": "sgh_8"
+    }
+   ],
+   "phases": "hold"
   }
  },
  "movements": {
@@ -41385,7 +51046,29 @@
   "wrist_pushup": "wrist_pushup",
   "wall_shoulder_flexion": "wall_shoulder_flexion",
   "pancake_compression": "pancake_compression",
-  "thoracic_extension": "thoracic_extension"
+  "thoracic_extension": "thoracic_extension",
+  "straddle_handstand": "straddle_handstand",
+  "supported_handstand_shift": "supported_handstand_shift",
+  "handstand_weight_shift": "handstand_weight_shift",
+  "fingertip_one_arm_handstand": "fingertip_one_arm_handstand",
+  "one_arm_handstand_hover": "one_arm_handstand_hover",
+  "straddle_one_arm_handstand": "straddle_one_arm_handstand",
+  "one_arm_handstand": "one_arm_handstand",
+  "assisted_partial_shrimp": "assisted_partial_shrimp",
+  "assisted_shrimp": "assisted_shrimp",
+  "floating_shrimp": "floating_shrimp",
+  "assisted_held_shrimp": "assisted_held_shrimp",
+  "shrimp_squat": "shrimp_squat",
+  "assisted_supinated_german_hang": "assisted_supinated_german_hang",
+  "assisted_behind_bar_support": "assisted_behind_bar_support",
+  "assisted_korean_dip": "assisted_korean_dip",
+  "assisted_partial_hefesto": "assisted_partial_hefesto",
+  "assisted_hefesto": "assisted_hefesto",
+  "hefesto": "hefesto",
+  "vertical_flag": "vertical_flag",
+  "flag_negative": "flag_negative",
+  "skin_the_cat": "skin_the_cat",
+  "supinated_german_hang": "supinated_german_hang"
  },
  "aliases": {
   "2/3 Muscle Up": "two_thirds_muscleup",

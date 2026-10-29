@@ -27,7 +27,8 @@ VERSION = re.search(r'versionName = "([^"]+)"', (ROOT / 'app/build.gradle.kts').
 
 # The app's families (SkillBook.DEFAULT_FAMILIES), in its order, each rung easiest first.
 NAMES = ['Pull-up', 'Muscle-up', 'Front lever', 'Back lever', 'Dip', 'Push-up', 'Handstand push-up', 'Planche', 'Handstand',
-         'Pistol squat', 'Toes to bar', 'L-sit', 'Dragon flag', 'Human flag']
+         'Pistol squat', 'Toes to bar', 'L-sit', 'Dragon flag', 'Human flag', 'Shrimp squat', 'Hefesto']
+SKILL_COUNT = len(bc.SKILLS)
 FAMILIES = list(zip(NAMES, bc.BELT_LADDERS, strict=True))
 
 
@@ -86,17 +87,20 @@ first_belt = min((x for v in landed.values() for x in v if x), key=lambda x: pos
 beginner_all = max((v[0] for v in landed.values()), key=lambda x: pos(*x))
 
 MILESTONES = [
-    (first_belt, 'First belt: squat Beginner. The hollow body and push-up follow within a week.'),
+    (first_belt, 'First belt: hollow body Beginner. The push-up and squat follow within a few classes.'),
     (landed['pullup'][0], 'Pull-up Beginner: ten sets of 3 strict pull-ups.'),
     (landed['strict_muscleup'][0], 'Strict muscle-up Beginner.'),
     (landed['freestanding_handstand'][0], 'Freestanding handstand Beginner, 5 s.'),
     (landed['full_back'][0], 'Full back lever Beginner, 3 s.'),
     ((7, 100), 'The Advanced Athlete exam.'),
-    (landed['full_flag'][0], 'Full human flag Beginner, 2 s a side.'),
-    (landed['full_front'][0], 'Full front lever Beginner, 2 s.'),
-    (landed['straddle_planche'][0], 'Straddle planche Beginner, 2 s.'),
+    (landed['full_flag'][0], 'Full human flag Beginner, 3 s a side.'),
+    (landed['shrimp_squat'][0], 'Shrimp squat Beginner, 2 a side.'),
+    (landed['full_front'][0], 'Full front lever Beginner, 3 s.'),
+    (landed['straddle_planche'][0], 'Straddle planche Beginner, 3 s.'),
     (landed['one_arm_pullup'][0], 'One-arm pull-up Beginner, 1 a side.'),
-    (landed['full_planche'][0], 'Full planche Beginner, 2 s: the last of the 37 skills to its first belt.'),
+    (landed['hefesto'][0], 'Hefesto Beginner, 1 rep.'),
+    (landed['full_planche'][0], 'Full planche Beginner, 3 s.'),
+    (landed['one_arm_handstand'][0], 'One-arm handstand Beginner, 3 s a side.'),
     ((9, 100), 'The Level 9 exam tests every full shape.'),
     ((10, 100), 'The champion test ends with the Full Battle. By now every skill has reached its Elite target once, in a set or through a harder rung.'),
 ]
@@ -182,7 +186,7 @@ JS = """
     try { localStorage.setItem('sg-pace', String(w)); } catch (e) {}
   }
   btns.forEach(b => b.addEventListener('click', () => set(+b.dataset.w)));
-  let w = 6; try { w = +localStorage.getItem('sg-pace') || 6; } catch (e) {}
+  let w = 5; try { w = +localStorage.getItem('sg-pace') || 5; } catch (e) {}
   set([5, 6, 7].includes(w) ? w : 6);
 })();
 """
@@ -198,11 +202,11 @@ BODY = f"""<title>What You Can Achieve</title>
   <span class="eyebrow">Street Gymnastics {VERSION} · the program as written</span>
   <h1>What you can achieve</h1>
   <p>Every date on this page is counted from the app's 1,000 classes: if you do every set as written on the Normal toggle, this is the class where each belt lands. Repeating a block after a missed exam moves it later, and Harder days or your own workouts move it sooner.</p>
-  <div class="pace" role="group" aria-label="Classes a week"><span>Classes a week</span><button type="button" data-w="5">5</button><button type="button" data-w="6">6</button><button type="button" data-w="7">7</button></div>
+  <div class="pace" role="group" aria-label="Classes a week"><span>Classes a week</span><button type="button" data-w="2">2</button><button type="button" data-w="3">3</button><button type="button" data-w="5">5</button><button type="button" data-w="7">7</button><button type="button" data-w="10">10</button><button type="button" data-w="14">14</button></div>
 </header>
 <section class="facts" aria-label="In numbers">
-  <div class="fact"><b>{inplan}/185</b><span>belts that land inside the program</span></div>
-  <div class="fact"><b>{reached}/37</b><span>skills that reach their Elite target: in a set, or as Elite held through a harder rung</span></div>
+  <div class="fact"><b>{inplan}/{5 * SKILL_COUNT}</b><span>belts that land inside the program</span></div>
+  <div class="fact"><b>{reached}/{SKILL_COUNT}</b><span>skills that reach their Elite target: in a set, or as Elite held through a harder rung</span></div>
   <div class="fact"><b>{at(first_belt)}</b><span>your first belt</span></div>
   <div class="fact"><b>L9:100</b><span>every full shape tested: planche, both levers, the flag, the one-arm pull-up</span></div>
   <div class="fact"><b><span id="years">3.2</span> yrs</b><span>for all 1,000 classes at this pace</span></div>
@@ -221,7 +225,7 @@ BODY = f"""<title>What You Can Achieve</title>
     <li>These are working-set targets, done with a rep or two still in you, not single maximal efforts. Elite is that target thirty times over.</li>
     <li>The full planche and the one-arm pull-up come at about the research medians for committed, lighter athletes. Most people take longer: expect block repeats there.</li>
     <li>Heavier, taller, female and over-40 athletes typically take 20–50% longer on the levers, flag, planche, muscle-up and one-arm work. The handstand, the core and the legs change much less.</li>
-    <li>The last of the 37 first belts is the full planche at {at(beginner_all)}.</li>
+    <li>The last of the {SKILL_COUNT} first belts lands at {at(beginner_all)}.</li>
   </ul></section>
 </main>
 <script>{JS}</script>

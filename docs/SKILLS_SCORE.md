@@ -1,4 +1,4 @@
-# Skills and the overall score (29 October 2026, round 10)
+# Skills and the overall score (29 October 2026, round 11)
 
 Skills work like belts. Each rung of a ladder (pull-up, planche, handstand and so on) has five levels: **Beginner, Intermediate, Advanced, Master and Elite**. A level is earned with sets at its target, done in good form. Nothing is unlocked by attending, by skipping ahead or by a one-off test.
 
@@ -9,6 +9,8 @@ This replaces the 27 October model: 100 points per skill from prep and practice,
 A skill is something done on one's own, from a dead hang to a full planche (the owner's call, 28 October 2026). Assisted, supported and partial versions, negatives and drills are progressions: they stay in the classes as steps and easier options, listed as their family's `foundations`, which never become rungs.
 
 Since round 9 there are **37 skills** (the owner's choice on 29 October, from the claude-1 proposal): the 35 that at least four coaches backed, plus the dead hang and the hollow body hold as early belts. 185 levels in all. Twenty former skills are now movements only: the active hang, chin-up, typewriter pull-up, chest-to-bar, bar support, support hold, straight-bar dip, pause, close and archer push-ups, elevated pike push-up, planche lean, frog stand, handstand balance, the one-leg front and back levers, the one-leg L-sit, knee raise, sliding leg curl and Nordic curl. The squat is new. The families: pull-up (dead hang, pull-up, archer, one-arm), muscle-up, front lever, back lever, dip, push-up (push-up, one-arm), handstand push-up (pike, wall, deficit), planche (pseudo-planche push-up, tuck, advanced tuck, straddle, full), handstand (wall, freestanding), pistol (squat, pistol), hanging core (leg raise, toes-to-bar), L-sit (L-sit, V-sit), dragon flag (hollow body, dragon flag) and the human flag.
+
+Round 11 brings **40 skills** in 16 families, 200 levels in all. The one-arm handstand tops the handstand ladder (wall, freestanding, one-arm), and the shrimp squat (rear foot held) and the Hefesto are families of their own, one rung each. Their steps are movements: the straddle handstand, the supported and freestanding weight shifts, the fingertip-assisted one-arm handstand, the hover and the straddle one-arm handstand; the assisted partial, assisted, floating-leg and assisted foot-held shrimp squats; and the foot-assisted supinated German hang, behind-bar support, Korean dip, partial Hefesto and Hefesto. The shrimp steps share the pistol's single-leg-squat pattern, so they stay foundations of the shrimp family and never join the pistol ladder.
 
 ## What counts
 
@@ -46,7 +48,7 @@ Targets are **working sets**: what a trained athlete does for one set inside a c
 | Master | 30 | 15 | 30 | 20 | 60 s |
 | Elite | 30 | 20 | 40 | 25 | 75 s |
 
-Every target is in `SkillStandards.kt` and `docs/CURRICULUM_PLAN.md`. The rarest skills have their Elite set where a committed adult can reach it inside the program (the realism check, 29 October 2026): full planche 2/2/2/3/4 s, one-arm pull-up 1/1/1/2/3 a side, straddle planche 2/3/4/5/6 s, full front lever 2/3/4/6/8 s, full flag 2/3/4/5/6 s a side, strict muscle-up 1/2/3/4/5 and V-sit 2/3/4/5/6 s. From Advanced up every level takes 30 sets, so no two of those levels share a target; Beginner to Advanced may share one and differ by their sets.
+Every target is in `SkillStandards.kt` and `docs/CURRICULUM_PLAN.md`. The rarest skills have their Elite set where a committed adult can reach it inside the program (the realism check, 29 October 2026, retuned in round 11 so no hold starts under 3 s): full planche 3/3/4/5/6 s, one-arm pull-up 1/1/1/2/3 a side, Hefesto 1/1/2/3/4, one-arm handstand 3/4/5/7/10 s a side, straddle planche 3/4/5/6/8 s, full front lever 3/4/5/7/10 s, full back lever 3/5/8/12/15 s, full flag 3/4/5/6/8 s a side, strict muscle-up 1/2/4/6/8 and V-sit 3/4/5/6/8 s. The shrimp squat asks 2/3/5/7/10 a side and the freestanding handstand 5/15/30/45/60 s. From Advanced up every level takes 30 sets, so no two of those levels share a target; Beginner to Advanced may share one and differ by their sets.
 
 - A set over a higher target counts for the lower ones too, so 30 sets at the Elite target earn all five levels at once, Master included, on a program day or an own workout. Each level needs the one below it.
 - Beginner is the hook: about three quarters of a coach's entry standard, and only 10 sets. The owner asked for a first badge early; levels from Intermediate up are hard on purpose.
@@ -59,19 +61,19 @@ Every target is in `SkillStandards.kt` and `docs/CURRICULUM_PLAN.md`. The rarest
 
 ## Following the program as written
 
-Results for someone who does every class of the ten levels as written and trains nothing extra (counted by `tools/build_curriculum.py` from the classes; scores with the app's values and the leaderboard's 767 ceiling):
+Results for someone who does every class of the ten levels as written and trains nothing extra (counted by `tools/build_curriculum.py` from the classes; scores with the app's values and score version 3's ceiling of 887):
 
 | End of level | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
 |---|---|---|---|---|---|---|---|---|---|---|
-| Overall score (of 1000) | 12 | 24 | 56 | 83 | 118 | 162 | 193 | 281 | 465 | 698 |
-| Levels earned (of 185) | 8 | 16 | 30 | 44 | 57 | 76 | 87 | 106 | 126 | 156 |
-| Skills at Beginner or more (of 37) | 7 | 10 | 13 | 20 | 23 | 28 | 30 | 35 | 37 | 37 |
+| Overall score (of 1000) | 13 | 30 | 46 | 78 | 111 | 136 | 195 | 285 | 454 | 726 |
+| Levels earned (of 200) | 11 | 20 | 28 | 44 | 57 | 70 | 84 | 106 | 130 | 166 |
+| Skills at Beginner or more (of 40) | 7 | 10 | 13 | 21 | 23 | 27 | 31 | 36 | 40 | 40 |
 
-- The first badge comes at class 10 (squat Beginner); the hollow body and push-up follow by class 16.
-- Every level brings new badges, and every skill reaches Beginner inside the plan, the last being the full planche at L9:065.
-- Every skill reaches its Elite target by the end of Level 10 (the owner: "at least the max should be achievable, it's ok if not the sets"). 34 reach it in their working sets, the one-arm pull-up in one Level 10 record set, and the tuck and advanced tuck back levers hold Elite itself through the full back lever.
-- A progression peaks while it is still trained, before the next rung takes over: the advanced tuck front lever at 15 s in Level 7, the tuck flag at 15 s in Level 6, the advanced tuck planche at 12 s in Level 8, the L-sit at 30 s as Level 9 begins and the wall handstand at 75 s in Level 5. No record set sits beside a harder rung of its ladder (`validate_progressions.py`).
-- Elite takes 30 sets at the target, so the plan alone reaches Elite on 16 skills: the basics, the strict muscle-up, the archer pull-up, the dragon flag and the full back lever, plus the dead hang through the pull-up and the tuck, advanced tuck and straddle back levers through the full back lever. The rest of Elite comes from repeating blocks and the athlete's own workouts, by design. The skills help says so.
+- The first badge comes at class 11 (hollow body Beginner); the push-up and squat follow at class 13.
+- Every level brings new badges, and every skill reaches Beginner inside the plan, the last being the one-arm handstand at L9:090.
+- Every skill reaches its Elite target by the end of Level 10 (the owner: "at least the max should be achievable, it's ok if not the sets"). 38 reach it in a set of their own, the one-arm handstand, shrimp squat and Hefesto in Level 10 record sets, and the dead hang and hanging leg raise hold Elite through the pull-up and toes-to-bar.
+- A progression peaks while it is still trained, before the next rung takes over. No record set sits beside a harder rung of its ladder (`validate_progressions.py`).
+- Elite takes 30 sets at the target, so the plan alone reaches Elite on 14 skills: the push-up, squat, hollow body, pull-up, dip, the pseudo-planche push-up, the freestanding handstand, the pistol, toes-to-bar, the dragon flag and the tuck back lever, plus the dead hang, wall handstand and hanging leg raise through the harder rung of their ladders. The rest of Elite comes from repeating blocks and the athlete's own workouts, by design. The skills help says so.
 
 ## The overall score (`OverallScore`)
 
@@ -81,9 +83,12 @@ Each rung has a value (`SKILL_VALUES`), anchored on a strict pull-up at 10:
 |---|---|
 | Strict pull-up | 10 |
 | Tuck front lever | 15 |
+| Shrimp squat | 14 |
 | Full back lever | 50 |
+| Hefesto | 50 |
 | Full front lever | 100 |
 | Full one-arm pull-up | 110 |
+| One-arm handstand | 110 |
 | Straddle planche | 110 |
 | Full planche | 200 |
 
@@ -119,11 +124,12 @@ The athlete can still change the answer.
 
 ## Leaderboard
 
-- The score document (version 2) holds:
+- The score document (version 3 since round 11) holds:
   - `overall`;
   - `families`: ten times each family's points;
   - `verified`: the rungs at Beginner or above.
 - The board function (`firebase/functions/boards.py`) drops any document whose overall doesn't add up from its families. Its family ceilings must match the app's; `SkillBookTest` checks this.
-- Round 9 dropped the Nordic family, but the deployed function still divides by all 15 ceilings (767). So the app keeps Nordic's 24 in the score's maximum (`OverallScore.RETIRED_CEILINGS`), and a score's top is 969, shown 96.9. The dip family keeps its top value of 12 on the parallel dip. The next functions deploy can drop Nordic from `FAMILY_CEILINGS` and `RETIRED_CEILINGS` together; a deploy is needed for any change to a family's top value.
+- Round 9 dropped the Nordic family, but the deployed function kept dividing by all 15 ceilings (767), so the app kept Nordic's 24 in the score's maximum (`OverallScore.RETIRED_CEILINGS`) and a score topped out at 969, shown 96.9. Round 11 needs a deploy for its new families anyway: version 3 of the score drops Nordic from `FAMILY_CEILINGS` and `RETIRED_CEILINGS` together, raises the handstand family to 110 and adds shrimp 14 and hefesto 50. The 16 ceilings add up to 887, and every family's top at Elite is the whole 1000 again. The dip family keeps its top value of 12 on the parallel dip. A deploy is needed for any change to a family's top value.
+- Until the rules and function are deployed, the old function drops version 3 scores, and the old rules refuse them: ship the app and the deploy together.
 - Boards: `overall_*`, plus one `family_<id>_*` board per family.
-- `firestore.rules` caps the overall at 1000 and the families at 15. The rules and the function don't change with this model.
+- `firestore.rules` caps the overall at 1000 and the families at 16, and accepts only version 3.

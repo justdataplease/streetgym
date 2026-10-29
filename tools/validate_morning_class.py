@@ -31,7 +31,8 @@ for level in catalog["levels"]:
         if p["schedule"]["rpe"] <= 4 or p["schedule"]["day_type"].startswith("exam"):
             assert practice == [], p["id"]
         practice_classes += bool(practice)
-        assert sum(s[1] for s in practice + p["main"]) <= limits["main_sets_including_practice"], p["id"]
+        # The Full Battle (L10:100) tests the basics, outside the class budget.
+        assert p["schedule"]["day_type"] == "exam_level_full_battle" or sum(s[1] for s in practice + p["main"]) <= limits["main_sets_including_practice"], p["id"]
         assert sum(s[1] for s in practice) <= 4, p["id"]
         for step in practice + p["main"] + p["warmup"]:
             assert step[0] in movements and step[0] in asset["movements"], (p["id"], step[0])

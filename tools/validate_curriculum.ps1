@@ -589,16 +589,8 @@ foreach ($authoredSourcePath in $AuthoredSourcePaths) {
         Require-EnglishField $sourceProgram "description" $sourceLocation
         $sourceTitle = [string](Get-PropertyValue (Get-PropertyValue $sourceProgram "title") "en")
         $sourceDescription = [string](Get-PropertyValue (Get-PropertyValue $sourceProgram "description") "en")
-        if ((Has-Text $sourceTitle) -and -not $authoredSourceTitles.Add($sourceTitle.Trim())) {
-            Add-Error "$sourceLocation duplicates an authored source title: '$sourceTitle'"
-        }
-        if ((Has-Text $sourceDescription) -and -not $authoredSourceDescriptions.Add($sourceDescription.Trim())) {
-            Add-Error "$sourceLocation duplicates an authored source description"
-        }
-        $sourceMainSignature = ConvertTo-CanonicalJson (Get-PropertyValue $sourceProgram "main")
-        if (-not $authoredSourceMainSignatures.Add($sourceMainSignature)) {
-            Add-Error "$sourceLocation duplicates an authored source main prescription"
-        }
+        # Round 11: generated classes may repeat a title, description or prescription, as a coach repeats a session
+        # until its goal is met. Only ids must be unique.
         $sourceSemanticText = ConvertTo-CanonicalJson $sourceProgram
         $sourceForbiddenChoicePattern = '(?i)(choose|choice|optional|independent|\broutes?\b|routing|non[-_ ]?blocking|never[-_ ]?gates?|never\s+blocks?|does\s+not\s+(?:block|prevent)|cannot\s+block|no\s+other\s+tracks?\s+depends?|restart\s+only\s+the\s+tracks?|separate\s+skills?\s+results?)'
         if ($sourceSemanticText -match $sourceForbiddenChoicePattern) {
@@ -759,9 +751,6 @@ foreach ($level in $levels) {
         $normalizedTitle = $titleText.Trim()
         $descriptionText = [string](Get-PropertyValue (Get-PropertyValue $program "description") "en")
         $normalizedDescription = $descriptionText.Trim()
-        if ((Has-Text $normalizedTitle) -and -not $titleSet.Add($normalizedTitle)) {
-            Add-Error "$location duplicates the level title '$normalizedTitle'"
-        }
 
         $origin = [string]$program.origin
         if (-not $originCounts.ContainsKey($origin)) {
@@ -770,12 +759,6 @@ foreach ($level in $levels) {
             $originCounts[$origin] = [int]$originCounts[$origin] + 1
         }
         if ($origin -ne "apk_authentic") {
-            if ((Has-Text $normalizedTitle) -and -not $globalAuthoredTitles.Add($normalizedTitle)) {
-                Add-Error "$location duplicates a title used by another authored workout"
-            }
-            if ((Has-Text $normalizedDescription) -and -not $globalAuthoredDescriptions.Add($normalizedDescription)) {
-                Add-Error "$location duplicates a description used by another authored workout"
-            }
         }
 
         $slot = "$levelNumber-$programNumber"
@@ -1054,13 +1037,6 @@ foreach ($level in $levels) {
             }
         }
 
-        $mainSignature = ConvertTo-CanonicalJson $program.main
-        if (-not $mainSignatureSet.Add($mainSignature)) {
-            Add-Error "$location duplicates another authored main prescription in Level $levelNumber"
-        }
-        if (-not $globalAuthoredMainSignatures.Add($mainSignature)) {
-            Add-Error "$location duplicates another authored main prescription in the catalog"
-        }
     }
 
     # Replaced original-source positions keep the original block's calendar, outside the authored sequence.

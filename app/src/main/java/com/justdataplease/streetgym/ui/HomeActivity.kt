@@ -101,6 +101,7 @@ import com.justdataplease.streetgym.data.progress.DayAssignment
 import com.justdataplease.streetgym.data.progress.ExamResult
 import com.justdataplease.streetgym.data.progress.Intensity
 import com.justdataplease.streetgym.data.progress.LevelReplay
+import com.justdataplease.streetgym.data.progress.NextClass
 import com.justdataplease.streetgym.data.progress.Placement
 import com.justdataplease.streetgym.data.progress.SharedPreferencesProgressRepository
 import com.justdataplease.streetgym.data.progress.WorkoutSession
@@ -109,6 +110,7 @@ import com.justdataplease.streetgym.data.skills.SkillBook
 import com.justdataplease.streetgym.data.skills.SkillCurriculumReader
 import com.justdataplease.streetgym.data.skills.SkillGroup
 import com.justdataplease.streetgym.data.skills.SkillProgress
+import com.justdataplease.streetgym.widget.NextClassWidget
 import java.text.DateFormat
 import java.text.NumberFormat
 import java.util.ArrayDeque
@@ -271,10 +273,14 @@ open class HomeActivity : Activity() {
         billing = TierBilling(this)
         tier = Entitlement.tier(this)
         Entitlement.prefs(this).registerOnSharedPreferenceChangeListener(entitlementChanged)
+        // The home-screen widget follows progress, the tier and the theme from here on.
+        NextClassWidget.watch(this)
         adBreak = WorkoutAdBreak(this)
         restoredScreen = savedInstanceState?.let(::screenFromBundle)
-            ?: if (intent.getBooleanExtra(TimingAlerts.OPEN_TIMER, false)) Screen.Timing else null
+            ?: if (intent.getBooleanExtra(TimingAlerts.OPEN_TIMER, false)) Screen.Timing
+            else NextClassWidget.programToOpen(intent)?.let(Screen::Overview)
         intent.removeExtra(TimingAlerts.OPEN_TIMER)
+        intent.removeExtra(NextClassWidget.EXTRA_PROGRAM)
         restEndsAtEpochMillis = savedInstanceState?.getLong(STATE_REST_END)
             ?.takeIf { it > System.currentTimeMillis() }
         restProgramId = savedInstanceState?.getString(STATE_REST_PROGRAM)
@@ -311,6 +317,11 @@ open class HomeActivity : Activity() {
         super.onNewIntent(intent)
         if (intent.getBooleanExtra(TimingAlerts.OPEN_TIMER, false)) {
             if (catalog != null) openRoot(Screen.Timing) else restoredScreen = Screen.Timing
+        }
+        // A tap on the widget: the next class's overview, as Today's card opens it (or Today itself).
+        if (NextClassWidget.opened(intent)) {
+            val screen = NextClassWidget.programToOpen(intent)?.let(Screen::Overview) ?: Screen.Dashboard
+            if (catalog != null) openRoot(screen) else restoredScreen = screen
         }
     }
 
@@ -2725,13 +2736,12 @@ open class HomeActivity : Activity() {
 
     private fun levelLocked(levelNumber: Int): Boolean = LevelAccess.locked(levelNumber, Entitlement.tier(this))
 
-    private fun allPrograms(catalog: CurriculumCatalog): List<TrainingProgram> =
-        catalog.levels.sortedBy { it.number }.flatMap { level -> level.programs.sortedBy { it.number } }
+    private fun allPrograms(catalog: CurriculumCatalog): List<TrainingProgram> = NextClass.ordered(catalog)
 
+    /** The next class in the sequence; the home-screen widget shows the same one ([NextClass]). */
     private fun assignedProgram(): TrainingProgram? {
         if (catalog == null) return null
-        return DayAssignment.next(orderedPrograms, progressRepository.completedProgramIds(), levelReplay(),
-            TrainingProgram::id, TrainingProgram::levelNumber)
+        return NextClass.of(orderedPrograms, progressRepository.completedProgramIds(), levelReplay())
     }
 
     /** The first day never completed: where the athlete stopped, whatever they repeat. */
@@ -2842,6 +2852,8 @@ open class HomeActivity : Activity() {
          * activity, and parsing the whole curriculum again each time would show the loading screen for nothing.
          */
         @Volatile private var loaded: LoadedCatalog? = null
+        /** The parsed catalog once the app has read it, so the home-screen widget doesn't parse it again. */
+        internal val loadedCatalog: CurriculumCatalog? get() = loaded?.catalog
         /** The longest name for a custom day or a renamed level: room for any built-in one, short enough for a card. */
         private const val MAX_NAME_LENGTH = 60
         private const val REQUEST_LOCATION = 720

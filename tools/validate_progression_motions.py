@@ -36,6 +36,9 @@ EXPECTED = {
     "typewriter_pullup": "typewriter_pullup", "assisted_one_arm_pullup": "assisted_one_arm_pullup",
     "one_arm_pullup_negative": "one_arm_pullup_negative", "deficit_wall_hspu": "deficit_wall_hspu",
     "freestanding_hspu_negative": "freestanding_hspu_negative",
+    # flag_hang_skills.py (round 11)
+    "vertical_flag": "vertical_flag", "flag_negative": "flag_negative", "skin_the_cat": "skin_the_cat",
+    "supinated_german_hang": "supinated_german_hang",
 }
 # The typewriter guide faces the viewer (its slide is sideways), so its elbows point out to the sides;
 # group_f checks them against the bar and the outer side instead of the side-view bend direction.
@@ -513,6 +516,90 @@ for i, t, j in frames("freestanding_hspu_negative"):
         fail("freestanding_hspu_negative", f"the feet come down during the negative at sample {i}")
         break
 straight_legs("freestanding_hspu_negative")
+
+# ---- flag_hang_skills.py (round 11) ----
+for name in ("vertical_flag", "flag_negative", "skin_the_cat", "supinated_german_hang"):
+    above_floor(name)
+
+# 27-28 vertical flag and flag negative: the flags' split grip and shoulder with both arms locked and the legs straight.
+# The vertical flag holds one line straight up over the shoulders, legs together; the negative lowers that line away
+# from the pole, slowly and steadily, through the level flag line until the toes reach the floor. Nothing but the hands
+# touches the pole.
+for name in ("vertical_flag", "flag_negative"):
+    pinned(name, "neck", (80, 60))
+    pinned(name, "hand_near", (62, 60 + FLAG_DY))
+    pinned(name, "hand_far", (62, 60 - FLAG_DY))
+    straight(name, "near")
+    straight(name, "far")
+    straight_legs(name)
+    for i, t, j in frames(name):
+        if min(x for k, (x, _) in j.items() if k not in ("hand_near", "hand_far", "hands")) < 62 + 2 or \
+                j["head"][0] - figure.head_radius < 62:
+            fail(name, f"the body touches the pole at sample {i}")
+            break
+vertical = at("vertical_flag", 1.0)
+if abs(vertical["hip"][0] - vertical["neck"][0]) > 0.1 or vertical["hip"][1] > vertical["neck"][1] - 19.9:
+    fail("vertical_flag", "the trunk does not stand straight up over the shoulders in the hold")
+for side in ("near", "far"):
+    if abs(signed(angle(vertical["hip"], vertical[f"foot_{side}"]))) > 1:
+        fail("vertical_flag", f"leg_{side} does not point straight up in the hold")
+if abs(signed(angle(vertical["hip"], vertical["foot_near"]) - angle(vertical["hip"], vertical["foot_far"]))) > 2:
+    fail("vertical_flag", "the legs are not together in the hold")
+for i, t, j in frames("flag_negative"):
+    for side in ("near", "far"):
+        if abs(signed(angle(j["hip"], j[f"foot_{side}"]) - angle(j["neck"], j["hip"]))) > 1:
+            fail("flag_negative", f"leg_{side} breaks the body line at sample {i}")
+            break
+drops = [j["foot_near"][1] for _, t, j in frames("flag_negative") if 0.08 <= t <= 0.78]
+if any(b < a - 1e-6 for a, b in zip(drops, drops[1:])):
+    fail("flag_negative", "the lowering is not one steady descent")
+if abs(signed(angle(at("flag_negative", 0.0)["hip"], at("flag_negative", 0.0)["neck"]) - 180)) > 0.5:
+    fail("flag_negative", "the negative does not start from the vertical flag")
+if not any(abs(j["hip"][1] - j["neck"][1]) < 1 and 0.3 <= t <= 0.6 for _, t, j in frames("flag_negative")):
+    fail("flag_negative", "the lowering does not pass the level flag line in its middle")
+for t in (0.0, 0.5):
+    if at("flag_negative", t)["toe_near"][1] > ANKLE - 5:
+        fail("flag_negative", f"the feet are down at t={t}")
+landed = at("flag_negative", 0.9)
+if landed["toe_near"][1] < FLOOR - 0.5:
+    fail("flag_negative", "the toes do not reach the floor at the end")
+
+# 29 skin-the-cat on the high bar: both hands stay on the bar with straight arms, the feet never touch the floor, the
+# hips roll over the shoulders, and the hang behind opens the shoulders with straight legs; a still hang at either end.
+STC_HAND = (100, BAR)
+pinned("skin_the_cat", "hand_near", STC_HAND)
+pinned("skin_the_cat", "hand_far", STC_HAND)
+straight("skin_the_cat", "near")
+straight("skin_the_cat", "far")
+for i, t, j in frames("skin_the_cat"):
+    if max(j["foot_near"][1], j["toe_near"][1], j["foot_far"][1], j["toe_far"][1]) > ANKLE - 5:
+        fail("skin_the_cat", f"the feet come down to the floor at sample {i}")
+        break
+if min(j["hip"][1] - j["shoulder"][1] for _, _, j in frames("skin_the_cat")) > -15:
+    fail("skin_the_cat", "the hips never roll over the shoulders")
+if extension(at("skin_the_cat", 0.5)) < 100:
+    fail("skin_the_cat", f"the hands are not behind the body in the German hang ({extension(at('skin_the_cat', 0.5)):.0f} deg)")
+straight_legs("skin_the_cat", window=(0.44, 0.56))
+for t in (0.0, 1.0):
+    hang = at("skin_the_cat", t)
+    if abs(hang["hip"][0] - hang["shoulder"][0]) > 0.1 or dist(hang["hip"], hang["foot_near"]) < 30.8:
+        fail("skin_the_cat", f"no still, straight hang at t={t}")
+
+# 30 supinated German hang: the Hefesto's bar and start position, hands on the bar, straight arms, the shoulders open
+# behind the body and the feet clear of the floor.
+pinned("supinated_german_hang", "hand_near", (95, 40))
+pinned("supinated_german_hang", "hand_far", (95, 40))
+straight("supinated_german_hang", "near")
+straight("supinated_german_hang", "far")
+for i, t, j in frames("supinated_german_hang"):
+    if max(j["foot_near"][1], j["toe_near"][1], j["foot_far"][1], j["toe_far"][1]) > ANKLE - 3:
+        fail("supinated_german_hang", f"the feet come down to the floor at sample {i}")
+        break
+held, start = at("supinated_german_hang", 1.0), at("hefesto", 0.0)
+if extension(held) < 100:
+    fail("supinated_german_hang", f"the shoulders are not open in the hold ({extension(held):.0f} deg)")
+if max(dist(held[k], start[k]) for k in held if k not in ("hands", "feet")) > 0.5:
+    fail("supinated_german_hang", "the hold is not the Hefesto's start position")
 
 if failures:
     print(f"Progression motion checks failed with {len(failures)} error(s):")

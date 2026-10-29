@@ -1545,6 +1545,150 @@
       }
     },
     {
+      "id": "assisted_supinated_german_hang",
+      "name": {
+        "en": "Foot-Assisted Supinated German Hang"
+      },
+      "description": {
+        "en": "On a low, secure bar with the palms facing you, keep the feet down and taking most of the weight. Rotate back to a comfortable hang with the hands behind you and the elbows straight, then step out easily."
+      },
+      "category": "skill_foundation",
+      "patterns": [
+        "hefesto",
+        "shoulder_extension"
+      ],
+      "equipment": [
+        "low_bar"
+      ],
+      "regression_id": "german_hang",
+      "safety": {
+        "en": "Never drop into the stretch or force a new grip."
+      },
+      "counts": {
+        "en": "Active, pain-free range only."
+      }
+    },
+    {
+      "id": "assisted_behind_bar_support",
+      "name": {
+        "en": "Foot-Assisted Behind-Bar Support"
+      },
+      "description": {
+        "en": "With an underhand grip and the bar behind the hips, hold a straight-arm support with the feet helping. Practise lowering and stepping out."
+      },
+      "category": "skill_foundation",
+      "patterns": [
+        "hefesto",
+        "shoulder_extension"
+      ],
+      "equipment": [
+        "low_bar"
+      ],
+      "regression_id": "assisted_supinated_german_hang",
+      "safety": {
+        "en": "Keep the shoulder stretch comfortable and even on both sides."
+      },
+      "counts": {
+        "en": "The feet stay ready to take weight the whole time."
+      }
+    },
+    {
+      "id": "assisted_korean_dip",
+      "name": {
+        "en": "Foot-Assisted Korean Dip"
+      },
+      "description": {
+        "en": "From the behind-bar support with the feet helping, bend the elbows through a comfortable range, then press back to straight elbows."
+      },
+      "category": "skill_strength",
+      "patterns": [
+        "hefesto",
+        "shoulder_extension"
+      ],
+      "equipment": [
+        "low_bar"
+      ],
+      "regression_id": "assisted_behind_bar_support",
+      "safety": {
+        "en": "Don't force deep shoulder extension."
+      },
+      "counts": {
+        "en": "The same foot help every set, and every rep finishes at straight elbows."
+      }
+    },
+    {
+      "id": "assisted_partial_hefesto",
+      "name": {
+        "en": "Foot-Assisted Partial Hefesto"
+      },
+      "description": {
+        "en": "From a foot-assisted supinated German hang, pull only through the part of the transition you control, then return with the feet helping."
+      },
+      "category": "advanced_strength",
+      "patterns": [
+        "hefesto",
+        "shoulder_extension"
+      ],
+      "equipment": [
+        "low_bar"
+      ],
+      "regression_id": "assisted_korean_dip",
+      "safety": {
+        "en": "No dropping on the way down and no forced shoulder range."
+      },
+      "counts": {
+        "en": "A partial rep is not a full Hefesto."
+      }
+    },
+    {
+      "id": "assisted_hefesto",
+      "name": {
+        "en": "Foot-Assisted Hefesto"
+      },
+      "description": {
+        "en": "Use the same foot-assisted set-up each time. Pull from the straight-arm German hang, move behind the bar and press to a straight-arm support."
+      },
+      "category": "advanced_strength",
+      "patterns": [
+        "hefesto",
+        "shoulder_extension"
+      ],
+      "equipment": [
+        "low_bar"
+      ],
+      "regression_id": "assisted_partial_hefesto",
+      "safety": {
+        "en": "Stop at shoulder or elbow pain. Start when ten straight-bar dips, a 5-second full back lever and three strict muscle-ups are controlled."
+      },
+      "counts": {
+        "en": "The full assisted range, with an exit you can repeat. Assisted reps never count as unassisted ones."
+      }
+    },
+    {
+      "id": "hefesto",
+      "name": {
+        "en": "Hefesto"
+      },
+      "description": {
+        "en": "From a still supinated German hang with straight elbows, pull and move behind the bar, then press to a straight-arm support behind it. A steady high false grip is allowed."
+      },
+      "category": "mastery_skill",
+      "patterns": [
+        "hefesto",
+        "shoulder_extension"
+      ],
+      "equipment": [
+        "high_bar"
+      ],
+      "regression_id": "assisted_hefesto",
+      "safety": {
+        "en": "Stop for shoulder or elbow pain, and go back to assisted work before control fails."
+      },
+      "counts": {
+        "en": "From a still hang to locked arms on top. No kip, kick, bounce, short start or unfinished press. A controlled arch is fine."
+      }
+    },
+    {
       "id": "tuck_back_entry",
       "name": {
         "en": "Feet-Assisted Tuck Back-Lever Entry"
@@ -2462,6 +2606,129 @@
       }
     },
     {
+      "id": "assisted_partial_shrimp",
+      "name": {
+        "en": "Assisted Partial Shrimp Squat"
+      },
+      "description": {
+        "en": "Hold a secure support and bend the free knee behind you. Lower that knee toward a raised pad, then stand up on the front leg. The rear foot stays off the floor."
+      },
+      "category": "fundamental",
+      "patterns": [
+        "single_leg_squat",
+        "shrimp"
+      ],
+      "equipment": [
+        "support",
+        "mat"
+      ],
+      "regression_id": "split_squat",
+      "safety": {
+        "en": "Use a comfortable depth and keep the front knee over the toes."
+      },
+      "counts": {
+        "en": "Light hand help only. No bounce and no push from the rear foot."
+      }
+    },
+    {
+      "id": "assisted_shrimp",
+      "name": {
+        "en": "Assisted Shrimp Squat"
+      },
+      "description": {
+        "en": "Hold a secure support and lower the floating rear knee to a thin pad. Stand up on the front leg without help from the rear foot."
+      },
+      "category": "strength",
+      "patterns": [
+        "single_leg_squat",
+        "shrimp"
+      ],
+      "equipment": [
+        "support",
+        "mat"
+      ],
+      "regression_id": "assisted_partial_shrimp",
+      "safety": {
+        "en": "Keep the whole front foot down and the knee tracking over the toes."
+      },
+      "counts": {
+        "en": "Touch the pad lightly. The rear foot never pushes."
+      }
+    },
+    {
+      "id": "floating_shrimp",
+      "name": {
+        "en": "Floating-Leg Shrimp Squat"
+      },
+      "description": {
+        "en": "Without hand support, bend the rear knee behind you, touch it lightly to a thin pad and stand up. The rear foot stays clear and is not held."
+      },
+      "category": "skill_strength",
+      "patterns": [
+        "single_leg_squat",
+        "shrimp"
+      ],
+      "equipment": [
+        "mat"
+      ],
+      "regression_id": "assisted_shrimp",
+      "safety": {
+        "en": "Keep the front knee over the toes. Use less depth rather than bouncing out of the bottom."
+      },
+      "counts": {
+        "en": "Full, controlled reps a side, with no push from the rear foot and no bounce."
+      }
+    },
+    {
+      "id": "assisted_held_shrimp",
+      "name": {
+        "en": "Assisted Foot-Held Shrimp Squat"
+      },
+      "description": {
+        "en": "Hold the rear foot with one hand and a secure support with the other. Lower the rear knee toward a pad and stand up. Use less depth if needed."
+      },
+      "category": "skill_strength",
+      "patterns": [
+        "single_leg_squat",
+        "shrimp"
+      ],
+      "equipment": [
+        "support",
+        "mat"
+      ],
+      "regression_id": "floating_shrimp",
+      "safety": {
+        "en": "Lean on the support before forcing range."
+      },
+      "counts": {
+        "en": "The rear foot stays held the whole rep."
+      }
+    },
+    {
+      "id": "shrimp_squat",
+      "name": {
+        "en": "Shrimp Squat"
+      },
+      "description": {
+        "en": "Hold the rear foot with one hand the whole time and reach the other arm forward. Touch the rear knee lightly to a thin pad and stand up on the front leg."
+      },
+      "category": "advanced_strength",
+      "patterns": [
+        "single_leg_squat",
+        "shrimp"
+      ],
+      "equipment": [
+        "mat"
+      ],
+      "regression_id": "assisted_held_shrimp",
+      "safety": {
+        "en": "Keep the front knee over the toes and stop at any knee pain."
+      },
+      "counts": {
+        "en": "No support, no push from the rear foot and no bounce, through the full range. Floating-leg reps are a separate progression. Your weaker leg counts."
+      }
+    },
+    {
       "id": "hanging_leg_raise",
       "name": {
         "en": "Hanging Straight-Leg Raise"
@@ -2675,6 +2942,162 @@
       }
     },
     {
+      "id": "straddle_handstand",
+      "name": {
+        "en": "Straddle Handstand"
+      },
+      "description": {
+        "en": "Hold a freestanding handstand on two straight arms with the legs in a controlled straddle. Enter, open the legs and come down under control."
+      },
+      "category": "skill",
+      "patterns": [
+        "handstand",
+        "balance"
+      ],
+      "equipment": [],
+      "regression_id": "freestanding_handstand",
+      "safety": {
+        "en": "Practise only with a clear exit and space around you. Rehearse a reliable exit before any shift to one hand."
+      },
+      "counts": {
+        "en": "Only steady time with no wall counts."
+      }
+    },
+    {
+      "id": "supported_handstand_shift",
+      "name": {
+        "en": "Supported Handstand Weight Shift"
+      },
+      "description": {
+        "en": "With the toes lightly on a wall, shift the hips over one hand and back to the centre. Both arms stay straight. Work both sides."
+      },
+      "category": "skill_foundation",
+      "patterns": [
+        "handstand",
+        "balance"
+      ],
+      "equipment": [
+        "wall"
+      ],
+      "regression_id": "straddle_handstand",
+      "safety": {
+        "en": "Don't twist or let the supporting shoulder sink."
+      },
+      "counts": {
+        "en": "The second hand stays down and the wall stays in reach."
+      }
+    },
+    {
+      "id": "handstand_weight_shift",
+      "name": {
+        "en": "Freestanding Handstand Weight Shift"
+      },
+      "description": {
+        "en": "From a steady straddle handstand, shift over one hand and take weight off the other, then come back to the centre under control."
+      },
+      "category": "advanced_skill",
+      "patterns": [
+        "handstand",
+        "balance"
+      ],
+      "equipment": [],
+      "regression_id": "supported_handstand_shift",
+      "safety": {
+        "en": "Keep both hands ready to catch the balance."
+      },
+      "counts": {
+        "en": "A shift and a controlled return is one rep a side."
+      }
+    },
+    {
+      "id": "fingertip_one_arm_handstand",
+      "name": {
+        "en": "Fingertip-Assisted One-Arm Handstand"
+      },
+      "description": {
+        "en": "In a straddle, stack over one straight arm with the other hand's fingertips lightly on the floor. Use the same set-up every session."
+      },
+      "category": "advanced_skill",
+      "patterns": [
+        "handstand",
+        "balance"
+      ],
+      "equipment": [],
+      "regression_id": "handstand_weight_shift",
+      "safety": {
+        "en": "Keep the supporting elbow locked and come down with the rehearsed exit."
+      },
+      "counts": {
+        "en": "Assisted time only. Fingertip contact never counts as a one-arm hold."
+      }
+    },
+    {
+      "id": "one_arm_handstand_hover",
+      "name": {
+        "en": "One-Arm Handstand Hover"
+      },
+      "description": {
+        "en": "From a fingertip-assisted straddle, lift the assisting hand briefly and put it back with control. Practise both sides."
+      },
+      "category": "mastery_skill",
+      "patterns": [
+        "handstand",
+        "balance"
+      ],
+      "equipment": [],
+      "regression_id": "fingertip_one_arm_handstand",
+      "safety": {
+        "en": "Put the hand back before the balance goes, and come down with the rehearsed exit."
+      },
+      "counts": {
+        "en": "The time is a practice window with resets. Log only your longest clean hold without the free hand, on the weaker side."
+      }
+    },
+    {
+      "id": "straddle_one_arm_handstand",
+      "name": {
+        "en": "Straddle One-Arm Handstand"
+      },
+      "description": {
+        "en": "Hold a straddle handstand on one straight arm with the other hand clear. Stack the hips over the supporting hand and come down under control."
+      },
+      "category": "mastery_skill",
+      "patterns": [
+        "handstand",
+        "balance"
+      ],
+      "equipment": [],
+      "regression_id": "one_arm_handstand_hover",
+      "safety": {
+        "en": "Come down with the rehearsed exit. Stop at any wrist, elbow or shoulder pain."
+      },
+      "counts": {
+        "en": "The time starts once the balance settles. It ends at a touch, a hop, a bent elbow or a lost shape. Your weaker side counts."
+      }
+    },
+    {
+      "id": "one_arm_handstand",
+      "name": {
+        "en": "One-Arm Handstand"
+      },
+      "description": {
+        "en": "Hold a handstand on one straight arm with the legs together and the free hand clear. Practise both sides, always with a safe exit."
+      },
+      "category": "mastery_skill",
+      "patterns": [
+        "handstand",
+        "balance"
+      ],
+      "equipment": [],
+      "regression_id": "straddle_one_arm_handstand",
+      "safety": {
+        "en": "Come down with the rehearsed exit. Stop at any wrist, elbow or shoulder pain."
+      },
+      "counts": {
+        "en": "One straight arm, legs together, no support. Straddle and assisted holds are separate progressions. Your weaker side counts."
+      }
+    },
+    {
       "id": "flag_ground_support",
       "name": {
         "en": "Feet-Grounded Human-Flag Support"
@@ -2729,7 +3152,7 @@
       "equipment": [
         "stall_bars"
       ],
-      "regression_id": "assisted_tuck_flag",
+      "regression_id": "vertical_flag",
       "safety": {
         "en": "Use fixed stall bars or a rated flag pole, never a loose rail or door frame. Train both sides. Keep the lower arm straight, push with the lower hand and pull with the upper hand. Stop for elbow or shoulder discomfort; do not jump into the hold. Start when three 8-second assisted tuck flags on each side are solid."
       },
@@ -3428,6 +3851,102 @@
       "regression_id": "cat_cow",
       "safety": {
         "en": "Move from the upper back only: keep the ribs down and the lower back still. Pad the edge with a towel, and stop if the neck strains."
+      }
+    },
+    {
+      "id": "vertical_flag",
+      "name": {
+        "en": "Vertical Human Flag"
+      },
+      "description": {
+        "en": "Take the flag grip on fixed stall bars or a flag pole, top hand pulling and bottom hand pushing. Kick up into a vertical line beside the pole: upside down, hips stacked over the shoulders, legs straight and together, both arms locked. Hold briefly, then bring the feet down under control. Reverse sides."
+      },
+      "category": "skill_foundation",
+      "patterns": [
+        "human_flag"
+      ],
+      "equipment": [
+        "stall_bars"
+      ],
+      "regression_id": "assisted_tuck_flag",
+      "safety": {
+        "en": "Use fixed stall bars or a rated flag pole, never a loose rail or door frame. Train both sides. Keep both arms straight, push with the lower hand and pull with the upper hand. Kick up only as hard as you can stop, with clear space to come down. Start when three 8-second assisted tuck flags on each side are solid."
+      },
+      "counts": {
+        "en": "Side-on to the pole, arms straight, legs straight and together, the body one vertical line with the hips over the shoulders. Hold each side; your weaker side counts."
+      }
+    },
+    {
+      "id": "flag_negative",
+      "name": {
+        "en": "Human Flag Negative"
+      },
+      "description": {
+        "en": "From the vertical flag, lower the straight body slowly away from the pole, about three to five seconds, through the level flag line and on down until the feet reach the floor. Keep both arms locked and the hips in line; lower in a straddle while the legs-together line is still too hard. Reset standing; repetitions are per side."
+      },
+      "category": "advanced_skill",
+      "patterns": [
+        "human_flag"
+      ],
+      "equipment": [
+        "stall_bars"
+      ],
+      "regression_id": "straddle_flag",
+      "safety": {
+        "en": "Use fixed stall bars or a rated flag pole, never a loose rail or door frame. Train both sides. Keep both arms straight, push with the lower hand and pull with the upper hand. Slow down most as the body passes level, and end the set when the lowering turns into a drop. Start when the vertical flag and three 5-second straddle flags on each side are solid."
+      },
+      "counts": {
+        "en": "One slow lowering from the vertical flag to the floor, arms straight and the body in one line, is one rep a side. Your weaker side counts."
+      }
+    },
+    {
+      "id": "skin_the_cat",
+      "name": {
+        "en": "Skin-the-Cat"
+      },
+      "description": {
+        "en": "Hang from rings or a bar high enough to keep the feet off the floor. Tuck the knees, roll back through the inverted tuck and lower the legs behind into a German hang, then return the same way to the hang. Move slowly, with straight elbows all the way."
+      },
+      "category": "skill_foundation",
+      "patterns": [
+        "back_lever",
+        "inversion",
+        "shoulder_extension"
+      ],
+      "equipment": [
+        "rings_or_bar",
+        "mat"
+      ],
+      "regression_id": "skin_cat_partial",
+      "safety": {
+        "en": "Never drop into the German hang or force its depth: the stretch should stay mild in the front of the shoulders and biceps. Turn back before it turns sharp, and stop for shoulder or elbow pain. Start when the supported partial skin-the-cat and the feet-supported German hang are comfortable."
+      },
+      "counts": {
+        "en": "Hang to German hang and back to the hang is one rep, slow and with straight elbows. No kick or drop."
+      }
+    },
+    {
+      "id": "supinated_german_hang",
+      "name": {
+        "en": "Supinated German Hang"
+      },
+      "description": {
+        "en": "On a bar high enough for the feet to stay off the floor, hold the German hang with an underhand grip: hands behind you, elbows straight, shoulders open only as far as is comfortable. It is the Hefesto's start position. Get into it slowly, through a skin-the-cat or by lifting the feet from the foot-assisted version, and come out the way you went in."
+      },
+      "category": "skill_foundation",
+      "patterns": [
+        "hefesto",
+        "shoulder_extension"
+      ],
+      "equipment": [
+        "high_bar"
+      ],
+      "regression_id": "assisted_supinated_german_hang",
+      "safety": {
+        "en": "Never drop into the stretch or force a new grip. Keep the stretch mild in the front of the shoulders and biceps, and come out before it turns sharp. Start when the foot-assisted supinated German hang is comfortable."
+      },
+      "counts": {
+        "en": "Feet off the floor, elbows straight and a still, pain-free hang. The time ends when an elbow bends or the feet touch down."
       }
     }
   ]

@@ -1033,7 +1033,14 @@ class ExerciseAnimationView @JvmOverloads constructor(
             !visibleRect.isEmpty &&
             context.systemAnimationsEnabled()
 
-    /** Review tools only (the androidTest gallery): draws the frame at [phase] of the loop, [cycle] reps in, as if playing. */
+    /** One loop of the bound clip and where it starts, for drawings made ahead with [hold] (the home-screen widget). */
+    internal val loopDurationMs: Long get() = resolved.template.cycleDurationMs
+    internal val loopStartPhase: Float get() = resolved.template.startPhase
+
+    /**
+     * Draws the frame at [phase] of the loop, [cycle] reps in, as if playing: the androidTest gallery's review sheets
+     * and the home-screen widget's flip-book.
+     */
     internal fun hold(phase: Float, cycle: Int = 0) {
         stopAnimator()
         held = true
@@ -1205,12 +1212,18 @@ private const val BOX_HALF = 12f
 private const val MAT_HALF = 9f
 /**
  * Clips drawn facing the viewer, so a front view can't be worked out from them: each with its own side clip, or null
- * for planks and flags, whose other view is the clip seen end-on along the body.
+ * for planks and flags, whose other view is the clip seen end-on along the body. The one-arm handstand line (round 11)
+ * straddles, shifts and frees an arm sideways, so it is drawn from the front beside a handstand seen from the side (the
+ * chest-to-wall one for the supported shift).
  */
 private val FACING_CLIPS: Map<String, String?> = mapOf(
     "windshield_wiper" to "wiper_side", "pancake_compression" to "pancake_side",
-    "assisted_tuck_flag" to null, "tuck_flag" to null, "straddle_flag" to null, "full_flag" to null,
-    "flag_ground_support" to null, "side_plank" to null, "straight_side_plank" to null, "kneeling_side_plank" to null,
+    "assisted_tuck_flag" to null, "vertical_flag" to null, "tuck_flag" to null, "straddle_flag" to null, "full_flag" to null,
+    "flag_negative" to null, "flag_ground_support" to null, "side_plank" to null, "straight_side_plank" to null, "kneeling_side_plank" to null,
+    "straddle_handstand" to "freestanding_handstand", "supported_handstand_shift" to "wall_handstand",
+    "handstand_weight_shift" to "freestanding_handstand", "fingertip_one_arm_handstand" to "freestanding_handstand",
+    "one_arm_handstand_hover" to "freestanding_handstand", "straddle_one_arm_handstand" to "freestanding_handstand",
+    "one_arm_handstand" to "freestanding_handstand",
 )
 /** How wide a figure seen end-on along its body is drawn: nearly stacked in line. */
 private const val END_WIDTH = 0.35f

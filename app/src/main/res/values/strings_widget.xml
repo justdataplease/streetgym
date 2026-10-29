@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The home-screen widget. It names the next class in the sequence and never a day or a date. -->
+    <string name="widget_label">Next class</string>
+    <string name="widget_description">Your next class and its lead movement. Tap to open it.</string>
+    <string name="widget_next">Next</string>
+    <string name="widget_done">Done</string>
+    <string name="widget_level_class">Level %1$d · Class %2$d</string>
+    <string name="widget_level_class_spoken">Level %1$d, class %2$d</string>
+    <string name="widget_minutes">%d min</string>
+    <plurals name="widget_targets">
+        <item quantity="one">%d target</item>
+        <item quantity="other">%d targets</item>
+    </plurals>
+    <string name="widget_all_done_detail">Every class done</string>
+    <string name="widget_locked">locked for your tier</string>
+    <!-- Read by TalkBack for the whole card: "Next class: Level 4, class 20, Basics & Endurance, Strict Pull-Up, 44 min. Opens the class." -->
+    <string name="widget_open_class">Next class: %1$s. Opens the class.</string>
+    <string name="widget_open_app">%1$s. Opens Street Gymnastics.</string>
+</resources>

@@ -1,15 +1,13 @@
 # Street Gymnastics
 
-Dedicated Android app with 1,000 guided calisthenics workouts across ten levels and 159 movements in the current curriculum library. The ten-level curriculum and its supporting code are synchronized from the `sg-placement-points` worktree. The assigned daily workout is for an individual athlete.
+Dedicated Android app with 1,000 guided calisthenics workouts across ten levels, 40 belted skills and 181 movements in the current curriculum library. The ten-level curriculum and its supporting code are synchronized from the `sg-placement-points` worktree. The assigned daily workout is for an individual athlete.
 
-Settings > Theme picks one of five looks:
-- Fresh Court: the original green, the default.
-- Concrete & Tape: light.
-- Concrete & Trees: Concrete & Tape in the brand greens.
+Settings > Theme picks one of three looks, all free:
+- Concrete & Tape: light, the default.
 - Night Park: dark.
 - Wheatpaste: light.
 
-Older installs with dark mode on open in Night Park.
+Looks that were dropped open as the one they copied; Fresh Court falls back to the default. Older installs with dark mode on open in Night Park.
 
 On first launch with no progress, three questions (push-ups, pull-ups, squats) suggest a start at Level 1 (day 1, 22 or 41), Level 2 or Level 3. The athlete can agree or start from scratch. Training, checked sets, timers and progress are kept on the phone. Pro can also save them to a Google account; that, and the leaderboard, appear only when a Firebase configuration is supplied (see [Free, Plus and Pro](docs/TIERS.md)).
 
@@ -57,5 +55,7 @@ Firebase is optional. Add ignored `app/src/debug/res/values/firebase.xml` or `ap
 From this folder, run `python tools/build_curriculum.py` (it writes all 1,000 classes from the plan in `docs/CURRICULUM_PLAN.md`), then `tools/assemble_curriculum.ps1`, `tools/validate_curriculum.ps1`, `tools/validate_animations.ps1`, `python tools/validate_morning_class.py`, `python tools/validate_progressions.py` and `python tools/validate_progression_motions.py` (the Python checks need Pillow), and copy `generated/curriculum_v2.json` to `app/src/main/assets/curriculum.json`; `tools/package_dist.ps1` runs the whole chain. See `docs/CURRICULUM_METHOD.md` for how the classes are made and `docs/CURRICULUM_PLAN.md` for the program itself.
 
 Exercise cards show the animation followed directly by the exercise instructions and sets. Animations play automatically; the Pause / Slow motion toolbar and repeated movement-guide caption have been removed.
+
+The **Next class** home-screen widget shows the next class (level, class number, title, first step and minutes) beside a small figure looping the class's first movement; a tap opens that class. It never names a day or a date: the athlete trains whenever they choose, and the widget follows the classes done, skipped, the theme and the tier.
 
 Today's opening park scene repeats its daily three-exercise routine, with a brief final skill hold and fade before the next walk-in. Returning to the visible card starts all three exercises again. Android's reduced-motion setting still shows a stationary final pose.
