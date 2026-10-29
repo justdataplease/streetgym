@@ -283,7 +283,7 @@ $result = [ordered]@{
     catalog_provenance = [ordered]@{
         classification = "llm_authored_reconstructed_curriculum"
         notice = $catalogMetadata.catalog_notice
-        content_generation = "Static sessions written by tools/build_curriculum.py from the round 9 plan; scripts assemble and validate."
+        content_generation = "Static sessions written by tools/build_curriculum.py from docs/CURRICULUM_PLAN.md; scripts assemble and validate."
         content_revision = 3
     }
     summary = [ordered]@{

@@ -84,7 +84,7 @@ for p in classes:
             assert value(st) <= cap, f"{where(p)} {st[0]} {value(st)} is over its rep cap {cap}"
 
 # 2. The fixed week from Level 2: elbow-heavy days (pull, planche, bar) between arm-light ones (legs, handstand,
-#    basics), the same weekday keeping the same role in every build class.
+#    basics), the same rotation position keeping the same role in every build class.
 ROLES = {1: ("front_pull", "front_onearm"), 2: ("legs_core",), 3: ("planche_push",), 4: ("handstand_press",),
          5: ("back_flag",), 6: ("basics", "battle", "statics_chain"), 7: ("recovery",)}
 for p in classes:
@@ -92,7 +92,7 @@ for p in classes:
         t = p["schedule"]["day_type"]
         role = t.removeprefix("deload_").removeprefix("light_")
         if role in {r for rs in ROLES.values() for r in rs}:
-            assert role in ROLES[p["schedule"]["day"]], f"{where(p)} is a {role} class on weekday {p['schedule']['day']}"
+            assert role in ROLES[p["schedule"]["day"]], f"{where(p)} is a {role} class at rotation position {p['schedule']['day']}"
 
 # 3. Easy classes are easy: RPE 4 or lower, no practice part, no assessment and no more than two sets of anything.
 for p in classes:
@@ -193,7 +193,7 @@ for p in classes:
         if mid in TARGETS:
             best[key] = max(best.get(key, 0), v)
 
-# 9. Skills: every one of the 37 belted skills is trained and reaches its Elite target at least once inside the
+# 9. Skills: every one of the 40 belted skills is trained and reaches its Elite target at least once inside the
 #    program, or holds Elite through a harder rung of its ladder there; a lever, planche or flag progression peaks
 #    while it is trained, never as a record beside a harder rung; every full shape is first tested by the Level 9 exam;
 #    Level 10 holds the records.

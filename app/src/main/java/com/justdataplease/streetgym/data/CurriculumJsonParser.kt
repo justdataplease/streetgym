@@ -96,9 +96,7 @@ object CurriculumJsonParser {
         val coachingOverlay = json.optJSONObject("coaching_overlay")
         val legacy = json.optJSONObject("legacy")
 
-        val morningRecovery = json.optBoolean("morning_recovery", false)
         val mainExercises = when {
-            morningRecovery -> parseCompactSteps(json.optJSONArray("main"), programId, "main", movementLibrary)
             json.optJSONArray("training_main") != null ->
                 parseCompactSteps(json.optJSONArray("training_main"), programId, "main", movementLibrary)
             content?.optJSONArray("exercises") != null ->
@@ -135,12 +133,12 @@ object CurriculumJsonParser {
             day = schedule?.optIntOrNull("day")
                 ?: json.optIntOrNull("day")
                 ?: json.optIntOrNull("day_number"),
-            estimatedMinutes = if (morningRecovery) 20 else schedule?.optIntOrNull("minutes")
+            estimatedMinutes = schedule?.optIntOrNull("minutes")
                 ?: json.optIntOrNull("estimated_minutes"),
             exercises = mainExercises,
             readiness = json.optLocalized("readiness"),
             safety = json.optLocalized("safety"),
-            targetRpe = if (morningRecovery) 3 else json.optIntOrNull("training_rpe") ?: (schedule?.optIntOrNull("rpe")
+            targetRpe = json.optIntOrNull("training_rpe") ?: (schedule?.optIntOrNull("rpe")
                 ?: json.optIntOrNull("target_rpe"))?.takeIf { it in 1..10 },
             dayType = schedule?.optValueAsString("day_type")
                 ?: json.optValueAsString("day_type"),

@@ -254,7 +254,7 @@ fun Context.showSkillSheet(status: SkillStatus, family: SkillFamily, statuses: L
         val schedule = when {
             expected == null -> getString(R.string.skills_beyond_program)
             skill.beyondProgram -> getString(R.string.skills_readiness_test, expected.level)
-            expected.week != null -> getString(R.string.skills_schedule_week, expected.level, expected.week)
+            expected.number != null -> getString(R.string.skills_schedule_class, expected.level, expected.number)
             else -> getString(R.string.skills_schedule_level, expected.level)
         }
         addView(detailRow(getString(R.string.skills_on_schedule), schedule))

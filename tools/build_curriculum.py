@@ -25,7 +25,6 @@ EXAMS = {1: [20, 40, 60, 81, 100], 2: [20, 40, 62, 84, 100], 3: [20, 40, 64, 84,
 for _L in range(4, 11):
     EXAMS[_L] = [13, 34, 55, 76, 100]
 BELT_SETS = [10, 20, 30, 30, 30]
-BELTS = ['Beginner', 'Intermediate', 'Advanced', 'Master', 'Elite']
 REP_CAP = {'pushup': 50, 'squat': 40, 'parallel_dip': 30, 'pullup': 21, 'hanging_leg_raise': 15, 'toes_to_bar': 15}
 
 # ----- skills: the 40 belted skills, their targets and their dose path -----
@@ -436,8 +435,8 @@ def ramp_of(M, L, n, exam_day=False):
     return st(mid, 1, value=v, rest=45, tempo='ramp-up')
 
 
-# ----- the calendar -----
-def weekday(n):
+# ----- the rotation: seven class positions, never weekdays (the athlete trains at their own pace) -----
+def rotation_day(n):
     return (n - 1) % 7 + 1
 
 
@@ -446,7 +445,7 @@ def kind_of(L, n):
     ex = EXAMS[L]
     if n in ex:
         return 'exam'
-    if weekday(n) == 7:
+    if rotation_day(n) == 7:
         return 'recovery'
     b = block_of(L, n)
     e = ex[b - 1]
@@ -476,9 +475,9 @@ def kind_of(L, n):
         return 'reentry'
     if n == e - 1:
         return 'primer'
-    if weekday(e) == 7 and n == e - 2:
+    if rotation_day(e) == 7 and n == e - 2:
         return 'easy'
-    if b > 1 and weekday(ex[b - 2]) == 7 and n == ex[b - 2] + 1:
+    if b > 1 and rotation_day(ex[b - 2]) == 7 and n == ex[b - 2] + 1:
         return 'reentry'
     if n == 98:
         return 'easy'
@@ -489,7 +488,7 @@ def kind_of(L, n):
 
 
 def role_of(L, n):
-    d = weekday(n)
+    d = rotation_day(n)
     if L == 1:
         return {1: 'circuit_a', 2: 'practice_hand', 3: 'circuit_b', 4: 'practice_bar', 5: 'core_balance', 6: 'circuit_c', 7: 'recovery'}[d]
     if d == 6 and L >= 8:
@@ -500,11 +499,11 @@ def role_of(L, n):
 
 BLOCK_NAMES = {
     1: ['First Positions', 'Wall & Negatives', 'First Pull', 'Strong Basics', 'Foundations Finale'],
-    2: ['Bar Basics', 'Pull-Up Ladder', 'First Lever', 'Lean & Press', 'Bar Strength Finale'],
+    2: ['Bar Basics', 'Pull-Up Strength', 'First Lever', 'Lean & Press', 'Bar Strength Finale'],
 }
 EXAM_NAMES = {
     (1, 20): 'The Basics', (1, 40): 'Wall & Negatives', (1, 60): 'First Pull', (1, 81): 'First Pull-Up', (1, 100): 'Level 1 Test: Foundations',
-    (2, 20): 'Bar Basics', (2, 40): 'Pull-Up Ladder', (2, 62): 'First Lever', (2, 84): 'Lean & Press', (2, 100): 'Level 2 Test: Bar Strength',
+    (2, 20): 'Bar Basics', (2, 40): 'Pull-Up Strength', (2, 62): 'First Lever', (2, 84): 'Lean & Press', (2, 100): 'Level 2 Test: Bar Strength',
 }
 LEVEL_NAMES = ['Foundations', 'Bar Strength', 'First Skills', 'Skill Control', 'Balance & Levers', 'Confident Calisthenics', 'Full Shapes',
                'Strength Endurance', 'Superhuman', 'Beyond Gravity']
@@ -705,9 +704,9 @@ def day6_press(L, n):
 
 
 def bar_light(L, n):
-    """The exam week's bar day: the leading line at 2 sets, one set of each other line, all at the block's dose and never
-    a step up; the Hefesto line on the rung below its top, the day before an exam. Then the hanging core and the rows. At
-    most 4 elbow-load sets, so the exam meets fresh elbows."""
+    """The exam week's bar day: one set of each line at 70% of the block's dose, never a step up; the Hefesto line on
+    the rung below its top, the day before an exam. Then the hanging core and the rows. The exam the next class tests
+    these same lines, so it meets fresh elbows (the statics review: two sets at the exam dose came the class before)."""
     c = (L, n)
     lead = bar_lead(L, n)
     M = []
@@ -717,7 +716,7 @@ def bar_light(L, n):
         top = settled(line, L, n) or ('skin_cat_partial' if line == 'back' else first_started(L, n, 'vertical_flag', 'assisted_tuck_flag', 'flag_ground_support'))
         if top == 'hefesto':
             top = rung('hefesto', L, n)[1]  # tomorrow's exam tests the strict Hefesto
-        M.append((st(top, 2 if line == lead else 1, ctx=c, rest=150), 0))
+        M.append((st(top, 1, ctx=c, rest=150, frac=0.7), 0))
     if L == 2 or not M:
         M.insert(0, (st('straight_bar_support', 2, ctx=c, rest=75), 0))
     M += [(st(hang_core(L, n), 2, ctx=c, rest=75), 1), (st('feet_elevated_row' if started('feet_elevated_row', L, n) else 'inverted_row', 2, ctx=c, rest=90), 1),
@@ -1295,6 +1294,7 @@ ROLE_SENTENCE = {
     'circuit_c': 'The engine circuit: five stations of the basics, one set each, round after round.',
     'recovery': 'An easy recovery class: a walk, then gentle mobility. Finish fresher than you started.',
     'front_pull': 'The pull class: the front-lever ladder while the shoulders are fresh, the muscle-up line, then the pulling.',
+    'front_pull_early': 'The pull class: the front-lever ladder while the shoulders are fresh, then the pulling.',
     'front_onearm': 'The pull class: the front-lever ladder, the muscle-up, the one-arm pulling path, then the pull-ups.',
     'legs_core': 'Legs and trunk, a class off for the elbows: single-leg strength, the hamstrings, compression and the dragon flag.',
     'planche_push': 'The planche class: a short handstand, the planche ladder, then the pushing.',
@@ -1304,7 +1304,7 @@ ROLE_SENTENCE = {
     'battle': 'The Battle: the basics at fixed rests, every set as written, no racing the clock.',
     'statics_chain': 'The Statics Chain: one run through the shapes with short transitions, holds kept short.',
 }
-KIND_TITLE = {'deload': 'Lighter', 'light': 'Light', 'reentry': 'Re-Entry', 'primer': 'Primer', 'easy': 'Easy Basics', 'barlight': 'Light Bar',
+KIND_TITLE = {'deload': 'Lighter', 'light': 'Light', 'reentry': 'Re-Entry', 'primer': 'Exam Prep', 'easy': 'Easy Basics', 'barlight': 'Light Bar',
               'presslight': 'Light Press'}
 KIND_SENTENCE = {
     'build_a': '', 'build_b': 'One step up on the lead steps.', 'carry': 'The first classes of the level: last level\'s doses, one set fewer on the leads.',
@@ -1312,9 +1312,9 @@ KIND_SENTENCE = {
     'deload': 'A lighter class: one set fewer on every step, the same dose per set.',
     'light': 'A light class: the same lines at lower doses.',
     'reentry': 'An easy first class after the exam: short sets with plenty in reserve.',
-    'primer': 'The primer before the exam: one easy set of each line, nothing hard.',
+    'primer': 'Exam prep: one easy set of each line, nothing hard.',
     'easy': 'An easy class before the exam: the basics at half the dose.',
-    'barlight': 'The bar class before the exam, kept light: the leading line at the block\'s dose, one set of the others, nothing new.',
+    'barlight': 'The bar class before the exam, kept light: one set of each line at about 70% of the block\'s dose, nothing new.',
     'presslight': 'The press class before the exam, kept light: the handstand, the press at the block\'s dose, nothing new.',
 }
 EXAM_SENTENCE = {
@@ -1602,7 +1602,7 @@ def build_once(skip):
             kind, role = r['kind'], r['role']
             lead = next((s for s in M if s[0] not in ('german_hang', 'easy_walk')), M[0])
             if kind == 'exam':
-                head = EXAM_NAMES.get((L, n)) or {'exam_level_advanced_athlete': 'Advanced Athlete Exam',
+                head = EXAM_NAMES.get((L, n)) or {'exam_level_advanced_athlete': 'Level 7 Test: Advanced Athlete',
                                                   'exam_block_champion_statics_strength': 'Champion Test: Statics & Strength',
                                                   'exam_level_full_battle': 'Champion Test: the Full Battle'}.get(r['dtype'])
                 if not head:
@@ -1619,7 +1619,9 @@ def build_once(skip):
             elif role == 'recovery' or kind == 'recovery':
                 first = ROLE_SENTENCE['recovery']
             else:
-                first = (KIND_SENTENCE.get(kind, '') + ' ' + ('' if kind in ('reentry', 'primer', 'easy') else ROLE_SENTENCE[role])).strip()
+                # Before the muscle-up line starts (L2:043), the pull class names no muscle-up (the teacher's review).
+                says = 'front_pull_early' if role == 'front_pull' and not started('low_bar_transition', L, n) else role
+                first = (KIND_SENTENCE.get(kind, '') + ' ' + ('' if kind in ('reentry', 'primer', 'easy') else ROLE_SENTENCE[says])).strip()
             body = ', '.join(dose_text(s) for s in P + M if s[0] not in ('easy_walk',))
             desc = f'{block_name(L, n)}. {first} This class: {body}.'
             if kind not in ('recovery', 'exam', 'reentry', 'primer', 'easy') and role != 'recovery':
@@ -1632,7 +1634,7 @@ def build_once(skip):
             programs.append({
                 'id': f'r9-l{L:02d}-p{n:03d}', 'origin': 'round9', 'level': L, 'number': n,
                 'title': {'en': title}, 'description': {'en': desc},
-                'schedule': {'week': (n - 1) // 7 + 1, 'day': weekday(n), 'day_type': r['dtype'], 'minutes': minutes,
+                'schedule': {'week': (n - 1) // 7 + 1, 'day': rotation_day(n), 'day_type': r['dtype'], 'minutes': minutes,
                              'rpe': r['rpe'], 'focus': focus},
                 'warmup': warm, 'practice': P, 'main': M, 'cooldown': cool,
             })

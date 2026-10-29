@@ -22,11 +22,14 @@ data class SkillStep(
     val seconds: Int? = null,
 )
 
-/** One scheduled session, in the order the program assigns them. [minutes] is its planned length, when it has one. */
+/**
+ * One scheduled session, in the order the program assigns them. [number]: its class number in the level. [minutes]: its
+ * planned length, when it has one.
+ */
 data class SkillProgram(
     val id: String,
     val level: Int,
-    val week: Int?,
+    val number: Int?,
     val day: Int?,
     val steps: List<SkillStep>,
     val minutes: Int? = null,

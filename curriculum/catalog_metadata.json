@@ -62,7 +62,7 @@
         "en": "Full Shapes"
       },
       "description": {
-        "en": "Train brief full front and back levers, the full human flag, freestanding handstand push-up negatives and one-arm pull-up groundwork in small daily doses, with the straddle shapes and assisted rungs always in the same class to step back to. Most adults need two to four years of steady training to hold these full shapes; the rung below is the class until then."
+        "en": "Train brief full front and back levers, the full human flag, freestanding handstand push-up negatives and one-arm pull-up groundwork in small, frequent doses, with the straddle shapes and assisted rungs always in the same class to step back to. Most adults need two to four years of steady training to hold these full shapes; the rung below is the class until then."
       }
     },
     {
@@ -100,7 +100,7 @@
     "en": "Advance a movement only after you can complete its current variation with controlled range and reserve effort on at least two separate sessions. Change only one variable: repetitions, hold time, assistance or lever length. A new workout number is not a skill-readiness test; keep using an easier variation as long as needed. Later planche, straddle and full-lever shapes are practice ceilings, not requirements: use the listed regression for as long as needed. The levels build challenge through harder variations and controlled workload, with easier consolidation days between demanding sessions. Keep the current variation until it is repeatable; a shorter lever or more assistance can still be challenging training."
   },
   "training_recovery": {
-    "en": "Follow the assigned morning class, including its easy recovery sessions. Daily practice does not mean daily hard effort. If soreness or fatigue makes the warm-up unusually heavy, make today an easy walk and mobility morning, then return to the assigned strength session when recovered."
+    "en": "Train the classes in order, including the easy recovery classes. Training often does not mean training hard every time. If soreness or fatigue makes the warm-up unusually heavy, make this session an easy walk and mobility, then come back to the next class when recovered."
   },
   "app_slot_order": {
     "purpose": "Source slot shown at each app position, per level; levels not listed keep slot order. Level 2 runs its 40 reconstructed bridge classes (source slots 31-70) before the 30 original-source workouts (slots 1-30), so the source block arrives after pull-ups, chest-to-bar, knee raises and tuck L-sits are trained. Reconstructed records are numbered by app position; source content and legacy ids follow their slot.",

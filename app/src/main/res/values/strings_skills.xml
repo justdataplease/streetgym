@@ -32,7 +32,7 @@
     <string name="skills_value">Score value</string>
     <string name="skills_value_line">%1$s of %2$s\'s %3$s</string>
     <string name="skills_on_schedule">On schedule</string>
-    <string name="skills_schedule_week">Level %1$d · week %2$d</string>
+    <string name="skills_schedule_class">Level %1$d · class %2$d</string>
     <string name="skills_schedule_level">Level %1$d</string>
     <string name="skills_readiness_test">Checked once in Level %1$d, then beyond the program</string>
     <string name="skills_beyond_program">Beyond the program</string>

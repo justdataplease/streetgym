@@ -8,7 +8,7 @@ This replaces the 27 October model: 100 points per skill from prep and practice,
 
 A skill is something done on one's own, from a dead hang to a full planche (the owner's call, 28 October 2026). Assisted, supported and partial versions, negatives and drills are progressions: they stay in the classes as steps and easier options, listed as their family's `foundations`, which never become rungs.
 
-Since round 9 there are **37 skills** (the owner's choice on 29 October, from the claude-1 proposal): the 35 that at least four coaches backed, plus the dead hang and the hollow body hold as early belts. 185 levels in all. Twenty former skills are now movements only: the active hang, chin-up, typewriter pull-up, chest-to-bar, bar support, support hold, straight-bar dip, pause, close and archer push-ups, elevated pike push-up, planche lean, frog stand, handstand balance, the one-leg front and back levers, the one-leg L-sit, knee raise, sliding leg curl and Nordic curl. The squat is new. The families: pull-up (dead hang, pull-up, archer, one-arm), muscle-up, front lever, back lever, dip, push-up (push-up, one-arm), handstand push-up (pike, wall, deficit), planche (pseudo-planche push-up, tuck, advanced tuck, straddle, full), handstand (wall, freestanding), pistol (squat, pistol), hanging core (leg raise, toes-to-bar), L-sit (L-sit, V-sit), dragon flag (hollow body, dragon flag) and the human flag.
+Round 9 set **37 skills** (the owner's choice on 29 October, from the claude-1 proposal): the 35 that at least four coaches backed, plus the dead hang and the hollow body hold as early belts. 185 levels in all. Twenty former skills are now movements only: the active hang, chin-up, typewriter pull-up, chest-to-bar, bar support, support hold, straight-bar dip, pause, close and archer push-ups, elevated pike push-up, planche lean, frog stand, handstand balance, the one-leg front and back levers, the one-leg L-sit, knee raise, sliding leg curl and Nordic curl. The squat is new. The families: pull-up (dead hang, pull-up, archer, one-arm), muscle-up, front lever, back lever, dip, push-up (push-up, one-arm), handstand push-up (pike, wall, deficit), planche (pseudo-planche push-up, tuck, advanced tuck, straddle, full), handstand (wall, freestanding), pistol (squat, pistol), hanging core (leg raise, toes-to-bar), L-sit (L-sit, V-sit), dragon flag (hollow body, dragon flag) and the human flag.
 
 Round 11 brings **40 skills** in 16 families, 200 levels in all. The one-arm handstand tops the handstand ladder (wall, freestanding, one-arm), and the shrimp squat (rear foot held) and the Hefesto are families of their own, one rung each. Their steps are movements: the straddle handstand, the supported and freestanding weight shifts, the fingertip-assisted one-arm handstand, the hover and the straddle one-arm handstand; the assisted partial, assisted, floating-leg and assisted foot-held shrimp squats; and the foot-assisted supinated German hang, behind-bar support, Korean dip, partial Hefesto and Hefesto. The shrimp steps share the pistol's single-leg-squat pattern, so they stay foundations of the shrimp family and never join the pistol ladder.
 
@@ -65,15 +65,15 @@ Results for someone who does every class of the ten levels as written and trains
 
 | End of level | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
 |---|---|---|---|---|---|---|---|---|---|---|
-| Overall score (of 1000) | 13 | 30 | 46 | 78 | 111 | 136 | 195 | 285 | 454 | 726 |
-| Levels earned (of 200) | 11 | 20 | 28 | 44 | 57 | 70 | 84 | 106 | 130 | 166 |
+| Overall score (of 1000) | 13 | 30 | 46 | 76 | 110 | 136 | 195 | 285 | 454 | 726 |
+| Levels earned (of 200) | 11 | 20 | 28 | 43 | 56 | 69 | 83 | 105 | 129 | 165 |
 | Skills at Beginner or more (of 40) | 7 | 10 | 13 | 21 | 23 | 27 | 31 | 36 | 40 | 40 |
 
 - The first badge comes at class 11 (hollow body Beginner); the push-up and squat follow at class 13.
 - Every level brings new badges, and every skill reaches Beginner inside the plan, the last being the one-arm handstand at L9:090.
 - Every skill reaches its Elite target by the end of Level 10 (the owner: "at least the max should be achievable, it's ok if not the sets"). 38 reach it in a set of their own, the one-arm handstand, shrimp squat and Hefesto in Level 10 record sets, and the dead hang and hanging leg raise hold Elite through the pull-up and toes-to-bar.
 - A progression peaks while it is still trained, before the next rung takes over. No record set sits beside a harder rung of its ladder (`validate_progressions.py`).
-- Elite takes 30 sets at the target, so the plan alone reaches Elite on 14 skills: the push-up, squat, hollow body, pull-up, dip, the pseudo-planche push-up, the freestanding handstand, the pistol, toes-to-bar, the dragon flag and the tuck back lever, plus the dead hang, wall handstand and hanging leg raise through the harder rung of their ladders. The rest of Elite comes from repeating blocks and the athlete's own workouts, by design. The skills help says so.
+- Elite takes 30 sets at the target, so the plan alone reaches Elite on 13 skills: the push-up, squat, hollow body, pull-up, dip, the pseudo-planche push-up, the freestanding handstand, the pistol, toes-to-bar and the dragon flag, plus the dead hang, wall handstand and hanging leg raise through the harder rung of their ladders. The rest of Elite comes from repeating blocks and the athlete's own workouts, by design. The skills help says so.
 
 ## The overall score (`OverallScore`)
 

@@ -47,7 +47,7 @@ From Level 4 every block runs from the recovery after one exam to the next exam:
 1. **Re-entry**, an easy class after the exam (block 1 opens with a re-entry and then carries the last level's end doses for five classes).
 2. **Week A** at the block dose, then **week B** one step up.
 3. **Hold and trim** classes in the longer blocks, and a deload in block 3.
-4. **Exam week:** position 4 is a light handstand-and-press class, position 5 a light bar class (no flag, at most 4 elbow-load sets), and the exam falls on position 6, its warm-up the primer.
+4. **Exam week:** position 4 is a light handstand-and-press class, position 5 a light bar class (no flag, one set of each line at about 70% of the block's dose, so the exam meets fresh elbows), and the exam falls on position 6, its warm-up the primer.
 
 Block 5 (classes 77–100) ends with a taper into the level exam on class 100: 92–94 deload, 95 hold, 96 light, 97 easy, 98 recovery, 99 primer.
 
@@ -108,10 +108,10 @@ Counted from the classes, if every set is done as written on the Normal toggle. 
 | Front lever | advanced_tuck_front | 5/8/10/12/15 s | L4:008 | L4:029 | L5:076 | L9:071* | L10:064* | own |
 | Front lever | straddle_front | 3/5/7/10/12 s | L7:015 | L7:036 | L8:008 | L9:071* | L10:064* | own |
 | Front lever | full_front | 3/4/5/7/10 s | L8:015 | L8:036 | L8:078 | L9:071 | L10:064 | own |
-| Back lever | tuck_back_hold | 5/8/12/16/20 s | L3:012 | L3:033 | L3:075 | L4:019 | L4:054 | L4:061 |
-| Back lever | advanced_tuck_back | 5/8/10/15/20 s | L4:061 | L4:083 | L5:040 | L5:061 | L10:054* | own |
-| Back lever | straddle_back | 3/5/8/10/12 s | L5:082 | L6:006 | L7:027 | L8:082* | L10:054* | own |
-| Back lever | full_back | 3/5/8/12/15 s | L6:047 | L6:082 | L7:082 | L8:082 | L10:054 | own |
+| Back lever | tuck_back_hold | 5/8/12/16/20 s | L3:012 | L3:033 | L3:075 | L4:020 | L4:068 | own |
+| Back lever | advanced_tuck_back | 5/8/10/15/20 s | L4:061 | L4:089 | L5:041 | L5:068 | L10:082* | own |
+| Back lever | straddle_back | 3/5/8/10/12 s | L5:082 | L6:006 | L7:069 | L8:100* | L10:082* | own |
+| Back lever | full_back | 3/5/8/12/15 s | L6:047 | L6:082 | L7:089 | L8:100 | L10:082 | own |
 | Dip | parallel_dip | 4/10/15/20/25 | L1:062 | L1:078 | L2:100 | L5:073 | L8:003 | L9:052 |
 | Push-up | pushup | 6/12/20/30/40 | L1:001 | L1:013 | L1:071 | L2:080 | L6:017 | L9:045 |
 | Push-up | one_arm_pushup | 1/3/5/7/10 a side | L7:006 | L8:006 | L10:020 | own | own | own |
@@ -140,7 +140,7 @@ Counted from the classes, if every set is done as written on the Normal toggle. 
 | Shrimp squat | shrimp_squat | 2/3/5/7/10 a side | L7:058 | L7:081 | L8:044 | L9:072 | L10:072 | own |
 | Hefesto | hefesto | 1/1/2/3/4 | L9:040 | L9:076 | L10:013 | L10:082 | own | own |
 
-**166 of 200 belts land in classes.** By level, Levels 1–10 land 11, 9, 8, 16, 13, 13, 14, 22, 24 and 36. The first belt comes at class 11 (hollow body Beginner), and the push-up and squat follow at class 13. Every level brings new ones. Every skill earns its Beginner belt inside the plan, the last being the one-arm handstand at L9:090.
+**165 of 200 belts land in classes.** By level, Levels 1–10 land 11, 9, 8, 15, 13, 13, 14, 22, 24 and 36. The first belt comes at class 11 (hollow body Beginner), and the push-up and squat follow at class 13. Every level brings new ones. Every skill earns its Beginner belt inside the plan, the last being the one-arm handstand at L9:090.
 
 ## The realism check
 

@@ -34,13 +34,10 @@ object SkillCurriculumReader {
                 SkillProgram(
                     id = program.optString("id"),
                     level = program.optInt("level", level.optInt("number")),
-                    // Stored weeks restart at each source block; the athlete's week follows the class number.
-                    week = program.optInt("number").takeIf { it > 0 }?.let { (it - 1) / 7 + 1 },
+                    number = program.optInt("number").takeIf { it > 0 },
                     day = schedule?.optInt("day")?.takeIf { it > 0 },
                     steps = steps(program, movements.keys),
-                    // As the workout screen plans it: morning recovery classes run 20 minutes.
-                    minutes = if (program.optBoolean("morning_recovery", false)) MORNING_MINUTES
-                    else schedule?.optInt("minutes")?.takeIf { it > 0 },
+                    minutes = schedule?.optInt("minutes")?.takeIf { it > 0 },
                 )
             }
         }
@@ -76,7 +73,6 @@ object SkillCurriculumReader {
         is String -> Regex("^\\d+").find(value.trim())?.value?.toIntOrNull()?.takeIf { it > 0 }
         else -> null
     }
-    private const val MORNING_MINUTES = 20
 
     /** Variants named in an authentic exercise's description come before its plain name. */
     internal fun authenticMovement(name: String, description: String): String? =
