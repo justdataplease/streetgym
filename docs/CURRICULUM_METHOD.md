@@ -29,6 +29,7 @@ Every one of the 1,000 classes is written by `tools/build_curriculum.py` from on
 
 The pipeline:
 1. `python tools/build_curriculum.py` writes the classes. It checks the validators' rules as it writes and prints where every belt lands if each set is done as written.
+   `python tools/build_achievements_page.py` then rebuilds [ACHIEVEMENTS.html](ACHIEVEMENTS.html), the page of what the program gives skill by skill and belt by belt, counted from the same classes.
 2. `tools/assemble_curriculum.ps1` joins them with the movement library and the original export's legacy ids into `generated/curriculum_v2.json`. Copy that file to the app's assets.
 3. The five validators: `validate_curriculum.ps1` (catalog structure and weekly coverage), `validate_animations.ps1`, `validate_morning_class.py` (the practice part and animation contacts), `validate_progressions.py` (the round 9 plan rules) and `validate_progression_motions.py`.
 

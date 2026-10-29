@@ -11,6 +11,9 @@ try {
     & python "tools\build_curriculum.py"
     if ($LASTEXITCODE -ne 0) { throw "Curriculum generation failed" }
 
+    & python "tools\build_achievements_page.py"
+    if ($LASTEXITCODE -ne 0) { throw "Achievements page generation failed" }
+
     & powershell.exe -NoProfile -ExecutionPolicy Bypass -File "tools\assemble_curriculum.ps1"
     if ($LASTEXITCODE -ne 0) { throw "Curriculum assembly failed" }
 

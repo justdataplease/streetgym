@@ -95,6 +95,8 @@ Level 10 is for records: every skill reaches its Elite target in at least one se
 
 ## Where each belt lands
 
+The same table as a page, with milestones and the months at 5, 6 or 7 classes a week: [ACHIEVEMENTS.html](ACHIEVEMENTS.html), rebuilt by `tools/build_achievements_page.py`.
+
 Counted from the classes, if every set is done as written on the Normal toggle. "own" means block repeats or own training.
 
 | Family | Skill | Targets | First set | Beginner | Intermediate | Advanced | Master | Elite |
