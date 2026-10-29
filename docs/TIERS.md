@@ -4,7 +4,7 @@ Street Gymnastics has three tiers. Plus is one Google Play payment. Pro is a yea
 
 | | Free | Plus · 9.99 once | Pro · 19.99 a year |
 |---|---|---|---|
-| Levels | 1–3 | 1–5 | all (6 and 7 are Pro only) |
+| Levels | 1–3 | 1–5 | all (6 to 10 are Pro only) |
 | Ads | yes | no | no |
 | Saved and custom days (My workouts) | 3 | 30 | 300 |
 | Own lists in My workouts (beside Favorites) | – | 3 of 10 days | 10 of 30 days |
@@ -26,7 +26,7 @@ Earlier IDs `full_program` and `remove_ads` were never activated and are no long
 
 ## Where each tier applies
 
-- **Levels.** `LevelAccess.locked(level, Entitlement.tier(context))` locks Levels 4 and 5 on Free and Levels 6 and 7 below Pro (`LevelAccess.tierFor`, owner's call on 2026-10-28). Today, Training, Overview, Skills, repeats and an active class all show the paywall instead: Plus and Pro for Levels 4 and 5, Pro alone for 6 and 7. The level cards and skill cells carry the tier's badge.
+- **Levels.** `LevelAccess.locked(level, Entitlement.tier(context))` locks Levels 4 and 5 on Free and Levels 6 to 10 below Pro (`LevelAccess.tierFor`, owner's call on 2026-10-28). Today, Training, Overview, Skills, repeats and an active class all show the paywall instead: Plus and Pro for Levels 4 and 5, Pro alone for 6 to 10 (Levels 8–10 joined Pro on 2026-10-29). The level cards and skill cells carry the tier's badge.
 - **Ads.** `Entitlement.adFree` (Plus and Pro) removes every placement.
 - **My workouts.** Saved days (the heart on an overview) and custom days share `Tier.savedDays`. At the limit, adding shows the paywall (or, on Pro, a note). Nothing is ever removed when a tier ends: everything stays usable, and only adding stops until the athlete is under the limit.
 - **Lists.** Favorites is the default list: every saved and custom day is in it, on every tier. Plus and Pro also make their own lists (`Tier.workoutLists` and `Tier.daysPerList`: 3 lists of 10 days on Plus, 10 lists of 30 on Pro, so the lists can hold every saved day); on those tiers the heart opens a picker with Favorites always ticked, the athlete's lists, New list and, for a saved day, Remove. Free's heart saves straight to Favorites, and its New list chip shows the Plus paywall; Plus at 3 lists sees Pro; a full list can't be ticked in the picker. Lists don't count toward the saved days, and a day leaves its lists when it leaves My workouts. Lists live in the library JSON (`LibraryState.lists`), so Pro's cloud copy carries them with no rules change; each list merges by its newest change, and a deleted list stays as a tombstone. When a tier ends the lists are kept but hidden, and come back with Plus.

@@ -50,7 +50,7 @@ data class TrainingProgram(
 
 /**
  * One exercise of a class. [easier]: the step's easier rung, which the athlete may do instead and is credited for.
- * [readinessCheck]: a single test set, answered "Did you hit it?" rather than credited as training.
+ * [readinessCheck]: a single test set that tells the athlete whether to move on; it isn't credited as training.
  * [assessment]: one recorded set at the number shown; on an exam day it is one of the exam's targets.
  */
 data class TrainingExercise(

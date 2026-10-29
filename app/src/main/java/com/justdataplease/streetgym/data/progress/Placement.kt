@@ -8,8 +8,8 @@ import java.util.Locale
 /**
  * First-launch placement, taken like an exam: one set each of strict pull-ups, push-ups and squats, as many as the
  * athlete can with good form. A weighted [score] (pull-ups count most, squats least) picks one of the block starts of
- * Levels 1–3 ([starts]), and the [gate]s keep pull-ups honest: Level 2 needs eight and Level 3 fifteen. Every day before the
- * start is credited as trained for skills, unlike "Complete day".
+ * Levels 1–3 ([starts]), and the [gate]s keep pull-ups honest: Level 2 needs eight and Level 3 fifteen. The days before
+ * the start give no skill levels, like "Complete day": the counts only choose where to start.
  */
 object Placement {
     /** The tests, in the card's order. [full] is the count that earns all of a test's [weight]. */

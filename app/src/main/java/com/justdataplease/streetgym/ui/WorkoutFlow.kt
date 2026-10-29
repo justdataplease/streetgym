@@ -2,6 +2,7 @@ package com.justdataplease.streetgym.ui
 
 import com.justdataplease.streetgym.data.model.TrainingExercise
 import com.justdataplease.streetgym.data.model.TrainingSet
+import com.justdataplease.streetgym.data.skills.SkillStandard
 
 /** One set of a class in training order, with the progress key both workout views save. */
 data class WorkoutStep(
@@ -16,7 +17,22 @@ data class WorkoutStep(
     /** The exercise this set belongs to, as the easier-option choice is saved. */
     val exerciseKey: String get() = WorkoutFlow.exerciseKey(section, exercise, exerciseIndex)
     val setCount: Int get() = exercise.sets.size
+    /** A set that counts toward skills, whose reps or seconds the athlete can log. */
+    val credited: Boolean get() = section in WorkoutFlow.CREDITED_SECTIONS && !exercise.readinessCheck
 }
+
+/** A hold, measured in seconds; otherwise a set of reps. */
+val TrainingSet.timed: Boolean get() = repetitions == null && !repetitionsMax && durationSeconds != null
+
+/** The plan's reps or seconds, or null when it says "max" or gives no number. */
+val TrainingSet.planned: Int? get() = if (timed) durationSeconds else repetitions?.takeIf { !repetitionsMax }
+
+/**
+ * How a set is logged and counted: [timed] in seconds, else reps; [planned] is the number that counts when the athlete
+ * logs nothing, null when they have to give it. [window]: the plan's time is for attempts, so only the longest clean
+ * hold counts.
+ */
+data class SetMeasure(val timed: Boolean, val planned: Int?, val window: Boolean = false)
 
 /**
  * The ordered sets of one class (warm-up, practice, main, cooldown), free of Android types so the
@@ -46,29 +62,47 @@ class WorkoutFlow(val steps: List<WorkoutStep>) {
     /**
      * What the finished class credits toward skills: ticked sets per movement in the practice and main work. An
      * exercise done as its easier option ([easier] holds [exerciseKey]s) credits the easier movement; readiness checks
-     * are answered on their own and credit nothing; [movementOf] names the movement an exercise trains.
+     * credit nothing; [movementOf] names the movement an exercise trains.
      */
-    fun credits(completed: Set<String>, easier: Set<String>, movementOf: (TrainingExercise) -> String?): Map<String, Int> {
-        val credits = LinkedHashMap<String, Int>()
-        for (step in steps) {
-            if (step.section !in CREDITED_SECTIONS || step.key !in completed || step.exercise.readinessCheck) continue
-            val option = step.exercise.easier?.takeIf { step.exerciseKey in easier }
-            val id = option?.movementId ?: movementOf(step.exercise) ?: continue
-            credits[id] = (credits[id] ?: 0) + 1
-        }
-        return credits
-    }
+    fun credits(completed: Set<String>, easier: Set<String>, movementOf: (TrainingExercise) -> String?): Map<String, Int> =
+        credited(completed, easier, movementOf).groupingBy { it.second }.eachCount()
 
-    /** An exam class's targets (its assessment sets in the main work), each with whether all its sets were ticked. */
-    fun examTests(completed: Set<String>): List<Pair<TrainingExercise, Boolean>> = steps
+    /**
+     * The same sets as [credits], each in its skill's measure ([measure]): what the athlete logged for it ([done], by set
+     * key), else the plan's number; 0 when they have to give it and didn't. [standardOf] gives a skill's standard, and is
+     * null for a movement that is no skill.
+     */
+    fun doses(
+        completed: Set<String>,
+        easier: Set<String>,
+        done: Map<String, Int>,
+        movementOf: (TrainingExercise) -> String?,
+        standardOf: (String) -> SkillStandard?,
+    ): Map<String, List<Int>> = credited(completed, easier, movementOf)
+        .mapNotNull { (step, id) ->
+            val standard = standardOf(id) ?: return@mapNotNull null
+            id to (done[step.key] ?: measure(step, standard).planned ?: 0)
+        }
+        .groupBy({ it.first }, { it.second })
+
+    /** The ticked sets that train skills, each with the movement it credits. */
+    private fun credited(completed: Set<String>, easier: Set<String>, movementOf: (TrainingExercise) -> String?) = steps
+        .filter { it.credited && it.key in completed }
+        .mapNotNull { step -> movement(step, easier, movementOf)?.let { step to it } }
+
+    /**
+     * An exam class's targets (its assessment sets in the main work), each with whether it looks reached: every set
+     * ticked, none done as the easier option ([easier]) and no logged number ([done]) short of the plan.
+     */
+    fun examTests(completed: Set<String>, easier: Set<String>, done: Map<String, Int>): List<Pair<TrainingExercise, Boolean>> = steps
         .filter { it.section == "main" && it.exercise.assessment }
         .groupBy(WorkoutStep::exercise)
-        .map { (exercise, sets) -> exercise to sets.all { it.key in completed } }
-
-    /** Readiness checks with a ticked set: each asks "Did you hit it?" when the class is finished. */
-    fun readinessChecks(completed: Set<String>): List<TrainingExercise> = steps
-        .filter { it.section in CREDITED_SECTIONS && it.exercise.readinessCheck && it.key in completed }
-        .map(WorkoutStep::exercise).distinct()
+        .map { (exercise, sets) ->
+            exercise to sets.all { step ->
+                step.key in completed && step.exerciseKey !in easier &&
+                    done[step.key].let { it == null || it >= (step.set.planned ?: 0) }
+            }
+        }
 
     companion object {
         /** [sections] are (key, exercises) pairs in class order; empty sections add no steps. */
@@ -87,6 +121,22 @@ class WorkoutFlow(val steps: List<WorkoutStep>) {
 
         /** The sections whose sets train skills: warm-up and cooldown only prepare and recover. */
         val CREDITED_SECTIONS = setOf("practice", "main")
+
+        /** The movement [step] trains: its easier option when [easier] holds its exercise, else what [movementOf] names. */
+        fun movement(step: WorkoutStep, easier: Set<String>, movementOf: (TrainingExercise) -> String?): String? =
+            step.exercise.easier?.takeIf { step.exerciseKey in easier }?.movementId ?: movementOf(step.exercise)
+
+        /**
+         * How [step] is logged and counted toward the skill it trains ([standard], null for a movement that is no skill):
+         * the plan's number, unless the time is a practice window or the skill is measured the other way (an easier
+         * option done for reps in place of a hold, or the reverse), when only the athlete's own number counts.
+         */
+        fun measure(step: WorkoutStep, standard: SkillStandard?): SetMeasure = when {
+            standard == null -> SetMeasure(step.set.timed, step.set.planned)
+            standard.window -> SetMeasure(timed = true, planned = null, window = true)
+            standard.seconds != step.set.timed -> SetMeasure(standard.seconds, planned = null)
+            else -> SetMeasure(step.set.timed, step.set.planned)
+        }
 
         fun exerciseKey(section: String, exercise: TrainingExercise, exerciseIndex: Int): String =
             "$section:${exercise.id}-$exerciseIndex"

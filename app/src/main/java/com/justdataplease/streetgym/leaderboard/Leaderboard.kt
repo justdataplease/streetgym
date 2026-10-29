@@ -3,6 +3,7 @@ package com.justdataplease.streetgym.leaderboard
 import com.justdataplease.streetgym.data.library.CustomDays
 import com.justdataplease.streetgym.data.progress.WorkoutSession
 import com.justdataplease.streetgym.data.skills.SkillCredit
+import com.justdataplease.streetgym.data.skills.SkillLevel
 import com.justdataplease.streetgym.data.skills.SkillProgress
 import org.json.JSONArray
 import org.json.JSONObject
@@ -31,8 +32,8 @@ sealed interface Standing {
 
 /**
  * A Pro athlete's public score ([com.justdataplease.streetgym.data.skills.OverallScore]): the overall score out of 1000,
- * each skill family's points (ten times its raw value, so the server can check the overall), and the rungs they
- * passed a test for.
+ * each skill family's points (ten times its raw value, so the server can check the overall), and the skills the
+ * athlete holds a level in.
  */
 data class Score(val overall: Int, val families: Map<String, Int>, val verified: List<String> = emptyList()) {
     companion object {
@@ -85,29 +86,28 @@ object Boards {
 
 object Scores {
     /**
-     * The classes that count, for Skills and the leaderboard alike: every class trained with its sets ticked, in the
-     * program, repeated or the athlete's own ([customMinutes] gives an own day's planned length, when it still exists),
-     * and the days the placement test placed past, credited as trained. "Complete day" and "Complete level" earn
-     * nothing, so both reflect training, not taps.
+     * The classes that count, for Skills and the leaderboard alike: every class trained with its sets ticked and their
+     * reps or seconds, in the program, repeated or the athlete's own ([customMinutes] gives an own day's planned length,
+     * when it still exists). "Complete day", "Complete level" and the days the placement test placed past earn nothing,
+     * so both reflect training, not taps.
      */
     fun credits(sessions: List<WorkoutSession>, customMinutes: (String) -> Int? = { null }): List<SkillCredit> = sessions
-        .filter { !it.manuallyCompleted || it.placed }
+        .filter { !it.manuallyCompleted }
         .sortedBy { it.completedAtEpochMillis }
         .map { session ->
-            if (session.placed) SkillCredit(session.programId)
-            else SkillCredit(session.programId, session.credits, session.durationSeconds, session.intensity.factor,
-                if (CustomDays.isCustom(session.programId)) customMinutes(session.programId) else null)
+            SkillCredit(session.programId, session.credits, session.durationSeconds,
+                if (CustomDays.isCustom(session.programId)) customMinutes(session.programId) else null, session.doses)
         }
 
-    /** Program days marked complete without training: done, but worth no points. */
+    /** Program days marked complete without training, by a tap or the placement test: done, but worth no points. */
     fun markedComplete(sessions: List<WorkoutSession>): Int = sessions
-        .filter { it.manuallyCompleted && !it.placed && !CustomDays.isCustom(it.programId) }.map { it.programId }.toSet().size
+        .filter { it.manuallyCompleted && !CustomDays.isCustom(it.programId) }.map { it.programId }.toSet().size
 
     fun from(progress: SkillProgress): Score = Score(
         overall = progress.overall.score,
         families = progress.overall.families.filter { it.points > 0 }
             .associate { it.family.spec.id to Math.round(it.points * 10).toInt() },
-        verified = progress.statuses.filter { it.verified }.map { it.skill.id }.sorted(),
+        verified = progress.statuses.filter { it.level > SkillLevel.NONE }.map { it.skill.id }.sorted(),
     )
 
     /** The score goes up after a change, at most every [PUBLISH_MILLIS], so a burst of workouts costs one write. */

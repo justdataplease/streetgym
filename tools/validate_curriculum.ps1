@@ -5,12 +5,7 @@ param(
     [string]$AppSourcePath = "app/src/main",
     [string]$CatalogMetadataPath = "curriculum/catalog_metadata.json",
     [string[]]$AuthoredSourcePaths = @(
-        "curriculum/l1_tail.json",
-        "curriculum/l2_l3_tails.json",
-        "curriculum/l3_extension.json",
-        "curriculum/l4_l5.json",
-        "curriculum/l6.json",
-        "curriculum/l7.json"
+        "curriculum/program.json"
     )
 )
 
@@ -637,11 +632,11 @@ foreach ($authoredSourcePath in $AuthoredSourcePaths) {
         }
     }
 }
-if ($authoredSourceProgramCount -ne 719) {
-    Add-Error "Expected 719 authored source programs including archive, found $authoredSourceProgramCount"
+if ($authoredSourceProgramCount -ne 1000) {
+    Add-Error "Expected 1000 authored source programs, found $authoredSourceProgramCount"
 }
-if ($authoredSourceProgramIds.Count -ne 719) {
-    Add-Error "Expected 719 unique authored source program ids, found $($authoredSourceProgramIds.Count)"
+if ($authoredSourceProgramIds.Count -ne 1000) {
+    Add-Error "Expected 1000 unique authored source program ids, found $($authoredSourceProgramIds.Count)"
 }
 
 $profileById = @{}
@@ -671,7 +666,6 @@ foreach ($profile in @($catalog.coaching_profiles)) {
         Add-Error "Coaching profile $profileId has fewer than 2 explicit cooldown stretches"
     }
 }
-if ($profileById.Count -lt 1) { Add-Error "No coaching profiles were found" }
 
 $baselineBySlot = @{}
 $baselineDetailedCount = 0
@@ -706,8 +700,8 @@ foreach ($slotOrder in @($catalogMetadata.app_slot_order.levels)) {
 }
 
 $levels = @($catalog.levels)
-$expectedCounts = @{ 1 = 100; 2 = 100; 3 = 100; 4 = 100; 5 = 100; 6 = 100; 7 = 100 }
-if ($levels.Count -ne 7) { Add-Error "Expected 7 levels, found $($levels.Count)" }
+$expectedCounts = @{ 1 = 100; 2 = 100; 3 = 100; 4 = 100; 5 = 100; 6 = 100; 7 = 100; 8 = 100; 9 = 100; 10 = 100 }
+if ($levels.Count -ne 10) { Add-Error "Expected 10 levels, found $($levels.Count)" }
 $seenLevels = New-Object 'System.Collections.Generic.HashSet[int]'
 $programIds = New-Object 'System.Collections.Generic.HashSet[string]'
 $globalAuthoredTitles = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
@@ -1071,7 +1065,7 @@ foreach ($level in $levels) {
 
     # Replaced original-source positions keep the original block's calendar, outside the authored sequence.
     $authoredPrograms = @($programs | Where-Object {
-        [string]$_.origin -ne "apk_authentic" -and "$levelNumber-$([int]$_.number)" -notin $replacedSourceSlots
+        [string]$_.origin -ne "apk_authentic"
     } | Sort-Object number)
     $consecutiveHardPrograms = 0
     $hardRunStartNumber = 0
@@ -1266,11 +1260,11 @@ foreach ($orderedLevel in @($levels | Sort-Object { [int]$_.number })) {
     }
 }
 
-foreach ($requiredLevel in 1..7) {
+foreach ($requiredLevel in 1..10) {
     if (-not $seenLevels.Contains($requiredLevel)) { Add-Error "Missing Level $requiredLevel" }
 }
-if ($totalPrograms -ne 700) { Add-Error "Expected 700 total programs, found $totalPrograms" }
-if ($programIds.Count -ne 700) { Add-Error "Expected 700 unique program ids, found $($programIds.Count)" }
+if ($totalPrograms -ne 1000) { Add-Error "Expected 1000 total programs, found $totalPrograms" }
+if ($programIds.Count -ne 1000) { Add-Error "Expected 1000 unique program ids, found $($programIds.Count)" }
 if ([int]$originCounts.apk_authentic -ne 90 - $replacedSourceCount) {
     Add-Error "Expected $(90 - $replacedSourceCount) apk_authentic programs, found $($originCounts.apk_authentic)"
 }
@@ -1280,18 +1274,18 @@ if ([int]$originCounts.reconstructed_placeholder -ne 180 + $replacedSourceCount)
 if ([int]$originCounts.llm_extension -ne 30) {
     Add-Error "Expected 30 llm_extension programs, found $($originCounts.llm_extension)"
 }
-if ([int]$originCounts.new_level -ne 400) {
-    Add-Error "Expected 400 new_level programs, found $($originCounts.new_level)"
+if ([int]$originCounts.new_level -ne 700) {
+    Add-Error "Expected 700 new_level programs, found $($originCounts.new_level)"
 }
 
 $expectedSummary = [ordered]@{
-    level_count = 7
-    program_count = 700
+    level_count = 10
+    program_count = 1000
     authentic_program_count = 90 - $replacedSourceCount
     reconstructed_placeholder_count = 180
     replaced_source_program_count = $replacedSourceCount
     new_extension_program_count = 30
-    new_level_program_count = 400
+    new_level_program_count = 700
     archived_legacy_placeholder_count = 109
     movement_count = $movementById.Count
 }

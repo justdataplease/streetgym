@@ -6,7 +6,7 @@ This folder is a scripted, rebuildable debug distribution of the dedicated Stree
 ## Contents
 
 - `streetgym-debug.apk` — installable English-only Android debug package.
-- `streetgym-curriculum-v2.json` — complete English-only application catalog: seven levels, 100 workouts each.
+- `streetgym-curriculum-v2.json` — complete English-only application catalog: ten levels, 100 workouts each.
 - `streetgym-exercise-animations.json` — editable offline line-figure poses (joint angles on a fixed-proportion rig), animation templates, and exercise mappings used by the app.
 - `source-baseline-export.json` — untouched bilingual extraction from the supplied Base APK.
 - `EXTRACTION_REPORT.md` — source hashes, exact extraction counts, and missing-Pro findings.
@@ -25,7 +25,7 @@ The debug application ID is `com.justdataplease.streetgym.debug`. Minimum Androi
 
 ## Training sequence
 
-The calisthenics track contains exactly 700 scheduled workouts: 100 in each of seven levels.
+The calisthenics track contains exactly 1,000 scheduled individual workouts: 100 in each of ten levels.
 
 Available detailed workouts and newly written sessions are combined into one consistent sequence in the app. Source classifications exist only in the catalog and technical reports for auditing; they are not displayed as product labels. The supplied package did not contain the unavailable paid workout details, and the new sessions do not claim to recover them.
 

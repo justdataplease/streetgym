@@ -31,7 +31,7 @@ class TiersPanel(
     private val billing: TierBilling,
     private val paywall: Paywall? = null,
 ) : LinearLayout(activity) {
-    /** Only Pro opens it: the account, and Levels 6 and 7. */
+    /** Only Pro opens it: the account, and Levels 6 to 10. */
     private val proOnly = paywall == Paywall.Account || paywall is Paywall.Level && LevelAccess.tierFor(paywall.number) == Tier.PRO
     private val heading = activity.titleText(activity.getString(when (paywall) {
         null -> R.string.tiers_title

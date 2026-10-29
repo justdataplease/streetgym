@@ -388,7 +388,7 @@ open class HomeActivity : Activity() {
         page.addWithMargins(bodyText(getString(R.string.leaderboard_how), 12f), topDp = 14)
         val score = if (uid != null && profile != null) currentScore(book).let { if (boardSkill == null) it.overall else it.families[boardSkill] ?: 0 } else 0
         // Family boards rank ten times the family's raw value; they read on the same scale as Skills, out of 100.
-        val scoreMax = book.families.sumOf { it.ceiling }
+        val scoreMax = OverallScore.scoreMax(book.families)
         val overallBoard = boardSkill == null
         fun shown(points: Int): String = scoreText(if (overallBoard || scoreMax == 0) points else points * 100.0 / scoreMax)
         fun show(board: Board?, loading: Boolean) {
@@ -471,36 +471,11 @@ open class HomeActivity : Activity() {
         leaderboard.publish(uid, profile, score) { ok -> if (ok) accountStore.savePublishedScore(uid, score, now) }
     }
 
-    /** Skills from the classes that count ([Scores.credits]) and the tests passed: the Skills tab and the board agree. */
+    /** Skills from the classes that count ([Scores.credits]): the Skills tab and the board agree. */
     private fun skillProgress(book: SkillBook, history: List<WorkoutSession> = progressRepository.sessionHistory()): SkillProgress =
-        book.progress(Scores.credits(history) { id -> library.customDay(id)?.let(CustomDays::estimatedMinutes) },
-            progressRepository.skillTests().passed.keys)
+        book.progress(Scores.credits(history) { id -> library.customDay(id)?.let(CustomDays::estimatedMinutes) })
 
     private fun currentScore(book: SkillBook): Score = Scores.from(skillProgress(book))
-
-    /** A test from the skill sheet or a readiness check in class: logged, synced and shown. */
-    private fun recordSkillTest(skillId: String, name: String, passed: Boolean) {
-        progressRepository.recordSkillTest(skillId, passed)
-        cloudChanged()
-        Toast.makeText(this, if (passed) getString(R.string.skills_test_logged_pass, name)
-            else getString(R.string.skills_test_logged_fail), Toast.LENGTH_SHORT).show()
-        if (currentScreen == Screen.Progress) renderProgress()
-    }
-
-    /** After a class: each ticked readiness check asks "Did you hit it?"; a Yes counts as a passed test. */
-    private fun askReadiness(checks: List<TrainingExercise>) {
-        val book = skillBook ?: return
-        val exercise = checks.firstOrNull() ?: return
-        val locale = uiLocale()
-        val id = book.movementOf(exercise.movementId, exercise.name.resolve(locale), exercise.description.resolve(locale))
-            ?: return askReadiness(checks.drop(1))
-        val name = displayName(exercise, locale)
-        val test = book.families.firstNotNullOfOrNull { family -> family.skills.firstOrNull { it.id == id } }?.test
-        askSkillTest(getString(R.string.readiness_question_title, name), testStandard(test)) { passed ->
-            recordSkillTest(id, name, passed)
-            askReadiness(checks.drop(1))
-        }
-    }
 
     /**
      * After an exam class: the athlete ticks the targets reached (a fully ticked set starts ticked). The result is
@@ -1017,8 +992,8 @@ open class HomeActivity : Activity() {
     }
 
     /**
-     * The placement's answer. A start past Level 1, day 1 marks every earlier day complete, credited as trained for
-     * skills and the leaderboard ([Scores.credits]), unlike "Complete level", with the same sync.
+     * The placement's answer. A start past Level 1, day 1 marks every earlier day complete, worth nothing like
+     * "Complete level" ([Scores.credits]), with the same sync.
      */
     private fun startPlacement(start: Placement.Start) {
         val skipped = Placement.skipped(orderedPrograms, start, TrainingProgram::levelNumber, TrainingProgram::number)
@@ -2106,6 +2081,8 @@ open class HomeActivity : Activity() {
                 exerciseNotes(exercise, locale).takeIf(String::isNotBlank)?.let {
                     exerciseCard.addWithMargins(bodyText(it, 13f), topDp = 4)
                 }
+                // The sets' logged numbers, redrawn when the easier option changes what they log.
+                val doneLabels = mutableListOf<() -> Unit>()
                 exercise.easier?.takeIf { section.key in WorkoutFlow.CREDITED_SECTIONS && !exercise.readinessCheck }?.let { option ->
                     val key = WorkoutFlow.exerciseKey(section.key, exercise, exerciseIndex)
                     val holder = FrameLayout(this)
@@ -2113,8 +2090,9 @@ open class HomeActivity : Activity() {
                         holder.removeAllViews()
                         val on = key in progressRepository.activeWorkout()?.easierExercises.orEmpty()
                         holder.addView(easierToggle(option.name.resolve(locale), on) { next ->
-                            progressRepository.setEasier(key, next)
+                            switchEasier(program, key, next)
                             bindEasier()
+                            doneLabels.forEach { it() }
                         }, FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT))
                     }
                     bindEasier()
@@ -2122,7 +2100,9 @@ open class HomeActivity : Activity() {
                 }
                 exercise.sets.forEachIndexed { setIndex, set ->
                     val setKey = WorkoutFlow.setKey(program.id, section.key, exercise, exerciseIndex, set, setIndex)
+                    val step = WorkoutStep(section.key, exercise, exerciseIndex, set, setIndex, setKey)
                     val checked = setKey in active.completedSetIds
+                    val credited = step.credited
                     val row = LinearLayout(this).apply {
                         orientation = LinearLayout.HORIZONTAL
                         gravity = Gravity.CENTER_VERTICAL
@@ -2153,12 +2133,35 @@ open class HomeActivity : Activity() {
                         )
                         addView(bodyText(setPrescription(set, locale), 13f))
                     }
+                    // What the athlete did, when it differs from the plan: skill levels count sets at a target.
+                    val doneText = TextView(this).apply {
+                        textSize = 13f
+                        typeface = Typeface.DEFAULT_BOLD
+                        setTextColor(AppColors.PRIMARY)
+                        setPadding(0, dp(4), 0, dp(4))
+                        text = setDoneLabel(measureOf(step), active.done[setKey])
+                    }
+                    fun logDone(amount: Int?) {
+                        progressRepository.setDone(setKey, amount)
+                        doneText.text = setDoneLabel(measureOf(step), amount)
+                        if (!checkBox.isChecked) checkBox.performClick()
+                    }
+                    if (credited) {
+                        doneText.setOnClickListener { askSetDone(measureOf(step), progressRepository.activeWorkout()?.done?.get(setKey), ::logDone) }
+                        copy.addView(doneText, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+                        doneLabels += { doneText.text = setDoneLabel(measureOf(step), progressRepository.activeWorkout()?.done?.get(setKey)) }
+                    }
                     row.addView(checkBox, LinearLayout.LayoutParams(dp(48), dp(48)))
                     row.addView(copy, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
                     setChecks[setKey] = checkBox
                     checkBox.setOnClickListener {
                         progressRepository.setCompleted(setKey, checkBox.isChecked)
                         refreshChecks()
+                        // A "max" set, a practice window or an easier option measured the other way has no number to
+                        // count until the athlete gives it.
+                        val measure = measureOf(step)
+                        if (checkBox.isChecked && credited && measure.planned == null &&
+                            progressRepository.activeWorkout()?.done?.get(setKey) == null) askSetDone(measure, null, ::logDone)
                         if (checkBox.isChecked) {
                             if (doneCount >= allSetKeys.size) clearRest()
                             else set.breakSeconds?.takeIf { it > 0 }?.let(::startRest)
@@ -2217,7 +2220,10 @@ open class HomeActivity : Activity() {
             }
             override fun finish(completedSets: Int, totalSets: Int) = requestFinish(program, completedSets, totalSets)
             override fun easierExercises() = progressRepository.activeWorkout()?.easierExercises.orEmpty()
-            override fun setEasier(exerciseKey: String, easier: Boolean) = progressRepository.setEasier(exerciseKey, easier)
+            override fun doneAmounts() = progressRepository.activeWorkout()?.done.orEmpty()
+            override fun setDoneAmount(key: String, amount: Int?) = progressRepository.setDone(key, amount)
+            override fun setEasier(exerciseKey: String, easier: Boolean) = switchEasier(program, exerciseKey, easier)
+            override fun measure(step: WorkoutStep) = measureOf(step)
         }
         val titles = sections(program).associate { it.key to getString(it.titleRes) }
         setBody(FocusWorkoutView(this, program, workoutFlow(program), titles, active.startedAtEpochMillis, uiLocale(), host))
@@ -2274,16 +2280,18 @@ open class HomeActivity : Activity() {
             .setSingleChoiceItems(labels, selected) { _, which -> selected = which }
             .setNegativeButton(R.string.cancel, null)
             .setPositiveButton(R.string.finish) { _, _ ->
-                // Only the ticked sets count toward skills, with an easier option credited to the easier movement.
+                // Only the ticked sets count toward skills, with an easier option credited to the easier movement, each
+                // with its reps or seconds.
                 val active = progressRepository.activeWorkout()
                 val flow = workoutFlow(program)
                 val ticked = active?.completedSetIds.orEmpty()
+                val easier = active?.easierExercises.orEmpty()
                 val book = skillBook
-                val credits = if (book == null) emptyMap() else flow.credits(ticked, active?.easierExercises.orEmpty()) { exercise ->
-                    book.movementOf(exercise.movementId, exercise.name.resolve(Locale.ENGLISH), exercise.description.resolve(Locale.ENGLISH))
-                }
+                val credits = if (book == null) emptyMap() else flow.credits(ticked, easier, ::skillMovement)
+                val doses = if (book == null) emptyMap()
+                    else flow.doses(ticked, easier, active?.done.orEmpty(), ::skillMovement) { id -> book.skill(id)?.standard }
                 // A repeat's rating is kept on its own history entry only; see WorkoutSession.
-                val session = progressRepository.finishWorkout(effortRating = values[selected], credits = credits)
+                val session = progressRepository.finishWorkout(effortRating = values[selected], credits = credits, doses = doses)
                 cloudChanged()
                 clearRest()
                 Toast.makeText(this, if (session?.repeat == true) R.string.repeat_saved else R.string.workout_saved,
@@ -2293,8 +2301,7 @@ open class HomeActivity : Activity() {
                     Screen.Progress,
                     pushCurrent = false,
                 )
-                if (session != null && program.isExam) askExam(program, flow.examTests(ticked), offerRepeat = !session.repeat)
-                else if (session != null && !session.repeat) askReadiness(flow.readinessChecks(ticked))
+                if (session != null && program.isExam) askExam(program, flow.examTests(ticked, easier, active?.done.orEmpty()), offerRepeat = !session.repeat)
             }
             .show()
     }
@@ -2398,12 +2405,7 @@ open class HomeActivity : Activity() {
                             skillGroup = group
                             renderProgress()
                         },
-                        onOpen = { status, family, statuses ->
-                            val nextTest = progressRepository.skillTests().nextAttemptAt(status.skill.id, System.currentTimeMillis())
-                            showSkillSheet(status, family, statuses, progress.overall, nextTest) { skill, passed ->
-                                recordSkillTest(skill.id, skill.name, passed)
-                            }
-                        },
+                        onOpen = { status, family, statuses -> showSkillSheet(status, family, statuses, progress.overall) },
                     ),
                     topDp = 14,
                 )
@@ -2541,7 +2543,6 @@ open class HomeActivity : Activity() {
             addWithMargins(bodyText(getString(R.string.version_format, version), 12f).apply {
                 setOnClickListener { developerMenu.onVersionTapped() }
             }, topDp = 10)
-            addWithMargins(bodyText(getString(R.string.theme_fonts_notice), 12f), topDp = 6)
         }
         about.addWithMargins(secondaryButton("Ad privacy") { NativeAds.showPrivacy(this, BuildConfig.ADMOB_NATIVE_ID) }, topDp = 12)
         page.addView(about)
@@ -2549,7 +2550,7 @@ open class HomeActivity : Activity() {
     }
 
     /**
-     * Settings' Reset progress: after a confirmation every finished class, the history, skill tests and exam results go,
+     * Settings' Reset progress: after a confirmation every finished class, the history, skill levels and exam results go,
      * and the placement question comes back on Today. My workouts, the theme and purchases stay; signed in, the cloud
      * copy and the leaderboard score follow at the sync this starts.
      */
@@ -2687,6 +2688,25 @@ open class HomeActivity : Activity() {
 
     private fun workoutFlow(program: TrainingProgram): WorkoutFlow =
         WorkoutFlow.of(program.id, sections(program).map { it.key to it.exercises })
+
+    /** The skill movement [exercise] trains, when the skill book is ready and knows it. */
+    private fun skillMovement(exercise: TrainingExercise): String? =
+        skillBook?.movementOf(exercise.movementId, exercise.name.resolve(Locale.ENGLISH), exercise.description.resolve(Locale.ENGLISH))
+
+    /** How [step] is logged now, done as planned or as its easier option. */
+    private fun measureOf(step: WorkoutStep): SetMeasure {
+        val easier = progressRepository.activeWorkout()?.easierExercises.orEmpty()
+        val id = WorkoutFlow.movement(step, easier, ::skillMovement)
+        return WorkoutFlow.measure(step, id?.let { skillBook?.skill(it)?.standard })
+    }
+
+    /** Switches an exercise to or from its easier option; what was logged for its sets was the other movement. */
+    private fun switchEasier(program: TrainingProgram, exerciseKey: String, easier: Boolean) {
+        progressRepository.setEasier(exerciseKey, easier)
+        val done = progressRepository.activeWorkout()?.done.orEmpty()
+        workoutFlow(program).steps.filter { it.exerciseKey == exerciseKey && it.key in done }
+            .forEach { progressRepository.setDone(it.key, null) }
+    }
 
     private fun programById(id: String): TrainingProgram? =
         if (CustomDays.isCustom(id)) library.customDay(id)?.let(CustomDays::toProgram) else programIndex[id]

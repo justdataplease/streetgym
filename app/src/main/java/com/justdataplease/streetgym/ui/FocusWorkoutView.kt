@@ -114,6 +114,11 @@ class FocusWorkoutView(
         /** Exercises done as their easier option ([WorkoutStep.exerciseKey]), credited to the easier movement. */
         fun easierExercises(): Set<String>
         fun setEasier(exerciseKey: String, easier: Boolean)
+        /** What the athlete did in a set, by set key, where it differs from the plan ([ActiveWorkout.done]). */
+        fun doneAmounts(): Map<String, Int>
+        fun setDoneAmount(key: String, amount: Int?)
+        /** How a set is logged now, done as planned or as its easier option. */
+        fun measure(step: WorkoutStep): SetMeasure
     }
 
     private enum class Mode { SET, REST, SUMMARY }
@@ -287,6 +292,12 @@ class FocusWorkoutView(
                 maxLines = 1
                 ellipsize = TextUtils.TruncateAt.END
             }, topDp = 2)
+            if (step.credited) addWithMargins(textAction(context.setDoneLabel(host.measure(step), host.doneAmounts()[step.key])) {
+                context.askSetDone(host.measure(step), host.doneAmounts()[step.key]) { amount ->
+                    host.setDoneAmount(step.key, amount)
+                    render()
+                }
+            }, width = WRAP, topDp = 2)
             val option = step.exercise.easier
                 ?.takeIf { step.section in WorkoutFlow.CREDITED_SECTIONS && !step.exercise.readinessCheck }
             addWithMargins(if (option == null) easierChip(step, notes.easier) else context.easierToggle(
@@ -306,7 +317,17 @@ class FocusWorkoutView(
                 )
             }
         } else {
-            context.primaryButton(context.getString(R.string.focus_done)) { done(index) }.apply {
+            context.primaryButton(context.getString(R.string.focus_done)) {
+                // A "max" set, a practice window or an easier option measured the other way has no number to count
+                // until the athlete gives it.
+                val measure = host.measure(step)
+                if (step.credited && measure.planned == null && step.key !in host.doneAmounts()) {
+                    context.askSetDone(measure, null) { amount ->
+                        host.setDoneAmount(step.key, amount)
+                        done(index)
+                    }
+                } else done(index)
+            }.apply {
                 contentDescription = stepLabel(R.string.focus_done_description, step)
             }
         }

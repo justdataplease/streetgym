@@ -17,7 +17,6 @@ class ResetProgressTest {
         train("sg:l01:p0001", 0)
         train("sg:l01:p0002", DAY)
         repository.completePrograms(listOf("sg:l01:p0003"), 2 * DAY)
-        repository.recordSkillTest("pullup", passed = true, at = 2 * DAY)
         repository.recordExam(ExamResult("sg:l01:p0020", 2 * DAY, listOf("pullup"), emptyList()))
         repository.startLevelReplay(1)
         repository.startWorkout("sg:l01:p0004", 3 * DAY, repeat = false)
@@ -26,7 +25,6 @@ class ResetProgressTest {
 
         assertTrue(repository.completedProgramIds().isEmpty())
         assertTrue(repository.sessionHistory().isEmpty())
-        assertEquals(SkillTestLog(), repository.skillTests())
         assertEquals(ExamLog(), repository.examLog())
         assertNull(repository.levelReplay())
         assertNull(repository.activeWorkout())

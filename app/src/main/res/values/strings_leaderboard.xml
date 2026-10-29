@@ -13,12 +13,12 @@
     <string name="leaderboard_rank">#%1$d</string>
     <string name="leaderboard_you_rank">You’re #%1$d · %2$s points</string>
     <string name="leaderboard_you_top">You’re in the top %1$d%% · %2$s points</string>
-    <string name="leaderboard_you_none">Train and pass skill tests to earn points on this board.</string>
+    <string name="leaderboard_you_none">Train to raise your skill levels and earn points on this board.</string>
     <string name="leaderboard_hidden">You’re hidden from the leaderboard. Turn it on in Settings.</string>
     <string name="leaderboard_sign_in">Sign in from Settings to appear on the leaderboard.</string>
     <string name="leaderboard_join">Get Pro to appear on the leaderboard</string>
     <string name="leaderboard_updated">%1$s players · updated %2$s · boards refresh every 6 hours</string>
-    <string name="leaderboard_how">The board shows your overall score from Skills: each family counts its hardest achieved rung, weighted by how hard it is, and harder rungs need a passed test. Only ticked sets in finished workouts count; days marked complete or placed past, repeats and your own workouts don’t. Tiers: Beginner, Novice from 7.5, Intermediate from 20, Advanced from 42.5, Elite from 65 and World-class from 85.</string>
+    <string name="leaderboard_how">The board shows your overall score from Skills: each family counts its best skill, weighted by how hard it is and by its level. Ticked sets count from program days, days you repeat and your own workouts; days marked complete or placed past by the placement test don’t. Tiers: Beginner, Novice from 7.5, Intermediate from 20, Advanced from 42.5, Elite from 65 and World-class from 85.</string>
     <string name="paywall_leaderboard">The leaderboard is part of Plus</string>
     <string name="paywall_account">Joining the leaderboard and saving your progress are part of Pro</string>
 </resources>

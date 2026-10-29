@@ -13,5 +13,4 @@
     <string name="theme_class_number">Class %d</string>
     <string name="theme_class_of">Class %1$d of %2$d, %3$s</string>
     <string name="theme_stamp_done">DONE</string>
-    <string name="theme_fonts_notice">Fonts: Albert Sans, Anton, Archivo Black, Big Shoulders and Space Mono, under the SIL Open Font License 1.1.</string>
 </resources>

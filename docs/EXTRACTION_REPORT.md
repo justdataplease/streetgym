@@ -36,10 +36,10 @@ Those records contain slot identity/order and Pro entitlement state, but no work
 
 The immutable forensic export is never overwritten. A separate assembly step:
 
-1. Projects the 90 authentic workouts into English without altering their English prescriptions.
+1. Preserves the 90 original detailed workouts in the forensic export; the current app retains 86 as authentic records and uses four explicit exam replacements.
 2. Adds a clearly labeled, newly authored warm-up and stretching overlay.
 3. Fills the 180 empty Pro slots inside the balanced 100-workout Level 1-3 app sequence with distinct `reconstructed_placeholder` workouts.
 4. Adds 30 clearly labeled `llm_extension` workouts to bring Level 3 from 70 to 100 slots.
-5. Adds 400 `new_level` workouts across Levels 4-7.
+5. Adds 700 `new_level` workouts across Levels 4-10.
 
-The app catalog therefore has exactly 700 complete workouts - 100 in each of seven levels - while preserving an auditable boundary between extracted and newly authored material. The 109 original empty Level 1-2 placeholders above the app's 100-workout boundary remain preserved in the forensic export. Polish remains only in that separate forensic export; the app and its bundled catalog are English-only.
+The app catalog therefore has exactly 1,000 complete workouts - 100 in each of ten levels - while preserving an auditable boundary between extracted and newly authored material. The 109 original empty Level 1-2 placeholders above the app's 100-workout boundary remain preserved in the forensic export. Polish remains only in that separate forensic export; the app and its bundled catalog are English-only.

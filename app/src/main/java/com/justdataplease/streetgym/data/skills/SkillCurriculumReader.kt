@@ -23,6 +23,7 @@ object SkillCurriculumReader {
                     category = item.optString("category"),
                     patterns = item.optJSONArray("patterns").strings().toSet(),
                     regressionId = item.optString("regression_id").takeIf { it.isNotBlank() && it != "null" },
+                    counts = item.optJSONObject("counts")?.optString("en")?.takeIf(String::isNotBlank),
                 ))
             }
         }
@@ -50,7 +51,8 @@ object SkillCurriculumReader {
         val main = program.optJSONArray("training_main") ?: program.optJSONArray("main")
         val compact = (main.tuples() + program.optJSONArray("practice").tuples()).mapNotNull { tuple ->
             val id = tuple.optString(0).takeIf { it in known } ?: return@mapNotNull null
-            SkillStep(id, tuple.optInt(1, 1).coerceAtLeast(1), tuple.optString(5) == READINESS_CHECK)
+            SkillStep(id, tuple.optInt(1, 1).coerceAtLeast(1), tuple.optString(5) == READINESS_CHECK,
+                reps = dose(tuple.opt(2)), seconds = dose(tuple.opt(3)))
         }
         if (main != null) return compact
         // Authentic sessions list their main work by exercise name; map the recurring ones, then add the practice.
@@ -60,11 +62,20 @@ object SkillCurriculumReader {
             val description = exercise.optJSONObject("description")?.optString("en").orEmpty()
             val id = (exercise.optString("movement_id").takeIf { it in known } ?: authenticMovement(name, description))
                 ?.takeIf { it in known } ?: return@mapNotNull null
-            SkillStep(id, exercise.optJSONArray("sets")?.length()?.coerceAtLeast(1) ?: 1)
+            val first = exercise.optJSONArray("sets")?.optJSONObject(0)
+            SkillStep(id, exercise.optJSONArray("sets")?.length()?.coerceAtLeast(1) ?: 1,
+                reps = first?.let { dose(it.opt("repetitions")) }, seconds = first?.let { dose(it.opt("duration_seconds")) })
         }.orEmpty() + compact
     }
 
     private const val READINESS_CHECK = "readiness_check"
+
+    /** A set's reps or seconds as the curriculum writes them: 8, "5/side", "12-16" or "3-4-5" read as their first number. */
+    internal fun dose(value: Any?): Int? = when (value) {
+        is Number -> value.toInt().takeIf { it > 0 }
+        is String -> Regex("^\\d+").find(value.trim())?.value?.toIntOrNull()?.takeIf { it > 0 }
+        else -> null
+    }
     private const val MORNING_MINUTES = 20
 
     /** Variants named in an authentic exercise's description come before its plain name. */

@@ -316,6 +316,9 @@
       "regression_id": "foot_assisted_hang",
       "safety": {
         "en": "Do not sink into a painful shoulder; keep a foot on support when needed."
+      },
+      "counts": {
+        "en": "Both hands on the bar, arms straight, feet off the floor the whole time. The time ends when a foot touches or a hand lets go."
       }
     },
     {
@@ -359,6 +362,9 @@
       "regression_id": "foot_assisted_hang",
       "safety": {
         "en": "End the hold before the shoulders rise uncontrollably."
+      },
+      "counts": {
+        "en": "Arms straight, shoulders drawn down away from the ears and kept there, feet off the floor. The time ends when the shoulders rise; a relaxed hang is a dead hang."
       }
     },
     {
@@ -420,6 +426,9 @@
       "regression_id": "assisted_pullup",
       "safety": {
         "en": "Leave one or two clean reps in reserve; no neck reaching. If a set comes up short, finish its remaining repetitions foot-assisted."
+      },
+      "counts": {
+        "en": "Palms facing away, hands about shoulder width. From a still hang on straight arms, chin over the bar, back to straight arms. No kick or swing, and at most 2 s of rest between reps."
       }
     },
     {
@@ -440,6 +449,9 @@
       "regression_id": "assisted_pullup",
       "safety": {
         "en": "Use a grip width that keeps elbows and wrists comfortable."
+      },
+      "counts": {
+        "en": "Palms facing you. From a still hang on straight arms, pull until the chin clears the bar, then lower to straight arms. No kick or swing, and at most 2 s of rest between reps."
       }
     },
     {
@@ -522,6 +534,9 @@
       "regression_id": "foot_assisted_support",
       "safety": {
         "en": "Step down before elbows bend or shoulders collapse."
+      },
+      "counts": {
+        "en": "On parallel bars with locked arms, shoulders pushed down, feet off the floor and touching nothing. The time ends when an elbow bends or the shoulders sink."
       }
     },
     {
@@ -605,6 +620,9 @@
       "regression_id": "assisted_dip",
       "safety": {
         "en": "Use pain-free depth and keep one or two reps in reserve."
+      },
+      "counts": {
+        "en": "From locked arms on parallel bars, lower until the shoulders are below the elbows, then press back to locked arms. No kick or swing, and at most 2 s of rest between reps."
       }
     },
     {
@@ -626,6 +644,9 @@
       "regression_id": "foot_assisted_support",
       "safety": {
         "en": "Use a bar low enough for a safe step-down."
+      },
+      "counts": {
+        "en": "On top of a straight bar with locked arms, shoulders pushed down, feet off the floor. The time ends when an elbow bends, the shoulders sink or the feet take weight."
       }
     },
     {
@@ -643,7 +664,7 @@
       "equipment": [
         "secure_incline"
       ],
-      "regression_id": null,
+      "regression_id": "wall_pushup",
       "safety": {
         "en": "Verify the surface cannot move and keep elbows at a comfortable angle."
       }
@@ -664,6 +685,9 @@
       "regression_id": "incline_pushup",
       "safety": {
         "en": "Keep hips and ribs connected; stop before technique breaks."
+      },
+      "counts": {
+        "en": "Hands under the shoulders, body straight from head to heels. Lower until the chest touches the floor or a fist-high marker, then press to locked arms. Rest only at the top, at most 2 s; the set ends at the first rep that sags."
       }
     },
     {
@@ -682,6 +706,9 @@
       "regression_id": "incline_pushup",
       "safety": {
         "en": "Shorten the pause or elevate the hands if alignment changes."
+      },
+      "counts": {
+        "en": "A full push-up with a 2-second stop, chest a fist above the floor and the body straight, then a press to locked arms without a bounce."
       }
     },
     {
@@ -701,6 +728,9 @@
       "regression_id": "pushup",
       "safety": {
         "en": "Do not force a diamond shape if wrists object."
+      },
+      "counts": {
+        "en": "Hands closer than shoulder width, elbows brushing the sides, chest to a fist-high marker, then locked arms. Body straight."
       }
     },
     {
@@ -719,6 +749,9 @@
       "regression_id": "incline_pushup",
       "safety": {
         "en": "Use a short range and an incline if shoulders or wrists feel overloaded."
+      },
+      "counts": {
+        "en": "Hands shoulder width, feet walked in until the hips are high over the hands. Lower until the head touches the floor in front of the hands, then press to locked arms."
       }
     },
     {
@@ -1093,6 +1126,9 @@
       "regression_id": "lying_knee_raise",
       "safety": {
         "en": "Use short sets and step down before grip or shoulder control fails."
+      },
+      "counts": {
+        "en": "From a still hang, lift the knees until the thighs pass hip height, then lower to a straight hang. No swing."
       }
     },
     {
@@ -1276,6 +1312,9 @@
       "regression_id": "pullup",
       "safety": {
         "en": "Regress once height drops; do not chase the bar with the chin."
+      },
+      "counts": {
+        "en": "From a still hang on straight arms, pull until the chest below the collarbones touches the bar, then lower to straight arms. No kick or swing, and at most 2 s of rest between reps."
       }
     },
     {
@@ -1317,6 +1356,9 @@
       "regression_id": "band_muscleup",
       "safety": {
         "en": "Attempt only with prerequisite high pull and dip strength; avoid chicken-wing transitions. Start when ten strict pull-ups, five chest-to-bar pull-ups and ten straight-bar dips are controlled."
+      },
+      "counts": {
+        "en": "From a still hang on straight arms, pull and press over the bar to locked arms on top with no kip, swing or kick, then lower back to the hang. At most 2 s of rest between reps."
       }
     },
     {
@@ -1360,6 +1402,9 @@
       "regression_id": "tuck_front_row",
       "safety": {
         "en": "Use a spotter or low rings and end before the shoulders lose position."
+      },
+      "counts": {
+        "en": "Under the bar on straight arms, knees tight to the chest, back level with the floor. The time starts once the back is level and ends when the hips drop or an elbow bends."
       }
     },
     {
@@ -1380,6 +1425,9 @@
       "regression_id": "tuck_front_hold",
       "safety": {
         "en": "Return to tuck immediately when the hips fall or elbows bend. Start when three 10-second tuck holds stay level with the hips at shoulder height."
+      },
+      "counts": {
+        "en": "As the tuck front lever, with a flat back and the hips opened until the thighs point straight down from a level trunk. Straight arms; the time ends when the hips drop."
       }
     },
     {
@@ -1400,6 +1448,9 @@
       "regression_id": "advanced_tuck_front",
       "safety": {
         "en": "Alternate legs evenly and regress before the back arches. Start when three 10-second advanced-tuck holds are clean, at least six weeks after your first advanced-tuck practice."
+      },
+      "counts": {
+        "en": "One leg straight in line with a level body, the other tucked, arms straight. Hold each leg in turn; your weaker side counts."
       }
     },
     {
@@ -1420,6 +1471,9 @@
       "regression_id": "one_leg_front",
       "safety": {
         "en": "Use short submaximal holds and avoid lumbar arching. Start when three 8-second one-leg holds on each side are clean."
+      },
+      "counts": {
+        "en": "Legs straight and apart, the whole body level with the floor, arms straight. The time ends when the hips drop or a knee bends."
       }
     },
     {
@@ -1439,7 +1493,10 @@
       ],
       "regression_id": "straddle_front",
       "safety": {
-        "en": "Stop as soon as the line breaks and return to the straddle. Start when a previous class has completed three clean 8-second straddle holds. Through Level 6 it appears only as a single readiness check; Level 7 trains brief one-to-three-second holds with the straddle in the same class as the fallback."
+        "en": "Stop as soon as the line breaks and return to the straddle. Start when a previous class has completed three clean 8-second straddle holds. Through Level 6 it appears only as a single readiness check; Level 7 trains brief one-to-three-second holds and Levels 8-10 lengthen them, always with the straddle in the same class as the fallback."
+      },
+      "counts": {
+        "en": "Legs straight and together, the body one straight line level with the floor, arms straight. The time starts once the line is level and ends when it breaks."
       }
     },
     {
@@ -1528,6 +1585,9 @@
       "regression_id": "tuck_back_entry",
       "safety": {
         "en": "Set up on low rings or a low bar with the feet on the floor or a box, as in the German hang, and unload the feet only as far as control allows; use a spotter if available. Stop before shoulder extension feels strained. Start when skin-the-cat and tuck entries are smooth and pain-free in the shoulders and elbows."
+      },
+      "counts": {
+        "en": "Facing down behind the bar on straight arms, knees tight to the chest, back level with the floor. The time ends when the hips rise or drop or an elbow bends."
       }
     },
     {
@@ -1549,6 +1609,9 @@
       "regression_id": "tuck_back_hold",
       "safety": {
         "en": "Regress immediately if shoulder comfort or elbow lock changes. Start when three 10-second tuck holds are clean and the elbows and biceps feel nothing the next day."
+      },
+      "counts": {
+        "en": "As the tuck back lever, with a flat back and the hips opened until the thighs point straight down from a level trunk. Straight arms."
       }
     },
     {
@@ -1570,6 +1633,9 @@
       "regression_id": "advanced_tuck_back",
       "safety": {
         "en": "Set up over a box or with the feet near the floor, as in the German hang, so the feet can take weight at any moment, and unload them only as far as control allows; use a spotter if available. Alternate sides and keep holds brief. Start when three 10-second advanced-tuck holds are clean."
+      },
+      "counts": {
+        "en": "Facing down, one leg straight in line with a level body, the other tucked, arms straight. Hold each leg in turn; your weaker side counts."
       }
     },
     {
@@ -1591,6 +1657,9 @@
       "regression_id": "one_leg_back",
       "safety": {
         "en": "Use submaximal holds and stop at the first loss of shoulder position. Start when three 8-second one-leg holds on each side are clean."
+      },
+      "counts": {
+        "en": "Facing down, legs straight and apart, the whole body level with the floor, arms straight."
       }
     },
     {
@@ -1611,7 +1680,10 @@
       ],
       "regression_id": "straddle_back",
       "safety": {
-        "en": "Use a safe exit and stop as soon as the line breaks or the shoulders feel strained, then return to the straddle. Start when a previous class has completed three clean 8-second straddle holds. Through Level 6 it appears only as a single readiness check; Level 7 trains brief one-to-three-second holds with the straddle in the same class as the fallback."
+        "en": "Use a safe exit and stop as soon as the line breaks or the shoulders feel strained, then return to the straddle. Start when a previous class has completed three clean 8-second straddle holds. Through Level 6 it appears only as a single readiness check; Level 7 trains brief one-to-three-second holds and Levels 8-10 lengthen them, always with the straddle in the same class as the fallback."
+      },
+      "counts": {
+        "en": "Facing down, legs straight and together, the body one straight line level with the floor, arms straight. The time starts once the line is level and ends when it breaks."
       }
     },
     {
@@ -1700,6 +1772,9 @@
       "regression_id": "full_dragon_negative",
       "safety": {
         "en": "Use low repetitions, a secure anchor, and zero neck pressure. Start when three sets of two slow full negatives are smooth."
+      },
+      "counts": {
+        "en": "Shoulders on a bench, hands holding behind the head. Lower the straight body until it is just above the bench and raise it back to vertical, at least 2 s down, with no bend at the hips."
       }
     },
     {
@@ -1743,6 +1818,9 @@
       "regression_id": "elevated_plank",
       "safety": {
         "en": "Increase lean by millimetres, not ego; stop for wrist or elbow discomfort."
+      },
+      "counts": {
+        "en": "Straight arms, a straight body and the shoulders a hand's length past the wrists, measured against the same floor line every time. The time ends when the lean shrinks or an elbow bends."
       }
     },
     {
@@ -1764,6 +1842,9 @@
       "regression_id": "planche_lean",
       "safety": {
         "en": "Practice low, look slightly forward, and keep a clear padded fall zone."
+      },
+      "counts": {
+        "en": "Hands on the floor, knees resting on the bent arms, both feet off the floor. Bent-arm balance: the straight-arm tuck planche is its own skill."
       }
     },
     {
@@ -1786,6 +1867,9 @@
       "regression_id": "frog_stand",
       "safety": {
         "en": "Use parallettes if wrists prefer neutral grip and stop before elbow lock changes. Start when three 20-second planche leans with pushed-away shoulders are clean."
+      },
+      "counts": {
+        "en": "Straight arms, knees tight to the chest, feet off the floor, hips level with the shoulders. The time starts once the feet lift and ends when they touch or an elbow bends."
       }
     },
     {
@@ -1808,6 +1892,9 @@
       "regression_id": "tuck_planche",
       "safety": {
         "en": "Regress on any wrist, elbow, or anterior shoulder discomfort. Start when three 8-second tuck planche holds are clean."
+      },
+      "counts": {
+        "en": "As the tuck planche, with a flat back and the hips opened, the trunk level with the floor and the hips at shoulder height. Straight arms."
       }
     },
     {
@@ -1829,7 +1916,10 @@
       ],
       "regression_id": "advanced_tuck_planche",
       "safety": {
-        "en": "Attempt only after repeatable advanced-tuck holds; keep efforts brief and submaximal. Readiness check, not a target: attempt it only after three clean 8-second advanced-tuck holds; until then, do the listed easier option."
+        "en": "Attempt only after repeatable advanced-tuck holds; keep efforts brief and submaximal. Start when three clean 8-second advanced-tuck holds are repeatable. Through Level 7 it is a single readiness check; Levels 8-10 train it, with the advanced tuck in the same class to step back to."
+      },
+      "counts": {
+        "en": "Straight arms, legs straight and apart, the whole body level with the floor and the feet off it."
       }
     },
     {
@@ -1851,7 +1941,10 @@
       ],
       "regression_id": "straddle_planche",
       "safety": {
-        "en": "Attempt this only after long-term prerequisite development; otherwise perform the listed regression for the assigned sets. Readiness check, not a target: attempt it only after three clean 5-second straddle holds; until then, do the listed easier option."
+        "en": "Attempt this only after long-term prerequisite development; otherwise perform the listed regression for the assigned sets. Start when two clean 5-second straddle holds are repeatable. Levels 9-10 train it, with the straddle in the same class to step back to."
+      },
+      "counts": {
+        "en": "Straight arms, legs together, the body one straight line level with the floor. The time ends when the hips drop, a knee bends or a foot touches."
       }
     },
     {
@@ -2236,6 +2329,9 @@
       "regression_id": "pushup",
       "safety": {
         "en": "Turn the hands only as comfortable, limit the lean, and stop for wrist or front-shoulder pain."
+      },
+      "counts": {
+        "en": "Hands by the hips with the fingers turned out, shoulders ahead of the hands by the same lean every rep (mark it on the floor). Chest to just above the hands, press to locked arms keeping the lean. A rep that loses the lean doesn't count."
       }
     },
     {
@@ -2278,6 +2374,9 @@
       "regression_id": "straight_bar_support",
       "safety": {
         "en": "Use only a controlled depth that keeps both shoulders comfortable and level."
+      },
+      "counts": {
+        "en": "From locked arms on a straight bar, lower until the bar meets the lower chest, then press back to locked arms. No kick or swing. Parallel-bar dips count as dips, not here."
       }
     },
     {
@@ -2357,6 +2456,9 @@
       "regression_id": "assisted_pistol_squat",
       "safety": {
         "en": "Use only a depth that preserves foot pressure, knee alignment, and balance. Start when three sets of eight assisted pistols per leg are controlled."
+      },
+      "counts": {
+        "en": "On one leg with the free leg straight in front and the heel down. Lower until the hip is below the knee, then stand to a straight leg without touching anything. Your weaker leg counts."
       }
     },
     {
@@ -2378,6 +2480,9 @@
       "regression_id": "knee_raise",
       "safety": {
         "en": "Bend the knees or stop the set when the back arches or grip fades."
+      },
+      "counts": {
+        "en": "From a still hang, lift straight legs until the feet pass hip height, then lower to a straight hang. No swing."
       }
     },
     {
@@ -2399,6 +2504,9 @@
       "regression_id": "hanging_leg_raise",
       "safety": {
         "en": "Use a smaller range before swinging begins and step down before grip failure."
+      },
+      "counts": {
+        "en": "From a still hang, lift the legs with the knees straight until the toes touch the bar, then lower to a straight hang. No kip or swing between reps."
       }
     },
     {
@@ -2475,6 +2583,9 @@
       "regression_id": "pike_handstand_hold",
       "safety": {
         "en": "Use the easier variation until wrists and shoulders tolerate it comfortably. Keep elbows straight and breathe. Before inversion, rehearse a controlled exit with a qualified coach or spotter; never kick up without an exit."
+      },
+      "counts": {
+        "en": "Chest to the wall, arms locked, body straight, only the toes on the wall. The time ends when the elbows bend or you come down."
       }
     },
     {
@@ -2536,6 +2647,9 @@
       "regression_id": "handstand_toe_pull",
       "safety": {
         "en": "Use the easier variation until wrists and shoulders tolerate it comfortably. Keep elbows straight and breathe. Before inversion, rehearse a controlled exit with a qualified coach or spotter; never kick up without an exit. Start when 10-second toe pulls are calm, kick-ups to the wall are controlled and the cartwheel exit is automatic."
+      },
+      "counts": {
+        "en": "Your longest clean balance in the practice window: both feet off the wall and the floor until a foot comes down. Resets and kick-ups between attempts are not hold time."
       }
     },
     {
@@ -2555,6 +2669,9 @@
       "regression_id": "handstand_balance",
       "safety": {
         "en": "Warm the wrists first and practise only with a clear exit and space around you. Start when ten-second balances away from the wall are repeatable."
+      },
+      "counts": {
+        "en": "No wall: straight body, locked arms, hands staying where they landed (finger corrections are fine, steps are not). One continuous hold, ended by a foot coming down or a hand moving."
       }
     },
     {
@@ -2615,6 +2732,9 @@
       "regression_id": "assisted_tuck_flag",
       "safety": {
         "en": "Use fixed stall bars or a rated flag pole, never a loose rail or door frame. Train both sides. Keep the lower arm straight, push with the lower hand and pull with the upper hand. Stop for elbow or shoulder discomfort; do not jump into the hold. Start when three 8-second assisted tuck flags on each side are solid."
+      },
+      "counts": {
+        "en": "Side-on to the pole, arms straight, knees tucked, the trunk level with the floor. Hold each side; your weaker side counts."
       }
     },
     {
@@ -2635,6 +2755,9 @@
       "regression_id": "tuck_flag",
       "safety": {
         "en": "Use fixed stall bars or a rated flag pole, never a loose rail or door frame. Train both sides. Keep the lower arm straight, push with the lower hand and pull with the upper hand. Return to the tuck before the hips drop. Start when three 5-second tuck flags on each side are solid."
+      },
+      "counts": {
+        "en": "Side-on to the pole, arms straight, legs straight and apart, the body level with the floor. Hold each side; your weaker side counts."
       }
     },
     {
@@ -2655,6 +2778,9 @@
       "regression_id": "straddle_flag",
       "safety": {
         "en": "Use fixed stall bars or a rated flag pole, never a loose rail or door frame. Train both sides. Keep the lower arm straight, push with the lower hand and pull with the upper hand. Start when three 5-second straddle flags on each side are solid; if the line breaks, use the straddle flag."
+      },
+      "counts": {
+        "en": "Side-on to the pole, arms straight, legs straight and together, the body one line level with the floor. Hold each side; your weaker side counts."
       }
     },
     {
@@ -2676,6 +2802,9 @@
       "regression_id": "pullup",
       "safety": {
         "en": "Keep both shoulders packed and the straight elbow soft. Use pull-ups instead once the chin no longer clears the bar without twisting. Start only when about ten strict pull-ups feel controlled."
+      },
+      "counts": {
+        "en": "Hands about twice shoulder width. Pull to the working hand while the other arm stays straight along the bar and only guides; lower to straight arms. Your weaker side counts."
       }
     },
     {
@@ -2697,6 +2826,9 @@
       "regression_id": "archer_pullup",
       "safety": {
         "en": "Keep both shoulders packed and the elbows soft; the slide stays level, without kicking or twisting. Return to archer pull-ups as soon as the chin drops below the bar during the slide. Start when three sets of five archer pull-ups per side are controlled."
+      },
+      "counts": {
+        "en": "Pull up to one hand, slide the chin along the bar to the other hand without dropping below it, then lower to straight arms. Each pull counts for the side it starts on; your weaker side counts."
       }
     },
     {
@@ -2762,7 +2894,10 @@
       ],
       "regression_id": "one_arm_pullup_negative",
       "safety": {
-        "en": "Start only when one-arm negatives of five seconds per side are smooth. Keep the shoulder engaged from the dead hang, never drop into a straight arm, and stop if the elbow or shoulder hurts."
+        "en": "Start when one-arm negatives of five seconds per side are smooth, three a side. Keep the shoulder engaged from the dead hang, never drop into a straight arm, and stop if the elbow or shoulder hurts."
+      },
+      "counts": {
+        "en": "One hand on the bar, palm facing away, the free hand on the chest and off the arm. From a still hang on a straight arm, chin over the bar, back to a straight arm. No kick or twist. Your weaker side counts."
       }
     },
     {
@@ -2782,6 +2917,9 @@
       "regression_id": "pushup",
       "safety": {
         "en": "Keep the body in one line and the working elbow about 45 degrees from the ribs. Shorten the range or return to push-ups if the hips sag. Start only when about twenty strict push-ups feel easy."
+      },
+      "counts": {
+        "en": "Hands about twice shoulder width. Lower toward the working hand while the other arm stays straight and only guides, then press back up. Your weaker side counts."
       }
     },
     {
@@ -2801,6 +2939,9 @@
       "regression_id": "archer_pushup",
       "safety": {
         "en": "Start when five archer push-ups per side are clean. Keep the working elbow close to the ribs and the hips level; raise the hand on a bench if the hips twist."
+      },
+      "counts": {
+        "en": "Feet no wider than shoulder width, the free hand behind the back, hips and shoulders square to the floor. Chest to fist height, then a locked arm. Your weaker side counts."
       }
     },
     {
@@ -2822,6 +2963,9 @@
       "regression_id": "pike_pushup",
       "safety": {
         "en": "Use a box that cannot slide, let the elbows travel back rather than flare, and stop before the head touches the floor. Return to floor pike push-ups if the hips drop."
+      },
+      "counts": {
+        "en": "Feet on a box at about hip height, hips stacked over the hands. Lower until the head touches the floor in front of the hands, then press to locked arms."
       }
     },
     {
@@ -2868,6 +3012,9 @@
       "regression_id": "wall_hspu_negative",
       "safety": {
         "en": "Start only after five controlled four-second negatives. Keep the repetitions few and crisp, exit by walking down, and stop at any neck discomfort."
+      },
+      "counts": {
+        "en": "Chest to the wall, hands shoulder width. Lower until the head touches the folded mat, then press to locked arms. Legs straight and still: no kick."
       }
     },
     {
@@ -2892,6 +3039,9 @@
       "regression_id": "wall_hspu",
       "safety": {
         "en": "Keep the deficit small at first and the blocks stable. Lower only as deep as the shoulders stay comfortable, keep the elbows tracking forward and stop at any neck or shoulder discomfort. Start when three sets of five wall handstand push-ups are smooth."
+      },
+      "counts": {
+        "en": "As the wall handstand push-up, with the hands on blocks or parallettes about 10 cm high, so the head lowers below the hands to the mat. Press to locked arms with no kick."
       }
     },
     {
@@ -2939,6 +3089,9 @@
       "regression_id": "tuck_lsit",
       "safety": {
         "en": "Keep the arms locked and the shoulders pushed down. Return to the tuck L-sit if the hips sink behind the hands. Start after three clean 15-second tuck L-sits with both feet off the floor."
+      },
+      "counts": {
+        "en": "Locked arms, one leg straight at hip height or higher with the heel off the floor, the other tucked. Hold each leg in turn; your weaker side counts."
       }
     },
     {
@@ -2962,6 +3115,9 @@
       "regression_id": "one_leg_lsit",
       "safety": {
         "en": "Keep holds short and the shape exact; bend one knee as soon as the legs drop. Start after three clean 10-second holds on each leg in the one-leg version."
+      },
+      "counts": {
+        "en": "Locked arms, both legs straight and together at hip height or higher, heels off the floor."
       }
     },
     {
@@ -2985,6 +3141,9 @@
       "regression_id": "lsit",
       "safety": {
         "en": "Start when twenty-second L-sits are clean. Keep the arms locked and hold only as high as the hips allow; stop for wrist or elbow pain."
+      },
+      "counts": {
+        "en": "Locked arms, both legs straight and raised at least 45 degrees above level, the feet about head height or higher. Below that it is an L-sit."
       }
     },
     {
@@ -3050,6 +3209,9 @@
       "regression_id": "glute_bridge",
       "safety": {
         "en": "Use a smooth floor, keep the hips lifted throughout, and shorten the slide if the hamstrings cramp."
+      },
+      "counts": {
+        "en": "Heels on sliders or a towel, hips up. Slide both legs out nearly straight, then curl the heels back under the knees with the hips staying up."
       }
     },
     {
@@ -3094,7 +3256,10 @@
       ],
       "regression_id": "nordic_negative",
       "safety": {
-        "en": "Use padding under the knees and a secure anchor. Make one controlled attempt only; if the pull back up fails, finish the set as a negative."
+        "en": "Use padding under the knees and a secure anchor. Start when two sets of eight Nordic negatives are controlled. Make each repetition a controlled attempt; if the pull back up fails, finish it as a negative."
+      },
+      "counts": {
+        "en": "Knees on a pad, heels held. Lower the straight body from knees to head under control to the floor, then pull back up with the hamstrings alone. A push from the hands is good training, but only unassisted reps count here."
       }
     },
     {

@@ -14,7 +14,7 @@ import com.justdataplease.streetgym.data.progress.SharedPreferencesProgressRepos
 import org.json.JSONObject
 
 /**
- * Pro's cloud progress: users/{uid}/data/progress (completed days, history, skill tests, exam results) and users/{uid}/data/library
+ * Pro's cloud progress: users/{uid}/data/progress (completed days, history with each set's reps, exam results) and users/{uid}/data/library
  * (My workouts).
  * A sync reads both documents, merges them into the phone and writes back only what changed: two reads and at most
  * two writes. It's forced after a change on the phone (sign-in, a finished workout, My workouts, Sync now); otherwise
@@ -62,7 +62,6 @@ class CloudSync(
         done: (Result) -> Unit,
     ) {
         val cloudSessions = cloudProgress.getString("sessions")
-        val cloudTests = cloudProgress.getString("tests")
         val cloudExams = cloudProgress.getString("exams")
         @Suppress("UNCHECKED_CAST")
         val cloudCompleted = (cloudProgress.get("completed") as? List<String>).orEmpty()
@@ -71,9 +70,9 @@ class CloudSync(
         val cloudResetAt = cloudProgress.getLong("reset_at") ?: 0L
         if (cloudResetAt > progress.resetAt()) progress.reset(cloudResetAt, keepActiveWorkout = true)
         val resetAt = progress.resetAt()
-        val (completed, sessions, tests, exams) = if (cloudResetAt == resetAt)
-            progress.mergeCloud(cloudCompleted, cloudSessions, cloudTests, cloudExams)
-            else progress.mergeCloud(emptyList(), null, null, null)
+        val (completed, sessions, exams) = if (cloudResetAt == resetAt)
+            progress.mergeCloud(cloudCompleted, cloudSessions, cloudExams)
+            else progress.mergeCloud(emptyList(), null, null)
         val cloudLibraryObject = cloudLibrary.getString("library")?.let { runCatching { JSONObject(it) }.getOrNull() }
         val cloudLibraryState = LibraryCodec.decode(cloudLibraryObject)
         val mergedLibrary = library.state().merge(cloudLibraryState)
@@ -81,10 +80,10 @@ class CloudSync(
         val libraryJson = LibraryCodec.encode(mergedLibrary).toString()
         val batch = db.batch()
         var writes = 0
-        if (sessions != cloudSessions || tests != cloudTests || exams != (cloudExams ?: ExamLog().encode()) ||
+        if (sessions != cloudSessions || exams != (cloudExams ?: ExamLog().encode()) ||
             completed != cloudCompleted.toSet() || resetAt != cloudResetAt) {
-            batch.set(progressDoc, mapOf("completed" to completed.sorted(), "sessions" to sessions, "tests" to tests,
-                "exams" to exams, "reset_at" to resetAt, "updated_at" to FieldValue.serverTimestamp())); writes++
+            batch.set(progressDoc, mapOf("completed" to completed.sorted(), "sessions" to sessions, "exams" to exams,
+                "reset_at" to resetAt, "updated_at" to FieldValue.serverTimestamp())); writes++
         }
         // Missing or unreadable in the cloud: the merged copy replaces it.
         if (cloudLibraryObject == null || cloudLibraryState != mergedLibrary) {

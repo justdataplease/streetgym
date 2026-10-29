@@ -59,7 +59,7 @@ fun Context.placementCard(
             addView(bodyText(text).apply { setTextColor(AppColors.TEXT) })
             level?.programs?.firstOrNull { it.number == start.day }?.let { opensLine(where, it) }
                 ?.let { addWithMargins(bodyText(it, 13f), topDp = 6) }
-            if (start != scratch) addWithMargins(bodyText(getString(R.string.placement_credit), 13f), topDp = 6)
+            if (start != scratch) addWithMargins(bodyText(getString(R.string.placement_no_credit), 13f), topDp = 6)
             // What a few more reps would change, so a count entered too low shows.
             Placement.better(pullUps, pushUps, squats, starts)?.let { better ->
                 val more = resources.getQuantityString(better.test.more(), better.more, better.more)

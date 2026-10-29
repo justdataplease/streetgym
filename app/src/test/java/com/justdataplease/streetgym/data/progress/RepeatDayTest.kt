@@ -24,10 +24,10 @@ class RepeatDayTest {
     }
     private fun today() = DayAssignment.next(days, repository.completedProgramIds(), repository.levelReplay(),
         Day::id, Day::level)
-    private fun skills() = book.progress(Scores.credits(repository.sessionHistory()), repository.skillTests().passed.keys)
+    private fun skills() = book.progress(Scores.credits(repository.sessionHistory()))
     private fun levelProgress(level: Int) = days.count { it.level == level && it.id in repository.completedProgramIds() }
 
-    @Test fun aRepeatEarnsSkillPointsButChangesNoCompletedDayTodayOrLevelProgress() {
+    @Test fun aRepeatCountsItsSetsButChangesNoCompletedDayTodayOrLevelProgress() {
         days.take(12).forEachIndexed { index, day -> train(day, index * DAY) }
         val completed = repository.completedProgramIds()
         val today = today()
@@ -42,8 +42,10 @@ class RepeatDayTest {
         assertEquals(level, levelProgress(1))
         // The repeat is practice: its sets add to the skills it trains, and nothing goes down.
         val after = skills()
-        assertTrue(after.statuses.sumOf { it.own } > points.statuses.sumOf { it.own })
-        points.statuses.zip(after.statuses).forEach { (before, now) -> assertTrue(before.skill.id, now.own >= before.own) }
+        assertTrue(after.statuses.sumOf { it.sets } > points.statuses.sumOf { it.sets })
+        points.statuses.zip(after.statuses).forEach { (before, now) ->
+            assertTrue(before.skill.id, now.sets >= before.sets && now.level >= before.level)
+        }
         assertTrue(after.overall.score >= points.overall.score)
     }
 
@@ -60,8 +62,8 @@ class RepeatDayTest {
         assertTrue(reloaded.getValue(days[1].id).placed && reloaded.getValue(days[2].id).placed)
         assertFalse(reloaded.getValue(days[3].id).placed)
         assertTrue(reloaded.values.filter { it.programId != days[0].id }.all { it.manuallyCompleted && it.intensity == Intensity.NORMAL })
-        // Placed days count as trained; Complete day doesn't.
-        assertEquals(listOf(days[1].id, days[2].id, days[0].id).toSet(),
+        // Placed days earn nothing, like Complete day.
+        assertEquals(setOf(days[0].id),
             Scores.credits(repository.sessionHistory()).map { it.programId }.toSet())
     }
 
@@ -136,14 +138,18 @@ class RepeatDayTest {
         assertEquals(mapOf("pushup" to 2), repository.sessionHistory().single().credits)
     }
 
-    @Test fun skillTestsAreKeptAndMergedWithTheCloudCopy() {
-        repository.recordSkillTest("lsit", passed = true, at = 10)
-        repository.recordSkillTest("tuck_planche", passed = false, at = 20)
-        assertEquals(setOf("lsit"), repository.skillTests().passed.keys)
-        val cloud = SkillTestLog().record("dragon_flag", true, 5).encode()
-        val merged = repository.mergeCloud(emptyList(), null, cloud)
-        assertEquals(setOf("lsit", "dragon_flag"), repository.skillTests().passed.keys)
-        assertEquals(repository.skillTests(), SkillTestLog.decode(merged.tests))
+    @Test fun whatTheAthleteDidInEachSetIsKeptWithTheSessionAndTheCloudCopy() {
+        repository.startWorkout(days[0].id, DAY)
+        repository.setDone("set-a", 12)
+        repository.setDone("set-b", 9)
+        repository.setDone("set-b", null)
+        // Read back from the stored JSON, as after a restart.
+        assertEquals(mapOf("set-a" to 12), SharedPreferencesProgressRepository(PreferencesContext(preferences)).activeWorkout()?.done)
+        repository.finishWorkout(DAY + 30 * MINUTE, 7, credits = mapOf("pullup" to 2), doses = mapOf("pullup" to listOf(12, 6), "squat" to emptyList()))
+        val reloaded = SharedPreferencesProgressRepository(PreferencesContext(preferences)).sessionHistory().single()
+        assertEquals(mapOf("pullup" to listOf(12, 6)), reloaded.doses)
+        // The cloud copy carries them.
+        assertTrue(repository.mergeCloud(emptyList(), null).sessions.contains("\"doses\""))
     }
 
     @Test fun dataSavedBeforeRepeatsReadsAsNormalSessions() {

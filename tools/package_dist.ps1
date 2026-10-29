@@ -8,6 +8,9 @@ $projectRoot = Split-Path -Parent $PSScriptRoot
 Push-Location $projectRoot
 
 try {
+    & python "tools\build_curriculum.py"
+    if ($LASTEXITCODE -ne 0) { throw "Curriculum generation failed" }
+
     & powershell.exe -NoProfile -ExecutionPolicy Bypass -File "tools\assemble_curriculum.ps1"
     if ($LASTEXITCODE -ne 0) { throw "Curriculum assembly failed" }
 

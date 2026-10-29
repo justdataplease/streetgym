@@ -20,6 +20,7 @@ import com.justdataplease.streetgym.data.model.TrainingProgram
 import com.justdataplease.streetgym.data.progress.Intensity
 import com.justdataplease.streetgym.data.progress.SharedPreferencesProgressRepository
 import com.justdataplease.streetgym.data.skills.SkillCurriculumReader
+import com.justdataplease.streetgym.data.skills.SkillLevel
 import com.justdataplease.streetgym.leaderboard.Scores
 import com.justdataplease.streetgym.ui.AppColors
 import com.justdataplease.streetgym.ui.AppSettings
@@ -65,7 +66,7 @@ class TrainingInstrumentation : Instrumentation() {
             if (!basketball) check(preferences("street_basketball_progress").edit().putString("legacy_marker", "kept").commit())
             val catalog = AssetCurriculumRepository(targetContext).load().getOrThrow()
             val programs = catalog.levels.flatMap { it.programs }
-            check(catalog.levels.size == 7 && programs.size == if (basketball) 48 else 700)
+            check(catalog.levels.size == (if (basketball) 7 else 10) && programs.size == if (basketball) 48 else 1000)
             check(programs.map { it.id }.distinct().size == programs.size)
             check(programs.all { it.id.startsWith("bb:") == basketball && it.hasDetails })
             val assets = targetContext.assets.list("").orEmpty().toSet()
@@ -192,7 +193,7 @@ class TrainingInstrumentation : Instrumentation() {
             report("History calendar marks today's workout, lists it under the day, opens its overview and returns to the list")
 
             val skillBook = targetContext.assets.open("curriculum.json").bufferedReader().use { SkillCurriculumReader.read(it.readText()) }
-            fun skills() = skillBook.progress(Scores.credits(repository.sessionHistory()), repository.skillTests().passed.keys)
+            fun skills() = skillBook.progress(Scores.credits(repository.sessionHistory()))
             val repeatDay = programs.first()
             val repeatCompleted = repository.completedProgramIds()
             val repeatSkills = skills()
@@ -201,8 +202,13 @@ class TrainingInstrumentation : Instrumentation() {
             clickText(R.string.repeat_day)
             check(repository.activeWorkout()?.let { it.programId == repeatDay.id && it.repeat } == true)
             check(shown(R.string.repeat_active_title) && shown(R.string.repeat_note) && !shown("Complete day"))
-            val repeatSet = checkNotNull(find { it is CheckBox && it.contentDescription?.toString()?.startsWith("Mark set ") == true })
-            runOnMainSync { repeatSet.performClick() }; settle()
+            // "Did more or fewer?" logs what the set really was, and ticks it.
+            clickText(R.string.set_done_ask)
+            setDialogText("15")
+            clickDialog(R.string.set_done_save)
+            check(repository.activeWorkout()?.let { it.done.values.toList() == listOf(15) && it.completedSetIds.size == 1 } == true)
+            check(shown(targetContext.resources.getQuantityString(R.plurals.set_done_reps, 15, 15)) ||
+                shown(targetContext.getString(R.string.set_done_seconds, 15)))
             nav(R.string.nav_levels); clickLabel(catalog.levels.first().name.resolve()); clickLabel(programs[1].name.resolve())
             clickText(R.string.start_workout); clickDialog(R.string.cancel)
             check(repository.activeWorkout()?.let { it.repeat && it.completedSetIds.size == 1 } == true)
@@ -212,7 +218,9 @@ class TrainingInstrumentation : Instrumentation() {
             clickText(R.string.finish_workout); clickDialog(R.string.finish); clickDialog(R.string.finish)
             check(repository.activeWorkout() == null && repository.levelReplay() == null)
             check(repository.completedProgramIds() == repeatCompleted)
-            check(skills() == repeatSkills)
+            // The repeat's ticked set counts like any class's, with its reps; nothing goes down.
+            check(skills().statuses.zip(repeatSkills.statuses).all { (now, before) -> now.sets >= before.sets && now.level >= before.level })
+            check(repository.sessionHistory().first { it.repeat }.credits?.values?.sum() == 1)
             val repeatHistory = repository.sessionHistory()
             check(repeatHistory.size == 2 && repeatHistory.count { !it.repeat } == 1)
             check(repeatHistory.first().let { it.repeat && it.programId == repeatDay.id && it.effortRating != null })
@@ -221,7 +229,7 @@ class TrainingInstrumentation : Instrumentation() {
             nav(R.string.nav_progress); clickText(R.string.progress_tab_history)
             check(shown(targetContext.getString(R.string.workouts_completed_format, 1, programs.size)))
             check(find { it is TextView && it.text.startsWith(targetContext.getString(R.string.history_repeat, "")) } != null)
-            report("Repeating a completed day asks before replacing a workout and leaves progress, Today and skill points unchanged")
+            report("Repeating a completed day asks before replacing a workout, logs a set done bigger than planned that counts toward skills, and leaves progress and Today unchanged")
             if (basketball) {
                 nav(R.string.nav_levels); clickLabel(catalog.levels.first().name.resolve()); clickLabel(programs.first().name.resolve())
                 clickText(R.string.start_workout)
@@ -551,10 +559,10 @@ class TrainingInstrumentation : Instrumentation() {
             val levelTwoFirst = levelTwo.programs.minBy { it.number }
             val atDayFortyOne = targetContext.getString(R.string.placement_level_day, 1, 41)
             val atLevelTwo = targetContext.getString(R.string.level_number, 2)
-            // Placed days are done and count as trained: skill points, and none marked complete for nothing.
-            fun placedAsTrained(days: Int) = repository.sessionHistory().let { it.size == days && it.all { session -> session.placed } } &&
-                Scores.credits(repository.sessionHistory()).size == days && skills().statuses.any { it.own > 0 } &&
-                Scores.markedComplete(repository.sessionHistory()) == 0
+            // Placed days are done but give no skills at all, like Complete day.
+            fun placedForNothing(days: Int) = repository.sessionHistory().let { it.size == days && it.all { session -> session.placed } } &&
+                Scores.credits(repository.sessionHistory()).isEmpty() && Scores.markedComplete(repository.sessionHistory()) == days &&
+                skills().statuses.all { it.sets == 0 && it.level == SkillLevel.NONE }
             fun enter(test: Int, count: Int) {
                 val field = checkNotNull(find { it is EditText && it.contentDescription == targetContext.getString(test) }) as EditText
                 runOnMainSync { field.setText(count.toString()) }; settle()
@@ -565,7 +573,7 @@ class TrainingInstrumentation : Instrumentation() {
                 !shown(targetContext.getString(R.string.placement_confirm, atDayFortyOne)))
             enter(R.string.placement_squats, 30)
             check(shown(targetContext.getString(R.string.placement_result_day, atDayFortyOne)))
-            check(shown(R.string.placement_scratch) && shown(R.string.placement_credit) && !shown(R.string.placement_skip) &&
+            check(shown(R.string.placement_scratch) && shown(R.string.placement_no_credit) && !shown(R.string.placement_skip) &&
                 !shown(R.string.placement_answer_all))
             enter(R.string.placement_pull_ups, 10); enter(R.string.placement_push_ups, 30)
             check(shown(targetContext.getString(R.string.placement_result, 2, levelTwo.name.resolve())))
@@ -574,14 +582,14 @@ class TrainingInstrumentation : Instrumentation() {
             clickLabel(targetContext.getString(R.string.placement_confirm, atDayFortyOne))
             check(AppSettings(targetContext).placementDone &&
                 repository.completedProgramIds() == levelOneDays.filter { it.number < 41 }.map { it.id }.toSet())
-            check(placedAsTrained(40))
+            check(placedForNothing(40))
             check(!shown(R.string.placement_title) && shown(dayFortyOne.name.resolve()) && shown(R.string.start_today))
             nav(R.string.nav_levels)
             check(shown(targetContext.getString(R.string.level_progress_format, 40, 100)))
             clickLabel(catalog.levels.first().name.resolve())
             check(shown(R.string.placement_level_one_hint) && shown("Complete level") && shown(R.string.complete_level_no_points))
             // A new athlete again. The owner's case, ten pull-ups and thirty push-ups with squats never counted, starts at
-            // Level 2, and the card says what four more pull-ups would change; the whole of Level 1 is credited.
+            // Level 2, and the card says what four more pull-ups would change; the whole of Level 1 is placed past.
             check(preferences("streetgym_progress").edit().clear().commit())
             AppSettings(targetContext).placementDone = false
             nav(R.string.nav_today)
@@ -592,7 +600,7 @@ class TrainingInstrumentation : Instrumentation() {
                 targetContext.getString(R.string.placement_level_day, 2, 21))))
             clickLabel(targetContext.getString(R.string.placement_confirm, atLevelTwo))
             check(AppSettings(targetContext).placementDone && repository.completedProgramIds() == levelOne)
-            check(placedAsTrained(levelOne.size))
+            check(placedForNothing(levelOne.size))
             check(!shown(R.string.placement_title) && shown(levelTwoFirst.name.resolve()) && shown(R.string.start_today))
             // Harder for today, from Today's card: the day's strength reps go up a quarter and its overview says so; the
             // overview sets it back.
@@ -601,12 +609,13 @@ class TrainingInstrumentation : Instrumentation() {
             check(AppSettings(targetContext).intensityToday() == Intensity.HARDER)
             clickLabel(levelTwoFirst.name.resolve())
             check(find { it is TextView && it.text.toString().endsWith(" • " + targetContext.getString(R.string.intensity_harder)) } != null)
-            fun pullUps(day: TrainingProgram) = checkNotNull(day.exercises.firstOrNull { it.movementId == "pullup" }).sets.first()
-            val harder = targetContext.setPrescription(pullUps(Intensity.HARDER.scale(levelTwoFirst)), Locale.ENGLISH)
-            check(harder != targetContext.setPrescription(pullUps(levelTwoFirst), Locale.ENGLISH) && shown(harder))
+            // Level 2 opens with its easy re-entry class (round 9): push-ups at half the dose, no pulling.
+            fun pushUps(day: TrainingProgram) = checkNotNull(day.exercises.firstOrNull { it.movementId == "pushup" }).sets.first()
+            val harder = targetContext.setPrescription(pushUps(Intensity.HARDER.scale(levelTwoFirst)), Locale.ENGLISH)
+            check(harder != targetContext.setPrescription(pushUps(levelTwoFirst), Locale.ENGLISH) && shown(harder))
             clickText(R.string.intensity_normal)
             check(AppSettings(targetContext).intensityToday() == Intensity.NORMAL &&
-                shown(targetContext.setPrescription(pullUps(levelTwoFirst), Locale.ENGLISH)))
+                shown(targetContext.setPrescription(pushUps(levelTwoFirst), Locale.ENGLISH)))
             nav(R.string.nav_levels)
             check(levelOne.size == 100 && shown(targetContext.getString(R.string.level_progress_format, 100, 100)))
             clickLabel(catalog.levels.first().name.resolve())
@@ -617,7 +626,7 @@ class TrainingInstrumentation : Instrumentation() {
             check(!shown(R.string.placement_title) && AppSettings(targetContext).placementDone)
             clickText(R.string.start_today)
             check(repository.activeWorkout()?.programId == levelTwoFirst.id)
-            report("First launch is a placement test: the weighted counts and pull-up gates pick a block start, a skip keeps Level 1 and its hint, placed days count as trained, Harder for today scales strength reps, and placement never returns")
+            report("First launch is a placement test: the weighted counts and pull-up gates pick a block start, a skip keeps Level 1 and its hint, placed days give no skills, Harder for today scales strength reps, and placement never returns")
 
             // Settings' Reset progress, with Level 1 complete and a Level 2 class in progress.
             nav(R.string.nav_settings)
@@ -724,6 +733,24 @@ class TrainingInstrumentation : Instrumentation() {
         }
         read(uiAutomation.rootInActiveWindow)
         error("Missing dialog action: $label. Visible text: $labels")
+    }
+    /** Types into the text field of the dialog in front. */
+    private fun setDialogText(text: String) {
+        fun editable(node: AccessibilityNodeInfo): AccessibilityNodeInfo? {
+            if (node.isEditable) return node
+            for (i in 0 until node.childCount) node.getChild(i)?.let(::editable)?.let { return it }
+            return null
+        }
+        repeat(40) {
+            val field = uiAutomation.rootInActiveWindow?.let(::editable)
+            if (field != null) {
+                check(field.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT,
+                    Bundle().apply { putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, text) }))
+                settle(); return
+            }
+            SystemClock.sleep(100)
+        }
+        error("No text field in the dialog")
     }
     private fun shown(label: String) = find { it is TextView && it.text.toString() == label } != null
     private fun shown(resource: Int) = shown(targetContext.getString(resource))

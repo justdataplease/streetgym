@@ -12,7 +12,7 @@
     <string name="placement_less">One rep fewer</string>
     <string name="placement_more">One rep more</string>
     <string name="placement_answer_all">Enter all three to see where you start.</string>
-    <string name="placement_credit">The days before your start count as trained for your skills.</string>
+    <string name="placement_no_credit">Skipping ahead gives no skill levels: the days before your start don’t count.</string>
     <string name="placement_better">%1$s would start you at %2$s.</string>
     <plurals name="placement_more_pull_ups"><item quantity="one">%d more pull-up</item><item quantity="other">%d more pull-ups</item></plurals>
     <plurals name="placement_more_push_ups"><item quantity="one">%d more push-up</item><item quantity="other">%d more push-ups</item></plurals>
@@ -26,10 +26,10 @@
     <string name="placement_list_end">%1$s and %2$s</string>
     <string name="placement_confirm">Start at %1$s</string>
     <string name="placement_scratch">Start from scratch</string>
-    <string name="placement_level_one_hint">Already train? Complete Level 1 to start Level 2 now. Its days then earn no skill points.</string>
+    <string name="placement_level_one_hint">Already train? Complete Level 1 to start Level 2 now. Its days then don’t count toward skill levels.</string>
     <string name="intensity_title">How do you feel today?</string>
     <string name="intensity_easier">Easier</string>
     <string name="intensity_normal">Normal</string>
     <string name="intensity_harder">Harder</string>
-    <string name="intensity_note">Harder adds a quarter to the reps and hold times of strength exercises and earns a quarter more skill points for them. Easier takes a quarter off both. Skill work stays as written. Back to Normal tomorrow.</string>
+    <string name="intensity_note">Harder adds a quarter to the reps and hold times of strength exercises, so their sets reach skill targets sooner. Easier takes a quarter off. Skill work stays as written. Back to Normal tomorrow.</string>
 </resources>

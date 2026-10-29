@@ -1,36 +1,75 @@
-# Skills and the overall score (27 October 2026)
+# Skills and the overall score (29 October 2026, round 9)
 
-A pro-athlete review of the Skills tab found that skill points measured attendance, not ability. Credit came from the prescribed sets of any finished class, ticked or not. Readiness checks unlocked a skill just by attending, and "Complete level" taps unlocked skills too. Elite rungs showed about 85/100 before they had ever been trained. The leaderboard summed raw points, so it ranked volume. This revision changes what counts, splits each skill's points, and adds a weighted overall score.
+Skills work like belts. Each rung of a ladder (pull-up, planche, handstand and so on) has five levels: **Beginner, Intermediate, Advanced, Master and Elite**. A level is earned with sets at its target, done in good form. Nothing is unlocked by attending, by skipping ahead or by a one-off test.
+
+This replaces the 27 October model: 100 points per skill from prep and practice, readiness tests, "Log your max" and `SkillTestLog`.
+
+## What is a skill
+
+A skill is something done on one's own, from a dead hang to a full planche (the owner's call, 28 October 2026). Assisted, supported and partial versions, negatives and drills are progressions: they stay in the classes as steps and easier options, listed as their family's `foundations`, which never become rungs.
+
+Since round 9 there are **37 skills** (the owner's choice on 29 October, from the claude-1 proposal): the 35 that at least four coaches backed, plus the dead hang and the hollow body hold as early belts. 185 levels in all. Twenty former skills are now movements only: the active hang, chin-up, typewriter pull-up, chest-to-bar, bar support, support hold, straight-bar dip, pause, close and archer push-ups, elevated pike push-up, planche lean, frog stand, handstand balance, the one-leg front and back levers, the one-leg L-sit, knee raise, sliding leg curl and Nordic curl. The squat is new. The families: pull-up (dead hang, pull-up, archer, one-arm), muscle-up, front lever, back lever, dip, push-up (push-up, one-arm), handstand push-up (pike, wall, deficit), planche (pseudo-planche push-up, tuck, advanced tuck, straddle, full), handstand (wall, freestanding), pistol (squat, pistol), hanging core (leg raise, toes-to-bar), L-sit (L-sit, V-sit), dragon flag (hollow body, dragon flag) and the human flag.
 
 ## What counts
 
-- Only the sets ticked in a finished class count (`WorkoutSession.credits`, built by `WorkoutFlow.credits`), and only in the practice and main sections.
-- A class counts once it ran at least 40% of its planned minutes.
-- Classes saved before ticks were kept count their prescription.
-- Days marked complete, placed past, repeated or custom earn nothing (`Scores.credits`). Skills and the leaderboard use the same credits, so the two screens agree.
-- An exercise can be switched to its easier option in either workout view. Its sets then count for the easier movement.
-- A readiness check earns no points. After the class it asks "Did you hit it?", and a Yes counts as a passed test.
+- Only the sets ticked in a finished class count, and only in the practice and main sections (`WorkoutFlow.credits`).
+- Each set keeps its dose (`WorkoutFlow.doses`), the reps or seconds done in the skill's measure:
+  - by default, the plan's reps or seconds;
+  - if the athlete logged a number with "Did more or fewer?" (`SetDone.kt`), that number;
+  - for a "max" set, the logged reps, else 0;
+  - for an easier option measured the other way (a tuck front lever row for a timed tuck hold, a support hold for straight-bar dips, and so on), the logged reps or seconds of the option, else 0. Switching the option clears what was logged for the other movement.
+- The set logger asks in the measure of the movement actually done (`WorkoutFlow.measure`), and asks straight away when a set has no plan's number to count.
+- Doses are saved on `WorkoutSession.doses` and synced with cloud progress. Older sessions without doses count the program's prescription (`SkillStep.reps`/`seconds`).
+- Program days, repeated days and the athlete's own workouts all count. A class counts once it ran at least 20% of its planned minutes.
+- Skipping ahead gives nothing: days placed past by the placement test, Complete day and Complete level earn no sets (`Scores.credits`).
+- A set done as the easier option counts for the easier movement when it is a skill.
+- Readiness-check sets count for nothing.
+- Harder days scale the plan's reps and holds by 1.25, so their sets reach targets sooner.
+- Each skill's page says what a set must be to count, from the movement library's `counts` text (the coaching review, 29 October 2026). A hold starts once the shape is set and ends when it breaks. A rep starts still and finishes at lockout, without a kip or swing. The rules also pin down the shapes whose difficulty varies most:
+  - the planche lean and pseudo-planche push-up are measured against the same floor line every time;
+  - the V-sit's legs are at least 45 degrees above level;
+  - the pike and deficit handstand push-ups have a set foot height and a 10 cm deficit;
+  - archer movements keep the guiding arm straight;
+  - a Nordic curl counts only without the hands.
 
-## Each skill's 100 points (`SkillBook`)
+## Levels (`SkillStandards`, `SkillBook`)
 
-- **Prep, up to 50.** Weighted points from the rung's own sets, the easier rungs below it and the family's foundations. The target is what the schedule delivers up to the class that first prescribes the rung.
-- **Practice, up to 50.** 25 points for each of the first two credited classes that trained the rung itself.
+Each rung has a standard: whether it is measured in reps or seconds, whether it's done one side at a time (the weaker side counts), a grade from 1 (easy) to 5 (extreme), and five targets.
 
-So following the program fills prep on the introducing class, and the second class that trains the rung brings it to 100. A rung worth less than 15 in the overall score is achieved at 100. A rung worth 15 or more is only "Trained" at 100 and needs a passed test.
+Targets are **working sets**: what a trained athlete does for one set inside a class, one or two reps in reserve, not a single maximal effort (round 9). Thirty sets of a 40-rep pull-up is a career, not a belt.
 
-A test is taken from the skill sheet, at most once per rung every 24 hours, or answered at a readiness check. Tests are kept in `SkillTestLog` and synced with cloud progress.
+| Level | Sets needed at the target | Pull-up | Push-up | Dip | Wall handstand |
+|---|---|---|---|---|---|
+| Beginner | 10 | 3 | 6 | 4 | 20 s |
+| Intermediate | 20 | 6 | 12 | 10 | 30 s |
+| Advanced | 30 | 10 | 20 | 15 | 45 s |
+| Master | 30 | 15 | 30 | 20 | 60 s |
+| Elite | 30 | 20 | 40 | 25 | 75 s |
 
-Achieving a rung achieves every easier rung of its family, compared by value, not by ladder position.
+Every target is in `SkillStandards.kt` and `docs/CURRICULUM_PLAN.md`. The rarest skills have their Elite set where a committed adult can reach it inside the program (the realism check, 29 October 2026): full planche 2/2/2/3/4 s, one-arm pull-up 1/1/1/2/3 a side, straddle planche 2/3/4/5/6 s, full front lever 2/3/4/6/8 s, full flag 2/3/4/5/6 s a side, strict muscle-up 1/2/3/4/5 and V-sit 2/3/4/5/6 s. From Advanced up every level takes 30 sets, so no two of those levels share a target; Beginner to Advanced may share one and differ by their sets.
 
-## Ladder fixes
+- A set over a higher target counts for the lower ones too. Each level needs the one below it.
+- Beginner is the hook: about three quarters of a coach's entry standard, and only 10 sets. The owner asked for a first badge early; levels from Intermediate up are hard on purpose.
+- Every level is earned on the skill itself.
+  - Until 29 October, a harder rung at Beginner showed the easier rungs of its ladder as Master (`carriedBy`).
+  - The coaching review dropped this: doing a harder movement says nothing about an easier one's high-rep target.
+- Each level is its target many times over. Elite on the push-up means 30 separate sets of 100, far more than the single performances published standards compare. The help says so.
+- No Beginner target asks for a longer set than the plan's own longest one on a rung the plan trains 30 times or more (`SkillBookTest`).
 
-- The pseudo-planche push-up is a planche rung.
-- The pull-over and the Bulgarian split squat are foundations. Foundations never join a ladder.
-- The handstand ladder runs: wall handstand, kick-up, exit, toe pull, balance attempts, freestanding handstand.
-- The muscle-up ladder puts the jump muscle-up before chest-to-bar.
-- Grades were rebalanced; Elite is now kept for the full front lever, straddle and full planche and the full one-arm pull-up.
-- Four new top rungs sit past the program: the one-arm pull-up, one-arm push-up, freestanding handstand and V-sit.
-- A set's points follow its rung's grade (10 to 20).
+## Following the program as written
+
+Results for someone who does every class of the ten levels as written and trains nothing extra (counted by `tools/build_curriculum.py` from the classes; scores with the app's values and the leaderboard's 767 ceiling):
+
+| End of level | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Overall score (of 1000) | 12 | 24 | 56 | 83 | 118 | 162 | 193 | 281 | 465 | 698 |
+| Levels earned (of 185) | 8 | 16 | 30 | 44 | 57 | 76 | 87 | 104 | 121 | 143 |
+| Skills at Beginner or more (of 37) | 7 | 10 | 13 | 20 | 23 | 28 | 30 | 35 | 37 | 37 |
+
+- The first badge comes at class 10 (squat Beginner); the hollow body and push-up follow by class 16.
+- Every level brings new badges, and every skill reaches Beginner inside the plan, the last being the full planche at L9:065.
+- Every skill gets at least one set at its Elite target by the end of Level 10 (the owner: "at least the max should be achievable, it's ok if not the sets"). Most reach it in their working sets; eight get one record set in a Level 10 class.
+- Elite takes 30 sets at the target, so the plan alone reaches Elite on 12 skills: the basics, the strict muscle-up, the archer pull-up, the dragon flag and the full back lever. The rest of Elite comes from repeating blocks and the athlete's own workouts, by design. The skills help says so.
 
 ## The overall score (`OverallScore`)
 
@@ -46,12 +85,11 @@ Each rung has a value (`SKILL_VALUES`), anchored on a strict pull-up at 10:
 | Straddle planche | 110 |
 | Full planche | 200 |
 
-The score is built per family:
-- A family counts its hardest achieved rung's value.
-- It adds half the gap to its next rung, in proportion to that rung's 0–100 points. Training alone never reaches the next value.
-- The overall is 1000 × the families' sum ÷ the sum of every family's top value. That sum is 767 today.
-
-Tiers:
+How it adds up:
+- A rung earns a fifth of its value per level, so Elite earns all of it.
+- Each family counts its best rung.
+- The overall is 1000 × the families' sum ÷ the sum of every family's top value.
+- The app shows it out of 100 with one decimal; the leaderboard keeps the 1000 scale.
 
 | Tier | Score |
 |---|---|
@@ -62,18 +100,28 @@ Tiers:
 | Elite | 650–849 |
 | World-class | 850–1000 |
 
-Following the program and passing each test as it comes:
+## Display (`SkillMedals.kt`)
 
-| End of level | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
-|---|---|---|---|---|---|---|---|
-| Overall score | 77 | 153 | 241 | 346 | 438 | 548 | 813 |
+Each skill is its figure on a rounded square:
+- **Outline:** shows the rung's grade, from green (easy) to red (extreme).
+- **Rank shield:** a game-style insignia hanging from the square's foot: a peaked shield with a gold rim and a glossy graphite face. Beginner has one gold chevron band and Intermediate two. Advanced has three stars and Master one big star under a stacked crest. Elite has the big star with wings and a taller crest.
 
-Attending every class without passing a test tops out at 262.
+## Exams
+
+On an exam day, a target starts ticked only if all of the following hold (`WorkoutFlow.examTests`):
+- every set was ticked;
+- no set was done as the easier option;
+- no logged number fell short of the plan.
+
+The athlete can still change the answer.
 
 ## Leaderboard
 
-- The score document (version 2) holds `overall`, `families` (ten times each family's points) and `verified`.
-- The board function (`firebase/functions/boards.py`) drops any document whose overall doesn't add up from its families. The family ceilings there must match the app's; `SkillBookTest` checks this.
+- The score document (version 2) holds:
+  - `overall`;
+  - `families`: ten times each family's points;
+  - `verified`: the rungs at Beginner or above.
+- The board function (`firebase/functions/boards.py`) drops any document whose overall doesn't add up from its families. Its family ceilings must match the app's; `SkillBookTest` checks this.
+- Round 9 dropped the Nordic family, but the deployed function still divides by all 15 ceilings (767). So the app keeps Nordic's 24 in the score's maximum (`OverallScore.RETIRED_CEILINGS`), and a score's top is 969, shown 96.9. The dip family keeps its top value of 12 on the parallel dip. The next functions deploy can drop Nordic from `FAMILY_CEILINGS` and `RETIRED_CEILINGS` together; a deploy is needed for any change to a family's top value.
 - Boards: `overall_*`, plus one `family_<id>_*` board per family.
-- `firestore.rules` caps the overall at 1000 and the families at 15.
-- The rules and the function need a deploy before the new app version publishes scores.
+- `firestore.rules` caps the overall at 1000 and the families at 15. The rules and the function don't change with this model.

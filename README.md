@@ -1,6 +1,6 @@
 # Street Gymnastics
 
-Dedicated Android app with 700 guided calisthenics workouts across seven levels and 151 animated movements. Copied from the owned StreetGym source into the Android suite; the original project remains unchanged.
+Dedicated Android app with 1,000 guided calisthenics workouts across ten levels and 159 movements in the current curriculum library. The ten-level curriculum and its supporting code are synchronized from the `sg-placement-points` worktree. The assigned daily workout is for an individual athlete.
 
 Settings > Theme picks one of five looks:
 - Fresh Court: the original green, the default.
@@ -38,7 +38,7 @@ Google native cards appear below progress on Today and at the end of workout sec
 
 Debug builds always use Google demo IDs. Release builds read `admob.streetgymnastics.appId` and `admob.streetgymnastics.nativeId`, falling back to the existing Toolbox `admob.appId` / `admob.nativeId` settings, then demo IDs if neither exists. An optional `admob.streetgymnastics.fullscreenNativeId` overrides the full-screen native placement; otherwise it uses the same native unit. Canonical ad code lives in the suite's `shared/nativeads`; run `tools/sync_native_ads.py` after changes. Copies inside the app keep standalone exports self-contained.
 
-Free has Levels 1–3, ads and 3 saved days. **Plus** (one payment, requested at 9.99) unlocks every level, removes every placement, and adds 30 saved and custom days, 3 lists of their own in My workouts with 10 days each (beside Favorites, where every saved day goes), level renaming, Parks and a view of the leaderboard. **Pro** (a yearly subscription, requested at 19.99) adds 300 days, 10 lists of 30, Sign in with Google, cloud progress and a place on the leaderboard; its offer says the subscription pays for the servers and database. Without Plus, Today, Training and the class overview show a paywall in place of Start for Level 4 and later. Settings shows both offers with Play's prices and Restore purchases; ownership stays cached offline. **Play Console products, the Firebase project and live checkout tests remain required**; see [Free, Plus and Pro](docs/TIERS.md). Debug and GitHub builds can't buy, so they get Pro; Settings > Simulate tier (debug only) tests Free and Plus.
+Free has Levels 1–3, ads and 3 saved days. **Plus** (one payment, requested at 9.99) unlocks Levels 4–5, removes every placement, and adds 30 saved and custom days, 3 lists of their own in My workouts with 10 days each (beside Favorites, where every saved day goes), level renaming, Parks and a view of the leaderboard. **Pro** (a yearly subscription, requested at 19.99) adds Levels 6–10, 300 days, 10 lists of 30, Sign in with Google, cloud progress and a place on the leaderboard; its offer says the subscription pays for the servers and database. Today, Training and the workout overview show the applicable paywall: Plus from Level 4 and Pro from Level 6. Settings shows both offers with Play's prices and Restore purchases; ownership stays cached offline. **Play Console products, the Firebase project and live checkout tests remain required**; see [Free, Plus and Pro](docs/TIERS.md). Debug and GitHub builds can't buy, so they get Pro; Settings > Simulate tier (debug only) tests Free and Plus.
 
 ## Timer tools
 
@@ -54,7 +54,7 @@ Firebase is optional. Add ignored `app/src/debug/res/values/firebase.xml` or `ap
 
 ## Content checks
 
-From this folder, run `tools/assemble_curriculum.ps1`, then `tools/validate_curriculum.ps1`, `tools/validate_animations.ps1`, `python tools/validate_morning_class.py`, `python tools/validate_progressions.py` and `python tools/validate_progression_motions.py` (the Python checks need Pillow), and copy `generated/curriculum_v2.json` to `app/src/main/assets/curriculum.json`; `tools/package_dist.ps1` runs the whole chain. The October 2026 coaching revision changed the authored classes, the daily practice timetable and the movement library; see `docs/CURRICULUM_METHOD.md` for what changed, source provenance and training boundaries.
+From this folder, run `python tools/build_curriculum.py` (it writes all 1,000 classes from the plan in `docs/CURRICULUM_PLAN.md`), then `tools/assemble_curriculum.ps1`, `tools/validate_curriculum.ps1`, `tools/validate_animations.ps1`, `python tools/validate_morning_class.py`, `python tools/validate_progressions.py` and `python tools/validate_progression_motions.py` (the Python checks need Pillow), and copy `generated/curriculum_v2.json` to `app/src/main/assets/curriculum.json`; `tools/package_dist.ps1` runs the whole chain. See `docs/CURRICULUM_METHOD.md` for how the classes are made and `docs/CURRICULUM_PLAN.md` for the program itself.
 
 Exercise cards show the animation followed directly by the exercise instructions and sets. Animations play automatically; the Pause / Slow motion toolbar and repeated movement-guide caption have been removed.
 

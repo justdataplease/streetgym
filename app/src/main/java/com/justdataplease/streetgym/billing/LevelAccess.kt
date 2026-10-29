@@ -1,6 +1,6 @@
 package com.justdataplease.streetgym.billing
 
-/** Levels 1–3 are free, Plus adds Levels 4 and 5, and Levels 6 and 7 come with Pro. */
+/** Levels 1–3 are free, Plus adds Levels 4 and 5, and Levels 6 to 10 come with Pro. */
 object LevelAccess {
     const val FIRST_PAID_LEVEL = 4
     const val FIRST_PRO_LEVEL = 6

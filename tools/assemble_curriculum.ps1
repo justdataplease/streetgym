@@ -14,191 +14,14 @@ function Read-JsonFile([string]$Path) {
     return Get-Content -Raw -Encoding UTF8 -LiteralPath $Path | ConvertFrom-Json
 }
 
+# Day ids are frozen (2.5): athletes' completed days, history, exams and cloud copies refer to them. Edit a day's
+# content in place; never insert, remove or reorder days or move an exam. DayIdsTest fails if this changes.
 function Stable-ProgramId([int]$Level, [int]$Number) {
     return "sg:l{0:D2}:p{1:D4}" -f $Level, $Number
 }
 
 function Localized([string]$English) {
     return [ordered]@{ en = $English }
-}
-
-$script:flagPracticeIds = @("flag_ground_support", "assisted_tuck_flag", "tuck_flag", "straddle_flag", "full_flag")
-# Round 6: tuck-or-harder flags are maximal straight-arm holds, so they lead the main work rather than the practice.
-$script:hardFlagIds = @("tuck_flag", "straddle_flag", "full_flag")
-$script:leverAndMuscleUpIds = @("tuck_front_hold", "advanced_tuck_front", "one_leg_front", "straddle_front", "full_front", "tuck_back_hold",
-    "advanced_tuck_back", "one_leg_back", "straddle_back", "full_back", "strict_muscleup", "band_muscleup", "negative_muscleup", "jump_muscleup")
-$script:lowerBodyPatterns = @("legs", "squat", "lunge", "lateral_lunge", "single_leg", "single_leg_squat", "hinge",
-    "posterior_chain", "knee_flexion", "hip_extension")
-
-function Limit-TrainingSteps($Steps, [int]$SetBudget, [int]$SetsPerExercise) {
-    # Project the authored prescription without adding work or replacing movements.
-    $rows = @($Steps)
-    if ($SetBudget -lt $rows.Count) { throw "The set budget must retain every authored exercise" }
-    $counts = New-Object int[] $rows.Count
-    $allIndexes = @(for ($index = 0; $index -lt $rows.Count; $index++) { $index })
-    # Second sets go to leg and hinge work first, so the steps listed last are not the ones always trimmed.
-    $lowerIndexes = @($allIndexes | Where-Object {
-        @($movementById[[string]$rows[$_][0]].patterns | Where-Object { $_ -in $script:lowerBodyPatterns }).Count -gt 0
-    })
-    # The class's lead skill (its first advanced skill, else its first skill rung) keeps its authored sets, so a
-    # rung's start gate never rests on a trimmed session; the trims fall on the supporting work (round 5b).
-    $rank = @{ advanced_skill = 2; mastery_skill = 2; skill = 1 }
-    $lead = -1
-    foreach ($index in $allIndexes) {
-        $leadRank = [int]$rank[[string]$movementById[[string]$rows[$index][0]].category]
-        if ($leadRank -gt 0 -and ($lead -lt 0 -or $leadRank -gt [int]$rank[[string]$movementById[[string]$rows[$lead][0]].category])) { $lead = $index }
-    }
-    for ($round = 0; $round -lt $SetsPerExercise; $round++) {
-        $order = if ($round -eq 1) { @($lowerIndexes) + @($allIndexes | Where-Object { $_ -notin $lowerIndexes }) } else { $allIndexes }
-        foreach ($index in $order) {
-            if ($SetBudget -gt 0 -and $round -lt [int]$rows[$index][1] -and $counts[$index] -eq $round) {
-                $counts[$index]++
-                $SetBudget--
-            }
-        }
-        if ($round -eq 0 -and $lead -ge 0) {
-            while ($SetBudget -gt 0 -and $counts[$lead] -lt [Math]::Min([int]$rows[$lead][1], $SetsPerExercise)) {
-                $counts[$lead]++
-                $SetBudget--
-            }
-        }
-    }
-    $projected = New-Object System.Collections.ArrayList
-    for ($index = 0; $index -lt $rows.Count; $index++) {
-        $step = @($rows[$index]).Clone()
-        $originalSets = [int]$step[1]
-        $step[1] = $counts[$index]
-        foreach ($doseIndex in @(2, 3)) {
-            # Keep per-set ladders aligned when their final sets are removed.
-            if ($step[$doseIndex] -is [string] -and $step[$doseIndex] -match '^(\d+(?:-\d+)+)(/side)?$') {
-                $series = $Matches[1] -split '-'
-                $side = $Matches[2]
-                if ($series.Count -ne $originalSets) { throw "Invalid authored dose ladder" }
-                $step[$doseIndex] = ($series[0..($counts[$index] - 1)] -join '-') + $side
-            }
-        }
-        [void]$projected.Add($step)
-    }
-    return ,$projected.ToArray()
-}
-
-# ----- Original-source projection (morning_class.json early_projection) -----
-# An ordered rule list. A rule names the source step it matches: "exercise", optional "exercise_description",
-# "set" (a compound element's name) and "set_description"; a field that is left out matches anything, "" matches a
-# blank source field and a list matches any of its entries. "where" limits a rule to app classes ("L1:001-L1:040",
-# "L3:015" or a list). "action" is project_exercise (the whole exercise becomes the library movement), project_set
-# (only the matching sets do) or keep (the prepared source step stays, optionally capped). Doses: "reps" or
-# "seconds" (fixed), "reps_cap" or "seconds_cap" (the source dose, capped); "per_class" overrides them per class.
-# "like" is a regex the exercise and set descriptions together must match; "rest_min" raises the set's rest; a
-# "{source}" in "set_note" stands for the source set's (or exercise's) own description.
-function Test-ProjectionField($Rule, [string]$Name, [string]$Actual) {
-    $property = $Rule.PSObject.Properties[$Name]
-    if ($null -eq $property) { return $true }
-    $actualText = ([string]$Actual).Trim()
-    foreach ($expected in @($property.Value)) {
-        if ($actualText -ceq ([string]$expected).Trim()) { return $true }
-    }
-    return $false
-}
-
-function Test-ProjectionLike($Rule, [string]$Text) {
-    $property = $Rule.PSObject.Properties["like"]
-    if ($null -eq $property) { return $true }
-    return [regex]::IsMatch($Text, [string]$property.Value)
-}
-
-function Test-ProjectionWhere($Rule, [int]$Level, [int]$Number) {
-    $property = $Rule.PSObject.Properties["where"]
-    if ($null -eq $property) { return $true }
-    foreach ($range in @($property.Value)) {
-        if ([string]$range -notmatch '^L(\d):(\d{3})(?:-L(\d):(\d{3}))?$') { throw "Invalid early_projection where '$range'" }
-        $fromLevel = [int]$Matches[1]; $fromNumber = [int]$Matches[2]
-        $toLevel = $(if ($Matches[3]) { [int]$Matches[3] } else { $fromLevel })
-        $toNumber = $(if ($Matches[4]) { [int]$Matches[4] } else { $fromNumber })
-        $position = $Level * 1000 + $Number
-        if ($position -ge ($fromLevel * 1000 + $fromNumber) -and $position -le ($toLevel * 1000 + $toNumber)) { return $true }
-    }
-    return $false
-}
-
-function Get-ProjectionDose($Rule, [int]$Level, [int]$Number) {
-    $dose = [ordered]@{}
-    foreach ($name in @("reps", "seconds", "reps_cap", "seconds_cap")) {
-        if ($null -ne $Rule.PSObject.Properties[$name]) { $dose[$name] = [int]$Rule.$name }
-    }
-    $perClass = $Rule.PSObject.Properties["per_class"]
-    if ($null -ne $perClass) {
-        $override = $perClass.Value.PSObject.Properties[("L{0}:{1:D3}" -f $Level, $Number)]
-        if ($null -ne $override) {
-            $dose = [ordered]@{}
-            foreach ($name in @("reps", "seconds", "reps_cap", "seconds_cap")) {
-                if ($null -ne $override.Value.PSObject.Properties[$name]) { $dose[$name] = [int]$override.Value.$name }
-            }
-        }
-    }
-    return $dose
-}
-
-function Set-ProjectionDose($Set, $Dose, [int]$MaxSetRepetitions) {
-    if ($Dose.Count -eq 0) { return }
-    $sourceReps = $(if ($Set.repetitions_max) { $MaxSetRepetitions } else { $Set.repetitions })
-    $sourceSeconds = $Set.duration_seconds
-    if ($Dose.Contains("reps")) { $Set.repetitions = $Dose.reps; $Set.duration_seconds = $null }
-    elseif ($Dose.Contains("seconds")) { $Set.repetitions = $null; $Set.duration_seconds = $Dose.seconds }
-    elseif ($Dose.Contains("reps_cap")) {
-        if ($null -eq $sourceReps) { throw "reps_cap needs a repetition dose in the source set" }
-        $Set.repetitions = [Math]::Min([int]$sourceReps, [int]$Dose.reps_cap); $Set.duration_seconds = $null
-    }
-    elseif ($Dose.Contains("seconds_cap")) {
-        if ($null -eq $sourceSeconds) { throw "seconds_cap needs a timed source set" }
-        $Set.duration_seconds = [Math]::Min([int]$sourceSeconds, [int]$Dose.seconds_cap); $Set.repetitions = $null
-    }
-    $Set.repetitions_max = $false
-}
-
-function Update-PerSideNote($Set, $SourceRepetitions) {
-    # Capped totals keep their per-side wording true: "10 reps on each leg" over 12 repetitions reads "6 reps on each leg".
-    if ($null -eq $Set.description -or $null -eq $Set.repetitions -or $null -eq $SourceRepetitions) { return }
-    if ([int]$Set.repetitions -eq [int]$SourceRepetitions -or ([int]$Set.repetitions % 2) -ne 0) { return }
-    $text = [string]$Set.description.en
-    $match = [regex]::Match($text, '\b(\d+)( (?:reps?|times?) on each (?:leg|side))')
-    if (-not $match.Success) { return }
-    $perSide = [int]$Set.repetitions / 2
-    $Set.description = Localized ($text.Substring(0, $match.Index) + $perSide + $match.Groups[2].Value + $text.Substring($match.Index + $match.Length))
-}
-
-$script:polishKey = ([string][char]112) + ([string][char]108)
-function Test-DormantVideoMetadataKey([string]$Name) {
-    $normalized = [regex]::Replace($Name, '[_\-\s]', '').ToLowerInvariant()
-    return $normalized -in @(
-        "video",
-        "videoid",
-        "videourl",
-        "videoprovider",
-        "url",
-        "provider",
-        "vimeo",
-        "vimeoid",
-        "vimeourl",
-        "vimeoprovider"
-    )
-}
-
-function Remove-AppOnlyMetadata($Value) {
-    if ($null -eq $Value -or $Value -is [string]) { return }
-    if ($Value -is [System.Management.Automation.PSCustomObject]) {
-        foreach ($property in @($Value.PSObject.Properties)) {
-            if ($property.Name -ceq $script:polishKey -or (Test-DormantVideoMetadataKey $property.Name)) {
-                $Value.PSObject.Properties.Remove($property.Name)
-                continue
-            }
-            Remove-AppOnlyMetadata $property.Value
-        }
-        return
-    }
-    if ($Value -is [System.Collections.IEnumerable]) {
-        foreach ($item in $Value) { Remove-AppOnlyMetadata $item }
-    }
 }
 
 $baselineHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $BaselinePath).Hash
@@ -208,10 +31,9 @@ if ($baselineHash -ne $expectedBaselineSha256) {
 
 $baseline = Read-JsonFile $BaselinePath
 $catalogMetadata = Read-JsonFile (Join-Path $CurriculumDirectory "catalog_metadata.json")
-$authenticTitles = (Read-JsonFile (Join-Path $CurriculumDirectory "authentic_titles.json")).titles
-$morningClass = Read-JsonFile (Join-Path $CurriculumDirectory "morning_class.json")
 $classProgression = Read-JsonFile (Join-Path $CurriculumDirectory "class_progression.json")
-# App positions ("level-number") where an authored class takes the place of an original-source class (round 6 exam days).
+# App positions ("level-number") where an authored class takes the place of an original-source class. Since round 9
+# every original-source position is replaced: tools/build_curriculum.py writes all 1,000 classes.
 $replacedSourceSlots = @($catalogMetadata.replaced_source_slots | ForEach-Object { [string]$_ })
 $authoredBySlot = @{}
 $movementById = [ordered]@{}
@@ -241,7 +63,6 @@ foreach ($file in $batchFiles) {
 }
 
 if ($movementById.Count -eq 0) { throw "No movement definitions were found" }
-if ($coachingProfiles.Count -eq 0) { throw "No coaching profiles were found" }
 
 $levelDefinitions = @($catalogMetadata.level_definitions)
 $assembledLevels = New-Object System.Collections.ArrayList
@@ -313,6 +134,7 @@ foreach ($levelDefinition in $levelDefinitions) {
                         has_details = $true
                     }
                     warmup = $authored.warmup
+                    practice = $authored.practice
                     main = $authored.main
                     cooldown = $authored.cooldown
                     readiness = $(if ($null -ne $authored.readiness) { $authored.readiness } else { $catalogMetadata.progression_readiness })
@@ -324,41 +146,7 @@ foreach ($levelDefinition in $levelDefinitions) {
             }
 
             if ([bool]$legacyProgram.has_details) {
-                Remove-AppOnlyMetadata $legacyProgram
-                $profile = $coachingProfiles[($number - 1) % $coachingProfiles.Count]
-                $assembled = [ordered]@{
-                    id = $stableId
-                    origin = "apk_authentic"
-                    level = $levelNumber
-                    number = $number
-                    title = $authenticTitles.PSObject.Properties["$levelNumber-$sourceSlot"].Value
-                    description = $catalogMetadata.authentic_description
-                    schedule = [ordered]@{
-                        week = [Math]::Floor(($number - 1) / 7) + 1
-                        day = (($number - 1) % 7) + 1
-                        day_type = "authentic_base"
-                        minutes = $null
-                        rpe = $null
-                        focus = @("authentic_base")
-                    }
-                    legacy = [ordered]@{
-                        workout_id = [string]$legacyProgram.id
-                        pro = [bool]$legacyProgram.pro
-                        has_details = $true
-                    }
-                    readiness = $catalogMetadata.progression_readiness
-                    safety = $catalogMetadata.authentic_scaling
-                    content = $legacyProgram
-                    coaching_overlay = [ordered]@{
-                        origin = "new_coaching_overlay"
-                        profile_id = [string]$profile.id
-                        warmup = $profile.warmup
-                        cooldown = $profile.cooldown
-                    }
-                }
-                [void]$programs.Add($assembled)
-                $authenticCount++
-                continue
+                throw "Original-source slot $slot must be listed in catalog_metadata.json replaced_source_slots"
             }
 
             if (-not $authoredBySlot.ContainsKey($slot)) {
@@ -380,6 +168,7 @@ foreach ($levelDefinition in $levelDefinitions) {
                     has_details = $false
                 }
                 warmup = $authored.warmup
+                practice = $authored.practice
                 main = $authored.main
                 cooldown = $authored.cooldown
                 readiness = $(if ($null -ne $authored.readiness) { $authored.readiness } else { $catalogMetadata.progression_readiness })
@@ -411,6 +200,7 @@ foreach ($levelDefinition in $levelDefinitions) {
                 description = $authored.description
                 schedule = $authored.schedule
                 warmup = $authored.warmup
+                practice = $authored.practice
                 main = $authored.main
                 cooldown = $authored.cooldown
                 readiness = $(if ($null -ne $authored.readiness) { $authored.readiness } else { $catalogMetadata.progression_readiness })
@@ -437,6 +227,7 @@ foreach ($levelDefinition in $levelDefinitions) {
                 description = $authored.description
                 schedule = $authored.schedule
                 warmup = $authored.warmup
+                practice = $authored.practice
                 main = $authored.main
                 cooldown = $authored.cooldown
                 readiness = $(if ($null -ne $authored.readiness) { $authored.readiness } else { $catalogMetadata.progression_readiness })
@@ -447,182 +238,20 @@ foreach ($levelDefinition in $levelDefinitions) {
         }
     }
 
-    $classLevel = $morningClass.levels | Where-Object { [int]$_.level -eq $levelNumber } | Select-Object -First 1
     $progressionLimits = $classProgression.levels | Where-Object { [int]$_.level -eq $levelNumber } | Select-Object -First 1
     if ($null -eq $progressionLimits) { throw "Missing workload limits for level $levelNumber" }
     foreach ($program in $programs) {
-        $classDay = (([int]$program.number - 1) % 7) + 1
-        # Practice doses rise in phases inside each level; the first phase that covers the class applies.
-        $classPhase = @($classLevel.phases | Where-Object { [int]$program.number -le [int]$_.through_program } | Select-Object -First 1)
-        if ($classPhase.Count -ne 1) { throw "No morning-class phase covers Level $levelNumber program $($program.number)" }
-        $classSlot = $classPhase[0].days | Where-Object { [int]$_.day -eq $classDay } | Select-Object -First 1
-        $program["practice"] = @($classSlot.practice)
-        if ($program.origin -ne "apk_authentic") {
-            # Human-flag practice is left out of classes that train levers or muscle-ups (pulling-tendon load).
-            $mainIds = @($program.main | ForEach-Object { [string]$_[0] })
-            if (@($mainIds | Where-Object { $_ -in $script:leverAndMuscleUpIds }).Count -gt 0) {
-                $kept = New-Object System.Collections.ArrayList
-                foreach ($step in @($classSlot.practice)) {
-                    if ([string]$step[0] -notin $script:flagPracticeIds) { [void]$kept.Add($step) }
-                }
-                $program["practice"] = $kept.ToArray()
-            }
-            # Deload weeks unload the practice too: one set per side of flag work and half the other practice sets.
-            if ([string]$program.schedule.day_type -match "deload") {
-                $halved = New-Object System.Collections.ArrayList
-                foreach ($step in @($program.practice)) {
-                    $copy = @($step).Clone()
-                    $copy[1] = $(if ([string]$copy[0] -in $script:flagPracticeIds) { 1 } else { [int][Math]::Ceiling([int]$copy[1] / 2) })
-                    [void]$halved.Add($copy)
-                }
-                $program["practice"] = $halved.ToArray()
-            }
-        } elseif ($classDay -notin @(4, 7)) {
-            # Original-source classes add the level's source practice (pike push-ups: the source blocks press too little).
-            $sourceSlot = @($classLevel.source_practice | Where-Object { [int]$_.day -eq $classDay } | Select-Object -First 1)
-            if ($sourceSlot.Count -eq 1) {
-                $combined = New-Object System.Collections.ArrayList
-                foreach ($step in @($classSlot.practice) + @($sourceSlot[0].practice)) { [void]$combined.Add($step) }
-                $program["practice"] = $combined.ToArray()
-            }
+        # The plan writes each class's practice and main as the athlete does them; the assembler only checks the budget.
+        if ($null -eq $program.practice) { throw "Level $levelNumber program $($program.number) has no practice list" }
+        $sets = 0
+        foreach ($step in @($program.practice) + @($program.main)) {
+            if ([int]$step[1] -gt [int]$progressionLimits.sets_per_exercise) { throw "Level $levelNumber program $($program.number) has a step above $($progressionLimits.sets_per_exercise) sets" }
+            $sets += [int]$step[1]
         }
-        if ($program.origin -eq "apk_authentic" -and $classDay -in @(4, 7)) {
-            $program["morning_recovery"] = $true
-            $program["practice"] = @()
-            $recoveryMain = New-Object System.Collections.ArrayList
-            foreach ($step in @($morningClass.early_recovery)) { [void]$recoveryMain.Add($step) }
-            # From Level 2 the source recovery days add hinge work (the source blocks hold almost none).
-            if ($levelNumber -ge [int]$morningClass.early_recovery_hinge.from_level) {
-                foreach ($step in @($morningClass.early_recovery_hinge.steps)) { [void]$recoveryMain.Add($step) }
-            }
-            $program["main"] = $recoveryMain.ToArray()
-            # Each recovery day has its own display name (morning_class.json early_recovery_titles, by app position).
-            $recoveryTitle = $morningClass.early_recovery_titles.titles.PSObject.Properties["$levelNumber-$($program.number)"]
-            if ($null -eq $recoveryTitle) { throw "morning_class.json early_recovery_titles has no name for $levelNumber-$($program.number)" }
-            $program["title"] = Localized ([string]$recoveryTitle.Value)
-            $program["description"] = Localized "An easy morning class: gentle walking, shoulder mobility and trunk control. Finish feeling fresher for the next strength session."
-            $program["safety"] = $catalogMetadata.training_recovery
+        if ($sets -gt [int]$progressionLimits.main_sets_including_practice) {
+            throw "Level $levelNumber program $($program.number) has $sets sets; the budget is $($progressionLimits.main_sets_including_practice)"
         }
-        if ($program.origin -eq "apk_authentic" -and -not $program["morning_recovery"]) {
-            # A separate working projection keeps the original export auditable.
-            $training = $program.content | ConvertTo-Json -Depth 100 | ConvertFrom-Json
-            $limits = $morningClass.early_strength_limits
-            $projectionRules = @($morningClass.early_projection)
-            foreach ($exercise in $training.exercises) {
-                $exerciseName = [string]$exercise.name.en
-                $exerciseDescription = [string]$exercise.description.en
-                # A project_exercise rule turns the whole source exercise into one library movement with its easier rung.
-                $exerciseRule = $projectionRules | Where-Object {
-                    [string]$_.action -ceq "project_exercise" -and (Test-ProjectionWhere $_ $levelNumber ([int]$program.number)) -and
-                    (Test-ProjectionField $_ "exercise" $exerciseName) -and (Test-ProjectionField $_ "exercise_description" $exerciseDescription)
-                } | Select-Object -First 1
-                if ($null -ne $exerciseRule) {
-                    $movement = $movementById[[string]$exerciseRule.movement_id]
-                    $regression = $movementById[[string]$movement.regression_id]
-                    if ($null -eq $movement -or $null -eq $regression) { throw "early_projection needs a library movement with a regression: $($exerciseRule.movement_id)" }
-                    $exercise | Add-Member -NotePropertyName movement_id -NotePropertyValue $movement.id -Force
-                    $exercise.name = $movement.name
-                    $exercise.description = Localized ("{0} {1} Easier option: {2}." -f $movement.description.en, $movement.safety.en, $regression.name.en)
-                    $dose = Get-ProjectionDose $exerciseRule $levelNumber ([int]$program.number)
-                    $note = $(if ($null -ne $exerciseRule.PSObject.Properties["set_note"]) { [string]$exerciseRule.set_note } else { "Use the easier option whenever needed; stop with reserve effort." })
-                    foreach ($set in $exercise.sets) {
-                        Set-ProjectionDose $set $dose ([int]$limits.max_set_repetitions)
-                        $set.name = Localized ""
-                        $set.description = Localized $note
-                    }
-                    continue
-                }
-                # Otherwise each set (a per-set variation, or one element of a compound exercise) takes the first
-                # project_set or keep rule that matches it.
-                foreach ($set in $exercise.sets) {
-                    $setName = [string]$set.name.en
-                    $setDescription = [string]$set.description.en
-                    $setRule = $projectionRules | Where-Object {
-                        [string]$_.action -cne "project_exercise" -and (Test-ProjectionWhere $_ $levelNumber ([int]$program.number)) -and
-                        (Test-ProjectionField $_ "exercise" $exerciseName) -and (Test-ProjectionField $_ "exercise_description" $exerciseDescription) -and
-                        (Test-ProjectionField $_ "set" $setName) -and (Test-ProjectionField $_ "set_description" $setDescription) -and
-                        (Test-ProjectionLike $_ "$exerciseDescription $setDescription")
-                    } | Select-Object -First 1
-                    if ($null -eq $setRule) { continue }
-                    $sourceRepetitions = $set.repetitions
-                    Set-ProjectionDose $set (Get-ProjectionDose $setRule $levelNumber ([int]$program.number)) ([int]$limits.max_set_repetitions)
-                    if ($null -ne $setRule.PSObject.Properties["rest_min"]) {
-                        $set.break_seconds = [Math]::Max([int]$set.break_seconds, [int]$setRule.rest_min)
-                    }
-                    if ([string]$setRule.action -ceq "keep") {
-                        Update-PerSideNote $set $sourceRepetitions
-                        continue
-                    }
-                    $movement = $movementById[[string]$setRule.movement_id]
-                    $regression = $movementById[[string]$movement.regression_id]
-                    if ($null -eq $movement -or $null -eq $regression) { throw "early_projection needs a library movement with a regression: $($setRule.movement_id)" }
-                    $set.name = $movement.name
-                    $sourceNote = $(if (-not [string]::IsNullOrWhiteSpace($setDescription)) { $setDescription.Trim() } else { $exerciseDescription.Trim() })
-                    if ($sourceNote -and -not $sourceNote.EndsWith(".")) { $sourceNote += "." }
-                    $lead = $(if ($null -ne $setRule.PSObject.Properties["set_note"]) { ([string]$setRule.set_note).Replace("{source}", $sourceNote).Trim() + " " } else { "" })
-                    $set.description = Localized ("{0}Easier option: {1}; stop with reserve effort." -f $lead, $regression.name.en)
-                    $set | Add-Member -NotePropertyName movement_id -NotePropertyValue $movement.id -Force
-                }
-            }
-            $practiceSetCount = 0
-            foreach ($step in @($program.practice)) { $practiceSetCount += [int]$step[1] }
-            $remaining = [Math]::Min([int]$limits.main_sets_including_practice, [int]$progressionLimits.main_sets_including_practice) - $practiceSetCount
-            if ($remaining -lt @($training.exercises).Count) { throw "The set budget must retain every source exercise" }
-            $selectedByExercise = @{}
-            foreach ($exercise in $training.exercises) { $selectedByExercise[[string]$exercise.id] = New-Object System.Collections.ArrayList }
-            for ($round = 0; $round -lt [int]$limits.sets_per_exercise; $round++) {
-                foreach ($exercise in $training.exercises) {
-                    if ($remaining -le 0) { break }
-                    $available = @($exercise.sets)
-                    if ($round -lt $available.Count) {
-                        $set = $available[$round]
-                        if ($set.repetitions_max) {
-                            $set.repetitions_max = $false
-                            $set.repetitions = [int]$limits.max_set_repetitions
-                        } elseif ($null -ne $set.repetitions) {
-                            $uncapped = $set.repetitions
-                            $set.repetitions = [Math]::Min([int]$set.repetitions, [int]$limits.repetitions)
-                            Update-PerSideNote $set $uncapped
-                        }
-                        if ($null -ne $set.duration_seconds) {
-                            $set.duration_seconds = [Math]::Min([int]$set.duration_seconds, [int]$limits.hold_seconds)
-                        }
-                        $set.break_seconds = [Math]::Max([int]$set.break_seconds, [int]$limits.minimum_rest_seconds)
-                        if ($null -ne $limits.PSObject.Properties["maximum_rest_seconds"]) {
-                            $set.break_seconds = [Math]::Min([int]$set.break_seconds, [int]$limits.maximum_rest_seconds)
-                        }
-                        [void]$selectedByExercise[[string]$exercise.id].Add($set)
-                        $remaining--
-                    }
-                }
-            }
-            foreach ($exercise in $training.exercises) { $exercise.sets = @($selectedByExercise[[string]$exercise.id]) }
-            $program["training_content"] = $training
-            $program["training_rpe"] = $(if ($levelNumber -eq 1) { 6 } else { [int]$limits.rpe })
-        }
-        if ($null -ne $program.schedule.rpe -and [int]$program.schedule.rpe -le 4) {
-            $program["practice"] = @()
-        }
-        # An exam day tests the handstand in its main work, so it skips the practice block (round 6).
-        if ([string]$program.schedule.day_type -match "^exam") {
-            $program["practice"] = @()
-        }
-        if ($program.origin -ne "apk_authentic") {
-            # Tuck-or-harder flags lead the main work; the set budget still counts them as before.
-            $leading = New-Object System.Collections.ArrayList
-            $kept = New-Object System.Collections.ArrayList
-            foreach ($step in @($program.practice)) {
-                if ([string]$step[0] -in $script:hardFlagIds) { [void]$leading.Add($step) } else { [void]$kept.Add($step) }
-            }
-            $program["practice"] = $kept.ToArray()
-            $practiceSets = 0
-            foreach ($step in @($program.practice) + $leading.ToArray()) { $practiceSets += [int]$step[1] }
-            $limited = Limit-TrainingSteps $program.main `
-                ([int]$progressionLimits.main_sets_including_practice - $practiceSets) `
-                ([int]$progressionLimits.sets_per_exercise)
-            foreach ($step in @($limited)) { [void]$leading.Add($step) }
-            $program["training_main"] = $leading.ToArray()
-        }
+        $program["practice"] = @($program.practice)
     }
 
     if ($programs.Count -ne $targetProgramsPerLevel) {
@@ -653,8 +282,8 @@ $result = [ordered]@{
     catalog_provenance = [ordered]@{
         classification = "llm_authored_reconstructed_curriculum"
         notice = $catalogMetadata.catalog_notice
-        content_generation = "Static sessions authored by language-model review; scripts only assemble and validate."
-        content_revision = 2
+        content_generation = "Static sessions written by tools/build_curriculum.py from the round 9 plan; scripts assemble and validate."
+        content_revision = 3
     }
     summary = [ordered]@{
         level_count = $assembledLevels.Count
@@ -684,5 +313,5 @@ $utf8WithoutBom = New-Object System.Text.UTF8Encoding($false)
 Write-Host "Assembled $($result.summary.program_count) programs across $($result.summary.level_count) levels."
 Write-Host "Authentic: $authenticCount; reconstructed placeholders: $reconstructedCount; replaced original-source classes: $replacedSourceCount; new-level: $newLevelCount."
 Write-Host "LLM extensions: $newExtensionCount; archived legacy placeholders retained in forensic export: $archivedLegacyPlaceholderCount."
-Write-Host "Movement definitions: $($movementById.Count); coaching profiles: $($coachingProfiles.Count)."
+Write-Host "Movement definitions: $($movementById.Count)."
 Write-Host "Output: $OutputPath"

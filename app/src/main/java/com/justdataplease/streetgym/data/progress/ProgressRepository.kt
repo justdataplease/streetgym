@@ -2,12 +2,12 @@ package com.justdataplease.streetgym.data.progress
 
 /**
  * One finished class. [credits] holds the sets ticked per movement in its practice and main work, with an easier
- * option credited to the easier movement; null for a class saved before ticks were kept. A [repeat] is a day the
- * athlete had already completed and chose to train again: its ticked sets earn skill points like any class, but
+ * option credited to the easier movement; null for a class saved before ticks were kept. [doses]: each of a skill's
+ * ticked sets in its measure, reps or seconds held (0 when unknown); null for a class saved before doses were kept.
+ * A [repeat] is a day the athlete had already completed and chose to train again: its ticked sets count like any class, but
  * completed days, Today, level progress and the level replay come from [ProgressRepository.completedProgramIds],
  * which a repeat never changes. [manuallyCompleted]: marked done without training, by "Complete day" or "Complete
- * level" (worth nothing) or by the placement test ([placed], credited as trained). [intensity]: the day's Easier,
- * Normal or Harder.
+ * level" or by the placement test ([placed]), all worth nothing. [intensity]: the day's Easier, Normal or Harder.
  */
 data class WorkoutSession(
     val programId: String,
@@ -20,9 +20,13 @@ data class WorkoutSession(
     val credits: Map<String, Int>? = null,
     val placed: Boolean = false,
     val intensity: Intensity = Intensity.NORMAL,
+    val doses: Map<String, List<Int>>? = null,
 )
 
-/** A class in progress. [easierExercises]: the exercises the athlete does as their easier option (WorkoutFlow.exerciseKey). */
+/**
+ * A class in progress. [easierExercises]: the exercises the athlete does as their easier option (WorkoutFlow.exerciseKey).
+ * [done]: what the athlete did in a set, by set key, where it differs from the plan or the plan says "max".
+ */
 data class ActiveWorkout(
     val programId: String,
     val startedAtEpochMillis: Long,
@@ -30,6 +34,7 @@ data class ActiveWorkout(
     val repeat: Boolean = false,
     val easierExercises: Set<String> = emptySet(),
     val intensity: Intensity = Intensity.NORMAL,
+    val done: Map<String, Int> = emptyMap(),
 )
 
 interface ProgressRepository {
@@ -49,14 +54,14 @@ interface ProgressRepository {
     fun setEasier(exerciseKey: String, easier: Boolean)
     /** Easier, Normal or Harder for the active workout, until it finishes. */
     fun setIntensity(intensity: Intensity) {}
+    /** What the athlete did in a set of the active workout, in reps or seconds; null goes back to the plan. */
+    fun setDone(setId: String, amount: Int?) {}
     fun finishWorkout(
         completedAtEpochMillis: Long = System.currentTimeMillis(),
         effortRating: Int? = null,
         credits: Map<String, Int>? = null,
+        doses: Map<String, List<Int>>? = null,
     ): WorkoutSession?
-    /** Logged skill tests and readiness checks ([SkillTestLog]). */
-    fun skillTests(): SkillTestLog
-    fun recordSkillTest(skillId: String, passed: Boolean, at: Long = System.currentTimeMillis())
     /** Exam results ([ExamLog]); a repository without them keeps none. */
     fun examLog(): ExamLog = ExamLog()
     fun recordExam(result: ExamResult) {}

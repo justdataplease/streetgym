@@ -9,6 +9,7 @@ import com.justdataplease.streetgym.data.model.TrainingExercise
 import com.justdataplease.streetgym.data.model.TrainingLevel
 import com.justdataplease.streetgym.data.model.TrainingProgram
 import com.justdataplease.streetgym.data.model.TrainingSet
+import com.justdataplease.streetgym.data.skills.SkillCurriculumReader
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -101,9 +102,9 @@ object CurriculumJsonParser {
             json.optJSONArray("training_main") != null ->
                 parseCompactSteps(json.optJSONArray("training_main"), programId, "main", movementLibrary)
             content?.optJSONArray("exercises") != null ->
-                content.optJSONArray("exercises").mapObjects(::parseExpandedExercise)
+                content.optJSONArray("exercises").mapObjects { parseExpandedExercise(it, movementLibrary) }
             json.optJSONArray("exercises") != null ->
-                json.optJSONArray("exercises").mapObjects(::parseExpandedExercise)
+                json.optJSONArray("exercises").mapObjects { parseExpandedExercise(it, movementLibrary) }
             json.optJSONArray("main") != null ->
                 parseCompactSteps(json.optJSONArray("main"), programId, "main", movementLibrary)
             sections?.optJSONArray("main") != null ->
@@ -161,7 +162,7 @@ object CurriculumJsonParser {
         if (array == null || array.length() == 0) return emptyList()
         return when (array.opt(0)) {
             is JSONArray -> parseCompactSteps(array, programId, section, movementLibrary)
-            is JSONObject -> array.mapObjects(::parseExpandedExercise)
+            is JSONObject -> array.mapObjects { parseExpandedExercise(it, movementLibrary) }
             else -> emptyList()
         }
     }
@@ -244,17 +245,24 @@ object CurriculumJsonParser {
         }
     }
 
-    private fun parseExpandedExercise(json: JSONObject): TrainingExercise = TrainingExercise(
-        id = json.optValueAsString("id") ?: "exercise-${json.optInt("number", 0)}",
-        movementId = json.optValueAsString("movement_id")
-            ?: json.optValueAsString("animation_id"),
-        number = json.optInt("number", 0),
-        name = json.optLocalized("name"),
-        description = json.optLocalized("description"),
-        sets = json.optJSONArray("sets").mapObjects(::parseExpandedSet),
-        category = json.optValueAsString("category"),
-        equipment = json.optJSONArray("equipment").mapStrings(),
-    )
+    private fun parseExpandedExercise(json: JSONObject, movementLibrary: Map<String, JSONObject>): TrainingExercise {
+        val movementId = json.optValueAsString("movement_id") ?: json.optValueAsString("animation_id")
+        val name = json.optLocalized("name")
+        val description = json.optLocalized("description")
+        // An original-source exercise names no category: its movement's, or its source name's, lets Easier and Harder
+        // scale it like the authored classes (the coaching review, 29 October 2026).
+        val known = movementId ?: SkillCurriculumReader.authenticMovement(name.en.orEmpty(), description.en.orEmpty())
+        return TrainingExercise(
+            id = json.optValueAsString("id") ?: "exercise-${json.optInt("number", 0)}",
+            movementId = movementId,
+            number = json.optInt("number", 0),
+            name = name,
+            description = description,
+            sets = json.optJSONArray("sets").mapObjects(::parseExpandedSet),
+            category = json.optValueAsString("category") ?: known?.let { movementLibrary[it]?.optValueAsString("category") },
+            equipment = json.optJSONArray("equipment").mapStrings(),
+        )
+    }
 
     private fun parseExpandedSet(json: JSONObject): TrainingSet = TrainingSet(
         id = json.optValueAsString("id") ?: "set-${json.optInt("number", 0)}",

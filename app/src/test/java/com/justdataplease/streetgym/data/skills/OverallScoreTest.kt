@@ -2,73 +2,79 @@ package com.justdataplease.streetgym.data.skills
 
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.File
+import kotlin.math.roundToInt
 
-/** The weighted overall score on the shipped curriculum. */
+/**
+ * The weighted overall score: on every family's ladders as the skills define them, and on the shipped curriculum for
+ * the program as written.
+ */
 class OverallScoreTest {
-    private fun score(verified: Set<String>, credits: List<SkillCredit> = emptyList()) = book.progress(credits, verified).overall
+    /** Each skill in [levels] at that level: 30 sets of it at the level's target (enough for any level), as an own day. */
+    private fun score(levels: Map<String, SkillLevel>, credits: List<SkillCredit> = emptyList()): OverallScore =
+        book.progress(credits + levels.mapNotNull { (id, level) ->
+            SkillStandards.of(id).target(level)?.let { target ->
+                SkillCredit("custom:$id", mapOf(id to SkillLevel.ELITE.sets), doses = mapOf(id to List(SkillLevel.ELITE.sets) { target }))
+            }
+        }).overall
 
-    @Test fun nothingDoneIsZeroAndEveryTopRungIsTheWholeThousand() {
-        assertEquals(0, score(emptySet()).score)
-        assertEquals(OverallScore.Tier.BEGINNER, score(emptySet()).tier)
-        val tops = book.families.map { it.skills.maxBy { skill -> skill.value }.id }.toSet()
-        assertEquals(OverallScore.MAX, score(tops).score)
-        assertEquals(OverallScore.Tier.WORLD_CLASS, score(tops).tier)
-        assertEquals(book.families.sumOf { it.ceiling }, score(emptySet()).max)
+    private fun elite(vararg ids: String) = score(ids.associateWith { SkillLevel.ELITE })
+
+    @Test fun nothingDoneIsZeroAndEliteOfEveryTopRungIsTheWholeScaleButTheRetiredFamilies() {
+        assertEquals(0, score(emptyMap()).score)
+        assertEquals(OverallScore.Tier.BEGINNER, score(emptyMap()).tier)
+        val tops = book.families.map { it.skills.maxBy { skill -> skill.value }.id }
+        // The retired Nordic curl family's 24 stay in the maximum until the board function drops it: 743 of 767.
+        val retired = OverallScore.RETIRED_CEILINGS.values.sum()
+        val max = book.families.sumOf { it.ceiling } + retired
+        assertEquals(max, score(emptyMap()).max)
+        assertEquals((OverallScore.MAX * (max - retired).toDouble() / max).roundToInt(), elite(*tops.toTypedArray()).score)
+        assertEquals(OverallScore.Tier.WORLD_CLASS, elite(*tops.toTypedArray()).tier)
     }
 
     @Test fun harderSkillsWeighMore() {
-        val pullup = score(setOf("pullup")).score
-        val tuckFront = score(setOf("tuck_front_hold")).score
-        val fullFront = score(setOf("full_front")).score
-        val fullPlanche = score(setOf("full_planche")).score
+        val pullup = elite("pullup").score
+        val tuckFront = elite("tuck_front_hold").score
+        val fullFront = elite("full_front").score
+        val fullPlanche = elite("full_planche").score
         assertTrue("$pullup < $tuckFront < $fullFront < $fullPlanche", pullup < tuckFront && tuckFront < fullFront && fullFront < fullPlanche)
         // A full planche is worth twice a full front lever, and a full front lever about twice a full back lever.
         assertEquals(2.0, fullPlanche.toDouble() / fullFront, 0.02)
-        assertEquals(2.0, fullFront.toDouble() / score(setOf("full_back")).score, 0.05)
+        assertEquals(2.0, fullFront.toDouble() / elite("full_back").score, 0.05)
     }
 
-    @Test fun eachFamilyCountsOnlyItsBestRung() {
-        val pullup = score(setOf("pullup")).score
-        assertEquals(pullup, score(setOf("assisted_pullup", "eccentric_pullup", "chinup", "pullup")).score)
+    @Test fun eachLevelEarnsAFifthOfTheSkillsValue() {
+        fun family(levels: Map<String, SkillLevel>) = score(levels).families.first { it.family.spec.id == "pullup" }
+        fun own(level: SkillLevel) = OverallScore.points(book.progress(listOf(SkillCredit("custom:p",
+            mapOf("pullup" to SkillLevel.ELITE.sets),
+            doses = mapOf("pullup" to List(SkillLevel.ELITE.sets) { SkillStandards.of("pullup").target(level)!! }))))
+            .statuses.first { it.skill.id == "pullup" })
+        // The pull-up is worth 10: Beginner 2, Intermediate 4, Elite 10.
+        assertEquals(2.0, own(SkillLevel.BEGINNER), 1e-9)
+        assertEquals(4.0, own(SkillLevel.INTERMEDIATE), 1e-9)
+        assertEquals(10.0, own(SkillLevel.ELITE), 1e-9)
+        // The family counts its best skill, each earned on itself: a Beginner pull-up gives the dead hang below it nothing.
+        assertEquals(2.0, family(mapOf("pullup" to SkillLevel.BEGINNER)).points, 1e-9)
+        assertEquals("pullup", family(mapOf("pullup" to SkillLevel.BEGINNER)).best?.skill?.id)
+        assertEquals(10.0, family(mapOf("pullup" to SkillLevel.ELITE)).points, 1e-9)
+        val levels = SkillLevel.entries.map { score(mapOf("pullup" to it)).score }
+        assertEquals(levels.sorted(), levels)
+    }
+
+    @Test fun eachFamilyCountsOnlyItsBestSkill() {
+        val pullup = elite("pullup").score
+        assertEquals(pullup, elite("dead_hang", "pullup").score)
         // Two families add up.
-        val dip = score(setOf("parallel_dip")).score
-        assertEquals((pullup + dip).toDouble(), score(setOf("pullup", "parallel_dip")).score.toDouble(), 1.0)
+        val dip = elite("parallel_dip").score
+        assertEquals((pullup + dip).toDouble(), elite("pullup", "parallel_dip").score.toDouble(), 1.0)
     }
 
-    @Test fun trainingAloneEarnsAtMostHalfTheGapToTheNextRung() {
-        // Every class of the program, followed to the letter, with no test ever passed.
-        val attended = score(emptySet(), allClasses)
-        assertTrue("attendance only: ${attended.score}", attended.score in 1..300)
-        attended.families.forEach { family ->
-            val base = family.base?.skill?.value ?: 0
-            val next = family.next?.skill?.value ?: base
-            assertTrue("${family.family.spec.id} ${family.points}", family.points <= base + OverallScore.PARTIAL * (next - base) + 1e-9)
-        }
-    }
-
-    @Test fun followingTheProgramAndPassingEachTestReachesEliteWithTheEndSkillsStillAhead() {
-        val taught = book.families.flatMap { it.skills }.filter { it.expected != null }.map { it.id }.toSet()
-        val graduate = score(taught, allClasses)
-        assertTrue("graduate ${graduate.score}", graduate.score in 650..849)
-        assertEquals(OverallScore.Tier.ELITE, graduate.tier)
-        // What's left: the rungs past the program, the full planche worth the most of them.
-        val left = book.families.flatMap { it.skills }.filter { it.id !in taught }.map { it.id }.toSet()
-        assertTrue(left.containsAll(setOf("full_planche", "one_arm_pullup", "one_arm_pushup", "v_sit")))
-        assertFalse("freestanding_handstand" in left)  // round 6: practised from Level 5 and tested in the exams
-    }
-
-    @Test fun aTrainedRungShowsItsTestAsTheNextBigGain() {
-        val overall = score(emptySet(), allClasses)
-        val best = overall.bestTest()
-        assertTrue("best $best", best != null && best.first.trained && best.second > 0)
-        assertEquals(overall.gain(best!!.first.skill), best.second)
-        // Passing it adds at least that much.
-        val after = score(setOf(best.first.skill.id), allClasses).score
-        assertTrue("${overall.score} + ${best.second} <= $after", after >= overall.score + best.second - 1)
+    @Test fun followingTheProgramAsPrescribedScoresSomethingWithTheTopStillAhead() {
+        val attended = real.progress(allClasses).overall
+        // Levels 8-10 climb to every Elite set, but Elite takes 30 sets at its target, so the top stays ahead.
+        assertTrue("program as written: ${attended.score}", attended.score in OverallScore.MAX / 4 until OverallScore.MAX * 3 / 4)
     }
 
     @Test fun tiersCoverZeroToAThousand() {
@@ -82,16 +88,22 @@ class OverallScoreTest {
     }
 
     @Test fun groupsShareTheThousand() {
-        val tops = book.families.map { it.skills.maxBy { skill -> skill.value }.id }.toSet()
-        val overall = score(tops)
+        val tops = book.families.map { it.skills.maxBy { skill -> skill.value }.id }
+        val overall = elite(*tops.toTypedArray())
         val ceilings = SkillGroup.entries.map { overall.group(it) }
         ceilings.forEach { (points, ceiling) -> assertEquals(ceiling, points) }
-        assertEquals(OverallScore.MAX.toDouble(), ceilings.sumOf { it.second }.toDouble(), 2.0)
+        // The four groups share the thousand, less the retired families' share.
+        assertEquals(overall.scaled(overall.max - OverallScore.RETIRED_CEILINGS.values.sum().toDouble()).toDouble(),
+            ceilings.sumOf { it.second }.toDouble(), 2.0)
     }
 
     private companion object {
+        /** Every family with all its rungs, as a curriculum that teaches the 37 skills gives them. */
+        val book = SkillBook.build(
+            SkillBook.DEFAULT_FAMILIES.flatMap { it.ladder }.associateWith { SkillMovement(it, it, "skill", emptySet(), null) },
+            emptyList())
         val curriculum: String by lazy { File("src/main/assets/curriculum.json").readText() }
-        val book by lazy { SkillCurriculumReader.read(curriculum) }
+        val real by lazy { SkillCurriculumReader.read(curriculum) }
         val allClasses: List<SkillCredit> by lazy {
             val levels = JSONObject(curriculum).getJSONArray("levels")
             (0 until levels.length()).map(levels::getJSONObject).sortedBy { it.getInt("number") }.flatMap { level ->

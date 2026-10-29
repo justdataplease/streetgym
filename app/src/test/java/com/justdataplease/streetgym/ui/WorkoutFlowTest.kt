@@ -4,6 +4,7 @@ import com.justdataplease.streetgym.data.model.EasierOption
 import com.justdataplease.streetgym.data.model.LocalizedText
 import com.justdataplease.streetgym.data.model.TrainingExercise
 import com.justdataplease.streetgym.data.model.TrainingSet
+import com.justdataplease.streetgym.data.skills.SkillStandard
 import org.junit.Assert.*
 import org.junit.Test
 
@@ -137,8 +138,72 @@ class WorkoutFlowTest {
         val easier = setOf(flow.steps.first { it.exercise.id == "pullup" }.exerciseKey)
         assertEquals(mapOf("wall_handstand" to 2, "eccentric_pullup" to 3, "dip" to 1), flow.credits(ticked, easier, movementOf))
         assertEquals(emptyMap<String, Int>(), flow.credits(emptySet(), easier, movementOf))
-        // The ticked readiness check is asked about instead.
-        assertEquals(listOf("tuck_planche"), flow.readinessChecks(ticked).map { it.id })
-        assertEquals(emptyList<TrainingExercise>(), flow.readinessChecks(emptySet()))
+    }
+
+    @Test fun eachTickedSetKeepsItsDoseInTheSkillsMeasure() {
+        val hold = exercise("wall_handstand", 2).let { e -> e.copy(sets = e.sets.map { it.copy(repetitions = null, durationSeconds = 30) }) }
+        val max = exercise("pullup", 3).let { e -> e.copy(sets = e.sets.map { it.copy(repetitionsMax = true) }) }
+        val flow = WorkoutFlow.of("p1", listOf("practice" to listOf(hold), "main" to listOf(max, main[1])))
+        val movementOf = { exercise: TrainingExercise -> exercise.id }
+        val standards = mapOf("wall_handstand" to standard(seconds = true), "pullup" to standard(), "dip" to standard())
+        val ticked = flow.keys.toSet()
+        val pullups = flow.steps.filter { it.exercise.id == "pullup" }
+        // Holds in seconds and reps as planned; a "max" set counts what was logged, or nothing.
+        val done = mapOf(pullups[0].key to 12, pullups[1].key to 9)
+        assertEquals(mapOf("wall_handstand" to listOf(30, 30), "pullup" to listOf(12, 9, 0), "dip" to listOf(8, 8)),
+            flow.doses(ticked, emptySet(), done, movementOf, standards::get))
+        // A logged set beats the plan.
+        val dip = flow.steps.first { it.exercise.id == "dip" }.key
+        assertEquals(listOf(15, 8), flow.doses(ticked, emptySet(), mapOf(dip to 15), movementOf, standards::get)["dip"])
+        // A movement that is no skill is left out; a set measured the other way counts 0 until logged.
+        assertNull(flow.doses(ticked, emptySet(), emptyMap(), movementOf, mapOf("dip" to standard())::get)["pullup"])
+        assertEquals(listOf(0, 0), flow.doses(ticked, emptySet(), emptyMap(), movementOf, mapOf("wall_handstand" to standard())::get)["wall_handstand"])
+        assertEquals(listOf(30, null, 8), listOf(flow[0], flow[2], flow[5]).map { it.set.planned })
+    }
+
+    @Test fun aPracticeWindowCountsOnlyTheLongestHoldLogged() {
+        val window = exercise("handstand_balance", 2).let { e -> e.copy(sets = e.sets.map { it.copy(repetitions = null, durationSeconds = 30) }) }
+        val flow = WorkoutFlow.of("p1", listOf("practice" to listOf(window)))
+        val standards = mapOf("handstand_balance" to standard(seconds = true, window = true))
+        // The 30 s window is for attempts: it holds nothing until the athlete logs the longest clean balance.
+        assertEquals(SetMeasure(timed = true, planned = null, window = true), WorkoutFlow.measure(flow[0], standards["handstand_balance"]))
+        assertEquals(listOf(6, 0), flow.doses(flow.keys.toSet(), emptySet(), mapOf(flow[0].key to 6), { it.id }, standards::get)["handstand_balance"])
+    }
+
+    @Test fun anEasierOptionMeasuredTheOtherWayAsksForItsOwnNumber() {
+        val row = EasierOption("tuck_front_row", LocalizedText("Tuck Front Lever Row"))
+        val hold = exercise("tuck_front_hold", 2).let { e ->
+            e.copy(movementId = "tuck_front_hold", easier = row, sets = e.sets.map { it.copy(repetitions = null, durationSeconds = 10) })
+        }
+        val flow = WorkoutFlow.of("p1", listOf("main" to listOf(hold)))
+        val standards = mapOf("tuck_front_hold" to standard(seconds = true), "tuck_front_row" to standard())
+        val movementOf = { exercise: TrainingExercise -> exercise.movementId }
+        val easier = setOf(flow[0].exerciseKey)
+        fun measure(easier: Set<String>) = WorkoutFlow.measure(flow[0], WorkoutFlow.movement(flow[0], easier, movementOf)?.let(standards::get))
+        // As written, the 10 s hold counts; as rows, reps count, which the plan doesn't give.
+        assertEquals(SetMeasure(timed = true, planned = 10), measure(emptySet()))
+        assertEquals(SetMeasure(timed = false, planned = null), measure(easier))
+        assertEquals(mapOf("tuck_front_row" to listOf(8, 0)),
+            flow.doses(flow.keys.toSet(), easier, mapOf(flow[0].key to 8), movementOf, standards::get))
+    }
+
+    private fun standard(seconds: Boolean = false, window: Boolean = false) = SkillStandard(seconds, 1, listOf(1), window = window)
+
+    @Test fun anExamTargetStartsReachedOnlyWhenEverySetWasDoneInFullAsWritten() {
+        val easierOption = EasierOption("assisted_pullup", LocalizedText("Assisted Pull-Up"))
+        val pullup = exercise("pullup", 2).copy(assessment = true, easier = easierOption)
+        val dip = exercise("dip", 1).copy(assessment = true)
+        val flow = WorkoutFlow.of("exam", listOf("practice" to practice, "main" to listOf(pullup, dip, main[0])))
+        val all = flow.keys.toSet()
+        fun reached(completed: Set<String> = all, easier: Set<String> = emptySet(), done: Map<String, Int> = emptyMap()) =
+            flow.examTests(completed, easier, done).map { (exercise, reached) -> exercise.id to reached }
+        // Only the assessment sets of the main work are targets.
+        assertEquals(listOf("pullup" to true, "dip" to true), reached())
+        val pullups = flow.steps.filter { it.exercise === pullup }
+        assertEquals(listOf("pullup" to false, "dip" to true), reached(completed = all - pullups[1].key))
+        assertEquals(listOf("pullup" to false, "dip" to true), reached(easier = setOf(pullups[0].exerciseKey)))
+        // A logged set short of the 8 planned misses it; meeting or beating it doesn't.
+        assertEquals(listOf("pullup" to false, "dip" to true), reached(done = mapOf(pullups[0].key to 7)))
+        assertEquals(listOf("pullup" to true, "dip" to true), reached(done = mapOf(pullups[0].key to 8, pullups[1].key to 11)))
     }
 }

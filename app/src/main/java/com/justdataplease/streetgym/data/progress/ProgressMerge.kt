@@ -1,5 +1,8 @@
 package com.justdataplease.streetgym.data.progress
 
+/** The merged copy of Pro's cloud progress: completed days, history and exam results, as uploaded. */
+data class CloudProgress(val completed: Set<String>, val sessions: String, val exams: String)
+
 /**
  * Pro's cloud copy meets this device's progress: completed days are united and history keeps every session either
  * side has, once. Nothing is ever removed by a merge.
