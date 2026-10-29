@@ -2,8 +2,10 @@ package com.justdataplease.streetgym.data.skills
 
 /**
  * An athlete's level in one skill, like belts: each takes [sets] sets at its target or more ([SkillStandard.target]),
- * and a set over a higher target counts for the lower ones too. Beginner comes quickly (10 sets), so a new athlete
- * earns a first badge in the first weeks; Intermediate takes 20 and the rest 30 each. Elite is ultra hard but possible.
+ * and a set over a higher target counts for the lower ones too, so 30 sets at the Elite target earn all five. A level
+ * held on a harder rung holds on the easier rungs of its ladder ([SkillStatus.carriedBy]). Beginner comes quickly (10
+ * sets), so a new athlete earns a first badge in the first weeks; Intermediate takes 20 and the rest 30 each. Elite is
+ * ultra hard but possible.
  */
 enum class SkillLevel(val sets: Int) {
     NONE(0), BEGINNER(10), INTERMEDIATE(20), ADVANCED(30), MASTER(30), ELITE(30);
@@ -37,7 +39,9 @@ data class SkillStandard(
  * one-arm pull-up asks 1, 1, 2, 2 and 3 reps a side, the full planche 2, 2, 3, 3 and 4 s, the strict muscle-up 1 to 5
  * reps. Where two levels share a target they differ only by their sets: Beginner takes 10 and Intermediate 20, while
  * Advanced and Master, at 30 each, come together. Each skill's Elite target is reached once inside the program, by the
- * end of Level 10; its 30 Elite sets come from repeated blocks and the athlete's own training. Everything else in the
+ * end of Level 10, or the program gives its Elite through a harder rung of its ladder (the tuck and advanced tuck back
+ * levers, through the full back lever); its 30 Elite sets come from repeated blocks and the athlete's own training. A
+ * progression peaks while it is still trained, never as a record beside the harder rung. Everything else in the
  * classes (chin-ups, knee raises, Nordic curls, the one-leg levers, balance attempts and the like) is a progression or
  * a movement and earns no belt. Grades: 1 easy (the dead hang, push-up, squat and hollow body), 2 moderate (the first
  * strict benchmarks, pull-up and dip), 3 hard, 4 very hard (the strict muscle-up, full back lever and full flag), 5

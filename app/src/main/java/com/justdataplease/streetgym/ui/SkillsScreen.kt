@@ -230,6 +230,7 @@ fun Context.showSkillSheet(status: SkillStatus, family: SkillFamily, statuses: L
         }, topDp = 10)
         addWithMargins(detailRow(getString(R.string.skills_difficulty), difficultyName(skill.difficulty)), topDp = 10)
         addView(detailRow(getString(R.string.skills_level), levelName(status.level)))
+        status.carriedBy?.let { addView(detailRow(getString(R.string.skills_held_through), it.name)) }
         addView(detailRow(getString(R.string.skills_sets_done), status.sets.toString()))
         addView(detailRow(getString(R.string.skills_best),
             if (status.best > 0) maxText(standard, status.best) else getString(R.string.skills_best_none)))

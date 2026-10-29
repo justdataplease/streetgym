@@ -17,6 +17,11 @@ TARGETS = {sid: [int(x) for x in nums.split(",")[1:]]
            for sid, nums in re.findall(r'"(\w+)" to (?:reps|repsSide|hold|holdSide|attempts)\(([\d, ]+)\)', kotlin)}
 TARGETS = {k: [int(x) for x in v] for k, v in TARGETS.items()}
 assert len(TARGETS) == 37, len(TARGETS)
+# The app's belt ladders (SkillBook.DEFAULT_FAMILIES), easiest rung first: a level on a harder rung holds on the easier.
+book = (ROOT / "app/src/main/java/com/justdataplease/streetgym/data/skills/SkillBook.kt").read_text(encoding="utf-8")
+BELT_LADDERS = [re.findall(r'"(\w+)"', rungs) for rungs in re.findall(r'SkillFamilySpec\("\w+", "[^"]+", SkillGroup\.\w+,\s*listOf\(([^)]*)\)', book)]
+assert sorted(r for rungs in BELT_LADDERS for r in rungs) == sorted(TARGETS), BELT_LADDERS
+BELT_SETS = [10, 20, 30, 30, 30]
 
 FROZEN_EXAMS = {1: [20, 40, 60, 81, 100], 2: [20, 40, 62, 84, 100], 3: [20, 40, 64, 84, 100]}
 FROZEN_EXAMS.update({L: [13, 34, 55, 76, 100] for L in range(4, 11)})
@@ -181,21 +186,35 @@ for p in classes:
             best[key] = max(best.get(key, 0), v)
 
 # 9. Skills: every one of the 37 belted skills is trained and reaches its Elite target at least once inside the
-#    program; every full shape is first tested by the Level 9 exam; Level 10 holds the records.
+#    program, or holds Elite through a harder rung of its ladder there; a lever, planche or flag progression peaks
+#    while it is trained, never as a record beside a harder rung; every full shape is first tested by the Level 9 exam;
+#    Level 10 holds the records.
 reach = defaultdict(int)
+at_target = {sid: [0] * 5 for sid in TARGETS}
 for p in classes:
     for st in work(p):
         if st[0] in TARGETS and st[5] != "readiness_check":
             reach[st[0]] = max(reach[st[0]], value(st))
+            at_target[st[0]] = [c + (st[1] if value(st) >= t else 0) for c, t in zip(at_target[st[0]], TARGETS[st[0]])]
+    if not p["schedule"]["day_type"].startswith("exam"):
+        ids = {st[0] for st in p["main"]}
+        for st in p["main"]:
+            for rungs in LADDERS.values():
+                if st[5] == "assessment" and st[0] in rungs:
+                    harder = ids & set(rungs[rungs.index(st[0]) + 1:])
+                    assert not harder, f"{where(p)} has a {st[0]} record beside {sorted(harder)}"
+elite_own = {sid for sid, counts in at_target.items() if all(c >= need for c, need in zip(counts, BELT_SETS))}
+elite_in_plan = {r for rungs in BELT_LADDERS for i, r in enumerate(rungs) if elite_own & set(rungs[i:])}
 for sid, t in TARGETS.items():
     assert sid in first, f"{sid} is never trained"
-    assert reach[sid] >= t[4], f"{sid} never reaches its Elite target {t[4]} (best {reach[sid]})"
+    assert reach[sid] >= t[4] or sid in elite_in_plan, f"{sid} never reaches its Elite target {t[4]} (best {reach[sid]})"
 l9 = {st[0] for st in by[(9, 100)]["main"] if st[5] == "assessment"}
 assert set(FULL_SHAPES) <= l9, set(FULL_SHAPES) - l9
 assert all(TARGETS[s][0] <= value(st) for st in by[(9, 100)]["main"] for s in FULL_SHAPES if st[0] == s)
 records = [st for p in classes if p["level"] == 10 for st in p["main"] if st[5] == "assessment" and st[0] in TARGETS and value(st) == TARGETS[st[0]][4]]
 assert records, "Level 10 has no record sets"
 
-print(f"Plan checks passed: frozen exams with a re-entry after each, {len(TARGETS)} skills each reaching Elite at least once, "
+print(f"Plan checks passed: frozen exams with a re-entry after each, {len(TARGETS)} skills each reaching Elite at least once "
+      f"({len(elite_in_plan & {s for s in TARGETS if reach[s] < TARGETS[s][4]})} through a harder rung), no progression record beside a harder rung, "
       f"every full shape tested at L9:100, {len(debuts)} lever, planche and flag rungs at least 60 classes apart, "
       f"easy days easy, lighter exam weeks, weekly hinge, pressing and compression, and no stacked straight-arm, elbow, planche or flag days.")

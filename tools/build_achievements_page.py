@@ -1,7 +1,8 @@
 """Writes docs/ACHIEVEMENTS.html: what the program gives, skill by skill and belt by belt, counted from the classes.
 
 Reads curriculum/program.json (from tools/build_curriculum.py) and counts each belt the way the app does: sets at the
-target or more, the belt below already held, every set done as written on the Normal toggle. Run it after the generator.
+target or more, the belt below already held, every set done as written on the Normal toggle, and a belt held on a harder
+rung of a ladder held on its easier rungs too. Run it after the generator.
 
     python tools/build_achievements_page.py                  # writes docs/ACHIEVEMENTS.html
     python tools/build_achievements_page.py --fragment X     # also writes the page body alone (for an artifact) to X
@@ -9,6 +10,7 @@ target or more, the belt below already held, every set done as written on the No
 import html
 import importlib.util
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -18,19 +20,15 @@ bc = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(bc)
 
 programs = json.loads((ROOT / 'curriculum/program.json').read_text(encoding='utf-8'))['programs']
-landed, counts = bc.belts(programs)
+landed, counts, via = bc.belts(programs)
 BADGES = (ROOT / 'tools/achievement_badges.html').read_text(encoding='utf-8').split('-->', 1)[1].strip()
 NEED = bc.BELT_SETS
+VERSION = re.search(r'versionName = "([^"]+)"', (ROOT / 'app/build.gradle.kts').read_text(encoding='utf-8')).group(1)
 
-FAMILIES = [
-    ('Hang', ['dead_hang']), ('Pull-up', ['pullup', 'archer_pullup']), ('One-arm pull', ['one_arm_pullup']),
-    ('Muscle-up', ['strict_muscleup']), ('Front lever', bc.LADDERS['front']), ('Back lever', bc.LADDERS['back']),
-    ('Dip', ['parallel_dip']), ('Push-up', ['pushup', 'one_arm_pushup']), ('Handstand push-up', ['pike_pushup', 'wall_hspu', 'deficit_wall_hspu']),
-    ('Planche', ['pseudo_planche_pushup'] + bc.LADDERS['planche']), ('Handstand', ['wall_handstand', 'freestanding_handstand']),
-    ('Legs', ['squat', 'pistol_squat']), ('Hanging core', ['hanging_leg_raise', 'toes_to_bar']), ('L-sit', ['lsit', 'v_sit']),
-    ('Core', ['hollow_body_hold', 'dragon_flag']), ('Human flag', bc.LADDERS['flag']),
-]
-assert sorted(s for _, ids in FAMILIES for s in ids) == sorted(bc.SKILLS)
+# The app's families (SkillBook.DEFAULT_FAMILIES), in its order, each rung easiest first.
+NAMES = ['Pull-up', 'Muscle-up', 'Front lever', 'Back lever', 'Dip', 'Push-up', 'Handstand push-up', 'Planche', 'Handstand',
+         'Pistol squat', 'Toes to bar', 'L-sit', 'Dragon flag', 'Human flag']
+FAMILIES = list(zip(NAMES, bc.BELT_LADDERS, strict=True))
 
 
 def pos(L, n):
@@ -41,16 +39,17 @@ def at(x):
     return f'L{x[0]}:{x[1]:03d}'
 
 
-# The first class whose set reaches each skill's Elite target: the max, which every skill reaches once.
+# The first class whose set reaches each skill's Elite target: the max. Every skill reaches it once, or holds Elite
+# itself through a harder rung of its ladder.
 first_max = {}
 for p in programs:
     for st in p['practice'] + p['main']:
         sid = st[0]
-        if sid in bc.SKILLS and sid not in first_max:
+        if sid in bc.SKILLS and sid not in first_max and st[5] != 'readiness_check':
             v = int(str(st[2] if st[2] is not None else st[3]).split('/')[0])
             if v >= bc.SKILLS[sid]['t'][4]:
                 first_max[sid] = (p['level'], p['number'])
-assert set(first_max) == set(bc.SKILLS), set(bc.SKILLS) - set(first_max)
+assert all(sid in first_max or landed[sid][4] for sid in bc.SKILLS), [s for s in bc.SKILLS if s not in first_max and not landed[s][4]]
 
 
 def target(sid, k):
@@ -64,7 +63,9 @@ def cell(sid, k):
     x = landed[sid][k]
     t = html.escape(target(sid, k))
     if x:
-        return (f'<div class="chip done"><b>{at(x)}</b><span>{t}</span>'
+        through = via[sid][k]
+        note = f'<span class="via">via {html.escape(bc.LIB[through]["name"]["en"])}</span>' if through else ''
+        return (f'<div class="chip done{" carried" if through else ""}"><b>{at(x)}</b><span>{t}</span>{note}'
                 f'<span class="mo" data-c="{pos(*x)}"></span></div>')
     extra = ''
     if k == 4:
@@ -97,10 +98,11 @@ MILESTONES = [
     (landed['one_arm_pullup'][0], 'One-arm pull-up Beginner, 1 a side.'),
     (landed['full_planche'][0], 'Full planche Beginner, 2 s: the last of the 37 skills to its first belt.'),
     ((9, 100), 'The Level 9 exam tests every full shape.'),
-    ((10, 100), 'The champion test ends with the Full Battle. By now every skill has reached its Elite target once.'),
+    ((10, 100), 'The champion test ends with the Full Battle. By now every skill has reached its Elite target once, in a set or through a harder rung.'),
 ]
 mil = ''.join(f'<li><b>{at(x)}</b><span class="mo" data-c="{pos(*x)}"></span><span>{html.escape(t)}</span></li>' for x, t in MILESTONES)
 lvl = ''.join(f'<td class="num">{n}</td>' for n in per_level)
+reached = sum(1 for sid in bc.SKILLS if sid in first_max or landed[sid][4])
 
 CSS = """
 :root {
@@ -160,6 +162,9 @@ thead th { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transf
 .chip span { font-size: 11px; color: var(--muted); white-space: nowrap; }
 .chip.done { border-color: var(--ok); }
 .chip.done b { color: var(--ok-ink); }
+.chip.carried { border-style: dashed; }
+.chip .via { color: var(--ok-ink); font-weight: 600; white-space: normal; }
+.key-via { display: inline-block; width: 22px; height: 14px; border: 2px dashed var(--ok); border-radius: 5px; vertical-align: -2px; }
 .chip.window b { color: var(--muted); font-weight: 600; font-size: 13px; }
 .chip .max { color: var(--ink); font-weight: 600; }
 .key-ok { display: inline-block; width: 22px; height: 14px; border: 2px solid var(--ok); border-radius: 5px; vertical-align: -2px; }
@@ -190,14 +195,14 @@ BODY = f"""<title>What You Can Achieve</title>
 <style>{CSS}</style>
 <main>
 <header class="lede">
-  <span class="eyebrow">Street Gymnastics 2.5.0 · the program as written</span>
+  <span class="eyebrow">Street Gymnastics {VERSION} · the program as written</span>
   <h1>What you can achieve</h1>
   <p>Every date on this page is counted from the app's 1,000 classes: if you do every set as written on the Normal toggle, this is the class where each belt lands. Repeating a block after a missed exam moves it later, and Harder days or your own workouts move it sooner.</p>
   <div class="pace" role="group" aria-label="Classes a week"><span>Classes a week</span><button type="button" data-w="5">5</button><button type="button" data-w="6">6</button><button type="button" data-w="7">7</button></div>
 </header>
 <section class="facts" aria-label="In numbers">
   <div class="fact"><b>{inplan}/185</b><span>belts that land inside the program</span></div>
-  <div class="fact"><b>37/37</b><span>skills that reach their Elite target at least once</span></div>
+  <div class="fact"><b>{reached}/37</b><span>skills that reach their Elite target: in a set, or as Elite held through a harder rung</span></div>
   <div class="fact"><b>{at(first_belt)}</b><span>your first belt</span></div>
   <div class="fact"><b>L9:100</b><span>every full shape tested: planche, both levers, the flag, the one-arm pull-up</span></div>
   <div class="fact"><b><span id="years">3.2</span> yrs</b><span>for all 1,000 classes at this pace</span></div>
@@ -206,7 +211,7 @@ BODY = f"""<title>What You Can Achieve</title>
   <p class="staged">The class where each one comes, and roughly when at the pace you picked.</p></div>
   <ol class="miles">{mil}</ol></section>
 <section aria-labelledby="t-h"><div class="head"><h2 id="t-h">Every skill, every belt</h2>
-  <p class="staged">A belt is its target in good form, 10 sets for Beginner, 20 for Intermediate and 30 for each level above. <span class="key-ok"></span> A green outline is a belt the classes give: the class where it lands, its target and when. "own" is a belt that needs repeated blocks or your own training; it shows how many of its sets the classes give. On those Elite cells, "max" is the class where you first do one set at the Elite target.</p></div>
+  <p class="staged">A belt is its target in good form, 10 sets for Beginner, 20 for Intermediate and 30 for each level above. <span class="key-ok"></span> A green outline is a belt the classes give: the class where it lands, its target and when. <span class="key-via"></span> A dashed one comes through a harder rung of the same ladder: a belt held on the full back lever is held on the straddle and tuck back levers too, never higher. "own" is a belt that needs repeated blocks or your own training; it shows how many of its sets the classes give. On those Elite cells, "max" is the class where you first do one set at the Elite target.</p></div>
   <div class="scroll"><table class="map">{BADGES}<tbody>{''.join(rows)}</tbody></table></div></section>
 <section aria-labelledby="l-h"><div class="head"><h2 id="l-h">Belts by level</h2></div>
   <div class="scroll"><table><thead><tr><th scope="col">Level</th>{''.join(f'<th scope="col" class="num">{L}</th>' for L in range(1, 11))}</tr></thead>

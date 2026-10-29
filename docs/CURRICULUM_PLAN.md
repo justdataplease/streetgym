@@ -1,4 +1,4 @@
-# The Street Gymnastics program (round 9, 29 October 2026)
+# The Street Gymnastics program (round 9, 29 October 2026; round 10 review the same day)
 
 One fixed solo program: 10 levels × 100 daily classes, no choices, no freestyle, no group classes. It starts with easy circuits, moves to a fixed skill week, brings the full shapes in Levels 8–9 and spends Level 10 on records. Every class is written by `tools/build_curriculum.py` from the plan below; the numbers in this document are counted from those classes.
 
@@ -91,7 +91,16 @@ The exams that mark the plan:
 - **L10:076, champion test part one.** Every full shape and the hardest strength skills, one fresh set each.
 - **L10:100, the Full Battle.** Five rounds of 10 pull-ups, 20 dips, 30 push-ups and 40 squats, with 30 s between stations and 90 s between rounds. Every station is its own test.
 
-Level 10 is for records: every skill reaches its Elite target in at least one set. Most skills reach it with their working sets. Eight lower or rare rungs get one record set in a Level 10 class instead (tuck and advanced-tuck back lever, advanced-tuck front lever, advanced-tuck planche, tuck flag, L-sit, wall handstand, one-arm pull-up), and the class says so. The 30 Elite sets come from block repeats and own training, by design.
+Level 10 is for records: every skill reaches its Elite target. 34 reach it with their working sets. The one-arm pull-up gets one record set in a Level 10 class (L10:015), and the class says so. The tuck and advanced-tuck back levers hold Elite itself through the full back lever (L10:088). The 30 Elite sets come from block repeats and own training, by design.
+
+**Progressions peak while they are trained (round 10).** Until 2.5.0, the easier rungs reached their top only as Level 10 record sets, next to the full shape: a 20 s tuck back lever beside 4 × 11 s full back levers. Now each one peaks as the back-off of the next rung, before it leaves the classes:
+- advanced-tuck front lever 15 s at L7:078;
+- tuck flag 15 s a side at L6:082;
+- advanced-tuck planche 12 s at L8:079;
+- L-sit 30 s at L9:003, its back-off hold on the legs and core day once the V-sit takes the planche day;
+- wall handstand 75 s at L5:082, one endurance hold after the freestanding practice on the handstand day in Levels 4–5.
+
+A level held on a harder rung also holds on the easier rungs of its ladder, never higher, in the app and in these counts. So a progression never shows a lower belt than the shape above it.
 
 ## Where each belt lands
 
@@ -101,7 +110,7 @@ Counted from the classes, if every set is done as written on the Normal toggle. 
 
 | Family | Skill | Targets | First set | Beginner | Intermediate | Advanced | Master | Elite |
 |---|---|---|---|---|---|---|---|---|
-| Pull | dead_hang | 30/45/60/75/90 s | L1:001 | L1:067 | L2:032 | L4:029 | own | own |
+| Pull | dead_hang | 30/45/60/75/90 s | L1:001 | L1:067 | L2:032 | L4:029 | L8:015* | L10:078* |
 | Pull | pullup | 3/6/10/15/20 | L1:043 | L1:100 | L3:055 | L5:064 | L8:015 | L10:078 |
 | Pull | archer_pullup | 2/3/4/6/8 a side | L5:008 | L5:043 | L6:092 | L8:050 | L9:085 | L10:085 |
 | Pull | one_arm_pullup | 1/1/1/2/3 a side | L9:015 | L9:043 | L9:078 | L10:022 | own | own |
@@ -113,22 +122,22 @@ Counted from the classes, if every set is done as written on the Normal toggle. 
 | Overhead | pike_pushup | 6/8/10/12/15 | L1:044 | L2:023 | L2:096 | L3:054 | L4:013 | own |
 | Overhead | wall_hspu | 2/4/6/8/10 | L4:061 | L5:005 | L6:019 | L8:026 | L9:089 | own |
 | Overhead | deficit_wall_hspu | 2/3/5/6/8 | L8:005 | L8:040 | L9:026 | L10:061 | own | own |
-| Handstand | wall_handstand | 20/30/45/60/75 s | L1:026 | L1:073 | L2:076 | L3:089 | own | own |
+| Handstand | wall_handstand | 20/30/45/60/75 s | L1:026 | L1:073 | L2:076 | L3:089 | L10:008* | own |
 | Handstand | freestanding_handstand | 5/10/20/30/45 s | L4:005 | L4:061 | L5:089 | L8:004 | L10:008 | own |
 | Front lever | tuck_front_hold | 5/8/12/16/20 s | L2:043 | L2:084 | L3:057 | L4:085 | L6:015 | own |
-| Front lever | advanced_tuck_front | 5/8/10/12/15 s | L4:008 | L4:085 | L6:008 | L7:008 | own | own |
-| Front lever | straddle_front | 3/5/6/8/10 s | L7:015 | L7:050 | L9:022 | L9:085 | L10:085 | own |
+| Front lever | advanced_tuck_front | 5/8/10/12/15 s | L4:008 | L4:085 | L6:008 | L7:008 | L10:078* | own |
+| Front lever | straddle_front | 3/5/6/8/10 s | L7:015 | L7:050 | L9:022 | L9:085 | L10:078* | own |
 | Front lever | full_front | 2/3/4/6/8 s | L8:015 | L8:064 | L9:057 | L10:008 | L10:078 | own |
-| Back lever | tuck_back_hold | 5/8/12/16/20 s | L3:011 | L3:032 | L3:081 | L4:060 | own | own |
-| Back lever | advanced_tuck_back | 5/8/10/15/20 s | L4:060 | L4:095 | L5:025 | L6:004 | own | own |
-| Back lever | straddle_back | 3/5/8/10/12 s | L5:081 | L6:011 | L6:060 | L9:004 | L10:011 | own |
+| Back lever | tuck_back_hold | 5/8/12/16/20 s | L3:011 | L3:032 | L3:081 | L4:060 | L9:081* | L10:088* |
+| Back lever | advanced_tuck_back | 5/8/10/15/20 s | L4:060 | L4:095 | L5:025 | L6:004 | L9:081* | L10:088* |
+| Back lever | straddle_back | 3/5/8/10/12 s | L5:081 | L6:011 | L6:060 | L8:088* | L9:081* | L10:088* |
 | Back lever | full_back | 3/5/8/10/12 s | L6:046 | L6:088 | L7:088 | L8:088 | L9:081 | L10:088 |
 | Planche | tuck_planche | 5/8/10/12/15 s | L4:002 | L4:044 | L5:002 | L6:002 | L7:058 | own |
 | Planche | advanced_tuck_planche | 3/5/8/10/12 s | L6:002 | L6:030 | L7:009 | L8:023 | own | own |
-| Planche | straddle_planche | 2/3/4/5/6 s | L8:037 | L8:072 | L10:065 | own | own | own |
+| Planche | straddle_planche | 2/3/4/5/6 s | L8:037 | L8:072 | L9:079* | L10:002* | own | own |
 | Planche | full_planche | 2/2/2/3/4 s | L9:016 | L9:065 | L9:079 | L10:002 | own | own |
-| Flag | tuck_flag | 5/8/10/12/15 s a side | L5:005 | L5:047 | L6:026 | L7:047 | own | own |
-| Flag | straddle_flag | 2/4/6/8/10 s a side | L6:061 | L6:089 | L8:026 | own | own | own |
+| Flag | tuck_flag | 5/8/10/12/15 s a side | L5:005 | L5:047 | L6:026 | L7:026 | L10:089* | own |
+| Flag | straddle_flag | 2/4/6/8/10 s a side | L6:061 | L6:089 | L8:026 | L10:047* | L10:089* | own |
 | Flag | full_flag | 2/3/4/5/6 s a side | L7:061 | L8:005 | L8:089 | L10:047 | L10:089 | own |
 | Core | hollow_body_hold | 20/30/40/50/60 s | L1:001 | L1:015 | L2:020 | L3:064 | L4:038 | L5:068 |
 | Core | hanging_leg_raise | 5/8/10/12/15 | L2:025 | L2:073 | L3:071 | L5:060 | L6:025 | L7:039 |
@@ -139,7 +148,7 @@ Counted from the classes, if every set is done as written on the Normal toggle. 
 | Legs | squat | 15/20/25/30/40 | L1:001 | L1:010 | L2:020 | L3:010 | L3:059 | L6:059 |
 | Legs | pistol_squat | 2/4/6/8/10 a side | L4:003 | L4:038 | L5:059 | L6:094 | L8:024 | L10:010 |
 
-**143 of 185 belts land in classes.** By level, Levels 1–10 land 8, 8, 14, 14, 13, 19, 11, 17, 17 and 22. The first belt comes at class 10 (squat Beginner), the push-up and hollow follow by class 16, and every level brings new ones. Every skill earns its Beginner belt inside the plan, the last being the full planche at L9:065. Followed exactly, the program scores 12 by the end of Level 1, 193 by Level 7, 465 by Level 9 and 698 by Level 10, out of 1000.
+**156 of 185 belts land in classes.** By level, Levels 1–10 land 8, 8, 14, 14, 13, 19, 11, 19, 20 and 30. A * marks a belt held through a harder rung of the same ladder (round 10): the level of the harder rung holds on the easier ones, never higher. The first belt comes at class 10 (squat Beginner), the push-up and hollow follow by class 16, and every level brings new ones. Every skill earns its Beginner belt inside the plan, the last being the full planche at L9:065. Followed exactly, the program scores 12 by the end of Level 1, 193 by Level 7, 465 by Level 9 and 698 by Level 10, out of 1000.
 
 ## The realism check
 
@@ -208,7 +217,8 @@ The strict muscle-up sits below the full front lever in every source:
   - rungs at least 60 classes apart, none starting in a lighter class, none two in a week, at most three a level;
   - a build dose never under 80% of its best on the same day type.
 - **Skills:**
-  - all 37 trained and each at its Elite target at least once;
+  - all 37 trained and each at its Elite target at least once, or holding Elite through a harder rung inside the program;
+  - no lever, planche or flag record set beside a harder rung of its ladder;
   - every full shape tested at L9:100;
   - Level 10 record sets.
 

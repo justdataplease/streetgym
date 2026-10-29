@@ -2568,7 +2568,7 @@
     {
       "id": "wall_handstand",
       "name": {
-        "en": "Chest-to-Wall Handstand Practice"
+        "en": "Chest-to-Wall Handstand"
       },
       "description": {
         "en": "From a plank facing away from a clear wall, walk feet up and hands in only as far as you can reverse safely. Push tall with straight elbows and ribs tucked. Walk back down before fatigue. A partial wall walk is valid."
@@ -2717,7 +2717,7 @@
     {
       "id": "tuck_flag",
       "name": {
-        "en": "Tuck Human-Flag Practice"
+        "en": "Tuck Human Flag"
       },
       "description": {
         "en": "Only after assisted holds and controlled exits are repeatable, briefly unload the foothold with knees tucked. Keep the trunk facing forward and shoulders active. Regain foot support before form changes. Longer-leg and full flags come after stable tuck control, not after finishing a level."
@@ -2740,7 +2740,7 @@
     {
       "id": "straddle_flag",
       "name": {
-        "en": "Straddle Human-Flag Practice"
+        "en": "Straddle Human Flag"
       },
       "description": {
         "en": "From a solid tuck flag, open both legs into a wide straddle for a brief sideways hold, then tuck again and lower under control. Keep the trunk facing forward and the hips in line with the shoulders."

@@ -48,19 +48,19 @@ skill('hanging_leg_raise', [5, 8, 10, 12, 15], 'r', (2, 25), 3, {2: 6, 3: 9, 4: 
 skill('tuck_front_hold', [5, 8, 12, 16, 20], 's', (2, 43), 3, {2: 7, 3: 12, 4: 16, 5: 20, 6: 20, 7: 20, 8: 20, 9: 20, 10: 20})
 skill('pseudo_planche_pushup', [5, 8, 10, 12, 15], 'r', (3, 2), 5, {3: 7, 4: 9, 5: 10, 6: 12, 7: 13, 8: 15, 9: 15, 10: 15})
 skill('tuck_back_hold', [5, 8, 12, 16, 20], 's', (3, 11), 5, {3: 12, 4: 16, 5: 20, 6: 20, 7: 20, 8: 20, 9: 20, 10: 20})
-skill('lsit', [5, 10, 15, 20, 30], 's', (3, 23), 4, {3: 8, 4: 12, 5: 15, 6: 18, 7: 20, 8: 25, 9: 30, 10: 30})
+skill('lsit', [5, 10, 15, 20, 30], 's', (3, 23), 4, {3: 8, 4: 12, 5: 15, 6: 18, 7: 20, 8: 30, 9: 30, 10: 30})
 skill('tuck_planche', [5, 8, 10, 12, 15], 's', (4, 2), 3, {4: 8, 5: 10, 6: 13, 7: 15, 8: 15, 9: 15, 10: 15})
 skill('pistol_squat', [2, 4, 6, 8, 10], 'r', (4, 3), 1, {4: 3, 5: 5, 6: 6, 7: 8, 8: 9, 9: 10, 10: 10}, side=True)
 skill('freestanding_handstand', [5, 10, 20, 30, 45], 's', (4, 5), 3, {4: 6, 5: 10, 6: 15, 7: 20, 8: 25, 9: 30, 10: 45})
-skill('advanced_tuck_front', [5, 8, 10, 12, 15], 's', (4, 8), 3, {4: 5, 5: 8, 6: 10, 7: 13, 8: 15, 9: 15, 10: 15})
+skill('advanced_tuck_front', [5, 8, 10, 12, 15], 's', (4, 8), 3, {4: 5, 5: 8, 6: 10, 7: 15, 8: 15, 9: 15, 10: 15})
 skill('toes_to_bar', [3, 6, 8, 12, 15], 'r', (4, 15), 2, {4: 3, 5: 5, 6: 7, 7: 9, 8: 12, 9: 15, 10: 15})
 skill('strict_muscleup', [1, 2, 3, 4, 5], 'r', (4, 39), 1, {4: 1, 5: 2, 6: 2, 7: 3, 8: 4, 9: 5, 10: 5})
 skill('advanced_tuck_back', [5, 8, 10, 15, 20], 's', (4, 60), 4, {4: 8, 5: 12, 6: 16, 7: 20, 8: 20, 9: 20, 10: 20})
 skill('wall_hspu', [2, 4, 6, 8, 10], 'r', (4, 61), 1, {4: 2, 5: 4, 6: 5, 7: 7, 8: 8, 9: 10, 10: 10})
-skill('tuck_flag', [5, 8, 10, 12, 15], 's', (5, 5), 3, {5: 8, 6: 12, 7: 15, 8: 15, 9: 15, 10: 15}, side=True)
+skill('tuck_flag', [5, 8, 10, 12, 15], 's', (5, 5), 3, {5: 8, 6: 15, 7: 15, 8: 15, 9: 15, 10: 15}, side=True)
 skill('archer_pullup', [2, 3, 4, 6, 8], 'r', (5, 8), 1, {5: 2, 6: 3, 7: 4, 8: 6, 9: 8, 10: 8}, side=True)
 skill('straddle_back', [3, 5, 8, 10, 12], 's', (5, 81), 3, {5: 4, 6: 7, 7: 10, 8: 12, 9: 12, 10: 12})
-skill('advanced_tuck_planche', [3, 5, 8, 10, 12], 's', (6, 2), 2, {6: 5, 7: 8, 8: 10, 9: 12, 10: 12})
+skill('advanced_tuck_planche', [3, 5, 8, 10, 12], 's', (6, 2), 2, {6: 5, 7: 8, 8: 12, 9: 12, 10: 12})
 skill('dragon_flag', [1, 3, 5, 6, 8], 'r', (6, 17), 1, {6: 2, 7: 4, 8: 6, 9: 8, 10: 8})
 skill('straddle_flag', [2, 4, 6, 8, 10], 's', (6, 61), 2, {6: 2, 7: 4, 8: 6, 9: 8, 10: 10}, side=True)
 skill('one_arm_pushup', [1, 3, 5, 7, 10], 'r', (7, 2), 1, {7: 2, 8: 4, 9: 6, 10: 10}, side=True)
@@ -147,6 +147,19 @@ LADDERS = {
     'planche': ['tuck_planche', 'advanced_tuck_planche', 'straddle_planche', 'full_planche'],
     'flag': ['tuck_flag', 'straddle_flag', 'full_flag'],
 }
+
+# The app's belt ladders (SkillBook.DEFAULT_FAMILIES), easiest rung first. A level held on a harder rung is held on
+# every easier rung of its ladder too (round 10): a full back lever at Elite makes the tuck back lever Elite.
+BELT_LADDERS = [
+    ['dead_hang', 'pullup', 'archer_pullup', 'one_arm_pullup'], ['strict_muscleup'],
+    ['tuck_front_hold', 'advanced_tuck_front', 'straddle_front', 'full_front'],
+    ['tuck_back_hold', 'advanced_tuck_back', 'straddle_back', 'full_back'], ['parallel_dip'],
+    ['pushup', 'one_arm_pushup'], ['pike_pushup', 'wall_hspu', 'deficit_wall_hspu'],
+    ['pseudo_planche_pushup', 'tuck_planche', 'advanced_tuck_planche', 'straddle_planche', 'full_planche'],
+    ['wall_handstand', 'freestanding_handstand'], ['squat', 'pistol_squat'], ['hanging_leg_raise', 'toes_to_bar'],
+    ['lsit', 'v_sit'], ['hollow_body_hold', 'dragon_flag'], ['tuck_flag', 'straddle_flag', 'full_flag'],
+]
+assert sorted(r for rungs in BELT_LADDERS for r in rungs) == sorted(SKILLS)
 
 
 def pos(L, n):
@@ -602,7 +615,11 @@ def build_role(role, L, n, step):
         df = dragon(L, n)
         M.append((st(df, 3, ctx=c, rest=120 if df != 'candlestick' else 60, tempo='4010' if 'negative' in df else '2111'), 0))
         M.append((st('hollow_body_hold', 2, ctx=c, rest=60), 1))
-        M.append((st('pancake_compression', 2, ctx=c, rest=60), 2))
+        if started('v_sit', L, n) and L <= 9:
+            # Once the V-sit takes the planche day, the L-sit stays here as the compression hold until it reaches its top.
+            M.append((st('lsit', 1, ctx=c, rest=75), 2))
+        else:
+            M.append((st('pancake_compression', 2, ctx=c, rest=60), 2))
         M.append((st('straight_side_plank', 1, ctx=c, rest=45), 2))
         return P, M, 'legs', 'legs', 45, 6
     if role in ('back_bar', 'back_muscleup'):
@@ -647,7 +664,11 @@ def build_role(role, L, n, step):
         M.append((st('glute_bridge' if L < 3 else 'single_leg_bridge', 2, ctx=c, rest=60), 1))
         M.append((st('hollow_body_hold', 1, ctx=c, rest=60), 2))
         M.append((st('seated_pike_lift', 1, ctx=c, rest=60), 2))
-        return handstand_practice(L, n, 3), M, 'wrist push shoulder', 'push', 55, 6
+        P = handstand_practice(L, n, 3)
+        if started('freestanding_handstand', L, n) and L <= 5:
+            # The wall hold stays as the handstand's endurance back-off until it reaches its own top.
+            P.append((st('wall_handstand', 1, ctx=c, rest=60, tempo='easy technique'), 1))
+        return P, M, 'wrist push shoulder', 'push', 55, 6
     if role == 'basics':
         M = [(st(rung('planche', L, n)[0] or 'planche_lean', 1, ctx=c, rest=90, frac=0.6), 2),
              (st(rung('front', L, n)[0] or 'tuck_front_row', 1, ctx=c, rest=90, frac=0.6), 2),
@@ -984,8 +1005,9 @@ ROLE_OF_SKILL = {'front': ('front_pull', 'front_onearm'), 'back': ('back_bar', '
                  'flag': ('handstand_flag_press',)}
 
 
-def add_records(raw):
-    """Level 10 is for records: a skill the classes never take to its Elite target gets one set at it, an assessment."""
+def add_records(raw, skip=()):
+    """Level 10 is for records: a skill the classes never take to its Elite target gets one set at it, an assessment.
+    The skills in `skip` need none: their fitted classes reach the target, or they hold Elite through a harder rung."""
     best = defaultdict(int)
     for (L, n), r in raw.items():
         for s, _ in r['P'] + r['M']:
@@ -996,7 +1018,7 @@ def add_records(raw):
     used = set()
     for sid, sk in SKILLS.items():
         elite = sk['t'][4]
-        if best[sid] >= elite:
+        if sid in skip:
             continue
         roles = RECORD_ROLE[sid]
         for n in range(15, 92):
@@ -1040,9 +1062,29 @@ def tokens(prog):
 
 
 def build():
+    """All 1,000 classes. A first pass without records finds the skills whose fitted classes reach their Elite target and
+    the rungs that hold Elite through a harder rung inside the program; the second gives the records to the rest."""
+    programs, _, _ = build_once(set(SKILLS))
+    _, _, via = belts(programs)
+    reach = best_sets(programs)
+    return build_once({sid for sid in SKILLS if via[sid][4] or reach[sid] >= SKILLS[sid]['t'][4]})
+
+
+def best_sets(programs):
+    """Each skill's biggest set in the practice and main parts, readiness checks left out."""
+    reach = defaultdict(int)
+    for p in programs:
+        for s in p['practice'] + p['main']:
+            if s[0] in SKILLS and s[5] != 'readiness_check':
+                reach[s[0]] = max(reach[s[0]], int(str(s[2] if s[2] is not None else s[3]).split('/')[0]))
+    return reach
+
+
+def build_once(skip):
     import re
+    rehearsed.clear()  # each pass rehearses from the first class again
     raw = {(L, n): build_raw(L, n) for L in range(1, 11) for n in range(1, 101)}
-    records, best = add_records(raw)
+    records, best = add_records(raw, skip)
     programs = []
     seen_titles, seen_desc, seen_main = set(), set(), set()
     fitted = {}
@@ -1162,15 +1204,30 @@ def check(programs):
                         errors.append(f'L{L}:{s0:03d}-{s0 + 6:03d} misses {k}')
             if not any(re.search(r'(?i)(recovery|restore|reset)', p['schedule']['day_type']) and p['schedule']['rpe'] <= 4 for p in window):
                 errors.append(f'L{L}:{s0:03d}-{s0 + 6:03d} has no recovery day')
+    landed, _, _ = belts(programs)
+    reach = best_sets(programs)
+    for p in programs:
+        ids = {s[0] for s in p['main']}
+        for s in p['main']:
+            # A progression peaks while it is trained: never a record set beside a harder rung of its ladder.
+            if s[5] == 'assessment' and not p['schedule']['day_type'].startswith('exam'):
+                for rungs in LADDERS.values():
+                    if s[0] in rungs and ids & set(rungs[rungs.index(s[0]) + 1:]):
+                        errors.append(f'L{p["level"]}:{p["number"]:03d} has a {s[0]} record beside a harder rung')
+    for sid, sk in SKILLS.items():
+        if reach[sid] < sk['t'][4] and not landed[sid][4]:
+            errors.append(f'{sid} never reaches its Elite target {sk["t"][4]} (best {reach[sid]})')
     return errors
 
 
 def belts(programs):
-    """Where each belt lands if every set is done as written on the Normal toggle: the first class whose running count of
-    sets at or above the target reaches 10/20/30/30/30, the belt below already held. Practice and main count; warm-up,
-    cool-down and readiness checks do not."""
+    """Where each belt lands if every set is done as written on the Normal toggle, as the app counts it: the first class
+    whose running count of sets at or above the target reaches 10/20/30/30/30, the belt below already held, or the
+    first class where a harder rung of its ladder holds that belt (`via` names that rung). Practice and main count;
+    warm-up, cool-down and readiness checks do not."""
     count = {sid: [0] * 5 for sid in SKILLS}
     landed = {sid: [None] * 5 for sid in SKILLS}
+    via = {sid: [None] * 5 for sid in SKILLS}
     for p in programs:
         for s in p['practice'] + p['main']:
             sid = s[0]
@@ -1182,13 +1239,21 @@ def belts(programs):
                     count[sid][k] += s[1]
                 if landed[sid][k] is None and count[sid][k] >= BELT_SETS[k] and (k == 0 or landed[sid][k - 1] is not None):
                     landed[sid][k] = (p['level'], p['number'])
-    return landed, count
+    own = {sid: list(v) for sid, v in landed.items()}
+    for rungs in BELT_LADDERS:
+        for i, sid in enumerate(rungs):
+            for k in range(5):
+                for harder in rungs[i + 1:]:
+                    x = own[harder][k]
+                    if x and (landed[sid][k] is None or pos(*x) < pos(*landed[sid][k])):
+                        landed[sid][k], via[sid][k] = x, harder
+    return landed, count, via
 
 
 def main():
     programs, records, best = build()
     errors = check(programs)
-    landed, count = belts(programs)
+    landed, count, via = belts(programs)
     print('records in Level 10:', {k: v for k, v in records.items()})
     inplan = sum(1 for v in landed.values() for x in v if x)
     per_level = defaultdict(int)
@@ -1197,7 +1262,9 @@ def main():
             if x:
                 per_level[x[0]] += 1
     for sid, v in landed.items():
-        print('%-24s %-16s %s' % (sid, '/'.join(map(str, SKILLS[sid]['t'])), ' '.join('%8s' % ('L%d:%03d' % x if x else 'own') for x in v)))
+        # A * marks a belt held through a harder rung of the ladder.
+        print('%-24s %-16s %s' % (sid, '/'.join(map(str, SKILLS[sid]['t'])),
+                                  ' '.join('%9s' % ('L%d:%03d%s' % (x + ('*' if h else '',)) if x else 'own') for x, h in zip(v, via[sid]))))
     print('belts in plan', inplan, 'of', 5 * len(SKILLS), 'per level', [per_level[L] for L in range(1, 11)])
     print(len(errors), 'check errors')
     for e in errors[:40]:
@@ -1207,7 +1274,7 @@ def main():
     (ROOT / 'curriculum/program.json').write_text(json.dumps(out, ensure_ascii=False, indent=1) + '\n', encoding='utf-8')
     if len(sys.argv) > 2 and sys.argv[1] == '--report':
         Path(sys.argv[2]).write_text(json.dumps({
-            'landed': {k: ['L%d:%03d' % x if x else None for x in v] for k, v in landed.items()},
+            'landed': {k: ['L%d:%03d' % x if x else None for x in v] for k, v in landed.items()}, 'via': via,
             'targets': {k: SKILLS[k]['t'] for k in SKILLS}, 'records': records, 'best': best,
             'debut': {k: 'L%d:%03d' % SKILLS[k]['start'] for k in SKILLS},
             'doses': {k: {L: [dose(k, L, e) for e in EXAMS[L]] for L in range(1, 11) if dose(k, L, 100) is not None and started(k, L, 100)} for k in SKILLS},

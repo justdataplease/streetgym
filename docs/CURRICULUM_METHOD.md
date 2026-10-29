@@ -40,6 +40,12 @@ Round 9 removed what only the earlier generations used:
 - the weekday practice timetable and original-source projection (`morning_class.json`) and `authentic_titles.json`;
 - the assembler's projection and set-trimming code.
 
+Round 10 (the owner's review of 2.5.0, the same day) kept the plan and fixed how progressions read beside their full shapes:
+- **Carry.** A level held on a harder rung holds on the easier rungs of its ladder, never higher (`SkillStatus.carriedBy`). The generator, the page and `validate_progressions.py` count belts the same way, the validator from `SkillBook.kt`'s own ladders. Before, the plan gave the full back lever Elite while its straddle, with the same 8 s target, only reached Advanced 16 classes later.
+- **Peaks.** A progression peaks while it is still trained, as the next rung's back-off, not as a Level 10 record beside the full shape. Five such records went, and a new rule forbids a lever, planche or flag record beside a harder rung.
+- **Records.** The generator decides on the fitted classes in two passes, so a rung whose Elite comes through a harder rung gets no record.
+- **Names.** The tuck and straddle human flags and the chest-to-wall handstand lost their old "Practice" suffix.
+
 ## Before round 9
 
 Rounds 1-8 (October 2026) built the ten-level catalog by hand-authored batches, a weekday practice timetable and generator passes kept outside the repository. Their descriptions and review transcripts are in Git history; the design decisions that survive are in the plan.

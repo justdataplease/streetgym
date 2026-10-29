@@ -51,6 +51,7 @@ class SkillBookTest {
         assertEquals(SkillLevel.INTERMEDIATE, level(sets("pullup", 29, 10)))
         assertEquals(SkillLevel.ADVANCED, level(sets("pullup", 30, 10)))
         assertEquals(SkillLevel.MASTER, level(sets("pullup", 30, 15)))
+        // Thirty sets at the Elite target earn all five at once, on an own day too: Master needs no sets of its own.
         assertEquals(SkillLevel.ELITE, level(sets("pullup", 30, 25)))
     }
 
@@ -130,16 +131,26 @@ class SkillBookTest {
     }
 
     @Test
-    fun everyLevelIsEarnedOnTheSkillItself() {
-        // The archer pull-up's Beginner target is 2 reps each side. A harder rung says nothing of an easier one's targets
-        // (the coaching review, 29 October 2026): the rungs below keep the levels of their own sets.
+    fun aHarderRungsLevelHoldsOnTheEasierRungs() {
+        // The archer pull-up's Beginner target is 2 reps each side. Its level holds on every easier rung of the ladder,
+        // never higher (round 10, 29 October 2026), and names the rung it comes through.
         val beginner = book.progress(listOf(sets("archer_pullup", 10, 2)))
         assertEquals(SkillLevel.BEGINNER, beginner.status("archer_pullup").level)
-        assertEquals(SkillLevel.NONE, beginner.status("pullup").level)
-        assertEquals(SkillLevel.NONE, beginner.status("assisted_pullup").level)
+        assertNull(beginner.status("archer_pullup").carriedBy)
+        assertEquals(SkillLevel.BEGINNER, beginner.status("pullup").level)
+        assertEquals("archer_pullup", beginner.status("pullup").carriedBy?.id)
+        assertEquals(SkillLevel.BEGINNER, beginner.status("assisted_pullup").level)
+        // The next level takes the rung's own sets.
+        assertEquals(SkillLevel.INTERMEDIATE, beginner.status("pullup").next)
+        assertEquals(20, beginner.status("pullup").setsToGo)
+        // Short of a level nothing carries, and a rung's own higher level stays its own.
+        assertEquals(SkillLevel.NONE, book.progress(listOf(sets("archer_pullup", 9, 2))).status("pullup").level)
         val both = book.progress(listOf(sets("archer_pullup", 30, 2), sets("pullup", 30, 40)))
         assertEquals(SkillLevel.ELITE, both.status("pullup").level)
+        assertNull(both.status("pullup").carriedBy)
         assertEquals(SkillLevel.BEGINNER, both.status("archer_pullup").level)
+        assertEquals(SkillLevel.ELITE, both.status("assisted_pullup").level)
+        assertEquals("pullup", both.status("assisted_pullup").carriedBy?.id)
     }
 
     @Test
@@ -155,8 +166,10 @@ class SkillBookTest {
     fun closestListsOnlySkillsTheAthleteStarted() {
         val progress = book.progress(listOf(SkillCredit("p1")))
         assertEquals(listOf("assisted_pullup"), progress.closest(3).map { it.skill.id })
-        // A harder rung leaves the easier one to its own sets: both stay open to raise.
+        // The archer's Intermediate holds on the rungs below; the pull-up, with no sets of its own, has nothing to raise
+        // yet, while the assisted pull-up's own sets keep it open.
         val both = book.progress(listOf(sets("archer_pullup", 30, 3), SkillCredit("p1")))
+        assertEquals(SkillLevel.INTERMEDIATE, both.status("pullup").level)
         assertEquals(setOf("archer_pullup", "assisted_pullup"), both.closest(3).map { it.skill.id }.toSet())
     }
 
@@ -164,8 +177,8 @@ class SkillBookTest {
     fun levelsAddUpAcrossSkills() {
         val progress = book.progress(listOf(sets("pullup", 30, 5)))
         assertEquals(4 * 5, progress.totalLevels)
-        // Beginner pull-up; the assisted pull-up below it has no sets of its own, so no level.
-        assertEquals(SkillLevel.BEGINNER.ordinal, progress.levels)
+        // Beginner pull-up, held on the assisted pull-up below it too.
+        assertEquals(2 * SkillLevel.BEGINNER.ordinal, progress.levels)
     }
 
     @Test
