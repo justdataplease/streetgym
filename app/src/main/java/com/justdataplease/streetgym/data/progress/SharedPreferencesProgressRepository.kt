@@ -103,9 +103,9 @@ class SharedPreferencesProgressRepository(
         val edit = preferences.edit()
             .putString(KEY_SESSION_HISTORY, encodeSessions(sessions).toString())
             .remove(KEY_ACTIVE_WORKOUT)
-        // A repeat or a custom day only adds its history entry: completed days and the level replay stay exactly as
-        // they were.
-        if (!active.repeat && !CustomDays.isCustom(active.programId)) {
+        // A repeat, a custom day or a ready workout only adds its history entry: completed days and the level replay
+        // stay exactly as they were.
+        if (!active.repeat && !CustomDays.offProgram(active.programId)) {
             edit.putStringSet(KEY_COMPLETED_PROGRAM_IDS, completedProgramIds() + active.programId)
                 .putRepeated(listOf(active.programId))
         }

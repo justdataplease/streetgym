@@ -18,8 +18,8 @@ sealed interface Paywall {
     data object Parks : Paywall
     data object Rename : Paywall
     data object Leaderboard : Paywall
-    /** The account: joining the leaderboard and cloud progress (Pro). */
-    data object Account : Paywall
+    /** The ready workouts in Training › Library (Pro). */
+    data object Ready : Paywall
     data class Saved(val limit: Int) : Paywall
     /** Own lists in My workouts: Plus, or more of them with Pro once Plus has made all of its [limit]. */
     data class Lists(val limit: Int) : Paywall
@@ -31,15 +31,15 @@ class TiersPanel(
     private val billing: TierBilling,
     private val paywall: Paywall? = null,
 ) : LinearLayout(activity) {
-    /** Only Pro opens it: the account, and Levels 6 to 10. */
-    private val proOnly = paywall == Paywall.Account || paywall is Paywall.Level && LevelAccess.tierFor(paywall.number) == Tier.PRO
+    /** Only Pro opens it: the ready workouts, and Levels 7 to 10. */
+    private val proOnly = paywall == Paywall.Ready || paywall is Paywall.Level && LevelAccess.tierFor(paywall.number) == Tier.PRO
     private val heading = activity.titleText(activity.getString(when (paywall) {
         null -> R.string.tiers_title
         is Paywall.Level -> if (proOnly) R.string.paywall_level_pro else R.string.paywall_level
         Paywall.Parks -> R.string.paywall_parks
         Paywall.Rename -> R.string.paywall_rename
         Paywall.Leaderboard -> R.string.paywall_leaderboard
-        Paywall.Account -> R.string.paywall_account
+        Paywall.Ready -> R.string.paywall_ready
         is Paywall.Saved -> R.string.paywall_saved
         is Paywall.Lists -> if (paywall.limit == 0) R.string.paywall_lists else R.string.paywall_lists_full
     }, (paywall as? Paywall.Level)?.number ?: (paywall as? Paywall.Saved)?.limit ?: (paywall as? Paywall.Lists)?.limit ?: 0), 20f)
@@ -54,10 +54,13 @@ class TiersPanel(
     private val proBuy = activity.primaryButton(activity.getString(R.string.pro_buy)) {
         if (!billing.buyPro(activity)) showMessage(activity.getString(R.string.purchase_unavailable_retry))
     }
+    private val proLifeBuy = activity.secondaryButton(activity.getString(R.string.pro_life_buy)) {
+        if (!billing.buyProLife(activity)) showMessage(activity.getString(R.string.purchase_unavailable_retry))
+    }
     private val proManage = activity.secondaryButton(activity.getString(R.string.pro_manage)) {
         runCatching { activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(TierBilling.manageProUrl(activity.packageName)))) }
     }
-    /** Why Pro is a subscription, under the plans and outside them: what the yearly price pays for. */
+    /** What the yearly price pays for, and that Pro for life is one payment. */
     private val proWhy = activity.bodyText(activity.getString(R.string.pro_why), 12f)
     private val message = activity.bodyText("", 13f)
     private val restore = activity.secondaryButton(activity.getString(R.string.restore_purchase)) {
@@ -82,6 +85,7 @@ class TiersPanel(
         addView(heading)
         if (paywall is Paywall.Level) addWithMargins(activity.bodyText(activity.getString(
             if (proOnly) R.string.paywall_level_pro_body else R.string.paywall_level_body), 14f), topDp = 6)
+        if (paywall == Paywall.Ready) addWithMargins(activity.bodyText(activity.getString(R.string.paywall_ready_body), 14f), topDp = 6)
         addWithMargins(current, topDp = 6)
         plusBlock.addView(activity.titleText(activity.getString(R.string.plus_title), 17f))
         plusBlock.addWithMargins(features(R.array.plus_features), topDp = 6)
@@ -92,6 +96,7 @@ class TiersPanel(
         proBlock.addWithMargins(features(R.array.pro_features), topDp = 6)
         proBlock.addWithMargins(proNote, topDp = 6)
         proBlock.addWithMargins(proBuy, topDp = 12)
+        proBlock.addWithMargins(proLifeBuy, topDp = 8)
         proBlock.addWithMargins(proManage, topDp = 8)
         addWithMargins(proBlock, topDp = 12)
         addWithMargins(proWhy, topDp = 8)
@@ -156,10 +161,16 @@ class TiersPanel(
         proBuy.text = billing.proPrice?.let { activity.getString(R.string.pro_buy_price, it) } ?: activity.getString(R.string.pro_buy)
         proBuy.isEnabled = tier < Tier.PRO && ready && billing.proPrice != null
         proBuy.alpha = if (proBuy.isEnabled) 1f else .45f
+        proLifeBuy.visibility = proBuy.visibility
+        proLifeBuy.text = billing.proLifePrice?.let { activity.getString(R.string.pro_life_buy_price, it) }
+            ?: activity.getString(R.string.pro_life_buy)
+        proLifeBuy.isEnabled = tier < Tier.PRO && ready && billing.proLifePrice != null
+        proLifeBuy.alpha = if (proLifeBuy.isEnabled) 1f else .45f
         proManage.visibility = if (billing.proActive) View.VISIBLE else View.GONE
         proNote.text = when {
+            billing.proLifeOwned -> activity.getString(R.string.pro_life_owned)
             tier == Tier.PRO -> activity.getString(R.string.pro_active)
-            billing.proPending -> activity.getString(R.string.purchase_pending)
+            billing.proPending || billing.proLifePending -> activity.getString(R.string.purchase_pending)
             else -> ""
         }
         proNote.visibility = if (proNote.text.isEmpty()) View.GONE else View.VISIBLE

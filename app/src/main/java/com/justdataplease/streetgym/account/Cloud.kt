@@ -10,7 +10,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 
 /**
- * The Firebase project behind the Pro account, the leaderboard and progress analytics. A build without a Firebase
+ * The Firebase project behind the account (Plus and Pro), the leaderboard and progress analytics. A build without a Firebase
  * configuration (README, "Pro account") has no default app: then [available] is false, every account feature stays
  * hidden and nothing is uploaded, so the app runs exactly as before.
  */

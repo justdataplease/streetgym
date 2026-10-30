@@ -29,12 +29,14 @@ object CurriculumJsonParser {
 
     fun parse(json: String): CurriculumCatalog = parse(JSONObject(json))
 
-    fun parse(root: JSONObject): CurriculumCatalog {
+    /** [workouts]: the ready workouts, written like the classes and with the same movements (assets/workouts.json). */
+    fun parse(root: JSONObject, workouts: JSONArray? = root.optJSONArray("workouts")): CurriculumCatalog {
         val movementLibrary = parseMovementLibrary(root.optJSONArray("movement_library"))
 
         return CurriculumCatalog(
             schemaVersion = root.optValueAsString("schema_version") ?: "1",
             levels = root.optJSONArray("levels").mapObjects { parseLevel(it, movementLibrary) },
+            workouts = workouts.mapObjects { parseProgram(it, 0, movementLibrary) },
         )
     }
 
@@ -132,6 +134,8 @@ object CurriculumJsonParser {
             warmup = parseFlexibleSection(warmupArray, programId, "warmup", movementLibrary),
             cooldown = parseFlexibleSection(cooldownArray, programId, "cooldown", movementLibrary),
             headline = schedule?.optValueAsString("headline"),
+            group = json.optValueAsString("group"),
+            grade = json.optIntOrNull("grade"),
         )
     }
 

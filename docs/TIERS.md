@@ -1,19 +1,20 @@
 # Free, Plus and Pro
 
-Street Gym has three tiers. Plus is one Google Play payment. Pro is a yearly subscription that includes everything in Plus; it pays for the servers and database behind the account, and the Pro offer says so.
+Street Gym has three tiers (the owner, 2026-10-30, for 2.8.0). Plus is one Google Play payment. Pro includes everything in Plus and is either a yearly subscription, which pays for the servers and database behind cloud progress, or one larger payment, "Pro for life".
 
-| | Free | Plus · 14.99 once | Pro · 29.99 a year |
+| | Free | Plus · 14.99 once | Pro · 29.99 a year or 89.99 once |
 |---|---|---|---|
-| Levels | 1–3 | 1–5 | all (6 to 10 are Pro only) |
+| Levels | 1–3 | 1–6 | all (7 to 10 are Pro only) |
 | Ads | yes | no | no |
+| Leaderboard (sign in with Google, appear on it) | – | yes | yes |
+| Ready workouts (Training › Library, 36) | see them | see them | yes |
+| Cloud progress (save and restore My workouts and progress) | – | – | yes |
 | Saved and custom days (My workouts) | 3 | 30 | 300 |
 | Own lists in My workouts (beside Favorites) | – | 3 of 10 days | 10 of 30 days |
 | Rename levels | – | yes | yes |
-| Parks near me (23,512 bundled parks) | – | yes | yes |
-| Leaderboard | – | view | view and appear on it |
-| Sign in with Google, cloud progress | – | – | yes |
+| Parks near me (73,303 OpenStreetMap parks) | – | yes | yes |
 
-The prices are the owner's Play prices (decided 2026-10-30, before the first upload; earlier drafts said 9.99 and 19.99). The app only ever shows the formatted price Google Play returns. Play adds VAT and rounds per country, so enter each VAT country's price where a clean consumer price matters.
+The prices are the owner's Play prices (decided 2026-10-30, before the first upload; earlier drafts said 9.99 and 19.99; Pro for life was added the same evening). In 2.7.0 Plus was Levels 1–5 and only Pro signed in. The app only ever shows the formatted price Google Play returns. Play adds VAT and rounds per country, so enter each VAT country's price where a clean consumer price matters.
 
 ## Play Console products (owner)
 
@@ -21,20 +22,22 @@ The prices are the owner's Play prices (decided 2026-10-30, before the first upl
 |---|---|---|---|
 | Plus | One-time product, non-consumable | `plus` | Purchase option `buy`, 14.99 EUR |
 | Pro | Subscription | `pro` | Base plan `yearly`, auto-renewing, 29.99 EUR a year |
+| Pro for life | One-time product, non-consumable | `pro_life` | Purchase option `buy`, 89.99 EUR |
 
 Earlier IDs `full_program` and `remove_ads` were never activated and are no longer recognized; don't activate them. Play product IDs can't be reused once created.
 
 ## Where each tier applies
 
-- **Levels.** `LevelAccess.locked(level, Entitlement.tier(context))` locks Levels 4 and 5 on Free and Levels 6 to 10 below Pro (`LevelAccess.tierFor`, owner's call on 2026-10-28). Today, Training, Overview, Skills, repeats and an active class all show the paywall instead: Plus and Pro for Levels 4 and 5, Pro alone for 6 to 10 (Levels 8–10 joined Pro on 2026-10-29). The level cards and skill cells carry the tier's badge.
+- **Levels.** `LevelAccess.locked(level, Entitlement.tier(context))` locks Levels 4 to 6 on Free and Levels 7 to 10 below Pro (`LevelAccess.tierFor`; Plus gained Level 6 on 2026-10-30). Today, Training, Overview, Skills, repeats and an active class all show the paywall instead: Plus and Pro for Levels 4 to 6, Pro alone for 7 to 10. The level cards and skill cells carry the tier's badge.
 - **Ads.** `Entitlement.adFree` (Plus and Pro) removes every placement.
 - **My workouts.** Saved days (the heart on an overview) and custom days share `Tier.savedDays`. At the limit, adding shows the paywall (or, on Pro, a note). Nothing is ever removed when a tier ends: everything stays usable, and only adding stops until the athlete is under the limit.
 - **Lists.** Favorites is the default list: every saved and custom day is in it, on every tier. Plus and Pro also make their own lists (`Tier.workoutLists` and `Tier.daysPerList`: 3 lists of 10 days on Plus, 10 lists of 30 on Pro, so the lists can hold every saved day); on those tiers the heart opens a picker with Favorites always ticked, the athlete's lists, New list and, for a saved day, Remove. Free's heart saves straight to Favorites, and its New list chip shows the Plus paywall; Plus at 3 lists sees Pro; a full list can't be ticked in the picker. Lists don't count toward the saved days, and a day leaves its lists when it leaves My workouts. Lists live in the library JSON (`LibraryState.lists`), so Pro's cloud copy carries them with no rules change; each list merges by its newest change, and a deleted list stays as a tombstone. When a tier ends the lists are kept but hidden, and come back with Plus.
 - **Rename levels** and **Parks** (Training tab) show the Plus paywall on Free.
-- **Leaderboard** (Progress tab): Free sees the Plus paywall; Plus sees the boards and an offer to join with Pro; Pro signs in and appears.
-- **Account** (Settings): only Pro. A lapsed Pro stays signed in; nothing syncs and its cloud copy and last score are kept until it renews or deletes the account.
+- **Leaderboard** (Progress tab): Free sees the Plus paywall; Plus and Pro see the boards, sign in from Settings and appear on them (`Tier.account`).
+- **Account** (Settings): Plus and Pro sign in. Only Pro syncs (`Tier.cloud`, `CloudSync`): Plus sees "Your progress stays on this phone. Cloud saves are part of Pro." instead of the sync status. An athlete whose plan ends stays signed in; nothing syncs or publishes, and the cloud copy and last score are kept until they renew or delete the account.
+- **Ready workouts** (Training › Library, `Tier.readyWorkouts`): 36 workouts in eight groups (full body, pull, push, legs, core, skills, short on time, mobility), each a whole class with warm-up, cool-down and easier options, written in `tools/build_ready_workouts.py` from the program's own movements (assets/workouts.json, ids `ready:<name>`). Every tier sees the list and each overview; below Pro the Pro offer replaces Start. They run like a custom day: any time, at the normal intensity, every skill on, never completing a class; their sets count toward Skills and the leaderboard, and a heart saves one to My workouts.
 
-`TierBilling` follows the Toolbox entitlement model: only PURCHASED grants, pending grants nothing, purchases are acknowledged, ownership is cached offline, and only a successful complete query of a product's own type revokes it (a refund, or a lapsed subscription). There's no server-side purchase verification: Firestore trusts the app's tier. Restore purchases checks both.
+`TierBilling` (Plus and Pro for life as one-time products, Pro as a subscription) follows the Toolbox entitlement model: only PURCHASED grants, pending grants nothing, purchases are acknowledged, ownership is cached offline, and only a successful complete query of a product's own type revokes it (a refund, or a lapsed subscription). There's no server-side purchase verification: Firestore trusts the app's tier. Restore purchases checks all three.
 
 **Debug and GitHub builds** can't buy (the `.debug` package isn't the Play app), so they get Pro. Settings > Simulate tier (debug only) picks Free, Plus or Pro to test limits, paywalls and ads; cached real ownership still counts on top. Release builds have no override, only the review code below.
 
@@ -63,10 +66,10 @@ Without these steps the app runs exactly as before: every account feature stays 
 
 Every tier's training progress goes to Firestore (the owner, 2026-10-30), to see how athletes do and improve the program, while **Share my progress** is on: the note and switch at the bottom of the first-launch placement and in Settings › Your data, on by default (`AppSettings.shareProgress`). Code: `analytics/Analytics.kt` (when), `AnalyticsPayload.kt` (what), `FirestoreAnalytics.kt` (Firestore, App Set ID); rules: `firebase/firestore.rules`, `analytics/`.
 
-- **Who writes.** A build without Firebase (GitHub) uploads nothing. Otherwise the app writes as the Google account when a Pro athlete is signed in, else as an anonymous Firebase user it signs in only for this. The anonymous user is no account: `Cloud.uid`, the Account section, cloud progress and the leaderboard ignore it, and the rules refuse it everywhere but `analytics/`. A Google sign-in simply replaces it.
+- **Who writes.** A build without Firebase (GitHub) uploads nothing. Otherwise the app writes as the Google account when a Plus or Pro athlete is signed in, else as an anonymous Firebase user it signs in only for this. The anonymous user is no account: `Cloud.uid`, the Account section, cloud progress and the leaderboard ignore it, and the rules refuse it everywhere but `analytics/`. A Google sign-in simply replaces it.
 - **The chain.** A random install ID (a UUID, kept until the app's data is cleared), Google's App Set ID (developer scope when Play services gives it; it survives a reinstall), and a signed-in account's Firebase uid. No Android ID, advertising ID or device details.
 - **`analytics/{installId}`**: `v` 1, `appSetId`, `appSetScope` (`developer` or `app`), `accountUid` (only ever the writer's own Google account; an anonymous write leaves it as it was), `firstSeen`, `lastSeen` (server time), `versionName`, `versionCode`, `tier` (`free`, `plus` or `pro`, as the app believes it: Pro in debug), `debug`, `shareProgress` true, `placement` {`pullUps`, `pushUps`, `squats` (null when left empty), `skillTest`, `startLevel`, `startDay`}, `skills` {skill id: [level 0–5, sets, best set]} for started skills, `score` (overall out of 1000, the leaderboard's scale), `switches` (`SkillSwitches.format`), `completedClasses`, `trainedClasses`, `markedClasses`, `atLevel` and `atDay` (the first day not passed).
-- **`analytics/{installId}/sessions/{startedAt millis}`**, one per finished class: `v` 1, `programId` (`sg:lNN:pNNNN`, or `custom` for an own day), `level`, `day`, `dayType`, `exam`, `custom`, `repeat`, `intensity`, `effort` (1–10), `startedAt`, `finishedAt`, `durationSec`, `plannedSets`, `doneSets`, `leftOutSets` (skill switches), `uploadedAt` (server time), and `exercises`: each {`section`, `movementId`, `easier` (the easier option's movement when used), `test` (an exam target), `sets`: each {`planned` (reps or seconds, null for max), `max`, `timed`, `done` (logged, else null), `ticked`, `off`}}.
+- **`analytics/{installId}/sessions/{startedAt millis}`**, one per finished class: `v` 1, `programId` (`sg:lNN:pNNNN`, `ready:<name>` for a ready workout, or `custom` for an own day), `level`, `day`, `dayType`, `exam`, `custom`, `repeat`, `intensity`, `effort` (1–10), `startedAt`, `finishedAt`, `durationSec`, `plannedSets`, `doneSets`, `leftOutSets` (skill switches), `uploadedAt` (server time), and `exercises`: each {`section`, `movementId`, `easier` (the easier option's movement when used), `test` (an exam target), `sets`: each {`planned` (reps or seconds, null for max), `max`, `timed`, `done` (logged, else null), `ticked`, `off`}}.
 - **Never sent:** names (an own day's or its exercises'), email, username, country, location, locale, time zone, IP-derived data or anything typed. Ids that aren't plain ids are dropped (`AnalyticsPayload.ID`), and the rules allow only the fields above.
 - **When.** The install document when the app opens, at most every 10 minutes and only once the placement was answered or skipped; after a placement; and with each finished class in one batch (two writes). Days marked done by Complete day, Complete level or the placement aren't sessions; they're counted in `markedClasses`. A class stays on the phone until the server confirms its write.
 - **Off** stops every upload and deletes the install document and every class this install wrote (it keeps their ids, as nobody can read the collection), retried until confirmed. Deleting the Pro account takes its uid off this install's document at the next sync.
@@ -93,7 +96,7 @@ The parks come from OpenStreetMap (names and coordinates only; © OpenStreetMap 
 
 ## Acceptance before selling
 
-With a Play license tester and the registered package, verify for each product: purchase and acknowledgement, cancellation, pending payment, reinstall and Restore purchases, offline ownership, refund (levels lock again, ads return), localized prices; for Pro also a subscription lapse (Plus, if owned, remains) and Manage subscription. With the Firebase project set up: sign in, choose a username (a taken one is refused), sync between two phones, the board after the next rebuild, hiding from the leaderboard, and account deletion.
+With a Play license tester and the registered package, verify for each product (`plus`, `pro`, `pro_life`): purchase and acknowledgement, cancellation, pending payment, reinstall and Restore purchases, offline ownership, refund (levels lock again, ads return), localized prices; for Pro also a subscription lapse (Plus, if owned, remains) and Manage subscription. With the Firebase project set up: sign in, choose a username (a taken one is refused), sync between two phones, the board after the next rebuild, hiding from the leaderboard, and account deletion.
 
 JVM tests cover tiers and entitlement reconciliation, the review code (with a test code, never the real one), the saved-days limit, the custom-day model and merge, the exercise search, parks search and distance, scores, board caching and standing, usernames, countries and the progress merge; `firebase/functions/test_boards.py` covers the board builder. None of these is a real Google Play transaction or a live Firestore call.
 

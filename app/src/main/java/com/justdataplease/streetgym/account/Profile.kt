@@ -7,7 +7,7 @@ import com.justdataplease.streetgym.leaderboard.Usernames
 import org.json.JSONArray
 import org.json.JSONObject
 
-/** A Pro athlete's public name and country, and whether they show on the leaderboard. */
+/** A Plus or Pro athlete's public name and country, and whether they show on the leaderboard. */
 data class Profile(val username: String, val country: String, val visible: Boolean = true)
 
 /** The account's state on the phone, so no screen waits for Firestore: the profile, the last sync and score. */

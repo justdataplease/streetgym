@@ -31,7 +31,7 @@ sealed interface Standing {
 }
 
 /**
- * A Pro athlete's public score ([com.justdataplease.streetgym.data.skills.OverallScore]): the overall score out of 1000,
+ * A Plus or Pro athlete's public score ([com.justdataplease.streetgym.data.skills.OverallScore]): the overall score out of 1000,
  * each skill family's points (ten times its raw value, so the server can check the overall), and the skills the
  * athlete holds a level in.
  */
@@ -90,8 +90,8 @@ object Boards {
 object Scores {
     /**
      * The classes that count, for Skills and the leaderboard alike: every class trained with its sets ticked and their
-     * reps or seconds, in the program, repeated or the athlete's own ([customMinutes] gives an own day's planned length,
-     * when it still exists). "Complete day", "Complete level" and the days the placement test placed past earn nothing,
+     * reps or seconds, in the program, repeated, a ready workout or the athlete's own ([customMinutes] gives such a day's
+     * planned length, when it still exists). "Complete day", "Complete level" and the days the placement test placed past earn nothing,
      * so both reflect training, not taps.
      */
     fun credits(sessions: List<WorkoutSession>, customMinutes: (String) -> Int? = { null }): List<SkillCredit> = sessions
@@ -99,12 +99,12 @@ object Scores {
         .sortedBy { it.completedAtEpochMillis }
         .map { session ->
             SkillCredit(session.programId, session.credits, session.durationSeconds,
-                if (CustomDays.isCustom(session.programId)) customMinutes(session.programId) else null, session.doses)
+                if (CustomDays.offProgram(session.programId)) customMinutes(session.programId) else null, session.doses)
         }
 
     /** Program days marked complete without training, by a tap or the placement test: done, but worth no points. */
     fun markedComplete(sessions: List<WorkoutSession>): Int = sessions
-        .filter { it.manuallyCompleted && !CustomDays.isCustom(it.programId) }.map { it.programId }.toSet().size
+        .filter { it.manuallyCompleted && !CustomDays.offProgram(it.programId) }.map { it.programId }.toSet().size
 
     fun from(progress: SkillProgress): Score = Score(
         overall = progress.overall.score,

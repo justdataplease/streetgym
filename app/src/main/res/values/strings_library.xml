@@ -2,6 +2,20 @@
 <resources>
     <string name="training_tab_levels">Levels</string>
     <string name="training_tab_workouts">My workouts</string>
+    <string name="training_tab_ready">Library</string>
+    <string name="ready_intro">Ready workouts for days off the program. Each has a warm-up, a cool-down and easier options.</string>
+    <string name="ready_meta">%1$s · %2$s · About %3$d min</string>
+    <string name="ready_grade_1">Beginner</string>
+    <string name="ready_grade_2">Intermediate</string>
+    <string name="ready_grade_3">Advanced</string>
+    <string name="ready_group_full">Full body</string>
+    <string name="ready_group_pull">Pull</string>
+    <string name="ready_group_push">Push</string>
+    <string name="ready_group_legs">Legs</string>
+    <string name="ready_group_core">Core</string>
+    <string name="ready_group_skills">Skills</string>
+    <string name="ready_group_short">Short on time</string>
+    <string name="ready_group_mobility">Mobility</string>
     <string name="library_intro">Save any day with the heart on its overview, or build your own from every exercise in the program.</string>
     <string name="library_usage">%1$d of %2$d saved and custom days</string>
     <string name="library_over_limit">You have more than %1$d. Nothing is removed; remove some to add new ones.</string>

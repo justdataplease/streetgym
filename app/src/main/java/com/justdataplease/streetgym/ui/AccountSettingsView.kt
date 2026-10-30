@@ -56,8 +56,9 @@ class AccountSettingsView(
         // The Google account only: the anonymous user progress analytics signs in with is no account.
         val user = Cloud.user(activity)
         addView(context.titleText(context.getString(R.string.account_title), 20f))
-        if (!Entitlement.tier(activity).account) {
-            // Only Pro signs in; an account from a lapsed Pro stays signed in, but nothing syncs.
+        val tier = Entitlement.tier(activity)
+        if (!tier.account) {
+            // Plus and Pro sign in; an account from a lapsed plan stays signed in, but nothing syncs or publishes.
             if (user != null) {
                 addWithMargins(context.bodyText(context.getString(R.string.account_lapsed), 14f), topDp = 6)
                 addWithMargins(context.secondaryButton(context.getString(R.string.account_sign_out)) { GoogleAccount.signOut(activity) }, topDp = 12)
@@ -67,7 +68,7 @@ class AccountSettingsView(
         visibility = View.VISIBLE
         val status = context.bodyText("", 13f)
         if (user == null) {
-            addWithMargins(context.bodyText(context.getString(R.string.account_intro), 14f), topDp = 6)
+            addWithMargins(context.bodyText(context.getString(if (tier.cloud) R.string.account_intro else R.string.account_intro_plus), 14f), topDp = 6)
             addWithMargins(context.primaryButton(context.getString(R.string.account_sign_in)) {
                 if (busy) return@primaryButton
                 busy = true; status.setText(R.string.account_working)
@@ -105,16 +106,19 @@ class AccountSettingsView(
             }, topDp = 6)
             addWithMargins(context.secondaryButton(context.getString(R.string.account_edit_profile)) { editProfile(user.uid, profile) }, topDp = 4)
         }
-        status.text = if (store.lastSyncAt > 0) context.getString(R.string.account_synced,
-            DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(Date(store.lastSyncAt)))
-            else context.getString(R.string.account_not_synced)
-        addWithMargins(status, topDp = 14)
-        addWithMargins(context.secondaryButton(context.getString(R.string.account_sync_now)) {
-            status.setText(R.string.account_working)
-            sync.sync(force = true) { result ->
-                if (result == CloudSync.Result.Failed) status.setText(R.string.account_sync_failed) else { render(); onChanged() }
-            }
-        }, topDp = 8)
+        // Plus is on the leaderboard only; its progress stays on the phone.
+        if (tier.cloud) {
+            status.text = if (store.lastSyncAt > 0) context.getString(R.string.account_synced,
+                DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(Date(store.lastSyncAt)))
+                else context.getString(R.string.account_not_synced)
+            addWithMargins(status, topDp = 14)
+            addWithMargins(context.secondaryButton(context.getString(R.string.account_sync_now)) {
+                status.setText(R.string.account_working)
+                sync.sync(force = true) { result ->
+                    if (result == CloudSync.Result.Failed) status.setText(R.string.account_sync_failed) else { render(); onChanged() }
+                }
+            }, topDp = 8)
+        } else addWithMargins(context.bodyText(context.getString(R.string.account_plus_note), 13f), topDp = 14)
         addWithMargins(context.secondaryButton(context.getString(R.string.account_sign_out)) { GoogleAccount.signOut(activity) }, topDp = 8)
         addWithMargins(context.bodyText(context.getString(R.string.account_sign_out_note), 12f), topDp = 4)
         addWithMargins(context.secondaryButton(context.getString(R.string.account_delete)) { confirmDelete(user.uid) }, topDp = 12)

@@ -447,9 +447,9 @@ class TrainingInstrumentation : Instrumentation() {
             check(find { it is NativeAdSlot } != null)
             check(repository.activeWorkout() == lockedActive)
             nav(R.string.nav_levels)
-            // Levels 1-3 are free; Levels 4 and 5 carry the Plus badge and 6 and 7 the Pro one.
+            // Levels 1-3 are free; Levels 4 to 6 carry the Plus badge and 7 to 10 the Pro one.
             fun badges(tier: Int) = findAll { it is TextView && it.text.toString() == targetContext.getString(tier).uppercase() }.size
-            check(badges(R.string.tier_plus) == 2 && badges(R.string.tier_pro) == catalog.levels.size - 5)
+            check(badges(R.string.tier_plus) == 3 && badges(R.string.tier_pro) == catalog.levels.size - 6)
             clickLabel(catalog.levels[3].name.resolve())
             check(shown(paywall) && !shown("Complete level"))
             nav(R.string.nav_today); clickLabel(levelFour.name.resolve())
@@ -477,13 +477,27 @@ class TrainingInstrumentation : Instrumentation() {
             Entitlement.setSimulatedTier(targetContext, Tier.PLUS)
             await { Entitlement.tier(targetContext) == Tier.PLUS }
             nav(R.string.nav_levels)
-            check(badges(R.string.tier_plus) == 0 && badges(R.string.tier_pro) == catalog.levels.size - 5)
-            clickLabel(catalog.levels[5].name.resolve())
+            check(badges(R.string.tier_plus) == 0 && badges(R.string.tier_pro) == catalog.levels.size - 6)
+            clickLabel(catalog.levels[6].name.resolve())
             // The Plus block is built but hidden.
             val plusOffer = find { it is TextView && it.text.toString() == targetContext.getString(R.string.plus_title) && it.isShown }
-            check(shown(targetContext.getString(R.string.paywall_level_pro, 6)) && plusOffer == null && !shown("Complete level"))
+            check(shown(targetContext.getString(R.string.paywall_level_pro, 7)) && plusOffer == null && !shown("Complete level"))
+            report("Plus opens Levels 4 to 6; Levels 7 to 10 offer Pro only")
+
+            // Training > Library: every tier sees the ready workouts; below Pro an overview offers Pro instead of Start.
+            val ready = catalog.workouts.first()
+            nav(R.string.nav_levels); clickText(R.string.training_tab_ready)
+            check(shown(R.string.paywall_ready) && shown(ready.name.resolve()))
+            clickLabel(ready.name.resolve())
+            check(shown(R.string.paywall_ready) && !shown(R.string.start_workout) && shown(ready.exercises.first().name.resolve()))
             Entitlement.setSimulatedTier(targetContext, null)
-            report("Plus opens Levels 4 and 5; Levels 6 and 7 offer Pro only")
+            await { Entitlement.tier(targetContext) == Tier.PRO }
+            nav(R.string.nav_levels); clickText(R.string.training_tab_ready)
+            check(!shown(R.string.paywall_ready) && catalog.workouts.size == 36)
+            clickLabel(ready.name.resolve())
+            check(shown(R.string.start_workout) && !shown(R.string.paywall_ready) && !shown("Complete day"))
+            nav(R.string.nav_levels); clickText(R.string.training_tab_levels)
+            report("Library: 36 ready workouts; Plus sees them with the Pro offer, Pro can start one")
 
             nav(R.string.nav_timer); clickLabel("30 sec"); clickLabel("Start")
             val timing = TimingStore(targetContext)

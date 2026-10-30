@@ -16,9 +16,7 @@
     <string name="leaderboard_you_none">Train to raise your skill levels and earn points on this board.</string>
     <string name="leaderboard_hidden">You’re hidden from the leaderboard. Turn it on in Settings.</string>
     <string name="leaderboard_sign_in">Sign in from Settings to appear on the leaderboard.</string>
-    <string name="leaderboard_join">Get Pro to appear on the leaderboard</string>
     <string name="leaderboard_updated">%1$s players · updated %2$s · boards refresh every 6 hours</string>
     <string name="leaderboard_how">Your overall score from Skills: each family counts its best skill, by how hard it is and its level. Ticked sets count from program days, repeats and your own workouts; placed or completed days don\'t. Tiers: Beginner, Novice from 7.5, Intermediate 20, Advanced 42.5, Elite 65, World-class 85.</string>
     <string name="paywall_leaderboard">The leaderboard is part of Plus</string>
-    <string name="paywall_account">Joining the leaderboard and saving your progress are part of Pro</string>
 </resources>

@@ -113,9 +113,21 @@ object WorkoutLists {
     }
 }
 
+/** Pro's ready workouts ([com.justdataplease.streetgym.data.model.CurriculumCatalog.workouts]), by id. */
+object ReadyWorkouts {
+    const val PREFIX = "ready:"
+    fun isReady(programId: String): Boolean = programId.startsWith(PREFIX)
+}
+
 object CustomDays {
     const val PREFIX = "custom:"
     fun isCustom(programId: String): Boolean = programId.startsWith(PREFIX)
+
+    /**
+     * A day outside the ten levels: a custom day or a ready workout. It never completes a class, runs at the normal
+     * intensity with every skill on, and is credited like any workout.
+     */
+    fun offProgram(programId: String): Boolean = isCustom(programId) || ReadyWorkouts.isReady(programId)
     fun newId(): String = PREFIX + java.util.UUID.randomUUID()
 
     /** Work and rest, rounded up to whole minutes: about 3 s a repetition. */

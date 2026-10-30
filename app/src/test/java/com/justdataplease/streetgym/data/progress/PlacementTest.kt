@@ -111,10 +111,10 @@ class PlacementTest {
 
     @Test fun aStartPastThePlanStopsAtItsLastLevel() {
         assertEquals(3, Placement.lastOpenLevel(Tier.FREE))
-        assertEquals(5, Placement.lastOpenLevel(Tier.PLUS))
+        assertEquals(6, Placement.lastOpenLevel(Tier.PLUS))
         assertEquals(10, Placement.lastOpenLevel(Tier.PRO))
         assertEquals(Start(3), Placement.capped(Start(7), Tier.FREE))
-        assertEquals(Start(5), Placement.capped(Start(7), Tier.PLUS))
+        assertEquals(Start(6), Placement.capped(Start(7), Tier.PLUS))
         assertEquals(Start(7), Placement.capped(Start(7), Tier.PRO))
         assertEquals(Start(2, 21), Placement.capped(Start(2, 21), Tier.FREE))
         Tier.entries.forEach { tier ->

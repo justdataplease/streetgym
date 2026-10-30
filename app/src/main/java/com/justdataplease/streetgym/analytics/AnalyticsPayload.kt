@@ -2,6 +2,7 @@ package com.justdataplease.streetgym.analytics
 
 import com.justdataplease.streetgym.billing.Tier
 import com.justdataplease.streetgym.data.library.CustomDays
+import com.justdataplease.streetgym.data.library.ReadyWorkouts
 import com.justdataplease.streetgym.data.model.TrainingExercise
 import com.justdataplease.streetgym.data.model.TrainingProgram
 import com.justdataplease.streetgym.data.progress.ActiveWorkout
@@ -95,6 +96,7 @@ object AnalyticsPayload {
     /** A movement, skill or day type id; anything else (text) is never sent. */
     val ID = Regex("^[a-z0-9_]{1,64}$")
     private val PROGRAM_ID = Regex("^sg:l[0-9]{2}:p[0-9]{4}$")
+    private val READY_ID = Regex("^ready:[a-z0-9_]{1,40}$")
     private val SWITCHES = Regex("^[a-z0-9_:,]{0,400}$")
 
     /** More would only be a damaged class; the rules allow 60. */
@@ -165,7 +167,11 @@ object AnalyticsPayload {
         val counted = flow.steps.filter { it.key !in leftOut }
         return mapOf(
             "v" to VERSION,
-            "programId" to if (custom) "custom" else session.programId.takeIf(PROGRAM_ID::matches) ?: "unknown",
+            "programId" to when {
+                custom -> "custom"
+                ReadyWorkouts.isReady(session.programId) -> session.programId.takeIf(READY_ID::matches) ?: "unknown"
+                else -> session.programId.takeIf(PROGRAM_ID::matches) ?: "unknown"
+            },
             "level" to program.levelNumber,
             "day" to program.number,
             "dayType" to program.dayType?.takeIf(ID::matches),

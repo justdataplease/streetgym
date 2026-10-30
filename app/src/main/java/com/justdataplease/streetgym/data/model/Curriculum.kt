@@ -5,6 +5,8 @@ import java.util.Locale
 data class CurriculumCatalog(
     val schemaVersion: String,
     val levels: List<TrainingLevel>,
+    /** Pro's ready workouts (assets/workouts.json): days outside the ten levels, run any time. */
+    val workouts: List<TrainingProgram> = emptyList(),
 )
 
 data class TrainingLevel(
@@ -37,6 +39,9 @@ data class TrainingProgram(
     val cooldown: List<TrainingExercise> = emptyList(),
     /** An exam's headline skill (a movement id): missing it offers to repeat the block ([ExamResult.offersRepeat]). */
     val headline: String? = null,
+    /** A ready workout's group in the Library (pull, push, legs…) and its grade: 1 beginner, 2 intermediate, 3 advanced. */
+    val group: String? = null,
+    val grade: Int? = null,
 ) {
     /** An exam day (about every 20 classes): its [TrainingExercise.assessment] sets are the targets to reach. */
     val isExam: Boolean get() = dayType?.startsWith("exam") == true

@@ -15,7 +15,7 @@ import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 
-/** Sign in with Google (Pro only) through Credential Manager, then Firebase Auth. */
+/** Sign in with Google (Plus and Pro) through Credential Manager, then Firebase Auth. */
 object GoogleAccount {
     // Activity.getMainExecutor needs API 28; the app supports 23.
     private val main = java.util.concurrent.Executor { android.os.Handler(android.os.Looper.getMainLooper()).post(it) }

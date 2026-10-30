@@ -38,7 +38,8 @@ internal fun scoreText(points: Number): String = SCORE_FORMAT.format(points.toDo
 private val SCORE_FORMAT = DecimalFormat("0.#", DecimalFormatSymbols(Locale.ENGLISH))
 
 /** A row of options with one selected: the tabs of Training and Progress, and other small choices. */
-fun Context.segmentedSwitch(labels: List<String>, selected: Int, onSelect: (Int) -> Unit): LinearLayout =
+/** [compact]: narrower segments, so four labels fit a small phone (Training's tabs). */
+fun Context.segmentedSwitch(labels: List<String>, selected: Int, compact: Boolean = false, onSelect: (Int) -> Unit): LinearLayout =
     LinearLayout(this).apply {
         orientation = LinearLayout.HORIZONTAL
         setPadding(dp(3), dp(3), dp(3), dp(3))
@@ -49,7 +50,7 @@ fun Context.segmentedSwitch(labels: List<String>, selected: Int, onSelect: (Int)
                 textSize = 14f
                 typeface = Typeface.DEFAULT_BOLD
                 gravity = Gravity.CENTER
-                setPadding(dp(18), dp(8), dp(18), dp(8))
+                setPadding(dp(if (compact) 11 else 18), dp(8), dp(if (compact) 11 else 18), dp(8))
                 setTextColor(if (index == selected) AppColors.PRIMARY else AppColors.TEXT_SECONDARY)
                 if (index == selected) background = roundedDrawable(AppColors.SURFACE, dp(11).toFloat())
                 isClickable = true

@@ -20,6 +20,8 @@ object Entitlement {
     const val PREFS = "streetgym_billing"
     const val PLUS_OWNED = "plus_owned"
     const val PRO_ACTIVE = "pro_active"
+    /** Pro for life, the one-time Pro product. */
+    const val PRO_LIFE_OWNED = "pro_life_owned"
     /** When Play review access ([ReviewAccess]) ends, in epoch milliseconds. */
     const val REVIEW_UNTIL = "review_until"
     private const val SIMULATED_TIER = "simulated_tier"
@@ -27,7 +29,8 @@ object Entitlement {
     fun prefs(context: Context) = context.applicationContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
     fun tier(context: Context): Tier = prefs(context).let {
-        tierFor(it.getBoolean(PLUS_OWNED, false), it.getBoolean(PRO_ACTIVE, false), BuildConfig.DEBUG, simulatedTier(context),
+        tierFor(it.getBoolean(PLUS_OWNED, false), it.getBoolean(PRO_ACTIVE, false) || it.getBoolean(PRO_LIFE_OWNED, false),
+            BuildConfig.DEBUG, simulatedTier(context),
             review = ReviewAccess.active(it.getLong(REVIEW_UNTIL, 0L), System.currentTimeMillis()))
     }
 

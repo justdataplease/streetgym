@@ -71,6 +71,21 @@ class AnalyticsPayloadTest {
         assertEquals("", document["switches"])
     }
 
+    @Test fun aReadyWorkoutGoesUpUnderItsOwnId() {
+        val program = CustomDays.toProgram(CustomDay("x", "Lunch Break", listOf(
+            CustomExercise("pullup", "Strict Pull-Up", "pullup", sets = listOf(CustomSet(5))),
+        ), updatedAt = 0L)).copy(id = "ready:lunch_break")
+        val flow = WorkoutFlow.of(program.id, listOf("main" to program.exercises))
+        val session = WorkoutSession(program.id, STARTED, STARTED + 600_000L, 600L)
+
+        val document = AnalyticsPayload.session(session, program, flow, ActiveWorkout(program.id, STARTED), leftOut = emptySet())
+
+        assertEquals("ready:lunch_break", document["programId"])
+        assertEquals(false, document["custom"])
+        val odd = AnalyticsPayload.session(session.copy(programId = "ready:Anna's"), program, flow, null, leftOut = emptySet())
+        assertEquals("unknown", odd["programId"])
+    }
+
     @Test fun anOwnDayGoesUpSetBySetWithoutItsNamesOrId() {
         val day = CustomDay("custom:0d9ab3a6-4e2f-4f7a-9c11-5a1e0b6f2c77", "Anna's Tuesday at Riverside Park", listOf(
             CustomExercise("pullup", "Pull-ups with John", "pullup", sets = listOf(CustomSet(8), CustomSet(8))),

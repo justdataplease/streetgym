@@ -33,7 +33,7 @@ class CloudSync(
     fun sync(force: Boolean = false, done: (Result) -> Unit = {}) {
         val uid = Cloud.uid(context)
         val db = Cloud.firestore(context)
-        if (uid == null || db == null || !Entitlement.tier(context).account) return done(Result.Skipped)
+        if (uid == null || db == null || !Entitlement.tier(context).cloud) return done(Result.Skipped)
         if (!force && System.currentTimeMillis() - store.lastSyncAt < MIN_INTERVAL_MILLIS) return done(Result.Skipped)
         if (running) { again = true; return done(Result.Skipped) }
         running = true

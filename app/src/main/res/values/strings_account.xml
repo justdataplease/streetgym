@@ -3,10 +3,12 @@
     <string name="account_section">Account</string>
     <string name="account_title">Your account</string>
     <string name="account_intro">Sign in with Google to save your progress and My workouts, and to join the leaderboard. Training always works offline.</string>
+    <string name="account_intro_plus">Sign in with Google to join the leaderboard. Training always works offline.</string>
+    <string name="account_plus_note">Your progress stays on this phone. Cloud saves are part of Pro.</string>
     <string name="account_sign_in">Sign in with Google</string>
     <string name="account_working">Connecting…</string>
     <string name="account_sign_in_failed">Couldn’t sign in. Check your connection and try again.</string>
-    <string name="account_lapsed">Pro has ended. Your cloud copy and your place on the leaderboard are kept; renew Pro to sync again.</string>
+    <string name="account_lapsed">Your plan has ended. Your cloud copy and your place on the leaderboard are kept until you renew.</string>
     <string name="account_pick_name">Choose a username and a country to appear on the leaderboard.</string>
     <string name="account_choose_profile">Choose a username</string>
     <string name="account_edit_profile">Edit profile</string>

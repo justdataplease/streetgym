@@ -73,8 +73,11 @@ class EntitlementTest {
         assertEquals(listOf(3, 30, 300), Tier.entries.map { it.savedDays })
         assertFalse(Tier.FREE.adFree || Tier.FREE.parks || Tier.FREE.renameLevels)
         assertTrue(Tier.PLUS.adFree && Tier.PLUS.parks && Tier.PLUS.renameLevels)
-        assertFalse(Tier.FREE.account || Tier.PLUS.account)
-        assertTrue(Tier.PRO.adFree && Tier.PRO.account)
+        // Plus signs in for the leaderboard; only Pro saves to the cloud and opens the ready workouts.
+        assertFalse(Tier.FREE.account || Tier.FREE.leaderboard)
+        assertTrue(Tier.PLUS.account && Tier.PLUS.leaderboard && Tier.PRO.account)
+        assertFalse(Tier.PLUS.cloud || Tier.PLUS.readyWorkouts)
+        assertTrue(Tier.PRO.adFree && Tier.PRO.cloud && Tier.PRO.readyWorkouts)
     }
     @Test fun savedDaysShareOneLimitAndNothingIsRemovedAboveIt() {
         assertTrue(SavedLimit.canAdd(Tier.FREE, 2))

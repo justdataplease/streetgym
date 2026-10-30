@@ -4,38 +4,44 @@
     <string name="tier_plus">Plus</string>
     <string name="tier_pro">Pro</string>
     <string name="tiers_title">Plus and Pro</string>
-    <string name="tier_current_free">You’re on Free: Levels 1–3 with ads and 3 saved or custom days, all in Favorites.</string>
-    <string name="tier_current_plus">You have Plus: Levels 1–5, no ads, 30 saved or custom days (3 lists of 10), your own level names and parks near you.</string>
-    <string name="tier_current_pro">You have Pro: all of Plus, Levels 6 to 10, 300 saved or custom days (10 lists of 30), the leaderboard and cloud saves to your Google account.</string>
+    <string name="tier_current_free">You’re on Free: Levels 1–3, with ads.</string>
+    <string name="tier_current_plus">You have Plus: Levels 1–6, no ads, the leaderboard.</string>
+    <string name="tier_current_pro">You have Pro: everything is open.</string>
     <string name="plus_title">Plus · one payment</string>
     <string-array name="plus_features">
+        <item>Levels 4 to 6</item>
         <item>No ads</item>
-        <item>Levels 4 and 5</item>
-        <item>30 saved and custom days</item>
-        <item>3 lists of your own in My workouts, 10 days each</item>
+        <item>Leaderboard</item>
+        <item>30 saved days, 3 lists</item>
+        <item>Parks near you</item>
         <item>Rename levels</item>
-        <item>Calisthenics parks near you</item>
     </string-array>
     <string name="plus_buy">Get Plus</string>
     <string name="plus_buy_price">Get Plus · %1$s</string>
     <string name="plus_owned">Plus is yours.</string>
-    <string name="pro_title">Pro · yearly*</string>
+    <string name="pro_title">Pro · yearly or for life</string>
+    <!-- The ready workouts' count is checked against assets/workouts.json (ReadyWorkoutsTest). -->
     <string-array name="pro_features">
         <item>Everything in Plus</item>
-        <item>Levels 6 to 10, up to the full levers, planche, flag, Hefesto and the one-arm pull-up and handstand</item>
-        <item>300 saved and custom days in 10 lists of 30</item>
-        <item>Leaderboard: overall and per skill</item>
-        <item>Your progress saved to your Google account and on all your devices</item>
+        <item>Levels 7 to 10</item>
+        <item>36 ready workouts</item>
+        <item>Cloud saves on all your phones</item>
+        <item>300 saved days, 10 lists</item>
     </string-array>
-    <string name="pro_why">* Pro is yearly because cloud saves and the leaderboard run on servers. It renews each year until you cancel in Google Play.</string>
+    <string name="pro_why">The yearly plan pays for the servers and renews until you cancel it in Google Play. Pro for life is one payment.</string>
     <string name="pro_buy">Get Pro</string>
-    <string name="pro_buy_price">Get Pro · %1$s per year</string>
+    <string name="pro_buy_price">Get Pro · %1$s a year</string>
+    <string name="pro_life_buy">Pro for life</string>
+    <string name="pro_life_buy_price">Pro for life · %1$s once</string>
     <string name="pro_active">Pro is active.</string>
+    <string name="pro_life_owned">Pro is yours for life.</string>
     <string name="pro_manage">Manage subscription</string>
     <string name="paywall_level">Level %1$d is part of Plus</string>
-    <string name="paywall_level_body">Lever, planche, flag and handstand work. Pro includes it too, and adds Levels 6 to 10.</string>
+    <string name="paywall_level_body">Lever, planche, flag and handstand work. Pro includes it too, and adds Levels 7 to 10.</string>
     <string name="paywall_level_pro">Level %1$d is part of Pro</string>
-    <string name="paywall_level_pro_body">Levels 6 to 10 build up to the full levers, planche, human flag, Hefesto, one-arm pull-up and one-arm handstand.</string>
+    <string name="paywall_level_pro_body">Levels 7 to 10 build up to the full front lever, planche, human flag, Hefesto, one-arm pull-up and one-arm handstand.</string>
+    <string name="paywall_ready">Ready workouts are part of Pro</string>
+    <string name="paywall_ready_body">Workouts for days off the program: pull, push, legs, core, skills, short days and mobility.</string>
     <string name="paywall_parks">Parks near you are part of Plus</string>
     <string name="paywall_rename">Renaming levels is part of Plus</string>
     <string name="paywall_saved">You’ve used all %1$d saved and custom days</string>
@@ -46,7 +52,7 @@
     <string name="restore_purchase">Restore purchases</string>
     <string name="purchase_checking">Checking purchases…</string>
     <string name="purchase_restored_pro">Pro restored. Everything is unlocked.</string>
-    <string name="purchase_restored_plus">Plus restored. Levels 4 and 5 are unlocked and ads are off.</string>
+    <string name="purchase_restored_plus">Plus restored. Levels 4 to 6 and the leaderboard are open, and ads are off.</string>
     <string name="purchase_not_found">No purchase found for this Google account.</string>
     <string name="purchase_unreachable">Couldn’t reach Google Play. Try again later.</string>
     <string name="purchase_unavailable">Google Play purchases are unavailable.</string>

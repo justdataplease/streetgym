@@ -77,7 +77,7 @@ object HistoryCalendar {
                 it.manuallyCompleted -> marked++
                 else -> {
                     trained++
-                    if (it.repeat) repeats++ else if (CustomDays.isCustom(it.programId)) custom++
+                    if (it.repeat) repeats++ else if (CustomDays.offProgram(it.programId)) custom++
                 }
             }
         }

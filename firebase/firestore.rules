@@ -142,7 +142,7 @@ service cloud.firestore {
         && data.keys().hasAll(['v', 'programId', 'level', 'day', 'exam', 'custom', 'repeat', 'intensity', 'startedAt',
           'finishedAt', 'durationSec', 'plannedSets', 'doneSets', 'leftOutSets', 'exercises', 'uploadedAt'])
         && data.v == 1
-        && data.programId is string && data.programId.matches('^(sg:l[0-9]{2}:p[0-9]{4}|custom|unknown)$')
+        && data.programId is string && data.programId.matches('^(sg:l[0-9]{2}:p[0-9]{4}|ready:[a-z0-9_]{1,40}|custom|unknown)$')
         && optionalCount(data, 'level', 20)
         && optionalCount(data, 'day', 1000)
         && (data.get('dayType', null) == null || data.dayType is string && data.dayType.matches('^[a-z0-9_]{1,64}$'))

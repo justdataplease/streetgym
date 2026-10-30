@@ -1,8 +1,9 @@
 package com.justdataplease.streetgym.billing
 
 /**
- * What each tier unlocks. Plus is one payment; Pro is a yearly subscription that includes everything in Plus and
- * pays for the server and database behind the account: sign-in, the leaderboard and cloud progress.
+ * What each tier unlocks (the owner, 2026-10-30). Plus is one payment and includes the leaderboard. Pro includes
+ * everything in Plus and is a yearly subscription or one larger payment ("Pro for life"); it adds the last levels,
+ * the ready workouts and cloud progress, which runs on the server and database behind the account.
  */
 enum class Tier(val savedDays: Int, val workoutLists: Int, val daysPerList: Int) {
     // The lists can hold every saved day: 3 lists of 10 on Plus, 10 lists of 30 on Pro.
@@ -13,10 +14,13 @@ enum class Tier(val savedDays: Int, val workoutLists: Int, val daysPerList: Int)
     val parks: Boolean get() = this >= PLUS
     /** Own lists in My workouts; Free keeps everything in Favorites. */
     val lists: Boolean get() = workoutLists > 0
-    /** Plus sees the leaderboard; only Pro appears on it. */
     val leaderboard: Boolean get() = this >= PLUS
-    /** Only Pro signs in: its place on the leaderboard and cloud progress need the account. */
-    val account: Boolean get() = this == PRO
+    /** Plus and Pro sign in for their place on the leaderboard. */
+    val account: Boolean get() = this >= PLUS
+    /** Only Pro saves its progress and My workouts to the account, and restores them on another phone. */
+    val cloud: Boolean get() = this == PRO
+    /** The ready workouts in Training › Library ([com.justdataplease.streetgym.data.library.ReadyWorkouts]). */
+    val readyWorkouts: Boolean get() = this == PRO
 
     companion object {
         fun fromName(name: String?): Tier? = entries.firstOrNull { it.name == name }
@@ -24,7 +28,7 @@ enum class Tier(val savedDays: Int, val workoutLists: Int, val daysPerList: Int)
 }
 
 /**
- * The tier from cached ownership. Debug and GitHub builds can't buy, so they get Pro unless the tester simulates a
+ * The tier from cached ownership ([proActive]: the yearly subscription or Pro for life). Debug and GitHub builds can't buy, so they get Pro unless the tester simulates a
  * lower tier; ownership still counts on top. Release builds have no override, except a running Play review code
  * ([review], see [ReviewAccess]), which gives at least Pro in every build.
  */

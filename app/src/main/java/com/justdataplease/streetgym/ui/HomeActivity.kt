@@ -27,6 +27,7 @@ import com.justdataplease.streetgym.data.library.ExerciseLibrary
 import com.justdataplease.streetgym.data.library.LibraryCodec
 import com.justdataplease.streetgym.data.library.LibraryMovement
 import com.justdataplease.streetgym.data.library.LibraryRepository
+import com.justdataplease.streetgym.data.library.ReadyWorkouts
 import com.justdataplease.streetgym.account.AccountStore
 import com.justdataplease.streetgym.account.Cloud
 import com.justdataplease.streetgym.account.CloudSync
@@ -98,7 +99,6 @@ import android.window.OnBackInvokedCallback
 import android.window.OnBackInvokedDispatcher
 import com.justdataplease.streetgym.R
 import com.justdataplease.streetgym.data.AssetCurriculumRepository
-import com.justdataplease.streetgym.data.CurriculumJsonParser
 import com.justdataplease.streetgym.data.model.CurriculumCatalog
 import com.justdataplease.streetgym.data.model.TrainingExercise
 import com.justdataplease.streetgym.data.model.TrainingLevel
@@ -159,7 +159,7 @@ open class HomeActivity : Activity() {
     private lateinit var progressRepository: SharedPreferencesProgressRepository
     private lateinit var library: LibraryRepository
     private var exerciseLibrary: ExerciseLibrary? = null
-    /** Training's tabs: 0 Levels, 1 My workouts, 2 Parks. */
+    /** Training's tabs: 0 Levels, 1 My workouts, 2 Library (the ready workouts), 3 Parks. */
     private var trainingTab = 0
     /** The list open in My workouts (Plus); null for Favorites, everything the athlete keeps. */
     private var workoutListId: String? = null
@@ -201,9 +201,12 @@ open class HomeActivity : Activity() {
             // Every screen walks the day order and looks days up by id: sort and index them once per catalog.
             orderedPrograms = value?.let(::allPrograms).orEmpty()
             programIndex = orderedPrograms.associateBy(TrainingProgram::id)
+            readyIndex = value?.workouts.orEmpty().associateBy(TrainingProgram::id)
         }
     private var orderedPrograms: List<TrainingProgram> = emptyList()
     private var programIndex: Map<String, TrainingProgram> = emptyMap()
+    /** Pro's ready workouts by id ([ReadyWorkouts]); they're no part of the day order. */
+    private var readyIndex: Map<String, TrainingProgram> = emptyMap()
     /** The Easier, Normal or Harder [catalog] is scaled to ([syncIntensity]). */
     private var scaledFor = Intensity.NORMAL
     private var skillBook: SkillBook? = null
@@ -381,7 +384,7 @@ open class HomeActivity : Activity() {
     }
 
     /**
-     * Plus sees the boards; Pro also appears on them. A board is one cached document ([LeaderboardRepository]); the
+     * Plus and Pro see the boards and, once signed in, appear on them. A board is one cached document ([LeaderboardRepository]); the
      * athlete's place comes from that same document, so this screen costs at most one read per board every six hours.
      */
     private fun renderLeaderboard(page: LinearLayout, book: SkillBook) {
@@ -424,11 +427,7 @@ open class HomeActivity : Activity() {
             if (board == null) { holder.addView(bodyText(getString(if (loading) R.string.leaderboard_loading else R.string.leaderboard_offline), 14f)); return }
             holder.addView(card().apply {
                 when {
-                    uid == null && tier.account -> addView(bodyText(getString(R.string.leaderboard_sign_in), 14f))
-                    !tier.account -> {
-                        addView(bodyText(getString(R.string.leaderboard_join), 14f))
-                        addWithMargins(secondaryButton(getString(R.string.pro_buy)) { showPaywall(Paywall.Account) }, topDp = 8)
-                    }
+                    uid == null -> addView(bodyText(getString(R.string.leaderboard_sign_in), 14f))
                     profile == null -> addView(bodyText(getString(R.string.account_pick_name), 14f))
                     !profile.visible -> addView(bodyText(getString(R.string.leaderboard_hidden), 14f))
                     else -> addView(titleText(when (val standing = Boards.standing(board, profile.username, score)) {
@@ -480,7 +479,7 @@ open class HomeActivity : Activity() {
     }
 
     /**
-     * Pro with a visible profile: the score from finished workouts goes to the leaderboard when it changed, at most
+     * Plus or Pro with a visible profile: the score from finished workouts goes to the leaderboard when it changed, at most
      * every ten minutes ([Scores.shouldPublish]). A hidden profile takes its score off.
      */
     private fun publishScore() {
@@ -534,7 +533,7 @@ open class HomeActivity : Activity() {
 
     /** Skills from the classes that count ([Scores.credits]): the Skills tab and the board agree. */
     private fun skillProgress(book: SkillBook, history: List<WorkoutSession> = progressRepository.sessionHistory()): SkillProgress =
-        book.progress(Scores.credits(history) { id -> library.customDay(id)?.let(CustomDays::estimatedMinutes) })
+        book.progress(Scores.credits(history) { id -> library.customDay(id)?.let(CustomDays::estimatedMinutes) ?: readyIndex[id]?.estimatedMinutes })
 
     private fun currentScore(book: SkillBook): Score = Scores.from(skillProgress(book))
 
@@ -812,7 +811,8 @@ open class HomeActivity : Activity() {
         renderLoading()
         worker.execute {
             // The catalog asset is read and parsed once, for the program, the exercise library and Skills.
-            val root = AssetCurriculumRepository(this).readRoot()
+            val repository = AssetCurriculumRepository(this)
+            val root = repository.readRoot()
             // On a second thread meanwhile, as neither reads what the other makes: the clips that Today's park scene
             // and every movement guide use, then Skills, which read the movement library and schedule from the same
             // JSON (both only read it). A Skills failure only hides the Skills tab.
@@ -820,7 +820,7 @@ open class HomeActivity : Activity() {
                 runCatching { MotionClip.preload(this) }
                 root.getOrNull()?.let { runCatching { SkillCurriculumReader.read(it) }.getOrNull() }
             }
-            val result = root.mapCatching(CurriculumJsonParser::parse)
+            val result = root.mapCatching(repository::parse)
             val exercises = result.getOrNull()?.let { runCatching { ExerciseLibrary.from(it) }.getOrNull() }
             val skills = runCatching { side.get() }.getOrNull()
             val parsed = result.getOrNull()?.let { LoadedCatalog(it, exercises, skills) }?.also { loaded = it }
@@ -1044,7 +1044,7 @@ open class HomeActivity : Activity() {
             today.addView(titleText(displayName(next, uiLocale()), if (compact) 20f else 23f))
             today.addWithMargins(bodyText(programMeta(next), 13f), topDp = 6)
             if (paywallLevel == null) {
-                if (!CustomDays.isCustom(next.id)) today.addWithMargins(intensityRow(::renderDashboard), topDp = 14)
+                if (!CustomDays.offProgram(next.id)) today.addWithMargins(intensityRow(::renderDashboard), topDp = 14)
                 today.addWithMargins(primaryButton(getString(if (active?.programId == next.id) R.string.resume_workout else R.string.start_today)) {
                     requestStart(next, repeat = repeating)
                 }, topDp = 16)
@@ -1140,12 +1140,17 @@ open class HomeActivity : Activity() {
         val completed = passedIds()
         val page = verticalPage()
         page.addWithMargins(segmentedSwitch(listOf(getString(R.string.training_tab_levels),
-            getString(R.string.training_tab_workouts), getString(R.string.training_tab_parks)), trainingTab) { index ->
+            getString(R.string.training_tab_workouts), getString(R.string.training_tab_ready), getString(R.string.training_tab_parks)),
+            trainingTab, compact = true) { index ->
             trainingTab = index
             renderLevels()
         }, width = ViewGroup.LayoutParams.WRAP_CONTENT, bottomDp = 14)
         if (trainingTab != 0) {
-            val map = if (trainingTab == 1) { renderMyWorkouts(page, locale); false } else renderParks(page)
+            val map = when (trainingTab) {
+                1 -> { renderMyWorkouts(page, locale); false }
+                2 -> { renderReadyWorkouts(page, locale); false }
+                else -> renderParks(page)
+            }
             // The Parks map fills the screen instead of scrolling with the page.
             setBody(if (map) page else scroll(page))
             return
@@ -1212,13 +1217,49 @@ open class HomeActivity : Activity() {
         saved.forEach { page.addWithMargins(libraryCard(it, locale), bottomDp = 10) }
     }
 
-    /** A saved or custom day in My workouts: its name and what it holds, opening its overview. */
+    /** A saved or custom day in My workouts, or a ready workout: its name and what it holds, opening its overview. */
     private fun libraryCard(program: TrainingProgram, locale: Locale): LinearLayout = card(clickable = true).apply {
         addView(titleText(displayName(program, locale), 18f))
-        addWithMargins(bodyText(if (CustomDays.isCustom(program.id)) customMeta(program.exercises.size, program.estimatedMinutes ?: 1)
-            else listOf(getString(R.string.level_number, program.levelNumber), programMeta(program)).joinToString(" • "), 13f), topDp = 4)
+        addWithMargins(bodyText(when {
+            CustomDays.isCustom(program.id) -> customMeta(program.exercises.size, program.estimatedMinutes ?: 1)
+            ReadyWorkouts.isReady(program.id) -> readyMeta(program)
+            else -> listOf(getString(R.string.level_number, program.levelNumber), programMeta(program)).joinToString(" • ")
+        }, 13f), topDp = 4)
+        if (ReadyWorkouts.isReady(program.id)) program.description.resolve(locale).takeIf(String::isNotBlank)
+            ?.let { addWithMargins(bodyText(it, 13f), topDp = 4) }
         setOnClickListener { navigate(Screen.Overview(program.id)) }
     }
+
+    /**
+     * Training › Library: Pro's ready workouts by group, for days off the program. Other tiers see them too, with the
+     * Pro offer on top; each opens its overview, which offers Pro instead of Start.
+     */
+    private fun renderReadyWorkouts(page: LinearLayout, locale: Locale) {
+        val ready = catalog?.workouts.orEmpty()
+        page.addView(bodyText(getString(R.string.ready_intro)))
+        if (!Entitlement.tier(this).readyWorkouts) page.addWithMargins(TiersPanel(this, billing, Paywall.Ready), topDp = 14)
+        ready.groupBy { it.group }.forEach { (group, workouts) ->
+            page.addWithMargins(sectionLabel(readyGroupName(group)), topDp = 14)
+            workouts.forEach { page.addWithMargins(libraryCard(it, locale), bottomDp = 10) }
+        }
+    }
+
+    private fun readyGroupName(group: String?): String = getString(when (group) {
+        "full" -> R.string.ready_group_full
+        "pull" -> R.string.ready_group_pull
+        "push" -> R.string.ready_group_push
+        "legs" -> R.string.ready_group_legs
+        "core" -> R.string.ready_group_core
+        "skills" -> R.string.ready_group_skills
+        "short" -> R.string.ready_group_short
+        else -> R.string.ready_group_mobility
+    })
+
+    /** "Intermediate · 6 exercises · About 30 min". */
+    private fun readyMeta(program: TrainingProgram): String = getString(R.string.ready_meta,
+        getString(when (program.grade) { 1 -> R.string.ready_grade_1; 3 -> R.string.ready_grade_3; else -> R.string.ready_grade_2 }),
+        resources.getQuantityString(R.plurals.custom_exercises, program.exercises.size, program.exercises.size),
+        program.estimatedMinutes ?: 1)
 
     /** A new list from My workouts, opened at once; Free and a full tier see what gives more. */
     private fun requestNewList() {
@@ -1353,7 +1394,7 @@ open class HomeActivity : Activity() {
                 // A map kept off screen (the list, another tab) doesn't take the results; the list shows them.
                 val map = parksMap?.takeUnless { parksMapHidden }
                 when {
-                    map == null -> if (currentScreen == Screen.Levels && trainingTab == 2) renderLevels()
+                    map == null -> if (currentScreen == Screen.Levels && trainingTab == 3) renderLevels()
                     query.isBlank() -> origin?.let { map.showNearby(it.first, it.second, results.take(NEARBY_ON_MAP).map(NearbyPark::park)) }
                     results.isEmpty() -> Toast.makeText(this, R.string.parks_none, Toast.LENGTH_SHORT).show()
                     else -> map.focus(results.map { it.park })
@@ -1370,13 +1411,13 @@ open class HomeActivity : Activity() {
             val loaded = runCatching { updater.load() }.getOrDefault(emptyList())
             runOnUiThread {
                 parks = loaded; parksLoading = false
-                if (currentScreen == Screen.Levels && trainingTab == 2) renderLevels()
+                if (currentScreen == Screen.Levels && trainingTab == 3) renderLevels()
             }
             // The quarterly file, when the job published a new one (at most one small request a week).
             val fresh = runCatching { updater.update(loaded.size) }.getOrNull() ?: return@execute
             runOnUiThread {
                 parks = fresh
-                if (currentScreen == Screen.Levels && trainingTab == 2) renderLevels()
+                if (currentScreen == Screen.Levels && trainingTab == 3) renderLevels()
             }
         }
     }
@@ -1853,7 +1894,10 @@ open class HomeActivity : Activity() {
             setBody(scroll(page))
             return
         }
-        if (!inspecting && !canStart(program.id) && !progressRepository.isProgramCompleted(program.id)) {
+        val ready = ReadyWorkouts.isReady(program.id)
+        // A ready workout shows what it holds on every tier; below Pro the offer takes Start's place.
+        val readyLocked = ready && !Entitlement.tier(this).readyWorkouts
+        if (!inspecting && !ready && !canStart(program.id) && !progressRepository.isProgramCompleted(program.id)) {
             page.addView(card().apply {
                 addView(titleText(displayName(program, locale), 25f))
                 addWithMargins(bodyText("This daily plan is locked."), topDp = 12)
@@ -1867,17 +1911,18 @@ open class HomeActivity : Activity() {
         val assigned = assignedProgram()
         val active = progressRepository.activeWorkout()
         // Today's day starts as usual (during a level replay too); any other completed day can be repeated.
-        val repeatable = !custom && assigned?.id != program.id && canRepeat(program.id)
+        val repeatable = !custom && !ready && assigned?.id != program.id && canRepeat(program.id)
         val repeatResume = active?.programId == program.id && active.repeat
         val hero = card()
         if (inspecting) hero.addWithMargins(badge(getString(R.string.inspect_only)), width = ViewGroup.LayoutParams.WRAP_CONTENT, bottomDp = 8)
         val title = titleText(displayName(program, locale), 25f)
-        if (inspecting || (custom && !Entitlement.tier(this).lists)) hero.addView(title) else hero.addView(LinearLayout(this).apply {
+        if (inspecting || readyLocked || (custom && !Entitlement.tier(this).lists)) hero.addView(title) else hero.addView(LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             addView(title, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
             addView(heartButton(program.id))
         })
         val meta = if (custom) customMeta(program.exercises.size, program.estimatedMinutes ?: 1)
+        else if (ready) readyMeta(program)
         else buildList {
             add(getString(R.string.level_number, program.levelNumber))
             programMeta(program).takeIf(String::isNotBlank)?.let(::add)
@@ -1916,7 +1961,7 @@ open class HomeActivity : Activity() {
         page.addWithMargins(hero, bottomDp = 14)
         if (program.isExam) page.addWithMargins(examCard(program, locale), bottomDp = 14)
 
-        if (!custom && program.switchedOff(settings.skillSwitches) && program.id !in progressRepository.completedProgramIds()) {
+        if (!CustomDays.offProgram(program.id) && program.switchedOff(settings.skillSwitches) && program.id !in progressRepository.completedProgramIds()) {
             page.addWithMargins(card().apply {
                 background = roundedDrawable(AppColors.INFO_SURFACE, dp(24).toFloat())
                 addView(bodyText(getString(R.string.switch_off_class), 14f))
@@ -1934,10 +1979,12 @@ open class HomeActivity : Activity() {
                 page.addWithMargins(primaryButton(getString(R.string.inspect_only), AppColors.TEXT_SECONDARY) {}.apply {
                     isEnabled = false
                 }, topDp = 8)
-            } else if (custom || assigned?.id == program.id) {
+            } else if (readyLocked) {
+                page.addWithMargins(TiersPanel(this, billing, Paywall.Ready), topDp = 8)
+            } else if (custom || ready || assigned?.id == program.id) {
                 val isResume = active?.programId == program.id && !active.repeat
                 page.addWithMargins(workoutViewSetting(settings), topDp = 4)
-                if (!custom) page.addWithMargins(intensityRow { renderOverview(program.id) }, topDp = 8)
+                if (!custom && !ready) page.addWithMargins(intensityRow { renderOverview(program.id) }, topDp = 8)
                 val start = primaryButton(
                     getString(when {
                         isResume -> R.string.resume_workout
@@ -1948,7 +1995,7 @@ open class HomeActivity : Activity() {
                 start.compoundDrawablePadding = dp(8)
                 page.addWithMargins(start, topDp = 8)
                 // Complete day moves the sequence on, so only the assigned day offers it.
-                if (!custom) {
+                if (!custom && !ready) {
                     page.addWithMargins(secondaryButton("Complete day") { requestCompleteDay(program) }, topDp = 8)
                     page.addWithMargins(noPointsNote(R.string.complete_day_no_points), topDp = 6)
                 }
@@ -2095,7 +2142,7 @@ open class HomeActivity : Activity() {
 
     /** Today's pick for a program day; an own day runs as the athlete wrote it. */
     private fun intensityFor(program: TrainingProgram): Intensity =
-        if (CustomDays.isCustom(program.id)) Intensity.NORMAL else settings.intensityToday()
+        if (CustomDays.offProgram(program.id)) Intensity.NORMAL else settings.intensityToday()
 
     private fun renderActive(programId: String) {
         val program = programById(programId) ?: return
@@ -2674,7 +2721,7 @@ open class HomeActivity : Activity() {
             settings.theme = picked
             recreate()
         }, bottomDp = 18)
-        // Only Pro signs in; a build without Firebase shows no account at all.
+        // Plus and Pro sign in; a build without Firebase shows no account at all.
         if (Cloud.signInAvailable(this) && (Entitlement.tier(this).account || Cloud.uid(this) != null)) {
             page.addView(sectionLabel(getString(R.string.account_section)))
             page.addWithMargins(AccountSettingsView(this, cloudSync) { publishScore() }, bottomDp = 16)
@@ -2898,12 +2945,16 @@ open class HomeActivity : Activity() {
             .forEach { progressRepository.setDone(it.key, null) }
     }
 
-    private fun programById(id: String): TrainingProgram? =
-        if (CustomDays.isCustom(id)) library.customDay(id)?.let(CustomDays::toProgram) else programIndex[id]
+    private fun programById(id: String): TrainingProgram? = when {
+        CustomDays.isCustom(id) -> library.customDay(id)?.let(CustomDays::toProgram)
+        ReadyWorkouts.isReady(id) -> readyIndex[id]
+        else -> programIndex[id]
+    }
 
-    /** Today's assigned day, or one of the athlete's own custom days, which start any time. */
+    /** Today's assigned day, one of the athlete's own custom days, or on Pro a ready workout: those start any time. */
     private fun canStart(id: String): Boolean =
-        (assignedProgram()?.id == id || CustomDays.isCustom(id) && library.customDay(id) != null) &&
+        (assignedProgram()?.id == id || CustomDays.isCustom(id) && library.customDay(id) != null ||
+            ReadyWorkouts.isReady(id) && id in readyIndex && Entitlement.tier(this).readyWorkouts) &&
             programById(id)?.levelNumber?.let(::levelLocked) != true
 
     /** Any completed day can be trained again, in a level the athlete can open; days not reached yet cannot. */
@@ -2927,9 +2978,9 @@ open class HomeActivity : Activity() {
     private fun passedIds(): Set<String> =
         NextClass.passed(orderedPrograms, progressRepository.completedProgramIds(), settings.skillSwitches)
 
-    /** The athlete's skill switches for [program]; an own day runs as they built it. */
+    /** The athlete's skill switches for [program]; an own day runs as they built it, and a ready workout as written. */
     private fun switchesFor(program: TrainingProgram): SkillSwitches =
-        if (CustomDays.isCustom(program.id)) SkillSwitches() else settings.skillSwitches
+        if (CustomDays.offProgram(program.id)) SkillSwitches() else settings.skillSwitches
 
     /** The skill that leaves [exercise] out of this workout, or null when it is in (on, or chosen anyway). */
     private fun leftOutBy(program: TrainingProgram, section: String, exercise: TrainingExercise, index: Int): SkillFamilySpec? {

@@ -2,7 +2,7 @@
 <resources>
     <string name="reset_title">Start over</string>
     <string name="reset_body">Erase your classes, history, skill levels and exam results, then choose a new start. My workouts, theme and purchases stay.</string>
-    <string name="reset_body_account">Erase your classes, history, skill levels and exam results, then choose a new start. Your cloud copy and leaderboard score reset too. My workouts, theme and purchases stay.</string>
+    <string name="reset_body_account">Erase your classes, history, skill levels and exam results, then choose a new start. Your leaderboard score and any cloud copy reset too. My workouts, theme and purchases stay.</string>
     <string name="reset_button">Reset progress</string>
     <string name="reset_confirm_title">Reset all progress?</string>
     <string name="reset_confirm_message">Every finished class, your history, skill levels and exam results are erased. This can\'t be undone.</string>
