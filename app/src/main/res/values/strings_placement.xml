@@ -1,41 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="placement_title">Placement test</string>
-    <string name="placement_prompt">Find your start like an exam. Warm up, then do one set of each, as many as you can with good form, resting two minutes between them. Enter what you did.</string>
+    <string name="placement_kicker">FIRST, A QUICK TEST</string>
+    <string name="placement_title">How strong are you today?</string>
+    <string name="placement_prompt">Warm up, then one set of each, as many as you can with good form. Rest two minutes between. We\'ll find your start.</string>
     <string name="placement_pull_ups">Strict pull-ups</string>
-    <string name="placement_pull_ups_how">Overhand, from a dead hang until your chin clears the bar.</string>
+    <string name="placement_pull_ups_short">Pull-ups</string>
     <string name="placement_push_ups">Push-ups</string>
-    <string name="placement_push_ups_how">Body straight, chest to a fist above the floor.</string>
+    <string name="placement_push_ups_short">Push-ups</string>
     <string name="placement_squats">Bodyweight squats</string>
-    <string name="placement_squats_how">Thighs below parallel, heels down.</string>
-    <string name="placement_count">Reps</string>
+    <string name="placement_squats_short">Squats</string>
+    <string name="placement_how">Strict: chin over the bar · chest to a fist above the floor · thighs below parallel, heels down.</string>
+    <string name="placement_your_start">Your start</string>
+    <string name="placement_start_line">%1$s · %2$s</string>
     <string name="placement_less">One rep fewer</string>
     <string name="placement_more">One rep more</string>
     <string name="placement_answer_all">Enter all three to see where you start.</string>
-    <string name="placement_no_credit">Skipping ahead gives no skill levels: the days before your start don’t count.</string>
-    <string name="placement_better">%1$s would start you at %2$s.</string>
+    <string name="placement_no_credit">Only a guide. Skipped days don\'t count toward skill levels.</string>
+    <string name="placement_better">%1$s → %2$s</string>
     <plurals name="placement_more_pull_ups"><item quantity="one">%d more pull-up</item><item quantity="other">%d more pull-ups</item></plurals>
     <plurals name="placement_more_push_ups"><item quantity="one">%d more push-up</item><item quantity="other">%d more push-ups</item></plurals>
     <plurals name="placement_more_squats"><item quantity="one">%d more squat</item><item quantity="other">%d more squats</item></plurals>
+    <string name="placement_skills_label">From your skills</string>
+    <string name="placement_opens_label">Opens with</string>
+    <string name="placement_assumes_label">Assumes you can do</string>
+    <string name="placement_better_label">Closer to the next start</string>
     <string name="placement_skip">Skip and start at Level 1</string>
-    <string name="placement_result">Based on your test, you should start at Level %1$d: %2$s. Do you agree, or do you want to start from scratch?</string>
-    <string name="placement_result_day">Based on your test, you should start at %1$s. Do you agree, or do you want to start from scratch?</string>
-    <string name="placement_result_first">Based on your test, start at Level %1$d: %2$s</string>
     <string name="placement_level_day">Level %1$d, day %2$d</string>
-    <string name="placement_opens">%1$s opens with %2$s.</string>
-    <string name="placement_list_end">%1$s and %2$s</string>
     <string name="placement_confirm">Start at %1$s</string>
     <string name="placement_scratch">Start from scratch</string>
-    <string name="placement_indicative">Only a guide: this start assumes you can already do %1$s. You can start from scratch instead, or complete levels yourself whenever you think you should.</string>
     <string name="placement_skills_title">Already hold skills?</string>
-    <string name="placement_skills_prompt">Tap the hardest level test you would pass today, every target with good form. The level after it is your suggested start.</string>
+    <string name="placement_skills_prompt">Tap the hardest level test you\'d pass today with good form. You start at the level after it.</string>
     <string name="placement_skill_test">Level %1$d test</string>
     <string name="placement_skill_result">Passing the Level %1$d test suggests Level %2$d: %3$s.</string>
-    <string name="placement_skill_capped">Level %1$d comes with %2$s, so you start at Level %3$d, the last level your plan opens. After an upgrade, complete levels to move on.</string>
+    <string name="placement_skill_capped">Level %1$d needs %2$s, so you start at Level %3$d, the last one your plan opens.</string>
     <string name="placement_level_one_hint">Already train? Complete Level 1 to start Level 2 now. Its days then don’t count toward skill levels.</string>
     <string name="intensity_title">How do you feel today?</string>
     <string name="intensity_easier">Easier</string>
     <string name="intensity_normal">Normal</string>
     <string name="intensity_harder">Harder</string>
-    <string name="intensity_note">Harder adds a quarter to the reps and hold times of strength exercises, so their sets reach skill targets sooner. Easier takes a quarter off. Skill work stays as written. Back to Normal tomorrow.</string>
+    <string name="intensity_note">Harder adds a quarter to strength reps and holds, so you reach skill targets sooner. Easier takes a quarter off. Skill work stays as written. Back to Normal tomorrow.</string>
 </resources>

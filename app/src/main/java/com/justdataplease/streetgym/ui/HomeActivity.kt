@@ -941,8 +941,11 @@ open class HomeActivity : Activity() {
             addWithMargins(titleText(getString(R.string.brand_line), 30f).apply { setTextColor(AppColors.HERO_TEXT) }, topDp = 8)
             addWithMargins(ParkSceneView(context), height = dp(180), topDp = 4)
         }
-        if (!compact) page.addWithMargins(hero, bottomDp = 20)
-        if (!compact) page.addView(sectionLabel(getString(R.string.today_section)))
+        // A new athlete first says where to start; that screen brings its own header, and Today's day card follows once
+        // it's answered or skipped.
+        val placing = askPlacement(completed, active)
+        if (!compact && !placing) page.addWithMargins(hero, bottomDp = 20)
+        if (!compact && !placing) page.addView(sectionLabel(getString(R.string.today_section)))
         val today = card(clickable = next != null)
         val paywallLevel = next?.levelNumber?.takeIf(::levelLocked)
         if (next != null) {
@@ -973,12 +976,12 @@ open class HomeActivity : Activity() {
             today.addView(titleText(getString(R.string.all_complete_title), 22f))
             today.addWithMargins(bodyText(getString(R.string.all_complete_body)), topDp = 8)
         }
-        // A new athlete first says where to start; Today's day card follows once that's answered or skipped.
-        page.addWithMargins(if (askPlacement(completed, active)) placementCard(orderedPrograms, catalog?.levels.orEmpty(),
-            uiLocale(), placementAnswers, placementSkill, Entitlement.tier(this), ::startPlacement) else today, bottomDp = 16)
+        page.addWithMargins(if (placing) placementCard(orderedPrograms, catalog?.levels.orEmpty(),
+            uiLocale(), placementAnswers, placementSkill, Entitlement.tier(this), settings, ::startPlacement) else today, bottomDp = 16)
         if (paywallLevel != null) page.addWithMargins(TiersPanel(this, billing, Paywall.Level(paywallLevel)), bottomDp = 16)
         val done = all.count { it.id in completed }
-        page.addWithMargins(card(clickable = true).apply {
+        // Nothing done yet while placing: the placement screen ends with its sharing note.
+        if (!placing) page.addWithMargins(card(clickable = true).apply {
             addView(titleText(getString(R.string.progress_title), 18f))
             addWithMargins(bodyText(getString(R.string.workouts_completed_format, done, all.size), 14f), topDp = 6)
             addWithMargins(horizontalProgress(percentage(done, all.size)), height = dp(8), topDp = 14)
@@ -2596,6 +2599,8 @@ open class HomeActivity : Activity() {
             page.addView(sectionLabel(getString(R.string.switches_section)))
             page.addWithMargins(skillSwitchesCard(book, settings), bottomDp = 16)
         }
+        page.addView(sectionLabel(getString(R.string.share_section)))
+        page.addWithMargins(shareProgressNote(settings, inSettings = true), bottomDp = 16)
         page.addWithMargins(card().apply {
             addView(titleText(getString(R.string.reset_title), 19f))
             addWithMargins(bodyText(getString(if (Cloud.uid(this@HomeActivity) != null) R.string.reset_body_account

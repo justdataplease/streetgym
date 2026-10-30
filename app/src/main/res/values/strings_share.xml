@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Sharing training progress to improve the program (the owner, 2026-10-30): on until switched off. -->
+    <string name="share_switch">Share my training progress</string>
+    <string name="share_body"><b>Share my progress.</b> Only training progress, under a random code: no name, email or location. It shows us what works, so the classes keep getting better.</string>
+    <string name="share_section">Your data</string>
+</resources>

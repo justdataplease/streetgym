@@ -49,6 +49,10 @@ Round 11 builds on round 10 (2.5.1):
   - **The lines:** each family's line is curated in `SkillProgressions.LINES` (`data/skills/SkillSwitches.kt`), in first-use order, each step with the rung it leads to. Shared work belongs to no line. A step two lines share (the German hang) goes off only when both lines are off, and the freestanding HSPU needs the freestanding handstand.
   - **In the classes:** switched-off exercises stay visible, greyed, and out of the set count. A tap asks before doing one anyway. A class with nothing left to train counts as passed (`NextClass.passed`) and earns nothing; one family off never empties a class.
   - **Exams and skills:** an exam doesn't test a switched-off skill. The skill score is out of the skills trained; the leaderboard keeps the full scale.
+- **2.6.6, first screen and shorter texts (the owner):**
+  - **First screen (design B of three):** the placement test asks "How strong are you today?" under a dark header, with three big counters. The start shows on yellow tape as soon as all three counts are in. One card below says what the start opens with, what it assumes (one target per line) and what a few more reps would change. The skills step is folded under one line below the start button.
+  - **Sharing progress:** a note and switch close the first screen and sit in Settings › Your data, on by default (`AppSettings.shareProgress`). Nothing is uploaded yet: the upload, anonymous sign-in and database rules wait for the owner's go-ahead.
+  - **Shorter texts:** 36 app strings are shorter and plainer; the Skills help went from about 600 words to 300. The class texts follow in 2.6.7.
 
 ## The frame
 

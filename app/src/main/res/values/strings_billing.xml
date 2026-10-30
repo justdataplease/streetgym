@@ -5,8 +5,8 @@
     <string name="tier_pro">Pro</string>
     <string name="tiers_title">Plus and Pro</string>
     <string name="tier_current_free">You’re on Free: Levels 1–3 with ads and 3 saved or custom days, all in Favorites.</string>
-    <string name="tier_current_plus">You have Plus: Levels 1–5, no ads, 30 saved or custom days in up to 3 lists of 10, your own level names and parks near you.</string>
-    <string name="tier_current_pro">You have Pro: everything in Plus, Levels 6 to 10, 300 saved or custom days in up to 10 lists of 30, the leaderboard, and your progress saved to your Google account.</string>
+    <string name="tier_current_plus">You have Plus: Levels 1–5, no ads, 30 saved or custom days (3 lists of 10), your own level names and parks near you.</string>
+    <string name="tier_current_pro">You have Pro: all of Plus, Levels 6 to 10, 300 saved or custom days (10 lists of 30), the leaderboard and cloud saves to your Google account.</string>
     <string name="plus_title">Plus · one payment</string>
     <string-array name="plus_features">
         <item>No ads</item>
@@ -27,7 +27,7 @@
         <item>Leaderboard: overall and per skill</item>
         <item>Your progress saved to your Google account and on all your devices</item>
     </string-array>
-    <string name="pro_why">* Pro is yearly because cloud progress and the leaderboard run on servers and a database, and the subscription pays for them. It renews every year until you cancel in Google Play.</string>
+    <string name="pro_why">* Pro is yearly because cloud saves and the leaderboard run on servers. It renews each year until you cancel in Google Play.</string>
     <string name="pro_buy">Get Pro</string>
     <string name="pro_buy_price">Get Pro · %1$s per year</string>
     <string name="pro_active">Pro is active.</string>
@@ -35,7 +35,7 @@
     <string name="paywall_level">Level %1$d is part of Plus</string>
     <string name="paywall_level_body">Lever, planche, flag and handstand work. Pro includes it too, and adds Levels 6 to 10.</string>
     <string name="paywall_level_pro">Level %1$d is part of Pro</string>
-    <string name="paywall_level_pro_body">Levels 6 to 10 build up to the full front and back lever, planche, flag, Hefesto and the one-arm pull-up and handstand, through the last class.</string>
+    <string name="paywall_level_pro_body">Levels 6 to 10 build up to the full levers, planche, human flag, Hefesto, one-arm pull-up and one-arm handstand.</string>
     <string name="paywall_parks">Parks near you are part of Plus</string>
     <string name="paywall_rename">Renaming levels is part of Plus</string>
     <string name="paywall_saved">You’ve used all %1$d saved and custom days</string>

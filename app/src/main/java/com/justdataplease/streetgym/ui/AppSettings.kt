@@ -42,6 +42,11 @@ class AppSettings(context: Context) {
         get() = preferences.getBoolean(KEY_PLACEMENT_DONE, false)
         set(value) = preferences.edit().putBoolean(KEY_PLACEMENT_DONE, value).apply()
 
+    /** Share training progress to improve the program ([shareProgressNote]): on until switched off. */
+    var shareProgress: Boolean
+        get() = preferences.getBoolean(KEY_SHARE_PROGRESS, true)
+        set(value) = preferences.edit().putBoolean(KEY_SHARE_PROGRESS, value).apply()
+
     /** "How do you feel today?": the pick for today's classes, Normal again the next day. */
     fun intensityToday(now: Long = System.currentTimeMillis()): Intensity =
         if (preferences.getLong(KEY_INTENSITY_DAY, -1L) == localDay(now)) Intensity.fromName(preferences.getString(KEY_INTENSITY, null))
@@ -82,6 +87,7 @@ class AppSettings(context: Context) {
         private const val KEY_SOUND_CUES = "sound_cues"
         private const val KEY_WORKOUT_VIEW = "workout_view"
         private const val KEY_PLACEMENT_DONE = "placement_done"
+        private const val KEY_SHARE_PROGRESS = "share_progress"
         private const val KEY_INTENSITY = "intensity"
         private const val KEY_INTENSITY_DAY = "intensity_day"
         private const val DAY_MILLIS = 24 * 60 * 60 * 1000L

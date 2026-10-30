@@ -6,9 +6,9 @@
         <item quantity="other">%1$d taps to developer settings</item>
     </plurals>
     <string name="developer_inspect_all">Inspect all days</string>
-    <string name="developer_inspect_note">Open every day of every level to read its exercises, doses and guides. Days you haven\'t reached are inspect only: they can\'t be started or completed, and nothing is recorded.</string>
+    <string name="developer_inspect_note">Open every day of every level to read it. Days you haven\'t reached are read-only: nothing can be started or recorded.</string>
     <string name="developer_hide">Hide developer settings</string>
     <string name="developer_done">Done</string>
     <string name="inspect_only">Inspect only</string>
-    <string name="inspect_only_note">Developer inspection: read this day as it will be. It can\'t be started or completed until you reach it.</string>
+    <string name="inspect_only_note">Developer view: read this day as it will be. You can\'t start or complete it until you reach it.</string>
 </resources>

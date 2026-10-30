@@ -2,7 +2,7 @@
 <resources>
     <string name="account_section">Account</string>
     <string name="account_title">Your account</string>
-    <string name="account_intro">Sign in with Google to save your progress and My workouts to your account, and to join the leaderboard. Training always works offline.</string>
+    <string name="account_intro">Sign in with Google to save your progress and My workouts, and to join the leaderboard. Training always works offline.</string>
     <string name="account_sign_in">Sign in with Google</string>
     <string name="account_working">Connecting…</string>
     <string name="account_sign_in_failed">Couldn’t sign in. Check your connection and try again.</string>
@@ -19,7 +19,7 @@
     <string name="account_sign_out_note">Signing out keeps everything on this phone.</string>
     <string name="account_delete">Delete account</string>
     <string name="account_delete_title">Delete your account?</string>
-    <string name="account_delete_message">Your cloud progress, username and leaderboard scores are deleted for good. Everything on this phone stays. Google asks you to confirm the account first.</string>
+    <string name="account_delete_message">Deletes your cloud progress, username and leaderboard scores for good. Everything on this phone stays. Google asks you to confirm first.</string>
     <string name="account_deleted">Account deleted.</string>
     <string name="account_delete_failed">Couldn’t delete the account. Try again.</string>
     <string name="profile_title">Your leaderboard profile</string>

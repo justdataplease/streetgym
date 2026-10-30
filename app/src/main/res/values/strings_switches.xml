@@ -2,12 +2,12 @@
 <resources>
     <!-- Settings: the skill switches (review 12). -->
     <string name="switches_section">Skills in your classes</string>
-    <string name="switches_intro">Switch off a skill you don\'t want to train, like the handstand or the human flag. Its exercises stay in your classes, greyed out, and leave your skill progress. Tap a skill to keep its first steps and switch off only the harder ones.</string>
+    <string name="switches_intro">Don\'t want to train a skill, like the handstand or the flag? Switch it off. Its exercises stay greyed out and leave your skill progress. Tap a skill to switch off only its harder steps.</string>
     <string name="switches_all_on">All steps on</string>
     <string name="switches_off">Switched off</string>
     <string name="switches_off_basics">Switched off · %1$s stays</string>
     <string name="switches_up_to">Up to %1$s</string>
-    <string name="switches_family_intro">Switch off a step and every harder one leaves your classes. Switch one back on and every easier one comes back too.</string>
+    <string name="switches_family_intro">Switch off a step and every harder one goes too. Switch one on and the easier ones come back.</string>
     <string name="switches_rung">Step %1$d</string>
     <string name="switches_always_on">Always on: a basic</string>
     <string name="switches_steps">On the way: %1$s</string>
@@ -16,9 +16,9 @@
     <!-- In the classes. -->
     <string name="switch_off_badge">Switched off · %1$s</string>
     <string name="switch_off_title">%1$s is switched off</string>
-    <string name="switch_off_message">You\'ve switched off the %1$s skill, so this isn\'t part of your workouts or skill progress. Do you want to continue?</string>
+    <string name="switch_off_message">You\'ve switched off the %1$s skill, so this isn\'t part of your workouts or skill progress. Continue anyway?</string>
     <string name="switch_off_continue">Continue</string>
-    <string name="switch_off_class">Every exercise in this class belongs to a skill you switched off, so it counts as passed and you move straight on. You can still do it.</string>
+    <string name="switch_off_class">Every exercise here belongs to a skill you switched off, so this class counts as passed. You can still do it.</string>
     <string name="switch_off_day">Switched off</string>
     <plurals name="focus_switched_off">
         <item quantity="one">%d set of a switched-off skill left out</item>

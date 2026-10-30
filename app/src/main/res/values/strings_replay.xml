@@ -2,7 +2,7 @@
 <resources>
     <string name="replay_go_back">Go back to this level</string>
     <string name="replay_dialog_title">Go back to Level %1$d?</string>
-    <string name="replay_dialog_message">Today restarts at the first day of %1$s and moves forward from there, back to where you stopped. Completed days, history and skills are kept. You can return to your furthest day any time from Training.</string>
+    <string name="replay_dialog_message">Today goes back to the first day of %1$s and moves on to where you stopped. Your days, history and skills stay. Go back to your furthest day anytime from Training.</string>
     <string name="replay_confirm">Go back</string>
     <string name="replay_today">Repeating from Level %1$d</string>
     <string name="replay_card_title">Repeating from Level %1$d</string>

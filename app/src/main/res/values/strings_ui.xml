@@ -14,7 +14,7 @@
     <string name="resume_workout">Resume</string>
     <string name="start_today">Start workout</string>
     <string name="all_complete_title">Sequence complete</string>
-    <string name="all_complete_body">You completed the full guided sequence. Mark the achievement and use an easy recovery day.</string>
+    <string name="all_complete_body">You finished the whole program. Celebrate, then take an easy day.</string>
     <string name="workouts_completed_format">%1$d / %2$d workouts</string>
     <string name="levels_title">Training</string>
     <string name="level_number">Level %1$d</string>
@@ -42,11 +42,11 @@
     <string name="seconds_format">%1$d sec</string>
     <string name="rest_format">Rest %1$d sec</string>
     <string name="no_exercises">No exercise details are available for this workout.</string>
-    <string name="readiness_note">Use the displayed regression whenever clean form is unavailable. If no lower step is listed, reduce range, repetitions or sets, or add support and assistance. Keep two or three quality repetitions in reserve, stop a maximum-repetition set when technique starts to break, and stop for sharp joint pain.</string>
+    <string name="readiness_note">Can\'t keep clean form? Take the easier version shown, or cut range, reps or sets. Keep two or three good reps in reserve, end a max set when form breaks, and stop for sharp joint pain.</string>
     <string name="start_workout">Start workout</string>
     <string name="assigned_later">Assigned later in the sequence</string>
     <string name="workout_completed">Workout completed</string>
-    <string name="sequence_locked_note">This is a guided sequence. Finish today’s assigned workout before starting this one.</string>
+    <string name="sequence_locked_note">Finish today\'s class first.</string>
     <string name="sequence_completed_note">You completed this workout in the guided sequence.</string>
     <string name="active_workout">Active workout</string>
     <string name="started_minutes_ago">Started %1$d min ago</string>
@@ -62,7 +62,7 @@
     <string name="replace">Start this one</string>
     <string name="cancel">Cancel</string>
     <string name="finish_early_title">Finish before every set?</string>
-    <string name="finish_early_message">You can finish now: only the sets you ticked count toward your skills. Reduce the difficulty next time if form or fatigue stopped the session.</string>
+    <string name="finish_early_message">Finish now? Only the sets you ticked count. If form or fatigue stopped you, go easier next time.</string>
     <string name="finish">Finish</string>
     <string name="effort_title">How hard did that feel?</string>
     <string name="effort_item">RPE %1$d</string>
@@ -79,9 +79,9 @@
     <string name="keep_screen_awake">Keep screen awake</string>
     <string name="sound_cues">Rest timer sound</string>
     <string name="safety_title">Train safely</string>
-    <string name="safety_body">Warm up before loading skills. Perform the prescribed variation only with clean control; otherwise use its displayed regression. If no lower rung is listed, reduce range, repetitions or sets, or add support and assistance. Leave repetitions in reserve and do not force German-hang or shoulder range. Stop for sharp pain, numbness, dizziness, or loss of control. Persistent symptoms need qualified medical advice.</string>
+    <string name="safety_body">Warm up first. Do each exercise only with clean form; if you can\'t, take the easier option or cut range, reps or sets. Leave a rep or two in reserve and never force shoulder range, like the German hang. Stop for sharp pain, numbness, dizziness or loss of control, and see a doctor if it lasts.</string>
     <string name="about_title">About Street Gymnastics</string>
-    <string name="about_body">We made Street Gymnastics from our own training. We wanted an app without AI, with no direction to choose and no complicated setup: it works like going to a class. Every day’s class is ready for you. Move ahead faster when it feels easy, or repeat a class until it does, one step at a time towards the skills that made you want to start.</string>
+    <string name="about_body">We made Street Gymnastics from our own training. No AI, no setup, nothing to choose: like a class, today\'s is ready for you. Move on when it feels easy, or repeat it until it does.</string>
     <string name="version_format">Version %1$s</string>
     <string name="empty_description">A balanced session of skill practice, fundamentals, and mobility.</string>
     <string name="brand_kicker">DAILY CALISTHENICS</string>

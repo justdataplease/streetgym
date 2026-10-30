@@ -574,22 +574,25 @@ class TrainingInstrumentation : Instrumentation() {
             check(shown(R.string.placement_skip) && shown(R.string.placement_answer_all) &&
                 !shown(targetContext.getString(R.string.placement_confirm, atDayFortyOne)))
             enter(R.string.placement_squats, 30)
-            check(shown(targetContext.getString(R.string.placement_result_day, atDayFortyOne)))
+            check(shown(targetContext.getString(R.string.placement_start_line, atDayFortyOne, catalog.levels.first().name.resolve())))
             check(shown(R.string.placement_scratch) && shown(R.string.placement_no_credit) && !shown(R.string.placement_skip) &&
                 !shown(R.string.placement_answer_all))
             enter(R.string.placement_pull_ups, 10); enter(R.string.placement_push_ups, 30)
-            check(shown(targetContext.getString(R.string.placement_result, 2, levelTwo.name.resolve())))
+            check(shown(targetContext.getString(R.string.placement_start_line, atLevelTwo, levelTwo.name.resolve())))
             check(shown(targetContext.getString(R.string.placement_confirm, atLevelTwo)))
-            // Counts that reach Level 3 open the skills step (review 6): passing the Level 6 test suggests Level 7, held to
-            // the athlete's plan, and the card names what the start assumes; a second tap clears the test.
+            // Counts that reach Level 3 offer the skills step (review 6), folded under its title: passing the Level 6
+            // test suggests Level 7, held to the athlete's plan, and the card names what the start assumes; a second
+            // tap clears the test.
             enter(R.string.placement_pull_ups, 20); enter(R.string.placement_push_ups, 50); enter(R.string.placement_squats, 75)
-            check(shown(R.string.placement_skills_title) && shown(targetContext.getString(R.string.placement_skill_test, 9)))
+            check(shown(R.string.placement_skills_title) && !shown(targetContext.getString(R.string.placement_skill_test, 9)))
+            clickText(R.string.placement_skills_title)
+            check(shown(targetContext.getString(R.string.placement_skill_test, 9)))
             clickLabel(targetContext.getString(R.string.placement_skill_test, 6))
             val suggested = Placement.capped(Placement.skillStart(6), Entitlement.tier(targetContext))
             check(shown(targetContext.getString(R.string.placement_confirm, targetContext.getString(R.string.level_number, suggested.level))))
             val passedSix = targetContext.getString(R.string.placement_skill_result, 6, 7, "").removeSuffix(".")
             check(find { it is TextView && it.text.toString().startsWith(passedSix) } != null)
-            check(find { it is TextView && it.text.toString().startsWith(targetContext.getString(R.string.placement_indicative, "|").substringBefore("|")) } != null)
+            check(shown(R.string.placement_assumes_label.let { targetContext.getString(it).uppercase() }))
             clickLabel(targetContext.getString(R.string.placement_skill_test, 6))
             check(shown(targetContext.getString(R.string.placement_confirm, targetContext.getString(R.string.level_number, 3))))
             enter(R.string.placement_squats, 30)
