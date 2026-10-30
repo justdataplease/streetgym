@@ -1624,59 +1624,55 @@ ROLE_TITLE = {
     'front_onearm': 'Front Lever & One-Arm', 'legs_core': 'Legs & Core', 'planche_push': 'Planche & Push', 'handstand_press': 'Handstand & Press',
     'back_flag': 'Back Lever & Flag', 'basics': 'Basics & Endurance', 'battle': 'The Battle', 'statics_chain': 'Statics Chain',
 }
+# One plain line on what the class is (the owner, 2026-10-30: short texts people read; the exercise list sits right under it).
 ROLE_SENTENCE = {
-    'circuit_a': 'A full-body circuit: each station is one set, then the round repeats.',
-    'practice_hand': 'An easy practice class: the handstand line, straight-arm support and the wrists.',
-    'circuit_b': 'A legs, hips and trunk circuit: each station is one set, then the round repeats.',
-    'practice_bar': 'An easy practice class on the bar: hangs, slow lowering and the trunk.',
-    'core_balance': 'An easy practice class: the trunk, compression and balance, all with reserve.',
-    'circuit_c': 'The engine circuit: five stations of the basics, one set each, round after round.',
-    'recovery': 'An easy recovery class: a walk, then gentle mobility. Finish fresher than you started.',
-    'front_pull': 'The pull class: the front-lever ladder while the shoulders are fresh, the muscle-up line, then the pulling.',
-    'front_pull_early': 'The pull class: the front-lever ladder while the shoulders are fresh, then the pulling.',
-    'front_onearm': 'The pull class: the front-lever ladder, the muscle-up, the one-arm pulling path, then the pull-ups.',
-    'legs_core': 'Legs and trunk, a class off for the elbows: single-leg strength, the hamstrings, compression and the dragon flag.',
-    'planche_push': 'The planche class: a short handstand, the planche ladder, then the pushing.',
-    'handstand_press': 'The handstand class, light on the elbows: the handstand block, the overhead press and easy shoulder extension.',
-    'back_flag': 'The bar class: one line leads this block with its ladder, the others keep two working sets.',
-    'basics': 'The basics class: opening sets at the dose, then rounds of the basics at a lighter dose.',
-    'basics_strength': 'The basics class: the lever sets, then the basics and the press at the dose, one strong set at a time.',
-    'battle': 'The Battle: the basics at fixed rests, every set as written, no racing the clock.',
-    'battle_rehearsal': ('The Full Battle rehearsal: the champion test\'s stations, numbers and rests, three rounds of its five: '
-                         '30 s between stations, 90 s between rounds. Every set as written.'),
-    'statics_chain': 'The Statics Chain: one run through the shapes with short transitions, holds kept short.',
+    'circuit_a': 'A full-body circuit: one set per station, then repeat the round.',
+    'practice_hand': 'Easy practice: handstand, straight-arm support and wrists.',
+    'circuit_b': 'A legs, hips and trunk circuit: one set per station, then repeat the round.',
+    'practice_bar': 'Easy practice on the bar: hangs, slow lowering and the trunk.',
+    'core_balance': 'Easy practice: trunk, compression and balance, with reps to spare.',
+    'circuit_c': 'The engine circuit: the basics, one set each, round after round.',
+    'recovery': 'A walk, then gentle mobility. Finish fresher than you started.',
+    'front_pull': "Pull day: front lever while you're fresh, then muscle-up work and pulling.",
+    'front_pull_early': "Pull day: front lever while you're fresh, then pulling.",
+    'front_onearm': 'Pull day: front lever, muscle-up, one-arm pulling, then pull-ups.',
+    'legs_core': 'Legs and trunk. A day off for the elbows.',
+    'planche_push': 'Planche day: a short handstand, the planche, then pushing.',
+    'handstand_press': 'Handstand day, easy on the elbows: balance, pressing overhead and gentle shoulder work.',
+    'back_flag': 'Bar day: one line leads this block, the others keep two working sets.',
+    'basics': 'Basics day: a few sets at full dose, then lighter rounds.',
+    'basics_strength': 'Basics day: levers, then the basics and the press, one strong set at a time.',
+    'battle': 'The Battle: the basics at fixed rests, every set as written. No racing the clock.',
+    'battle_rehearsal': 'A Full Battle rehearsal: three of its five rounds at its numbers, 30 s between stations and 90 s between rounds.',
+    'statics_chain': 'The Statics Chain: one run through the shapes, short holds, quick changes.',
 }
 KIND_TITLE = {'deload': 'Lighter', 'light': 'Light', 'reentry': 'Re-Entry', 'primer': 'Exam Prep', 'easy': 'Easy Basics', 'barlight': 'Light Bar',
               'presslight': 'Light Press'}
 KIND_SENTENCE = {
-    'build_a': '', 'build_b': 'One step up on the lead steps.', 'carry': 'The first classes of the level: last level\'s doses, one set fewer on the leads.',
-    'hold': 'The classes before the exam: the stepped-up doses, nothing new.', 'trim': 'The classes before the exam: the leads at the stepped-up dose, no back-off sets.',
-    'deload': 'A lighter class: one set fewer on every step, the same dose per set.',
-    'light': 'A light class: the same lines at lower doses.',
-    'reentry': 'An easy first class after the exam: short sets with plenty in reserve.',
-    'primer': 'Exam prep: tomorrow is the test. One easy set of each line, to arrive fresh, nothing hard.',
-    'easy': 'An easy class before the exam: the basics at half the dose.',
-    'barlight': 'The bar class before the exam: the work is done, today you sharpen. One set of each line at about 70% of the block\'s dose.',
-    'presslight': 'The press class before the exam: the work is done, today you sharpen. The handstand and the press at the block\'s dose, then off.',
+    'build_a': '', 'build_b': 'One step up since last time.', 'carry': "New level: last level's doses, one set fewer on the leads.",
+    'hold': 'Before the exam: hold these doses, nothing new.', 'trim': 'Before the exam: main sets at the raised dose, no back-off sets.',
+    'deload': 'Lighter class: one set fewer of each, same reps and holds.',
+    'light': 'A light class: the same work at lower doses.',
+    'reentry': 'An easy start after the exam: short sets with plenty in reserve.',
+    'primer': 'Tomorrow is the exam. One easy set of each, nothing hard, so you arrive fresh.',
+    'easy': 'An easy class before the exam: the basics at half dose.',
+    'barlight': "Bar day before the exam. The work is done: one set of each at about 70% of the block's dose.",
+    'presslight': "Press day before the exam. The work is done: handstand and press at the block's dose, then stop.",
 }
+# Kinds whose own line already says what the class is: no role line after it.
+KIND_ONLY = ('reentry', 'primer', 'easy', 'barlight', 'presslight')
 EXAM_SENTENCE = {
-    'exam_block': ('The block exam, a real test of your level: one fresh set of every skill family you train, at a number you reached in the '
-                   'last three weeks, in the order shown: balance, the holds, strength, the basics, the trunk. Take it fresh, as your first '
-                   'class of the day, and rest at least the time shown. Tick each target you reach. Missing the headline skill, or three '
-                   'targets or more, offers to repeat the block; any other miss is simply tested again next time. A skill that started '
-                   'in this block is tested at the next exam, after two weeks of practice.'),
-    'exam_level': ('The level test, a real test of your level: one fresh set of every skill family the level trained, at its top dose, in the '
-                   'order shown: balance, the holds, strength, the basics, the trunk. Take it fresh, as your first class of the day, and '
-                   'rest at least the time shown. Tick each target you reach. Missing the headline skill, or three targets or more, offers '
-                   'to repeat the block.'),
-    'exam_level_advanced_athlete': ('The Advanced Athlete exam: the standard this program sets for an advanced athlete, plus every other skill '
-                                    'family you train, one fresh set each. Take it fresh, as your first class of the day. Tick each target you reach.'),
-    'exam_block_champion_statics_strength': ('Champion test, part one: every full shape and the hardest strength skills, with the pistol and '
-                                             'the hanging core, one fresh set each with full rest. Take it fresh. Tick each target you reach.'),
-    'exam_level_full_battle': 'Champion test, part two, the Full Battle: five rounds of 10 pull-ups, 20 dips, 30 push-ups and 40 squats, 30 s between stations and 90 s between rounds. Every set as written.',
+    'exam_block': ('One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, '
+                   'basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat.'),
+    'exam_level': ('One fresh set of each skill the level trained, at its top dose, in order: balance, holds, strength, basics, trunk. '
+                   'Rest fully between tests. Missing the headline or three targets offers a block repeat.'),
+    'exam_level_advanced_athlete': ("The Advanced Athlete exam: this program's standard for an advanced athlete, plus one fresh set of every "
+                                    'other skill you train. Rest fully between tests.'),
+    'exam_block_champion_statics_strength': ('Champion test, part one: every full shape and the hardest strength skills, plus the pistol '
+                                             'and the hanging core. One fresh set each, full rest between.'),
+    'exam_level_full_battle': ('Champion test, part two: the Full Battle. Five rounds of 10 pull-ups, 20 dips, 30 push-ups and 40 squats, '
+                               '30 s between stations and 90 s between rounds. Every set as written.'),
 }
-COACHING = ('Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a '
-            'controlled exit have held for two classes; change one thing at a time.')
 
 
 # Short names for class titles (the owner: nice, representative names).
@@ -2199,25 +2195,24 @@ def build_once(skip):
                 says = 'front_pull_early' if role == 'front_pull' and not started('low_bar_transition', L, n) else role
                 said = KIND_SENTENCE.get(kind, '')
                 if tempo:
-                    said = 'The doses hold this week: lower every rep in 3 s.'
+                    said = 'Same doses this week: lower every rep in 3 s.'
                 elif kind == 'build_b' and not rose_any:
-                    said = 'The same doses as last time: make every rep cleaner.'
+                    said = 'Same doses as last time: make every rep cleaner.'
                 elif kind == 'build_b':
                     said = 'One step up since last time.'
                 says = 'basics_strength' if says == 'basics' and not rounds_left else says
-                first = (said + ' ' + ('' if kind in ('reentry', 'primer', 'easy') else ROLE_SENTENCE[says])).strip()
-            body = ', '.join(dose_text(s) for s in P + M if s[0] not in ('easy_walk',))
-            desc = f'{block_name(L, n)}. {first} This class: {body}.'
+                first = (said + ' ' + ('' if kind in KIND_ONLY else ROLE_SENTENCE[says])).strip()
+            # The owner (2026-10-30): a short, plain description. The exercise list shows right under it, and the move-up
+            # and reserve advice lives in the class's readiness and safety notes, so neither is repeated here.
+            desc = f'{block_name(L, n)}. {first}'
             if headline:
                 desc += f' Headline: {name(headline)}.'
-            if kind != 'exam' and n < 100 and n > 86 and next(x for x in EXAMS[L] if x > n) == 100:
-                desc += f' {100 - n} classes to the level test.'  # review 8 (the teacher)
-            if kind not in ('recovery', 'exam', 'reentry', 'primer', 'easy') and role != 'recovery':
-                desc += ' ' + COACHING
+            if kind not in ('exam', 'primer') and n < 100 and n > 86 and next(x for x in EXAMS[L] if x > n) == 100:
+                desc += f' {100 - n} classes to the level test.'  # review 8 (the teacher); the primer already says tomorrow
             recs = [x for x in P + M if x[5] == 'assessment'] if kind != 'exam' else []
             if recs:
                 desc += (' Record set: ' + ', '.join(dose_text(x) for x in recs) +
-                         ", one fresh set at the skill's Elite target. Elite itself takes 30 such sets, from repeats and your own training.")
+                         ': one fresh set at the Elite target. Elite takes 30 of them.')
             focus = list(dict.fromkeys(p for s in M[:4] for p in LIB[s[0]]['patterns']))[:5]
             programs.append({
                 'id': f'r9-l{L:02d}-p{n:03d}', 'origin': 'round9', 'level': L, 'number': n,

@@ -53,7 +53,7 @@
         "en": "Confident Calisthenics"
       },
       "description": {
-        "en": "Consolidate strong basics and train handstand, flag, lever and planche variations at your current ability. Straddle levers and the straddle flag take most adults years, not weeks: when a shape isn't clean yet, train the rung below it for the same sets."
+        "en": "Strong basics, plus handstand, flag, lever and planche work at your level. Straddle shapes take most adults years: until one is clean, train the rung below for the same sets."
       }
     },
     {
@@ -62,7 +62,7 @@
         "en": "Full Shapes"
       },
       "description": {
-        "en": "Train brief full front and back levers, the full human flag, freestanding handstand push-up negatives and one-arm pull-up groundwork in small, frequent doses, with the straddle shapes and assisted rungs always in the same class to step back to. Most adults need two to four years of steady training to hold these full shapes; the rung below is the class until then."
+        "en": "The straddle front lever, short full back levers and full flags, one-arm push-ups, shrimp squats and one-arm pull-up groundwork. Full shapes take most adults years: until then, train the rung below."
       }
     },
     {
@@ -71,7 +71,7 @@
         "en": "Strength Endurance"
       },
       "description": {
-        "en": "Long sets of the basics and the full shapes grow together: full front and back levers, the straddle planche, one-arm push-ups, V-sits and Nordic curls join the classes, and every dose climbs faster than before. Miss an exam and repeat its block: that is how this level is meant to be trained."
+        "en": "Long sets of the basics, and the full front lever, straddle planche, V-sit and deficit handstand push-ups join. Doses climb faster now. Miss an exam and repeat the block: that's how this level works."
       }
     },
     {
@@ -80,7 +80,7 @@
         "en": "Superhuman"
       },
       "description": {
-        "en": "Full levers become the main work, the full planche and the one-arm pull-up begin, and the basics climb toward their Master and Elite sets in steep steps. Repeating a block after a missed exam is part of the plan."
+        "en": "Full levers become the main work. The full planche, one-arm pull-up, one-arm handstand and Hefesto begin, and the basics climb in steep steps. Repeating a block after a missed exam is part of the plan."
       }
     },
     {
@@ -89,7 +89,7 @@
         "en": "Beyond Gravity"
       },
       "description": {
-        "en": "The last level: every skill climbs to its Elite set by the final class, from 30-second full levers and a 20-second full planche to one-arm pull-ups, 60 dips and a five-minute hang. Most athletes repeat blocks here; the rung below is always in the class to step back to."
+        "en": "The last level: the top skills climb toward Elite, and it ends with the two Champion tests. Most athletes repeat blocks here, and the rung below is always in the class."
       }
     }
   ],
@@ -97,10 +97,10 @@
     "en": "Replacement and extension sessions are newly authored for StreetGym. The app uses a balanced ten-level sequence of 100 assigned workouts per level."
   },
   "progression_readiness": {
-    "en": "Advance a movement only after you can complete its current variation with controlled range and reserve effort on at least two separate sessions. Change only one variable: repetitions, hold time, assistance or lever length. A new workout number is not a skill-readiness test; keep using an easier variation as long as needed. Later planche, straddle and full-lever shapes are practice ceilings, not requirements: use the listed regression for as long as needed. The levels build challenge through harder variations and controlled workload, with easier consolidation days between demanding sessions. Keep the current variation until it is repeatable; a shorter lever or more assistance can still be challenging training."
+    "en": "Move up after two classes at this dose with full range, a controlled exit and reps to spare. Until then, stay on the easier version. Change one thing at a time."
   },
   "training_recovery": {
-    "en": "Train the classes in order, including the easy recovery classes. Training often does not mean training hard every time. If soreness or fatigue makes the warm-up unusually heavy, make this session an easy walk and mobility, then come back to the next class when recovered."
+    "en": "Do the classes in order and keep the easy ones easy. Warm-up feels heavy? Walk and stretch today, then do the next class once rested."
   },
   "app_slot_order": {
     "purpose": "Source slot shown at each app position, per level; levels not listed keep slot order. Level 2 runs its 40 reconstructed bridge classes (source slots 31-70) before the 30 original-source workouts (slots 1-30), so the source block arrives after pull-ups, chest-to-bar, knee raises and tuck L-sits are trained. Reconstructed records are numbered by app position; source content and legacy ids follow their slot.",

@@ -53,6 +53,11 @@ Round 11 builds on round 10 (2.5.1):
   - **First screen (design B of three):** the placement test asks "How strong are you today?" under a dark header, with three big counters. The start shows on yellow tape as soon as all three counts are in. One card below says what the start opens with, what it assumes (one target per line) and what a few more reps would change. The skills step is folded under one line below the start button.
   - **Sharing progress:** a note and switch close the first screen and sit in Settings › Your data, on by default (`AppSettings.shareProgress`). Nothing is uploaded yet: the upload, anonymous sign-in and database rules wait for the owner's go-ahead.
   - **Shorter texts:** 36 app strings are shorter and plainer; the Skills help went from about 600 words to 300. The class texts follow in 2.6.7.
+- **2.6.7, shorter class texts (the owner):**
+  - **Classes:** a description is the block and one line about the class. The exercise list it repeated is gone, and so is the advice the readiness text gives. Readiness, the same for every class, is 31 words instead of 108; safety is 25 instead of 45; an exam says what it asks in about 45 words. Class texts went from 260,000 words to 77,000, and the asset from 3.05 MB to 1.93 MB. Only text changed: ids, titles, steps, doses and the belt report are as before.
+  - **Where the texts live:** readiness, recovery and the level descriptions are in `curriculum/catalog_metadata.json`, the movements in `curriculum/movement_library.json`, and the class lines in the generator's `ROLE_SENTENCE`, `KIND_SENTENCE` and `EXAM_SENTENCE`.
+  - **Movements:** 97 entries are shorter, and every "Start when" number is unchanged. No safety note contains "; " any more: the app splits a movement's notes there, so 42 movements showed part of their safety note in the description.
+  - **Fixes:** Levels 7 and 10 no longer promise work they don't contain, and the class before an exam says "Tomorrow is the exam" instead of "1 classes to the level test".
 
 ## The frame
 
