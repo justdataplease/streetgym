@@ -1390,7 +1390,7 @@ def exam_rest(mid, L, nxt=None, short=False):
 
 
 ADVANCED_STANDARD = [('freestanding_handstand', 30), ('strict_muscleup', 4), ('advanced_tuck_planche', 8), ('straddle_front', 5),
-                     ('full_back', 8), ('full_flag', 3), ('wall_hspu', 7), ('pullup', 15), ('parallel_dip', 20), ('pushup', 35),
+                     ('full_back', 8), ('full_flag', 3), ('wall_hspu', 7), ('pullup', 15), ('parallel_dip', 20), ('pushup', 30),
                      ('pistol_squat', 8), ('lsit', 20)]
 EXAM_FLOOR = {(7, 100): dict(ADVANCED_STANDARD)}  # the Advanced Athlete exam: its standards are floors (the statics review 6)
 
@@ -1657,10 +1657,10 @@ KIND_SENTENCE = {
 # Kinds whose own line already says what the class is: no role line after it.
 KIND_ONLY = ('reentry', 'primer', 'easy', 'barlight', 'presslight')
 EXAM_SENTENCE = {
-    'exam_block': ('One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, '
+    'exam_block': ('One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, '
                    'basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat.'),
-    'exam_level': ('One fresh set of each skill the level trained, at its top dose, in order: balance, holds, strength, basics, trunk. '
-                   'Rest fully between tests. Missing the headline or three targets offers a block repeat.'),
+    'exam_level': ('One clean set of each skill the level trained, at the belt you reached, in order: balance, holds, strength, basics, '
+                   'trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat.'),
     'exam_level_advanced_athlete': ("The Advanced Athlete exam: this program's standard for an advanced athlete, plus one fresh set of every "
                                     'other skill you train. Rest fully between tests.'),
 }
@@ -2014,19 +2014,41 @@ def one_heavy_set(M, L):
 NO_STEP = {'strict_muscleup', 'one_arm_pullup', 'hefesto'}
 
 
+EXAM_BASICS = ('pushup', 'squat', 'pullup', 'parallel_dip')
+
+
+EXAM_SHARE = 0.7
+
+
+def exam_target(mid, best, L):
+    """An exam checks the skill, then rests; it doesn't hunt a record (the three coaches, 2.8.1; the owner: "less
+    repetition in exams, the concept is to check skill and rest", "70% is ok"): about 70% of the best trained set, but
+    never under the highest belt target that set reached, because exam sets count for belts (without that floor the
+    classes lose five belts and the full flag's Master); the rep basics at most their Master target, as they come last,
+    after the skills."""
+    v = min(best, tidy(mid, max(1, int(best * EXAM_SHARE + 0.5)), L))
+    t = SKILLS.get(mid, {}).get('t')
+    if not t:
+        return v
+    under = [x for x in t if x <= best]
+    v = max(v, under[-1]) if under else best
+    return min(v, t[3]) if mid in EXAM_BASICS else v
+
+
 def honest_exam(M, L, n, recent, headline):
-    """An exam tests what the athlete trained: each item at the best set of the last 21 classes. Only the headline
-    skill may go one step up, and only when that step reaches its next belt target (the teacher's review)."""
+    """An exam tests what the athlete trained: each item at the belt target its best set of the last 21 classes reached
+    (exam_target). Only the headline skill may go one step up, and only when that step reaches its next belt target
+    (the teacher's review)."""
     out = []
     for s in M:
         if s[5] == 'assessment' and s[0] in DOSED and recent[s[0]]:
             best = max([v for q, v in recent[s[0]] if pos(L, n) - q <= 21] or [0])
             if best:
-                v = best
+                v = exam_target(s[0], best, L)
                 if s[0] == headline and s[0] not in NO_STEP and pos(L, n) - pos(*DOSED[s[0]]['start']) >= 21:
                     up = step_up(s[0], best, L)
                     hit = [t for t in SKILLS.get(s[0], {}).get('t', []) if best < t <= up]
-                    v = hit[0] if hit else best
+                    v = hit[0] if hit else v
                 s = with_value(s, v)
         out.append(s)
     return out
@@ -2080,6 +2102,8 @@ def build_once(skip):
                     # Review 9 (the 20-year coach): the Korean dip's starting position, taught before and beside it.
                     warm.append(['assisted_behind_bar_support', 1, None, 10, 30, 'isometric', None])
                 ramp = ramp_of([s for s, _ in r['M'] + r['P']], L, n, r['kind'] == 'exam' or rec, [s for s, _ in r['P']], record=rec)
+                if ramp and r['kind'] == 'exam' and r['M'][0][0][0] in EXAM_BASICS:
+                    ramp = None  # a rep basic needs no ramp before its test (the three coaches, 2.8.1)
                 if ramp:
                     warm.append(ramp)
                 if r['kind'] != 'exam':

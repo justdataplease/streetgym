@@ -298,8 +298,9 @@ for sid, seen in gaps.items():
         assert b - a <= limit, f"{sid} goes {b - a} classes without a set before {where(classes[b])}"
 
 
-# 11. Review 2 and 3 (the three coaches). Exams test what the athlete trained: no item under the best set of the 21
-#     classes before it, at most two items above it and those by one step. Before a new rung, the rung below gets about two sets a week (11 in the 40 classes before its first
+# 11. Review 2 and 3 (the three coaches). Exams test what the athlete trained: no item under the belt its best set of
+#     the 21 classes before reached (2.8.1: the highest belt target at or under it, the rep basics at most Master; under
+#     the first belt, the set itself), at most two items above it and those by one step. Before a new rung, the rung below gets about two sets a week (11 in the 40 classes before its first
 #     set) on every ladder, the new lines' too. Straight-bar dips reach 10 before the Korean dip (the Hefesto's gate).
 #     From Level 4, a movement's sets and dose never rise together from one class of a day type to the next. Level 1
 #     circuits run whole rounds.
@@ -318,6 +319,22 @@ def one_step(v, seconds, level):
     return v + (1 if v <= (10 if seconds else 12) else 2 if v <= (30 if seconds else 20) else 5)
 
 
+EXAM_BASICS = ("pushup", "squat", "pullup", "parallel_dip")
+
+
+def exam_floor(mid, best):
+    """The lowest an exam may test a skill (2.8.1: about 70% of the trained best): the belt its trained best reached (the
+    rep basics at most Master), the best itself under the first belt; off the belts, half the best, allowing for the
+    Level 1-2 palette."""
+    t = TARGETS.get(mid)
+    if not t:
+        return max(1, best // 2)
+    under = [x for x in t if x <= best]
+    if not under:
+        return best
+    return min(under[-1], t[3]) if mid in EXAM_BASICS else under[-1]
+
+
 for i, p in enumerate(classes):
     if not p["schedule"]["day_type"].startswith("exam"):
         continue
@@ -330,7 +347,8 @@ for i, p in enumerate(classes):
     above = 0
     for st in p["main"]:
         if st[5] == "assessment" and trained[st[0]]:
-            assert value(st) >= trained[st[0]], f"{where(p)} tests {st[0]} at {value(st)}, under the {trained[st[0]]} it trained"
+            floor = exam_floor(st[0], trained[st[0]])
+            assert value(st) >= floor, f"{where(p)} tests {st[0]} at {value(st)}, under the belt {floor} its trained {trained[st[0]]} reached"
             if value(st) > trained[st[0]]:
                 above += 1
                 assert value(st) <= one_step(trained[st[0]], st[3] is not None, p["level"]),                     f"{where(p)} tests {st[0]} at {value(st)}, more than a step over the {trained[st[0]]} it trained"
@@ -405,5 +423,5 @@ print(f"Plan checks passed: frozen exams with a re-entry after each, {len(TARGET
       f"({len(elite_in_plan & {s for s in TARGETS if reach[s] < TARGETS[s][4]})} through a harder rung), no progression record beside a harder rung, "
       f"every full shape tested at L9:100, {len(debuts)} lever, planche and flag rungs at least 60 classes apart, "
       f"easy days easy, lighter exam weeks, weekly hinge, pressing and compression, no stacked straight-arm, elbow, planche or flag days, "
-      f"elbow-load caps, minimum holds, no skill left more than 14 classes, exams at the trained dose (two items a step over at most), two sets a week of the "
+      f"elbow-load caps, minimum holds, no skill left more than 14 classes, exams at about 70% of the trained dose, never under the belt it reached (two items a step over at most), two sets a week of the "
       f"rung below before each new rung, the Hefesto's dip gate, every readiness gate met before its step, no sets and dose rising together and whole circuit rounds.")

@@ -31,13 +31,16 @@ import com.justdataplease.streetgym.ui.FocusWorkoutView
 import com.justdataplease.streetgym.ui.StreetTheme
 import com.justdataplease.streetgym.ui.HistoryView
 import com.justdataplease.streetgym.ui.ParkSceneView
+import com.justdataplease.streetgym.ui.RankBadgeView
 import com.justdataplease.streetgym.ui.WorkoutView
 import com.justdataplease.streetgym.ui.setPrescription
 import com.justdataplease.streetgym.ui.systemAnimationsEnabled
 import com.justdataplease.streetgym.timer.*
 import com.justdataplease.monetization.NativeAdSlot
 import android.content.pm.ActivityInfo
+import android.graphics.Bitmap
 import android.graphics.Rect
+import java.io.File
 import android.graphics.drawable.ColorDrawable
 import android.os.ParcelFileDescriptor
 import android.widget.ScrollView
@@ -57,7 +60,10 @@ class TrainingInstrumentation : Instrumentation() {
     private var checks = 0
     private fun preferences(name: String) = targetContext.getSharedPreferences(name, Context.MODE_PRIVATE)
 
-    override fun onCreate(arguments: Bundle?) { super.onCreate(arguments); start() }
+    /** `-e shots true` saves a screenshot of the skill levels to the app's external files. */
+    private var shots = false
+
+    override fun onCreate(arguments: Bundle?) { super.onCreate(arguments); shots = arguments?.getString("shots") == "true"; start() }
     override fun onStart() {
         val originals = prefsNames.associateWith { preferences(it).all.toMap() }
         var failure: Throwable? = null
@@ -232,6 +238,27 @@ class TrainingInstrumentation : Instrumentation() {
             check(shown(targetContext.getString(R.string.workouts_completed_format, 1, programs.size)))
             check(find { it is TextView && it.text.startsWith(targetContext.getString(R.string.history_repeat, "")) } != null)
             report("Repeating a completed day asks before replacing a workout, logs a set done bigger than planned that counts toward skills, and leaves progress and Today unchanged")
+
+            // The owner (2.8.1): every level's shield is on show, and each closest skill names its next level. A repeated
+            // day of three push-up sets gives the push-up a next level to show.
+            repository.startWorkout(repeatDay.id, System.currentTimeMillis() - 40 * 60_000L, repeat = true)
+            repository.finishWorkout(credits = mapOf("pushup" to 3), doses = mapOf("pushup" to listOf(8, 8, 8)))
+            check(skills().closest(3).isNotEmpty())
+            nav(R.string.nav_today); nav(R.string.nav_progress); clickText(R.string.progress_tab_skills)
+            val ranks = SkillLevel.entries.filter { it > SkillLevel.NONE }
+            check(shown(targetContext.getString(R.string.skills_ranks).uppercase()))
+            check(ranks.all { shown(targetContext.resources.getQuantityString(R.plurals.skills_sets, it.sets, it.sets)) })
+            check(listOf(R.string.skills_level_1, R.string.skills_level_2, R.string.skills_level_3, R.string.skills_level_4,
+                R.string.skills_level_5).all { shown(it) })
+            val legend = checkNotNull(find { it.contentDescription?.startsWith(targetContext.getString(R.string.skills_ranks)) == true })
+            check(findAll { it is RankBadgeView }.size > ranks.size && shown(R.string.skills_next_short))
+            if (shots) {
+                runOnMainSync { legend.requestRectangleOnScreen(Rect(0, 0, legend.width, legend.height + 900), true) }; settle()
+                File(targetContext.getExternalFilesDir(null), "skills_levels.png").outputStream().use {
+                    uiAutomation.takeScreenshot().compress(Bitmap.CompressFormat.PNG, 100, it)
+                }
+            }
+            report("Skills shows every level's shield with its sets, and a closest skill shows the next level's shield")
             if (basketball) {
                 nav(R.string.nav_levels); clickLabel(catalog.levels.first().name.resolve()); clickLabel(programs.first().name.resolve())
                 clickText(R.string.start_workout)

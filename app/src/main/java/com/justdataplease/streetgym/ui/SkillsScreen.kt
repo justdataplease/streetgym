@@ -101,10 +101,7 @@ fun Context.skillsContent(
         background = tappable(Color.TRANSPARENT, dp(10).toFloat())
         isClickable = true
         isFocusable = true
-        setOnClickListener {
-            AlertDialog.Builder(context).setTitle(R.string.skills_help).setMessage(R.string.skills_how_points)
-                .setPositiveButton(android.R.string.ok, null).show()
-        }
+        setOnClickListener { showSkillsHelp() }
     }, width = LinearLayout.LayoutParams.WRAP_CONTENT, bottomDp = 6)
     addView(LinearLayout(context).apply {
         orientation = LinearLayout.VERTICAL
@@ -168,6 +165,10 @@ fun Context.skillsContent(
         }, topDp = 6)
         if (markedComplete > 0) addView(bodyText(getString(R.string.skills_marked_complete, markedComplete), 12f).apply { setTextColor(faint) })
     })
+
+    // Every shield a skill can earn, with its sets (the owner: "it's not clear with levels and chevrons").
+    addWithMargins(sectionLabel(getString(R.string.skills_ranks)), topDp = 14)
+    addWithMargins(rankLegend(), topDp = 6)
 
     addWithMargins(sectionLabel(getString(R.string.skills_closest)), topDp = 14)
     if (closest.isEmpty()) {
@@ -355,8 +356,52 @@ private fun Context.closestRow(status: SkillStatus, onClick: () -> Unit): View =
     }, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
         setMargins(dp(12), 0, dp(12), 0)
     })
-    // Short of Beginner, the line above and the bar already say where the skill stands.
-    if (status.level > SkillLevel.NONE) addView(titleText(levelName(status.level), 14f).apply { setTextColor(AppColors.PRIMARY) })
+    // The level it is closest to, as its shield: the medal on the left wears the one it holds.
+    status.next?.let { next ->
+        addView(LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.CENTER_HORIZONTAL
+            addView(bodyText(getString(R.string.skills_next_short), 10f))
+            addWithMargins(RankBadgeView(context, next, 0.7f), width = LinearLayout.LayoutParams.WRAP_CONTENT, topDp = 2)
+            addWithMargins(bodyText(levelName(next), 11f).apply {
+                setTextColor(AppColors.PRIMARY)
+                typeface = Typeface.DEFAULT_BOLD
+            }, width = LinearLayout.LayoutParams.WRAP_CONTENT, topDp = 2)
+        }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT))
+    }
+}
+
+/** The five levels a skill can earn, each as its shield with its name and the sets it takes; tapping explains them. */
+private fun Context.rankLegend(): View = LinearLayout(this).apply {
+    orientation = LinearLayout.HORIZONTAL
+    gravity = Gravity.BOTTOM
+    setPadding(dp(4), dp(10), dp(4), dp(10))
+    background = tappable(AppColors.SURFACE, dp(18).toFloat())
+    isClickable = true
+    isFocusable = true
+    val levels = SkillLevel.entries.filter { it > SkillLevel.NONE }
+    contentDescription = getString(R.string.skills_ranks_description,
+        levels.joinToString { getString(R.string.skills_rank_line, levelName(it), sets(it.sets)) })
+    setOnClickListener { showSkillsHelp() }
+    levels.forEach { level ->
+        addView(LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.CENTER_HORIZONTAL
+            importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
+            addView(RankBadgeView(context, level, 0.85f), LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT))
+            addWithMargins(oneLineText(levelName(level), bold = true).apply {
+                textSize = 11f
+                gravity = Gravity.CENTER_HORIZONTAL
+            }, topDp = 4)
+            addView(bodyText(sets(level.sets), 11f).apply { gravity = Gravity.CENTER_HORIZONTAL })
+        }, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+    }
+}
+
+private fun Context.showSkillsHelp() {
+    AlertDialog.Builder(this).setTitle(R.string.skills_help).setMessage(R.string.skills_how_points)
+        .setPositiveButton(android.R.string.ok, null).show()
 }
 
 private fun Context.skillCell(status: SkillStatus, lock: Tier?, off: Boolean, onClick: () -> Unit): View = LinearLayout(this).apply {

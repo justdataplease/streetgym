@@ -5,7 +5,7 @@
     <string name="skills_score_kicker">Overall score</string>
     <string name="skills_score_of">/ %1$s</string>
     <string name="skills_score_description">Overall score %1$s of %2$s, %3$s</string>
-    <string name="skills_tier_next">%1$s · %2$s to %3$s</string>
+    <string name="skills_tier_next">%1$s · %2$s points to %3$s</string>
     <string name="skills_tier_top">%1$s · the top tier</string>
     <string name="skills_tier_beginner">Beginner</string>
     <string name="skills_tier_novice">Novice</string>
@@ -18,6 +18,10 @@
     <string name="skills_marked_complete">Days marked complete without training: %1$d, worth nothing</string>
     <string name="skills_group_score_of">%1$s /%2$s</string>
     <string name="skills_group_score_description">%1$s, %2$s of %3$s points</string>
+    <string name="skills_ranks">Skill levels</string>
+    <string name="skills_rank_line">%1$s, %2$s</string>
+    <string name="skills_ranks_description">Skill levels: %1$s. Double-tap for how they work.</string>
+    <string name="skills_next_short">Next</string>
     <string name="skills_closest">Closest to the next level</string>
     <string name="skills_closest_empty">Finish a workout and tick your sets: 10 sets at a skill\'s first target make you a Beginner.</string>
     <string name="skills_filter_all">All</string>

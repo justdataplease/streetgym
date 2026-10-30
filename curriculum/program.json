@@ -3877,13 +3877,13 @@
     "en": "The Basics"
    },
    "description": {
-    "en": "First Positions. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Push-Up."
+    "en": "First Positions. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Push-Up."
    },
    "schedule": {
     "week": 3,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 32,
+    "minutes": 31,
     "rpe": 7,
     "focus": [
      "squat",
@@ -3975,15 +3975,6 @@
      30,
      "controlled",
      "foot_assisted_hang"
-    ],
-    [
-     "squat",
-     1,
-     7,
-     null,
-     45,
-     "ramp-up",
-     "box_squat"
     ]
    ],
    "practice": [],
@@ -4000,7 +3991,7 @@
     [
      "inverted_row",
      1,
-     8,
+     6,
      null,
      90,
      "assessment",
@@ -4010,7 +4001,7 @@
      "support_hold",
      1,
      null,
-     20,
+     15,
      90,
      "assessment",
      "foot_assisted_support"
@@ -4018,7 +4009,7 @@
     [
      "pushup",
      1,
-     8,
+     6,
      null,
      90,
      "assessment",
@@ -8017,13 +8008,13 @@
     "en": "Wall & Negatives"
    },
    "description": {
-    "en": "Wall & Negatives. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Chest-to-Wall Handstand."
+    "en": "Wall & Negatives. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Chest-to-Wall Handstand."
    },
    "schedule": {
     "week": 6,
     "day": 5,
     "day_type": "exam_block",
-    "minutes": 35,
+    "minutes": 34,
     "rpe": 7,
     "focus": [
      "handstand",
@@ -8132,7 +8123,7 @@
      "wall_handstand",
      1,
      null,
-     25,
+     20,
      90,
      "assessment",
      "pike_handstand_hold"
@@ -8149,7 +8140,7 @@
     [
      "eccentric_pullup",
      1,
-     2,
+     1,
      null,
      90,
      "assessment",
@@ -8158,7 +8149,7 @@
     [
      "assisted_dip",
      1,
-     6,
+     4,
      null,
      90,
      "assessment",
@@ -8167,7 +8158,7 @@
     [
      "pushup",
      1,
-     10,
+     6,
      null,
      90,
      "assessment",
@@ -8177,7 +8168,7 @@
      "hollow_body_hold",
      1,
      null,
-     25,
+     20,
      90,
      "assessment",
      "dead_bug"
@@ -8186,7 +8177,7 @@
      "dead_hang",
      1,
      null,
-     40,
+     30,
      90,
      "assessment",
      "foot_assisted_hang"
@@ -12283,7 +12274,7 @@
     "en": "First Pull"
    },
    "description": {
-    "en": "First Pull. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Pull-Up Negative."
+    "en": "First Pull. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Pull-Up Negative."
    },
    "schedule": {
     "week": 9,
@@ -12398,7 +12389,7 @@
      "wall_handstand",
      1,
      null,
-     25,
+     20,
      90,
      "assessment",
      "pike_handstand_hold"
@@ -12407,7 +12398,7 @@
      "frog_stand",
      1,
      null,
-     12,
+     8,
      90,
      "assessment",
      "incline_plank"
@@ -12433,7 +12424,7 @@
     [
      "eccentric_pullup",
      1,
-     3,
+     2,
      null,
      90,
      "assessment",
@@ -12442,7 +12433,7 @@
     [
      "eccentric_dip",
      1,
-     4,
+     3,
      null,
      90,
      "assessment",
@@ -12470,7 +12461,7 @@
      "dead_hang",
      1,
      null,
-     40,
+     30,
      90,
      "assessment",
      "foot_assisted_hang"
@@ -16778,7 +16769,7 @@
     "en": "First Pull-Up"
    },
    "description": {
-    "en": "Strong Basics. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Strict Pull-Up."
+    "en": "Strong Basics. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Strict Pull-Up."
    },
    "schedule": {
     "week": 12,
@@ -16902,7 +16893,7 @@
      "frog_stand",
      1,
      null,
-     15,
+     10,
      90,
      "assessment",
      "incline_plank"
@@ -16946,7 +16937,7 @@
     [
      "pushup",
      1,
-     15,
+     12,
      null,
      90,
      "assessment",
@@ -20820,7 +20811,7 @@
     "en": "Level 1 Test: Foundations"
    },
    "description": {
-    "en": "Foundations Finale. One fresh set of each skill the level trained, at its top dose, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Strict Pull-Up."
+    "en": "Foundations Finale. One clean set of each skill the level trained, at the belt you reached, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Strict Pull-Up."
    },
    "schedule": {
     "week": 15,
@@ -20944,7 +20935,7 @@
      "frog_stand",
      1,
      null,
-     15,
+     10,
      90,
      "assessment",
      "incline_plank"
@@ -20979,7 +20970,7 @@
     [
      "parallel_dip",
      1,
-     6,
+     4,
      null,
      90,
      "assessment",
@@ -20988,7 +20979,7 @@
     [
      "pushup",
      1,
-     15,
+     12,
      null,
      90,
      "assessment",
@@ -24546,7 +24537,7 @@
     "en": "Bar Basics"
    },
    "description": {
-    "en": "Bar Basics. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Strict Pull-Up."
+    "en": "Bar Basics. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Strict Pull-Up."
    },
    "schedule": {
     "week": 3,
@@ -24670,7 +24661,7 @@
      "frog_stand",
      1,
      null,
-     15,
+     10,
      90,
      "assessment",
      "incline_plank"
@@ -24705,7 +24696,7 @@
     [
      "parallel_dip",
      1,
-     6,
+     4,
      null,
      90,
      "assessment",
@@ -24714,7 +24705,7 @@
     [
      "pushup",
      1,
-     15,
+     12,
      null,
      90,
      "assessment",
@@ -28272,7 +28263,7 @@
     "en": "Pull-Up Strength"
    },
    "description": {
-    "en": "Pull-Up Strength. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Strict Pull-Up."
+    "en": "Pull-Up Strength. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Strict Pull-Up."
    },
    "schedule": {
     "week": 6,
@@ -28396,7 +28387,7 @@
      "frog_stand",
      1,
      null,
-     15,
+     10,
      90,
      "assessment",
      "incline_plank"
@@ -28431,7 +28422,7 @@
     [
      "pullup",
      1,
-     4,
+     3,
      null,
      90,
      "assessment",
@@ -28440,7 +28431,7 @@
     [
      "parallel_dip",
      1,
-     8,
+     6,
      null,
      90,
      "assessment",
@@ -28477,7 +28468,7 @@
      "dead_hang",
      1,
      null,
-     50,
+     45,
      90,
      "assessment",
      "foot_assisted_hang"
@@ -32485,13 +32476,13 @@
     "en": "First Lever"
    },
    "description": {
-    "en": "First Lever. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Tuck Front-Lever Hold."
+    "en": "First Lever. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Tuck Front-Lever Hold."
    },
    "schedule": {
     "week": 9,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 45,
+    "minutes": 44,
     "rpe": 7,
     "focus": [
      "handstand",
@@ -32600,7 +32591,7 @@
      "wall_handstand",
      1,
      null,
-     40,
+     30,
      90,
      "assessment",
      "pike_handstand_hold"
@@ -32609,7 +32600,7 @@
      "frog_stand",
      1,
      null,
-     20,
+     15,
      90,
      "assessment",
      "planche_lean"
@@ -32644,7 +32635,7 @@
     [
      "pullup",
      1,
-     4,
+     3,
      null,
      90,
      "assessment",
@@ -32653,7 +32644,7 @@
     [
      "parallel_dip",
      1,
-     8,
+     6,
      null,
      90,
      "assessment",
@@ -32680,7 +32671,7 @@
     [
      "hanging_leg_raise",
      1,
-     6,
+     5,
      null,
      90,
      "assessment",
@@ -32690,7 +32681,7 @@
      "dead_hang",
      1,
      null,
-     50,
+     45,
      90,
      "assessment",
      "foot_assisted_hang"
@@ -36680,13 +36671,13 @@
     "en": "Lean & Press"
    },
    "description": {
-    "en": "Lean & Press. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Planche Lean."
+    "en": "Lean & Press. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Planche Lean."
    },
    "schedule": {
     "week": 12,
     "day": 7,
     "day_type": "exam_block",
-    "minutes": 43,
+    "minutes": 42,
     "rpe": 7,
     "focus": [
      "handstand",
@@ -36786,7 +36777,7 @@
      "wall_handstand",
      1,
      null,
-     40,
+     30,
      90,
      "assessment",
      "pike_handstand_hold"
@@ -36795,7 +36786,7 @@
      "frog_stand",
      1,
      null,
-     20,
+     15,
      90,
      "assessment",
      "planche_lean"
@@ -36804,7 +36795,7 @@
      "planche_lean",
      1,
      null,
-     12,
+     8,
      90,
      "assessment",
      "incline_plank"
@@ -36830,7 +36821,7 @@
     [
      "pullup",
      1,
-     5,
+     4,
      null,
      90,
      "assessment",
@@ -36866,7 +36857,7 @@
     [
      "hanging_leg_raise",
      1,
-     6,
+     5,
      null,
      90,
      "assessment",
@@ -39775,7 +39766,7 @@
     "en": "Level 2 Test: Bar Strength"
    },
    "description": {
-    "en": "Bar Strength Finale. One fresh set of each skill the level trained, at its top dose, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Strict Pull-Up."
+    "en": "Bar Strength Finale. One clean set of each skill the level trained, at the belt you reached, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Strict Pull-Up."
    },
    "schedule": {
     "week": 15,
@@ -39899,7 +39890,7 @@
      "frog_stand",
      1,
      null,
-     20,
+     15,
      90,
      "assessment",
      "planche_lean"
@@ -39908,7 +39899,7 @@
      "planche_lean",
      1,
      null,
-     15,
+     10,
      90,
      "assessment",
      "incline_plank"
@@ -39962,7 +39953,7 @@
      "hollow_body_hold",
      1,
      null,
-     45,
+     40,
      90,
      "assessment",
      "dead_bug"
@@ -43623,13 +43614,13 @@
     "en": "Block 1 Exam · Pseudo-Planche Push-Up"
    },
    "description": {
-    "en": "First Skills, block 1. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Pseudo-Planche Push-Up."
+    "en": "First Skills, block 1. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Pseudo-Planche Push-Up."
    },
    "schedule": {
     "week": 3,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 50,
+    "minutes": 49,
     "rpe": 7,
     "focus": [
      "handstand",
@@ -43747,7 +43738,7 @@
      "frog_stand",
      1,
      null,
-     20,
+     14,
      120,
      "assessment",
      "planche_lean"
@@ -43756,7 +43747,7 @@
      "planche_lean",
      1,
      null,
-     15,
+     11,
      60,
      "assessment",
      "incline_plank"
@@ -43774,7 +43765,7 @@
      "tuck_front_hold",
      1,
      null,
-     9,
+     8,
      120,
      "assessment",
      "tuck_front_row"
@@ -43791,7 +43782,7 @@
     [
      "pseudo_planche_pushup",
      1,
-     6,
+     5,
      null,
      120,
      "assessment",
@@ -43800,7 +43791,7 @@
     [
      "pullup",
      1,
-     5,
+     4,
      null,
      120,
      "assessment",
@@ -43828,7 +43819,7 @@
      "hollow_body_hold",
      1,
      null,
-     45,
+     40,
      60,
      "assessment",
      "dead_bug"
@@ -47507,7 +47498,7 @@
     "en": "Block 2 Exam · L-Sit"
    },
    "description": {
-    "en": "First Skills, block 2. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: L-Sit."
+    "en": "First Skills, block 2. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: L-Sit."
    },
    "schedule": {
     "week": 6,
@@ -47631,7 +47622,7 @@
      "wall_handstand",
      1,
      null,
-     50,
+     45,
      120,
      "assessment",
      "pike_handstand_hold"
@@ -47640,7 +47631,7 @@
      "frog_stand",
      1,
      null,
-     20,
+     14,
      120,
      "assessment",
      "planche_lean"
@@ -47649,7 +47640,7 @@
      "planche_lean",
      1,
      null,
-     16,
+     11,
      60,
      "assessment",
      "incline_plank"
@@ -47667,7 +47658,7 @@
      "tuck_front_hold",
      1,
      null,
-     11,
+     8,
      120,
      "assessment",
      "tuck_front_row"
@@ -47676,7 +47667,7 @@
      "tuck_back_hold",
      1,
      null,
-     9,
+     8,
      120,
      "assessment",
      "skin_cat_partial"
@@ -47693,7 +47684,7 @@
     [
      "pseudo_planche_pushup",
      1,
-     6,
+     5,
      null,
      120,
      "assessment",
@@ -47711,7 +47702,7 @@
     [
      "parallel_dip",
      1,
-     11,
+     10,
      null,
      150,
      "assessment",
@@ -47730,7 +47721,7 @@
      "lsit",
      1,
      null,
-     6,
+     5,
      60,
      "assessment",
      "one_leg_lsit"
@@ -47739,7 +47730,7 @@
      "hollow_body_hold",
      1,
      null,
-     45,
+     40,
      60,
      "assessment",
      "dead_bug"
@@ -52263,7 +52254,7 @@
     "en": "Block 3 Exam · Tuck Back Lever"
    },
    "description": {
-    "en": "First Skills, block 3. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Tuck Back Lever."
+    "en": "First Skills, block 3. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Tuck Back Lever."
    },
    "schedule": {
     "week": 10,
@@ -52387,7 +52378,7 @@
      "wall_handstand",
      1,
      null,
-     50,
+     45,
      120,
      "assessment",
      "pike_handstand_hold"
@@ -52396,7 +52387,7 @@
      "frog_stand",
      1,
      null,
-     25,
+     18,
      120,
      "assessment",
      "planche_lean"
@@ -52405,7 +52396,7 @@
      "planche_lean",
      1,
      null,
-     18,
+     13,
      60,
      "assessment",
      "incline_plank"
@@ -52440,7 +52431,7 @@
     [
      "band_muscleup",
      1,
-     2,
+     1,
      null,
      120,
      "assessment",
@@ -52449,7 +52440,7 @@
     [
      "pseudo_planche_pushup",
      1,
-     6,
+     5,
      null,
      120,
      "assessment",
@@ -52467,7 +52458,7 @@
     [
      "parallel_dip",
      1,
-     12,
+     10,
      null,
      150,
      "assessment",
@@ -52486,7 +52477,7 @@
      "lsit",
      1,
      null,
-     7,
+     5,
      60,
      "assessment",
      "one_leg_lsit"
@@ -52494,7 +52485,7 @@
     [
      "hanging_leg_raise",
      1,
-     9,
+     8,
      null,
      60,
      "assessment",
@@ -56426,13 +56417,13 @@
     "en": "Block 4 Exam · Hanging Straight-Leg Raise"
    },
    "description": {
-    "en": "First Skills, block 4. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Hanging Straight-Leg Raise."
+    "en": "First Skills, block 4. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Hanging Straight-Leg Raise."
    },
    "schedule": {
     "week": 12,
     "day": 7,
     "day_type": "exam_block",
-    "minutes": 54,
+    "minutes": 53,
     "rpe": 7,
     "focus": [
      "handstand",
@@ -56532,7 +56523,7 @@
      "wall_handstand",
      1,
      null,
-     55,
+     45,
      120,
      "assessment",
      "pike_handstand_hold"
@@ -56541,7 +56532,7 @@
      "frog_stand",
      1,
      null,
-     30,
+     20,
      120,
      "assessment",
      "planche_lean"
@@ -56550,7 +56541,7 @@
      "planche_lean",
      1,
      null,
-     19,
+     13,
      120,
      "assessment",
      "incline_plank"
@@ -56559,7 +56550,7 @@
      "tuck_front_hold",
      1,
      null,
-     14,
+     12,
      120,
      "assessment",
      "tuck_front_row"
@@ -56568,7 +56559,7 @@
      "tuck_back_hold",
      1,
      null,
-     18,
+     16,
      120,
      "assessment",
      "skin_cat_partial"
@@ -56576,7 +56567,7 @@
     [
      "band_muscleup",
      1,
-     2,
+     1,
      null,
      120,
      "assessment",
@@ -56594,7 +56585,7 @@
     [
      "pseudo_planche_pushup",
      1,
-     7,
+     5,
      null,
      120,
      "assessment",
@@ -56603,7 +56594,7 @@
     [
      "pullup",
      1,
-     7,
+     6,
      null,
      120,
      "assessment",
@@ -56612,7 +56603,7 @@
     [
      "parallel_dip",
      1,
-     12,
+     10,
      null,
      150,
      "assessment",
@@ -56631,7 +56622,7 @@
      "lsit",
      1,
      null,
-     8,
+     6,
      60,
      "assessment",
      "one_leg_lsit"
@@ -59734,13 +59725,13 @@
     "en": "Level 3 Test: First Skills"
    },
    "description": {
-    "en": "First Skills, block 5. One fresh set of each skill the level trained, at its top dose, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Tuck Front-Lever Hold."
+    "en": "First Skills, block 5. One clean set of each skill the level trained, at the belt you reached, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Tuck Front-Lever Hold."
    },
    "schedule": {
     "week": 15,
     "day": 2,
     "day_type": "exam_level",
-    "minutes": 57,
+    "minutes": 56,
     "rpe": 7,
     "focus": [
      "handstand",
@@ -59867,7 +59858,7 @@
      "frog_stand",
      1,
      null,
-     30,
+     20,
      120,
      "assessment",
      "planche_lean"
@@ -59876,7 +59867,7 @@
      "planche_lean",
      1,
      null,
-     20,
+     14,
      60,
      "assessment",
      "incline_plank"
@@ -59920,7 +59911,7 @@
     [
      "pseudo_planche_pushup",
      1,
-     7,
+     5,
      null,
      120,
      "assessment",
@@ -59929,7 +59920,7 @@
     [
      "pullup",
      1,
-     7,
+     6,
      null,
      120,
      "assessment",
@@ -59938,7 +59929,7 @@
     [
      "parallel_dip",
      1,
-     12,
+     10,
      null,
      150,
      "assessment",
@@ -59957,7 +59948,7 @@
      "lsit",
      1,
      null,
-     8,
+     6,
      60,
      "assessment",
      "one_leg_lsit"
@@ -62436,7 +62427,7 @@
     "en": "Block 1 Exam · L-Sit"
    },
    "description": {
-    "en": "Skill Control, block 1. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: L-Sit."
+    "en": "Skill Control, block 1. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: L-Sit."
    },
    "schedule": {
     "week": 2,
@@ -62569,7 +62560,7 @@
      "frog_stand",
      1,
      null,
-     30,
+     20,
      120,
      "assessment",
      "planche_lean"
@@ -62578,7 +62569,7 @@
      "planche_lean",
      1,
      null,
-     20,
+     14,
      60,
      "assessment",
      "incline_plank"
@@ -62596,7 +62587,7 @@
      "tuck_front_hold",
      1,
      null,
-     14,
+     12,
      120,
      "assessment",
      "tuck_front_row"
@@ -62613,7 +62604,7 @@
     [
      "band_muscleup",
      1,
-     3,
+     2,
      null,
      120,
      "assessment",
@@ -62622,7 +62613,7 @@
     [
      "pseudo_planche_pushup",
      1,
-     7,
+     5,
      null,
      120,
      "assessment",
@@ -62631,7 +62622,7 @@
     [
      "pullup",
      1,
-     7,
+     6,
      null,
      120,
      "assessment",
@@ -62640,7 +62631,7 @@
     [
      "parallel_dip",
      1,
-     12,
+     10,
      null,
      150,
      "assessment",
@@ -62659,7 +62650,7 @@
      "lsit",
      1,
      null,
-     8,
+     6,
      60,
      "assessment",
      "one_leg_lsit"
@@ -66465,7 +66456,7 @@
     "en": "Block 2 Exam · Strict Toes-to-Bar"
    },
    "description": {
-    "en": "Skill Control, block 2. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Strict Toes-to-Bar."
+    "en": "Skill Control, block 2. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Strict Toes-to-Bar."
    },
    "schedule": {
     "week": 5,
@@ -66589,7 +66580,7 @@
      "freestanding_handstand",
      1,
      null,
-     6,
+     5,
      120,
      "assessment",
      "handstand_toe_pull"
@@ -66598,7 +66589,7 @@
      "tuck_planche",
      1,
      null,
-     6,
+     5,
      60,
      "assessment",
      "frog_stand"
@@ -66633,7 +66624,7 @@
     [
      "band_muscleup",
      1,
-     3,
+     2,
      null,
      120,
      "assessment",
@@ -66642,7 +66633,7 @@
     [
      "pullup",
      1,
-     8,
+     6,
      null,
      120,
      "assessment",
@@ -66651,7 +66642,7 @@
     [
      "parallel_dip",
      1,
-     13,
+     10,
      null,
      150,
      "assessment",
@@ -66660,7 +66651,7 @@
     [
      "pushup",
      1,
-     25,
+     20,
      null,
      120,
      "assessment",
@@ -70450,7 +70441,7 @@
     "en": "Block 3 Exam · Strict Bar Muscle-Up"
    },
    "description": {
-    "en": "Skill Control, block 3. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Strict Bar Muscle-Up."
+    "en": "Skill Control, block 3. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Strict Bar Muscle-Up."
    },
    "schedule": {
     "week": 8,
@@ -70574,7 +70565,7 @@
      "freestanding_handstand",
      1,
      null,
-     8,
+     6,
      120,
      "assessment",
      "handstand_toe_pull"
@@ -70583,7 +70574,7 @@
      "tuck_planche",
      1,
      null,
-     7,
+     5,
      60,
      "assessment",
      "frog_stand"
@@ -70601,7 +70592,7 @@
      "advanced_tuck_front",
      1,
      null,
-     6,
+     5,
      120,
      "assessment",
      "tuck_front_hold"
@@ -70627,7 +70618,7 @@
     [
      "pullup",
      1,
-     8,
+     6,
      null,
      120,
      "assessment",
@@ -70636,7 +70627,7 @@
     [
      "parallel_dip",
      1,
-     14,
+     10,
      null,
      150,
      "assessment",
@@ -70645,7 +70636,7 @@
     [
      "pushup",
      1,
-     25,
+     20,
      null,
      120,
      "assessment",
@@ -70655,7 +70646,7 @@
      "lsit",
      1,
      null,
-     11,
+     10,
      60,
      "assessment",
      "one_leg_lsit"
@@ -70664,7 +70655,7 @@
      "hollow_body_hold",
      1,
      null,
-     55,
+     50,
      60,
      "assessment",
      "dead_bug"
@@ -74422,13 +74413,13 @@
     "en": "Block 4 Exam · Wall Handstand Push-Up"
    },
    "description": {
-    "en": "Skill Control, block 4. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Wall Handstand Push-Up."
+    "en": "Skill Control, block 4. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Wall Handstand Push-Up."
    },
    "schedule": {
     "week": 11,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 51,
+    "minutes": 50,
     "rpe": 8,
     "focus": [
      "handstand",
@@ -74546,7 +74537,7 @@
      "freestanding_handstand",
      1,
      null,
-     9,
+     6,
      120,
      "assessment",
      "handstand_toe_pull"
@@ -74573,7 +74564,7 @@
      "advanced_tuck_front",
      1,
      null,
-     6,
+     5,
      120,
      "assessment",
      "tuck_front_hold"
@@ -74608,7 +74599,7 @@
     [
      "pullup",
      1,
-     9,
+     6,
      null,
      120,
      "assessment",
@@ -74617,7 +74608,7 @@
     [
      "parallel_dip",
      1,
-     14,
+     10,
      null,
      150,
      "assessment",
@@ -74626,7 +74617,7 @@
     [
      "pushup",
      1,
-     25,
+     20,
      null,
      120,
      "assessment",
@@ -74636,7 +74627,7 @@
      "lsit",
      1,
      null,
-     12,
+     10,
      60,
      "assessment",
      "one_leg_lsit"
@@ -79001,13 +78992,13 @@
     "en": "Level 4 Test: Skill Control"
    },
    "description": {
-    "en": "Skill Control, block 5. One fresh set of each skill the level trained, at its top dose, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Advanced-Tuck Back Lever."
+    "en": "Skill Control, block 5. One clean set of each skill the level trained, at the belt you reached, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Advanced-Tuck Back Lever."
    },
    "schedule": {
     "week": 15,
     "day": 2,
     "day_type": "exam_level",
-    "minutes": 51,
+    "minutes": 50,
     "rpe": 8,
     "focus": [
      "handstand",
@@ -79125,7 +79116,7 @@
      "freestanding_handstand",
      1,
      null,
-     10,
+     7,
      120,
      "assessment",
      "handstand_toe_pull"
@@ -79142,7 +79133,7 @@
     [
      "pistol_squat",
      1,
-     "3/side",
+     "2/side",
      null,
      90,
      "assessment",
@@ -79152,7 +79143,7 @@
      "advanced_tuck_front",
      1,
      null,
-     6,
+     5,
      120,
      "assessment",
      "tuck_front_hold"
@@ -79187,7 +79178,7 @@
     [
      "pullup",
      1,
-     9,
+     6,
      null,
      120,
      "assessment",
@@ -79196,7 +79187,7 @@
     [
      "parallel_dip",
      1,
-     14,
+     10,
      null,
      150,
      "assessment",
@@ -79205,7 +79196,7 @@
     [
      "pushup",
      1,
-     25,
+     20,
      null,
      120,
      "assessment",
@@ -79215,7 +79206,7 @@
      "lsit",
      1,
      null,
-     12,
+     10,
      60,
      "assessment",
      "one_leg_lsit"
@@ -81549,13 +81540,13 @@
     "en": "Block 1 Exam · Wall Handstand Push-Up"
    },
    "description": {
-    "en": "Balance & Levers, block 1. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Wall Handstand Push-Up."
+    "en": "Balance & Levers, block 1. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Wall Handstand Push-Up."
    },
    "schedule": {
     "week": 2,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 53,
+    "minutes": 52,
     "rpe": 8,
     "focus": [
      "handstand",
@@ -81673,7 +81664,7 @@
      "freestanding_handstand",
      1,
      null,
-     10,
+     7,
      120,
      "assessment",
      "handstand_toe_pull"
@@ -81690,7 +81681,7 @@
     [
      "pistol_squat",
      1,
-     "3/side",
+     "2/side",
      null,
      90,
      "assessment",
@@ -81700,7 +81691,7 @@
      "advanced_tuck_front",
      1,
      null,
-     6,
+     5,
      150,
      "assessment",
      "tuck_front_hold"
@@ -81735,7 +81726,7 @@
     [
      "pullup",
      1,
-     9,
+     6,
      null,
      120,
      "assessment",
@@ -81744,7 +81735,7 @@
     [
      "parallel_dip",
      1,
-     14,
+     10,
      null,
      150,
      "assessment",
@@ -81753,7 +81744,7 @@
     [
      "pushup",
      1,
-     25,
+     20,
      null,
      120,
      "assessment",
@@ -81763,7 +81754,7 @@
      "lsit",
      1,
      null,
-     12,
+     10,
      60,
      "assessment",
      "one_leg_lsit"
@@ -85534,7 +85525,7 @@
     "en": "Block 2 Exam · Archer Pull-Up"
    },
    "description": {
-    "en": "Balance & Levers, block 2. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Archer Pull-Up."
+    "en": "Balance & Levers, block 2. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Archer Pull-Up."
    },
    "schedule": {
     "week": 5,
@@ -85658,7 +85649,7 @@
      "freestanding_handstand",
      1,
      null,
-     14,
+     10,
      120,
      "assessment",
      "handstand_toe_pull"
@@ -85667,7 +85658,7 @@
      "tuck_planche",
      1,
      null,
-     9,
+     8,
      150,
      "assessment",
      "frog_stand"
@@ -85685,7 +85676,7 @@
      "advanced_tuck_back",
      1,
      null,
-     14,
+     10,
      150,
      "assessment",
      "tuck_back_hold"
@@ -85694,7 +85685,7 @@
      "tuck_flag",
      1,
      null,
-     "6/side",
+     "5/side",
      150,
      "assessment",
      "vertical_flag"
@@ -85720,7 +85711,7 @@
     [
      "wall_hspu",
      1,
-     3,
+     2,
      null,
      150,
      "assessment",
@@ -85757,7 +85748,7 @@
      "lsit",
      1,
      null,
-     14,
+     10,
      60,
      "assessment",
      "one_leg_lsit"
@@ -85774,7 +85765,7 @@
     [
      "toes_to_bar",
      1,
-     4,
+     3,
      null,
      60,
      "assessment",
@@ -89531,7 +89522,7 @@
     "en": "Block 3 Exam · Tuck Human Flag"
    },
    "description": {
-    "en": "Balance & Levers, block 3. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Tuck Human Flag."
+    "en": "Balance & Levers, block 3. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Tuck Human Flag."
    },
    "schedule": {
     "week": 8,
@@ -89655,7 +89646,7 @@
      "freestanding_handstand",
      1,
      null,
-     18,
+     15,
      120,
      "assessment",
      "handstand_toe_pull"
@@ -89691,7 +89682,7 @@
      "advanced_tuck_back",
      1,
      null,
-     17,
+     15,
      150,
      "assessment",
      "tuck_back_hold"
@@ -89700,7 +89691,7 @@
      "tuck_flag",
      1,
      null,
-     "6/side",
+     "5/side",
      150,
      "assessment",
      "vertical_flag"
@@ -89744,7 +89735,7 @@
     [
      "parallel_dip",
      1,
-     16,
+     15,
      null,
      150,
      "assessment",
@@ -89771,7 +89762,7 @@
     [
      "toes_to_bar",
      1,
-     4,
+     3,
      null,
      60,
      "assessment",
@@ -93530,13 +93521,13 @@
     "en": "Block 4 Exam · Advanced-Tuck Back Lever"
    },
    "description": {
-    "en": "Balance & Levers, block 4. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Advanced-Tuck Back Lever."
+    "en": "Balance & Levers, block 4. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Advanced-Tuck Back Lever."
    },
    "schedule": {
     "week": 11,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 60,
+    "minutes": 59,
     "rpe": 8,
     "focus": [
      "handstand",
@@ -93654,7 +93645,7 @@
      "freestanding_handstand",
      1,
      null,
-     20,
+     15,
      120,
      "assessment",
      "handstand_toe_pull"
@@ -93672,7 +93663,7 @@
      "advanced_tuck_front",
      1,
      null,
-     9,
+     8,
      150,
      "assessment",
      "tuck_front_hold"
@@ -93690,7 +93681,7 @@
      "tuck_flag",
      1,
      null,
-     "7/side",
+     "5/side",
      150,
      "assessment",
      "vertical_flag"
@@ -93725,7 +93716,7 @@
     [
      "pullup",
      1,
-     11,
+     10,
      null,
      120,
      "assessment",
@@ -93734,7 +93725,7 @@
     [
      "parallel_dip",
      1,
-     16,
+     15,
      null,
      150,
      "assessment",
@@ -93770,7 +93761,7 @@
     [
      "toes_to_bar",
      1,
-     4,
+     3,
      null,
      60,
      "assessment",
@@ -98153,7 +98144,7 @@
     "en": "Level 5 Test: Balance & Levers"
    },
    "description": {
-    "en": "Balance & Levers, block 5. One fresh set of each skill the level trained, at its top dose, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Straddle Back Lever."
+    "en": "Balance & Levers, block 5. One clean set of each skill the level trained, at the belt you reached, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Straddle Back Lever."
    },
    "schedule": {
     "week": 15,
@@ -98286,7 +98277,7 @@
      "freestanding_handstand",
      1,
      null,
-     25,
+     18,
      120,
      "assessment",
      "handstand_toe_pull"
@@ -98303,7 +98294,7 @@
     [
      "pistol_squat",
      1,
-     "5/side",
+     "4/side",
      null,
      90,
      "assessment",
@@ -98322,7 +98313,7 @@
      "straddle_back",
      1,
      null,
-     4,
+     3,
      120,
      "assessment",
      "advanced_tuck_back"
@@ -98366,7 +98357,7 @@
     [
      "pullup",
      1,
-     11,
+     10,
      null,
      120,
      "assessment",
@@ -98375,7 +98366,7 @@
     [
      "parallel_dip",
      1,
-     16,
+     15,
      null,
      150,
      "assessment",
@@ -98411,7 +98402,7 @@
     [
      "toes_to_bar",
      1,
-     5,
+     4,
      null,
      60,
      "assessment",
@@ -100725,7 +100716,7 @@
     "en": "Block 1 Exam · Straddle Back Lever"
    },
    "description": {
-    "en": "Confident Calisthenics, block 1. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Straddle Back Lever."
+    "en": "Confident Calisthenics, block 1. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Straddle Back Lever."
    },
    "schedule": {
     "week": 2,
@@ -100858,7 +100849,7 @@
      "freestanding_handstand",
      1,
      null,
-     25,
+     18,
      120,
      "assessment",
      "handstand_toe_pull"
@@ -100929,7 +100920,7 @@
     [
      "pullup",
      1,
-     11,
+     10,
      null,
      120,
      "assessment",
@@ -100938,7 +100929,7 @@
     [
      "parallel_dip",
      1,
-     16,
+     15,
      null,
      150,
      "assessment",
@@ -100974,7 +100965,7 @@
     [
      "toes_to_bar",
      1,
-     5,
+     4,
      null,
      60,
      "assessment",
@@ -104778,7 +104769,7 @@
     "en": "Block 2 Exam · Dragon Flag"
    },
    "description": {
-    "en": "Confident Calisthenics, block 2. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Dragon Flag."
+    "en": "Confident Calisthenics, block 2. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Dragon Flag."
    },
    "schedule": {
     "week": 5,
@@ -104928,7 +104919,7 @@
     [
      "pistol_squat",
      1,
-     "5/side",
+     "4/side",
      null,
      90,
      "assessment",
@@ -104938,7 +104929,7 @@
      "advanced_tuck_front",
      1,
      null,
-     11,
+     10,
      150,
      "assessment",
      "tuck_front_hold"
@@ -104947,7 +104938,7 @@
      "straddle_back",
      1,
      null,
-     6,
+     5,
      150,
      "assessment",
      "advanced_tuck_back"
@@ -104991,7 +104982,7 @@
     [
      "pullup",
      1,
-     12,
+     10,
      null,
      120,
      "assessment",
@@ -105000,7 +104991,7 @@
     [
      "parallel_dip",
      1,
-     17,
+     15,
      null,
      150,
      "assessment",
@@ -108882,7 +108873,7 @@
     "en": "Block 3 Exam · Advanced-Tuck Planche"
    },
    "description": {
-    "en": "Confident Calisthenics, block 3. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Advanced-Tuck Planche."
+    "en": "Confident Calisthenics, block 3. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Advanced-Tuck Planche."
    },
    "schedule": {
     "week": 8,
@@ -109042,7 +109033,7 @@
      "straddle_back",
      1,
      null,
-     6,
+     5,
      150,
      "assessment",
      "advanced_tuck_back"
@@ -109059,7 +109050,7 @@
     [
      "strict_muscleup",
      1,
-     3,
+     2,
      null,
      150,
      "assessment",
@@ -109077,7 +109068,7 @@
     [
      "wall_hspu",
      1,
-     5,
+     4,
      null,
      150,
      "assessment",
@@ -109086,7 +109077,7 @@
     [
      "pullup",
      1,
-     12,
+     10,
      null,
      120,
      "assessment",
@@ -109095,7 +109086,7 @@
     [
      "parallel_dip",
      1,
-     18,
+     15,
      null,
      150,
      "assessment",
@@ -109114,7 +109105,7 @@
      "lsit",
      1,
      null,
-     17,
+     15,
      60,
      "assessment",
      "one_leg_lsit"
@@ -109122,7 +109113,7 @@
     [
      "dragon_flag",
      1,
-     2,
+     1,
      null,
      60,
      "assessment",
@@ -113034,7 +113025,7 @@
     "en": "Block 4 Exam · Full Back Lever"
    },
    "description": {
-    "en": "Confident Calisthenics, block 4. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Full Back Lever."
+    "en": "Confident Calisthenics, block 4. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Full Back Lever."
    },
    "schedule": {
     "week": 11,
@@ -113194,7 +113185,7 @@
      "advanced_tuck_front",
      1,
      null,
-     14,
+     12,
      150,
      "assessment",
      "tuck_front_hold"
@@ -113220,7 +113211,7 @@
     [
      "strict_muscleup",
      1,
-     3,
+     2,
      null,
      150,
      "assessment",
@@ -113238,7 +113229,7 @@
     [
      "wall_hspu",
      1,
-     5,
+     4,
      null,
      150,
      "assessment",
@@ -113247,7 +113238,7 @@
     [
      "pullup",
      1,
-     13,
+     10,
      null,
      120,
      "assessment",
@@ -113256,7 +113247,7 @@
     [
      "parallel_dip",
      1,
-     18,
+     15,
      null,
      150,
      "assessment",
@@ -113274,7 +113265,7 @@
     [
      "dragon_flag",
      1,
-     2,
+     1,
      null,
      60,
      "assessment",
@@ -117829,7 +117820,7 @@
     "en": "Level 6 Test: Confident Calisthenics"
    },
    "description": {
-    "en": "Confident Calisthenics, block 5. One fresh set of each skill the level trained, at its top dose, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Straddle Human Flag."
+    "en": "Confident Calisthenics, block 5. One clean set of each skill the level trained, at the belt you reached, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Straddle Human Flag."
    },
    "schedule": {
     "week": 15,
@@ -117971,7 +117962,7 @@
      "freestanding_handstand",
      1,
      null,
-     35,
+     30,
      120,
      "assessment",
      "handstand_toe_pull"
@@ -118007,7 +117998,7 @@
      "full_back",
      1,
      null,
-     4,
+     3,
      120,
      "assessment",
      "straddle_back"
@@ -118024,7 +118015,7 @@
     [
      "strict_muscleup",
      1,
-     3,
+     2,
      null,
      120,
      "assessment",
@@ -118042,7 +118033,7 @@
     [
      "wall_hspu",
      1,
-     5,
+     4,
      null,
      120,
      "assessment",
@@ -118051,7 +118042,7 @@
     [
      "pullup",
      1,
-     13,
+     10,
      null,
      120,
      "assessment",
@@ -118060,7 +118051,7 @@
     [
      "parallel_dip",
      1,
-     18,
+     15,
      null,
      150,
      "assessment",
@@ -118079,7 +118070,7 @@
      "lsit",
      1,
      null,
-     18,
+     15,
      60,
      "assessment",
      "one_leg_lsit"
@@ -118087,7 +118078,7 @@
     [
      "dragon_flag",
      1,
-     2,
+     1,
      null,
      60,
      "assessment",
@@ -118096,7 +118087,7 @@
     [
      "toes_to_bar",
      1,
-     7,
+     6,
      null,
      60,
      "assessment",
@@ -120519,7 +120510,7 @@
     "en": "Block 1 Exam · Straddle Human Flag"
    },
    "description": {
-    "en": "Full Shapes, block 1. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Straddle Human Flag."
+    "en": "Full Shapes, block 1. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Straddle Human Flag."
    },
    "schedule": {
     "week": 2,
@@ -120670,7 +120661,7 @@
      "freestanding_handstand",
      1,
      null,
-     35,
+     30,
      120,
      "assessment",
      "handstand_toe_pull"
@@ -120697,7 +120688,7 @@
      "full_back",
      1,
      null,
-     4,
+     3,
      120,
      "assessment",
      "straddle_back"
@@ -120714,7 +120705,7 @@
     [
      "strict_muscleup",
      1,
-     3,
+     2,
      null,
      120,
      "assessment",
@@ -120732,7 +120723,7 @@
     [
      "wall_hspu",
      1,
-     5,
+     4,
      null,
      120,
      "assessment",
@@ -120741,7 +120732,7 @@
     [
      "pullup",
      1,
-     13,
+     10,
      null,
      120,
      "assessment",
@@ -120750,7 +120741,7 @@
     [
      "parallel_dip",
      1,
-     18,
+     15,
      null,
      150,
      "assessment",
@@ -120769,7 +120760,7 @@
      "lsit",
      1,
      null,
-     18,
+     15,
      60,
      "assessment",
      "one_leg_lsit"
@@ -120777,7 +120768,7 @@
     [
      "dragon_flag",
      1,
-     2,
+     1,
      null,
      60,
      "assessment",
@@ -120786,7 +120777,7 @@
     [
      "toes_to_bar",
      1,
-     7,
+     6,
      null,
      60,
      "assessment",
@@ -124777,13 +124768,13 @@
     "en": "Block 2 Exam · Straddle Front Lever"
    },
    "description": {
-    "en": "Full Shapes, block 2. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Straddle Front Lever."
+    "en": "Full Shapes, block 2. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Straddle Front Lever."
    },
    "schedule": {
     "week": 5,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 60,
+    "minutes": 59,
     "rpe": 8,
     "focus": [
      "handstand",
@@ -124937,7 +124928,7 @@
      "freestanding_handstand",
      1,
      null,
-     40,
+     30,
      120,
      "assessment",
      "handstand_toe_pull"
@@ -125008,7 +124999,7 @@
     [
      "one_arm_pushup",
      1,
-     "2/side",
+     "1/side",
      null,
      120,
      "assessment",
@@ -125017,7 +125008,7 @@
     [
      "pullup",
      1,
-     14,
+     10,
      null,
      120,
      "assessment",
@@ -125026,7 +125017,7 @@
     [
      "parallel_dip",
      1,
-     19,
+     15,
      null,
      150,
      "assessment",
@@ -125035,7 +125026,7 @@
     [
      "pushup",
      1,
-     35,
+     30,
      null,
      120,
      "assessment",
@@ -129042,7 +129033,7 @@
     "en": "Block 3 Exam · One-Arm Push-Up"
    },
    "description": {
-    "en": "Full Shapes, block 3. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: One-Arm Push-Up."
+    "en": "Full Shapes, block 3. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: One-Arm Push-Up."
    },
    "schedule": {
     "week": 8,
@@ -129202,7 +129193,7 @@
      "freestanding_handstand",
      1,
      null,
-     40,
+     30,
      120,
      "assessment",
      "handstand_toe_pull"
@@ -129220,7 +129211,7 @@
      "straddle_front",
      1,
      null,
-     4,
+     3,
      120,
      "assessment",
      "one_leg_front"
@@ -129229,7 +129220,7 @@
      "full_back",
      1,
      null,
-     6,
+     5,
      120,
      "assessment",
      "straddle_back"
@@ -129273,7 +129264,7 @@
     [
      "pullup",
      1,
-     14,
+     10,
      null,
      120,
      "assessment",
@@ -129291,7 +129282,7 @@
     [
      "pushup",
      1,
-     35,
+     30,
      null,
      120,
      "assessment",
@@ -129309,7 +129300,7 @@
     [
      "dragon_flag",
      1,
-     4,
+     3,
      null,
      60,
      "assessment",
@@ -133318,13 +133309,13 @@
     "en": "Block 4 Exam · Full Human Flag"
    },
    "description": {
-    "en": "Full Shapes, block 4. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Full Human Flag."
+    "en": "Full Shapes, block 4. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Full Human Flag."
    },
    "schedule": {
     "week": 11,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 60,
+    "minutes": 59,
     "rpe": 8,
     "focus": [
      "handstand",
@@ -133478,7 +133469,7 @@
      "freestanding_handstand",
      1,
      null,
-     40,
+     30,
      120,
      "assessment",
      "handstand_toe_pull"
@@ -133487,7 +133478,7 @@
      "advanced_tuck_planche",
      1,
      null,
-     9,
+     8,
      60,
      "assessment",
      "tuck_planche"
@@ -133523,7 +133514,7 @@
      "full_back",
      1,
      null,
-     7,
+     5,
      120,
      "assessment",
      "straddle_back"
@@ -133549,7 +133540,7 @@
     [
      "wall_hspu",
      1,
-     7,
+     6,
      null,
      120,
      "assessment",
@@ -133558,7 +133549,7 @@
     [
      "one_arm_pushup",
      1,
-     "2/side",
+     "1/side",
      null,
      120,
      "assessment",
@@ -133585,7 +133576,7 @@
     [
      "pushup",
      1,
-     35,
+     30,
      null,
      120,
      "assessment",
@@ -138380,7 +138371,7 @@
      "advanced_tuck_planche",
      1,
      null,
-     9,
+     8,
      60,
      "assessment",
      "tuck_planche"
@@ -138442,7 +138433,7 @@
     [
      "wall_hspu",
      1,
-     7,
+     6,
      null,
      120,
      "assessment",
@@ -138451,7 +138442,7 @@
     [
      "one_arm_pushup",
      1,
-     "2/side",
+     "1/side",
      null,
      120,
      "assessment",
@@ -138478,7 +138469,7 @@
     [
      "pushup",
      1,
-     35,
+     30,
      null,
      120,
      "assessment",
@@ -140927,7 +140918,7 @@
     "en": "Block 1 Exam · Full Human Flag"
    },
    "description": {
-    "en": "Strength Endurance, block 1. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Full Human Flag."
+    "en": "Strength Endurance, block 1. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Full Human Flag."
    },
    "schedule": {
     "week": 2,
@@ -141096,7 +141087,7 @@
      "advanced_tuck_planche",
      1,
      null,
-     9,
+     8,
      120,
      "assessment",
      "tuck_planche"
@@ -141149,7 +141140,7 @@
     [
      "wall_hspu",
      1,
-     7,
+     6,
      null,
      120,
      "assessment",
@@ -141158,7 +141149,7 @@
     [
      "one_arm_pushup",
      1,
-     "2/side",
+     "1/side",
      null,
      120,
      "assessment",
@@ -141185,7 +141176,7 @@
     [
      "pushup",
      1,
-     35,
+     30,
      null,
      120,
      "assessment",
@@ -141194,7 +141185,7 @@
     [
      "dragon_flag",
      1,
-     4,
+     3,
      null,
      60,
      "assessment",
@@ -141203,7 +141194,7 @@
     [
      "toes_to_bar",
      1,
-     9,
+     8,
      null,
      60,
      "assessment",
@@ -145239,7 +145230,7 @@
     "en": "Block 2 Exam · Full Front Lever"
    },
    "description": {
-    "en": "Strength Endurance, block 2. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Full Front Lever."
+    "en": "Strength Endurance, block 2. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Full Front Lever."
    },
    "schedule": {
     "week": 5,
@@ -145399,7 +145390,7 @@
      "freestanding_handstand",
      1,
      null,
-     50,
+     45,
      120,
      "assessment",
      "handstand_toe_pull"
@@ -145470,7 +145461,7 @@
     [
      "one_arm_pushup",
      1,
-     "2/side",
+     "1/side",
      null,
      120,
      "assessment",
@@ -145479,7 +145470,7 @@
     [
      "pullup",
      1,
-     16,
+     15,
      null,
      120,
      "assessment",
@@ -145497,7 +145488,7 @@
     [
      "pushup",
      1,
-     35,
+     30,
      null,
      120,
      "assessment",
@@ -145515,7 +145506,7 @@
     [
      "toes_to_bar",
      1,
-     10,
+     8,
      null,
      60,
      "assessment",
@@ -149549,7 +149540,7 @@
     "en": "Block 3 Exam · Deficit Wall Handstand Push-Up"
    },
    "description": {
-    "en": "Strength Endurance, block 3. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Deficit Wall Handstand Push-Up."
+    "en": "Strength Endurance, block 3. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Deficit Wall Handstand Push-Up."
    },
    "schedule": {
     "week": 8,
@@ -149709,7 +149700,7 @@
      "freestanding_handstand",
      1,
      null,
-     50,
+     45,
      120,
      "assessment",
      "handstand_toe_pull"
@@ -149735,7 +149726,7 @@
     [
      "shrimp_squat",
      1,
-     "4/side",
+     "3/side",
      null,
      90,
      "assessment",
@@ -149745,7 +149736,7 @@
      "full_back",
      1,
      null,
-     9,
+     8,
      120,
      "assessment",
      "straddle_back"
@@ -149789,7 +149780,7 @@
     [
      "pullup",
      1,
-     16,
+     15,
      null,
      120,
      "assessment",
@@ -149807,7 +149798,7 @@
     [
      "pushup",
      1,
-     40,
+     30,
      null,
      120,
      "assessment",
@@ -149825,7 +149816,7 @@
     [
      "toes_to_bar",
      1,
-     10,
+     8,
      null,
      60,
      "assessment",
@@ -153870,7 +153861,7 @@
     "en": "Block 4 Exam · V-Sit"
    },
    "description": {
-    "en": "Strength Endurance, block 4. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: V-Sit."
+    "en": "Strength Endurance, block 4. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: V-Sit."
    },
    "schedule": {
     "week": 11,
@@ -154030,7 +154021,7 @@
      "freestanding_handstand",
      1,
      null,
-     55,
+     45,
      120,
      "assessment",
      "handstand_toe_pull"
@@ -154047,7 +154038,7 @@
     [
      "pistol_squat",
      1,
-     "9/side",
+     "8/side",
      null,
      90,
      "assessment",
@@ -154066,7 +154057,7 @@
      "full_back",
      1,
      null,
-     10,
+     8,
      120,
      "assessment",
      "straddle_back"
@@ -154083,7 +154074,7 @@
     [
      "strict_muscleup",
      1,
-     5,
+     4,
      null,
      120,
      "assessment",
@@ -154110,7 +154101,7 @@
     [
      "pullup",
      1,
-     17,
+     15,
      null,
      120,
      "assessment",
@@ -154128,7 +154119,7 @@
     [
      "pushup",
      1,
-     40,
+     30,
      null,
      120,
      "assessment",
@@ -154146,7 +154137,7 @@
     [
      "toes_to_bar",
      1,
-     11,
+     8,
      null,
      60,
      "assessment",
@@ -158835,7 +158826,7 @@
     "en": "Level 8 Test: Strength Endurance"
    },
    "description": {
-    "en": "Strength Endurance, block 5. One fresh set of each skill the level trained, at its top dose, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Straddle Planche."
+    "en": "Strength Endurance, block 5. One clean set of each skill the level trained, at the belt you reached, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Straddle Planche."
    },
    "schedule": {
     "week": 15,
@@ -159022,7 +159013,7 @@
      "full_back",
      1,
      null,
-     10,
+     8,
      120,
      "assessment",
      "straddle_back"
@@ -159039,7 +159030,7 @@
     [
      "strict_muscleup",
      1,
-     5,
+     4,
      null,
      120,
      "assessment",
@@ -159075,7 +159066,7 @@
     [
      "pullup",
      1,
-     17,
+     15,
      null,
      120,
      "assessment",
@@ -159084,7 +159075,7 @@
     [
      "parallel_dip",
      1,
-     25,
+     20,
      null,
      150,
      "assessment",
@@ -159093,7 +159084,7 @@
     [
      "pushup",
      1,
-     40,
+     30,
      null,
      120,
      "assessment",
@@ -161560,7 +161551,7 @@
     "en": "Block 1 Exam · Full Front Lever"
    },
    "description": {
-    "en": "Superhuman, block 1. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Full Front Lever."
+    "en": "Superhuman, block 1. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Full Front Lever."
    },
    "schedule": {
     "week": 2,
@@ -161756,7 +161747,7 @@
      "full_back",
      1,
      null,
-     10,
+     8,
      120,
      "assessment",
      "straddle_back"
@@ -161773,7 +161764,7 @@
     [
      "strict_muscleup",
      1,
-     5,
+     4,
      null,
      120,
      "assessment",
@@ -161800,7 +161791,7 @@
     [
      "pullup",
      1,
-     17,
+     15,
      null,
      120,
      "assessment",
@@ -161809,7 +161800,7 @@
     [
      "parallel_dip",
      1,
-     25,
+     20,
      null,
      150,
      "assessment",
@@ -161818,7 +161809,7 @@
     [
      "pushup",
      1,
-     40,
+     30,
      null,
      120,
      "assessment",
@@ -165854,7 +165845,7 @@
     "en": "Block 2 Exam · One-Arm Pull-Up"
    },
    "description": {
-    "en": "Superhuman, block 2. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: One-Arm Pull-Up."
+    "en": "Superhuman, block 2. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: One-Arm Pull-Up."
    },
    "schedule": {
     "week": 5,
@@ -166031,7 +166022,7 @@
     [
      "pistol_squat",
      1,
-     "9/side",
+     "8/side",
      null,
      90,
      "assessment",
@@ -166050,7 +166041,7 @@
      "full_back",
      1,
      null,
-     10,
+     8,
      120,
      "assessment",
      "straddle_back"
@@ -166085,7 +166076,7 @@
     [
      "deficit_wall_hspu",
      1,
-     4,
+     3,
      null,
      120,
      "assessment",
@@ -166094,7 +166085,7 @@
     [
      "pullup",
      1,
-     18,
+     15,
      null,
      120,
      "assessment",
@@ -166103,7 +166094,7 @@
     [
      "parallel_dip",
      1,
-     25,
+     20,
      null,
      150,
      "assessment",
@@ -166112,7 +166103,7 @@
     [
      "pushup",
      1,
-     40,
+     30,
      null,
      120,
      "assessment",
@@ -166121,7 +166112,7 @@
     [
      "dragon_flag",
      1,
-     7,
+     6,
      null,
      60,
      "assessment",
@@ -166130,7 +166121,7 @@
     [
      "toes_to_bar",
      1,
-     13,
+     12,
      null,
      60,
      "assessment",
@@ -170146,7 +170137,7 @@
     "en": "Block 3 Exam · Hefesto"
    },
    "description": {
-    "en": "Superhuman, block 3. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Hefesto."
+    "en": "Superhuman, block 3. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Hefesto."
    },
    "schedule": {
     "week": 8,
@@ -170324,7 +170315,7 @@
      "full_front",
      1,
      null,
-     6,
+     5,
      60,
      "assessment",
      "straddle_front"
@@ -170332,7 +170323,7 @@
     [
      "shrimp_squat",
      1,
-     "6/side",
+     "5/side",
      null,
      90,
      "assessment",
@@ -170342,7 +170333,7 @@
      "full_back",
      1,
      null,
-     11,
+     8,
      120,
      "assessment",
      "straddle_back"
@@ -170368,7 +170359,7 @@
     [
      "deficit_wall_hspu",
      1,
-     4,
+     3,
      null,
      120,
      "assessment",
@@ -170386,7 +170377,7 @@
     [
      "pullup",
      1,
-     18,
+     15,
      null,
      120,
      "assessment",
@@ -170395,7 +170386,7 @@
     [
      "parallel_dip",
      1,
-     25,
+     20,
      null,
      150,
      "assessment",
@@ -170404,7 +170395,7 @@
     [
      "pushup",
      1,
-     40,
+     30,
      null,
      120,
      "assessment",
@@ -170422,7 +170413,7 @@
     [
      "toes_to_bar",
      1,
-     14,
+     12,
      null,
      60,
      "assessment",
@@ -174422,7 +174413,7 @@
     "en": "Block 4 Exam · Full Planche"
    },
    "description": {
-    "en": "Superhuman, block 4. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Full Planche."
+    "en": "Superhuman, block 4. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Full Planche."
    },
    "schedule": {
     "week": 11,
@@ -174599,7 +174590,7 @@
     [
      "pistol_squat",
      1,
-     "9/side",
+     "8/side",
      null,
      90,
      "assessment",
@@ -174609,7 +174600,7 @@
      "full_front",
      1,
      null,
-     6,
+     5,
      120,
      "assessment",
      "straddle_front"
@@ -174662,7 +174653,7 @@
     [
      "pullup",
      1,
-     19,
+     15,
      null,
      120,
      "assessment",
@@ -174671,7 +174662,7 @@
     [
      "parallel_dip",
      1,
-     25,
+     20,
      null,
      150,
      "assessment",
@@ -174680,7 +174671,7 @@
     [
      "pushup",
      1,
-     45,
+     30,
      null,
      120,
      "assessment",
@@ -174689,7 +174680,7 @@
     [
      "dragon_flag",
      1,
-     7,
+     6,
      null,
      60,
      "assessment",
@@ -174698,7 +174689,7 @@
     [
      "toes_to_bar",
      1,
-     14,
+     12,
      null,
      60,
      "assessment",
@@ -179327,7 +179318,7 @@
     "en": "Level 9 Test: Superhuman"
    },
    "description": {
-    "en": "Superhuman, block 5. One fresh set of each skill the level trained, at its top dose, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: One-Arm Handstand."
+    "en": "Superhuman, block 5. One clean set of each skill the level trained, at the belt you reached, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: One-Arm Handstand."
    },
    "schedule": {
     "week": 15,
@@ -179505,7 +179496,7 @@
      "full_front",
      1,
      null,
-     6,
+     5,
      120,
      "assessment",
      "straddle_front"
@@ -179576,7 +179567,7 @@
     [
      "pullup",
      1,
-     19,
+     15,
      null,
      120,
      "assessment",
@@ -179585,7 +179576,7 @@
     [
      "parallel_dip",
      1,
-     25,
+     20,
      null,
      150,
      "assessment",
@@ -179594,7 +179585,7 @@
     [
      "pushup",
      1,
-     45,
+     30,
      null,
      120,
      "assessment",
@@ -182025,7 +182016,7 @@
     "en": "Block 1 Exam · One-Arm Handstand"
    },
    "description": {
-    "en": "Beyond Gravity, block 1. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: One-Arm Handstand."
+    "en": "Beyond Gravity, block 1. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: One-Arm Handstand."
    },
    "schedule": {
     "week": 2,
@@ -182203,7 +182194,7 @@
      "full_front",
      1,
      null,
-     6,
+     5,
      60,
      "assessment",
      "straddle_front"
@@ -182265,7 +182256,7 @@
     [
      "pullup",
      1,
-     19,
+     15,
      null,
      120,
      "assessment",
@@ -182274,7 +182265,7 @@
     [
      "parallel_dip",
      1,
-     25,
+     20,
      null,
      150,
      "assessment",
@@ -182283,7 +182274,7 @@
     [
      "pushup",
      1,
-     45,
+     30,
      null,
      120,
      "assessment",
@@ -186285,7 +186276,7 @@
     "en": "Block 2 Exam · Full Planche"
    },
    "description": {
-    "en": "Beyond Gravity, block 2. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Full Planche."
+    "en": "Beyond Gravity, block 2. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Full Planche."
    },
    "schedule": {
     "week": 5,
@@ -186472,7 +186463,7 @@
      "full_front",
      1,
      null,
-     8,
+     7,
      120,
      "assessment",
      "straddle_front"
@@ -186525,7 +186516,7 @@
     [
      "pullup",
      1,
-     20,
+     15,
      null,
      120,
      "assessment",
@@ -186534,7 +186525,7 @@
     [
      "parallel_dip",
      1,
-     25,
+     20,
      null,
      150,
      "assessment",
@@ -186543,7 +186534,7 @@
     [
      "pushup",
      1,
-     45,
+     30,
      null,
      120,
      "assessment",
@@ -186552,7 +186543,7 @@
     [
      "dragon_flag",
      1,
-     7,
+     6,
      null,
      60,
      "assessment",
@@ -190568,7 +190559,7 @@
     "en": "Block 3 Exam · Hefesto"
    },
    "description": {
-    "en": "Beyond Gravity, block 3. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Hefesto."
+    "en": "Beyond Gravity, block 3. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Hefesto."
    },
    "schedule": {
     "week": 8,
@@ -190808,7 +190799,7 @@
     [
      "pullup",
      1,
-     20,
+     15,
      null,
      120,
      "assessment",
@@ -190817,7 +190808,7 @@
     [
      "parallel_dip",
      1,
-     30,
+     20,
      null,
      150,
      "assessment",
@@ -190826,7 +190817,7 @@
     [
      "pushup",
      1,
-     50,
+     30,
      null,
      120,
      "assessment",
@@ -194855,7 +194846,7 @@
     "en": "Block 4 Exam · Full Front Lever"
    },
    "description": {
-    "en": "Beyond Gravity, block 4. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Full Front Lever."
+    "en": "Beyond Gravity, block 4. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Full Front Lever."
    },
    "schedule": {
     "week": 11,
@@ -195095,7 +195086,7 @@
     [
      "pullup",
      1,
-     20,
+     15,
      null,
      120,
      "assessment",
@@ -195104,7 +195095,7 @@
     [
      "parallel_dip",
      1,
-     30,
+     20,
      null,
      150,
      "assessment",
@@ -195113,7 +195104,7 @@
     [
      "pushup",
      1,
-     50,
+     30,
      null,
      120,
      "assessment",
@@ -199865,7 +199856,7 @@
     "en": "Level 10 Test: Beyond Gravity"
    },
    "description": {
-    "en": "Beyond Gravity, block 5. One fresh set of each skill the level trained, at its top dose, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: One-Arm Pull-Up."
+    "en": "Beyond Gravity, block 5. One clean set of each skill the level trained, at the belt you reached, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: One-Arm Pull-Up."
    },
    "schedule": {
     "week": 15,
@@ -200114,7 +200105,7 @@
     [
      "pullup",
      1,
-     20,
+     15,
      null,
      120,
      "assessment",
@@ -200123,7 +200114,7 @@
     [
      "parallel_dip",
      1,
-     30,
+     20,
      null,
      150,
      "assessment",
@@ -200132,7 +200123,7 @@
     [
      "pushup",
      1,
-     50,
+     30,
      null,
      120,
      "assessment",
