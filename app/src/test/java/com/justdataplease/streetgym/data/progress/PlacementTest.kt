@@ -3,7 +3,6 @@ package com.justdataplease.streetgym.data.progress
 import com.justdataplease.streetgym.billing.LevelAccess
 import com.justdataplease.streetgym.billing.Tier
 import com.justdataplease.streetgym.data.CurriculumJsonParser
-import com.justdataplease.streetgym.data.model.ContentOrigin
 import com.justdataplease.streetgym.data.model.LocalizedText
 import com.justdataplease.streetgym.data.model.TrainingExercise
 import com.justdataplease.streetgym.data.model.TrainingProgram
@@ -192,7 +191,7 @@ class PlacementTest {
         TrainingExercise(name, null, 1, LocalizedText(name), LocalizedText.EMPTY, sets.toList())
 
     private fun program(vararg exercises: TrainingExercise) = TrainingProgram(
-        "sg:l02:p0001", 1, 2, LocalizedText("Day one"), LocalizedText.EMPTY, ContentOrigin.UNKNOWN, true, false,
+        "sg:l02:p0001", 1, 2, LocalizedText("Day one"), LocalizedText.EMPTY, true, false,
         1, 1, 40, exercises.toList(),
     )
 }

@@ -1,6 +1,5 @@
 package com.justdataplease.streetgym.data.library
 
-import com.justdataplease.streetgym.data.model.ContentOrigin
 import com.justdataplease.streetgym.data.model.LocalizedText
 import com.justdataplease.streetgym.data.model.TrainingExercise
 import com.justdataplease.streetgym.data.model.TrainingProgram
@@ -127,7 +126,7 @@ object CustomDays {
     /** A custom day as a program, so the list and focus workouts run it like any other. */
     fun toProgram(day: CustomDay): TrainingProgram = TrainingProgram(
         id = day.id, number = 0, levelNumber = 0, name = LocalizedText(day.name), description = LocalizedText.EMPTY,
-        origin = ContentOrigin.UNKNOWN, hasDetails = true, proPlaceholder = false, week = null, day = null,
+        hasDetails = true, proPlaceholder = false, week = null, day = null,
         estimatedMinutes = estimatedMinutes(day),
         exercises = day.exercises.mapIndexed { index, exercise ->
             TrainingExercise(

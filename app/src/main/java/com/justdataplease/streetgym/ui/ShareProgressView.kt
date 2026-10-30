@@ -6,13 +6,15 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.Switch
 import com.justdataplease.streetgym.R
+import com.justdataplease.streetgym.analytics.Analytics
 
 /**
  * The progress-sharing note (the owner, 2026-10-30): one plain line on what the app keeps to improve the program, beside a
  * switch that is on until the athlete switches it off. It closes the first-launch placement under a rule, and sits in a
- * card in Settings › Your data ([inSettings]).
+ * card in Settings › Your data ([inSettings]). Off stops progress analytics and deletes what this install shared
+ * ([Analytics.shareChanged]); [onChanged] follows.
  */
-fun Context.shareProgressNote(settings: AppSettings, inSettings: Boolean = false): View {
+fun Context.shareProgressNote(settings: AppSettings, inSettings: Boolean = false, onChanged: (Boolean) -> Unit = {}): View {
     val row = LinearLayout(this).apply {
         orientation = LinearLayout.HORIZONTAL
         gravity = Gravity.CENTER_VERTICAL
@@ -20,7 +22,11 @@ fun Context.shareProgressNote(settings: AppSettings, inSettings: Boolean = false
         @Suppress("DEPRECATION") val toggle = Switch(context).apply {
             contentDescription = getString(R.string.share_switch)
             isChecked = settings.shareProgress
-            setOnCheckedChangeListener { _, on -> settings.shareProgress = on }
+            setOnCheckedChangeListener { _, on ->
+                settings.shareProgress = on
+                Analytics.get(this@shareProgressNote).shareChanged(on)
+                onChanged(on)
+            }
         }
         addView(toggle, LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
             .apply { marginStart = dp(14) })

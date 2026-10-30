@@ -20,12 +20,22 @@ object Entitlement {
     const val PREFS = "streetgym_billing"
     const val PLUS_OWNED = "plus_owned"
     const val PRO_ACTIVE = "pro_active"
+    /** When Play review access ([ReviewAccess]) ends, in epoch milliseconds. */
+    const val REVIEW_UNTIL = "review_until"
     private const val SIMULATED_TIER = "simulated_tier"
 
     fun prefs(context: Context) = context.applicationContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
     fun tier(context: Context): Tier = prefs(context).let {
-        tierFor(it.getBoolean(PLUS_OWNED, false), it.getBoolean(PRO_ACTIVE, false), BuildConfig.DEBUG, simulatedTier(context))
+        tierFor(it.getBoolean(PLUS_OWNED, false), it.getBoolean(PRO_ACTIVE, false), BuildConfig.DEBUG, simulatedTier(context),
+            review = ReviewAccess.active(it.getLong(REVIEW_UNTIL, 0L), System.currentTimeMillis()))
+    }
+
+    /** Checks a Play review code; the right one stores when its access ends. False, and nothing stored, for a wrong one. */
+    fun redeemReviewCode(context: Context, input: String, now: Long = System.currentTimeMillis()): Boolean {
+        val until = ReviewAccess.unlockUntil(input, now) ?: return false
+        prefs(context).edit().putLong(REVIEW_UNTIL, until).apply()
+        return true
     }
 
     fun adFree(context: Context): Boolean = tier(context).adFree

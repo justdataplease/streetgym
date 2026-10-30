@@ -8,8 +8,6 @@ This folder is a scripted, rebuildable debug distribution of the dedicated Stree
 - `streetgym-debug.apk` — installable English-only Android debug package.
 - `streetgym-curriculum-v2.json` — complete English-only application catalog: ten levels, 100 workouts each.
 - `streetgym-exercise-animations.json` — editable offline line-figure poses (joint angles on a fixed-proportion rig), animation templates, and exercise mappings used by the app.
-- `source-baseline-export.json` — untouched bilingual extraction from the supplied Base APK.
-- `EXTRACTION_REPORT.md` — source hashes, exact extraction counts, and missing-Pro findings.
 - `CURRICULUM_METHOD.md` — provenance, fixed-sequence design, research, and safety boundaries.
 - `SHA256SUMS.txt` — SHA-256 integrity values for every payload file listed above.
 
@@ -27,7 +25,7 @@ The debug application ID is `com.justdataplease.streetgym.debug`. Minimum Androi
 
 The calisthenics track contains exactly 1,000 scheduled individual workouts: 100 in each of ten levels.
 
-Available detailed workouts and newly written sessions are combined into one consistent sequence in the app. Source classifications exist only in the catalog and technical reports for auditing; they are not displayed as product labels. The supplied package did not contain the unavailable paid workout details, and the new sessions do not claim to recover them.
+Every workout is authored for Street Gym by `tools/build_curriculum.py` and runs as one consistent sequence in the app.
 
 The Today screen assigns one fixed next workout. Future cards can be inspected but not started early. Validation is rolling rather than limited to stored week boundaries: within each level's authored portion, every consecutive seven authored sessions retain basic pulling, push-ups, dips or support, legs, core, and at least one recovery-like session at RPE 4 or below. From Level 3 onward, every such window also exposes muscle-up, front lever, back lever, dragon flag, and planche/elevated-plank goals in parallel. Daily preparation and stretching are validated separately.
 
@@ -35,7 +33,7 @@ Every authored skill or advanced movement has an exact prescription and listed r
 
 All new workouts are static, individually authored JSON—not runtime-random or Python-generated sessions.
 
-The app UI and bundled catalog are English-only. The separate technical export retains Polish alongside English only to record the supplied source data accurately.
+The app UI and bundled catalog are English-only.
 
 Exercise demonstrations are drawn locally by an articulated line-figure rig from angle-based keyframes in JSON. The app contains no video playback or outbound video links; unavailable videos are not used.
 

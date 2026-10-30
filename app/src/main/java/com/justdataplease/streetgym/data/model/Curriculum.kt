@@ -4,14 +4,7 @@ import java.util.Locale
 
 data class CurriculumCatalog(
     val schemaVersion: String,
-    val source: CatalogSource?,
     val levels: List<TrainingLevel>,
-)
-
-data class CatalogSource(
-    val sourceApkSha256: String?,
-    val generatedAt: String?,
-    val disclaimer: String?,
 )
 
 data class TrainingLevel(
@@ -28,7 +21,6 @@ data class TrainingProgram(
     val levelNumber: Int,
     val name: LocalizedText,
     val description: LocalizedText,
-    val origin: ContentOrigin,
     val hasDetails: Boolean,
     val proPlaceholder: Boolean,
     val week: Int?,
@@ -81,19 +73,6 @@ data class TrainingSet(
     val durationSeconds: Int?,
     val breakSeconds: Int?,
 )
-
-enum class ContentOrigin(val wireValue: String) {
-    APK_AUTHENTIC("apk_authentic"),
-    RECONSTRUCTED_PLACEHOLDER("reconstructed_placeholder"),
-    LLM_EXTENSION("llm_extension"),
-    NEW_LEVEL("new_level"),
-    UNKNOWN("unknown");
-
-    companion object {
-        fun fromWireValue(value: String?): ContentOrigin =
-            entries.firstOrNull { it.wireValue == value } ?: UNKNOWN
-    }
-}
 
 data class LocalizedText(
     val en: String? = null,

@@ -5,6 +5,7 @@ import org.junit.Test
 
 class ParksTest {
     private val parks = Parks.read("""
+        # Street Gym parks from OpenStreetMap. Data © OpenStreetMap contributors, ODbL 1.0
         Berlin - Outdoor pull up bars - Moabit - Germany	52.52328	13.31811
         Berlin - Calisthenics Park - Poelzigpark - Germany	52.55938	13.21844
         Athens - Calisthenics Park - Pedion tou Areos - Greece	37.99540	23.73600
@@ -58,6 +59,16 @@ class ParksTest {
         assertEquals(23.736, coordinates.getDouble(0), 1e-9)
         assertEquals(37.9954, coordinates.getDouble(1), 1e-9)
         assertEquals(0, org.json.JSONObject(Parks.geoJson(emptyList())).getJSONArray("features").length())
+    }
+
+    @Test fun theBundledParksAreOpenStreetMapsWithTheirNoticeFirst() {
+        val file = java.io.File("src/main/assets/${Parks.ASSET}")
+        val notice = file.bufferedReader(Charsets.UTF_8).use { it.readLine() }
+        assertTrue(notice, notice.startsWith("#") && notice.contains("© OpenStreetMap contributors") && notice.contains("ODbL"))
+        val bundled = file.reader(Charsets.UTF_8).use(Parks::read)
+        assertTrue("${bundled.size} parks", bundled.size > 50_000)
+        assertTrue(bundled.all { it.name.isNotBlank() && it.lat in -90.0..90.0 && it.lng in -180.0..180.0 })
+        assertTrue(Parks.search(bundled, "athens greece").size >= 10)
     }
 
     @Test fun searchFromALocationSortsByDistance() {

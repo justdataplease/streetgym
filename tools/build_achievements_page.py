@@ -223,7 +223,7 @@ BODY = f"""<title>What You Can Achieve</title>
 <style>{CSS}</style>
 <main>
 <header class="lede">
-  <span class="eyebrow">Street Gymnastics {VERSION} · the program as written</span>
+  <span class="eyebrow">Street Gym {VERSION} · the program as written</span>
   <h1>What you can achieve</h1>
   <p>Every date on this page is counted from the app's 1,000 classes: if you do every set as written on the Normal toggle, this is the class where each belt lands. Repeating a block after a missed exam moves it later, and Harder days or your own workouts move it sooner.</p>
   <div class="pace" role="group" aria-label="Classes a week"><span>Classes a week</span><button type="button" data-w="2">2</button><button type="button" data-w="3">3</button><button type="button" data-w="5">5</button><button type="button" data-w="7">7</button></div>

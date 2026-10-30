@@ -63,6 +63,13 @@ Round 11 builds on round 10 (2.5.1):
   - **Targets only:** the German hang and the tuck holds that stood between the tests close the exam's warm-up instead. An exam over the hour shortens its strength rests to 120 s before a test waits, so the warm-up's extra minutes cost no test.
   - **More families tested:** a fifth leg and trunk test, the Level 9 and 10 tests hold all nine max-strength families (the one-arm push-up joins), and Levels 1–2 test the dead hang beside the pull-up (one more test each). Families a block trained but its exam left out fell from 97 to 62 over the 50 exams.
   - **Belts:** 185 of 200 in the classes (straddle planche Elite lands at L10:100). The squat's Elite moves to the Full Battle (L10:090) with the pistol's Elite class at L10:009 (was L10:013); the full flag's last bar set before the test (L10:089) holds 5 s, so the classes keep 27 of its 30 Elite sets (`hold_elite_share`). The easy class before a level test keeps one easy one-arm push-up set from Level 8.
+- **2.7.0, the Google Play build (the owner):**
+  - **Name:** Street Gym in the app, "Street Gym: Daily Calisthenics" on Play and in Settings › About. The package and URLs keep `streetgymnastics`. About no longer says "No AI": the classes were drafted with AI help.
+  - **Play build:** target and compile SDK 36, back through `OnBackInvokedCallback`, and a release AAB signed with the upload key (kept out of git).
+  - **Sharing progress is live:** with Share my progress on (the default), the install's progress and each finished class go to Firestore, as the Pro account or an anonymous Firebase user; switching it off deletes them. It writes once Anonymous sign-in is on and the rules are deployed (docs/TIERS.md, "Progress analytics").
+  - **Review code:** a hidden code in Settings › About gives Google Play's reviewers Pro for 30 days (docs/TIERS.md, "Play review access").
+  - **Ads (Free only):** Street Gym's own AdMob app; native cards in a few more lists (one per screen) and a real interstitial at most every 5 minutes, at a finished section or leaving a workout (README, "Ads and privacy").
+  - **Catalog clean-up:** the shipped catalog no longer carries the third-party app's provenance (`source_baseline`, `catalog_provenance`, per-class `origin`, `legacy` workout ids), and no tool reads its export. Classes, day ids and belts are unchanged.
 
 ## The frame
 

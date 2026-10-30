@@ -43,8 +43,6 @@ try {
     Copy-Item -Force -LiteralPath "app\build\outputs\apk\debug\app-debug.apk" -Destination "dist\streetgym-debug.apk"
     Copy-Item -Force -LiteralPath "generated\curriculum_v2.json" -Destination "dist\streetgym-curriculum-v2.json"
     Copy-Item -Force -LiteralPath "app\src\main\assets\exercise_animations.json" -Destination "dist\streetgym-exercise-animations.json"
-    Copy-Item -Force -LiteralPath "street_gymnastic_programs_levels.json" -Destination "dist\source-baseline-export.json"
-    Copy-Item -Force -LiteralPath "docs\EXTRACTION_REPORT.md" -Destination "dist\EXTRACTION_REPORT.md"
     Copy-Item -Force -LiteralPath "docs\CURRICULUM_METHOD.md" -Destination "dist\CURRICULUM_METHOD.md"
     Copy-Item -Force -LiteralPath "packaging\DIST_README.md" -Destination "dist\README.md"
 
@@ -52,8 +50,6 @@ try {
         "dist\streetgym-debug.apk",
         "dist\streetgym-curriculum-v2.json",
         "dist\streetgym-exercise-animations.json",
-        "dist\source-baseline-export.json",
-        "dist\EXTRACTION_REPORT.md",
         "dist\CURRICULUM_METHOD.md",
         "dist\README.md"
     )

@@ -1,7 +1,5 @@
 package com.justdataplease.streetgym.data.library
 
-import com.justdataplease.streetgym.data.model.CatalogSource
-import com.justdataplease.streetgym.data.model.ContentOrigin
 import com.justdataplease.streetgym.data.model.CurriculumCatalog
 import com.justdataplease.streetgym.data.model.LocalizedText
 import com.justdataplease.streetgym.data.model.TrainingExercise
@@ -17,8 +15,8 @@ class WorkoutLibraryTest {
     private fun exercise(name: String, movementId: String? = null, category: String? = null, vararg sets: TrainingSet) =
         TrainingExercise(name, movementId, 1, LocalizedText(name), LocalizedText.EMPTY, sets.toList(), category, listOf("bar"))
     private fun program(id: String, vararg exercises: TrainingExercise) = TrainingProgram(id, 1, 1, LocalizedText(id),
-        LocalizedText.EMPTY, ContentOrigin.UNKNOWN, true, false, null, null, null, exercises.toList())
-    private val catalog = CurriculumCatalog("1", CatalogSource(null, null, null), listOf(TrainingLevel("l1", 1,
+        LocalizedText.EMPTY, true, false, null, null, null, exercises.toList())
+    private val catalog = CurriculumCatalog("1", listOf(TrainingLevel("l1", 1,
         LocalizedText("Foundations"), LocalizedText.EMPTY, listOf(
             program("a", exercise("Pull-up", "pull_up", "pull", set(reps = 5)), exercise("Hollow hold", null, "core", set(seconds = 20))),
             program("b", exercise("Pull-up", "pull_up", "pull", set(reps = 8)), exercise("Dip", "dip", "push", set(reps = 6))),

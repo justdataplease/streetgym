@@ -14,6 +14,7 @@ class EntitlementTest {
         assertEquals("yearly", TierBilling.PRO_BASE_PLAN)
         assertEquals("plus_owned", Entitlement.PLUS_OWNED)
         assertEquals("pro_active", Entitlement.PRO_ACTIVE)
+        assertEquals("review_until", Entitlement.REVIEW_UNTIL)
     }
     @Test fun purchasedGrantsImmediately() {
         assertEquals(Ownership(true, false), reconcileEntitlement(plus, false, payment(PaymentState.Purchased), false))

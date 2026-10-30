@@ -13,6 +13,7 @@ import android.text.TextUtils
 import com.justdataplease.streetgym.timer.TimingAlerts
 import com.justdataplease.streetgym.ads.WorkoutAdBreak
 import com.justdataplease.streetgym.ads.ManagedNativePlacement
+import com.justdataplease.streetgym.ads.AdRowAdapter
 import com.justdataplease.streetgym.billing.Entitlement
 import com.justdataplease.streetgym.billing.LevelAccess
 import com.justdataplease.streetgym.billing.SavedLimit
@@ -29,6 +30,10 @@ import com.justdataplease.streetgym.data.library.LibraryRepository
 import com.justdataplease.streetgym.account.AccountStore
 import com.justdataplease.streetgym.account.Cloud
 import com.justdataplease.streetgym.account.CloudSync
+import com.justdataplease.streetgym.analytics.Analytics
+import com.justdataplease.streetgym.analytics.AnalyticsPayload
+import com.justdataplease.streetgym.analytics.InstallSnapshot
+import com.justdataplease.streetgym.analytics.PlacementRecord
 import com.justdataplease.streetgym.leaderboard.Board
 import com.justdataplease.streetgym.leaderboard.Boards
 import com.justdataplease.streetgym.leaderboard.Countries
@@ -89,6 +94,8 @@ import android.widget.ScrollView
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
+import android.window.OnBackInvokedCallback
+import android.window.OnBackInvokedDispatcher
 import com.justdataplease.streetgym.R
 import com.justdataplease.streetgym.data.AssetCurriculumRepository
 import com.justdataplease.streetgym.data.CurriculumJsonParser
@@ -205,6 +212,7 @@ open class HomeActivity : Activity() {
     private val historyCalendar = HistoryCalendarState()
     private lateinit var accountStore: AccountStore
     private lateinit var cloudSync: CloudSync
+    private lateinit var analytics: Analytics
     private lateinit var leaderboard: LeaderboardRepository
     private var boardSkill: String? = null
     private var boardInCountry = false
@@ -231,6 +239,7 @@ open class HomeActivity : Activity() {
         }
     }
     private lateinit var adBreak: WorkoutAdBreak
+    private var paywallDialog: AlertDialog? = null
     private var timingPanel: TimingPanel? = null
     private var timingDialog: AlertDialog? = null
     private val timingHandler = Handler(Looper.getMainLooper())
@@ -270,6 +279,7 @@ open class HomeActivity : Activity() {
         library = LibraryRepository(this)
         accountStore = AccountStore(this)
         cloudSync = CloudSync(this, progressRepository, library)
+        analytics = Analytics.get(this)
         leaderboard = LeaderboardRepository(this)
         library.onChange = ::cloudChanged
         draft = savedInstanceState?.getString(STATE_DRAFT)?.let { runCatching { LibraryCodec.decodeDay(JSONObject(it)) }.getOrNull() }
@@ -302,6 +312,7 @@ open class HomeActivity : Activity() {
         billing.connect()
         // Pro: catch up with other devices at most every six hours; nothing at all without the account.
         cloudSync.sync(done = ::afterSync)
+        syncAnalytics()
         adBreak.resume()
         TimingAlerts.schedule(this)
         timingHandler.removeCallbacks(timingTick)
@@ -488,6 +499,39 @@ open class HomeActivity : Activity() {
         leaderboard.publish(uid, profile, score) { ok -> if (ok) accountStore.savePublishedScore(uid, score, now) }
     }
 
+    /**
+     * Progress analytics ([Analytics]) when the app opens, at most every ten minutes, and only once the first screen,
+     * with its sharing note, was answered.
+     */
+    private fun syncAnalytics(force: Boolean = false) {
+        if (catalog == null || !settings.placementDone) return
+        analytics.sync(force, ::analyticsSnapshot)
+    }
+
+    /** This install's training for progress analytics: versions, tier, skills, score, switches and where it stands. */
+    private fun analyticsSnapshot(): InstallSnapshot {
+        val history = progressRepository.sessionHistory()
+        val progress = skillBook?.let { skillProgress(it, history) }
+        val at = furthestProgram()
+        return InstallSnapshot(
+            versionName = BuildConfig.VERSION_NAME,
+            versionCode = BuildConfig.VERSION_CODE,
+            tier = Entitlement.tier(this),
+            debug = BuildConfig.DEBUG,
+            skills = progress?.let(AnalyticsPayload::skills),
+            score = progress?.overall?.score,
+            switches = SkillSwitches.format(settings.skillSwitches),
+            completedClasses = progressRepository.completedProgramIds().size,
+            trainedClasses = history.count { !it.manuallyCompleted },
+            markedClasses = Scores.markedComplete(history),
+            atLevel = at?.levelNumber,
+            atDay = at?.number,
+        )
+    }
+
+    /** The movement an exercise trains, for analytics: its own id, else the one Skills reads from its name. */
+    private fun analyticsMovement(exercise: TrainingExercise): String? = exercise.movementId ?: skillMovement(exercise)
+
     /** Skills from the classes that count ([Scores.credits]): the Skills tab and the board agree. */
     private fun skillProgress(book: SkillBook, history: List<WorkoutSession> = progressRepository.sessionHistory()): SkillProgress =
         book.progress(Scores.credits(history) { id -> library.customDay(id)?.let(CustomDays::estimatedMinutes) })
@@ -591,16 +635,52 @@ open class HomeActivity : Activity() {
         if (parksMapHidden) { parksMap?.destroy(); parksMap = null; parksMapHidden = false } else parksMap?.lowMemory()
     }
 
-    @Deprecated("Uses platform back navigation for minSdk 23 compatibility")
-    override fun onBackPressed() {
-        when (val screen = currentScreen) {
-            Screen.Dashboard, null -> super.onBackPressed()
+    /**
+     * Back inside the app: a nested screen returns to the one it came from (the workout to its overview, the overview
+     * to its list), a top-level tab to Today. False on Today, its placement questions included, and while loading:
+     * back then leaves the app.
+     */
+    private fun navigateBack(): Boolean {
+        when (currentScreen) {
+            Screen.Dashboard, null -> return false
             Screen.Levels, Screen.Progress, Screen.Settings, Screen.Timing -> openRoot(Screen.Dashboard)
             else -> {
                 val prior = backStack.pollLast()
                 if (prior != null) showScreen(prior, pushCurrent = false) else openRoot(Screen.Dashboard)
             }
         }
+        return true
+    }
+
+    /**
+     * Android 13+ with the manifest's per-activity opt-in (always on Android 16 at targetSdk 36, where onBackPressed
+     * is no longer called): back arrives here. It is registered only while [navigateBack] has somewhere to go, so on
+     * Today the system's predictive back-to-home runs. Open dialogs and the keyboard take back before it.
+     */
+    private val backCallback: Any? = if (Build.VERSION.SDK_INT >= 33) OnBackInvokedCallback { navigateBack() } else null
+    private var backCallbackRegistered = false
+
+    /** Follows [currentScreen]; [showScreen] calls it on every change. */
+    private fun syncBackCallback() {
+        if (Build.VERSION.SDK_INT < 33) return
+        val wanted = currentScreen.let { it != null && it != Screen.Dashboard }
+        if (wanted == backCallbackRegistered) return
+        val callback = backCallback as OnBackInvokedCallback
+        if (wanted) onBackInvokedDispatcher.registerOnBackInvokedCallback(OnBackInvokedDispatcher.PRIORITY_DEFAULT, callback)
+        else onBackInvokedDispatcher.unregisterOnBackInvokedCallback(callback)
+        backCallbackRegistered = wanted
+    }
+
+    /**
+     * Before Android 13, and on 13 itself (which ignores the per-activity opt-in): the same back as [backCallback].
+     * The platform-API form of AndroidX's OnBackPressedDispatcher, without moving this plain Activity to AndroidX;
+     * where onBackPressed isn't called, [backCallback] is.
+     */
+    @SuppressLint("GestureBackNavigation")
+    @Deprecated("Android 13+ takes back through OnBackInvokedCallback; see syncBackCallback")
+    override fun onBackPressed() {
+        @Suppress("DEPRECATION")
+        if (!navigateBack()) super.onBackPressed()
     }
 
     @Suppress("DEPRECATION")
@@ -629,7 +709,7 @@ open class HomeActivity : Activity() {
             contentDescription = getString(R.string.back)
             isClickable = true
             isFocusable = true
-            setOnClickListener { onBackPressed() }
+            setOnClickListener { navigateBack() }
         }
         toolbarTitle = TextView(this).apply {
             gravity = Gravity.CENTER_VERTICAL
@@ -759,6 +839,7 @@ open class HomeActivity : Activity() {
         val destination = restoredScreen?.takeIf(::isValidScreen) ?: Screen.Dashboard
         restoredScreen = null
         showScreen(destination, pushCurrent = false)
+        syncAnalytics()
     }
 
     /**
@@ -834,6 +915,7 @@ open class HomeActivity : Activity() {
         }
         if (pushCurrent) currentScreen?.let(backStack::addLast)
         currentScreen = screen
+        syncBackCallback()
         if (screen !is Screen.EditDay) draft = null
         if (screen != Screen.Timing) timingPanel = null
         toolbar.visibility = View.VISIBLE
@@ -879,7 +961,7 @@ open class HomeActivity : Activity() {
         val leavingWorkout = currentScreen is Screen.Active && screen != Screen.Timing
         backStack.clear()
         showScreen(screen, pushCurrent = false)
-        if (leavingWorkout && restEndsAtEpochMillis == null) adBreak.atNaturalBreak()
+        if (leavingWorkout && restEndsAtEpochMillis == null) adBreakNow()
     }
 
     private fun navigate(screen: Screen) = showScreen(screen, pushCurrent = true)
@@ -1011,6 +1093,9 @@ open class HomeActivity : Activity() {
             cloudChanged()
         }
         settings.placementDone = true
+        analytics.placed(PlacementRecord(placementAnswers[0].takeIf { it >= 0 }, placementAnswers[1].takeIf { it >= 0 },
+            placementAnswers[2].takeIf { it >= 0 }, placementSkill[0], start.level, start.day))
+        syncAnalytics(force = true)
         placementAnswers.fill(-1)
         placementSkill[0] = 0
         clearRest(); openRoot(Screen.Dashboard)
@@ -1366,11 +1451,21 @@ open class HomeActivity : Activity() {
     }
 
     private fun showPaywall(paywall: Paywall) {
-        AlertDialog.Builder(this).setView(scroll(LinearLayout(this).apply {
+        paywallDialog = AlertDialog.Builder(this).setView(scroll(LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dp(12), dp(12), dp(12), dp(4))
             addView(TiersPanel(this@HomeActivity, billing, paywall))
         })).setNegativeButton(R.string.cancel, null).show()
+    }
+
+    /**
+     * A natural break for the full-screen ad ([WorkoutAdBreak]): a finished section, or leaving a workout. Never over a
+     * paywall, whether a dialog or a panel on the screen just shown.
+     */
+    private fun adBreakNow() {
+        fun hasPaywall(view: View): Boolean = view is TiersPanel ||
+            (view is ViewGroup && (0 until view.childCount).any { hasPaywall(view.getChildAt(it)) })
+        adBreak.atNaturalBreak(covered = paywallDialog?.isShowing == true || hasPaywall(bodyContainer))
     }
 
     private fun requestNewDay() {
@@ -1718,15 +1813,23 @@ open class HomeActivity : Activity() {
         }
         summary.addWithMargins(secondaryButton(getString(R.string.rename_level)) { renameLevel(level) }, topDp = 10)
         val programs = level.programs.sortedBy { it.number }
+        val rows = ProgramListAdapter(this, programs, completed, assigned?.id, locale, progressRepository.examLog(), switchedOff)
+        // Free: one ad card after the first three classes (a tier change draws this screen again).
+        val withAd = if (Entitlement.adFree(this)) null else AdRowAdapter(rows, LinearLayout(this).apply {
+            setPadding(dp(12), dp(4), dp(12), dp(4))
+            addView(ManagedNativePlacement(this@HomeActivity),
+                LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+        }, after = 3)
         val list = ListView(this).apply {
             addHeaderView(summary, null, false)
-            adapter = ProgramListAdapter(context, programs, completed, assigned?.id, locale, progressRepository.examLog(), switchedOff)
+            adapter = withAd ?: rows
             divider = ColorDrawable(Color.TRANSPARENT)
             dividerHeight = 0
             clipToPadding = false
             setPadding(0, dp(4), 0, dp(16))
             setOnItemClickListener { _, _, position, _ ->
-                programs.getOrNull(position - headerViewsCount)?.let { navigate(Screen.Overview(it.id)) }
+                val row = (position - headerViewsCount).let { if (withAd != null) withAd.baseIndex(it) else it }
+                row?.let(programs::getOrNull)?.let { navigate(Screen.Overview(it.id)) }
             }
         }
         container.addView(list, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
@@ -1799,7 +1902,7 @@ open class HomeActivity : Activity() {
                     .setPositiveButton(R.string.delete) { _, _ ->
                         if (progressRepository.activeWorkout()?.programId == program.id) { clearRest(); progressRepository.abandonWorkout() }
                         library.deleteDay(program.id)
-                        onBackPressed()
+                        navigateBack()
                     }.show()
             }, topDp = 8)
         }
@@ -2095,7 +2198,7 @@ open class HomeActivity : Activity() {
                 refreshChecks()
                 if (doneCount == counted().size) clearRest()
                 scheduleRestUpdates()
-                if (sectionCheck.isChecked && restEndsAtEpochMillis == null) adBreak.atNaturalBreak()
+                if (sectionCheck.isChecked && restEndsAtEpochMillis == null) adBreakNow()
             }
             page.addView(header)
             section.exercises.forEachIndexed { exerciseIndex, exercise ->
@@ -2270,7 +2373,7 @@ open class HomeActivity : Activity() {
             }
             override fun skipRest() = clearRest()
             override fun sectionComplete() {
-                if ((restEndsAtEpochMillis ?: 0L) <= System.currentTimeMillis()) adBreak.atNaturalBreak()
+                if ((restEndsAtEpochMillis ?: 0L) <= System.currentTimeMillis()) adBreakNow()
             }
             override fun holdFinished() {
                 if (settings.soundCues) TimingAlerts.tone()
@@ -2359,6 +2462,8 @@ open class HomeActivity : Activity() {
                 // A repeat's rating is kept on its own history entry only; see WorkoutSession.
                 val session = progressRepository.finishWorkout(effortRating = values[selected], credits = credits, doses = doses)
                 cloudChanged()
+                if (session != null) analytics.classFinished(AnalyticsPayload.sessionId(session),
+                    AnalyticsPayload.session(session, program, flow, active, leftOutKeys(program, flow), ::analyticsMovement), ::analyticsSnapshot)
                 clearRest()
                 Toast.makeText(this, if (session?.repeat == true) R.string.repeat_saved else R.string.workout_saved,
                     Toast.LENGTH_SHORT).show()
@@ -2478,6 +2583,8 @@ open class HomeActivity : Activity() {
                                 off = switches.isRungOff(family.spec.id, status.skill.rung))
                         },
                         switches = settings.skillSwitches,
+                        // Free: one ad card partway down the ladders.
+                        ad = ManagedNativePlacement(this),
                     ),
                     topDp = 14,
                 )
@@ -2495,6 +2602,8 @@ open class HomeActivity : Activity() {
             addWithMargins(horizontalProgress(percent), topDp = 12, height = dp(10))
         }
         page.addWithMargins(overall, topDp = 14, bottomDp = 16)
+        // Free: one ad card below the totals, before the level breakdown.
+        page.addWithMargins(ManagedNativePlacement(this), bottomDp = if (Entitlement.adFree(this)) 0 else 16)
 
         page.addView(sectionLabel(getString(R.string.level_breakdown)))
         catalog.levels.sortedBy { it.number }.forEach { level ->
@@ -2600,7 +2709,7 @@ open class HomeActivity : Activity() {
             page.addWithMargins(skillSwitchesCard(book, settings), bottomDp = 16)
         }
         page.addView(sectionLabel(getString(R.string.share_section)))
-        page.addWithMargins(shareProgressNote(settings, inSettings = true), bottomDp = 16)
+        page.addWithMargins(shareProgressNote(settings, inSettings = true) { on -> if (on) syncAnalytics(force = true) }, bottomDp = 16)
         page.addWithMargins(card().apply {
             addView(titleText(getString(R.string.reset_title), 19f))
             addWithMargins(bodyText(getString(if (Cloud.uid(this@HomeActivity) != null) R.string.reset_body_account
@@ -2616,7 +2725,10 @@ open class HomeActivity : Activity() {
 
         val version = packageManager.getPackageInfo(packageName, 0).versionName ?: "1.0"
         val about = card().apply {
-            addView(titleText(getString(R.string.about_title), 19f))
+            // Held for two seconds, the title takes a Play review code (docs/TIERS.md, "Play review access").
+            addView(titleText(getString(R.string.about_title), 19f).apply {
+                onHeld(REVIEW_HOLD_MILLIS) { reviewCodeDialog { renderSettings() } }
+            })
             addWithMargins(bodyText(getString(R.string.about_body), 14f), topDp = 7)
             addWithMargins(bodyText(getString(R.string.version_format, version), 12f).apply {
                 setOnClickListener { developerMenu.onVersionTapped() }

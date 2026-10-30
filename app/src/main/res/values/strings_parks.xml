@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="training_tab_parks">Parks</string>
-    <string name="parks_teaser">More than 23,000 calisthenics parks worldwide, nearest first, with directions.</string>
-    <string name="parks_intro">%1$s calisthenics parks worldwide. Find the nearest, or search by city or park.</string>
+    <string name="parks_teaser">More than 70,000 outdoor workout parks worldwide, nearest first, with directions.</string>
+    <string name="parks_intro">%1$s workout parks worldwide. Find the nearest, or search by city or park.</string>
     <string name="parks_loading">Loading parks…</string>
     <string name="parks_near_me">Parks near me</string>
     <string name="parks_search_hint">City or park name</string>
@@ -15,9 +15,9 @@
     <string name="parks_directions">Tap a park for directions in your maps app.</string>
     <string name="parks_locating">Finding your location…</string>
     <string name="parks_no_location">Couldn’t get your location. Search by city instead.</string>
-    <string name="parks_location_denied">Location is off for Street Gymnastics. Search by city instead.</string>
-    <string name="parks_credit">Park data: howtocalisthenics.com. Map: OpenFreeMap, © OpenStreetMap. Your location isn’t sent anywhere; the map downloads the area on screen.</string>
-    <string name="parks_privacy">Your location isn’t sent anywhere.</string>
+    <string name="parks_location_denied">Location is off for Street Gym. Search by city instead.</string>
+    <string name="parks_credit">Parks and map data © OpenStreetMap contributors (ODbL). Map tiles: OpenFreeMap. Your location isn’t sent anywhere; the map downloads the area on screen.</string>
+    <string name="parks_privacy">© OpenStreetMap contributors. Your location isn’t sent.</string>
     <string name="parks_view_map">Map</string>
     <string name="parks_view_list">List</string>
     <string name="parks_my_location">Show my location</string>

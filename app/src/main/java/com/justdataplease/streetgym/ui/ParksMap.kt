@@ -209,7 +209,12 @@ class ParksMap(
             circleStrokeWidth(2f),
         ))
         style.addLayer(SymbolLayer(LAYER_COUNTS, SOURCE_PARKS).withFilter(clustered).withProperties(
-            textField(Expression.toString(Expression.get("point_count_abbreviated"))),
+            // MapLibre abbreviates 10,000 and more as "25.744000k", so those are rounded here: "26k".
+            textField(Expression.step(Expression.get("point_count"), Expression.toString(Expression.get("point_count_abbreviated")),
+                Expression.stop(10000, Expression.concat(
+                    Expression.toString(Expression.round(Expression.division(Expression.get("point_count"), Expression.literal(1000)))),
+                    Expression.literal("k"),
+                )))),
             textFont(arrayOf("Noto Sans Regular")),
             textSize(12f),
             textColor(AppColors.ON_ACCENT),

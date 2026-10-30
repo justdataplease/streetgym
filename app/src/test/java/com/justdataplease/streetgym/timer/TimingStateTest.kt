@@ -65,15 +65,15 @@ class TimingStateTest {
         assertEquals(22 * 3_600_000L,next-now)
     }
     @Test fun adIntervalCountsOnlyForegroundTime() {
-        val clock = AdBreakClock(); clock.resume(0); clock.pause(300_000)
+        val clock = AdBreakClock(); clock.resume(0); clock.pause(150_000)
         assertFalse(clock.due(9_000_000))
         clock.resume(10_000_000)
-        assertFalse(clock.due(10_299_999)); assertTrue(clock.due(10_300_000))
-        clock.shown(10_300_000); assertFalse(clock.due(10_300_001))
+        assertFalse(clock.due(10_149_999)); assertTrue(clock.due(10_150_000))
+        clock.shown(10_150_000); assertFalse(clock.due(10_150_001))
     }
     @Test fun missedAdBreakDoesNotQueueSeveralAds() {
         val clock = AdBreakClock(); clock.resume(0)
         assertTrue(clock.due(1_800_000)); clock.shown(1_800_000)
-        assertFalse(clock.due(1_800_000)); assertTrue(clock.due(2_400_000))
+        assertFalse(clock.due(1_800_000)); assertTrue(clock.due(2_100_000))
     }
 }

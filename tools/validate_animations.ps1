@@ -292,7 +292,11 @@ if (Test-Path -LiteralPath $animationResolved -PathType Leaf) {
 
 $animation = Read-JsonFile $AnimationPath "Animation asset"
 $movementLibrary = Read-JsonFile $MovementLibraryPath "Movement library"
-$forensicExport = Read-JsonFile $ForensicExportPath "Forensic export"
+# Optional since 2.7.0: the catalog no longer comes from the third-party export, so the alias check runs only where a
+# local copy still exists.
+$forensicExport = if (Test-Path -LiteralPath (Resolve-ProjectPath $ForensicExportPath) -PathType Leaf) {
+    Read-JsonFile $ForensicExportPath "Forensic export"
+} else { $null }
 
 $canvasWidth = 200.0
 $canvasHeight = 120.0

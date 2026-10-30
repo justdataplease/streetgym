@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
@@ -8,6 +9,11 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <!-- Parks near me (Plus): an approximate fix, used on the phone only. -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- MapLibre's manifest adds precise location; the app only ever asks for the approximate fix above and doesn't use
+         the map's location layer, so Play shows (and Data safety declares) approximate location only. -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" tools:node="remove" />
+    <!-- Location is optional (Parks also searches by city): phones and tablets without it can still install. -->
+    <uses-feature android:name="android.hardware.location" android:required="false" />
 
     <application
         android:allowBackup="false"
@@ -20,9 +26,14 @@
         android:theme="@style/Theme.StreetConcrete">
         <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="${admobAppId}" />
 
+        <!-- Predictive back: HomeActivity registers an OnBackInvokedCallback while a screen can go back, and Today
+             leaves with the system's back-to-home. On by default on Android 16 at targetSdk 36; set here so Android
+             14 and 15 behave the same. Android 13 and older keep onBackPressed. -->
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:enableOnBackInvokedCallback="true"
+            android:exported="true"
+            tools:targetApi="34">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

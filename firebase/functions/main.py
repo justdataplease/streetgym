@@ -1,13 +1,17 @@
-"""Street Gymnastics leaderboard: rebuilds the boards from the Pro scores every six hours.
+"""Street Gym's scheduled functions: the leaderboard, rebuilt from the Pro scores every six hours, and the daily
+deletion of progress analytics older than 24 months (expiry.py).
 
 Cost: a run with no new or removed score is two reads (one changed-score probe, one count) and stops. Otherwise it
 reads each score once, reads the boards' hashes, and writes only the boards that changed. Deploy with
 `firebase deploy --only functions,firestore` from streetgymnastics/firebase (docs/TIERS.md, "Pro account setup").
 """
+import datetime
+
 from firebase_admin import firestore, initialize_app
 from firebase_functions import scheduler_fn
 
 from boards import board_hash, build_boards
+from expiry import delete_expired
 
 initialize_app()
 
@@ -53,3 +57,9 @@ def rebuild_boards(event: scheduler_fn.ScheduledEvent) -> None:
             flush()
     flush()
     meta_ref.set({"built_at": started, "count": count})
+
+
+# Cost: two reads when nothing is due (two queries with no result), else a read and a delete per document.
+@scheduler_fn.on_schedule(schedule="every day 03:30", region="europe-west1", memory=256, timeout_sec=540)
+def expire_analytics(event: scheduler_fn.ScheduledEvent) -> None:
+    delete_expired(firestore.client(), firestore.FieldFilter, datetime.datetime.now(datetime.timezone.utc))

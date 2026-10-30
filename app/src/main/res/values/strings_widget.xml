@@ -16,5 +16,5 @@
     <string name="widget_locked">locked for your tier</string>
     <!-- Read by TalkBack for the whole card: "Next class: Level 4, class 20, Basics & Endurance, Strict Pull-Up, 44 min. Opens the class." -->
     <string name="widget_open_class">Next class: %1$s. Opens the class.</string>
-    <string name="widget_open_app">%1$s. Opens Street Gymnastics.</string>
+    <string name="widget_open_app">%1$s. Opens Street Gym.</string>
 </resources>

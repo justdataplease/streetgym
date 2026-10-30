@@ -1,16 +1,13 @@
 [CmdletBinding()]
 param(
     [string]$CatalogPath = "generated/curriculum_v2.json",
-    [string]$BaselinePath = "street_gymnastic_programs_levels.json",
     [string]$AppSourcePath = "app/src/main",
-    [string]$CatalogMetadataPath = "curriculum/catalog_metadata.json",
     [string[]]$AuthoredSourcePaths = @(
         "curriculum/program.json"
     )
 )
 
 $ErrorActionPreference = "Stop"
-$expectedBaselineSha256 = "AC8AAF41F477050EDDF9387DF1CD214FCBE3A29608AE4D5AE1E0C34D9F5EDA3D"
 $errors = New-Object System.Collections.ArrayList
 $warnings = New-Object System.Collections.ArrayList
 $allowedLateralRegressionPairs = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::Ordinal)
@@ -481,19 +478,12 @@ function Get-ProgramTokenText($Programs, $MovementById) {
 }
 
 if (-not (Test-Path -LiteralPath $CatalogPath -PathType Leaf)) { throw "Catalog not found: $CatalogPath" }
-if (-not (Test-Path -LiteralPath $BaselinePath -PathType Leaf)) { throw "Baseline not found: $BaselinePath" }
-
-$baselineHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $BaselinePath).Hash.ToUpperInvariant()
-if ($baselineHash -cne $expectedBaselineSha256) {
-    Add-Error "Baseline SHA-256 mismatch: expected $expectedBaselineSha256, found $baselineHash"
-}
 
 $catalogRaw = Get-Content -Raw -Encoding UTF8 -LiteralPath $CatalogPath
 if ($catalogRaw.Contains([string][char]0xFFFD)) {
     Add-Error "Final generated catalog contains a Unicode replacement character"
 }
 $catalog = $catalogRaw | ConvertFrom-Json
-$baseline = Get-Content -Raw -Encoding UTF8 -LiteralPath $BaselinePath | ConvertFrom-Json
 
 if (Contains-PropertyName $catalog "pl") {
     Add-Error "Final generated catalog contains at least one forbidden 'pl' key"
@@ -505,14 +495,10 @@ if (Contains-DormantVideoMetadata $catalog) {
     Add-Error "Final generated catalog contains dormant video id, URL, or provider metadata"
 }
 if ([string]$catalog.schema_version -cne "2.0.0") { Add-Error "schema_version must be 2.0.0" }
-if ([string]$catalog.source_baseline.sha256 -cne $expectedBaselineSha256) { Add-Error "Catalog source_baseline.sha256 is missing or incorrect" }
-if (-not [bool]$catalog.source_baseline.immutable) { Add-Error "source_baseline.immutable must be true" }
-if ([int]$catalog.source_baseline.authentic_program_count -ne 90) { Add-Error "source_baseline authentic count must be 90" }
-if ([int]$catalog.source_baseline.placeholder_count -ne 289) { Add-Error "source_baseline placeholder count must be 289" }
-if ([int]$catalog.source_baseline.included_placeholder_count -ne 180) { Add-Error "source_baseline included placeholder count must be 180" }
-if ([int]$catalog.source_baseline.archived_placeholder_count -ne 109) { Add-Error "source_baseline archived placeholder count must be 109" }
-if ([int]$catalog.source_baseline.app_slot_limit_per_level -ne 100) { Add-Error "source_baseline app slot limit must be 100" }
-Require-EnglishField $catalog.catalog_provenance "notice" "catalog_provenance"
+# Every class is authored for Street Gymnastics: the catalog carries no other app's ids, hashes or provenance labels.
+foreach ($retiredField in @("source_baseline", "catalog_provenance", "source", "metadata")) {
+    if (Has-Property $catalog $retiredField) { Add-Error "Final generated catalog must not carry a top-level '$retiredField' field" }
+}
 
 $movementById = @{}
 foreach ($movement in @($catalog.movement_library)) {
@@ -556,8 +542,7 @@ foreach ($movementId in $movementById.Keys) {
     }
 }
 
-# Validate all 719 authored source records, including the 109 owner-research
-# drafts that are intentionally archived outside the 700-slot app catalog.
+# Validate all 1,000 authored source records (tools/build_curriculum.py writes curriculum/program.json).
 $authoredSourceProgramIds = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::Ordinal)
 $authoredSourceTitles = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
 $authoredSourceDescriptions = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
@@ -659,38 +644,6 @@ foreach ($profile in @($catalog.coaching_profiles)) {
     }
 }
 
-$baselineBySlot = @{}
-$baselineDetailedCount = 0
-$baselinePlaceholderCount = 0
-foreach ($baselineLevel in @($baseline.levels)) {
-    foreach ($baselineProgram in @($baselineLevel.programs)) {
-        $slot = "$([int]$baselineLevel.number)-$([int]$baselineProgram.number)"
-        $baselineBySlot[$slot] = $baselineProgram
-        if ([bool]$baselineProgram.has_details) { $baselineDetailedCount++ } else { $baselinePlaceholderCount++ }
-    }
-}
-if ($baselineDetailedCount -ne 90 -or $baselinePlaceholderCount -ne 289) {
-    Add-Error "Baseline content counts changed: detailed=$baselineDetailedCount placeholders=$baselinePlaceholderCount"
-}
-
-# App position -> source slot (catalog_metadata.json app_slot_order; Level 2 runs slots 31-70 before 1-30).
-$sourceSlotByPosition = @{}
-$catalogMetadata = Get-Content -Raw -Encoding UTF8 -LiteralPath $CatalogMetadataPath | ConvertFrom-Json
-# App positions where an authored class takes the place of an original-source class (round 6 exam days).
-$replacedSourceSlots = @($catalogMetadata.replaced_source_slots | ForEach-Object { [string]$_ })
-$replacedSourceCount = $replacedSourceSlots.Count
-foreach ($slotOrder in @($catalogMetadata.app_slot_order.levels)) {
-    $orderLevel = [int]$slotOrder.level
-    $orderSlots = @(foreach ($range in @($slotOrder.source_slots)) { [int]$range[0]..[int]$range[1] })
-    if ($orderLevel -lt 1 -or $orderLevel -gt 3 -or (@($orderSlots | Sort-Object) -join ",") -cne ((1..100) -join ",")) {
-        Add-Error "app_slot_order for Level $orderLevel must list source slots 1-100 exactly once"
-        continue
-    }
-    for ($positionIndex = 0; $positionIndex -lt $orderSlots.Count; $positionIndex++) {
-        $sourceSlotByPosition["$orderLevel-$($positionIndex + 1)"] = $orderSlots[$positionIndex]
-    }
-}
-
 $levels = @($catalog.levels)
 $expectedCounts = @{ 1 = 100; 2 = 100; 3 = 100; 4 = 100; 5 = 100; 6 = 100; 7 = 100; 8 = 100; 9 = 100; 10 = 100 }
 if ($levels.Count -ne 10) { Add-Error "Expected 10 levels, found $($levels.Count)" }
@@ -699,7 +652,6 @@ $programIds = New-Object 'System.Collections.Generic.HashSet[string]'
 $globalAuthoredTitles = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
 $globalAuthoredDescriptions = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
 $globalAuthoredMainSignatures = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::Ordinal)
-$originCounts = @{ apk_authentic = 0; reconstructed_placeholder = 0; llm_extension = 0; new_level = 0 }
 $totalPrograms = 0
 
 foreach ($level in $levels) {
@@ -752,31 +704,9 @@ foreach ($level in $levels) {
         $descriptionText = [string](Get-PropertyValue (Get-PropertyValue $program "description") "en")
         $normalizedDescription = $descriptionText.Trim()
 
-        $origin = [string]$program.origin
-        if (-not $originCounts.ContainsKey($origin)) {
-            Add-Error "$location has unknown origin '$origin'"
-        } else {
-            $originCounts[$origin] = [int]$originCounts[$origin] + 1
+        foreach ($retiredField in @("origin", "legacy", "coaching_overlay")) {
+            if (Has-Property $program $retiredField) { Add-Error "$location must not carry a '$retiredField' field" }
         }
-        if ($origin -ne "apk_authentic") {
-        }
-
-        $slot = "$levelNumber-$programNumber"
-        if ($sourceSlotByPosition.ContainsKey($slot)) { $slot = "$levelNumber-$($sourceSlotByPosition[$slot])" }
-        $baselineProgram = $null
-        $expectedOrigin = "new_level"
-        if ($levelNumber -le 3) {
-            if ($baselineBySlot.ContainsKey($slot)) {
-                $baselineProgram = $baselineBySlot[$slot]
-                if ([bool]$baselineProgram.has_details -and "$levelNumber-$programNumber" -notin $replacedSourceSlots) { $expectedOrigin = "apk_authentic" }
-                else { $expectedOrigin = "reconstructed_placeholder" }
-            } elseif ($levelNumber -eq 3 -and $programNumber -ge 71 -and $programNumber -le 100) {
-                $expectedOrigin = "llm_extension"
-            } else {
-                Add-Error "$location has no matching baseline slot"
-            }
-        }
-        if ($origin -cne $expectedOrigin) { Add-Error "$location origin must be $expectedOrigin, found $origin" }
 
         $schedule = Get-PropertyValue $program "schedule"
         if ($null -eq $schedule) {
@@ -791,77 +721,11 @@ foreach ($level in $levels) {
         if (-not (Try-GetInteger (Get-PropertyValue $schedule "day") ([ref]$day)) -or $day -lt 1 -or $day -gt 7) {
             Add-Error "$location has invalid schedule.day"
         }
-        if ($origin -eq "apk_authentic") {
-            $expectedWeek = [long][Math]::Floor(($programNumber - 1) / 7) + 1
-            $expectedDay = [long](($programNumber - 1) % 7) + 1
-            if ($week -ne $expectedWeek -or $day -ne $expectedDay) {
-                Add-Error "$location authentic schedule must be week $expectedWeek day $expectedDay"
-            }
-        }
         $dayType = [string](Get-PropertyValue $schedule "day_type")
         if (-not (Has-Text $dayType)) { Add-Error "$location has blank schedule.day_type" }
         $focusItems = @((Get-PropertyValue $schedule "focus"))
         if ($focusItems.Count -lt 1 -or @($focusItems | Where-Object { -not (Has-Text $_) }).Count -gt 0) {
             Add-Error "$location requires at least one nonblank schedule.focus value"
-        }
-
-        if ($origin -eq "apk_authentic") {
-            if ($dayType -cne "authentic_base") { Add-Error "$location authentic day_type must be authentic_base" }
-            if (-not (Has-Property $schedule "minutes") -or $null -ne $schedule.minutes) {
-                Add-Error "$location authentic schedule.minutes must be present and null"
-            }
-            if (-not (Has-Property $schedule "rpe") -or $null -ne $schedule.rpe) {
-                Add-Error "$location authentic schedule.rpe must be present and null"
-            }
-            if ($null -eq $baselineProgram) {
-                Add-Error "$location cannot verify authentic content without a baseline slot"
-            } else {
-                $expectedContent = Copy-AppCatalogProjection $baselineProgram
-                if ((ConvertTo-CanonicalJson $program.content) -cne (ConvertTo-CanonicalJson $expectedContent)) {
-                    Add-Error "$location authentic content differs from the English-only, video-free baseline projection"
-                }
-                if ([string]$program.legacy.workout_id -cne [string]$baselineProgram.id) {
-                    Add-Error "$location legacy.workout_id does not match the baseline"
-                }
-                if ([bool]$program.legacy.pro -ne [bool]$baselineProgram.pro) {
-                    Add-Error "$location legacy.pro does not match the baseline"
-                }
-                if ([bool]$program.legacy.has_details -ne [bool]$baselineProgram.has_details) {
-                    Add-Error "$location legacy.has_details does not match the baseline"
-                }
-            }
-
-            $overlay = Get-PropertyValue $program "coaching_overlay"
-            if ($null -eq $overlay) {
-                Add-Error "$location has no coaching_overlay"
-            } else {
-                if ([string]$overlay.origin -cne "new_coaching_overlay") {
-                    Add-Error "$location coaching_overlay origin must be new_coaching_overlay"
-                }
-                $profileId = [string]$overlay.profile_id
-                if (-not $profileById.ContainsKey($profileId)) {
-                    Add-Error "$location references unknown coaching profile '$profileId'"
-                } else {
-                    $overlayWarmup = @($overlay.warmup)
-                    $overlayCooldown = @($overlay.cooldown)
-                    if ($overlayWarmup.Count -lt 3) { Add-Error "$location coaching warmup has fewer than 3 steps" }
-                    if ($overlayCooldown.Count -lt 3) { Add-Error "$location coaching cooldown has fewer than 3 steps" }
-                    for ($stepIndex = 0; $stepIndex -lt $overlayWarmup.Count; $stepIndex++) {
-                        Validate-Step $overlayWarmup[$stepIndex] "$location coaching warmup $($stepIndex + 1)" $movementById
-                    }
-                    for ($stepIndex = 0; $stepIndex -lt $overlayCooldown.Count; $stepIndex++) {
-                        Validate-Step $overlayCooldown[$stepIndex] "$location coaching cooldown $($stepIndex + 1)" $movementById
-                    }
-                    $profile = $profileById[$profileId]
-                    if ((ConvertTo-CanonicalJson $overlay.warmup) -cne (ConvertTo-CanonicalJson $profile.warmup)) {
-                        Add-Error "$location coaching warmup differs from profile $profileId"
-                    }
-                    if ((ConvertTo-CanonicalJson $overlay.cooldown) -cne (ConvertTo-CanonicalJson $profile.cooldown)) {
-                        Add-Error "$location coaching cooldown differs from profile $profileId"
-                    }
-                }
-            }
-            continue
         }
 
         $minutes = [long]0
@@ -877,21 +741,6 @@ foreach ($level in $levels) {
             Add-Error "$location is recovery-like but has RPE $rpe"
         }
         if (-not (Has-Text $program.authored_id)) { Add-Error "$location has blank authored_id" }
-
-        if ($origin -eq "reconstructed_placeholder" -and $null -ne $baselineProgram) {
-            if ([string]$program.legacy.workout_id -cne [string]$baselineProgram.id) {
-                Add-Error "$location legacy.workout_id does not match its placeholder"
-            }
-            if ([bool]$program.legacy.pro -ne [bool]$baselineProgram.pro -or [bool]$program.legacy.has_details -ne [bool]$baselineProgram.has_details) {
-                Add-Error "$location legacy flags do not match its placeholder"
-            }
-        }
-        if ($origin -eq "new_level" -and $levelNumber -lt 4) {
-            Add-Error "$location uses new_level below Level 4"
-        }
-        if ($origin -eq "llm_extension" -and ($levelNumber -ne 3 -or $programNumber -lt 71)) {
-            Add-Error "$location uses llm_extension outside the Level 3 post-baseline range"
-        }
 
         $warmup = @($program.warmup)
         $main = @($program.main)
@@ -1039,10 +888,8 @@ foreach ($level in $levels) {
 
     }
 
-    # Replaced original-source positions keep the original block's calendar, outside the authored sequence.
-    $authoredPrograms = @($programs | Where-Object {
-        [string]$_.origin -ne "apk_authentic"
-    } | Sort-Object number)
+    # Every class is authored: the whole level runs one seven-day calendar.
+    $authoredPrograms = @($programs | Sort-Object { [int]$_.number })
     $consecutiveHardPrograms = 0
     $hardRunStartNumber = 0
     for ($authoredIndex = 0; $authoredIndex -lt $authoredPrograms.Count; $authoredIndex++) {
@@ -1183,11 +1030,6 @@ $catalogHardRun = 0
 $catalogHardRunStart = ""
 foreach ($orderedLevel in @($levels | Sort-Object { [int]$_.number })) {
     foreach ($orderedProgram in @($orderedLevel.programs | Sort-Object { [int]$_.number })) {
-        if ([string]$orderedProgram.origin -eq "apk_authentic") {
-            $catalogHardRun = 0
-            $catalogHardRunStart = ""
-            continue
-        }
         if ([int]$orderedProgram.schedule.rpe -ge 7) {
             if ($catalogHardRun -eq 0) {
                 $catalogHardRunStart = "Level $([int]$orderedProgram.level) program $([int]$orderedProgram.number)"
@@ -1217,7 +1059,6 @@ $rehearsalRequiredCategories = @(
 )
 foreach ($orderedLevel in @($levels | Sort-Object { [int]$_.number })) {
     foreach ($orderedProgram in @($orderedLevel.programs | Sort-Object { [int]$_.number })) {
-        if ([string]$orderedProgram.origin -eq "apk_authentic") { continue }
         foreach ($sectionName in @("warmup", "main")) {
             $orderedSteps = @((Get-PropertyValue $orderedProgram $sectionName))
             for ($orderedStepIndex = 0; $orderedStepIndex -lt $orderedSteps.Count; $orderedStepIndex++) {
@@ -1241,28 +1082,9 @@ foreach ($requiredLevel in 1..10) {
 }
 if ($totalPrograms -ne 1000) { Add-Error "Expected 1000 total programs, found $totalPrograms" }
 if ($programIds.Count -ne 1000) { Add-Error "Expected 1000 unique program ids, found $($programIds.Count)" }
-if ([int]$originCounts.apk_authentic -ne 90 - $replacedSourceCount) {
-    Add-Error "Expected $(90 - $replacedSourceCount) apk_authentic programs, found $($originCounts.apk_authentic)"
-}
-if ([int]$originCounts.reconstructed_placeholder -ne 180 + $replacedSourceCount) {
-    Add-Error "Expected $(180 + $replacedSourceCount) reconstructed_placeholder programs (placeholders and replaced original-source classes), found $($originCounts.reconstructed_placeholder)"
-}
-if ([int]$originCounts.llm_extension -ne 30) {
-    Add-Error "Expected 30 llm_extension programs, found $($originCounts.llm_extension)"
-}
-if ([int]$originCounts.new_level -ne 700) {
-    Add-Error "Expected 700 new_level programs, found $($originCounts.new_level)"
-}
-
 $expectedSummary = [ordered]@{
     level_count = 10
     program_count = 1000
-    authentic_program_count = 90 - $replacedSourceCount
-    reconstructed_placeholder_count = 180
-    replaced_source_program_count = $replacedSourceCount
-    new_extension_program_count = 30
-    new_level_program_count = 700
-    archived_legacy_placeholder_count = 109
     movement_count = $movementById.Count
 }
 foreach ($summaryName in $expectedSummary.Keys) {
@@ -1300,11 +1122,6 @@ if (Has-Text $PSCommandPath) {
 
 Write-Host "Validated catalog: $CatalogPath"
 Write-Host "Levels: $($levels.Count); programs: $totalPrograms; movements: $($movementById.Count)"
-Write-Host ("Origins: authentic={0}; reconstructed={1}; extension={2}; new-level={3}" -f
-    $originCounts.apk_authentic,
-    $originCounts.reconstructed_placeholder,
-    $originCounts.llm_extension,
-    $originCounts.new_level)
 
 foreach ($warning in $warnings) { Write-Warning $warning }
 if ($errors.Count -gt 0) {

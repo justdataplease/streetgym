@@ -4,6 +4,12 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    // A Google account. The anonymous user the app signs in with for progress analytics is none: it may only write
+    // analytics/, never a profile, a username, cloud progress or a score.
+    function signedIn() {
+      return request.auth != null && request.auth.token.firebase.sign_in_provider != 'anonymous';
+    }
+
     // Leaderboards: the app reads them without signing in (Plus); only the scheduled function writes them.
     match /boards/{board} {
       allow get: if true;
@@ -17,21 +23,21 @@ service cloud.firestore {
 
     // A username belongs to one account: claimed once, released only by its owner.
     match /usernames/{name} {
-      allow get: if request.auth != null;
+      allow get: if signedIn();
       // Claimed only together with the profile that uses it, so one account can't hoard names.
-      allow create: if request.auth != null
+      allow create: if signedIn()
         && name.matches('^[a-z0-9_.]{3,20}$')
         && request.resource.data.keys().hasOnly(['uid'])
         && request.resource.data.uid == request.auth.uid
         && getAfter(/databases/$(database)/documents/users/$(request.auth.uid)).data.username.lower() == name;
-      allow delete: if request.auth != null && resource.data.uid == request.auth.uid;
+      allow delete: if signedIn() && resource.data.uid == request.auth.uid;
       allow list, update: if false;
     }
 
     // A profile: its username must be the one this account holds.
     match /users/{uid} {
-      allow get, delete: if request.auth != null && request.auth.uid == uid;
-      allow create, update: if request.auth != null && request.auth.uid == uid
+      allow get, delete: if signedIn() && request.auth.uid == uid;
+      allow create, update: if signedIn() && request.auth.uid == uid
         && request.resource.data.username is string
         && request.resource.data.username.matches('^[A-Za-z0-9_.]{3,20}$')
         && getAfter(/databases/$(database)/documents/usernames/$(request.resource.data.username.lower())).data.uid == uid
@@ -41,7 +47,7 @@ service cloud.firestore {
 
       // Cloud progress (Pro): only its owner reads or writes it.
       match /data/{doc} {
-        allow read, write: if request.auth != null && request.auth.uid == uid && doc in ['progress', 'library'];
+        allow read, write: if signedIn() && request.auth.uid == uid && doc in ['progress', 'library'];
       }
     }
 
@@ -50,7 +56,7 @@ service cloud.firestore {
     // server's, so the function's "changed since the last run" check can't be gamed. At most 16 families, one per
     // skill family (FAMILY_CEILINGS in functions/boards.py).
     match /scores/{uid} {
-      allow create, update: if request.auth != null && request.auth.uid == uid
+      allow create, update: if signedIn() && request.auth.uid == uid
         && request.resource.data.keys().hasOnly(['v', 'username', 'country', 'overall', 'families', 'verified', 'updated_at'])
         && request.resource.data.v == 3
         && request.resource.data.username == get(/databases/$(database)/documents/users/$(uid)).data.username
@@ -61,8 +67,95 @@ service cloud.firestore {
         && request.resource.data.overall >= 0 && request.resource.data.overall <= 1000
         && request.resource.data.families is map && request.resource.data.families.size() <= 16
         && request.resource.data.verified is list && request.resource.data.verified.size() <= 120;
-      allow delete: if request.auth != null && request.auth.uid == uid;
+      allow delete: if signedIn() && request.auth.uid == uid;
       allow read: if false;
+    }
+
+    // Progress analytics (the owner, 2026-10-30; docs/TIERS.md, "Progress analytics"): every tier's training progress
+    // under the install's random code (a UUID), while "Share my progress" is on. Any signed-in user, the anonymous one
+    // included, may write or delete an install whose code it knows; nobody reads. accountUid is only ever the writer's
+    // own Google account, and leaving it out keeps it. Times are the server's, sizes are capped.
+    match /analytics/{installId} {
+      allow create: if request.auth != null && validInstallId(installId)
+        && validInstall(request.resource.data) && ownAccount(request.resource.data);
+      allow update: if request.auth != null && validInstallId(installId)
+        && validInstall(request.resource.data)
+        && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['accountUid'])
+          || ownAccount(request.resource.data));
+      allow delete: if request.auth != null && validInstallId(installId);
+      allow read: if false;
+
+      // One finished class, by the millisecond it started.
+      match /sessions/{sessionId} {
+        allow create, update: if request.auth != null && validInstallId(installId)
+          && sessionId.matches('^[0-9]{10,15}$') && validSession(request.resource.data);
+        allow delete: if request.auth != null && validInstallId(installId) && sessionId.matches('^[0-9]{10,15}$');
+        allow read: if false;
+      }
+    }
+
+    function validInstallId(id) {
+      return id.matches('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+    }
+
+    function optionalCount(data, key, most) {
+      return data.get(key, null) == null || data[key] is int && data[key] >= 0 && data[key] <= most;
+    }
+
+    // No accountUid, or the signed-in Google account's own.
+    function ownAccount(data) {
+      return !('accountUid' in data) || signedIn() && data.accountUid == request.auth.uid;
+    }
+
+    function validInstall(data) {
+      return data.keys().hasOnly(['v', 'appSetId', 'appSetScope', 'accountUid', 'firstSeen', 'lastSeen', 'versionName',
+          'versionCode', 'tier', 'debug', 'shareProgress', 'placement', 'skills', 'score', 'switches', 'completedClasses',
+          'trainedClasses', 'markedClasses', 'atLevel', 'atDay'])
+        && data.keys().hasAll(['v', 'firstSeen', 'lastSeen', 'versionName', 'versionCode', 'tier', 'debug', 'shareProgress'])
+        && data.v == 1
+        && data.lastSeen == request.time
+        && data.firstSeen is timestamp
+        && data.versionName is string && data.versionName.size() <= 32
+        && data.versionCode is int
+        && data.tier in ['free', 'plus', 'pro']
+        && data.debug is bool
+        && data.shareProgress == true
+        && (data.get('appSetId', null) == null || data.appSetId is string && data.appSetId.size() <= 64)
+        && (data.get('appSetScope', null) == null || data.appSetScope in ['developer', 'app'])
+        && (data.get('placement', null) == null || data.placement is map
+          && data.placement.keys().hasOnly(['pullUps', 'pushUps', 'squats', 'skillTest', 'startLevel', 'startDay']))
+        && (data.get('skills', null) == null || data.skills is map && data.skills.size() <= 64)
+        && (data.get('score', null) == null || data.score is int && data.score >= 0 && data.score <= 1000)
+        && (data.get('switches', null) == null || data.switches is string && data.switches.size() <= 400)
+        && optionalCount(data, 'completedClasses', 100000)
+        && optionalCount(data, 'trainedClasses', 100000)
+        && optionalCount(data, 'markedClasses', 100000)
+        && optionalCount(data, 'atLevel', 20)
+        && optionalCount(data, 'atDay', 1000);
+    }
+
+    // Each exercise with its sets (planned, done, ticked); a class has at most 33 exercises.
+    function validSession(data) {
+      return data.keys().hasOnly(['v', 'programId', 'level', 'day', 'dayType', 'exam', 'custom', 'repeat', 'intensity',
+          'effort', 'startedAt', 'finishedAt', 'durationSec', 'plannedSets', 'doneSets', 'leftOutSets', 'exercises',
+          'uploadedAt'])
+        && data.keys().hasAll(['v', 'programId', 'level', 'day', 'exam', 'custom', 'repeat', 'intensity', 'startedAt',
+          'finishedAt', 'durationSec', 'plannedSets', 'doneSets', 'leftOutSets', 'exercises', 'uploadedAt'])
+        && data.v == 1
+        && data.programId is string && data.programId.matches('^(sg:l[0-9]{2}:p[0-9]{4}|custom|unknown)$')
+        && optionalCount(data, 'level', 20)
+        && optionalCount(data, 'day', 1000)
+        && (data.get('dayType', null) == null || data.dayType is string && data.dayType.matches('^[a-z0-9_]{1,64}$'))
+        && data.exam is bool && data.custom is bool && data.repeat is bool
+        && data.intensity in ['easier', 'normal', 'harder']
+        && (data.get('effort', null) == null || data.effort is int && data.effort >= 1 && data.effort <= 10)
+        && data.startedAt is timestamp && data.finishedAt is timestamp
+        && data.durationSec is int && data.durationSec >= 0
+        && optionalCount(data, 'plannedSets', 1000)
+        && optionalCount(data, 'doneSets', 1000)
+        && optionalCount(data, 'leftOutSets', 1000)
+        && data.exercises is list && data.exercises.size() <= 60
+        && data.uploadedAt == request.time;
     }
   }
 }

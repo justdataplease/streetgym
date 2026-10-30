@@ -30,10 +30,10 @@ Every one of the 1,000 classes is written by `tools/build_curriculum.py` from on
 The pipeline:
 1. `python tools/build_curriculum.py` writes the classes. It checks the validators' rules as it writes and prints where every belt lands if each set is done as written.
    `python tools/build_achievements_page.py` then rebuilds [ACHIEVEMENTS.html](ACHIEVEMENTS.html), the page of what the program gives skill by skill and belt by belt, counted from the same classes.
-2. `tools/assemble_curriculum.ps1` joins them with the movement library and the original export's legacy ids into `generated/curriculum_v2.json`. Copy that file to the app's assets.
+2. `tools/assemble_curriculum.ps1` joins them with the movement library and the level definitions into `generated/curriculum_v2.json`. Copy that file to the app's assets.
 3. The five validators: `validate_curriculum.ps1` (catalog structure and weekly coverage), `validate_animations.ps1`, `validate_morning_class.py` (the practice part and animation contacts), `validate_progressions.py` (the plan's rules) and `validate_progression_motions.py`.
 
-The original app's 90 detailed workouts and 109 out-of-range placeholders stay in the immutable forensic export (`street_gymnastic_programs_levels.json`, checked by SHA-256); every one of their positions is now an authored class (`catalog_metadata.json` `replaced_source_slots`). See [extraction provenance](EXTRACTION_REPORT.md).
+Every one of the 1,000 classes is written by `tools/build_curriculum.py`. Since 2.7.0 the catalog carries nothing from the third-party app the first workouts came from: no `source_baseline` hashes, no `origin` labels, no `legacy` workout ids and no `catalog_provenance`, and neither the assembler nor `validate_curriculum.ps1` reads its export (the validator now rejects those fields). Class N of a level is the authored class numbered N, so the day ids did not move. The extraction history stays in [EXTRACTION_REPORT.md](EXTRACTION_REPORT.md); the export itself stays out of git.
 
 Round 9 removed what only the earlier generations used:
 - the per-level source files (`l1_tail`, `l2_l3_tails`, `l3_extension`, `l4_l5`, `l6`, `l7`, `l8_l10`, `source_replacements`);

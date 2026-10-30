@@ -8,7 +8,10 @@ import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-/** A calisthenics park from howtocalisthenics.com: its name and where it is. Bundled; nothing is sent anywhere. */
+/**
+ * An outdoor workout park from OpenStreetMap (© OpenStreetMap contributors, ODbL): its name and where it is.
+ * Bundled; nothing is sent anywhere.
+ */
 data class Park(val name: String, val lat: Double, val lng: Double)
 
 data class NearbyPark(val park: Park, val kilometres: Double)
@@ -16,7 +19,7 @@ data class NearbyPark(val park: Park, val kilometres: Double)
 object Parks {
     const val ASSET = "spots.tsv"
 
-    /** One park per line: name, latitude and longitude separated by tabs. Malformed lines are skipped. */
+    /** One park per line: name, latitude and longitude separated by tabs. Other lines (the notice first) are skipped. */
     fun read(reader: Reader): List<Park> = reader.buffered().lineSequence().mapNotNull { line ->
         val parts = line.split('\t')
         if (parts.size != 3) return@mapNotNull null

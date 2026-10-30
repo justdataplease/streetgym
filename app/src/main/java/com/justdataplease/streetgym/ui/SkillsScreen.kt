@@ -79,6 +79,8 @@ fun Context.skillsContent(
     onGroup: (SkillGroup?) -> Unit,
     onOpen: (SkillStatus, SkillFamily, List<SkillStatus>) -> Unit,
     switches: SkillSwitches = SkillSwitches(),
+    /** An ad card ([com.justdataplease.streetgym.ads.ManagedNativePlacement]) after the fourth ladder, or the last. */
+    ad: View? = null,
 ): LinearLayout = LinearLayout(this).apply {
     orientation = LinearLayout.VERTICAL
     // The score, the closest skills and the level count are out of the skills the athlete trains (review 12).
@@ -188,7 +190,11 @@ fun Context.skillsContent(
         })
     }, topDp = 12, bottomDp = 4)
 
-    progress.families.filter { (family, _) -> group == null || family.spec.group == group }.forEach { (family, statuses) ->
+    val shown = progress.families.filter { (family, _) -> group == null || family.spec.group == group }
+    val adAt = minOf(4, shown.size)
+    fun placeAd() { if (ad != null) addWithMargins(ad, topDp = if (tier.adFree) 0 else 14) }
+    shown.forEachIndexed { index, (family, statuses) ->
+        if (index == adAt) placeAd()
         addWithMargins(LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
@@ -209,6 +215,7 @@ fun Context.skillsContent(
             })
         })
     }
+    if (adAt == shown.size) placeAd()
 }
 
 /**

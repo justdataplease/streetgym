@@ -30,16 +30,19 @@ object GoogleAccount {
         googleCredential(activity) { credential, failure ->
             val auth = Cloud.auth(activity)
             if (credential == null || auth == null) { onResult(failure ?: Result.Failed("unavailable")); return@googleCredential }
-            auth.signInWithCredential(credential).addOnCompleteListener(activity) { task ->
-                val user = if (task.isSuccessful) task.result?.user else null
-                onResult(if (user != null) Result.Signed(user) else Result.Failed(task.exception?.message ?: "sign-in"))
+            // An anonymous user (progress analytics) is simply replaced by the account, and stays if this fails.
+            Cloud.afterAnonymousSignIn {
+                auth.signInWithCredential(credential).addOnCompleteListener(activity) { task ->
+                    val user = if (task.isSuccessful) task.result?.user else null
+                    onResult(if (user != null) Result.Signed(user) else Result.Failed(task.exception?.message ?: "sign-in"))
+                }
             }
         }
     }
 
     /** Asks for the Google account again (Firebase needs a recent sign-in to delete an account). */
     fun reauthenticate(activity: Activity, onResult: (Boolean) -> Unit) {
-        val user = Cloud.auth(activity)?.currentUser ?: return onResult(false)
+        val user = Cloud.user(activity) ?: return onResult(false)
         googleCredential(activity) { credential, _ ->
             if (credential == null) onResult(false)
             else user.reauthenticate(credential).addOnCompleteListener(activity) { onResult(it.isSuccessful) }

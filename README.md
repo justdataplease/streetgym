@@ -1,6 +1,6 @@
-# Street Gymnastics
+# Street Gym: Daily Calisthenics
 
-Dedicated Android app with 1,000 guided calisthenics workouts across ten levels, 40 belted skills and 181 movements in the current curriculum library. The ten-level curriculum and its supporting code are synchronized from the `sg-placement-points` worktree. The assigned daily workout is for an individual athlete.
+**Street Gym** (on Google Play "Street Gym: Daily Calisthenics"; code, package and folders keep the earlier name: `streetgymnastics`, `com.justdataplease.streetgym`) is a dedicated Android app with 1,000 guided calisthenics workouts across ten levels, 40 belted skills and 181 movements in the current curriculum library. The ten-level curriculum and its supporting code are synchronized from the `sg-placement-points` worktree. The assigned daily workout is for an individual athlete.
 
 Settings > Theme picks one of three looks, all free:
 - Concrete & Tape: light, the default.
@@ -11,7 +11,7 @@ Looks that were dropped open as the one they copied; Fresh Court falls back to t
 
 On first launch with no progress, three questions (push-ups, pull-ups, squats) suggest a start at Level 1 (day 1, 22 or 41), Level 2 or Level 3. The athlete can agree or start from scratch. Training, checked sets, timers and progress are kept on the phone. Pro can also save them to a Google account; that, and the leaderboard, appear only when a Firebase configuration is supplied (see [Free, Plus and Pro](docs/TIERS.md)).
 
-Training has three tabs: **Levels**; **My workouts** (days saved with the heart at the top right of their overview, and custom days built from every exercise in the program); and **Parks** (Plus: 23,512 bundled calisthenics parks on a map that opens on the athlete's location with the nearest parks in view, or as a list; search by city or park). The map is MapLibre with OpenFreeMap tiles, as in JustMaps: no API key and no per-view cost. Progress has **Skills**, **History** and **Leaderboard**.
+Training has three tabs: **Levels**; **My workouts** (days saved with the heart at the top right of their overview, and custom days built from every exercise in the program); and **Parks** (Plus: 73,303 bundled outdoor workout parks from OpenStreetMap on a map that opens on the athlete's location with the nearest parks in view, or as a list; search by city or park). The map is MapLibre with OpenFreeMap tiles, as in JustMaps: no API key and no per-view cost. Progress has **Skills**, **History** and **Leaderboard**.
 
 A day's overview and the workout's list view carry one safety line ("Keep 2–3 reps in reserve and stop for sharp joint pain. Safety notes ›") that opens the readiness and safety notes of the class.
 
@@ -19,7 +19,7 @@ A day's overview and the workout's list view carry one safety line ("Keep 2–3 
 
 ## Build and run
 
-From `C:\MyDrive\jdp\android-apps`, using Android Studio JBR and Android SDK 35/36:
+From `C:\MyDrive\jdp\android-apps`, using JDK 17+ (Android Studio JBR or `%USERPROFILE%\dev-tools\jdk21`) and Android SDK platform 36:
 
 ```powershell
 .\gradlew.bat :streetgymnastics:assembleDebug :streetgymnastics:assembleDebugAndroidTest :streetgymnastics:testDebugUnitTest :streetgymnastics:lintDebug
@@ -28,15 +28,27 @@ adb install -r streetgymnastics/app/build/outputs/apk/androidTest/debug/streetgy
 adb shell am instrument -w com.justdataplease.streetgym.debug.test/com.justdataplease.streetgym.TrainingInstrumentation
 ```
 
-The nested project also retains its standalone Gradle wrapper (`gradlew.bat assembleDebug` inside this folder); standalone output names use `app-debug.apk`. The standalone toolchain matches the suite: AGP 8.13.2, Kotlin 2.3.21 and Gradle 8.14.6. Android 6.0/API 23 minimum, compile/target SDK 35. Production application ID: `com.justdataplease.streetgym`; debug adds `.debug`. [Latest signed development APK](https://github.com/justdataplease/streetgym/releases/latest). The GitHub downloads use the `.debug` package and Google test ad IDs; they are not production/Play builds.
+The nested project also retains its standalone Gradle wrapper (`gradlew.bat assembleDebug` inside this folder); standalone output names use `app-debug.apk`. The standalone toolchain matches the suite: AGP 8.13.2, Kotlin 2.3.21 and Gradle 8.14.6. Android 6.0/API 23 minimum, compile/target SDK 36 (Android 16: predictive back through `OnBackInvokedCallback`, edge-to-edge insets). Production application ID: `com.justdataplease.streetgym`; debug adds `.debug`. [Latest signed development APK](https://github.com/justdataplease/streetgym/releases/latest). The GitHub downloads use the `.debug` package and Google test ad IDs; they are not production/Play builds.
+
+### Release build
+
+`.\gradlew.bat :streetgymnastics:bundleRelease :streetgymnastics:assembleRelease` signs with the Play upload key when the git-ignored `streetgymnastics/keystore.properties` (`storeFile`, `storePassword`, `keyAlias`, `keyPassword`; `storeFile` is relative to this folder) and `streetgymnastics-release.keystore` are present. Without them the release is unsigned, so CI still builds. The key is backed up outside the Google Drive mirror, in `C:\Users\jason\keys\streetgymnastics`; losing it means a key-reset request to Google. Upload certificate SHA-256: `64:1A:1E:96:22:5B:85:0B:C0:A0:A8:E1:20:AB:94:B1:DA:36:43:C6:84:09:50:58:91:73:3E:7B:FE:6D:12:EB`. A release also needs the ignored `app/src/release/res/values/firebase.xml`. Check the bundle with `python -I tools\play\check_package.py <aab>` from the suite root.
 
 ## Ads and privacy
 
-Google native cards appear below progress on Today and at the end of workout sections. It uses the current theme, 24 dp corners, an Ad label and the SDK AdChoices control. After at least ten minutes of foreground use, an available full-screen native ad may appear at a section completion or when leaving a workout. Close is available immediately. Active independent timers, stopwatches and ringing alerts defer the break. Training works offline; ads and configured account sign-in use the network. AdMob can process device identifiers, IP address and ad interactions; the integration does not send workout content or progress. Settings > Ad privacy opens Google's available privacy choices. Consent is handled by UMP before ad requests.
+Ads are for Free only; Plus and Pro have none. One Google native card at most per screen (the current theme, 24 dp corners, an Ad label and the SDK AdChoices control), in these places:
+- **Today:** below the progress card.
+- **Training › a level's class list:** after the first three classes.
+- **Class overview:** below the exercises.
+- **Workout (list view):** after the last section, above Finish. Focus view has none.
+- **Progress › Skills:** after the fourth skill ladder (or the last, when a filter shows fewer).
+- **Progress › History:** below the totals, above the level breakdown. Finishing a class lands on Progress, so its card is the class-finished one.
 
-Debug builds always use Google demo IDs. Release builds read `admob.streetgymnastics.appId` and `admob.streetgymnastics.nativeId`, falling back to the existing Toolbox `admob.appId` / `admob.nativeId` settings, then demo IDs if neither exists. An optional `admob.streetgymnastics.fullscreenNativeId` overrides the full-screen native placement; otherwise it uses the same native unit. Canonical ad code lives in the suite's `shared/nativeads`; run `tools/sync_native_ads.py` after changes. Copies inside the app keep standalone exports self-contained.
+A full-screen AdMob interstitial may appear at a natural break, a finished section or leaving a workout, at most once every 5 minutes of foreground use (`AdBreakClock.GAP_MS`, `AdBreakPolicy`). Never on app open, mid-set, while a rest, timer, stopwatch or alarm runs, or over the paywall or the consent form. Background time does not count and missed breaks don't stack. Timer, Parks and the class editor have no ads. Training works offline; ads and configured account sign-in use the network. AdMob can process device identifiers, IP address and ad interactions; the integration does not send workout content or progress. Settings > Ad privacy opens Google's available privacy choices. Consent is handled by UMP before ad requests.
 
-Free has Levels 1–3, ads and 3 saved days. **Plus** (one payment, requested at 9.99) unlocks Levels 4–5, removes every placement, and adds 30 saved and custom days, 3 lists of their own in My workouts with 10 days each (beside Favorites, where every saved day goes), level renaming, Parks and a view of the leaderboard. **Pro** (a yearly subscription, requested at 19.99) adds Levels 6–10, 300 days, 10 lists of 30, Sign in with Google, cloud progress and a place on the leaderboard; its offer says the subscription pays for the servers and database. Today, Training and the workout overview show the applicable paywall: Plus from Level 4 and Pro from Level 6. Settings shows both offers with Play's prices and Restore purchases; ownership stays cached offline. **Play Console products, the Firebase project and live checkout tests remain required**; see [Free, Plus and Pro](docs/TIERS.md). Debug and GitHub builds can't buy, so they get Pro; Settings > Simulate tier (debug only) tests Free and Plus.
+Debug builds always use Google demo IDs. Release builds read Street Gym's own AdMob app (2026-10-30) from the suite's `gradle.properties`: `admob.streetgymnastics.appId`, `admob.streetgymnastics.nativeId` and `admob.streetgymnastics.interstitialId`. They never fall back to Toolbox's `admob.*` IDs; a build without them (standalone CI) uses demo IDs. Canonical native ad code lives in the suite's `shared/nativeads`; run `tools/sync_native_ads.py` after changes. Copies inside the app keep standalone exports self-contained.
+
+Free has Levels 1–3, ads and 3 saved days. **Plus** (one payment, 14.99 on Play) unlocks Levels 4–5, removes every placement, and adds 30 saved and custom days, 3 lists of their own in My workouts with 10 days each (beside Favorites, where every saved day goes), level renaming, Parks and a view of the leaderboard. **Pro** (a yearly subscription, 29.99 on Play) adds Levels 6–10, 300 days, 10 lists of 30, Sign in with Google, cloud progress and a place on the leaderboard; its offer says the subscription pays for the servers and database. Today, Training and the workout overview show the applicable paywall: Plus from Level 4 and Pro from Level 6. Settings shows both offers with Play's prices and Restore purchases; ownership stays cached offline. **Play Console products, the Firebase project and live checkout tests remain required**; see [Free, Plus and Pro](docs/TIERS.md). Debug and GitHub builds can't buy, so they get Pro; Settings > Simulate tier (debug only) tests Free and Plus.
 
 ## Timer tools
 
@@ -52,7 +64,7 @@ Firebase is optional. Add ignored `app/src/debug/res/values/firebase.xml` or `ap
 
 ## Content checks
 
-From this folder, run `python tools/build_curriculum.py` (it writes all 1,000 classes from the plan in `docs/CURRICULUM_PLAN.md`), then `tools/assemble_curriculum.ps1`, `tools/validate_curriculum.ps1`, `tools/validate_animations.ps1`, `python tools/validate_morning_class.py`, `python tools/validate_progressions.py` and `python tools/validate_progression_motions.py` (the Python checks need Pillow), and copy `generated/curriculum_v2.json` to `app/src/main/assets/curriculum.json`; `tools/package_dist.ps1` runs the whole chain. See `docs/CURRICULUM_METHOD.md` for how the classes are made and `docs/CURRICULUM_PLAN.md` for the program itself.
+From this folder, run `python tools/build_curriculum.py` (it writes all 1,000 classes from the plan in `docs/CURRICULUM_PLAN.md`), then `tools/assemble_curriculum.ps1` (every class is authored for Street Gym; the catalog carries no other app's ids or provenance fields), `tools/validate_curriculum.ps1`, `tools/validate_animations.ps1`, `python tools/validate_morning_class.py`, `python tools/validate_progressions.py` and `python tools/validate_progression_motions.py` (the Python checks need Pillow), and copy `generated/curriculum_v2.json` to `app/src/main/assets/curriculum.json`; `tools/package_dist.ps1` runs the whole chain. See `docs/CURRICULUM_METHOD.md` for how the classes are made and `docs/CURRICULUM_PLAN.md` for the program itself.
 
 Exercise cards show the animation followed directly by the exercise instructions and sets. Animations play automatically; the Pause / Slow motion toolbar and repeated movement-guide caption have been removed.
 

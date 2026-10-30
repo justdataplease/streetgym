@@ -25,11 +25,12 @@ enum class Tier(val savedDays: Int, val workoutLists: Int, val daysPerList: Int)
 
 /**
  * The tier from cached ownership. Debug and GitHub builds can't buy, so they get Pro unless the tester simulates a
- * lower tier; ownership still counts on top. Release builds have no override.
+ * lower tier; ownership still counts on top. Release builds have no override, except a running Play review code
+ * ([review], see [ReviewAccess]), which gives at least Pro in every build.
  */
-fun tierFor(plusOwned: Boolean, proActive: Boolean, debug: Boolean, simulated: Tier?): Tier {
+fun tierFor(plusOwned: Boolean, proActive: Boolean, debug: Boolean, simulated: Tier?, review: Boolean = false): Tier {
     val owned = when { proActive -> Tier.PRO; plusOwned -> Tier.PLUS; else -> Tier.FREE }
-    return maxOf(owned, if (debug) simulated ?: Tier.PRO else Tier.FREE)
+    return maxOf(owned, if (debug) simulated ?: Tier.PRO else Tier.FREE, if (review) Tier.PRO else Tier.FREE)
 }
 
 /** Saved ready days and custom days share the tier's limit, and lists have their own; nothing is removed when a tier ends. */

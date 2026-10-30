@@ -1,7 +1,6 @@
 package com.justdataplease.streetgym.widget
 
 import com.justdataplease.streetgym.data.CurriculumJsonParser
-import com.justdataplease.streetgym.data.model.ContentOrigin
 import com.justdataplease.streetgym.data.model.LocalizedText
 import com.justdataplease.streetgym.data.model.TrainingExercise
 import com.justdataplease.streetgym.data.model.TrainingProgram
@@ -22,7 +21,7 @@ class NextClassCardTest {
     private fun program(title: String, steps: List<TrainingExercise>, dayType: String? = null, level: Int = 4, number: Int = 20) =
         TrainingProgram(
             id = "sg:l%02d:p%04d".format(level, number), number = number, levelNumber = level, name = LocalizedText(title),
-            description = LocalizedText.EMPTY, origin = ContentOrigin.NEW_LEVEL, hasDetails = true, proPlaceholder = false,
+            description = LocalizedText.EMPTY, hasDetails = true, proPlaceholder = false,
             week = null, day = null, estimatedMinutes = 47, exercises = steps, dayType = dayType,
         )
 

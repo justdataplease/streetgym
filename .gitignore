@@ -27,6 +27,11 @@ __pycache__/
 *firebase-adminsdk*.json
 *service-account*.json
 
+# The Play upload key and its passwords (backed up outside the Drive mirror; see README, "Release build").
+*.keystore
+*.jks
+keystore.properties
+
 # Optional per-developer Firebase client configuration (see README "Optional sign-in").
 app/src/*/res/values/firebase.xml
 google-services.json

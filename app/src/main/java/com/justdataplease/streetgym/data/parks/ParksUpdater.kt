@@ -9,7 +9,7 @@ import java.util.zip.GZIPInputStream
 object ParksPolicy {
     /** How often Parks asks whether the published file changed (it changes about four times a year). */
     const val CHECK_MILLIS = 7 * 24 * 60 * 60_000L
-    /** The largest download accepted, unpacked: the real file is about 2 MB. */
+    /** The largest download accepted, unpacked: the real file is about 5 MB. */
     const val MAX_BYTES = 30 * 1024 * 1024
 
     fun dueForCheck(checkedAt: Long, now: Long): Boolean = now - checkedAt !in 0 until CHECK_MILLIS

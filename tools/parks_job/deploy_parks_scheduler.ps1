@@ -50,7 +50,7 @@ try {
 } finally {
     Pop-Location
 }
-& $Gcloud run jobs deploy $Job --image=$Image --region=$Region --service-account=$ServiceAccount --task-timeout=30m --memory=512Mi --cpu=1 --max-retries=1 --set-env-vars="PARKS_BUCKET=$Bucket" @Flags
+& $Gcloud run jobs deploy $Job --image=$Image --region=$Region --service-account=$ServiceAccount --task-timeout=3h --memory=1Gi --cpu=1 --max-retries=1 --set-env-vars="PARKS_BUCKET=$Bucket" @Flags
 & $Gcloud run jobs add-iam-policy-binding $Job --region=$Region --member="serviceAccount:$ServiceAccount" --role="roles/run.invoker" @Flags
 
 $Uri = "https://run.googleapis.com/v2/projects/$Project/locations/$Region/jobs/$Job`:run"

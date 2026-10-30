@@ -18,6 +18,7 @@ import com.justdataplease.streetgym.account.CloudSync
 import com.justdataplease.streetgym.account.GoogleAccount
 import com.justdataplease.streetgym.account.Profile
 import com.justdataplease.streetgym.account.Profiles
+import com.justdataplease.streetgym.analytics.Analytics
 import com.justdataplease.streetgym.billing.Entitlement
 import com.justdataplease.streetgym.leaderboard.Countries
 import com.justdataplease.streetgym.leaderboard.Usernames
@@ -52,7 +53,8 @@ class AccountSettingsView(
 
     private fun render() {
         removeAllViews()
-        val user = auth?.currentUser
+        // The Google account only: the anonymous user progress analytics signs in with is no account.
+        val user = Cloud.user(activity)
         addView(context.titleText(context.getString(R.string.account_title), 20f))
         if (!Entitlement.tier(activity).account) {
             // Only Pro signs in; an account from a lapsed Pro stays signed in, but nothing syncs.
@@ -164,8 +166,9 @@ class AccountSettingsView(
     }
 
     /**
-     * Play requires in-app deletion: cloud progress, username, profile and score go, then the Firebase account. The
-     * profile is read again first, so a username changed on another device is the one released.
+     * Play requires in-app deletion: cloud progress, username, profile and score go, then the Firebase account, and
+     * progress analytics drops the account's uid from this install's record. The profile is read again first, so a
+     * username changed on another device is the one released.
      */
     private fun confirmDelete(uid: String) {
         AlertDialog.Builder(activity).setTitle(R.string.account_delete_title).setMessage(R.string.account_delete_message)
@@ -183,9 +186,10 @@ class AccountSettingsView(
                             delete(db.document("users/$uid"))
                         }.commit().addOnCompleteListener(activity) { cleared ->
                             if (!cleared.isSuccessful) return@addOnCompleteListener failed()
-                            auth?.currentUser?.delete()?.addOnCompleteListener(activity) { deleted ->
+                            Cloud.user(activity)?.delete()?.addOnCompleteListener(activity) { deleted ->
                                 if (!deleted.isSuccessful) return@addOnCompleteListener failed()
                                 store.clear()
+                                Analytics.get(activity).accountDeleted()
                                 Toast.makeText(activity, R.string.account_deleted, Toast.LENGTH_LONG).show()
                                 render()
                             }

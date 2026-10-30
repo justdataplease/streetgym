@@ -1,7 +1,5 @@
 package com.justdataplease.streetgym.data
 
-import com.justdataplease.streetgym.data.model.CatalogSource
-import com.justdataplease.streetgym.data.model.ContentOrigin
 import com.justdataplease.streetgym.data.model.CurriculumCatalog
 import com.justdataplease.streetgym.data.model.EasierOption
 import com.justdataplease.streetgym.data.model.LocalizedText
@@ -32,27 +30,13 @@ object CurriculumJsonParser {
     fun parse(json: String): CurriculumCatalog = parse(JSONObject(json))
 
     fun parse(root: JSONObject): CurriculumCatalog {
-        val sourceObject = root.optJSONObject("source_baseline")
-            ?: root.optJSONObject("source")
-            ?: root.optJSONObject("metadata")
-        val provenanceObject = root.optJSONObject("catalog_provenance")
         val movementLibrary = parseMovementLibrary(root.optJSONArray("movement_library"))
 
         return CurriculumCatalog(
             schemaVersion = root.optValueAsString("schema_version") ?: "1",
-            source = sourceObject?.let { parseSource(it, provenanceObject) },
             levels = root.optJSONArray("levels").mapObjects { parseLevel(it, movementLibrary) },
         )
     }
-
-    private fun parseSource(json: JSONObject, provenance: JSONObject?): CatalogSource = CatalogSource(
-        sourceApkSha256 = json.optValueAsString("apk_sha256")
-            ?: json.optValueAsString("source_apk_sha256")
-            ?: json.optValueAsString("sha256"),
-        generatedAt = json.optValueAsString("generated_at"),
-        disclaimer = provenance?.optLocalized("notice")?.resolve()?.ifBlank { null }
-            ?: json.optLocalized("disclaimer").resolve().ifBlank { null },
-    )
 
     private fun parseMovementLibrary(array: JSONArray?): Map<String, JSONObject> = buildMap {
         if (array == null) return@buildMap
@@ -124,7 +108,6 @@ object CurriculumJsonParser {
                 json.optLocalized("name", fallback = "Workout $number"),
             ),
             description = json.optLocalized("description"),
-            origin = ContentOrigin.fromWireValue(json.optOriginValue()),
             hasDetails = mainExercises.isNotEmpty(),
             proPlaceholder = legacy?.optBoolean("pro", false) == true && mainExercises.isEmpty(),
             week = schedule?.optIntOrNull("week")
@@ -372,11 +355,6 @@ object CurriculumJsonParser {
 
     private fun String.humanize(): String = split('_')
         .joinToString(" ") { token -> token.replaceFirstChar { it.titlecase() } }
-
-    private fun JSONObject.optOriginValue(): String? = when (val origin = opt("origin")) {
-        is JSONObject -> origin.optValueAsString("type")
-        else -> origin?.takeUnless { it == JSONObject.NULL }?.toString()
-    }
 
     private fun JSONObject.optLocalized(key: String, fallback: String? = null): LocalizedText {
         return when (val value = opt(key)) {
