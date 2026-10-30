@@ -119,6 +119,9 @@ class FocusWorkoutView(
         fun setDoneAmount(key: String, amount: Int?)
         /** How a set is logged now, done as planned or as its easier option. */
         fun measure(step: WorkoutStep): SetMeasure
+        /** Sets of switched-off skills left out of this run (review 12), and doing them anyway. */
+        fun leftOut(): Int = 0
+        fun includeLeftOut() {}
     }
 
     private enum class Mode { SET, REST, SUMMARY }
@@ -409,6 +412,11 @@ class FocusWorkoutView(
             if (missed > 0) addView(context.bodyText(
                 resources.getQuantityString(R.plurals.focus_summary_skipped, missed, missed), 15f,
             ).apply { gravity = Gravity.CENTER })
+            host.leftOut().takeIf { it > 0 }?.let { out ->
+                addView(context.bodyText(resources.getQuantityString(R.plurals.focus_switched_off, out, out), 15f).apply {
+                    gravity = Gravity.CENTER
+                })
+            }
         }
         val controls = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
@@ -423,6 +431,9 @@ class FocusWorkoutView(
                     skipped.clear()
                     render()
                 }, LinearLayout.LayoutParams(0, WRAP, 1f).apply { marginStart = dp(8) })
+            }, topDp = 8)
+            if (host.leftOut() > 0) addWithMargins(context.secondaryButton(context.getString(R.string.focus_do_switched_off)) {
+                host.includeLeftOut()
             }, topDp = 8)
         }
         val sets = context.getString(R.string.active_sets_progress, done, flow.size)

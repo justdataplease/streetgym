@@ -69,7 +69,8 @@ internal object NextClassState {
         val ordered = NextClass.ordered(catalog)
         val progress = SharedPreferencesProgressRepository(context)
         val completed = progress.completedProgramIds()
-        val next = NextClass.of(ordered, completed, progress.levelReplay()) ?: return NextClassCard.allDone(ordered.lastOrNull())
+        val passed = NextClass.passed(ordered, completed, AppSettings(context).skillSwitches)
+        val next = NextClass.of(ordered, passed, progress.levelReplay()) ?: return NextClassCard.allDone(ordered.lastOrNull())
         val locked = LevelAccess.locked(next.levelNumber, Entitlement.tier(context))
         // A new athlete first answers the placement on Today, so the tap goes there instead of to Level 1, class 1.
         val placement = Placement.shouldAsk(AppSettings(context).placementDone, completed.size, progress.activeWorkout() != null)

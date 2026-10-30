@@ -23,6 +23,8 @@ import com.justdataplease.streetgym.data.skills.SkillLevel
 import com.justdataplease.streetgym.data.skills.SkillProgress
 import com.justdataplease.streetgym.data.skills.SkillStandard
 import com.justdataplease.streetgym.data.skills.SkillStatus
+import com.justdataplease.streetgym.data.skills.SkillSwitches
+import com.justdataplease.streetgym.data.skills.trained
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.Locale
@@ -76,11 +78,14 @@ fun Context.skillsContent(
     group: SkillGroup?,
     onGroup: (SkillGroup?) -> Unit,
     onOpen: (SkillStatus, SkillFamily, List<SkillStatus>) -> Unit,
+    switches: SkillSwitches = SkillSwitches(),
 ): LinearLayout = LinearLayout(this).apply {
     orientation = LinearLayout.VERTICAL
-    val closest = progress.closest(3)
+    // The score, the closest skills and the level count are out of the skills the athlete trains (review 12).
+    val trained = progress.trained(switches)
+    val closest = trained.closest(3)
     val tier = Entitlement.tier(context)
-    val overall = progress.overall
+    val overall = trained.overall
     val faint = blendColor(Color.WHITE, AppColors.PRIMARY_DARK, 0.25f)
 
     // How levels are earned, one tap away above the score.
@@ -118,6 +123,8 @@ fun Context.skillsContent(
                 setTextColor(blendColor(Color.WHITE, AppColors.PRIMARY_DARK, 0.3f))
             }, width = LinearLayout.LayoutParams.WRAP_CONTENT, leftDp = 8, bottomDp = 6)
         }, topDp = 4)
+        if (switches.any) addView(bodyText(getString(R.string.skills_score_trained, scoreText(progress.overall.score),
+            scoreText(OverallScore.MAX)), 12f).apply { setTextColor(blendColor(Color.WHITE, AppColors.PRIMARY_DARK, 0.3f)) })
         val next = tier.next
         addView(bodyText(if (next == null) getString(R.string.skills_tier_top, tierName(tier))
             else getString(R.string.skills_tier_next, tierName(tier), scoreText(next.floor - overall.score), tierName(next)), 14f).apply {
@@ -153,7 +160,7 @@ fun Context.skillsContent(
                 typeface = Typeface.DEFAULT_BOLD
             }, topDp = 10)
         }
-        addWithMargins(bodyText(getString(R.string.skills_levels, progress.levels, progress.totalLevels), 12f).apply {
+        addWithMargins(bodyText(getString(R.string.skills_levels, trained.levels, trained.totalLevels), 12f).apply {
             setTextColor(faint)
         }, topDp = 6)
         if (markedComplete > 0) addView(bodyText(getString(R.string.skills_marked_complete, markedComplete), 12f).apply { setTextColor(faint) })
@@ -195,7 +202,8 @@ fun Context.skillsContent(
             addView(LinearLayout(context).apply {
                 orientation = LinearLayout.HORIZONTAL
                 statuses.forEach { status ->
-                    addWithMargins(skillCell(status, lockFor(status, tier)) { onOpen(status, family, statuses) },
+                    val off = switches.isRungOff(family.spec.id, status.skill.rung)
+                    addWithMargins(skillCell(status, lockFor(status, tier), off) { onOpen(status, family, statuses) },
                         width = dp(86), rightDp = 8)
                 }
             })
@@ -208,7 +216,8 @@ fun Context.skillsContent(
  * what the next level takes, every level's sets at its target, its value in the overall score and where the program
  * teaches it.
  */
-fun Context.showSkillSheet(status: SkillStatus, family: SkillFamily, statuses: List<SkillStatus>, overall: OverallScore) {
+fun Context.showSkillSheet(status: SkillStatus, family: SkillFamily, statuses: List<SkillStatus>, overall: OverallScore,
+    off: Boolean = false) {
     val skill = status.skill
     val standard = skill.standard
     val lock = lockFor(status, Entitlement.tier(this))
@@ -228,6 +237,7 @@ fun Context.showSkillSheet(status: SkillStatus, family: SkillFamily, statuses: L
                 lock?.let { addWithMargins(lockBadge(partOf(it)), width = LinearLayout.LayoutParams.WRAP_CONTENT, topDp = 4) }
             }, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply { marginStart = dp(12) })
         }, topDp = 10)
+        if (off) addWithMargins(bodyText(getString(R.string.skills_switched_off_note), 13f).apply { setTextColor(AppColors.ACTION) }, topDp = 8)
         addWithMargins(detailRow(getString(R.string.skills_difficulty), difficultyName(skill.difficulty)), topDp = 10)
         addView(detailRow(getString(R.string.skills_level), levelName(status.level)))
         status.carriedBy?.let { addView(detailRow(getString(R.string.skills_held_through), it.name)) }
@@ -341,13 +351,19 @@ private fun Context.closestRow(status: SkillStatus, onClick: () -> Unit): View =
     if (status.level > SkillLevel.NONE) addView(titleText(levelName(status.level), 14f).apply { setTextColor(AppColors.PRIMARY) })
 }
 
-private fun Context.skillCell(status: SkillStatus, lock: Tier?, onClick: () -> Unit): View = LinearLayout(this).apply {
+private fun Context.skillCell(status: SkillStatus, lock: Tier?, off: Boolean, onClick: () -> Unit): View = LinearLayout(this).apply {
     orientation = LinearLayout.VERTICAL
     gravity = Gravity.CENTER_HORIZONTAL
     isClickable = true
     isFocusable = true
     background = tappable(Color.TRANSPARENT, dp(14).toFloat())
-    val state = if (lock != null) partOf(lock) else levelName(status.level)
+    // A switched-off skill (review 12) is greyed and says so; its level stays on its page.
+    if (off) alpha = 0.4f
+    val state = when {
+        off -> getString(R.string.skills_switched_off)
+        lock != null -> partOf(lock)
+        else -> levelName(status.level)
+    }
     contentDescription = medalDescription(status, state)
     setOnClickListener { onClick() }
     addView(skillMedal(status, 78), LinearLayout.LayoutParams(dp(86), medalHeight(78)))
@@ -360,10 +376,10 @@ private fun Context.skillCell(status: SkillStatus, lock: Tier?, onClick: () -> U
         minLines = 2
         ellipsize = TextUtils.TruncateAt.END
     }, topDp = 4)
-    if (status.next != null && lock == null) {
+    if (status.next != null && lock == null && !off) {
         addWithMargins(horizontalProgress(status.progress), width = dp(70), height = dp(4), topDp = 4)
     }
-    if (lock != null) {
+    if (lock != null && !off) {
         addWithMargins(lockBadge(getString(if (lock == Tier.PRO) R.string.tier_pro else R.string.tier_plus)), width = LinearLayout.LayoutParams.WRAP_CONTENT, topDp = 4)
     } else {
         addWithMargins(bodyText(state, 11f).apply {

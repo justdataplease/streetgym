@@ -160,6 +160,9 @@ class SkillBook private constructor(
         movementId?.takeIf { it in movements }
             ?: SkillCurriculumReader.authenticMovement(name, description)?.takeIf { it in movements }
 
+    /** A movement's name, for the skill switches' steps. */
+    fun nameOf(movementId: String): String? = movements[movementId]?.name
+
     /** The skill with [id], if it is a rung of a ladder. */
     fun skill(id: String): Skill? = skills[id]
 

@@ -2,6 +2,7 @@ package com.justdataplease.streetgym.ui
 
 import android.content.Context
 import com.justdataplease.streetgym.data.progress.Intensity
+import com.justdataplease.streetgym.data.skills.SkillSwitches
 import java.util.Locale
 import java.util.TimeZone
 
@@ -62,11 +63,17 @@ class AppSettings(context: Context) {
         get() = preferences.getBoolean(KEY_INSPECT_ALL_DAYS, false)
         set(value) = preferences.edit().putBoolean(KEY_INSPECT_ALL_DAYS, value).apply()
 
+    /** The skills the athlete switched off, or off from a rung on ([SkillSwitches]); review 12. */
+    var skillSwitches: SkillSwitches
+        get() = SkillSwitches.parse(preferences.getString(KEY_SKILL_SWITCHES, null))
+        set(value) = preferences.edit().putString(KEY_SKILL_SWITCHES, SkillSwitches.format(value).ifEmpty { null }).apply()
+
     fun selectedLocale(): Locale = Locale.ENGLISH
 
     companion object {
         private const val KEY_DEVELOPER_UNLOCKED = "developer_unlocked"
         private const val KEY_INSPECT_ALL_DAYS = "inspect_all_days"
+        private const val KEY_SKILL_SWITCHES = "skill_switches"
         private const val KEY_HISTORY_VIEW = "history_view"
         private const val PREFERENCES_NAME = "streetgym_settings"
         private const val KEY_THEME = "theme"

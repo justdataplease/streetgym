@@ -44,6 +44,9 @@ class WorkoutFlow(val steps: List<WorkoutStep>) {
 
     operator fun get(index: Int): WorkoutStep = steps[index]
 
+    /** The same class without the sets in [keys] (switched off, review 12); every other key stays as the full class saves it. */
+    fun without(keys: Set<String>): WorkoutFlow = if (keys.isEmpty()) this else WorkoutFlow(steps.filter { it.key !in keys })
+
     fun keys(section: String): List<String> = steps.filter { it.section == section }.map(WorkoutStep::key)
 
     fun completedCount(completed: Set<String>): Int = keys.count { it in completed }

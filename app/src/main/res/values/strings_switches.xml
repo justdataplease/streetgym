@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Settings: the skill switches (review 12). -->
+    <string name="switches_section">Skills in your classes</string>
+    <string name="switches_intro">Switch off a skill you don\'t want to train, like the handstand or the human flag. Its exercises stay in your classes, greyed out, and leave your skill progress. Tap a skill to keep its first steps and switch off only the harder ones.</string>
+    <string name="switches_all_on">All steps on</string>
+    <string name="switches_off">Switched off</string>
+    <string name="switches_off_basics">Switched off · %1$s stays</string>
+    <string name="switches_up_to">Up to %1$s</string>
+    <string name="switches_family_intro">Switch off a step and every harder one leaves your classes. Switch one back on and every easier one comes back too.</string>
+    <string name="switches_rung">Step %1$d</string>
+    <string name="switches_always_on">Always on: a basic</string>
+    <string name="switches_steps">On the way: %1$s</string>
+    <string name="switches_done">Done</string>
+
+    <!-- In the classes. -->
+    <string name="switch_off_badge">Switched off · %1$s</string>
+    <string name="switch_off_title">%1$s is switched off</string>
+    <string name="switch_off_message">You\'ve switched off the %1$s skill, so this isn\'t part of your workouts or skill progress. Do you want to continue?</string>
+    <string name="switch_off_continue">Continue</string>
+    <string name="switch_off_class">Every exercise in this class belongs to a skill you switched off, so it counts as passed and you move straight on. You can still do it.</string>
+    <string name="switch_off_day">Switched off</string>
+    <plurals name="focus_switched_off">
+        <item quantity="one">%d set of a switched-off skill left out</item>
+        <item quantity="other">%d sets of switched-off skills left out</item>
+    </plurals>
+    <string name="focus_do_switched_off">Do them anyway</string>
+
+    <!-- On the Skills screen. -->
+    <string name="skills_switched_off">Switched off</string>
+    <string name="skills_switched_off_note">Switched off in Settings: it stays out of your score until you switch it back on.</string>
+    <string name="skills_score_trained">Out of the skills you train. On the leaderboard: %1$s of %2$s.</string>
+</resources>

@@ -20,6 +20,8 @@ class ProgramListAdapter(
     private val assignedProgramId: String?,
     private val locale: Locale,
     private val exams: ExamLog = ExamLog(),
+    /** Classes the skill switches leave with nothing to train: passed, shown greyed (review 12). */
+    private val switchedOffIds: Set<String> = emptySet(),
 ) : BaseAdapter() {
     override fun getCount(): Int = programs.size
 
@@ -81,6 +83,7 @@ class ProgramListAdapter(
             val name = context.displayName(program, locale)
             val completed = program.id in completedIds
             val assigned = program.id == assignedProgramId
+            val off = !completed && program.id in switchedOffIds
             val unlocked = completed || assigned
             val programMeta = context.programMeta(program)
             number.text = program.number.toString()
@@ -99,12 +102,15 @@ class ProgramListAdapter(
             }
             done.visibility = if (completed) View.VISIBLE else View.GONE
             next.visibility = if (!completed && assigned) View.VISIBLE else View.GONE
-            later.visibility = if (!unlocked) View.VISIBLE else View.GONE
+            later.visibility = if (!unlocked || off) View.VISIBLE else View.GONE
+            later.text = context.getString(if (off) R.string.switch_off_day else R.string.locked_later).uppercase()
+            row.alpha = if (off) 0.5f else 1f
             row.contentDescription = buildString {
                 append(name)
                 if (unlocked && programMeta.isNotBlank()) append(", ").append(programMeta)
                 append(", ").append(context.getString(when {
                     completed -> R.string.completed
+                    off -> R.string.switch_off_day
                     assigned -> R.string.assigned_next
                     else -> R.string.locked_later
                 }))

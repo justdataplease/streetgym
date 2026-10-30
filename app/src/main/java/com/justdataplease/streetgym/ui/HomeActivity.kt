@@ -110,6 +110,10 @@ import com.justdataplease.streetgym.data.skills.SkillBook
 import com.justdataplease.streetgym.data.skills.SkillCurriculumReader
 import com.justdataplease.streetgym.data.skills.SkillGroup
 import com.justdataplease.streetgym.data.skills.SkillProgress
+import com.justdataplease.streetgym.data.skills.SkillFamilySpec
+import com.justdataplease.streetgym.data.skills.SkillSwitches
+import com.justdataplease.streetgym.data.skills.switchedOff
+import com.justdataplease.streetgym.data.skills.trained
 import com.justdataplease.streetgym.widget.NextClassWidget
 import java.text.DateFormat
 import java.text.NumberFormat
@@ -1045,7 +1049,7 @@ open class HomeActivity : Activity() {
     private fun renderLevels() {
         val catalog = catalog ?: return
         val locale = uiLocale()
-        val completed = progressRepository.completedProgramIds()
+        val completed = passedIds()
         val page = verticalPage()
         page.addWithMargins(segmentedSwitch(listOf(getString(R.string.training_tab_levels),
             getString(R.string.training_tab_workouts), getString(R.string.training_tab_parks)), trainingTab) { index ->
@@ -1661,6 +1665,8 @@ open class HomeActivity : Activity() {
         val level = catalog?.levels?.firstOrNull { it.number == levelNumber } ?: return
         val locale = uiLocale()
         val completed = progressRepository.completedProgramIds()
+        // Classes the skill switches leave with nothing to train count as passed, greyed in the list.
+        val switchedOff = passedIds() - completed
         val container = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         val summary = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
@@ -1669,7 +1675,7 @@ open class HomeActivity : Activity() {
             level.description.resolve(locale).takeIf(String::isNotBlank)?.let {
                 addWithMargins(bodyText(it, 14f), topDp = 4)
             }
-            val count = level.programs.count { it.id in completed }
+            val count = level.programs.count { it.id in completed || it.id in switchedOff }
             addWithMargins(
                 bodyText(getString(R.string.level_progress_format, count, level.programs.size), 13f),
                 topDp = 8,
@@ -1711,7 +1717,7 @@ open class HomeActivity : Activity() {
         val programs = level.programs.sortedBy { it.number }
         val list = ListView(this).apply {
             addHeaderView(summary, null, false)
-            adapter = ProgramListAdapter(context, programs, completed, assigned?.id, locale, progressRepository.examLog())
+            adapter = ProgramListAdapter(context, programs, completed, assigned?.id, locale, progressRepository.examLog(), switchedOff)
             divider = ColorDrawable(Color.TRANSPARENT)
             dividerHeight = 0
             clipToPadding = false
@@ -1804,12 +1810,18 @@ open class HomeActivity : Activity() {
         page.addWithMargins(hero, bottomDp = 14)
         if (program.isExam) page.addWithMargins(examCard(program, locale), bottomDp = 14)
 
+        if (!custom && program.switchedOff(settings.skillSwitches) && program.id !in progressRepository.completedProgramIds()) {
+            page.addWithMargins(card().apply {
+                background = roundedDrawable(AppColors.INFO_SURFACE, dp(24).toFloat())
+                addView(bodyText(getString(R.string.switch_off_class), 14f))
+            }, bottomDp = 14)
+        }
         val sections = sections(program)
         if (sections.all { it.exercises.isEmpty() }) {
             page.addWithMargins(card().apply { addView(bodyText(getString(R.string.no_exercises))) }, bottomDp = 14)
         } else {
             sections.filter { it.exercises.isNotEmpty() }.forEach { section ->
-                addExerciseSection(page, section, locale)
+                addExerciseSection(page, program, section, locale)
             }
             if (inspecting) {
                 page.addWithMargins(bodyText(getString(R.string.inspect_only_note), 14f), topDp = 8)
@@ -1868,6 +1880,7 @@ open class HomeActivity : Activity() {
 
     private fun addExerciseSection(
         page: LinearLayout,
+        program: TrainingProgram,
         section: ExerciseSection,
         locale: Locale,
     ) {
@@ -1897,6 +1910,11 @@ open class HomeActivity : Activity() {
                 )
             }
             exerciseCard.addView(heading)
+            leftOutBy(program, section.key, exercise, index)?.let { family ->
+                exerciseCard.alpha = 0.45f
+                exerciseCard.addWithMargins(badge(getString(R.string.switch_off_badge, family.name), AppColors.TEXT_SECONDARY),
+                    width = ViewGroup.LayoutParams.WRAP_CONTENT, topDp = 8)
+            }
             exerciseCard.addWithMargins(
                 exerciseAnimation(exercise, exerciseName, locale),
                 height = ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -1950,6 +1968,7 @@ open class HomeActivity : Activity() {
             return
         }
         val current = progressRepository.activeWorkout()
+        if (current?.programId != program.id) offAllowed.remove(program.id)
         if (current != null && (current.programId != program.id || current.repeat != repeat)) {
             AlertDialog.Builder(this)
                 .setTitle(R.string.replace_workout_title)
@@ -1983,20 +2002,24 @@ open class HomeActivity : Activity() {
         val sections = sections(program).filter { it.exercises.isNotEmpty() }
         if (restProgramId != program.id) clearRest()
         val flow = workoutFlow(program)
+        // Sets of switched-off skills (review 12) are greyed and left out of the count until the athlete does them anyway.
+        val leftOut = leftOutKeys(program, flow)
         val allSetKeys = flow.keys
-        var doneCount = allSetKeys.count { it in active.completedSetIds }
+        fun counted() = allSetKeys.filter { it !in leftOut }
+        var doneCount = counted().count { it in active.completedSetIds }
         val setChecks = linkedMapOf<String, CheckBox>()
         val sectionUpdates = mutableListOf<(Set<String>) -> Unit>()
-        val countLabel = bodyText(getString(R.string.active_sets_progress, doneCount, allSetKeys.size), 14f).apply {
+        val countLabel = bodyText(getString(R.string.active_sets_progress, doneCount, counted().size), 14f).apply {
             typeface = Typeface.DEFAULT_BOLD
             setTextColor(AppColors.NUMBER_DARK)
         }
-        val progressBar = horizontalProgress(percentage(doneCount, allSetKeys.size))
+        val progressBar = horizontalProgress(percentage(doneCount, counted().size))
         fun refreshChecks() {
             val completed = progressRepository.activeWorkout()?.completedSetIds.orEmpty()
-            doneCount = allSetKeys.count { it in completed }
-            countLabel.text = getString(R.string.active_sets_progress, doneCount, allSetKeys.size)
-            progressBar.progress = percentage(doneCount, allSetKeys.size)
+            val counted = counted()
+            doneCount = counted.count { it in completed }
+            countLabel.text = getString(R.string.active_sets_progress, doneCount, counted.size)
+            progressBar.progress = percentage(doneCount, counted.size)
             setChecks.forEach { (key, view) ->
                 view.isChecked = key in completed
                 view.buttonTintList = ColorStateList.valueOf(if (view.isChecked) AppColors.SUCCESS else AppColors.TEXT_SECONDARY)
@@ -2056,17 +2079,18 @@ open class HomeActivity : Activity() {
                 setOnClickListener { sectionCheck.performClick() }
             }
             sectionUpdates += { completed ->
-                val count = keys.count { it in completed }
-                sectionCheck.isChecked = keys.isNotEmpty() && count == keys.size
-                sectionCount.text = "$count/${keys.size}"
+                val live = keys.filter { it !in leftOut }
+                val count = live.count { it in completed }
+                sectionCheck.isChecked = live.isNotEmpty() && count == live.size
+                sectionCount.text = "$count/${live.size}"
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    sectionCheck.stateDescription = getString(R.string.active_sets_progress, count, keys.size)
+                    sectionCheck.stateDescription = getString(R.string.active_sets_progress, count, live.size)
                 }
             }
             sectionCheck.setOnClickListener {
-                progressRepository.setCompleted(keys, sectionCheck.isChecked)
+                progressRepository.setCompleted(keys.filter { it !in leftOut }, sectionCheck.isChecked)
                 refreshChecks()
-                if (doneCount == allSetKeys.size) clearRest()
+                if (doneCount == counted().size) clearRest()
                 scheduleRestUpdates()
                 if (sectionCheck.isChecked && restEndsAtEpochMillis == null) adBreak.atNaturalBreak()
             }
@@ -2075,6 +2099,28 @@ open class HomeActivity : Activity() {
                 val exerciseName = displayName(exercise, locale)
                 val exerciseCard = card()
                 exerciseCard.addView(titleText(exerciseName, 18f))
+                // A switched-off skill's exercise: greyed, and any tap asks before doing it in this workout anyway.
+                val exerciseKey = WorkoutFlow.exerciseKey(section.key, exercise, exerciseIndex)
+                val offFamily = leftOutBy(program, section.key, exercise, exerciseIndex)
+                var off = offFamily != null
+                val offBadge = offFamily?.let { family ->
+                    badge(getString(R.string.switch_off_badge, family.name), AppColors.TEXT_SECONDARY).also {
+                        exerciseCard.addWithMargins(it, width = ViewGroup.LayoutParams.WRAP_CONTENT, topDp = 6)
+                    }
+                }
+                fun doAnyway(then: () -> Unit) = askSwitchedOff(listOfNotNull(offFamily?.name)) {
+                    offAllowed.getOrPut(program.id, ::mutableSetOf) += exerciseKey
+                    leftOut -= flow.steps.filter { it.exerciseKey == exerciseKey }.map { it.key }.toSet()
+                    off = false
+                    exerciseCard.alpha = 1f
+                    offBadge?.visibility = View.GONE
+                    refreshChecks()
+                    then()
+                }
+                if (off) {
+                    exerciseCard.alpha = 0.45f
+                    exerciseCard.setOnClickListener { if (off) doAnyway {} }
+                }
                 exerciseCard.addWithMargins(
                     exerciseAnimation(exercise, exerciseName, locale),
                     height = ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -2157,6 +2203,11 @@ open class HomeActivity : Activity() {
                     row.addView(copy, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
                     setChecks[setKey] = checkBox
                     checkBox.setOnClickListener {
+                        if (off) {
+                            checkBox.isChecked = false
+                            doAnyway { checkBox.performClick() }
+                            return@setOnClickListener
+                        }
                         progressRepository.setCompleted(setKey, checkBox.isChecked)
                         refreshChecks()
                         // A "max" set, a practice window or an easier option measured the other way has no number to
@@ -2165,7 +2216,7 @@ open class HomeActivity : Activity() {
                         if (checkBox.isChecked && credited && measure.planned == null &&
                             progressRepository.activeWorkout()?.done?.get(setKey) == null) askSetDone(measure, null, ::logDone)
                         if (checkBox.isChecked) {
-                            if (doneCount >= allSetKeys.size) clearRest()
+                            if (doneCount >= counted().size) clearRest()
                             else set.breakSeconds?.takeIf { it > 0 }?.let(::startRest)
                         }
                         scheduleRestUpdates()
@@ -2179,7 +2230,7 @@ open class HomeActivity : Activity() {
         }
 
         page.addWithMargins(primaryButton(getString(R.string.finish_workout)) {
-            requestFinish(program, doneCount, allSetKeys.size)
+            requestFinish(program, doneCount, counted().size)
         }, topDp = 8)
         page.addWithMargins(secondaryButton(getString(R.string.abandon_workout)) {
             requestAbandon()
@@ -2200,6 +2251,8 @@ open class HomeActivity : Activity() {
         if (restProgramId != program.id) clearRest()
         restStatusView = null
         bottomNavigation.visibility = View.GONE
+        val flow = workoutFlow(program)
+        val leftOut = leftOutKeys(program, flow)
         val host = object : FocusWorkoutView.Host {
             override fun completedSets() = progressRepository.activeWorkout()?.completedSetIds.orEmpty()
             override fun setCompleted(key: String, completed: Boolean) = progressRepository.setCompleted(key, completed)
@@ -2226,9 +2279,17 @@ open class HomeActivity : Activity() {
             override fun setDoneAmount(key: String, amount: Int?) = progressRepository.setDone(key, amount)
             override fun setEasier(exerciseKey: String, easier: Boolean) = switchEasier(program, exerciseKey, easier)
             override fun measure(step: WorkoutStep) = measureOf(step)
+            override fun leftOut() = leftOut.size
+            override fun includeLeftOut() {
+                val steps = flow.steps.filter { it.key in leftOut }
+                askSwitchedOff(steps.mapNotNull { leftOutBy(program, it.section, it.exercise, it.exerciseIndex)?.name }) {
+                    offAllowed.getOrPut(program.id, ::mutableSetOf) += steps.map { it.exerciseKey }
+                    renderFocus(programId)
+                }
+            }
         }
         val titles = sections(program).associate { it.key to getString(it.titleRes) }
-        setBody(FocusWorkoutView(this, program, workoutFlow(program), titles, active.startedAtEpochMillis, uiLocale(), host))
+        setBody(FocusWorkoutView(this, program, flow.without(leftOut), titles, active.startedAtEpochMillis, uiLocale(), host))
         scheduleRestUpdates()
     }
 
@@ -2303,7 +2364,8 @@ open class HomeActivity : Activity() {
                     Screen.Progress,
                     pushCurrent = false,
                 )
-                if (session != null && program.isExam) askExam(program, flow.examTests(ticked, easier, active?.done.orEmpty()), offerRepeat = !session.repeat)
+                if (session != null && program.isExam) askExam(program, flow.examTests(ticked, easier, active?.done.orEmpty())
+                    .filterNot { (exercise, _) -> exercise.movementId?.let(settings.skillSwitches::isOff) == true }, offerRepeat = !session.repeat)
             }
             .show()
     }
@@ -2407,7 +2469,12 @@ open class HomeActivity : Activity() {
                             skillGroup = group
                             renderProgress()
                         },
-                        onOpen = { status, family, statuses -> showSkillSheet(status, family, statuses, progress.overall) },
+                        onOpen = { status, family, statuses ->
+                            val switches = settings.skillSwitches
+                            showSkillSheet(status, family, statuses, progress.trained(switches).overall,
+                                off = switches.isRungOff(family.spec.id, status.skill.rung))
+                        },
+                        switches = settings.skillSwitches,
                     ),
                     topDp = 14,
                 )
@@ -2525,6 +2592,10 @@ open class HomeActivity : Activity() {
         ) { settings.soundCues = it })
         preferencesCard.addView(workoutViewSetting(settings))
         page.addWithMargins(preferencesCard, bottomDp = 16)
+        skillBook?.let { book ->
+            page.addView(sectionLabel(getString(R.string.switches_section)))
+            page.addWithMargins(skillSwitchesCard(book, settings), bottomDp = 16)
+        }
         page.addWithMargins(card().apply {
             addView(titleText(getString(R.string.reset_title), 19f))
             addWithMargins(bodyText(getString(if (Cloud.uid(this@HomeActivity) != null) R.string.reset_body_account
@@ -2732,13 +2803,42 @@ open class HomeActivity : Activity() {
     /** The next class in the sequence; the home-screen widget shows the same one ([NextClass]). */
     private fun assignedProgram(): TrainingProgram? {
         if (catalog == null) return null
-        return NextClass.of(orderedPrograms, progressRepository.completedProgramIds(), levelReplay())
+        return NextClass.of(orderedPrograms, passedIds(), levelReplay())
+    }
+
+    /** Classes completed, or left with nothing to train by the skill switches: the sequence steps over both. */
+    private fun passedIds(): Set<String> =
+        NextClass.passed(orderedPrograms, progressRepository.completedProgramIds(), settings.skillSwitches)
+
+    /** The athlete's skill switches for [program]; an own day runs as they built it. */
+    private fun switchesFor(program: TrainingProgram): SkillSwitches =
+        if (CustomDays.isCustom(program.id)) SkillSwitches() else settings.skillSwitches
+
+    /** The skill that leaves [exercise] out of this workout, or null when it is in (on, or chosen anyway). */
+    private fun leftOutBy(program: TrainingProgram, section: String, exercise: TrainingExercise, index: Int): SkillFamilySpec? {
+        val family = exercise.movementId?.let(switchesFor(program)::offFamily) ?: return null
+        if (WorkoutFlow.exerciseKey(section, exercise, index) in offAllowed[program.id].orEmpty()) return null
+        return SkillBook.DEFAULT_FAMILIES.firstOrNull { it.id == family }
+    }
+
+    /** The set keys of [flow] that the skill switches leave out. */
+    private fun leftOutKeys(program: TrainingProgram, flow: WorkoutFlow): MutableSet<String> =
+        flow.steps.filter { leftOutBy(program, it.section, it.exercise, it.exerciseIndex) != null }.mapTo(mutableSetOf()) { it.key }
+
+    /** Asks before a switched-off skill's exercise (the owner's words); [onYes] does it in this workout anyway. */
+    private fun askSwitchedOff(families: List<String>, onYes: () -> Unit) {
+        val names = families.distinct().joinToString(" & ")
+        AlertDialog.Builder(this).setTitle(getString(R.string.switch_off_title, names))
+            .setMessage(getString(R.string.switch_off_message, names))
+            .setNegativeButton(R.string.cancel, null)
+            .setPositiveButton(R.string.switch_off_continue) { _, _ -> onYes() }
+            .show()
     }
 
     /** The first day never completed: where the athlete stopped, whatever they repeat. */
     private fun furthestProgram(): TrainingProgram? {
         if (catalog == null) return null
-        val completed = progressRepository.completedProgramIds()
+        val completed = passedIds()
         return orderedPrograms.firstOrNull { it.id !in completed }
     }
 
@@ -2746,7 +2846,7 @@ open class HomeActivity : Activity() {
     private fun levelReplay(): LevelReplay? {
         if (catalog == null) return null
         val replay = progressRepository.levelReplay() ?: return null
-        if (DayAssignment.replaying(orderedPrograms, progressRepository.completedProgramIds(), replay,
+        if (DayAssignment.replaying(orderedPrograms, passedIds(), replay,
                 TrainingProgram::id, TrainingProgram::levelNumber)) return replay
         progressRepository.endLevelReplay()
         return null
@@ -2862,5 +2962,7 @@ open class HomeActivity : Activity() {
         private const val STATE_PROGRAM = "program"
         private const val STATE_REST_END = "rest_end_epoch_millis"
         private const val STATE_REST_PROGRAM = "rest_program"
+        /** Switched-off exercises the athlete chose to do anyway, by class: kept for the workout across recreation. */
+        private val offAllowed = HashMap<String, MutableSet<String>>()
     }
 }

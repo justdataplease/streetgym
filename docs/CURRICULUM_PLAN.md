@@ -44,6 +44,11 @@ Round 11 builds on round 10 (2.5.1):
     - Every skill reaches Master inside the program. The basics, the core ladder (the owner: leg raise, toes-to-bar, L-sit, V-sit) and the easier rungs finish Elite there too. Each other ladder's top rung holds a step under its Elite target until its class in `ELITE_FROM`, then at it, so the classes give 23–27 of its 30 Elite sets (77–90%); a repeated block or the athlete's own training does the rest. Level 10 needs no record sets.
 
   Both new movements have readiness gates checked by `validate_progressions.py`, and the app counts the row as a front-lever foundation (the push-up already was one for the planche). The library has 184 movements; 184 of 200 belts land in classes, every Master and 24 Elites.
+- **2.6.5, skill switches (review 12, the owner):**
+  - **Settings → Skills in your classes:** a switch per skill, and a tap on a skill opens its progression to switch it off from a rung on. The basics (dead hang, pull-up, dip, push-up, squat, hollow body) stay on.
+  - **The lines:** each family's line is curated in `SkillProgressions.LINES` (`data/skills/SkillSwitches.kt`), in first-use order, each step with the rung it leads to. Shared work belongs to no line. A step two lines share (the German hang) goes off only when both lines are off, and the freestanding HSPU needs the freestanding handstand.
+  - **In the classes:** switched-off exercises stay visible, greyed, and out of the set count. A tap asks before doing one anyway. A class with nothing left to train counts as passed (`NextClass.passed`) and earns nothing; one family off never empties a class.
+  - **Exams and skills:** an exam doesn't test a switched-off skill. The skill score is out of the skills trained; the leaderboard keeps the full scale.
 
 ## The frame
 

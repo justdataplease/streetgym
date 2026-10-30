@@ -22,6 +22,7 @@ import com.justdataplease.streetgym.data.progress.Placement
 import com.justdataplease.streetgym.data.progress.SharedPreferencesProgressRepository
 import com.justdataplease.streetgym.data.skills.SkillCurriculumReader
 import com.justdataplease.streetgym.data.skills.SkillLevel
+import com.justdataplease.streetgym.data.skills.SkillSwitches
 import com.justdataplease.streetgym.leaderboard.Scores
 import com.justdataplease.streetgym.ui.AppColors
 import com.justdataplease.streetgym.ui.AppSettings
@@ -641,6 +642,31 @@ class TrainingInstrumentation : Instrumentation() {
             clickText(R.string.start_today)
             check(repository.activeWorkout()?.programId == levelTwoFirst.id)
             report("First launch is a placement test: the weighted counts and pull-up gates pick a block start, a skip keeps Level 1 and its hint, placed days give no skills, Harder for today scales strength reps, and placement never returns")
+
+            // Settings' skill switches (review 12): the handstand switched off greys its exercises in the class in
+            // progress and leaves their sets out of the count; a tap asks before doing one anyway; back on, all is back.
+            val noHandstand = SkillSwitches().with("handstand", 0)
+            val dayExercises = levelTwoFirst.warmup + levelTwoFirst.practice + levelTwoFirst.exercises + levelTwoFirst.cooldown
+            val handstandWork = dayExercises.filter { it.movementId?.let(noHandstand::isOff) == true }
+            check(handstandWork.isNotEmpty())
+            fun handstandSwitch() = checkNotNull(find { it is android.widget.Switch && it.contentDescription == "Handstand" })
+            nav(R.string.nav_settings)
+            handstandSwitch().let { view -> runOnMainSync { view.performClick() } }; settle()
+            check(AppSettings(targetContext).skillSwitches == noHandstand && shown(R.string.switches_off))
+            nav(R.string.nav_today)
+            clickLabel(levelTwoFirst.name.resolve())
+            val offBadge = targetContext.getString(R.string.switch_off_badge, "Handstand").uppercase()
+            check(shown(offBadge))
+            clickText(R.string.resume_workout)
+            val allSets = dayExercises.sumOf { it.sets.size }
+            val offSets = handstandWork.sumOf { it.sets.size }
+            check(shown(targetContext.getString(R.string.active_sets_progress, 0, allSets - offSets)))
+            clickLabel(offBadge); clickDialog(R.string.switch_off_continue)
+            check(shown(targetContext.getString(R.string.active_sets_progress, 0, allSets - offSets + handstandWork.first().sets.size)))
+            nav(R.string.nav_settings)
+            handstandSwitch().let { view -> runOnMainSync { view.performClick() } }; settle()
+            check(!AppSettings(targetContext).skillSwitches.any)
+            report("A skill switched off in Settings stays in its class greyed and out of the set count, a tap asks before doing it anyway, and switching it back on brings it back")
 
             // Settings' Reset progress, with Level 1 complete and a Level 2 class in progress.
             nav(R.string.nav_settings)
