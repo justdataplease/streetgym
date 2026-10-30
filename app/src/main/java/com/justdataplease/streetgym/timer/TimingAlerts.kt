@@ -54,7 +54,7 @@ object TimingAlerts {
     fun notifications(context: Context): Boolean {
         if (Build.VERSION.SDK_INT >= 33 && context.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) return false
         val manager = context.getSystemService(NotificationManager::class.java)
-        if (Build.VERSION.SDK_INT >= 24 && !manager.areNotificationsEnabled()) return false
+        if (!manager.areNotificationsEnabled()) return false
         if (Build.VERSION.SDK_INT >= 26 && manager.getNotificationChannel(CHANNEL)?.importance == NotificationManager.IMPORTANCE_NONE) return false
         return true
     }

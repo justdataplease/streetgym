@@ -28,7 +28,7 @@ adb install -r streetgymnastics/app/build/outputs/apk/androidTest/debug/streetgy
 adb shell am instrument -w com.justdataplease.streetgym.debug.test/com.justdataplease.streetgym.TrainingInstrumentation
 ```
 
-The nested project also retains its standalone Gradle wrapper (`gradlew.bat assembleDebug` inside this folder); standalone output names use `app-debug.apk`. The standalone toolchain matches the suite: AGP 8.13.2, Kotlin 2.3.21 and Gradle 8.14.6. Android 6.0/API 23 minimum, compile/target SDK 36 (Android 16: predictive back through `OnBackInvokedCallback`, edge-to-edge insets). Production application ID: `com.justdataplease.streetgym`; debug adds `.debug`. [Latest signed development APK](https://github.com/justdataplease/streetgym/releases/latest). The GitHub downloads use the `.debug` package and Google test ad IDs; they are not production/Play builds.
+The nested project also retains its standalone Gradle wrapper (`gradlew.bat assembleDebug` inside this folder); standalone output names use `app-debug.apk`. The standalone toolchain matches the suite: AGP 8.13.2, Kotlin 2.3.21 and Gradle 8.14.6. Android 7.0/API 24 minimum (Play automatic protection needs it, since 2.8.0), compile/target SDK 36 (Android 16: predictive back through `OnBackInvokedCallback`, edge-to-edge insets). Production application ID: `com.justdataplease.streetgym`; debug adds `.debug`. [Latest signed development APK](https://github.com/justdataplease/streetgym/releases/latest). The GitHub downloads use the `.debug` package and Google test ad IDs; they are not production/Play builds.
 
 ### Release build
 
