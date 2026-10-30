@@ -94,8 +94,9 @@ data class SkillFamily(val spec: SkillFamilySpec, val skills: List<Skill>) {
 
 /**
  * Where an athlete stands on one skill. [sets]: its ticked sets. [best]: its best set, in reps or seconds (0 when none
- * is known). [atTargets]: its sets at each target, Beginner to Elite. [level]: the level those reach, or the level of a
- * harder rung of its ladder when that is higher ([carriedBy]). Whoever holds a full back lever for 30 sets of 12 s holds
+ * is known). [atTargets]: its sets at each target, Beginner to Elite, with the sets of the harder rungs measured alike at
+ * the level each reaches there (review 11). [level]: the level those reach, or the level of a harder rung of its ladder
+ * when that is higher ([carriedBy]). Whoever holds a full back lever for 30 sets of 12 s holds
  * the tuck far longer than its 20 s, so a level held up a ladder is held down it too, never higher (round 10, 29
  * October 2026; the old carry made a harder rung's Beginner the easier rungs' Master, and round 8 dropped it).
  */
@@ -130,17 +131,19 @@ data class SkillProgress(val families: List<Pair<SkillFamily, List<SkillStatus>>
     val totalLevels: Int get() = statuses.size * SkillLevel.ELITE.ordinal
 
     /**
-     * Skills the athlete has started and can still raise, closest to their next level first; a level held through a
-     * harder rung, with no sets of its own, has nothing to raise yet.
+     * Skills the athlete has started and can still raise, closest to their next level first; a level that comes through
+     * a harder rung (its level or its sets), with no sets of its own, has nothing to raise yet.
      */
-    fun closest(limit: Int): List<SkillStatus> = statuses.filter { it.started && it.next != null && (it.carriedBy == null || it.sets > 0) }
+    fun closest(limit: Int): List<SkillStatus> = statuses.filter { it.started && it.next != null && it.sets > 0 }
         .sortedWith(compareByDescending<SkillStatus> { it.progress }.thenByDescending { it.sets }).take(limit)
 }
 
 /**
- * Skills built from the curriculum, each with five levels ([SkillLevel]): each level takes its sets of the skill itself
- * at its target ([SkillStandard]), reps for movements and seconds for holds. A set done as the easier option
- * counts for the easier skill, and a level held on a harder rung holds on the easier rungs of its ladder.
+ * Skills built from the curriculum, each with five levels ([SkillLevel]): each level takes its sets at its target
+ * ([SkillStandard]), reps for movements and seconds for holds. A set done as the easier option counts for the easier
+ * skill; a set on a harder rung counts for the easier rungs of its ladder measured alike, at the level it reaches on its
+ * own rung (a 6 s full planche is an Elite set of the straddle planche); and a level held on a harder rung holds on the
+ * easier rungs.
  */
 class SkillBook private constructor(
     val families: List<SkillFamily>,
@@ -184,9 +187,15 @@ class SkillBook private constructor(
             }
         }
         val result = families.map { family ->
-            val own = family.skills.map { skill ->
+            val reached = family.skills.map { skill ->
                 val sets = doses[skill.id].orEmpty()
-                val atTargets = skill.standard.targets.map { target -> sets.count { it >= target } }
+                skill.standard.targets.map { target -> sets.count { it >= target } }
+            }
+            val own = family.skills.mapIndexed { rung, skill ->
+                val sets = doses[skill.id].orEmpty()
+                // A harder rung's sets count here too, level by level, when both rungs are measured alike (review 11).
+                val harder = (rung + 1 until family.skills.size).filter { family.skills[it].standard.seconds == skill.standard.seconds }
+                val atTargets = reached[rung].mapIndexed { level, count -> count + harder.sumOf { reached[it].getOrElse(level) { 0 } } }
                 SkillStatus(skill, sets.size, sets.maxOrNull() ?: 0, atTargets, levelOf(atTargets))
             }
             // A harder rung's level holds on every easier rung; the nearest rung at the highest level names it.

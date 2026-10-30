@@ -21,7 +21,10 @@ assert len(TARGETS) == 40, len(TARGETS)
 book = (ROOT / "app/src/main/java/com/justdataplease/streetgym/data/skills/SkillBook.kt").read_text(encoding="utf-8")
 BELT_LADDERS = [re.findall(r'"(\w+)"', rungs) for rungs in re.findall(r'SkillFamilySpec\("\w+", "[^"]+", SkillGroup\.\w+,\s*listOf\(([^)]*)\)', book)]
 assert sorted(r for rungs in BELT_LADDERS for r in rungs) == sorted(TARGETS), BELT_LADDERS
-BELT_SETS = [10, 20, 30, 30, 30]
+BELT_SETS = [10, 15, 20, 25, 30]
+# A harder rung's set counts for the easier rungs of its ladder measured alike, at the level it reaches (review 11).
+HOLD_SKILLS = {sid for sid, _ in re.findall(r'"(\w+)" to (hold|holdSide)\(', kotlin)}
+EASIER = {sid: [e for e in rungs[:i] if (e in HOLD_SKILLS) == (sid in HOLD_SKILLS)] for rungs in BELT_LADDERS for i, sid in enumerate(rungs)}
 
 FROZEN_EXAMS = {1: [20, 40, 60, 81, 100], 2: [20, 40, 62, 84, 100], 3: [20, 40, 64, 84, 100]}
 FROZEN_EXAMS.update({L: [13, 34, 55, 76, 100] for L in range(4, 11)})
@@ -206,7 +209,9 @@ for p in classes:
     for st in work(p):
         if st[0] in TARGETS and st[5] != "readiness_check":
             reach[st[0]] = max(reach[st[0]], value(st))
-            at_target[st[0]] = [c + (st[1] if value(st) >= t else 0) for c, t in zip(at_target[st[0]], TARGETS[st[0]])]
+            hit = [st[1] if value(st) >= t else 0 for t in TARGETS[st[0]]]
+            for sid in [st[0]] + EASIER[st[0]]:
+                at_target[sid] = [c + h for c, h in zip(at_target[sid], hit)]
     if not p["schedule"]["day_type"].startswith("exam"):
         ids = {st[0] for st in p["main"]}
         for st in p["main"]:
@@ -216,6 +221,13 @@ for p in classes:
                     assert not harder, f"{where(p)} has a {st[0]} record beside {sorted(harder)}"
 elite_own = {sid for sid, counts in at_target.items() if all(c >= need for c, need in zip(counts, BELT_SETS))}
 elite_in_plan = {r for rungs in BELT_LADDERS for i, r in enumerate(rungs) if elite_own & set(rungs[i:])}
+# Review 11 (the owner): the classes take every skill to Master, and every Elite at least 70% of the way (21 of 30 sets).
+master_own = {sid for sid, counts in at_target.items() if all(c >= need for c, need in zip(counts[:4], BELT_SETS[:4]))}
+for rungs in BELT_LADDERS:
+    for i, sid in enumerate(rungs):
+        assert master_own & set(rungs[i:]), f"{sid} Master does not land inside the program"
+        assert sid in elite_in_plan or at_target[sid][4] >= 21, f"{sid} Elite is {at_target[sid][4]} of 30 sets inside the program"
+
 for sid, t in TARGETS.items():
     assert sid in first, f"{sid} is never trained"
     assert reach[sid] >= t[4] or sid in elite_in_plan, f"{sid} never reaches its Elite target {t[4]} (best {reach[sid]})"

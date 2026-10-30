@@ -77,8 +77,10 @@ class OverallScoreTest {
 
     @Test fun followingTheProgramAsPrescribedScoresSomethingWithTheTopStillAhead() {
         val attended = real.progress(allClasses).overall
-        // Levels 8-10 climb to every Elite set, but Elite takes 30 sets at its target, so the top stays ahead.
-        assertTrue("program as written: ${attended.score}", attended.score in OverallScore.MAX / 4 until OverallScore.MAX * 3 / 4)
+        // The classes take every skill to Master (review 11), but each ladder's top rung only most of the way to Elite, so
+        // the top stays ahead: about 81 of 100, in the Elite tier with World Class still ahead.
+        assertTrue("program as written: ${attended.score}", attended.score in OverallScore.MAX * 4 / 5 until OverallScore.MAX * 17 / 20)
+        assertEquals(OverallScore.Tier.ELITE, attended.tier)
     }
 
     @Test fun tiersCoverZeroToAThousand() {

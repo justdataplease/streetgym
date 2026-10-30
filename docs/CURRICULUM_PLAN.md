@@ -37,7 +37,13 @@ Round 11 builds on round 10 (2.5.1):
   - **Chin-ups** for the slow pull-up negatives in Level 1's last block (L1:088, L1:095), 2 × 2 lowered in 3 s: the same sets, the grip that gives a novice an extra rep.
   - **The Full Battle rehearsal (L10:090):** after the lever sets, three of the champion test's five rounds at its own numbers and rests (10 pull-ups, 20 dips, 30 push-ups, 40 squats; 30 s and 90 s), a day type of its own.
 
-  Both new movements have readiness gates checked by `validate_progressions.py`, and the app counts the row as a front-lever foundation (the push-up already was one for the planche). Belts stay at 163, each on the same class as in 2.6.3; the library has 184 movements.
+  - **Belts the classes complete (review 11, the owner):**
+    - Sets 10/15/20/25/30 for Beginner to Elite, five more each belt.
+    - A harder rung's set counts for the easier rungs of its ladder measured alike, at the belt it reaches on its own rung: a 6 s full planche is an Elite set of the straddle planche.
+    - Ten targets fitted to the classes: one-arm pull-up 1/1/1/1/2 a side, strict muscle-up Elite 7, full back lever Elite 14 s, one-arm push-up 1/3/4/4/5 a side, deficit wall HSPU Elite 7, one-arm handstand 6/7 s a side, V-sit Elite 7 s, full flag 5/6 s a side, shrimp squat Elite 8 a side, Hefesto 1/1/2/2/3.
+    - Every skill reaches Master inside the program. The basics, the core ladder (the owner: leg raise, toes-to-bar, L-sit, V-sit) and the easier rungs finish Elite there too. Each other ladder's top rung holds a step under its Elite target until its class in `ELITE_FROM`, then at it, so the classes give 23–27 of its 30 Elite sets (77–90%); a repeated block or the athlete's own training does the rest. Level 10 needs no record sets.
+
+  Both new movements have readiness gates checked by `validate_progressions.py`, and the app counts the row as a front-lever foundation (the push-up already was one for the planche). The library has 184 movements; 184 of 200 belts land in classes, every Master and 24 Elites.
 
 ## The frame
 
@@ -45,7 +51,7 @@ Round 11 builds on round 10 (2.5.1):
 |---|---|
 | Levels | 10 × 100 classes; Free 1–3, Plus 4–5, Pro 6–10 |
 | Exam classes (frozen) | L1 20/40/60/81/100 · L2 20/40/62/84/100 · L3 20/40/64/84/100 · L4–L10 13/34/55/76/100 |
-| Belts | 40 skills × Beginner–Elite, 10/20/30/30/30 sets at the target |
+| Belts | 40 skills × Beginner–Elite, 10/15/20/25/30 sets at the target; a harder rung's sets count down its ladder |
 | Class | warm-up (closing on a ramp-up set), practice (the handstand line), main, cool-down; 25–55 minutes |
 | Set budget | practice + main ≤ 14/14/15/16/18 sets in Levels 1–5 (`class_progression.json`), more after |
 | Pace | 1,000 classes ≈ 33 months at 7 a week, ≈ 38 at 6, ≈ 46 at 5; at 2 a week it simply takes longer |
@@ -131,58 +137,58 @@ The exams that mark the plan:
 - **Over the hour:** leg and trunk tests rotate out first, then the strength rests shorten to 120 s, and only then a basic waits.
 - **Headline:** the named exams of Levels 1–2 headline the skill in their name (First Pull-Up: the pull-up); the others the newest belted skill no earlier exam of the level named. Every exam's description ends with its headline.
 
-Level 10 is for records: every skill reaches its Elite target. 34 skills reach it in a set of their own. The strict muscle-up (L10:078), the dead hang (L10:085), the shrimp squat (L10:086), the one-arm handstand (L10:088) and the Hefesto (L10:089) get record sets, and the classes say so. The hanging leg raise holds Elite through toes-to-bar. Progressions peak while they are still trained; no lever, planche or flag record sits beside a harder rung of its ladder.
+Level 10 takes every skill to Master and each ladder's top rung most of the way to Elite (review 11). The one-arm pull-up, strict muscle-up, full front and back levers, one-arm push-up, deficit wall HSPU, full planche, one-arm handstand, pistol squat, dragon flag, full flag, shrimp squat and Hefesto hold a step under their Elite target until their class in `ELITE_FROM` (L8:069 to L10:058), then at it: the classes give 23–27 of their 30 Elite sets. The V-sit's class (L9:054) comes early enough to finish its Elite, and with it the L-sit's. No record sets are needed. Progressions peak while they are still trained; no lever, planche or flag record sits beside a harder rung of its ladder.
 
 ## Where each belt lands
 
 The same table as a page, with milestones and the months at any pace: [ACHIEVEMENTS.html](ACHIEVEMENTS.html), rebuilt by `tools/build_achievements_page.py`.
 
-Counted from the classes, if every set is done as written on the Normal toggle. "own" means block repeats or the athlete's own training. A * marks a belt held through a harder rung of the same ladder: the level of the harder rung holds on the easier ones, never higher.
+Counted from the classes, if every set is done as written on the Normal toggle, with a harder rung's sets counting for the easier rungs measured alike. A percentage is an Elite the classes take that far, the sets they give at its target out of 30; block repeats or the athlete's own training do the rest. A * marks a belt held through a harder rung of the same ladder: the level of the harder rung holds on the easier ones, never higher.
 
 | Family | Skill | Targets | First set | Beginner | Intermediate | Advanced | Master | Elite |
 |---|---|---|---|---|---|---|---|---|
-| Pull-up | dead_hang | 30/45/60/75/90 s | L1:001 | L1:018 | L2:068 | L5:071* | L8:071* | own |
-| Pull-up | pullup | 3/6/10/15/20 | L1:064 | L2:013 | L3:055 | L5:071 | L8:071 | own |
-| Pull-up | archer_pullup | 2/3/4/6/8 a side | L5:008 | L5:055 | L7:057 | L9:022 | L10:071 | own |
-| Pull-up | one_arm_pullup | 1/1/1/2/3 a side | L9:015 | L9:050 | L9:100 | L10:043 | own | own |
-| Muscle-up | strict_muscleup | 1/2/4/6/8 | L4:043 | L4:071 | L5:064 | L7:100 | L10:008 | own |
-| Front lever | tuck_front_hold | 5/8/12/16/20 s | L2:022 | L2:040 | L2:092 | L4:050 | L10:071* | own |
-| Front lever | advanced_tuck_front | 5/8/10/12/15 s | L4:008 | L4:029 | L5:064 | L9:071* | L10:071* | own |
-| Front lever | straddle_front | 3/5/7/10/12 s | L7:015 | L7:036 | L8:015 | L9:071* | L10:071* | own |
-| Front lever | full_front | 3/4/5/7/10 s | L8:015 | L8:036 | L8:078 | L9:071 | L10:071 | own |
-| Back lever | tuck_back_hold | 5/8/12/16/20 s | L3:012 | L3:034 | L3:075 | L4:020 | L4:068 | own |
-| Back lever | advanced_tuck_back | 5/8/10/15/20 s | L4:061 | L4:089 | L5:041 | L5:068 | L10:082* | own |
-| Back lever | straddle_back | 3/5/8/10/12 s | L5:082 | L6:006 | L7:083 | L8:100* | L10:082* | own |
-| Back lever | full_back | 3/5/8/12/15 s | L6:047 | L6:082 | L7:089 | L8:100 | L10:082 | own |
-| Dip | parallel_dip | 4/10/15/20/25 | L1:062 | L1:078 | L2:100 | L5:069 | L8:076 | L10:034 |
-| Push-up | pushup | 6/12/20/30/40 | L1:001 | L1:013 | L1:071 | L2:080 | L5:087 | L9:031 |
-| Push-up | one_arm_pushup | 1/3/5/7/10 a side | L7:006 | L7:048 | L9:090 | own | own | own |
-| Handstand push-up | pike_pushup | 6/8/10/12/15 | L1:044 | L1:079 | L2:011 | L2:094 | L10:088* | own |
-| Handstand push-up | wall_hspu | 2/4/6/8/10 | L4:067 | L4:088 | L5:095 | L7:088 | L10:088* | own |
-| Handstand push-up | deficit_wall_hspu | 2/3/5/6/8 | L8:018 | L8:039 | L9:013 | L10:039 | L10:088 | own |
-| Planche | pseudo_planche_pushup | 5/8/10/12/15 | L3:003 | L3:031 | L4:100* | L6:003* | L8:059 | L10:073 |
-| Planche | tuck_planche | 5/8/10/12/15 s | L4:003 | L4:017 | L4:100 | L6:003 | L9:094* | own |
-| Planche | advanced_tuck_planche | 5/6/8/10/12 s | L6:003 | L6:066 | L6:094 | L7:073 | L9:094* | own |
-| Planche | straddle_planche | 3/4/5/6/8 s | L8:003 | L8:024 | L8:059 | L9:017 | L9:094 | own |
-| Planche | full_planche | 3/3/4/5/6 s | L9:059 | L9:080 | L10:003 | L10:038 | L10:073 | own |
-| Handstand | wall_handstand | 20/30/45/60/75 s | L1:022 | L1:030 | L1:086 | L3:011 | L5:095 | L9:011* |
-| Handstand | freestanding_handstand | 5/15/30/45/60 s | L4:006 | L4:015 | L5:053 | L6:039 | L8:010 | L9:011 |
-| Handstand | one_arm_handstand | 3/4/5/7/10 s a side | L9:069 | L9:090 | L10:048 | L10:088 | own | own |
-| Pistol squat | squat | 15/20/25/30/40 | L1:003 | L1:013 | L1:052 | L3:040 | L8:030* | L10:037* |
-| Pistol squat | pistol_squat | 2/4/6/8/10 a side | L4:009 | L4:037 | L5:065 | L7:023 | L8:030 | L10:037 |
-| Toes to bar | hanging_leg_raise | 5/8/10/12/15 | L2:022 | L2:036 | L3:026 | L7:068* | L9:036* | L10:047* |
-| Toes to bar | toes_to_bar | 3/6/8/12/15 | L4:015 | L4:068 | L6:043 | L7:068 | L9:036 | L10:047 |
-| L-sit | lsit | 5/10/15/20/30 s | L3:023 | L3:051 | L4:065 | L6:030 | L10:037* | own |
-| L-sit | v_sit | 3/4/5/6/8 s | L8:009 | L8:030 | L8:065 | L10:009 | L10:037 | own |
-| Dragon flag | hollow_body_hold | 20/30/40/50/60 s | L1:001 | L1:011 | L1:068 | L3:058 | L4:086 | L5:086 |
-| Dragon flag | dragon_flag | 1/3/5/6/8 | L6:023 | L6:037 | L7:065 | L8:093 | L9:023 | L10:023 |
-| Human flag | tuck_flag | 5/8/10/12/15 s a side | L5:005 | L5:026 | L6:047 | L10:078* | own | own |
-| Human flag | straddle_flag | 3/4/6/8/10 s a side | L6:082 | L7:008 | L8:022 | L10:078* | own | own |
-| Human flag | full_flag | 3/4/5/6/8 s a side | L7:061 | L8:005 | L9:061 | L10:078 | own | own |
-| Shrimp squat | shrimp_squat | 2/3/5/7/10 a side | L7:058 | L7:079 | L8:039 | L9:072 | L10:072 | own |
-| Hefesto | hefesto | 1/1/2/3/4 | L9:040 | L9:076 | L10:013 | L10:082 | own | own |
+| Pull-up | dead_hang | 30/45/60/75/90 s | L1:001 | L1:018 | L2:012 | L5:055* | L8:055* | L10:043* |
+| Pull-up | pullup | 3/6/10/15/20 | L1:064 | L2:013 | L3:048 | L5:055 | L8:055 | L10:043 |
+| Pull-up | archer_pullup | 2/3/4/6/8 a side | L5:008 | L5:055 | L7:029 | L8:050 | L9:057 | L10:064 |
+| Pull-up | one_arm_pullup | 1/1/1/1/2 a side | L9:015 | L9:050 | L9:071 | L9:100 | L10:022 | 77% |
+| Muscle-up | strict_muscleup | 1/2/4/6/7 | L4:043 | L4:071 | L5:050 | L7:071 | L9:092 | 83% |
+| Front lever | tuck_front_hold | 5/8/12/16/20 s | L2:022 | L2:040 | L2:078 | L4:008 | L6:055 | L10:071 |
+| Front lever | advanced_tuck_front | 5/8/10/12/15 s | L4:008 | L4:029 | L5:043 | L6:078 | L10:015 | L10:078 |
+| Front lever | straddle_front | 3/5/7/10/12 s | L7:015 | L7:036 | L8:008 | L9:036 | L10:036 | L10:090 |
+| Front lever | full_front | 3/4/5/7/10 s | L8:015 | L8:036 | L8:071 | L9:055 | L10:057 | 83% |
+| Back lever | tuck_back_hold | 5/8/12/16/20 s | L3:012 | L3:034 | L3:064 | L3:097 | L4:047 | L5:076 |
+| Back lever | advanced_tuck_back | 5/8/10/15/20 s | L4:061 | L4:089 | L5:033 | L5:047 | L9:082 | L10:076 |
+| Back lever | straddle_back | 3/5/8/10/12 s | L5:082 | L6:006 | L7:019 | L8:055 | L10:047 | 93% |
+| Back lever | full_back | 3/5/8/12/14 s | L6:047 | L6:082 | L7:068 | L8:061 | L10:061 | 77% |
+| Dip | parallel_dip | 4/10/15/20/25 | L1:062 | L1:078 | L2:094 | L5:052 | L8:052 | L10:034 |
+| Push-up | pushup | 6/12/20/30/40 | L1:001 | L1:013 | L1:064 | L2:062 | L5:080 | L9:013 |
+| Push-up | one_arm_pushup | 1/3/4/4/5 a side | L7:006 | L7:048 | L9:041 | L10:041 | L10:083 | 80% |
+| Handstand push-up | pike_pushup | 6/8/10/12/15 | L1:044 | L1:079 | L2:004 | L2:081 | L9:004 | L10:076 |
+| Handstand push-up | wall_hspu | 2/4/6/8/10 | L4:067 | L4:088 | L5:081 | L7:067 | L10:032 | L10:081 |
+| Handstand push-up | deficit_wall_hspu | 2/3/5/6/7 | L8:018 | L8:039 | L8:100 | L10:018 | L10:081 | 80% |
+| Planche | pseudo_planche_pushup | 5/8/10/12/15 | L3:003 | L3:031 | L4:087* | L5:080* | L8:024 | L10:073 |
+| Planche | tuck_planche | 5/8/10/12/15 s | L4:003 | L4:017 | L4:087 | L5:080 | L8:080 | L10:080 |
+| Planche | advanced_tuck_planche | 5/6/8/10/12 s | L6:003 | L6:066 | L6:087 | L7:055 | L9:038 | L10:080 |
+| Planche | straddle_planche | 3/4/5/6/8 s | L8:003 | L8:024 | L8:052 | L8:100 | L9:066 | 97% |
+| Planche | full_planche | 3/3/4/5/6 s | L9:059 | L9:080 | L9:087 | L10:024 | L10:066 | 80% |
+| Handstand | wall_handstand | 20/30/45/60/75 s | L1:022 | L1:030 | L1:082 | L3:004 | L5:046 | L9:008 |
+| Handstand | freestanding_handstand | 5/15/30/45/60 s | L4:006 | L4:015 | L5:046 | L6:031 | L8:004 | L9:011 |
+| Handstand | one_arm_handstand | 3/4/5/6/7 s a side | L9:069 | L9:090 | L10:039 | L10:067 | L10:090 | 80% |
+| Pistol squat | squat | 15/20/25/30/40 | L1:003 | L1:013 | L1:045 | L3:009 | L7:044 | L10:100 |
+| Pistol squat | pistol_squat | 2/4/6/8/10 a side | L4:009 | L4:037 | L5:051 | L7:002 | L8:009 | 80% |
+| Toes to bar | hanging_leg_raise | 5/8/10/12/15 | L2:022 | L2:036 | L3:020 | L3:100 | L9:026 | L10:047 |
+| Toes to bar | toes_to_bar | 3/6/8/12/15 | L4:015 | L4:068 | L6:036 | L7:047 | L9:026 | L10:047 |
+| L-sit | lsit | 5/10/15/20/30 s | L3:023 | L3:051 | L4:051 | L6:009 | L8:093 | L10:037 |
+| L-sit | v_sit | 3/4/5/6/7 s | L8:009 | L8:030 | L8:051 | L9:072 | L10:023 | L10:044 |
+| Dragon flag | hollow_body_hold | 20/30/40/50/60 s | L1:001 | L1:011 | L1:064 | L3:002 | L4:065 | L5:086 |
+| Dragon flag | dragon_flag | 1/3/5/6/8 | L6:023 | L6:037 | L7:055 | L8:065 | L9:009 | 83% |
+| Human flag | tuck_flag | 5/8/10/12/15 s a side | L5:005 | L5:026 | L6:034 | L6:089 | L9:100 | L10:068 |
+| Human flag | straddle_flag | 3/4/6/8/10 s a side | L6:082 | L7:008 | L7:089 | L9:089 | L10:055 | 97% |
+| Human flag | full_flag | 3/4/5/5/6 s a side | L7:061 | L8:005 | L9:034 | L10:055 | L10:068 | 90% |
+| Shrimp squat | shrimp_squat | 2/3/5/7/8 a side | L7:058 | L7:079 | L8:030 | L9:034 | L10:051 | 77% |
+| Hefesto | hefesto | 1/1/2/2/3 | L9:040 | L9:076 | L9:096 | L10:034 | L10:055 | 83% |
 
-**163 of 200 belts land in classes.** By level, Levels 1–10 land 11, 9, 9, 15, 14, 12, 15, 20, 23 and 35. Review 6 cost two: one heavy set of high-rep pull-ups a class moves the pull-up's Master to L8:071 and its Elite (with the dead hang's, held through it) to the athlete's own training. The first belt comes at class 11 (hollow body Beginner), and the push-up and squat follow at class 13. Every level brings new ones. Every skill earns its Beginner belt inside the plan, the last being the one-arm handstand at L9:090.
+**184 of 200 belts land in classes:** every Master, and Elite for 24 skills; the other 16 Elites stand at 77–97%. By level, Levels 1–10 land 11, 9, 11, 14, 18, 12, 15, 24, 28 and 42. The first belt comes at class 11 (hollow body Beginner), and the push-up and squat follow at class 13. Every level brings new ones; the last first belt is the one-arm handstand's Beginner at L9:090.
 
 ## The realism check
 
@@ -234,11 +240,12 @@ The targets keep every skill's maximum reachable inside the program, and no hold
   - a build dose never under 80% of its best on the same class type;
   - sets and dose never rise together from Level 4.
 - **Exams:** at the trained dose, with at most two items a step over; from Level 4, 12 to 15 tests, at most 8 elbow-load sets besides the ramps. The step over is only for a rung at least 21 classes old, never for the muscle-up, one-arm pull-up or Hefesto (review 9).
-- **Records (review 9):** first in the class after a ramp on the rung below; the long hang record last.
+- **Records (review 9):** first in the class after a ramp on the rung below; the long hang record last. Since review 11 the top rungs train at their Elite target instead, and no class needs one.
 - **Circuits (review 9):** whole rounds only, in the circuits, the basics and the Battle; the fit drops a whole round, last first.
 - **Readiness gates (review 9):** every "Start when" line in the library is met by a class before its step starts.
 - **Skills:**
   - all 40 trained, each at its Elite target at least once or holding Elite through a harder rung;
+  - every skill to Master inside the program, and every Elite at least 21 of its 30 sets there (review 11);
   - minimum holds of 3 s for the full and straddle shapes, the V-sit, the advanced-tuck planche and the one-arm balance line, 5 s for the rest;
   - no skill at the top of its ladder left more than 14 classes (16 across a level's taper and exam);
   - no lever, planche or flag record set beside a harder rung of its ladder;

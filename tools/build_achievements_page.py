@@ -122,11 +122,12 @@ MILESTONES = [
     (landed['full_planche'][0], 'Full planche Beginner, 3 s.'),
     (landed['one_arm_handstand'][0], 'One-arm handstand Beginner, 3 s a side.'),
     ((9, 100), 'The Level 9 exam tests every full shape.'),
-    ((10, 100), 'The champion test ends with the Full Battle. By now every skill has reached its Elite target once, in a set or through a harder rung.'),
+    ((10, 100), 'The champion test ends with the Full Battle. By now every skill holds Master, and every Elite is at least 70% of the way.'),
 ]
 mil = ''.join(f'<li><b>{at(x)}</b><span class="mo" data-c="{pos(*x)}"></span><span>{html.escape(t)}</span></li>' for x, t in MILESTONES)
 lvl = ''.join(f'<td class="num">{n}</td>' for n in per_level)
 reached = sum(1 for sid in bc.SKILLS if sid in first_max or landed[sid][4])
+elite_in = sum(1 for sid in bc.SKILLS if landed[sid][4])
 
 CSS = """
 :root {
@@ -228,7 +229,7 @@ BODY = f"""<title>What You Can Achieve</title>
 </header>
 <section class="facts" aria-label="In numbers">
   <div class="fact"><b>{inplan}/{5 * SKILL_COUNT}</b><span>belts that land inside the program</span></div>
-  <div class="fact"><b>{reached}/{SKILL_COUNT}</b><span>skills that reach their Elite target: in a set, or as Elite held through a harder rung</span></div>
+  <div class="fact"><b>{elite_in}/{SKILL_COUNT}</b><span>Elite belts inside the program; every other Elite at least 70% of the way</span></div>
   <div class="fact"><b>{at(first_belt)}</b><span>your first belt</span></div>
   <div class="fact"><b>L9:100</b><span>every full shape tested: planche, both levers, the flag, the one-arm pull-up</span></div>
   <div class="fact"><b><span id="years">3.2</span> yrs</b><span>for all 1,000 classes at this pace</span></div>
@@ -237,7 +238,7 @@ BODY = f"""<title>What You Can Achieve</title>
   <p class="staged">The class where each one comes, and roughly when at the pace you picked.</p></div>
   <ol class="miles">{mil}</ol></section>
 <section aria-labelledby="t-h"><div class="head"><h2 id="t-h">Every skill, every belt</h2>
-  <p class="staged">A belt is its target in good form, 10 sets for Beginner, 20 for Intermediate and 30 for each level above. <span class="key-ok"></span> A green outline is a belt the classes give: the class where it lands, its target and when. <span class="key-via"></span> A dashed one comes through a harder rung of the same ladder: a belt held on the full back lever is held on the straddle and tuck back levers too, never higher. "first" is the class where you first do a set at that belt's target. A grey cell is a belt the classes don't complete: it needs repeated blocks or your own training, and its percentage is how far the classes take you, the sets they give at the target out of the sets the belt needs.</p></div>
+  <p class="staged">A belt is its target in good form: 10 sets for Beginner, 15 for Intermediate, 20 for Advanced, 25 for Master and 30 for Elite. A set on a harder rung counts for the easier rungs of its ladder too, at the belt it reaches: a 6 s full planche is an Elite set of the straddle planche. <span class="key-ok"></span> A green outline is a belt the classes give: the class where it lands, its target and when. <span class="key-via"></span> A dashed one comes through a harder rung of the same ladder: a belt held on the full back lever is held on the straddle and tuck back levers too, never higher. "first" is the class where you first do a set at that belt's target. The classes take every skill to Master. A grey cell is an Elite the classes take most of the way, the top rung of a ladder: its percentage is the sets they give at the target out of the 30 it needs, and a repeated block or your own training does the rest.</p></div>
   <div class="scroll"><table class="map">{BADGES}<tbody>{''.join(rows)}</tbody></table></div></section>
 <section aria-labelledby="l-h"><div class="head"><h2 id="l-h">Belts by level</h2></div>
   <div class="scroll"><table><thead><tr><th scope="col">Level</th>{''.join(f'<th scope="col" class="num">{L}</th>' for L in range(1, 11))}</tr></thead>

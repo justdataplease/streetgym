@@ -37,20 +37,21 @@ class SkillBookTest {
 
     @Test
     fun eachLevelTakesItsSetsAtItsTarget() {
-        // The pull-up's working-set targets: 3, 6, 10, 15 and 20 reps for Beginner to Elite; 10 sets for Beginner, 20
-        // for Intermediate and 30 for each level after.
+        // The pull-up's working-set targets: 3, 6, 10, 15 and 20 reps for Beginner to Elite; 10, 15, 20, 25 and 30 sets
+        // (review 11, the owner).
         fun level(vararg days: SkillCredit) = book.progress(days.toList()).status("pullup").level
         assertEquals(listOf(3, 6, 10, 15, 20), SkillStandards.of("pullup").targets)
-        assertEquals(listOf(10, 20, 30, 30, 30), SkillLevel.entries.drop(1).map { it.sets })
+        assertEquals(listOf(10, 15, 20, 25, 30), SkillLevel.entries.drop(1).map { it.sets })
         assertEquals(SkillLevel.NONE, level(sets("pullup", 9, 3)))
         assertEquals(SkillLevel.BEGINNER, level(sets("pullup", 10, 3)))
         // Sets under the target count toward nothing; a bigger set counts for the lower targets too.
         assertEquals(SkillLevel.NONE, level(sets("pullup", 300, 2)))
-        assertEquals(SkillLevel.BEGINNER, level(sets("pullup", 19, 6)))
-        assertEquals(SkillLevel.INTERMEDIATE, level(sets("pullup", 19, 6), sets("pullup", 1, 8)))
-        assertEquals(SkillLevel.INTERMEDIATE, level(sets("pullup", 29, 10)))
-        assertEquals(SkillLevel.ADVANCED, level(sets("pullup", 30, 10)))
-        assertEquals(SkillLevel.MASTER, level(sets("pullup", 30, 15)))
+        assertEquals(SkillLevel.BEGINNER, level(sets("pullup", 14, 6)))
+        assertEquals(SkillLevel.INTERMEDIATE, level(sets("pullup", 14, 6), sets("pullup", 1, 8)))
+        assertEquals(SkillLevel.INTERMEDIATE, level(sets("pullup", 19, 10)))
+        assertEquals(SkillLevel.ADVANCED, level(sets("pullup", 20, 10)))
+        assertEquals(SkillLevel.ADVANCED, level(sets("pullup", 24, 15)))
+        assertEquals(SkillLevel.MASTER, level(sets("pullup", 25, 15)))
         // Thirty sets at the Elite target earn all five at once, on an own day too: Master needs no sets of its own.
         assertEquals(SkillLevel.ELITE, level(sets("pullup", 30, 25)))
     }
@@ -62,8 +63,8 @@ class SkillBookTest {
         assertEquals(SkillLevel.INTERMEDIATE, status.next)
         assertEquals(22, status.sets)
         assertEquals(12, status.best)
-        assertEquals(8, status.setsToGo)
-        assertEquals(12 * 100 / 20, status.progress)
+        assertEquals(3, status.setsToGo)
+        assertEquals(12 * 100 / 15, status.progress)
         val elite = book.progress(listOf(sets("pullup", 30, 40))).status("pullup")
         assertNull(elite.next)
         assertEquals(100, elite.progress)
@@ -131,26 +132,45 @@ class SkillBookTest {
     }
 
     @Test
-    fun aHarderRungsLevelHoldsOnTheEasierRungs() {
-        // The archer pull-up's Beginner target is 2 reps each side. Its level holds on every easier rung of the ladder,
-        // never higher (round 10, 29 October 2026), and names the rung it comes through.
+    fun aHarderRungsSetsCountOnTheEasierRungs() {
+        // The archer pull-up's Beginner target is 2 reps each side: each such set is a Beginner set of every easier rung
+        // measured in reps too (review 11), never a set of a higher level there.
         val beginner = book.progress(listOf(sets("archer_pullup", 10, 2)))
         assertEquals(SkillLevel.BEGINNER, beginner.status("archer_pullup").level)
-        assertNull(beginner.status("archer_pullup").carriedBy)
         assertEquals(SkillLevel.BEGINNER, beginner.status("pullup").level)
-        assertEquals("archer_pullup", beginner.status("pullup").carriedBy?.id)
+        assertEquals(listOf(10, 0, 0, 0, 0), beginner.status("pullup").atTargets)
         assertEquals(SkillLevel.BEGINNER, beginner.status("assisted_pullup").level)
-        // The next level takes the rung's own sets.
+        assertEquals(0, beginner.status("pullup").sets)
+        // The next level takes sets at its own target, the pull-up's or the archer's.
         assertEquals(SkillLevel.INTERMEDIATE, beginner.status("pullup").next)
-        assertEquals(20, beginner.status("pullup").setsToGo)
-        // Short of a level nothing carries, and a rung's own higher level stays its own.
+        assertEquals(15, beginner.status("pullup").setsToGo)
         assertEquals(SkillLevel.NONE, book.progress(listOf(sets("archer_pullup", 9, 2))).status("pullup").level)
-        val both = book.progress(listOf(sets("archer_pullup", 30, 2), sets("pullup", 30, 40)))
-        assertEquals(SkillLevel.ELITE, both.status("pullup").level)
-        assertNull(both.status("pullup").carriedBy)
-        assertEquals(SkillLevel.BEGINNER, both.status("archer_pullup").level)
-        assertEquals(SkillLevel.ELITE, both.status("assisted_pullup").level)
-        assertEquals("pullup", both.status("assisted_pullup").carriedBy?.id)
+        // Sets of both rungs add up: 9 archer sets and a pull-up set make a Beginner.
+        assertEquals(SkillLevel.BEGINNER, book.progress(listOf(sets("archer_pullup", 9, 2), sets("pullup", 1, 3))).status("pullup").level)
+        // The planche: 24 full-planche sets of 6 s (its Advanced; Master takes 25) and six 8 s straddle sets make the
+        // straddle planche Elite, and the tuck planche's too.
+        val planche = everyRung.progress(listOf(sets("full_planche", 24, 6), sets("straddle_planche", 6, 8)))
+        assertEquals(SkillLevel.ADVANCED, planche.status("full_planche").level)
+        assertEquals(SkillLevel.ELITE, planche.status("straddle_planche").level)
+        assertEquals(SkillLevel.ELITE, planche.status("tuck_planche").level)
+    }
+
+    @Test
+    fun aHarderRungsLevelHoldsOnTheEasierRungs() {
+        // A rung measured the other way gets no sets, only the level, never higher (round 10, 29 October 2026), and names
+        // the rung it comes through: pull-ups in reps for the dead hang in seconds, holds for the pseudo-planche push-up.
+        val pullups = everyRung.progress(listOf(sets("pullup", 10, 3)))
+        assertEquals(SkillLevel.BEGINNER, pullups.status("dead_hang").level)
+        assertEquals("pullup", pullups.status("dead_hang").carriedBy?.id)
+        assertEquals(listOf(0, 0, 0, 0, 0), pullups.status("dead_hang").atTargets)
+        assertEquals(SkillLevel.NONE, everyRung.progress(listOf(sets("pullup", 9, 3))).status("dead_hang").level)
+        val planche = everyRung.progress(listOf(sets("tuck_planche", 30, 15)))
+        assertEquals(SkillLevel.ELITE, planche.status("pseudo_planche_pushup").level)
+        assertEquals("tuck_planche", planche.status("pseudo_planche_pushup").carriedBy?.id)
+        // A rung's own higher level stays its own.
+        val both = everyRung.progress(listOf(sets("pullup", 10, 3), sets("dead_hang", 15, 45)))
+        assertEquals(SkillLevel.INTERMEDIATE, both.status("dead_hang").level)
+        assertNull(both.status("dead_hang").carriedBy)
     }
 
     @Test
@@ -166,7 +186,7 @@ class SkillBookTest {
     fun closestListsOnlySkillsTheAthleteStarted() {
         val progress = book.progress(listOf(SkillCredit("p1")))
         assertEquals(listOf("assisted_pullup"), progress.closest(3).map { it.skill.id })
-        // The archer's Intermediate holds on the rungs below; the pull-up, with no sets of its own, has nothing to raise
+        // The archer's sets make the rungs below Intermediate; the pull-up, with no sets of its own, has nothing to raise
         // yet, while the assisted pull-up's own sets keep it open.
         val both = book.progress(listOf(sets("archer_pullup", 30, 3), SkillCredit("p1")))
         assertEquals(SkillLevel.INTERMEDIATE, both.status("pullup").level)
@@ -220,18 +240,21 @@ class SkillBookTest {
         // The rarest rungs stay reachable inside the program, so two levels may share a target and differ by their sets.
         // Round 11 starts the hardest holds at 3 s.
         assertEquals(listOf(3, 3, 4, 5, 6), SkillStandards.of("full_planche").targets)
-        assertEquals(listOf(1, 1, 1, 2, 3), SkillStandards.of("one_arm_pullup").targets)
-        assertEquals(listOf(1, 2, 4, 6, 8), SkillStandards.of("strict_muscleup").targets)
+        // Review 11 fits the hardest rungs' targets to the classes (the owner).
+        assertEquals(listOf(1, 1, 1, 1, 2), SkillStandards.of("one_arm_pullup").targets)
+        assertEquals(listOf(1, 2, 4, 6, 7), SkillStandards.of("strict_muscleup").targets)
         assertEquals(listOf(5, 15, 30, 45, 60), SkillStandards.of("freestanding_handstand").targets)
-        assertEquals(listOf(3, 4, 5, 7, 10), SkillStandards.of("one_arm_handstand").targets)
-        assertEquals(listOf(2, 3, 5, 7, 10), SkillStandards.of("shrimp_squat").targets)
-        assertEquals(listOf(1, 1, 2, 3, 4), SkillStandards.of("hefesto").targets)
+        assertEquals(listOf(3, 4, 5, 6, 7), SkillStandards.of("one_arm_handstand").targets)
+        assertEquals(listOf(2, 3, 5, 7, 8), SkillStandards.of("shrimp_squat").targets)
+        assertEquals(listOf(1, 1, 2, 2, 3), SkillStandards.of("hefesto").targets)
+        assertEquals(listOf(1, 3, 4, 4, 5), SkillStandards.of("one_arm_pushup").targets)
+        assertEquals(listOf(3, 4, 5, 5, 6), SkillStandards.of("full_flag").targets)
         // Beginner and Intermediate share the full planche's 3 s and differ by their sets; from Advanced each asks longer.
-        assertEquals(SkillLevel.BEGINNER, everyRung.progress(listOf(sets("full_planche", 19, 3))).status("full_planche").level)
+        assertEquals(SkillLevel.BEGINNER, everyRung.progress(listOf(sets("full_planche", 14, 3))).status("full_planche").level)
         assertEquals(SkillLevel.INTERMEDIATE, everyRung.progress(listOf(sets("full_planche", 30, 3))).status("full_planche").level)
         assertEquals(SkillLevel.ADVANCED, everyRung.progress(listOf(sets("full_planche", 30, 4))).status("full_planche").level)
-        // From Advanced up every level takes 30 sets, so no two of them may share a target.
-        SkillStandards.ALL.forEach { (id, standard) -> assertTrue(id, standard.targets.drop(2).zipWithNext().all { (a, b) -> b > a }) }
+        // Two levels may share a target and differ by their sets, but Elite always asks more than Master.
+        SkillStandards.ALL.forEach { (id, standard) -> assertTrue(id, standard.targets[4] > standard.targets[3]) }
         assertEquals(setOf("archer_pullup", "one_arm_pullup", "one_arm_pushup", "pistol_squat", "shrimp_squat", "one_arm_handstand",
             "tuck_flag", "straddle_flag", "full_flag"), SkillStandards.ALL.filterValues { it.perSide }.keys)
         assertEquals(setOf("dead_hang", "wall_handstand", "freestanding_handstand", "one_arm_handstand", "hollow_body_hold", "lsit", "v_sit",
@@ -372,6 +395,15 @@ class SkillBookTest {
         listOf("pullup", "wall_handstand").forEach { id ->
             assertTrue(id, graduate.status(id).best >= SkillStandards.of(id).target(SkillLevel.ELITE)!!)
         }
+        // Review 11 (the owner): following every class takes every skill to Master and every Elite at least 21 of its 30
+        // sets; the top rungs keep some of it for repeated blocks and the athlete's own training.
+        graduate.statuses.forEach { status ->
+            assertTrue("${status.skill.id} ${status.level}", status.level >= SkillLevel.MASTER)
+            assertTrue("${status.skill.id} Elite sets ${status.setsAt(SkillLevel.ELITE)}",
+                status.level == SkillLevel.ELITE || status.setsAt(SkillLevel.ELITE) >= 21)
+        }
+        assertEquals(SkillLevel.MASTER, graduate.status("full_planche").level)
+        assertEquals(SkillLevel.ELITE, graduate.status("toes_to_bar").level)
         // A rung the plan trains 10 times or more never asks for a Beginner set longer than the plan's own longest, unless
         // the plan's time is a practice window: following the classes as written must be able to earn it.
         assertEquals("Beginner beyond the plan", emptyList<String>(), graduate.statuses
