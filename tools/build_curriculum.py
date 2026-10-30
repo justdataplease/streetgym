@@ -404,7 +404,37 @@ WARM = {
              ['scapular_pull', 1, 6, None, 20, '2111', None], ['scapular_pushup', 1, 8, None, 20, '2111', None]],
     'easy': [['march', 1, None, 90, 0, 'easy', None], ['cat_cow', 1, 6, None, 10, 'slow', None],
              ['hip_circles', 1, 8, None, 10, 'controlled', None]],
+    # An exam's warm-up (the S&C review 6): general, wrists, the shoulder blades and an active hang, then the ramp sets.
+    'exam': [['march', 1, None, 60, 0, 'brisk', None], ['arm_swings', 1, 10, None, 10, 'controlled', 'shoulder_cars'],
+             ['hip_circles', 1, 8, None, 10, 'controlled', None], ['wrist_circles', 1, 10, None, 10, 'controlled', None],
+             ['wrist_rocks', 1, 10, None, 10, 'controlled', None], ['wrist_pushup', 1, 10, None, 20, 'slow', 'wrist_rocks'],
+             ['scapular_pull', 1, 6, None, 20, '2111', None], ['scapular_pushup', 1, 8, None, 20, '2111', None],
+             ['active_hang', 1, None, 15, 30, 'controlled', None]],
 }
+# Wrist prep (review 6, the teacher and the S&C coach): any class that puts weight on the hands in a handstand, planche,
+# press or one-arm push-up warms the wrists first, and the march shortens to make room. The L-sit on the bars is a
+# neutral grip.
+WRISTS = [['wrist_circles', 1, 10, None, 10, 'controlled', None], ['wrist_rocks', 1, 10, None, 10, 'controlled', None],
+          ['wrist_pushup', 1, 10, None, 20, 'slow', 'wrist_rocks']]
+HANDS = ({'pike_handstand_hold', 'wall_handstand', 'handstand_balance', 'freestanding_handstand', 'handstand_exit', 'handstand_toe_pull',
+          'frog_stand', 'planche_lean', 'pseudo_planche_pushup', 'pike_pushup', 'elevated_pike_pushup', 'wall_hspu_negative', 'wall_hspu',
+          'deficit_wall_hspu', 'freestanding_hspu_negative', 'one_arm_pushup'}
+         | set(LADDERS['planche']) | set(LADDERS['oah']))
+
+
+def with_wrists(warm, steps, main=()):
+    """[warm] with the wrist drills when [steps] load the hands; the wrist push-ups only when the main part does, not
+    just a short handstand practice."""
+    if 'wrist_circles' in [w[0] for w in warm] or not any(s[0] in HANDS for s in steps):
+        return warm
+    warm = [list(w) for w in warm]
+    if warm[0][0] == 'march':
+        warm[0][3] = 30
+    at = next((i + 1 for i, w in enumerate(warm) if w[0] in ('arm_swings', 'shoulder_cars', 'hip_circles')), 1)
+    drills = WRISTS if any(s[0] in HANDS for s in main) else WRISTS[:2]
+    return warm[:at] + [list(w) for w in drills] + warm[at:]
+
+
 COOL = {
     'pull': [['lat_stretch', 2, None, 30, 10, 'easy', None], ['forearm_stretch', 1, None, 30, 10, 'easy', None], ['child_pose', 1, None, 45, 0, 'easy', None]],
     'push': [['chest_stretch', 1, None, 30, 10, 'easy', None], ['forearm_stretch', 2, None, 30, 10, 'easy', None], ['child_pose', 1, None, 45, 0, 'easy', None]],
@@ -414,24 +444,41 @@ COOL = {
              ['hip_flexor_stretch', 1, None, '30/side', 10, 'easy', None]],
     'easy': [['supine_twist', 2, None, 30, 10, 'easy', None], ['hip_flexor_stretch', 1, None, '30/side', 10, 'easy', None],
              ['slow_breathing', 1, None, 120, 0, 'easy', None]],
+    'exam': [['lat_stretch', 1, None, 30, 10, 'easy', None], ['chest_stretch', 1, None, 30, 10, 'easy', None],
+             ['forearm_stretch', 1, None, 30, 10, 'easy', None], ['hip_flexor_stretch', 1, None, '30/side', 0, 'easy', None]],
 }
+# The straddle and full shapes ramp two rungs down (the S&C review 6): one rung down is still a working set.
+HARD_SHAPES = {'straddle_front', 'full_front', 'straddle_back', 'full_back', 'straddle_planche', 'full_planche', 'straddle_flag', 'full_flag',
+               'one_arm_handstand'}
+HAND_LINE = {'pike_handstand_hold', 'wall_handstand', 'handstand_balance', 'freestanding_handstand'} | set(LADDERS['oah'])
 
 
-def ramp_of(M, L, n, exam_day=False):
-    """The ramp-up set: the day's lead exercise one rung down (or itself) at about half its dose, in round numbers. On an
-    exam day the first test leads. Warm-up, so it earns nothing."""
+def ramp_of(M, L, n, exam_day=False, P=()):
+    """The ramp-up set (the teacher's review 6): the day's lead at about half of today's set. A rung under two weeks old
+    ramps on the rung below; a straddle or full shape two rungs down. No ramp when the practice part already opens the
+    same line. On an exam day the first test leads. Warm-up, so it earns nothing."""
     skip = ('slow',) if exam_day else ('assessment', 'slow')
     lead = next((s for s in M if s[0] in DOSED and s[5] not in skip), None)
     if lead is None:
         return None
-    mid = lead[0]
-    easier = LIB[mid].get('regression_id')
-    if easier in DOSED and started(easier, L, n):
-        mid = easier
-    d = dose(mid, L, n)
-    if d is None:
+    if P and P[0][0] in HAND_LINE and lead[0] in HAND_LINE:
         return None
-    v = tidy(mid, max(1, int(d * 0.5 + 0.5)), min(L, 2))
+    mid, v = lead[0], value_of(lead)
+    lad = next((rs for rs in LADDERS.values() if mid in rs), None)
+    down = 2 if mid in HARD_SHAPES else 1 if pos(L, n) - pos(*DOSED[mid]['start']) < 14 else 0
+    if lad and down and lad.index(mid) >= down:
+        mid = lad[lad.index(mid) - down]
+    elif down and LIB[mid].get('regression_id') in DOSED and started(LIB[mid]['regression_id'], L, n):
+        mid = LIB[mid]['regression_id']
+    if mid != lead[0]:
+        v = dose(mid, L, n)
+        if v is None:
+            return None
+    v = tidy(mid, max(1, int(v * 0.5 + 0.5)), min(L, 2))
+    if mid == lead[0]:
+        v = min(v, max(1, value_of(lead) // 2))
+    if P and mid == P[0][0]:
+        return None
     return st(mid, 1, value=v, rest=45, tempo='ramp-up')
 
 
@@ -646,6 +693,11 @@ def bar_lead(L, n):
     return turns[((L - 1) * 5 + b) % len(turns)]
 
 
+def bent_hefesto(line, L, n):
+    """The Hefesto line from the Korean dip on: bent-arm work, so it closes the bar day."""
+    return line == 'hefesto' and started('assisted_korean_dip', L, n)
+
+
 def line_steps(line, L, n, lead, step, three):
     """One line of the bar day. The lead runs 3 sets (and a back-off when two lines share the day); the others keep 2
     working sets of their rung, so no rung drops to one set before its jump. A new rung enters beside the rung below."""
@@ -710,16 +762,20 @@ def bar_light(L, n):
     c = (L, n)
     lead = bar_lead(L, n)
     M = []
-    for line in sorted(bar_lines(L, n), key=lambda k: k != lead):
+    for line in sorted(bar_lines(L, n), key=lambda k: (bent_hefesto(k, L, n), k != lead)):
         if line == 'flag':
             continue  # tomorrow's exam holds the flag and the planche: no flag the day before (the statics review)
         top = settled(line, L, n) or ('skin_cat_partial' if line == 'back' else first_started(L, n, 'vertical_flag', 'assisted_tuck_flag', 'flag_ground_support'))
         if top == 'hefesto':
             top = rung('hefesto', L, n)[1]  # tomorrow's exam tests the strict Hefesto
-        M.append((st(top, 1, ctx=c, rest=150, frac=0.7), 0))
+        # A family tomorrow's exam tests gets one set; the Hefesto line, untested before the strict Hefesto, keeps two
+        # (the statics review 6), so its rung below still gets two sets a week before the next rung.
+        tested_tomorrow = line != 'hefesto' or started('hefesto', L, n)
+        M.append((st(top, 1 if tested_tomorrow else 2, ctx=c, rest=150, frac=0.7), 0))
     if L == 2 or not M:
         M.insert(0, (st('straight_bar_support', 2, ctx=c, rest=75), 0))
-    M += [(st(hang_core(L, n), 2, ctx=c, rest=75), 1), (st('feet_elevated_row' if started('feet_elevated_row', L, n) else 'inverted_row', 2, ctx=c, rest=90), 1),
+    # Tomorrow's exam tests the hanging core too: one set at 70% (the statics review 6).
+    M += [(st(hang_core(L, n), 1, ctx=c, rest=75, frac=0.7), 1), (st('feet_elevated_row' if started('feet_elevated_row', L, n) else 'inverted_row', 2, ctx=c, rest=90), 1),
           (st('arch_hold', 1, ctx=c, rest=45), 1)]
     return [], M, 'pull', 'pull', 45, 5
 
@@ -733,8 +789,9 @@ def press_light(L, n):
     oah = rung('oah', L, n)[0]
     if oah:
         M.append((st(settled('oah', L, n) or oah, 1, ctx=c, rest=90), 0))
-    press = first_started(L, n, 'deficit_wall_hspu', 'wall_hspu', 'wall_hspu_negative', 'elevated_pike_pushup', 'pike_pushup')
-    M.append((st(press, 2, ctx=c, rest=150, tempo='5010' if press == 'wall_hspu_negative' else None), 0))
+    # No slow negatives two days before an exam (the S&C review 6): the press at its last full-range rung.
+    press = first_started(L, n, 'deficit_wall_hspu', 'wall_hspu', 'elevated_pike_pushup', 'pike_pushup')
+    M.append((st(press, 2, ctx=c, rest=150), 0))
     M += [(st('german_hang', 1, ctx=c, rest=60, tempo='slow'), 1), (st('arch_hold', 1, ctx=c, rest=45), 1),
           (st('seated_pike_lift', 1, ctx=c, rest=60), 1), (st('hollow_body_hold', 1, ctx=c, rest=45), 1)]
     return P, M, 'push', 'push', 40, 5
@@ -795,6 +852,7 @@ def build_role(role, L, n, step):
     # ----- Levels 2-10: the skill week -----
     if role in ('front_pull', 'front_onearm'):
         M = ladder('front', L, n, 4 if L >= 4 else 3, step) or [(st('tuck_front_row', 3, ctx=c, rest=90), 0)]
+        flag = settled('flag', L, n)
         if started('strict_muscleup', L, n):
             M.append((st('strict_muscleup', 3, ctx=c, rest=180, tempo='controlled', step=step), 0))
         elif started('band_muscleup', L, n):
@@ -803,6 +861,10 @@ def build_role(role, L, n, step):
                          tempo='5010' if started('negative_muscleup', L, n) else '2111'), 1))
         elif started('low_bar_transition', L, n):
             M.append((st('low_bar_transition', 2, ctx=c, rest=90, tempo='controlled'), 1))
+        if flag:
+            # The flag's second day: never beside the bar day or the planche day (the statics review). It follows the
+            # whole front-lever ladder and the muscle-up, so the muscle-up comes fresh (review 6).
+            M.append((st(flag, 1, ctx=c, rest=120, frac=0.7), 0))
         if role == 'front_onearm':
             oa = first_started(L, n, 'one_arm_pullup', 'one_arm_pullup_negative', 'assisted_one_arm_pullup')
             M.append((st(oa, 2, ctx=c, rest=150, tempo='5010' if oa == 'one_arm_pullup_negative' else '3010'), 0))
@@ -812,10 +874,6 @@ def build_role(role, L, n, step):
             M.append((st('archer_pullup', 1, ctx=c, rest=120), 0))  # kept: with the flag set, the muscle-up gives a set
         elif started('archer_pullup', L, n):
             M.append((st('archer_pullup', 3, ctx=c, rest=120, step=step), 1))
-        flag = settled('flag', L, n)
-        if flag:
-            # The flag's second day: never beside the bar day or the planche day (the statics review).
-            M.insert(1, (st(flag, 1, ctx=c, rest=120, frac=0.7), 0))
         # From Level 8 the high-rep pull-ups move to day 6: day 1 keeps 2 sets beside the one-arm work (the S&C review).
         M.append((st(pull_basic(L, n), 2 if L >= 8 else 3 if L >= 3 else 4, ctx=c, rest=150, step=step), 0))
         M.append((st(hang_core(L, n), 2, ctx=c, rest=75), 1))
@@ -913,9 +971,9 @@ def build_role(role, L, n, step):
             M.append((st(knee, 2, ctx=c, rest=90, frac=0.7), 2))
         else:
             M.append((st('bulgarian_split_squat', 2, ctx=c, rest=90), 2))
-        # Shoulder extension: the skin-the-cat, or beside the Korean dip the free supinated German hang (batch 2).
-        ext = ('supinated_german_hang' if rung('hefesto', L, n)[0] == 'assisted_korean_dip' and started('supinated_german_hang', L, n)
-               else 'skin_the_cat' if started('skin_the_cat', L, n) else 'german_hang')
+        # Shoulder extension: the skin-the-cat or the German hang. The supinated hang stays on the bar day, never the class
+        # before the Korean dip (the statics and S&C reviews).
+        ext = 'skin_the_cat' if started('skin_the_cat', L, n) else 'german_hang'
         M.append((st(ext, 1, ctx=c, rest=60, tempo='slow'), 1))
         M.append((st('arch_hold', 1, ctx=c, rest=45), 2))
         M.append((st('seated_pike_lift', 1, ctx=c, rest=60), 2))
@@ -924,7 +982,9 @@ def build_role(role, L, n, step):
         lines = bar_lines(L, n)
         lead = bar_lead(L, n)
         M = []
-        for line in sorted(lines, key=lambda k: k != lead):  # the leading line first, fresh
+        # The leading line first, fresh, but the Hefesto line last once it bends the arms (from the Korean dip): its
+        # bent-arm work tires the biceps the back lever then stretches (the statics review 6). The lead keeps its sets.
+        for line in sorted(lines, key=lambda k: (bent_hefesto(k, L, n), k != lead)):
             M += line_steps(line, L, n, line == lead, step, len(lines) == 3)
         if L == 2 or not lines:
             M = [(st('straight_bar_support', 2, ctx=c, rest=75), 0)] + M
@@ -944,25 +1004,30 @@ def build_role(role, L, n, step):
         return P, M, 'pull', 'pull', 55, 7 if L >= 3 else 5
     if role == 'basics':
         sbd = started('strict_muscleup', L, n) and not started('assisted_korean_dip', L, n)
+        # The lever sets come straight after the practice, before any basics (the statics review 6).
+        M = second_exposures(L, n)
         # Three pull-up sets from Level 4: vertical pulling reaches about 11 sets a week (the S&C review).
-        M = [(st(pull_basic(L, n), 3 if L >= 4 else 2, ctx=c, rest=150, step=step), 0), (st(dip_basic(L, n), 2, ctx=c, rest=120, step=step), 0),
-             (st('pushup', 2, ctx=c, rest=90, step=step), 0)]
+        M += [(st(pull_basic(L, n), 3 if L >= 4 else 2, ctx=c, rest=150, step=step), 0), (st(dip_basic(L, n), 2, ctx=c, rest=120, step=step), 0),
+              (st('pushup', 2, ctx=c, rest=90, step=step), 0)]
         if sbd:
             # From the muscle-up to the Korean dip, straight-bar dips keep the Hefesto's gate (10 reps) in reach.
             M.append((st('straight_bar_dip', 2, ctx=c, rest=120, step=step), 1))
         hard_push = first_started(L, n, 'one_arm_pushup', 'archer_pushup')
         if started(hard_push, L, n):
             M.append((st(hard_push, 2, ctx=c, rest=150, step=step if hard_push == 'one_arm_pushup' else 0), 0))
-        M += second_exposures(L, n) + day6_press(L, n)
+        M += day6_press(L, n)
         M += circuit([pull_basic(L, n), dip_basic(L, n), 'pushup', leg_basic(L, n), hang_core(L, n)], 2, L, n, rest=45, round_rest=120, frac=0.7)
         return handstand_practice(L, n, 2) + one_arm_attempts(L, n), M, 'full', 'full', 50, 6
     if role == 'battle':
         # One muscle-up set at the working dose: the muscle-up trains twice a week (the statics review).
         # The pull-up set day 1 gave up opens the battle at its full dose (the S&C review).
-        M = [(st('strict_muscleup', 1, ctx=c, rest=180, tempo='controlled'), 0), (st('pullup', 1, ctx=c, rest=150), 0)]
-        M += circuit(['pullup', 'parallel_dip', 'pushup', 'pistol_squat'], 3, L, n, rest=30, round_rest=120, frac=0.75)
+        # The order (the teacher's and statics reviews 6): the lever sets, the muscle-up and pull-ups, the pushing and the
+        # press, then the rounds last.
+        M = second_exposures(L, n)
+        M += [(st('strict_muscleup', 1, ctx=c, rest=180, tempo='controlled'), 0), (st('pullup', 1, ctx=c, rest=150), 0)]
         M.append((st('one_arm_pushup', 2, ctx=c, rest=150), 1))
-        M += second_exposures(L, n) + day6_press(L, n)
+        M += day6_press(L, n)
+        M += circuit(['pullup', 'parallel_dip', 'pushup', 'pistol_squat'], 3, L, n, rest=30, round_rest=120, frac=0.75)
         M.append((st('toes_to_bar', 2, ctx=c, rest=75, frac=0.8), 2))
         return one_arm_attempts(L, n), M, 'full', 'full', 50, 7
     if role == 'statics_chain':
@@ -995,10 +1060,16 @@ def line_drills(L, n):
     return out
 
 
+def easy_handstand(L, n, sets):
+    """The handstand in an easy class: the athlete's own rung at half its dose, never back to the wall once free
+    (the teacher's review 6)."""
+    hs = first_started(L, n, 'freestanding_handstand', 'wall_handstand', 'pike_handstand_hold')
+    return (st(hs, sets, ctx=(L, n), rest=60, tempo='easy technique', frac=0.5 if hs == 'freestanding_handstand' else 0.6), 0)
+
+
 def reentry(L, n):
     c = (L, n)
-    hs = first_started(L, n, 'freestanding_handstand', 'wall_handstand', 'pike_handstand_hold')
-    M = [(st(hs if hs != 'freestanding_handstand' else 'wall_handstand', 2, ctx=c, rest=60, tempo='easy technique', frac=0.6), 0),
+    M = [easy_handstand(L, n, 2),
          (st('hollow_body_hold', 2, ctx=c, rest=45, frac=0.6), 0), (st('dead_hang', 1, ctx=c, rest=60, frac=0.6), 0),
          (st('pushup', 2, ctx=c, rest=60, frac=0.5), 0), (st(leg_basic(L, n), 2, ctx=c, rest=60, frac=0.5), 0),
          (st('glute_bridge', 1, ctx=c, rest=30, frac=0.6), 1)]  # the week's hinge when the exam week has no legs day
@@ -1014,12 +1085,16 @@ def primer(L, n):
     if started('pike_pushup', L, n):
         M.append((st('pike_pushup', 1, ctx=c, rest=45, frac=0.5), 1))
     M += line_drills(L, n)
+    if L >= 4:
+        # The day before a level test stays at 8 sets (the S&C review 6): the line drills go first, then the bridge.
+        while len(M) > 8:
+            M.remove(next(x for x in reversed(M) if x[1] > 0))
     return [], M, 'full', 'easy', 40, 4
 
 
 def easy_class(L, n):
     c = (L, n)
-    M = [(st(first_started(L, n, 'wall_handstand', 'pike_handstand_hold'), 2, ctx=c, rest=60, tempo='easy technique', frac=0.6), 0),
+    M = [easy_handstand(L, n, 2),
          (st('pushup', 2, ctx=c, rest=60, frac=0.5), 0), (st('squat', 2, ctx=c, rest=60, frac=0.5), 0),
          (st('hollow_body_hold', 2, ctx=c, rest=45, frac=0.6), 0), (st('dead_hang', 1, ctx=c, rest=60, frac=0.6), 1)]
     M += line_drills(L, n)
@@ -1046,81 +1121,118 @@ def scaled(steps, set_frac=1.0, dose_frac=None, L=None, minus=0):
     return out
 
 
-# The order a test day runs its sets in: fresh balance and the biggest straight-arm shapes first.
-TEST_ORDER = ['one_arm_handstand', 'straddle_one_arm_handstand', 'freestanding_handstand', 'wall_handstand',
-              'full_planche', 'straddle_planche', 'advanced_tuck_planche', 'tuck_planche', 'frog_stand', 'planche_lean', 'full_front', 'straddle_front',
-              'one_leg_front', 'advanced_tuck_front', 'tuck_front_hold', 'german_hang', 'hefesto', 'assisted_hefesto', 'full_back', 'straddle_back',
-              'advanced_tuck_back', 'tuck_back_hold', 'full_flag', 'straddle_flag', 'tuck_flag', 'strict_muscleup', 'band_muscleup', 'deficit_wall_hspu', 'wall_hspu',
-              'pike_pushup', 'v_sit', 'lsit', 'one_arm_pullup', 'archer_pullup', 'pullup', 'eccentric_pullup', 'assisted_pullup', 'inverted_row',
-              'parallel_dip', 'eccentric_dip', 'assisted_dip', 'support_hold', 'one_arm_pushup', 'pseudo_planche_pushup', 'pushup', 'incline_pushup',
-              'shrimp_squat', 'pistol_squat', 'squat', 'toes_to_bar', 'hanging_leg_raise', 'dragon_flag', 'hollow_body_hold', 'dead_hang']
+# ----- exams (review 6): one test for every skill family the block trained -----
+# The order a test day runs (the three coaches, review 6): balance first, then the straight-arm holds, the bent-arm
+# strength, the basics, the trunk last. A leg test sits inside the rest after a hold. Each slot tests its hardest rung
+# that has had two weeks (a rung under two weeks old leaves the slot to the rung below). Tiers: H balance, A max
+# strength, L legs, B the rep basics, C the trunk.
+EXAM_SLOTS = [
+    ('H', ['one_arm_handstand', 'freestanding_handstand', 'wall_handstand']),
+    ('A', ['full_planche', 'straddle_planche', 'advanced_tuck_planche', 'tuck_planche', 'frog_stand']),
+    ('A', ['planche_lean']),
+    ('L', ['pistol_squat', 'squat']),
+    ('A', ['full_front', 'straddle_front', 'advanced_tuck_front', 'tuck_front_hold']),
+    ('L', ['shrimp_squat']),
+    ('A', ['full_back', 'straddle_back', 'advanced_tuck_back', 'tuck_back_hold']),
+    ('A', ['full_flag', 'straddle_flag', 'tuck_flag']),
+    ('A', ['strict_muscleup', 'band_muscleup']),
+    ('A', ['one_arm_pullup', 'archer_pullup']),
+    ('A', ['deficit_wall_hspu', 'wall_hspu', 'pike_pushup']),
+    ('A', ['hefesto']),
+    ('A', ['one_arm_pushup']),
+    ('A', ['pseudo_planche_pushup']),
+    ('B', ['pullup', 'eccentric_pullup', 'assisted_pullup', 'inverted_row']),
+    ('B', ['parallel_dip', 'eccentric_dip', 'assisted_dip', 'support_hold']),
+    ('B', ['pushup']),
+    ('C', ['v_sit', 'lsit']),
+    ('C', ['dragon_flag', 'hollow_body_hold']),
+    ('C', ['toes_to_bar', 'hanging_leg_raise']),
+    ('C', ['dead_hang']),
+]
+TIER = {m: t for t, ms in EXAM_SLOTS for m in ms}
+FAMILY = {m: rungs[0] for rungs in BELT_LADDERS for m in rungs}
+HOLDS = set(LADDERS['planche'])
+exam_seen = {}  # family -> the last exam that tested it (rotation over a cap)
 
 
-def tested(L, n):
-    """The skills a block's exam tests: each static line's top rung once it has had two build weeks, else the rung below,
-    and the belted skills the block trained."""
+def exam_caps(L, n):
+    """Tests a day can hold before results measure fatigue (review 6): at most 15, 14 in a block exam, with at most 8
+    max-strength tests (7 in a block exam), 3 rep basics and 4 legs and trunk tests, and 8 elbow-load sets. Levels 1-2:
+    10 and 12."""
+    if L <= 2:
+        return dict(total=12 if n == 100 else 10, A=6, B=3, LC=5, H=1)
+    if (L, n) == (10, 76):
+        return dict(total=15, A=9, B=0, LC=5, H=1)  # the champion statics test: every top rung, no rep basics
+    level = n == 100
+    return dict(total=15 if level else 14, A=8 if level else 7, B=3, LC=4, H=1)
+
+
+# Supporting strength tests: over a cap they rotate out before the muscle-up, the one-arm pull-up and the Hefesto. The
+# four static ladders (planche, front lever, back lever, flag) are never left out (the statics review 6).
+SECONDARY = {'one_arm_pushup', 'pseudo_planche_pushup', 'deficit_wall_hspu', 'wall_hspu', 'pike_pushup', 'archer_pullup', 'band_muscleup'}
+EXAM_ELBOW = 8  # elbow-load sets on an exam day, the German hang included (the S&C review 6)
+
+
+def exam_picks(L, n, raw):
+    """The skills exam (L, n) tests: in each slot the hardest rung with two weeks behind it, when its family had at least
+    4 sets in the 21 classes before. The lower rungs of a tested ladder are held through it, so they aren't tested; the
+    pull-up and push-up are, beside the one-arm rungs, because reps measure something else (the statics review 6)."""
+    here = pos(L, n)
+    sets = defaultdict(int)
+    for (L2, n2), r in raw.items():
+        if r['kind'] != 'exam' and 0 < here - pos(L2, n2) <= 21:
+            for s, _ in r['P'] + r['M']:
+                sets[FAMILY.get(s[0], s[0])] += s[1]
     picks = []
-    for name in STATIC_LADDERS:
-        top, below = rung(name, L, n)
-        if top is None:
+    for tier, cands in EXAM_SLOTS:
+        ok = [m for m in cands if started(m, L, n) and here - pos(*DOSED[m]['start']) >= 14]
+        if not ok:
             continue
-        sL, sn = DOSED[top]['start']
-        pick = top if pos(L, n) - pos(sL, sn) >= 14 else below or top
-        if pick in SKILLS:
-            picks.append(pick)
-        elif below in SKILLS:
-            picks.append(below)
-    for mid in ('one_arm_handstand', 'freestanding_handstand', 'strict_muscleup', 'hefesto', 'deficit_wall_hspu', 'one_arm_pullup',
-                'archer_pullup', 'pullup', 'parallel_dip', 'one_arm_pushup', 'pseudo_planche_pushup', 'pushup', 'shrimp_squat', 'pistol_squat',
-                'v_sit', 'lsit', 'toes_to_bar', 'dragon_flag', 'wall_hspu', 'pike_pushup', 'wall_handstand', 'hanging_leg_raise', 'squat',
-                'hollow_body_hold', 'dead_hang'):
-        sL, sn = DOSED[mid]['start']
-        if started(mid, L, n) and pos(L, n) - pos(sL, sn) >= 14:
-            picks.append(mid)
-    if not started('pullup', L, n) or pos(L, n) - pos(*SKILLS['pullup']['start']) < 14:
-        pb = pull_basic(L, n)
-        picks.append(pb if pb != 'pullup' else ('assisted_pullup' if L == 1 else 'eccentric_pullup'))
-        if L == 1 and started('eccentric_pullup', L, n) and pos(L, n) - pos(*PROG['eccentric_pullup']['start']) >= 14:
-            picks.append('eccentric_pullup')
-    if not started('parallel_dip', L, n) or pos(L, n) - pos(*SKILLS['parallel_dip']['start']) < 14:
-        db = dip_basic(L, n)
-        picks.append(db if db != 'parallel_dip' else 'eccentric_dip')
-    if started('frog_stand', L, n) and not started('tuck_planche', L, n):
-        picks.append('frog_stand')
-        if started('planche_lean', L, n) and pos(L, n) - pos(*PROG['planche_lean']['start']) >= 14:
-            picks.append('planche_lean')
-    if started('band_muscleup', L, n) and not started('strict_muscleup', L, n) and pos(L, n) - pos(*PROG['band_muscleup']['start']) >= 14:
-        picks.append('band_muscleup')
-    # one exercise per family: the hardest started one
-    families = [('one_arm_handstand', 'freestanding_handstand', 'wall_handstand'), ('deficit_wall_hspu', 'wall_hspu', 'pike_pushup'),
-                ('one_arm_pullup', 'archer_pullup'), ('v_sit', 'lsit'), ('toes_to_bar', 'hanging_leg_raise'),
-                ('one_arm_pushup', 'pseudo_planche_pushup'), ('shrimp_squat', 'pistol_squat')]
-    for fam in families:
-        have = [m for m in fam if m in picks]
-        for m in have[1:]:
-            picks.remove(m)
-    order = {m: i for i, m in enumerate(TEST_ORDER)}
-    picks = sorted(dict.fromkeys(picks), key=lambda m: order.get(m, 99))
-    keep = 10 if n == 100 else 8  # about 8 tests a block exam (the teacher's review)
-    if len(picks) > keep:
-        # drop the easiest supporting tests first, never a ladder's rung or a basic
-        for m in ('dead_hang', 'hollow_body_hold', 'squat', 'hanging_leg_raise', 'wall_handstand', 'pike_pushup', 'wall_hspu',
-                  'dragon_flag', 'toes_to_bar', 'lsit', 'pseudo_planche_pushup', 'archer_pullup', 'pistol_squat', 'frog_stand'):
-            if len(picks) > keep and m in picks:
-                picks.remove(m)
-    rungs = {r for name in STATIC_LADDERS for r in LADDERS[name]}
-    while len(picks) > keep:
-        picks.remove(next(m for m in reversed(picks) if m not in rungs and m not in ('one_arm_pullup', 'strict_muscleup', 'hefesto', 'one_arm_handstand', 'band_muscleup')))
+        m = ok[0]
+        family = [FAMILY.get(x, x) for x in cands]
+        if sum(sets[f] for f in dict.fromkeys(family)) < 4:
+            continue
+        if m == 'planche_lean' and not any(p == 'frog_stand' for p in picks):
+            continue  # the lean stands in beside the frog stand only, before the tuck planche
+        if m == 'pseudo_planche_pushup' and any(p in HOLDS for p in picks):
+            continue  # a planche hold tests the family
+        if m == 'dead_hang' and 'pullup' in picks:
+            continue
+        if m == 'band_muscleup' and L >= 5:
+            continue
+        picks.append(m)
     return picks
 
 
-ADVANCED_STANDARD = [('freestanding_handstand', 30), ('strict_muscleup', 4), ('advanced_tuck_planche', 8), ('straddle_front', 5),
-                     ('full_back', 8), ('full_flag', 3), ('wall_hspu', 7), ('pullup', 15), ('parallel_dip', 20), ('pushup', 35),
-                     ('pistol_squat', 8), ('lsit', 20)]
+def exam_cut(picks, L, n, keep=()):
+    """Holds the picks to the caps: over a cap, the family tested most recently waits for the next exam, never one in
+    [keep] (the newest skill, the level's standards)."""
+    caps = exam_caps(L, n)
 
+    def tier(m):
+        t = TIER[m]
+        return 'LC' if t in ('L', 'C') else t
 
-MAX_EFFORT = set(LADDERS['front'] + LADDERS['back'] + LADDERS['planche'] + LADDERS['flag'] + LADDERS['oah'] + LADDERS['hefesto']) | {
-    'strict_muscleup', 'one_arm_pullup', 'deficit_wall_hspu'}
+    def drop(cands):
+        cands = [m for m in cands if m not in keep]
+        cands = [m for m in cands if m in SECONDARY] or cands  # the supporting strength tests rotate first
+        if not cands:
+            return False
+        picks.remove(max(cands, key=lambda m: (exam_seen.get(FAMILY.get(m, m), -1), -picks.index(m))))
+        return True
+    for t in ('H', 'A', 'B', 'LC'):
+        while sum(1 for m in picks if tier(m) == t) > caps[t] and drop([m for m in picks if tier(m) == t]):
+            pass
+    hang = any(m in LADDERS['back'] + ['hefesto'] for m in picks)
+    while sum(1 for m in picks if m in ELBOW) + hang > EXAM_ELBOW and drop([m for m in picks if m in ELBOW]):
+        pass
+    # At most 10 advanced sets on an RPE 8 day (the class limits): the advanced legs and trunk tests rotate out first.
+    adv = [m for m in picks if LIB[m]['category'] in ('advanced_skill', 'mastery_skill', 'advanced_strength', 'skill_strength')]
+    while len(adv) > 10 and (drop([m for m in adv if tier(m) == 'LC']) or drop(adv)):
+        adv = [m for m in adv if m in picks]
+    while len(picks) > caps['total'] and (drop([m for m in picks if tier(m) == 'LC']) or drop([m for m in picks if tier(m) == 'B'])):
+        pass
+    return picks
 
 
 def exam_value(mid, L, n):
@@ -1129,42 +1241,91 @@ def exam_value(mid, L, n):
     return dose(mid, L, n, step=1)
 
 
-def exam_rest(mid, L):
+def exam_rest(mid, L, nxt=None, short=False):
+    """Rest after a test (review 6): 150 s after a max-strength test (120 s in Levels 3-4, or when the class runs long),
+    120 s after the handstand and the basics, 90 s after a leg test and 60 s between trunk tests. A leg test right after
+    a hold splits its rest: 60 s, the leg test, then 90 s, so holds stay about three minutes apart."""
     if L <= 2:
         return 90
-    return 180 if mid in MAX_EFFORT and L >= 7 else 120
+    t = TIER.get(mid, 'C')
+    if t == 'A':
+        return 60 if nxt and TIER.get(nxt) == 'L' else 120 if L <= 4 or short else 150
+    if t == 'B':
+        return 150 if mid == 'parallel_dip' and nxt == 'pushup' else 120
+    return 120 if t == 'H' else 90 if t == 'L' else 60
 
 
-def exam(L, n):
+ADVANCED_STANDARD = [('freestanding_handstand', 30), ('strict_muscleup', 4), ('advanced_tuck_planche', 8), ('straddle_front', 5),
+                     ('full_back', 8), ('full_flag', 3), ('wall_hspu', 7), ('pullup', 15), ('parallel_dip', 20), ('pushup', 35),
+                     ('pistol_squat', 8), ('lsit', 20)]
+EXAM_FLOOR = {(7, 100): dict(ADVANCED_STANDARD)}  # the Advanced Athlete exam: its standards are floors (the statics review 6)
+
+
+def exam_steps(picks, L, n, short=False):
     c = (L, n)
     M = []
+    hang = False
+    floor = EXAM_FLOOR.get((L, n), {})
+    order = [m for _, ms in EXAM_SLOTS for m in ms]
+    picks = sorted(picks, key=order.index)
+    for i, mid in enumerate(picks):
+        if mid in LADDERS['back'] + ['hefesto'] and started('german_hang', L, n) and not hang:
+            M.append((st('german_hang', 1, ctx=c, rest=60, tempo='slow'), 0))
+            hang = True
+        v = max(floor.get(mid, 0), exam_value(mid, L, n))
+        M.append((st(mid, 1, value=v, rest=exam_rest(mid, L, picks[i + 1] if i + 1 < len(picks) else None, short), tempo='assessment'), 0))
+    return M
+
+
+def exam(L, n, raw):
+    """An exam class: one fresh set of every skill family the block trained (review 6), in the slot order. The Full
+    Battle stays five rounds of the basics."""
+    c = (L, n)
     if (L, n) == (10, 100):
+        M = []
         for r in range(5):
             for i, (mid, reps) in enumerate((('pullup', 10), ('parallel_dip', 20), ('pushup', 30), ('squat', 40))):
                 M.append((st(mid, 1, value=reps, rest=90 if i == 3 else 30, tempo='assessment'), 0))
         return [], M, 'full', 'full', 55, 8, 'exam_level_full_battle'
+    picks = exam_picks(L, n, raw)
+    for mid in EXAM_FLOOR.get((L, n), {}):
+        slot = next(ms for _, ms in EXAM_SLOTS if mid in ms)
+        picks = [m for m in picks if m not in slot] + [mid]  # the standard's rung takes its slot
     if (L, n) == (10, 76):
-        for mid in ('one_arm_handstand', 'full_planche', 'full_front', 'hefesto', 'full_back', 'full_flag', 'strict_muscleup', 'one_arm_pullup',
-                    'one_arm_pushup', 'shrimp_squat'):
-            if mid == 'hefesto':
-                M.append((st('german_hang', 1, ctx=c, rest=60, tempo='slow'), 0))
-            M.append((st(mid, 1, value=exam_value(mid, L, n), rest=180, tempo='assessment'), 0))
-        return [], M, 'full', 'full', 55, 8, 'exam_block_champion_statics_strength'
-    if (L, n) == (7, 100):
-        # The standard, or what the athlete already trains when that is more.
-        for mid, v in ADVANCED_STANDARD:
-            if mid == 'full_back':
-                M.append((st('german_hang', 1, ctx=c, rest=60, tempo='slow'), 0))
-            M.append((st(mid, 1, value=max(v, exam_value(mid, L, n)), rest=exam_rest(mid, L), tempo='assessment'), 0))
-        return [], M, 'full', 'full', 55, 8, 'exam_level_advanced_athlete'
-    hang = False
-    for mid in tested(L, n):
-        if mid in ('tuck_back_hold', 'advanced_tuck_back', 'straddle_back', 'full_back', 'hefesto') and started('german_hang', L, n) and not hang:
-            M.append((st('german_hang', 1, ctx=c, rest=60, tempo='slow'), 0))
-            hang = True
-        M.append((st(mid, 1, value=exam_value(mid, L, n), rest=exam_rest(mid, L), tempo='assessment'), 0))
-    kind = 'exam_level' if n == 100 else 'exam_block'
-    return [], M, 'full', 'full', 55 if L >= 3 else 45, 8 if L >= 4 else 7, kind
+        picks = [m for m in picks if TIER[m] != 'B']
+    keep = set(EXAM_FLOOR.get((L, n), {}))
+    if L >= 3:
+        keep |= {m for m in picks if any(m in LADDERS[k] for k in STATIC_LADDERS)}
+    if picks:
+        keep.add(max(picks, key=lambda m: (pos(*DOSED[m]['start']), -picks.index(m))))  # the newest skill: the headline
+    picks = exam_cut(picks, L, n, keep)
+    cap = 45 if L <= 2 else 60  # an exam may take an hour (the statics and teacher reviews 6)
+    short = False
+    while True:
+        M = exam_steps(picks, L, n, short)
+        warm = WARM['exam'] + [st(picks[0], 1, value=1, rest=45, tempo='ramp-up')] * (2 if L >= 7 else 1)
+        if class_seconds([warm, [s for s, _ in M], COOL['exam']]) <= (cap - 2) * 60:
+            break
+        # Over the length: the trunk and legs tests rotate out first, then the basics; a max-strength test never does,
+        # its rest shortens instead.
+        lc = [m for m in picks if TIER[m] in ('L', 'C') and m not in keep]
+        b = [m for m in picks if TIER[m] == 'B' and m not in keep]
+        cands = lc or b
+        if not cands:
+            if short:
+                break
+            short = True
+            continue
+        picks.remove(max(cands, key=lambda m: (exam_seen.get(FAMILY.get(m, m), -1), -picks.index(m))))
+    for m in picks:
+        exam_seen[FAMILY.get(m, m)] = pos(L, n)
+    if (L, n) == (10, 76):
+        dtype = 'exam_block_champion_statics_strength'
+    elif (L, n) == (7, 100):
+        dtype = 'exam_level_advanced_athlete'
+    else:
+        dtype = 'exam_level' if n == 100 else 'exam_block'
+    return [], M, 'exam', 'exam', cap, 8 if L >= 4 else 7, dtype
 
 
 # ----- fitting a class: the set budget, the elbow cap, the length -----
@@ -1187,11 +1348,19 @@ def secs_of(step):
 
 
 def class_seconds(sections):
+    """A class's length: the work, the rests between sets, a change-over between exercises and, after a single set, its
+    rest before the next one. Steps of one movement in a row (a heavy set, then lighter ones) time as one exercise."""
     total = 0
     for steps in sections:
-        for s in steps:
+        for i, s in enumerate(steps):
             work, rests, rest = secs_of(s)
-            total += work + rests + 25 + (rest if s[1] == 1 else 0)
+            if i + 1 < len(steps) and steps[i + 1][0] == s[0]:
+                total += work + rests + rest
+                continue
+            group, j = s[1], i - 1
+            while j >= 0 and steps[j][0] == s[0]:
+                group, j = group + steps[j][1], j - 1
+            total += work + rests + 25 + (rest if group == 1 else 0)
     return total
 
 
@@ -1312,16 +1481,24 @@ KIND_SENTENCE = {
     'deload': 'A lighter class: one set fewer on every step, the same dose per set.',
     'light': 'A light class: the same lines at lower doses.',
     'reentry': 'An easy first class after the exam: short sets with plenty in reserve.',
-    'primer': 'Exam prep: one easy set of each line, nothing hard.',
+    'primer': 'Exam prep: tomorrow is the test. One easy set of each line, to arrive fresh, nothing hard.',
     'easy': 'An easy class before the exam: the basics at half the dose.',
-    'barlight': 'The bar class before the exam, kept light: one set of each line at about 70% of the block\'s dose, nothing new.',
-    'presslight': 'The press class before the exam, kept light: the handstand, the press at the block\'s dose, nothing new.',
+    'barlight': 'The bar class before the exam: the work is done, today you sharpen. One set of each line at about 70% of the block\'s dose.',
+    'presslight': 'The press class before the exam: the work is done, today you sharpen. The handstand and the press at the block\'s dose, then off.',
 }
 EXAM_SENTENCE = {
-    'exam_block': 'The block exam: one fresh set of each skill this block trained, at the block\'s dose, in the order shown. Tick each target you reach. A miss offers to repeat the block.',
-    'exam_level': 'The level exam: one fresh set of each skill the level trained, at its top dose, in the order shown. Tick each target you reach. A miss offers to repeat the block.',
-    'exam_level_advanced_athlete': 'The Advanced Athlete exam: the standard this program sets for an advanced athlete, one fresh set each. Tick each target you reach.',
-    'exam_block_champion_statics_strength': 'Champion test, part one: every full shape and the hardest strength skills, one fresh set each with full rest. Tick each target you reach.',
+    'exam_block': ('The block exam, a real test of your level: one fresh set of every skill family you train, at a number you reached in the '
+                   'last three weeks, in the order shown: balance, the holds, strength, the basics, the trunk. Take it fresh, as your first '
+                   'class of the day, and rest at least the time shown. Tick each target you reach. Missing the headline skill, or three '
+                   'targets or more, offers to repeat the block; any other miss is simply tested again next time.'),
+    'exam_level': ('The level test, a real test of your level: one fresh set of every skill family the level trained, at its top dose, in the '
+                   'order shown: balance, the holds, strength, the basics, the trunk. Take it fresh, as your first class of the day, and '
+                   'rest at least the time shown. Tick each target you reach. Missing the headline skill, or three targets or more, offers '
+                   'to repeat the block.'),
+    'exam_level_advanced_athlete': ('The Advanced Athlete exam: the standard this program sets for an advanced athlete, plus every other skill '
+                                    'family you train, one fresh set each. Take it fresh, as your first class of the day. Tick each target you reach.'),
+    'exam_block_champion_statics_strength': ('Champion test, part one: every full shape and the hardest strength skills, with the pistol and '
+                                             'the hanging core, one fresh set each with full rest. Take it fresh. Tick each target you reach.'),
     'exam_level_full_battle': 'Champion test, part two, the Full Battle: five rounds of 10 pull-ups, 20 dips, 30 push-ups and 40 squats, 30 s between stations and 90 s between rounds. Every set as written.',
 }
 COACHING = ('Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a '
@@ -1333,7 +1510,9 @@ def role_title(role, L, n):
         parts = [p for p, ok in (('Back Lever', rung('back', L, n)[0] or started('skin_cat_partial', L, n)),
                                  ('Flag', rung('flag', L, n)[0] or started('flag_ground_support', L, n)),
                                  ('Hefesto', rung('hefesto', L, n)[0])) if ok]
-        return ' & '.join(parts) if parts else 'Bar & Shoulders'
+        if not parts:
+            return 'Bar & Shoulders'
+        return parts[0] if len(parts) == 1 else ', '.join(parts[:-1]) + ' & ' + parts[-1]
     if role == 'front_pull' and not rung('front', L, n)[0]:
         return 'Pull'
     if role == 'planche_push' and not rung('planche', L, n)[0]:
@@ -1341,12 +1520,13 @@ def role_title(role, L, n):
     return ROLE_TITLE[role]
 
 
-def build_raw(L, n):
-    """The class before fitting: practice, main, warm-up and cool-down kinds, minute cap, RPE, day type, role, kind."""
+def build_raw(L, n, raw=None):
+    """The class before fitting: practice, main, warm-up and cool-down kinds, minute cap, RPE, day type, role, kind. An
+    exam reads the classes before it ([raw]) for what they trained."""
     kind = kind_of(L, n)
     role = role_of(L, n)
     if kind == 'exam':
-        P, M, wk, ck, cap, rpe, dtype = exam(L, n)
+        P, M, wk, ck, cap, rpe, dtype = exam(L, n, raw)
         return dict(P=P, M=M, wk=wk, ck=ck, cap=cap, rpe=rpe, dtype=dtype, role=role, kind=kind)
     if kind in ('reentry', 'primer', 'easy'):
         P, M, wk, ck, cap, rpe = {'reentry': reentry, 'primer': primer, 'easy': easy_class}[kind](L, n)
@@ -1520,6 +1700,29 @@ def no_double_rise(P, M, r, last, L):
     return out[:len(P)], out[len(P):]
 
 
+HEAVY = {'pullup': 12, 'parallel_dip': 18}
+
+
+def one_heavy_set(M, L):
+    """High-rep pull-ups and dips (the S&C review 6): one set a class at the dose, every other set at 75%, so the plan's
+    biggest biceps and inner-elbow load comes once a class, not two or three times after the skill work. The rounds
+    already run lighter."""
+    out, heavy = [], {}
+    for s in M:
+        mid = s[0]
+        if mid in HEAVY and s[5] not in ('assessment', 'ramp-up', 'controlled') and value_of(s) >= HEAVY[mid]:
+            if mid in heavy:
+                out.append(with_value(s, min(value_of(s), heavy[mid])))
+                continue
+            light = heavy[mid] = tidy(mid, max(1, int(value_of(s) * 0.75 + 0.5)), L)
+            if s[1] > 1:
+                out.append([s[0], 1] + list(s[2:]))
+                out.append(with_value([s[0], s[1] - 1] + list(s[2:]), light))
+                continue
+        out.append(s)
+    return out
+
+
 def honest_exam(M, L, n, recent, headline):
     """An exam tests what the athlete trained: each item at the best set of the last 21 classes. Only the headline
     skill may go one step up, and only when that step reaches its next belt target (the teacher's review)."""
@@ -1540,7 +1743,12 @@ def honest_exam(M, L, n, recent, headline):
 
 def build_once(skip):
     rehearsed.clear()  # each pass rehearses from the first class again
-    raw = {(L, n): build_raw(L, n) for L in range(1, 11) for n in range(1, 101)}
+    exam_seen.clear()
+    raw = {(L, n): build_raw(L, n, {}) for L in range(1, 11) for n in range(1, 101) if kind_of(L, n) != 'exam'}
+    for L in range(1, 11):
+        for n in EXAMS[L]:
+            raw[(L, n)] = build_raw(L, n, raw)
+    raw = {(L, n): raw[(L, n)] for L in range(1, 11) for n in range(1, 101)}
     records, best = add_records(raw, skip)
     programs = []
     fitted = {}
@@ -1550,11 +1758,22 @@ def build_once(skip):
     for L in range(1, 11):
         for n in range(1, 101):
             r = raw[(L, n)]
-            warm = [list(x) for x in WARM[r['wk']]]
-            cool = [list(x) for x in COOL[r['ck']]]
+            warm = with_wrists([list(x) for x in WARM[r['wk']]], [s for s, _ in r['P'] + r['M']], [s for s, _ in r['M']])
+            # The cool-down skips what the class already did (the teacher's review 6); compression work ends with the
+            # hip flexors, hand balance with the forearms (the S&C review 6).
+            done = {s[0] for s, _ in r['P'] + r['M']}
+            cool = [list(x) for x in COOL[r['ck']] if x[0] not in done]
+            # Each swaps in for the last stretch, so the cool-down keeps its length.
+            if done & {'lsit', 'v_sit', 'dragon_flag', 'tuck_lsit', 'one_leg_lsit'} and 'hip_flexor_stretch' not in [x[0] for x in cool]:
+                cool[-1:] = [['hip_flexor_stretch', 1, None, '30/side', 0, 'easy', None]]
+            if done & HANDS and 'forearm_stretch' not in [x[0] for x in cool] and r['kind'] != 'recovery':
+                cool[-1:] = [['forearm_stretch', 1, None, 30, 0, 'easy', None]] if cool[-1][0] != 'hip_flexor_stretch' else                     [['forearm_stretch', 1, None, 30, 10, 'easy', None], cool[-1]]
+            for extra in ('child_pose', 'lat_stretch', 'quad_stretch'):
+                if len(cool) < 3 and extra not in done and extra not in [x[0] for x in cool]:
+                    cool.append([extra, 1, None, 45 if extra == 'child_pose' else 30, 0, 'easy', None])
             if r['kind'] != 'recovery' and r['role'] != 'recovery':
                 # The main part's lead first; on an exam day the first test (the statics review).
-                ramp = ramp_of([s for s, _ in r['M'] + r['P']], L, n, r['kind'] == 'exam')
+                ramp = ramp_of([s for s, _ in r['M'] + r['P']], L, n, r['kind'] == 'exam', [s for s, _ in r['P']])
                 if ramp:
                     warm.append(ramp)
                 if r['kind'] == 'exam' and L >= 7:
@@ -1565,7 +1784,10 @@ def build_once(skip):
                         warm.append(ramp)
             # The bar day with three lines (back lever, flag, Hefesto) may hold one elbow set more; day 6 follows the bar
             # day, so it stays under the heavy mark, as does the exam week's light bar class.
-            if r['kind'] == 'barlight' or r['role'] in ('basics', 'battle', 'statics_chain'):
+            if r['kind'] == 'barlight':
+                cap = 3  # the class before an exam: one set of each tested line, two of an untested hang (review 6)
+            elif r['role'] in ('basics', 'battle', 'statics_chain') or L >= 4 and n - 2 in EXAMS[L] and r['kind'] == 'build_a':
+                # The first full class after an exam's recovery comes back gently too (the S&C review 6).
                 cap = 4
             else:
                 cap = ELBOW_CAP + 1 if r['role'] == 'back_flag' and len(bar_lines(L, n)) == 3 else ELBOW_CAP
@@ -1587,6 +1809,8 @@ def build_once(skip):
             fitted[(L, n)] = M
             if L >= 2:
                 P, M = no_double_rise(P, M, r, last, L)
+            if r['kind'] != 'exam':
+                M = one_heavy_set(M, L)
             headline = None
             if r['kind'] == 'exam' and r['dtype'] != 'exam_level_full_battle':
                 # The headline is the newest skill tested that no earlier exam of the level has named.
@@ -1600,7 +1824,9 @@ def build_once(skip):
             warm, P, M = finish(warm), finish(P, rehearse=False), finish(M)
             minutes = min(r['cap'], max(15, math.ceil(class_seconds([warm, P, M, cool]) / 60) + 2))
             kind, role = r['kind'], r['role']
-            lead = next((s for s in M if s[0] not in ('german_hang', 'easy_walk')), M[0])
+            # Day 6 opens with its lever sets but is named for its basics.
+            rungs = {r for rs in LADDERS.values() for r in rs} if role in ('basics', 'battle') else set()
+            lead = next((s for s in M if s[0] not in ('german_hang', 'easy_walk') and s[0] not in rungs), M[0])
             if kind == 'exam':
                 head = EXAM_NAMES.get((L, n)) or {'exam_level_advanced_athlete': 'Level 7 Test: Advanced Athlete',
                                                   'exam_block_champion_statics_strength': 'Champion Test: Statics & Strength',
@@ -1635,7 +1861,7 @@ def build_once(skip):
                 'id': f'r9-l{L:02d}-p{n:03d}', 'origin': 'round9', 'level': L, 'number': n,
                 'title': {'en': title}, 'description': {'en': desc},
                 'schedule': {'week': (n - 1) // 7 + 1, 'day': rotation_day(n), 'day_type': r['dtype'], 'minutes': minutes,
-                             'rpe': r['rpe'], 'focus': focus},
+                             'rpe': r['rpe'], 'focus': focus, **({'headline': headline} if headline else {})},
                 'warmup': warm, 'practice': P, 'main': M, 'cooldown': cool,
             })
     return programs, records, best
@@ -1661,8 +1887,8 @@ def check(programs):
         sec = class_seconds([p['warmup'], p['practice'], p['main'], p['cooldown']])
         if sec > p['schedule']['minutes'] * 60:
             errors.append(f'{where} needs {sec / 60:.1f} min > {p["schedule"]["minutes"]}')
-        if p['schedule']['minutes'] > 55:
-            errors.append(f'{where} is over 55 minutes')
+        if p['schedule']['minutes'] > (60 if p['schedule']['day_type'].startswith('exam') else 55):
+            errors.append(f'{where} is over its minutes')
         adv = sum(s[1] for s in p['main'] if LIB[s[0]]['category'] in ('advanced_skill', 'mastery_skill', 'advanced_strength', 'skill_strength'))
         if sum(s[1] for s in p['main']) > 20 or (p['schedule']['rpe'] >= 8 and adv > 10):
             errors.append(f'{where} main sets {sum(s[1] for s in p["main"])}, advanced {adv}')

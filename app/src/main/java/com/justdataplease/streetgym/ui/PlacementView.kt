@@ -14,6 +14,8 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.justdataplease.streetgym.R
+import com.justdataplease.streetgym.billing.LevelAccess
+import com.justdataplease.streetgym.billing.Tier
 import com.justdataplease.streetgym.data.model.TrainingLevel
 import com.justdataplease.streetgym.data.model.TrainingProgram
 import com.justdataplease.streetgym.data.progress.Placement
@@ -21,15 +23,19 @@ import java.util.Locale
 
 /**
  * Today's first-launch card: the placement test ([Placement]), taken like an exam. The athlete does one set each of
- * pull-ups, push-ups and squats and enters the counts; the card shows the start they give and one confirm. [answers]
- * holds each count (-1 for none) and outlives a redraw of Today. [onStart] gets where to start; skipping and "Start
- * from scratch" are Level 1, day 1.
+ * pull-ups, push-ups and squats and enters the counts; the card shows the start they give and one confirm. When the
+ * counts reach Level 3, the skills step lists the level tests: the hardest one the athlete would pass suggests the next
+ * level, held to the last level [tier] opens. The start is only a guide and says what it assumes. [answers] holds each
+ * count (-1 for none) and [skill] the chosen test (0 for none); both outlive a redraw of Today. [onStart] gets where to
+ * start; skipping and "Start from scratch" are Level 1, day 1.
  */
 fun Context.placementCard(
     programs: List<TrainingProgram>,
     levels: List<TrainingLevel>,
     locale: Locale,
     answers: IntArray,
+    skill: IntArray,
+    tier: Tier,
     onStart: (Placement.Start) -> Unit,
 ): LinearLayout = card().apply {
     val scratch = Placement.Start(1)
@@ -43,14 +49,50 @@ fun Context.placementCard(
             return
         }
         val (pullUps, pushUps, squats) = answers.toList()
-        val start = Placement.start(pullUps, pushUps, squats, starts)
+        val counted = Placement.start(pullUps, pushUps, squats, starts)
+        // The level tests: each level's last class, from Level 3's to Level 9's.
+        val tests = if (counted.level < Placement.MAX_LEVEL) emptyList() else Placement.SKILL_TESTS.mapNotNull { number ->
+            programs.filter { it.levelNumber == number }.maxByOrNull { it.number }?.takeIf { it.isExam }
+        }
+        if (tests.none { it.levelNumber == skill[0] }) skill[0] = 0
+        val wanted = if (skill[0] > 0) Placement.skillStart(skill[0]) else counted
+        val start = Placement.capped(wanted, tier)
+        fun levelName(number: Int) = levels.firstOrNull { it.number == number }?.let { displayName(it, locale) }
+            ?: getString(R.string.level_number, number)
         val level = levels.firstOrNull { it.number == start.level }
-        val name = level?.let { displayName(it, locale) } ?: getString(R.string.level_number, start.level)
+        val name = levelName(start.level)
         val where = where(start)
         val text = when {
+            skill[0] > 0 && start != wanted -> getString(R.string.placement_skill_result, skill[0], wanted.level, levelName(wanted.level)) +
+                " " + getString(R.string.placement_skill_capped, wanted.level, getString(tierName(LevelAccess.tierFor(wanted.level))), start.level)
+            skill[0] > 0 -> getString(R.string.placement_skill_result, skill[0], start.level, name)
             start == scratch -> getString(R.string.placement_result_first, start.level, name)
             start.day > 1 -> getString(R.string.placement_result_day, where)
             else -> getString(R.string.placement_result, start.level, name)
+        }
+        if (tests.isNotEmpty()) {
+            // The skills step: the level tests, each with its targets; one tap picks a test, a second clears it.
+            result.addWithMargins(titleText(getString(R.string.placement_skills_title), 16f), topDp = 20)
+            result.addWithMargins(bodyText(getString(R.string.placement_skills_prompt), 13f), topDp = 2)
+            tests.forEach { exam ->
+                val chosen = skill[0] == exam.levelNumber
+                result.addWithMargins(LinearLayout(context).apply {
+                    orientation = LinearLayout.VERTICAL
+                    setPadding(dp(14), dp(10), dp(14), dp(10))
+                    background = roundedDrawable(if (chosen) AppColors.INFO_SURFACE else AppColors.SURFACE, dp(14).toFloat(),
+                        if (chosen) AppColors.PRIMARY else AppColors.BORDER, dp(if (chosen) 2 else 1))
+                    isClickable = true
+                    isFocusable = true
+                    isSelected = chosen
+                    contentDescription = getString(R.string.placement_skill_test, exam.levelNumber)
+                    addView(titleText(getString(R.string.placement_skill_test, exam.levelNumber), 14f))
+                    addWithMargins(bodyText(targets(exam, locale), 12f), topDp = 2)
+                    setOnClickListener {
+                        skill[0] = if (chosen) 0 else exam.levelNumber
+                        renderResult(scrollToResult = false)
+                    }
+                }, topDp = 8)
+            }
         }
         result.addWithMargins(LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
@@ -60,8 +102,12 @@ fun Context.placementCard(
             level?.programs?.firstOrNull { it.number == start.day }?.let { opensLine(where, it) }
                 ?.let { addWithMargins(bodyText(it, 13f), topDp = 6) }
             if (start != scratch) addWithMargins(bodyText(getString(R.string.placement_no_credit), 13f), topDp = 6)
+            // Only a guide: what this start takes for granted (the exam just before it); the choice stays the athlete's.
+            Placement.assumed(programs, start, TrainingProgram::levelNumber, TrainingProgram::number, TrainingProgram::isExam)?.let {
+                addWithMargins(bodyText(getString(R.string.placement_indicative, targets(it, locale)), 13f), topDp = 6)
+            }
             // What a few more reps would change, so a count entered too low shows.
-            Placement.better(pullUps, pushUps, squats, starts)?.let { better ->
+            if (skill[0] == 0) Placement.better(pullUps, pushUps, squats, starts)?.let { better ->
                 val more = resources.getQuantityString(better.test.more(), better.more, better.more)
                 addWithMargins(bodyText(getString(R.string.placement_better, more, where(better.start)), 13f), topDp = 6)
             }
@@ -105,6 +151,16 @@ private fun Placement.Test.more(): Int = when (this) {
     Placement.Test.PULL_UPS -> R.plurals.placement_more_pull_ups
     Placement.Test.PUSH_UPS -> R.plurals.placement_more_push_ups
     Placement.Test.SQUATS -> R.plurals.placement_more_squats
+}
+
+/** An exam's targets in one line: "Strict Pull-Up · 15 reps, Parallel Bar Dip · 20 reps, …". */
+private fun Context.targets(exam: TrainingProgram, locale: Locale): String =
+    exam.exercises.filter { it.assessment }.joinToString(", ") { examTarget(it, locale) }
+
+private fun tierName(tier: Tier): Int = when (tier) {
+    Tier.FREE -> R.string.tier_free
+    Tier.PLUS -> R.string.tier_plus
+    Tier.PRO -> R.string.tier_pro
 }
 
 /** A start on day 1 names the level; a start inside a level names the day. */

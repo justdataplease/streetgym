@@ -148,6 +148,7 @@ object CurriculumJsonParser {
             practice = parseCompactSteps(json.optJSONArray("practice"), programId, "practice", movementLibrary),
             warmup = parseFlexibleSection(warmupArray, programId, "warmup", movementLibrary),
             cooldown = parseFlexibleSection(cooldownArray, programId, "cooldown", movementLibrary),
+            headline = schedule?.optValueAsString("headline"),
         )
     }
 

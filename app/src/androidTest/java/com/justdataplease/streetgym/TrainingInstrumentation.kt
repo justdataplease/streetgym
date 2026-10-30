@@ -18,6 +18,7 @@ import com.justdataplease.streetgym.billing.Tier
 import com.justdataplease.streetgym.data.AssetCurriculumRepository
 import com.justdataplease.streetgym.data.model.TrainingProgram
 import com.justdataplease.streetgym.data.progress.Intensity
+import com.justdataplease.streetgym.data.progress.Placement
 import com.justdataplease.streetgym.data.progress.SharedPreferencesProgressRepository
 import com.justdataplease.streetgym.data.skills.SkillCurriculumReader
 import com.justdataplease.streetgym.data.skills.SkillLevel
@@ -578,6 +579,19 @@ class TrainingInstrumentation : Instrumentation() {
             enter(R.string.placement_pull_ups, 10); enter(R.string.placement_push_ups, 30)
             check(shown(targetContext.getString(R.string.placement_result, 2, levelTwo.name.resolve())))
             check(shown(targetContext.getString(R.string.placement_confirm, atLevelTwo)))
+            // Counts that reach Level 3 open the skills step (review 6): passing the Level 6 test suggests Level 7, held to
+            // the athlete's plan, and the card names what the start assumes; a second tap clears the test.
+            enter(R.string.placement_pull_ups, 20); enter(R.string.placement_push_ups, 50); enter(R.string.placement_squats, 75)
+            check(shown(R.string.placement_skills_title) && shown(targetContext.getString(R.string.placement_skill_test, 9)))
+            clickLabel(targetContext.getString(R.string.placement_skill_test, 6))
+            val suggested = Placement.capped(Placement.skillStart(6), Entitlement.tier(targetContext))
+            check(shown(targetContext.getString(R.string.placement_confirm, targetContext.getString(R.string.level_number, suggested.level))))
+            val passedSix = targetContext.getString(R.string.placement_skill_result, 6, 7, "").removeSuffix(".")
+            check(find { it is TextView && it.text.toString().startsWith(passedSix) } != null)
+            check(find { it is TextView && it.text.toString().startsWith(targetContext.getString(R.string.placement_indicative, "|").substringBefore("|")) } != null)
+            clickLabel(targetContext.getString(R.string.placement_skill_test, 6))
+            check(shown(targetContext.getString(R.string.placement_confirm, targetContext.getString(R.string.level_number, 3))))
+            enter(R.string.placement_squats, 30)
             enter(R.string.placement_pull_ups, 0); enter(R.string.placement_push_ups, 20)
             clickLabel(targetContext.getString(R.string.placement_confirm, atDayFortyOne))
             check(AppSettings(targetContext).placementDone &&

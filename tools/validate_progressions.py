@@ -62,7 +62,7 @@ def hold_sets(p, ids):
 
 
 # 1. The frame: ten levels of 100 classes, the frozen exam days, an easy class after every exam from Level 3 (a
-#    re-entry, or the week's recovery), at most 55 minutes.
+#    re-entry, or the week's recovery), at most 55 minutes, an exam 60.
 for L in range(1, 11):
     exams = [p["number"] for p in classes if p["level"] == L and p["schedule"]["day_type"].startswith("exam")]
     assert exams == FROZEN_EXAMS[L], (L, exams)
@@ -71,7 +71,8 @@ for a, b in zip(classes, classes[1:]):
         assert b["schedule"]["day_type"] in ("reentry_recovery", "recovery"), f"{where(b)} must be easy after the exam"
 for p in classes:
     s = p["schedule"]
-    assert 15 <= s["minutes"] <= 55, f"{where(p)} runs {s['minutes']} minutes"
+    # An exam may take an hour (review 6: one test for every skill family); a class 55 minutes.
+    assert 15 <= s["minutes"] <= (60 if s["day_type"].startswith("exam") else 55), f"{where(p)} runs {s['minutes']} minutes"
     assert s["day"] == (p["number"] - 1) % 7 + 1 and s["week"] == (p["number"] - 1) // 7 + 1, where(p)
     lim = limits[p["level"]]
     # The Full Battle tests the basics, outside the set budget.
@@ -108,13 +109,15 @@ for p in classes:
         if before and not before["schedule"]["day_type"].startswith(("deload_", "exam", "reentry", "primer", "light_")):
             assert sum(st[1] for st in p["main"]) <= 0.7 * sum(st[1] for st in before["main"]) + 1, where(p)
 
-# 5. Exams: assessments in the main part only, at most 12 tests (the Full Battle's 20 stations aside).
+# 5. Exams: assessments in the main part only. From Level 4 an exam tests at least 12 skill families, and at most 15 with
+#    8 elbow-load sets, the German hang included (checked with the elbow caps below; the Full Battle's 20 stations aside).
 for p in classes:
     if p["schedule"]["day_type"].startswith("exam"):
         tests = [st for st in p["main"] if st[5] == "assessment"]
         assert not p["practice"] and tests, where(p)
         if p["schedule"]["day_type"] != "exam_level_full_battle":
-            assert len(tests) <= 12, f"{where(p)} has {len(tests)} tests"
+            assert len(tests) <= 15, f"{where(p)} has {len(tests)} tests"
+            assert p["level"] < 4 or len(tests) >= 12, f"{where(p)} tests only {len(tests)} skills"
             assert len({st[0] for st in tests}) == len(tests), f"{where(p)} tests a movement twice"
 
 # 6. Load between days: straight-arm classes never three in a row; heavy elbow days never back to back; the planche and
@@ -254,6 +257,8 @@ for p in classes:
         assert elbow(p) <= cap, f"{where(p)} has {elbow(p)} elbow-load sets"
         assert not (hold_sets(p, HEFESTO) and hold_sets(p, TUCK_OR_HARDER_PLANCHE)), f"{where(p)} holds the Hefesto and the planche"
         assert not (hold_sets(p, OAH) >= 2 and hold_sets(p, TUCK_OR_HARDER_PLANCHE) >= 2), f"{where(p)} leads the one-arm handstand and the planche"
+    else:
+        assert elbow(p) <= 8, f"{where(p)} tests with {elbow(p)} elbow-load sets"
     for st in work(p):
         if st[3] is not None and movements[st[0]]["category"] not in NOT_HOLDS and st[0] != "handstand_balance":
             assert value(st) >= (3 if st[0] in MIN3 else 5), f"{where(p)} holds {st[0]} for {value(st)} s"

@@ -43,6 +43,8 @@ data class TrainingProgram(
     val practice: List<TrainingExercise> = emptyList(),
     val warmup: List<TrainingExercise> = emptyList(),
     val cooldown: List<TrainingExercise> = emptyList(),
+    /** An exam's headline skill (a movement id): missing it offers to repeat the block ([ExamResult.offersRepeat]). */
+    val headline: String? = null,
 ) {
     /** An exam day (about every 20 classes): its [TrainingExercise.assessment] sets are the targets to reach. */
     val isExam: Boolean get() = dayType?.startsWith("exam") == true

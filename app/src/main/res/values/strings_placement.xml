@@ -26,6 +26,12 @@
     <string name="placement_list_end">%1$s and %2$s</string>
     <string name="placement_confirm">Start at %1$s</string>
     <string name="placement_scratch">Start from scratch</string>
+    <string name="placement_indicative">Only a guide: this start assumes you can already do %1$s. You can start from scratch instead, or complete levels yourself whenever you think you should.</string>
+    <string name="placement_skills_title">Already hold skills?</string>
+    <string name="placement_skills_prompt">Tap the hardest level test you would pass today, every target with good form. The level after it is your suggested start.</string>
+    <string name="placement_skill_test">Level %1$d test</string>
+    <string name="placement_skill_result">Passing the Level %1$d test suggests Level %2$d: %3$s.</string>
+    <string name="placement_skill_capped">Level %1$d comes with %2$s, so you start at Level %3$d, the last level your plan opens. After an upgrade, complete levels to move on.</string>
     <string name="placement_level_one_hint">Already train? Complete Level 1 to start Level 2 now. Its days then don’t count toward skill levels.</string>
     <string name="intensity_title">How do you feel today?</string>
     <string name="intensity_easier">Easier</string>

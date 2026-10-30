@@ -103,6 +103,43 @@ class PlacementTest {
 
     private fun every(check: (Int, Int, Int) -> Unit) = grid().forEach { (u, p, s) -> check(u, p, s) }
 
+    @Test fun theSkillsStepSuggestsTheLevelAfterThePassedTest() {
+        assertEquals(3..9, Placement.SKILL_TESTS)
+        assertEquals(Start(4), Placement.skillStart(3))
+        assertEquals(Start(7), Placement.skillStart(6))
+        assertEquals(Start(10), Placement.skillStart(9))
+    }
+
+    @Test fun aStartPastThePlanStopsAtItsLastLevel() {
+        assertEquals(3, Placement.lastOpenLevel(Tier.FREE))
+        assertEquals(5, Placement.lastOpenLevel(Tier.PLUS))
+        assertEquals(10, Placement.lastOpenLevel(Tier.PRO))
+        assertEquals(Start(3), Placement.capped(Start(7), Tier.FREE))
+        assertEquals(Start(5), Placement.capped(Start(7), Tier.PLUS))
+        assertEquals(Start(7), Placement.capped(Start(7), Tier.PRO))
+        assertEquals(Start(2, 21), Placement.capped(Start(2, 21), Tier.FREE))
+        Tier.entries.forEach { tier ->
+            Placement.SKILL_TESTS.forEach { passed ->
+                assertFalse(LevelAccess.locked(Placement.capped(Placement.skillStart(passed), tier).level, tier))
+            }
+        }
+    }
+
+    @Test fun aStartAssumesTheExamJustBeforeIt() {
+        val catalog = CurriculumJsonParser.parse(File("src/main/assets/curriculum.json").readText())
+        val programs = catalog.levels.sortedBy { it.number }.flatMap { level -> level.programs.sortedBy { it.number } }
+        fun assumed(start: Start) = Placement.assumed(programs, start, TrainingProgram::levelNumber, TrainingProgram::number, TrainingProgram::isExam)
+            ?.let { Start(it.levelNumber, it.number) }
+        assertNull(assumed(Start(1)))
+        assertEquals(Start(1, 40), assumed(Start(1, 41)))
+        assertEquals(Start(2, 100), assumed(Start(3)))
+        // Each skills-step start assumes the level test it came from, which tests every skill family of that level.
+        Placement.SKILL_TESTS.forEach { passed ->
+            assertEquals(Start(passed, 100), assumed(Placement.skillStart(passed)))
+            assertTrue(programs.first { it.levelNumber == passed && it.number == 100 }.exercises.count { it.assessment } >= 12)
+        }
+    }
+
     @Test fun onlyANewAthleteIsAsked() {
         assertTrue("new athlete", Placement.shouldAsk(recorded = false, completedDays = 0, workoutActive = false))
         assertFalse("existing progress", Placement.shouldAsk(recorded = false, completedDays = 12, workoutActive = false))

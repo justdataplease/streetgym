@@ -1,6 +1,7 @@
 package com.justdataplease.streetgym.data.progress
 
 import com.justdataplease.streetgym.billing.LevelAccess
+import com.justdataplease.streetgym.billing.Tier
 import com.justdataplease.streetgym.data.model.TrainingProgram
 import com.justdataplease.streetgym.data.model.TrainingSet
 import java.util.Locale
@@ -8,8 +9,10 @@ import java.util.Locale
 /**
  * First-launch placement, taken like an exam: one set each of strict pull-ups, push-ups and squats, as many as the
  * athlete can with good form. A weighted [score] (pull-ups count most, squats least) picks one of the block starts of
- * Levels 1–3 ([starts]), and the [gate]s keep pull-ups honest: Level 2 needs eight and Level 3 fifteen. The days before
- * the start give no skill levels, like "Complete day": the counts only choose where to start.
+ * Levels 1–3 ([starts]), and the [gate]s keep pull-ups honest: Level 2 needs eight and Level 3 fifteen. An athlete the
+ * counts place at Level 3 can go on with the skills step ([skillStart]): the hardest level test they would pass today.
+ * The days before the start give no skill levels, like "Complete day". It's only a guide: the athlete can start from
+ * scratch, or complete levels themselves, whenever they think they should.
  */
 object Placement {
     /** The tests, in the card's order. [full] is the count that earns all of a test's [weight]. */
@@ -86,6 +89,26 @@ object Placement {
 
     /** A hint names at most this many more reps. */
     private const val MAX_MORE = 15
+
+    const val LAST_LEVEL = 10
+
+    /**
+     * The level tests the skills step offers (review 6): passing the Level N test, every target with good form, suggests
+     * Level N + 1. The counts reach Level 3, so the step starts at its test and ends at Level 9's.
+     */
+    val SKILL_TESTS: IntRange = MAX_LEVEL until LAST_LEVEL
+
+    fun skillStart(passed: Int): Start = Start(passed.coerceIn(SKILL_TESTS) + 1)
+
+    /** The last level [tier] opens: Level 3 on Free, 5 on Plus, 10 on Pro. */
+    fun lastOpenLevel(tier: Tier): Int = (1..LAST_LEVEL).last { !LevelAccess.locked(it, tier) }
+
+    /** [start], or the first class of the last level [tier] opens when [start] needs a plan the athlete doesn't have. */
+    fun capped(start: Start, tier: Tier): Start = if (LevelAccess.locked(start.level, tier)) Start(lastOpenLevel(tier)) else start
+
+    /** The exam just before [start], whose targets the start assumes the athlete can already do; null at Level 1, day 1. */
+    fun <T> assumed(ordered: List<T>, start: Start, levelOf: (T) -> Int, dayOf: (T) -> Int, isExam: (T) -> Boolean): T? =
+        skipped(ordered, start, levelOf, dayOf).lastOrNull(isExam)
 
     /**
      * Only a new athlete is asked: nothing answered or skipped yet, no day completed and no workout under way. Anyone

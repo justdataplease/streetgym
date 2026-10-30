@@ -33,6 +33,18 @@ fun humanize(id: String): String = id.replace('_', ' ').trim().replaceFirstChar 
 fun Context.displayName(exercise: TrainingExercise, locale: Locale): String =
     exercise.name.resolve(locale).ifBlank { getString(R.string.exercise_number, exercise.number) }
 
+/** "Strict Pull-Up · 10 reps", "Front Lever · 8 s · per side": an exam's target as the class prescribes it. */
+fun Context.examTarget(exercise: TrainingExercise, locale: Locale): String {
+    val set = exercise.sets.firstOrNull()
+    val dose = when {
+        set?.repetitions != null -> getString(R.string.repetitions_format, set.repetitions)
+        set?.durationSeconds != null -> getString(R.string.focus_seconds, set.durationSeconds)
+        else -> null
+    }
+    val sides = set?.let { SetNotes.parse(it.description.resolve(locale)).sides }.orEmpty()
+    return (listOfNotNull(displayName(exercise, locale), dose) + sides).joinToString(" · ")
+}
+
 fun Context.programMeta(program: TrainingProgram): String = buildList {
     add(getString(
         R.string.workout_sequence_position,

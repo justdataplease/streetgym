@@ -9,6 +9,16 @@ import org.json.JSONObject
  */
 data class ExamResult(val programId: String, val at: Long, val reached: List<String>, val missed: List<String>) {
     val passed: Boolean get() = missed.isEmpty()
+
+    /**
+     * Whether the misses are worth repeating the block for (review 6): the exam's [headline] skill, or three targets or
+     * more. An exam tests every skill family the block trained, so any other single miss is simply tested again next time.
+     */
+    fun offersRepeat(headline: String?): Boolean = missed.size >= REPEAT_MISSES || headline != null && headline in missed
+
+    companion object {
+        const val REPEAT_MISSES = 3
+    }
 }
 
 /** Every exam result, retakes included, oldest first. */

@@ -1,7 +1,9 @@
 package com.justdataplease.streetgym.data.progress
 
+import com.justdataplease.streetgym.data.CurriculumJsonParser
 import org.junit.Assert.*
 import org.junit.Test
+import java.io.File
 
 class ExamLogTest {
     private val first = ExamResult("sg:l04:p0013", 1_000L, listOf("pullup", "straight_bar_dip"), listOf("tuck_planche"))
@@ -10,6 +12,27 @@ class ExamLogTest {
     @Test fun anExamPassesWhenNothingWasMissed() {
         assertFalse(first.passed)
         assertTrue(retake.passed)
+    }
+
+    @Test fun onlyTheHeadlineOrThreeMissesOfferARepeat() {
+        assertFalse(first.offersRepeat(headline = "pullup"))
+        assertTrue(first.offersRepeat(headline = "tuck_planche"))
+        assertFalse(first.offersRepeat(headline = null))
+        val three = first.copy(missed = listOf("tuck_planche", "pushup", "squat"))
+        assertTrue(three.offersRepeat(headline = "pullup"))
+        assertFalse(retake.offersRepeat(headline = "tuck_planche"))
+    }
+
+    @Test fun everyShippedExamNamesAHeadlineItTests() {
+        val catalog = CurriculumJsonParser.parse(File("src/main/assets/curriculum.json").readText())
+        val exams = catalog.levels.flatMap { it.programs }.filter { it.isExam && it.dayType != "exam_level_full_battle" }
+        assertEquals(49, exams.size)
+        exams.forEach { exam ->
+            val tests = exam.exercises.filter { it.assessment }.map { it.movementId }
+            assertTrue(exam.id, exam.headline != null && exam.headline in tests)
+            // From Level 4 an exam tests every skill family the block trained: twelve tests or more (review 6).
+            if (exam.levelNumber >= 4) assertTrue("${exam.id}: ${tests.size}", tests.size in 12..15)
+        }
     }
 
     @Test fun theLatestAttemptCounts() {

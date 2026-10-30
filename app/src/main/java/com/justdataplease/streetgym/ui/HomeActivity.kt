@@ -155,6 +155,8 @@ open class HomeActivity : Activity() {
     private var draft: CustomDay? = null
     /** The placement test's counts, one per test (-1 for none), kept through a redraw. */
     private var placementAnswers = IntArray(Placement.Test.entries.size) { -1 }
+    /** The level test the athlete would pass, from the placement's skills step; 0 for none. */
+    private val placementSkill = IntArray(1)
     private var parks: List<Park>? = null
     private var parksLoading = false
     private var parkOrigin: Pair<Double, Double>? = null
@@ -512,23 +514,11 @@ open class HomeActivity : Activity() {
                 when {
                     result.passed -> AlertDialog.Builder(this).setTitle(R.string.exam_passed_title)
                         .setMessage(R.string.exam_passed_message).setPositiveButton(android.R.string.ok, null).show()
-                    offerRepeat -> askRepeatBlock(exam, missed)
+                    offerRepeat && result.offersRepeat(exam.headline) -> askRepeatBlock(exam, missed)
                     else -> Toast.makeText(this, R.string.exam_saved_not_yet, Toast.LENGTH_SHORT).show()
                 }
             }
             .show()
-    }
-
-    /** "Strict Pull-Up · 10 reps", "Front Lever · 8 s · per side": a test as the class prescribes it. */
-    private fun examTarget(exercise: TrainingExercise, locale: Locale): String {
-        val set = exercise.sets.firstOrNull()
-        val dose = when {
-            set?.repetitions != null -> getString(R.string.repetitions_format, set.repetitions)
-            set?.durationSeconds != null -> getString(R.string.focus_seconds, set.durationSeconds)
-            else -> null
-        }
-        val sides = set?.let { SetNotes.parse(it.description.resolve(locale)).sides }.orEmpty()
-        return (listOfNotNull(displayName(exercise, locale), dose) + sides).joinToString(" · ")
     }
 
     /** A missed target: Today can go back to the first class after the previous exam and come through this exam again. */
@@ -981,7 +971,7 @@ open class HomeActivity : Activity() {
         }
         // A new athlete first says where to start; Today's day card follows once that's answered or skipped.
         page.addWithMargins(if (askPlacement(completed, active)) placementCard(orderedPrograms, catalog?.levels.orEmpty(),
-            uiLocale(), placementAnswers, ::startPlacement) else today, bottomDp = 16)
+            uiLocale(), placementAnswers, placementSkill, Entitlement.tier(this), ::startPlacement) else today, bottomDp = 16)
         if (paywallLevel != null) page.addWithMargins(TiersPanel(this, billing, Paywall.Level(paywallLevel)), bottomDp = 16)
         val done = all.count { it.id in completed }
         page.addWithMargins(card(clickable = true).apply {
@@ -1015,6 +1005,7 @@ open class HomeActivity : Activity() {
         }
         settings.placementDone = true
         placementAnswers.fill(-1)
+        placementSkill[0] = 0
         clearRest(); openRoot(Screen.Dashboard)
     }
 

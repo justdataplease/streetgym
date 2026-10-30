@@ -1,4 +1,4 @@
-# Skills and the overall score (29 October 2026, round 11)
+# Skills and the overall score (30 October 2026, round 11, review 6)
 
 Skills work like belts. Each rung of a ladder (pull-up, planche, handstand and so on) has five levels: **Beginner, Intermediate, Advanced, Master and Elite**. A level is earned with sets at its target, done in good form. Nothing is unlocked by attending, by skipping ahead or by a one-off test.
 
@@ -65,15 +65,15 @@ Results for someone who does every class of the ten levels as written and trains
 
 | End of level | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
 |---|---|---|---|---|---|---|---|---|---|---|
-| Overall score (of 1000) | 13 | 30 | 46 | 76 | 110 | 136 | 195 | 285 | 454 | 726 |
-| Levels earned (of 200) | 11 | 20 | 28 | 43 | 56 | 69 | 83 | 105 | 129 | 165 |
-| Skills at Beginner or more (of 40) | 7 | 10 | 13 | 21 | 23 | 27 | 31 | 36 | 40 | 40 |
+| Overall score (of 1000) | 13 | 30 | 47 | 77 | 110 | 136 | 196 | 285 | 450 | 726 |
+| Levels earned (of 200) | 11 | 20 | 29 | 44 | 58 | 70 | 85 | 105 | 128 | 163 |
+| Skills at Beginner or more (of 40) | 7 | 10 | 13 | 21 | 23 | 27 | 32 | 36 | 40 | 40 |
 
 - The first badge comes at class 11 (hollow body Beginner); the push-up and squat follow at class 13.
 - Every level brings new badges, and every skill reaches Beginner inside the plan, the last being the one-arm handstand at L9:090.
-- Every skill reaches its Elite target by the end of Level 10 (the owner: "at least the max should be achievable, it's ok if not the sets"). 38 reach it in a set of their own, the one-arm handstand, shrimp squat and Hefesto in Level 10 record sets, and the dead hang and hanging leg raise hold Elite through the pull-up and toes-to-bar.
+- Every skill reaches its Elite target by the end of Level 10 (the owner: "at least the max should be achievable, it's ok if not the sets"). 34 reach it in a set of their own, the strict muscle-up, dead hang, shrimp squat, one-arm handstand and Hefesto in Level 10 record sets, and the hanging leg raise holds Elite through toes-to-bar.
 - A progression peaks while it is still trained, before the next rung takes over. No record set sits beside a harder rung of its ladder (`validate_progressions.py`).
-- Elite takes 30 sets at the target, so the plan alone reaches Elite on 13 skills: the push-up, squat, hollow body, pull-up, dip, the pseudo-planche push-up, the freestanding handstand, the pistol, toes-to-bar and the dragon flag, plus the dead hang, wall handstand and hanging leg raise through the harder rung of their ladders. The rest of Elite comes from repeating blocks and the athlete's own workouts, by design. The skills help says so.
+- Elite takes 30 sets at the target, so the plan alone reaches Elite on 11 skills: the push-up, squat, hollow body, dip, the pseudo-planche push-up, the freestanding handstand, the pistol, toes-to-bar and the dragon flag, plus the wall handstand and hanging leg raise through the harder rung of their ladders. High-rep pull-ups run one heavy set a class (review 6), so the pull-up's Elite comes from own training. The rest of Elite comes from repeating blocks and the athlete's own workouts, by design. The skills help says so.
 
 ## The overall score (`OverallScore`)
 
@@ -114,6 +114,8 @@ Each skill is its figure on a rounded square:
 - **Rank shield:** a game-style insignia hanging from the square's foot: a peaked shield with a gold rim and a glossy graphite face. Beginner has one gold chevron band and Intermediate two. Advanced has three stars and Master one big star under a stacked crest. Elite has the big star with wings and a taller crest.
 
 ## Exams
+
+An exam tests one fresh set of every skill family the block trained, 12 to 15 tests from Level 4, in a fixed order: balance, the holds, the bent-arm strength, the basics, the trunk (review 6, `docs/CURRICULUM_PLAN.md`). Missing the exam's headline skill (`TrainingProgram.headline`), or three targets or more, offers to repeat the block (`ExamResult.offersRepeat`); any other miss is tested again at the next exam.
 
 On an exam day, a target starts ticked only if all of the following hold (`WorkoutFlow.examTests`):
 - every set was ticked;
