@@ -1383,6 +1383,30 @@
       }
     },
     {
+      "id": "tuck_front_lever_row",
+      "name": {
+        "en": "Tuck Front-Lever Row"
+      },
+      "description": {
+        "en": "Hang from a high bar in a tuck front lever, trunk level and knees tucked, feet free. Row until the elbows reach about a right angle with the trunk still level, then lower back to straight arms."
+      },
+      "category": "advanced_strength",
+      "patterns": [
+        "front_lever",
+        "horizontal_pull"
+      ],
+      "equipment": [
+        "high_bar"
+      ],
+      "regression_id": "tuck_front_row",
+      "safety": {
+        "en": "Keep the shoulder blades pulled down and the trunk level; stop the set when the hips drop or the elbows flare. Start when three 10-second tuck front-lever holds are clean."
+      },
+      "counts": {
+        "en": "From the tuck front lever on straight arms, row until the elbows reach a right angle with the trunk level, then lower to locked arms. A rep ends when the hips drop below the shoulders."
+      }
+    },
+    {
       "id": "tuck_front_hold",
       "name": {
         "en": "Tuck Front-Lever Hold"
@@ -2476,6 +2500,31 @@
       },
       "counts": {
         "en": "Hands by the hips with the fingers turned out, shoulders ahead of the hands by the same lean every rep (mark it on the floor). Chest to just above the hands, press to locked arms keeping the lean. A rep that loses the lean doesn't count."
+      }
+    },
+    {
+      "id": "tuck_planche_pushup",
+      "name": {
+        "en": "Tuck Planche Push-Up"
+      },
+      "description": {
+        "en": "From a tuck planche, bend the elbows straight back along the body while the shoulders lean further forward and the hips rise, the feet never touching, then press back to the locked tuck planche."
+      },
+      "category": "advanced_strength",
+      "patterns": [
+        "planche",
+        "horizontal_push"
+      ],
+      "equipment": [
+        "parallettes_or_floor",
+        "mat"
+      ],
+      "regression_id": "pseudo_planche_pushup",
+      "safety": {
+        "en": "Warm the wrists first and keep the elbows tracking back, never flared; lower only as far as the tuck stays off the floor. Start when three 10-second tuck planche holds and ten pseudo-planche push-ups are clean."
+      },
+      "counts": {
+        "en": "From a locked tuck planche, lower until the elbows are bent to about a right angle and press back to locked arms, the feet off the floor throughout. A rep ends when a foot touches."
       }
     },
     {

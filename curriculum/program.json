@@ -18331,16 +18331,16 @@
    "level": 1,
    "number": 88,
    "title": {
-    "en": "Hangs & Slow Pull-Ups"
+    "en": "First Strict Chin-Up"
    },
    "description": {
-    "en": "Foundations Finale. An easy practice class on the bar: hangs, slow lowering and the trunk. This class: Relaxed Hang 3 × 45 s, Pull-Up Negative 2 × 3, Small Hollow-to-Arch Swing 2 × 6, Hollow Body Hold 1 × 30 s. 12 classes to the level test. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Foundations Finale. An easy practice class on the bar: hangs, slow lowering and the trunk. This class: Relaxed Hang 3 × 45 s, Strict Chin-Up 2 × 2, Small Hollow-to-Arch Swing 2 × 6, Hollow Body Hold 1 × 30 s. 12 classes to the level test. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 13,
     "day": 4,
     "day_type": "practice_bar_line",
-    "minutes": 26,
+    "minutes": 25,
     "rpe": 4,
     "focus": [
      "hang",
@@ -18427,12 +18427,12 @@
      "foot_assisted_hang"
     ],
     [
-     "eccentric_pullup",
+     "chinup",
      2,
-     3,
+     2,
      null,
      90,
-     "5010",
+     "3010",
      "assisted_pullup"
     ],
     [
@@ -19814,16 +19814,16 @@
    "level": 1,
    "number": 95,
    "title": {
-    "en": "Hangs & Slow Pull-Ups"
+    "en": "Hangs & Chin-Ups"
    },
    "description": {
-    "en": "Foundations Finale. The same doses as last time: make every rep cleaner. An easy practice class on the bar: hangs, slow lowering and the trunk. This class: Relaxed Hang 3 × 45 s, Pull-Up Negative 2 × 3, Small Hollow-to-Arch Swing 2 × 6, Hollow Body Hold 1 × 30 s. 5 classes to the level test. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Foundations Finale. The same doses as last time: make every rep cleaner. An easy practice class on the bar: hangs, slow lowering and the trunk. This class: Relaxed Hang 3 × 45 s, Strict Chin-Up 2 × 2, Small Hollow-to-Arch Swing 2 × 6, Hollow Body Hold 1 × 30 s. 5 classes to the level test. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 14,
     "day": 4,
     "day_type": "practice_bar_line",
-    "minutes": 26,
+    "minutes": 25,
     "rpe": 4,
     "focus": [
      "hang",
@@ -19910,12 +19910,12 @@
      "foot_assisted_hang"
     ],
     [
-     "eccentric_pullup",
+     "chinup",
      2,
-     3,
+     2,
      null,
      90,
-     "5010",
+     "3010",
      "assisted_pullup"
     ],
     [
@@ -80032,20 +80032,20 @@
     "en": "First Tuck Human Flag"
    },
    "description": {
-    "en": "Balance & Levers, block 1. The first classes of the level: last level's doses, one set fewer on the leads. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Tuck Human Flag 2 × 5 s a side, Advanced-Tuck Back Lever 2 × 10 s, Strict Toes-to-Bar 3 × 3, Feet-Elevated Row 2 × 12. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Balance & Levers, block 1. The first classes of the level: last level's doses, one set fewer on the leads. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Tuck Human Flag 2 × 5 s a side, Advanced-Tuck Back Lever 2 × 10 s, Strict Toes-to-Bar 3 × 3, Tuck Front-Lever Row 2 × 3. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 1,
     "day": 5,
     "day_type": "back_flag",
-    "minutes": 29,
+    "minutes": 28,
     "rpe": 7,
     "focus": [
      "human_flag",
      "back_lever",
      "hanging_core",
      "compression",
-     "horizontal_pull"
+     "front_lever"
     ]
    },
    "warmup": [
@@ -80143,13 +80143,13 @@
      "hanging_leg_raise"
     ],
     [
-     "feet_elevated_row",
+     "tuck_front_lever_row",
      2,
-     12,
+     3,
      null,
-     90,
+     120,
      "2111",
-     "inverted_row"
+     "tuck_front_row"
     ]
    ],
    "cooldown": [
@@ -82704,20 +82704,20 @@
     "en": "Advanced-Tuck Back Lever & Toes-to-Bar"
    },
    "description": {
-    "en": "Balance & Levers, block 2. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Advanced-Tuck Back Lever 3 × 10 s, Tuck Human Flag 3 × 5 s a side, Strict Toes-to-Bar 3 × 4, Feet-Elevated Row 2 × 12. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Balance & Levers, block 2. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Advanced-Tuck Back Lever 3 × 10 s, Tuck Human Flag 3 × 5 s a side, Strict Toes-to-Bar 3 × 4, Tuck Front-Lever Row 2 × 3. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 3,
     "day": 5,
     "day_type": "back_flag",
-    "minutes": 35,
+    "minutes": 34,
     "rpe": 7,
     "focus": [
      "back_lever",
      "human_flag",
      "hanging_core",
      "compression",
-     "horizontal_pull"
+     "front_lever"
     ]
    },
    "warmup": [
@@ -82815,13 +82815,13 @@
      "hanging_leg_raise"
     ],
     [
-     "feet_elevated_row",
+     "tuck_front_lever_row",
      2,
-     12,
+     3,
      null,
-     90,
+     120,
      "2111",
-     "inverted_row"
+     "tuck_front_row"
     ]
    ],
    "cooldown": [
@@ -84026,20 +84026,20 @@
     "en": "Advanced-Tuck Back Lever & Toes-to-Bar"
    },
    "description": {
-    "en": "Balance & Levers, block 2. One step up since last time. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Advanced-Tuck Back Lever 3 × 14 s, Tuck Human Flag 3 × 6 s a side, Strict Toes-to-Bar 3 × 4, Feet-Elevated Row 2 × 12. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Balance & Levers, block 2. One step up since last time. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Advanced-Tuck Back Lever 3 × 14 s, Tuck Human Flag 3 × 6 s a side, Strict Toes-to-Bar 3 × 4, Tuck Front-Lever Row 2 × 3. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 4,
     "day": 5,
     "day_type": "back_flag",
-    "minutes": 35,
+    "minutes": 34,
     "rpe": 7,
     "focus": [
      "back_lever",
      "human_flag",
      "hanging_core",
      "compression",
-     "horizontal_pull"
+     "front_lever"
     ]
    },
    "warmup": [
@@ -84137,13 +84137,13 @@
      "hanging_leg_raise"
     ],
     [
-     "feet_elevated_row",
+     "tuck_front_lever_row",
      2,
-     12,
+     3,
      null,
-     90,
+     120,
      "2111",
-     "inverted_row"
+     "tuck_front_row"
     ]
    ],
    "cooldown": [
@@ -86687,20 +86687,20 @@
     "en": "Advanced-Tuck Back Lever & Toes-to-Bar"
    },
    "description": {
-    "en": "Balance & Levers, block 3. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Advanced-Tuck Back Lever 3 × 15 s, Tuck Human Flag 3 × 6 s a side, Strict Toes-to-Bar 3 × 4, Feet-Elevated Row 2 × 12. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Balance & Levers, block 3. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Advanced-Tuck Back Lever 3 × 15 s, Tuck Human Flag 3 × 6 s a side, Strict Toes-to-Bar 3 × 4, Tuck Front-Lever Row 2 × 4. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 6,
     "day": 5,
     "day_type": "back_flag",
-    "minutes": 35,
+    "minutes": 34,
     "rpe": 7,
     "focus": [
      "back_lever",
      "human_flag",
      "hanging_core",
      "compression",
-     "horizontal_pull"
+     "front_lever"
     ]
    },
    "warmup": [
@@ -86798,13 +86798,13 @@
      "hanging_leg_raise"
     ],
     [
-     "feet_elevated_row",
+     "tuck_front_lever_row",
      2,
-     12,
+     4,
      null,
-     90,
+     120,
      "2111",
-     "inverted_row"
+     "tuck_front_row"
     ]
    ],
    "cooldown": [
@@ -88016,20 +88016,20 @@
     "en": "Advanced-Tuck Back Lever & Toes-to-Bar"
    },
    "description": {
-    "en": "Balance & Levers, block 3. One step up since last time. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Advanced-Tuck Back Lever 3 × 17 s, Tuck Human Flag 3 × 6 s a side, Strict Toes-to-Bar 3 × 4, Feet-Elevated Row 2 × 12. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Balance & Levers, block 3. One step up since last time. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Advanced-Tuck Back Lever 3 × 17 s, Tuck Human Flag 3 × 6 s a side, Strict Toes-to-Bar 3 × 4, Tuck Front-Lever Row 2 × 4. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 7,
     "day": 5,
     "day_type": "back_flag",
-    "minutes": 35,
+    "minutes": 34,
     "rpe": 7,
     "focus": [
      "back_lever",
      "human_flag",
      "hanging_core",
      "compression",
-     "horizontal_pull"
+     "front_lever"
     ]
    },
    "warmup": [
@@ -88127,13 +88127,13 @@
      "hanging_leg_raise"
     ],
     [
-     "feet_elevated_row",
+     "tuck_front_lever_row",
      2,
-     12,
+     4,
      null,
-     90,
+     120,
      "2111",
-     "inverted_row"
+     "tuck_front_row"
     ]
    ],
    "cooldown": [
@@ -90684,20 +90684,20 @@
     "en": "Advanced-Tuck Back Lever & Toes-to-Bar"
    },
    "description": {
-    "en": "Balance & Levers, block 4. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Advanced-Tuck Back Lever 3 × 18 s, Tuck Human Flag 3 × 7 s a side, Strict Toes-to-Bar 3 × 4, Feet-Elevated Row 2 × 12. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Balance & Levers, block 4. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Advanced-Tuck Back Lever 3 × 18 s, Tuck Human Flag 3 × 7 s a side, Strict Toes-to-Bar 3 × 4, Tuck Front-Lever Row 2 × 4. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 9,
     "day": 5,
     "day_type": "back_flag",
-    "minutes": 35,
+    "minutes": 34,
     "rpe": 7,
     "focus": [
      "back_lever",
      "human_flag",
      "hanging_core",
      "compression",
-     "horizontal_pull"
+     "front_lever"
     ]
    },
    "warmup": [
@@ -90795,13 +90795,13 @@
      "hanging_leg_raise"
     ],
     [
-     "feet_elevated_row",
+     "tuck_front_lever_row",
      2,
-     12,
+     4,
      null,
-     90,
+     120,
      "2111",
-     "inverted_row"
+     "tuck_front_row"
     ]
    ],
    "cooldown": [
@@ -92013,7 +92013,7 @@
     "en": "Advanced-Tuck Back Lever & Toes-to-Bar"
    },
    "description": {
-    "en": "Balance & Levers, block 4. One step up since last time. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Advanced-Tuck Back Lever 3 × 20 s, Tuck Human Flag 3 × 7 s a side, Strict Toes-to-Bar 3 × 4, Feet-Elevated Row 2 × 12. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Balance & Levers, block 4. One step up since last time. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Advanced-Tuck Back Lever 3 × 20 s, Tuck Human Flag 3 × 7 s a side, Strict Toes-to-Bar 3 × 4, Tuck Front-Lever Row 2 × 4. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 10,
@@ -92026,7 +92026,7 @@
      "human_flag",
      "hanging_core",
      "compression",
-     "horizontal_pull"
+     "front_lever"
     ]
    },
    "warmup": [
@@ -92124,13 +92124,13 @@
      "hanging_leg_raise"
     ],
     [
-     "feet_elevated_row",
+     "tuck_front_lever_row",
      2,
-     12,
+     4,
      null,
-     90,
+     120,
      "2111",
-     "inverted_row"
+     "tuck_front_row"
     ]
    ],
    "cooldown": [
@@ -94674,13 +94674,13 @@
     "en": "First Straddle Back Lever"
    },
    "description": {
-    "en": "Balance & Levers, block 5. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Straddle Back Lever 2 × 4 s, Advanced-Tuck Back Lever 2 × 20 s, Tuck Human Flag 2 × 8 s a side, Strict Toes-to-Bar 3 × 5, Feet-Elevated Row 2 × 12. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Balance & Levers, block 5. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Straddle Back Lever 2 × 4 s, Advanced-Tuck Back Lever 2 × 20 s, Tuck Human Flag 2 × 8 s a side, Strict Toes-to-Bar 3 × 5, Tuck Front-Lever Row 2 × 4. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 12,
     "day": 5,
     "day_type": "back_flag",
-    "minutes": 33,
+    "minutes": 32,
     "rpe": 7,
     "focus": [
      "back_lever",
@@ -94793,13 +94793,13 @@
      "hanging_leg_raise"
     ],
     [
-     "feet_elevated_row",
+     "tuck_front_lever_row",
      2,
-     12,
+     4,
      null,
-     90,
+     120,
      "2111",
-     "inverted_row"
+     "tuck_front_row"
     ]
    ],
    "cooldown": [
@@ -95993,13 +95993,13 @@
     "en": "Tempo · Straddle Back Lever & Toes-to-Bar"
    },
    "description": {
-    "en": "Balance & Levers, block 5. The doses hold this week: lower every rep in 3 s. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Straddle Back Lever 2 × 4 s, Advanced-Tuck Back Lever 2 × 20 s, Tuck Human Flag 2 × 8 s a side, Strict Toes-to-Bar 3 × 5, Feet-Elevated Row 2 × 12. 11 classes to the level test. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Balance & Levers, block 5. The doses hold this week: lower every rep in 3 s. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Straddle Back Lever 2 × 4 s, Advanced-Tuck Back Lever 2 × 20 s, Tuck Human Flag 2 × 8 s a side, Strict Toes-to-Bar 3 × 5, Tuck Front-Lever Row 2 × 4. 11 classes to the level test. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 13,
     "day": 5,
     "day_type": "back_flag",
-    "minutes": 33,
+    "minutes": 32,
     "rpe": 7,
     "focus": [
      "back_lever",
@@ -96112,13 +96112,13 @@
      "hanging_leg_raise"
     ],
     [
-     "feet_elevated_row",
+     "tuck_front_lever_row",
      2,
-     12,
+     4,
      null,
-     90,
+     120,
      "3111",
-     "inverted_row"
+     "tuck_front_row"
     ]
    ],
    "cooldown": [
@@ -97330,7 +97330,7 @@
     "en": "Light · Straddle Back Lever & Toes-to-Bar"
    },
    "description": {
-    "en": "Balance & Levers, block 5. A light class: the same lines at lower doses. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Straddle Back Lever 2 × 3 s, Advanced-Tuck Back Lever 1 × 12 s, Tuck Human Flag 2 × 5 s a side, Strict Toes-to-Bar 2 × 3, Feet-Elevated Row 2 × 7. 4 classes to the level test. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Balance & Levers, block 5. A light class: the same lines at lower doses. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Straddle Back Lever 2 × 3 s, Advanced-Tuck Back Lever 1 × 12 s, Tuck Human Flag 2 × 5 s a side, Strict Toes-to-Bar 2 × 3, Tuck Front-Lever Row 2 × 2. 4 classes to the level test. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 14,
@@ -97449,13 +97449,13 @@
      "hanging_leg_raise"
     ],
     [
-     "feet_elevated_row",
+     "tuck_front_lever_row",
      2,
-     7,
+     2,
      null,
-     90,
+     120,
      "2111",
-     "inverted_row"
+     "tuck_front_row"
     ]
    ],
    "cooldown": [
@@ -99193,7 +99193,7 @@
     "en": "Straddle Back Lever & Toes-to-Bar"
    },
    "description": {
-    "en": "Confident Calisthenics, block 1. The first classes of the level: last level's doses, one set fewer on the leads. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Straddle Back Lever 2 × 4 s, Advanced-Tuck Back Lever 1 × 20 s, Tuck Human Flag 2 × 8 s a side, Strict Toes-to-Bar 3 × 5, Feet-Elevated Row 2 × 12. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Confident Calisthenics, block 1. The first classes of the level: last level's doses, one set fewer on the leads. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Straddle Back Lever 2 × 4 s, Advanced-Tuck Back Lever 1 × 20 s, Tuck Human Flag 2 × 8 s a side, Strict Toes-to-Bar 3 × 5, Tuck Front-Lever Row 2 × 4. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 1,
@@ -99312,13 +99312,13 @@
      "hanging_leg_raise"
     ],
     [
-     "feet_elevated_row",
+     "tuck_front_lever_row",
      2,
-     12,
+     4,
      null,
-     90,
+     120,
      "2111",
-     "inverted_row"
+     "tuck_front_row"
     ]
    ],
    "cooldown": [
@@ -101860,20 +101860,20 @@
     "en": "Straddle Back Lever & Toes-to-Bar"
    },
    "description": {
-    "en": "Confident Calisthenics, block 2. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Straddle Back Lever 3 × 4 s, Tuck Human Flag 3 × 8 s a side, Strict Toes-to-Bar 3 × 6, Feet-Elevated Row 2 × 12. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Confident Calisthenics, block 2. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Straddle Back Lever 3 × 4 s, Tuck Human Flag 3 × 8 s a side, Strict Toes-to-Bar 3 × 6, Tuck Front-Lever Row 2 × 4. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 3,
     "day": 5,
     "day_type": "back_flag",
-    "minutes": 35,
+    "minutes": 34,
     "rpe": 7,
     "focus": [
      "back_lever",
      "human_flag",
      "hanging_core",
      "compression",
-     "horizontal_pull"
+     "front_lever"
     ]
    },
    "warmup": [
@@ -101971,13 +101971,13 @@
      "hanging_leg_raise"
     ],
     [
-     "feet_elevated_row",
+     "tuck_front_lever_row",
      2,
-     12,
+     4,
      null,
-     90,
+     120,
      "2111",
-     "inverted_row"
+     "tuck_front_row"
     ]
    ],
    "cooldown": [
@@ -103216,7 +103216,7 @@
     "en": "Straddle Back Lever & Toes-to-Bar"
    },
    "description": {
-    "en": "Confident Calisthenics, block 2. One step up since last time. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Straddle Back Lever 3 × 6 s, Tuck Human Flag 3 × 10 s a side, Strict Toes-to-Bar 3 × 6, Feet-Elevated Row 2 × 12. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Confident Calisthenics, block 2. One step up since last time. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Straddle Back Lever 3 × 6 s, Tuck Human Flag 3 × 10 s a side, Strict Toes-to-Bar 3 × 6, Tuck Front-Lever Row 2 × 4. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 4,
@@ -103229,7 +103229,7 @@
      "human_flag",
      "hanging_core",
      "compression",
-     "horizontal_pull"
+     "front_lever"
     ]
    },
    "warmup": [
@@ -103327,13 +103327,13 @@
      "hanging_leg_raise"
     ],
     [
-     "feet_elevated_row",
+     "tuck_front_lever_row",
      2,
-     12,
+     4,
      null,
-     90,
+     120,
      "2111",
-     "inverted_row"
+     "tuck_front_row"
     ]
    ],
    "cooldown": [
@@ -105922,13 +105922,13 @@
     "en": "First Foot-Assisted Supinated German Hang"
    },
    "description": {
-    "en": "Confident Calisthenics, block 3. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Straddle Back Lever 3 × 6 s, Tuck Human Flag 2 × 12 s a side, Foot-Assisted Supinated German Hang 2 × 10 s, Strict Toes-to-Bar 3 × 6, Feet-Elevated Row 2 × 12. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Confident Calisthenics, block 3. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Straddle Back Lever 3 × 6 s, Tuck Human Flag 2 × 12 s a side, Foot-Assisted Supinated German Hang 2 × 10 s, Strict Toes-to-Bar 3 × 6, Tuck Front-Lever Row 2 × 4. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 6,
     "day": 5,
     "day_type": "back_flag",
-    "minutes": 37,
+    "minutes": 36,
     "rpe": 7,
     "focus": [
      "back_lever",
@@ -106042,13 +106042,13 @@
      "hanging_leg_raise"
     ],
     [
-     "feet_elevated_row",
+     "tuck_front_lever_row",
      2,
-     12,
+     4,
      null,
-     90,
+     120,
      "2111",
-     "inverted_row"
+     "tuck_front_row"
     ]
    ],
    "cooldown": [
@@ -107278,7 +107278,7 @@
     "en": "First Full Back Lever"
    },
    "description": {
-    "en": "Confident Calisthenics, block 3. The same doses as last time: make every rep cleaner. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Full Back Lever 2 × 3 s, Straddle Back Lever 1 × 6 s, Tuck Human Flag 2 × 12 s a side, Foot-Assisted Supinated German Hang 2 × 10 s, Strict Toes-to-Bar 3 × 6, Feet-Elevated Row 2 × 12. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Confident Calisthenics, block 3. The same doses as last time: make every rep cleaner. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Full Back Lever 2 × 3 s, Straddle Back Lever 1 × 6 s, Tuck Human Flag 2 × 12 s a side, Foot-Assisted Supinated German Hang 2 × 10 s, Strict Toes-to-Bar 3 × 6, Tuck Front-Lever Row 2 × 4. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 7,
@@ -107406,13 +107406,13 @@
      "hanging_leg_raise"
     ],
     [
-     "feet_elevated_row",
+     "tuck_front_lever_row",
      2,
-     12,
+     4,
      null,
-     90,
+     120,
      "2111",
-     "inverted_row"
+     "tuck_front_row"
     ]
    ],
    "cooldown": [
@@ -110053,7 +110053,7 @@
     "en": "Tuck Human Flag & Full Back Lever"
    },
    "description": {
-    "en": "Confident Calisthenics, block 4. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Tuck Human Flag 3 × 12 s a side, Full Back Lever 2 × 4 s, Foot-Assisted Supinated German Hang 2 × 12 s, Strict Toes-to-Bar 3 × 6, Feet-Elevated Row 2 × 12. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Confident Calisthenics, block 4. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Tuck Human Flag 3 × 12 s a side, Full Back Lever 2 × 4 s, Foot-Assisted Supinated German Hang 2 × 12 s, Strict Toes-to-Bar 3 × 6, Tuck Front-Lever Row 2 × 5. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 9,
@@ -110182,13 +110182,13 @@
      "hanging_leg_raise"
     ],
     [
-     "feet_elevated_row",
+     "tuck_front_lever_row",
      2,
-     12,
+     5,
      null,
-     90,
+     120,
      "2111",
-     "inverted_row"
+     "tuck_front_row"
     ]
    ],
    "cooldown": [
@@ -111436,13 +111436,13 @@
     "en": "Tuck Human Flag & Full Back Lever"
    },
    "description": {
-    "en": "Confident Calisthenics, block 4. One step up since last time. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Tuck Human Flag 3 × 15 s a side, Full Back Lever 2 × 4 s, Foot-Assisted Supinated German Hang 2 × 12 s, Strict Toes-to-Bar 3 × 6, Feet-Elevated Row 2 × 12. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Confident Calisthenics, block 4. One step up since last time. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Tuck Human Flag 3 × 15 s a side, Full Back Lever 2 × 4 s, Foot-Assisted Supinated German Hang 2 × 12 s, Strict Toes-to-Bar 3 × 6, Tuck Front-Lever Row 2 × 5. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 10,
     "day": 5,
     "day_type": "back_flag",
-    "minutes": 39,
+    "minutes": 38,
     "rpe": 7,
     "focus": [
      "human_flag",
@@ -111565,13 +111565,13 @@
      "hanging_leg_raise"
     ],
     [
-     "feet_elevated_row",
+     "tuck_front_lever_row",
      2,
-     12,
+     5,
      null,
-     90,
+     120,
      "2111",
-     "inverted_row"
+     "tuck_front_row"
     ]
    ],
    "cooldown": [
@@ -114196,13 +114196,13 @@
     "en": "First Straddle Human Flag"
    },
    "description": {
-    "en": "Confident Calisthenics, block 5. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Straddle Human Flag 2 × 3 s a side, Tuck Human Flag 1 × 15 s a side, Full Back Lever 2 × 4 s, Foot-Assisted Supinated German Hang 2 × 15 s, Strict Toes-to-Bar 3 × 7, Feet-Elevated Row 2 × 12. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Confident Calisthenics, block 5. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Straddle Human Flag 2 × 3 s a side, Tuck Human Flag 1 × 15 s a side, Full Back Lever 2 × 4 s, Foot-Assisted Supinated German Hang 2 × 15 s, Strict Toes-to-Bar 3 × 7, Tuck Front-Lever Row 2 × 5. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 12,
     "day": 5,
     "day_type": "back_flag",
-    "minutes": 38,
+    "minutes": 37,
     "rpe": 7,
     "focus": [
      "human_flag",
@@ -114333,13 +114333,13 @@
      "hanging_leg_raise"
     ],
     [
-     "feet_elevated_row",
+     "tuck_front_lever_row",
      2,
-     12,
+     5,
      null,
-     90,
+     120,
      "2111",
-     "inverted_row"
+     "tuck_front_row"
     ]
    ],
    "cooldown": [
@@ -115587,13 +115587,13 @@
     "en": "Tempo · Straddle Human Flag & Full Back Lever"
    },
    "description": {
-    "en": "Confident Calisthenics, block 5. The doses hold this week: lower every rep in 3 s. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Straddle Human Flag 2 × 3 s a side, Tuck Human Flag 1 × 15 s a side, Full Back Lever 2 × 4 s, Foot-Assisted Supinated German Hang 2 × 15 s, Strict Toes-to-Bar 3 × 7, Feet-Elevated Row 2 × 12. 11 classes to the level test. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Confident Calisthenics, block 5. The doses hold this week: lower every rep in 3 s. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Straddle Human Flag 2 × 3 s a side, Tuck Human Flag 1 × 15 s a side, Full Back Lever 2 × 4 s, Foot-Assisted Supinated German Hang 2 × 15 s, Strict Toes-to-Bar 3 × 7, Tuck Front-Lever Row 2 × 5. 11 classes to the level test. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 13,
     "day": 5,
     "day_type": "back_flag",
-    "minutes": 39,
+    "minutes": 38,
     "rpe": 7,
     "focus": [
      "human_flag",
@@ -115724,13 +115724,13 @@
      "hanging_leg_raise"
     ],
     [
-     "feet_elevated_row",
+     "tuck_front_lever_row",
      2,
-     12,
+     5,
      null,
-     90,
+     120,
      "3111",
-     "inverted_row"
+     "tuck_front_row"
     ]
    ],
    "cooldown": [
@@ -116978,7 +116978,7 @@
     "en": "Light · Straddle Human Flag & Full Back Lever"
    },
    "description": {
-    "en": "Confident Calisthenics, block 5. A light class: the same lines at lower doses. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Straddle Human Flag 2 × 3 s a side, Full Back Lever 2 × 3 s, Foot-Assisted Supinated German Hang 2 × 9 s, Strict Toes-to-Bar 2 × 4, Feet-Elevated Row 2 × 7. 4 classes to the level test. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Confident Calisthenics, block 5. A light class: the same lines at lower doses. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Straddle Human Flag 2 × 3 s a side, Full Back Lever 2 × 3 s, Foot-Assisted Supinated German Hang 2 × 9 s, Strict Toes-to-Bar 2 × 4, Tuck Front-Lever Row 2 × 3. 4 classes to the level test. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 14,
@@ -117107,13 +117107,13 @@
      "hanging_leg_raise"
     ],
     [
-     "feet_elevated_row",
+     "tuck_front_lever_row",
      2,
-     7,
+     3,
      null,
-     90,
+     120,
      "2111",
-     "inverted_row"
+     "tuck_front_row"
     ]
    ],
    "cooldown": [
@@ -118860,7 +118860,7 @@
     "en": "Foot-Assisted Supinated German Hang"
    },
    "description": {
-    "en": "Full Shapes, block 1. The first classes of the level: last level's doses, one set fewer on the leads. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Foot-Assisted Supinated German Hang 2 × 15 s, Full Back Lever 2 × 4 s, Straddle Human Flag 2 × 3 s a side, Strict Toes-to-Bar 3 × 7, Feet-Elevated Row 2 × 12. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Full Shapes, block 1. The first classes of the level: last level's doses, one set fewer on the leads. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Foot-Assisted Supinated German Hang 2 × 15 s, Full Back Lever 2 × 4 s, Straddle Human Flag 2 × 3 s a side, Strict Toes-to-Bar 3 × 7, Tuck Front-Lever Row 2 × 5. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 1,
@@ -118998,13 +118998,13 @@
      "hanging_leg_raise"
     ],
     [
-     "feet_elevated_row",
+     "tuck_front_lever_row",
      2,
-     12,
+     5,
      null,
-     90,
+     120,
      "2111",
-     "inverted_row"
+     "tuck_front_row"
     ]
    ],
    "cooldown": [
@@ -121314,16 +121314,16 @@
    "level": 7,
    "number": 17,
    "title": {
-    "en": "Advanced-Tuck Planche & Push-Ups"
+    "en": "First Tuck Planche Push-Up"
    },
    "description": {
-    "en": "Full Shapes, block 2. The planche class: a short handstand, the planche ladder, then the pushing. This class: Freestanding Handstand 2 × 40 s, Advanced-Tuck Planche 4 × 7 s, Tuck Planche 1 × 14 s, Pseudo-Planche Push-Up 1 × 12, Parallel-Bar Dip 1 × 18, Parallel-Bar Dip 2 × 14, Push-Up 2 × 35. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Full Shapes, block 2. The planche class: a short handstand, the planche ladder, then the pushing. This class: Freestanding Handstand 2 × 40 s, Advanced-Tuck Planche 4 × 7 s, Tuck Planche Push-Up 1 × 2, Pseudo-Planche Push-Up 1 × 12, Parallel-Bar Dip 1 × 18, Parallel-Bar Dip 2 × 14, Push-Up 2 × 35. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 3,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 48,
+    "minutes": 49,
     "rpe": 7,
     "focus": [
      "planche",
@@ -121419,13 +121419,13 @@
      "tuck_planche"
     ],
     [
-     "tuck_planche",
+     "tuck_planche_pushup",
      1,
+     2,
      null,
-     14,
-     120,
-     "isometric",
-     "frog_stand"
+     150,
+     "2111",
+     "pseudo_planche_pushup"
     ],
     [
      "pseudo_planche_pushup",
@@ -121699,13 +121699,13 @@
     "en": "First Human Flag Negative"
    },
    "description": {
-    "en": "Full Shapes, block 2. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Foot-Assisted Supinated German Hang 3 × 15 s, Full Back Lever 2 × 5 s, Straddle Human Flag 1 × 4 s a side, Human Flag Negative 1 × 1 a side, Strict Toes-to-Bar 3 × 8, Feet-Elevated Row 2 × 12. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Full Shapes, block 2. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Foot-Assisted Supinated German Hang 3 × 15 s, Full Back Lever 2 × 5 s, Straddle Human Flag 1 × 4 s a side, Human Flag Negative 1 × 1 a side, Strict Toes-to-Bar 3 × 8, Tuck Front-Lever Row 2 × 5. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 3,
     "day": 5,
     "day_type": "back_flag",
-    "minutes": 44,
+    "minutes": 43,
     "rpe": 7,
     "focus": [
      "hefesto",
@@ -121854,13 +121854,13 @@
      "hanging_leg_raise"
     ],
     [
-     "feet_elevated_row",
+     "tuck_front_lever_row",
      2,
-     12,
+     5,
      null,
-     90,
+     120,
      "2111",
-     "inverted_row"
+     "tuck_front_row"
     ]
    ],
    "cooldown": [
@@ -122735,13 +122735,13 @@
     "en": "Advanced-Tuck Planche & Dips"
    },
    "description": {
-    "en": "Full Shapes, block 2. One step up since last time. The planche class: a short handstand, the planche ladder, then the pushing. This class: Freestanding Handstand 2 × 40 s, Advanced-Tuck Planche 4 × 8 s, Tuck Planche 1 × 14 s, Pseudo-Planche Push-Up 1 × 12, Parallel-Bar Dip 1 × 19, Parallel-Bar Dip 2 × 14, Push-Up 2 × 35. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Full Shapes, block 2. One step up since last time. The planche class: a short handstand, the planche ladder, then the pushing. This class: Freestanding Handstand 2 × 40 s, Advanced-Tuck Planche 4 × 8 s, Tuck Planche Push-Up 1 × 2, Pseudo-Planche Push-Up 1 × 12, Parallel-Bar Dip 1 × 19, Parallel-Bar Dip 2 × 14, Push-Up 2 × 35. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 4,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 48,
+    "minutes": 49,
     "rpe": 7,
     "focus": [
      "planche",
@@ -122837,13 +122837,13 @@
      "tuck_planche"
     ],
     [
-     "tuck_planche",
+     "tuck_planche_pushup",
      1,
+     2,
      null,
-     14,
-     120,
-     "isometric",
-     "frog_stand"
+     150,
+     "2111",
+     "pseudo_planche_pushup"
     ],
     [
      "pseudo_planche_pushup",
@@ -123117,13 +123117,13 @@
     "en": "First Foot-Assisted Korean Dip"
    },
    "description": {
-    "en": "Full Shapes, block 2. The same doses as last time: make every rep cleaner. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Full Back Lever 2 × 5 s, Straddle Human Flag 1 × 4 s a side, Human Flag Negative 1 × 1 a side, Foot-Assisted Korean Dip 2 × 3, Supinated German Hang 1 × 10 s, Strict Toes-to-Bar 3 × 8, Feet-Elevated Row 2 × 12. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Full Shapes, block 2. The same doses as last time: make every rep cleaner. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Full Back Lever 2 × 5 s, Straddle Human Flag 1 × 4 s a side, Human Flag Negative 1 × 1 a side, Foot-Assisted Korean Dip 2 × 3, Supinated German Hang 1 × 10 s, Strict Toes-to-Bar 3 × 8, Tuck Front-Lever Row 2 × 5. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 4,
     "day": 5,
     "day_type": "back_flag",
-    "minutes": 42,
+    "minutes": 41,
     "rpe": 7,
     "focus": [
      "back_lever",
@@ -123272,13 +123272,13 @@
      "hanging_leg_raise"
     ],
     [
-     "feet_elevated_row",
+     "tuck_front_lever_row",
      2,
-     12,
+     5,
      null,
-     90,
+     120,
      "2111",
-     "inverted_row"
+     "tuck_front_row"
     ]
    ],
    "cooldown": [
@@ -124134,16 +124134,16 @@
    "level": 7,
    "number": 31,
    "title": {
-    "en": "Advanced-Tuck Planche & Dips"
+    "en": "Advanced-Tuck Planche"
    },
    "description": {
-    "en": "Full Shapes, block 2. The classes before the exam: the leads at the stepped-up dose, no back-off sets. The planche class: a short handstand, the planche ladder, then the pushing. This class: Freestanding Handstand 2 × 40 s, Advanced-Tuck Planche 4 × 8 s, Pseudo-Planche Push-Up 1 × 12, Parallel-Bar Dip 1 × 19, Parallel-Bar Dip 2 × 14, Push-Up 2 × 35. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Full Shapes, block 2. The classes before the exam: the leads at the stepped-up dose, no back-off sets. The planche class: a short handstand, the planche ladder, then the pushing. This class: Freestanding Handstand 2 × 40 s, Advanced-Tuck Planche 4 × 8 s, Tuck Planche Push-Up 1 × 2, Pseudo-Planche Push-Up 1 × 12, Parallel-Bar Dip 1 × 19, Parallel-Bar Dip 2 × 14, Push-Up 2 × 35. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 5,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 46,
+    "minutes": 49,
     "rpe": 7,
     "focus": [
      "planche",
@@ -124237,6 +124237,15 @@
      150,
      "isometric",
      "tuck_planche"
+    ],
+    [
+     "tuck_planche_pushup",
+     1,
+     2,
+     null,
+     150,
+     "2111",
+     "pseudo_planche_pushup"
     ],
     [
      "pseudo_planche_pushup",
@@ -125948,13 +125957,13 @@
     "en": "Straddle Human Flag & Full Back Lever"
    },
    "description": {
-    "en": "Full Shapes, block 3. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Straddle Human Flag 2 × 4 s a side, Human Flag Negative 1 × 1 a side, Full Back Lever 2 × 6 s, Foot-Assisted Korean Dip 2 × 4, Strict Toes-to-Bar 3 × 8, Feet-Elevated Row 2 × 12. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Full Shapes, block 3. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Straddle Human Flag 2 × 4 s a side, Human Flag Negative 1 × 1 a side, Full Back Lever 2 × 6 s, Foot-Assisted Korean Dip 2 × 4, Strict Toes-to-Bar 3 × 8, Tuck Front-Lever Row 2 × 6. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 6,
     "day": 5,
     "day_type": "back_flag",
-    "minutes": 40,
+    "minutes": 39,
     "rpe": 7,
     "focus": [
      "human_flag",
@@ -126094,13 +126103,13 @@
      "hanging_leg_raise"
     ],
     [
-     "feet_elevated_row",
+     "tuck_front_lever_row",
      2,
-     12,
+     6,
      null,
-     90,
+     120,
      "2111",
-     "inverted_row"
+     "tuck_front_row"
     ]
    ],
    "cooldown": [
@@ -127357,13 +127366,13 @@
     "en": "Tempo · Straddle Human Flag & Full Back Lever"
    },
    "description": {
-    "en": "Full Shapes, block 3. The doses hold this week: lower every rep in 3 s. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Straddle Human Flag 2 × 4 s a side, Human Flag Negative 1 × 1 a side, Full Back Lever 2 × 6 s, Foot-Assisted Korean Dip 2 × 4, Strict Toes-to-Bar 3 × 8, Feet-Elevated Row 2 × 12. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Full Shapes, block 3. The doses hold this week: lower every rep in 3 s. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Straddle Human Flag 2 × 4 s a side, Human Flag Negative 1 × 1 a side, Full Back Lever 2 × 6 s, Foot-Assisted Korean Dip 2 × 4, Strict Toes-to-Bar 3 × 8, Tuck Front-Lever Row 2 × 6. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 7,
     "day": 5,
     "day_type": "back_flag",
-    "minutes": 41,
+    "minutes": 40,
     "rpe": 7,
     "focus": [
      "human_flag",
@@ -127503,13 +127512,13 @@
      "hanging_leg_raise"
     ],
     [
-     "feet_elevated_row",
+     "tuck_front_lever_row",
      2,
-     12,
+     6,
      null,
-     90,
+     120,
      "3111",
-     "inverted_row"
+     "tuck_front_row"
     ]
    ],
    "cooldown": [
@@ -129819,10 +129828,10 @@
    "level": 7,
    "number": 59,
    "title": {
-    "en": "Advanced-Tuck Planche & Dips"
+    "en": "Advanced-Tuck Planche"
    },
    "description": {
-    "en": "Full Shapes, block 4. The planche class: a short handstand, the planche ladder, then the pushing. This class: Freestanding Handstand 2 × 40 s, Advanced-Tuck Planche 4 × 8 s, Tuck Planche 1 × 14 s, Pseudo-Planche Push-Up 1 × 13, Parallel-Bar Dip 1 × 20, Parallel-Bar Dip 2 × 15, Push-Up 2 × 35. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Full Shapes, block 4. The planche class: a short handstand, the planche ladder, then the pushing. This class: Freestanding Handstand 2 × 40 s, Advanced-Tuck Planche 4 × 8 s, Tuck Planche Push-Up 1 × 3, Pseudo-Planche Push-Up 1 × 13, Parallel-Bar Dip 1 × 20, Parallel-Bar Dip 2 × 15, Push-Up 2 × 35. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 9,
@@ -129924,13 +129933,13 @@
      "tuck_planche"
     ],
     [
-     "tuck_planche",
+     "tuck_planche_pushup",
      1,
+     3,
      null,
-     14,
-     120,
-     "isometric",
-     "frog_stand"
+     150,
+     "2111",
+     "pseudo_planche_pushup"
     ],
     [
      "pseudo_planche_pushup",
@@ -130204,7 +130213,7 @@
     "en": "First Full Human Flag"
    },
    "description": {
-    "en": "Full Shapes, block 4. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Full Human Flag 2 × 3 s a side, Straddle Human Flag 1 × 4 s a side, Full Back Lever 2 × 7 s, Foot-Assisted Korean Dip 2 × 4, Strict Toes-to-Bar 3 × 8, Feet-Elevated Row 2 × 12. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Full Shapes, block 4. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Full Human Flag 2 × 3 s a side, Straddle Human Flag 1 × 4 s a side, Full Back Lever 2 × 7 s, Foot-Assisted Korean Dip 2 × 4, Strict Toes-to-Bar 3 × 8, Tuck Front-Lever Row 2 × 6. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 9,
@@ -130350,13 +130359,13 @@
      "hanging_leg_raise"
     ],
     [
-     "feet_elevated_row",
+     "tuck_front_lever_row",
      2,
-     12,
+     6,
      null,
-     90,
+     120,
      "2111",
-     "inverted_row"
+     "tuck_front_row"
     ]
    ],
    "cooldown": [
@@ -131237,10 +131246,10 @@
    "level": 7,
    "number": 66,
    "title": {
-    "en": "Advanced-Tuck Planche & Dips"
+    "en": "Advanced-Tuck Planche"
    },
    "description": {
-    "en": "Full Shapes, block 4. One step up since last time. The planche class: a short handstand, the planche ladder, then the pushing. This class: Freestanding Handstand 2 × 40 s, Advanced-Tuck Planche 4 × 9 s, Tuck Planche 1 × 14 s, Pseudo-Planche Push-Up 1 × 13, Parallel-Bar Dip 1 × 20, Parallel-Bar Dip 2 × 15, Push-Up 2 × 35. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Full Shapes, block 4. One step up since last time. The planche class: a short handstand, the planche ladder, then the pushing. This class: Freestanding Handstand 2 × 40 s, Advanced-Tuck Planche 4 × 9 s, Tuck Planche Push-Up 1 × 3, Pseudo-Planche Push-Up 1 × 13, Parallel-Bar Dip 1 × 20, Parallel-Bar Dip 2 × 15, Push-Up 2 × 35. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 10,
@@ -131342,13 +131351,13 @@
      "tuck_planche"
     ],
     [
-     "tuck_planche",
+     "tuck_planche_pushup",
      1,
+     3,
      null,
-     14,
-     120,
-     "isometric",
-     "frog_stand"
+     150,
+     "2111",
+     "pseudo_planche_pushup"
     ],
     [
      "pseudo_planche_pushup",
@@ -131622,13 +131631,13 @@
     "en": "Tempo · Full Human Flag & Full Back Lever"
    },
    "description": {
-    "en": "Full Shapes, block 4. The doses hold this week: lower every rep in 3 s. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Full Human Flag 2 × 3 s a side, Straddle Human Flag 1 × 4 s a side, Full Back Lever 2 × 7 s, Foot-Assisted Korean Dip 2 × 4, Strict Toes-to-Bar 3 × 8, Feet-Elevated Row 2 × 12. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Full Shapes, block 4. The doses hold this week: lower every rep in 3 s. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Full Human Flag 2 × 3 s a side, Straddle Human Flag 1 × 4 s a side, Full Back Lever 2 × 7 s, Foot-Assisted Korean Dip 2 × 4, Strict Toes-to-Bar 3 × 8, Tuck Front-Lever Row 2 × 6. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 10,
     "day": 5,
     "day_type": "back_flag",
-    "minutes": 40,
+    "minutes": 39,
     "rpe": 7,
     "focus": [
      "human_flag",
@@ -131768,13 +131777,13 @@
      "hanging_leg_raise"
     ],
     [
-     "feet_elevated_row",
+     "tuck_front_lever_row",
      2,
-     12,
+     6,
      null,
-     90,
+     120,
      "3111",
-     "inverted_row"
+     "tuck_front_row"
     ]
    ],
    "cooldown": [
@@ -132648,16 +132657,16 @@
    "level": 7,
    "number": 73,
    "title": {
-    "en": "Advanced-Tuck Planche & Dips"
+    "en": "Advanced-Tuck Planche"
    },
    "description": {
-    "en": "Full Shapes, block 4. The classes before the exam: the leads at the stepped-up dose, no back-off sets. The planche class: a short handstand, the planche ladder, then the pushing. This class: Freestanding Handstand 2 × 40 s, Advanced-Tuck Planche 4 × 9 s, Pseudo-Planche Push-Up 1 × 13, Parallel-Bar Dip 1 × 20, Parallel-Bar Dip 2 × 15, Push-Up 2 × 35. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Full Shapes, block 4. The classes before the exam: the leads at the stepped-up dose, no back-off sets. The planche class: a short handstand, the planche ladder, then the pushing. This class: Freestanding Handstand 2 × 40 s, Advanced-Tuck Planche 4 × 9 s, Tuck Planche Push-Up 1 × 3, Pseudo-Planche Push-Up 1 × 13, Parallel-Bar Dip 1 × 20, Parallel-Bar Dip 2 × 15, Push-Up 2 × 35. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 11,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 46,
+    "minutes": 49,
     "rpe": 7,
     "focus": [
      "planche",
@@ -132751,6 +132760,15 @@
      150,
      "isometric",
      "tuck_planche"
+    ],
+    [
+     "tuck_planche_pushup",
+     1,
+     3,
+     null,
+     150,
+     "2111",
+     "pseudo_planche_pushup"
     ],
     [
      "pseudo_planche_pushup",
@@ -134453,7 +134471,7 @@
     "en": "Full Back Lever & Straddle Human Flag"
    },
    "description": {
-    "en": "Full Shapes, block 5. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Full Back Lever 2 × 8 s, Full Human Flag 1 × 3 s a side, Straddle Human Flag 1 × 5 s a side, Foot-Assisted Korean Dip 3 × 4, Strict Toes-to-Bar 3 × 9, Feet-Elevated Row 2 × 12. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Full Shapes, block 5. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Full Back Lever 2 × 8 s, Full Human Flag 1 × 3 s a side, Straddle Human Flag 1 × 5 s a side, Foot-Assisted Korean Dip 3 × 4, Strict Toes-to-Bar 3 × 9, Tuck Front-Lever Row 2 × 6. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 12,
@@ -134599,13 +134617,13 @@
      "hanging_leg_raise"
     ],
     [
-     "feet_elevated_row",
+     "tuck_front_lever_row",
      2,
-     12,
+     6,
      null,
-     90,
+     120,
      "2111",
-     "inverted_row"
+     "tuck_front_row"
     ]
    ],
    "cooldown": [
@@ -135853,13 +135871,13 @@
     "en": "Full Back Lever & Full Human Flag"
    },
    "description": {
-    "en": "Full Shapes, block 5. One step up since last time. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Full Back Lever 2 × 8 s, Full Human Flag 1 × 3 s a side, Straddle Human Flag 1 × 5 s a side, Foot-Assisted Korean Dip 3 × 5, Strict Toes-to-Bar 3 × 9, Feet-Elevated Row 2 × 12. 11 classes to the level test. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Full Shapes, block 5. One step up since last time. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Full Back Lever 2 × 8 s, Full Human Flag 1 × 3 s a side, Straddle Human Flag 1 × 5 s a side, Foot-Assisted Korean Dip 3 × 5, Strict Toes-to-Bar 3 × 9, Tuck Front-Lever Row 2 × 6. 11 classes to the level test. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 13,
     "day": 5,
     "day_type": "back_flag",
-    "minutes": 44,
+    "minutes": 43,
     "rpe": 7,
     "focus": [
      "back_lever",
@@ -135999,13 +136017,13 @@
      "hanging_leg_raise"
     ],
     [
-     "feet_elevated_row",
+     "tuck_front_lever_row",
      2,
-     12,
+     6,
      null,
-     90,
+     120,
      "2111",
-     "inverted_row"
+     "tuck_front_row"
     ]
    ],
    "cooldown": [
@@ -137271,7 +137289,7 @@
     "en": "Light · Full Back Lever & Full Human Flag"
    },
    "description": {
-    "en": "Full Shapes, block 5. A light class: the same lines at lower doses. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Full Back Lever 2 × 5 s, Full Human Flag 1 × 3 s a side, Straddle Human Flag 1 × 3 s a side, Foot-Assisted Korean Dip 2 × 3, Strict Toes-to-Bar 2 × 5, Feet-Elevated Row 2 × 7. 4 classes to the level test. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Full Shapes, block 5. A light class: the same lines at lower doses. The bar class: one line leads this block with its ladder, the others keep two working sets. This class: Full Back Lever 2 × 5 s, Full Human Flag 1 × 3 s a side, Straddle Human Flag 1 × 3 s a side, Foot-Assisted Korean Dip 2 × 3, Strict Toes-to-Bar 2 × 5, Tuck Front-Lever Row 2 × 4. 4 classes to the level test. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 14,
@@ -137417,13 +137435,13 @@
      "hanging_leg_raise"
     ],
     [
-     "feet_elevated_row",
+     "tuck_front_lever_row",
      2,
-     7,
+     4,
      null,
-     90,
+     120,
      "2111",
-     "inverted_row"
+     "tuck_front_row"
     ]
    ],
    "cooldown": [
@@ -197500,22 +197518,22 @@
    "level": 10,
    "number": 90,
    "title": {
-    "en": "The Battle"
+    "en": "Full Battle Rehearsal"
    },
    "description": {
-    "en": "Beyond Gravity, block 5. One step up since last time. The Battle: the basics at fixed rests, every set as written, no racing the clock. This class: One-Arm Handstand 1 × 7 s a side, Straddle Front Lever 1 × 12 s, Straddle Back Lever 1 × 12 s, Strict Bar Muscle-Up 1 × 7, Strict Pull-Up 1 × 20, One-Arm Push-Up 1 × 10 a side, Elevated Pike Push-Up 1 × 12, Strict Pull-Up 1 × 15, Parallel-Bar Dip 1 × 25, Push-Up 1 × 40, Pistol Squat 1 × 8 a side. 10 classes to the level test. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
+    "en": "Beyond Gravity, block 5. The Full Battle rehearsal: the champion test's stations, numbers and rests, three rounds of its five: 30 s between stations, 90 s between rounds. Every set as written. This class: One-Arm Handstand 1 × 7 s a side, Straddle Front Lever 1 × 12 s, Straddle Back Lever 1 × 12 s, Strict Pull-Up 1 × 10, Parallel-Bar Dip 1 × 20, Push-Up 1 × 30, Bodyweight Squat 1 × 40, Strict Pull-Up 1 × 10, Parallel-Bar Dip 1 × 20, Push-Up 1 × 30, Bodyweight Squat 1 × 40, Strict Pull-Up 1 × 10, Parallel-Bar Dip 1 × 20, Push-Up 1 × 30, Bodyweight Squat 1 × 40. 10 classes to the level test. Keep about two reps in reserve and end a hold when the shape breaks. Move up only when this dose, full range and a controlled exit have held for two classes; change one thing at a time."
    },
    "schedule": {
     "week": 13,
     "day": 6,
-    "day_type": "battle",
-    "minutes": 50,
+    "day_type": "battle_rehearsal",
+    "minutes": 49,
     "rpe": 7,
     "focus": [
      "front_lever",
      "back_lever",
-     "muscle_up",
-     "vertical_pull"
+     "vertical_pull",
+     "vertical_push"
     ]
    },
    "warmup": [
@@ -197554,15 +197572,6 @@
      10,
      "controlled",
      "wrist_circles"
-    ],
-    [
-     "wrist_pushup",
-     1,
-     10,
-     null,
-     20,
-     "slow",
-     "wrist_rocks"
     ],
     [
      "hip_circles",
@@ -197650,45 +197659,9 @@
      "advanced_tuck_back"
     ],
     [
-     "strict_muscleup",
-     1,
-     7,
-     null,
-     180,
-     "controlled",
-     "band_muscleup"
-    ],
-    [
      "pullup",
      1,
-     20,
-     null,
-     150,
-     "2111",
-     "assisted_pullup"
-    ],
-    [
-     "one_arm_pushup",
-     1,
-     "10/side",
-     null,
-     150,
-     "2111",
-     "archer_pushup"
-    ],
-    [
-     "elevated_pike_pushup",
-     1,
-     12,
-     null,
-     120,
-     "2111",
-     "pike_pushup"
-    ],
-    [
-     "pullup",
-     1,
-     15,
+     10,
      null,
      30,
      "controlled",
@@ -197697,7 +197670,7 @@
     [
      "parallel_dip",
      1,
-     25,
+     20,
      null,
      30,
      "controlled",
@@ -197706,20 +197679,92 @@
     [
      "pushup",
      1,
-     40,
+     30,
      null,
      30,
      "controlled",
      "incline_pushup"
     ],
     [
-     "pistol_squat",
+     "squat",
      1,
-     "8/side",
+     40,
      null,
-     120,
+     90,
      "controlled",
-     "assisted_pistol_squat"
+     "box_squat"
+    ],
+    [
+     "pullup",
+     1,
+     10,
+     null,
+     30,
+     "controlled",
+     "assisted_pullup"
+    ],
+    [
+     "parallel_dip",
+     1,
+     20,
+     null,
+     30,
+     "controlled",
+     "assisted_dip"
+    ],
+    [
+     "pushup",
+     1,
+     30,
+     null,
+     30,
+     "controlled",
+     "incline_pushup"
+    ],
+    [
+     "squat",
+     1,
+     40,
+     null,
+     90,
+     "controlled",
+     "box_squat"
+    ],
+    [
+     "pullup",
+     1,
+     10,
+     null,
+     30,
+     "controlled",
+     "assisted_pullup"
+    ],
+    [
+     "parallel_dip",
+     1,
+     20,
+     null,
+     30,
+     "controlled",
+     "assisted_dip"
+    ],
+    [
+     "pushup",
+     1,
+     30,
+     null,
+     30,
+     "controlled",
+     "incline_pushup"
+    ],
+    [
+     "squat",
+     1,
+     40,
+     null,
+     90,
+     "controlled",
+     "box_squat"
     ]
    ],
    "cooldown": [

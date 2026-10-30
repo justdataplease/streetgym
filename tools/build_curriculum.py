@@ -153,6 +153,9 @@ prog('one_arm_pullup_negative', 'r', (8, 36), 1, {8: 2, 9: 3}, side=True)
 prog('freestanding_hspu_negative', 'r', (10, 26), 1, {10: 3})
 # Review 7 (the owner): the full freestanding handstand push-up after five weeks of its negatives.
 prog('freestanding_hspu', 'r', (10, 60), 1, {10: 2})
+# The owner's "go fix" (the 10-year coach's review 9): dynamic lever and planche strength.
+prog('tuck_front_lever_row', 'r', (5, 1), 3, {5: 4, 6: 5, 7: 6})
+prog('tuck_planche_pushup', 'r', (7, 1), 2, {7: 3, 8: 3, 9: 3})
 prog('pancake_compression', 'r', (3, 1), 8, {3: 10, 4: 12, **flat(12, 5)})
 prog('seated_pike_lift', 'r', (2, 1), 6, {2: 10, 3: 12, **flat(15, 4)})
 prog('calf_raise', 'r', (1, 1), 12, {1: 15, **flat(20, 2)})
@@ -211,7 +214,7 @@ assert sorted(r for rungs in BELT_LADDERS for r in rungs) == sorted(SKILLS)
 ELBOW = (set(LADDERS['planche']) | set(LADDERS['back']) | set(LADDERS['flag']) | set(LADDERS['hefesto']) |
          {'strict_muscleup', 'band_muscleup', 'negative_muscleup', 'archer_pullup', 'assisted_one_arm_pullup', 'one_arm_pullup_negative',
           'one_arm_pullup', 'german_hang', 'skin_cat_partial', 'skin_the_cat', 'flag_negative', 'supinated_german_hang', 'pseudo_planche_pushup',
-          'one_arm_pushup', 'straight_bar_dip', 'jump_muscleup'})
+          'one_arm_pushup', 'straight_bar_dip', 'jump_muscleup', 'tuck_planche_pushup'})
 ELBOW_CAP = 6
 
 # Minimum holds: no set is a touch. 3 s for the full and straddle shapes, the V-sit, the advanced-tuck planche and the
@@ -359,7 +362,7 @@ PER_SIDE = {'ankle_rocks', 'bird_dog', 'cossack_squat', 'dead_bug', 'leg_swings'
 FIXED = {'wall_kickup': 3, 'bear_crawl': 20, 'hollow_arch_swing': 6, 'parallel_bar_walk': 6, 'cossack_squat': 4, 'jump_muscleup': 2,
          'pullover_lowbar': 3, 'squat_jump': 5,
          # Review 8 (stale periods): paused basics and the skill lines' missing drills, each a swap within its own line.
-         'pause_pushup': 8, 'pause_squat': 10, 'one_arm_handstand_hover': 20, 'supported_handstand_shift': 8}
+         'pause_pushup': 8, 'pause_squat': 10, 'chinup': 2, 'one_arm_handstand_hover': 20, 'supported_handstand_shift': 8}
 
 
 def amount(mid, value):
@@ -429,7 +432,7 @@ WARM = {
 WRISTS = [['wrist_circles', 1, 10, None, 10, 'controlled', None], ['wrist_rocks', 1, 10, None, 10, 'controlled', None],
           ['wrist_pushup', 1, 10, None, 20, 'slow', 'wrist_rocks']]
 HANDS = ({'pike_handstand_hold', 'wall_handstand', 'handstand_balance', 'freestanding_handstand', 'handstand_exit', 'handstand_toe_pull',
-          'frog_stand', 'planche_lean', 'one_arm_handstand_hover', 'supported_handstand_shift', 'pseudo_planche_pushup', 'pike_pushup', 'elevated_pike_pushup', 'wall_hspu_negative', 'wall_hspu',
+          'frog_stand', 'planche_lean', 'one_arm_handstand_hover', 'supported_handstand_shift', 'pseudo_planche_pushup', 'tuck_planche_pushup', 'pike_pushup', 'elevated_pike_pushup', 'wall_hspu_negative', 'wall_hspu',
           'deficit_wall_hspu', 'freestanding_hspu_negative', 'freestanding_hspu', 'one_arm_pushup', 'wall_kickup', 'parallel_bar_walk', 'bear_crawl'}
          | set(LADDERS['planche']) | set(LADDERS['oah']))
 
@@ -869,7 +872,11 @@ def build_role(role, L, n, step):
         return P, M, 'push', 'push', 30, 4
     if role == 'practice_bar':
         M = [(st('dead_hang', 3, ctx=c, rest=60, step=step), 0)]
-        if started('eccentric_pullup', L, n):
+        if n >= 88:
+            # The owner's "go fix" (the teacher's review 8): after the first pull-up, chin-ups for the negatives, the grip that
+            # gives a novice an extra rep or two, lowered in 3 s. Same sets, no extra elbow load.
+            M.append((st('chinup', 2, rest=90, tempo='3010'), 0))
+        elif started('eccentric_pullup', L, n):
             M.append((st('eccentric_pullup', 2, ctx=c, rest=90, tempo='5010', step=step), 0))
         else:
             M.append((st('inverted_row', 2, ctx=c, rest=60, step=step), 0))
@@ -987,6 +994,10 @@ def build_role(role, L, n, step):
                 M = [(st('frog_stand', 2, ctx=c, rest=90), 0)]
         elif L <= 5:
             M.append((st('planche_lean', 1, ctx=c, rest=60), 2))
+        if L == 7 and block_of(L, n) in (2, 4):
+            # Dynamic planche strength (the owner's "go fix", the 10-year coach): in blocks 2 and 4 the tuck back-off becomes
+            # its push-up; blocks 1, 3 and 5 keep the hold, which reaches its Elite target there.
+            M = [(st('tuck_planche_pushup', s[1], ctx=c, rest=150), p) if s[0] == 'tuck_planche' else (s, p) for s, p in M]
         if started('pseudo_planche_pushup', L, n):
             M.append((st('pseudo_planche_pushup', 1 if rung('planche', L, n)[0] else 2, ctx=c, rest=120, step=step), 1))
         if L == 2:
@@ -1078,7 +1089,12 @@ def build_role(role, L, n, step):
             # Review 7: the low-bar pullover, on the way to the muscle-up with the jump-assisted one, until the strict one.
             M.append((st('pullover_lowbar', 2, rest=90, tempo='controlled'), 2))
         M.append((st(hang_core(L, n), 3, ctx=c, rest=75), 1))
-        M.append((st('feet_elevated_row' if started('feet_elevated_row', L, n) else 'inverted_row', 2, ctx=c, rest=90), 1))
+        if 5 <= L <= 7:
+            # Dynamic lever strength (the owner's "go fix", the 10-year coach): in Levels 5-7 the tuck front-lever row on the
+            # high bar takes the feet-elevated rows' place, the next step in horizontal pulling.
+            M.append((st('tuck_front_lever_row', 2, ctx=c, rest=120), 1))
+        else:
+            M.append((st('feet_elevated_row' if started('feet_elevated_row', L, n) else 'inverted_row', 2, ctx=c, rest=90), 1))
         if L < 3:
             M.append((st('arch_hold', 1, ctx=c, rest=45), 2))
         P = [] if L >= 3 else handstand_practice(L, n, 1)
@@ -1099,6 +1115,14 @@ def build_role(role, L, n, step):
         M += day6_press(L, n)
         M += circuit([pull_basic(L, n), dip_basic(L, n), 'pause_pushup' if L == 2 and n >= 55 else 'pushup', leg_basic(L, n), hang_core(L, n)], 2, L, n, rest=45, round_rest=120, frac=0.7)
         return handstand_practice(L, n, 2) + one_arm_attempts(L, n), M, 'full', 'full', 50, 6
+    if role == 'battle' and (L, n) == (10, 90):
+        # The owner's "go fix" (the 10-year coach): the champion test's own stations, numbers and rests, three of its five
+        # rounds, after the lever sets; the singles wait.
+        M = second_exposures(L, n)
+        for r in range(3):
+            for i, (mid, v) in enumerate((('pullup', 10), ('parallel_dip', 20), ('pushup', 30), ('squat', 40))):
+                M.append((st(mid, 1, value=v, rest=90 if i == 3 else 30, tempo='circuit'), 3 + r))
+        return one_arm_attempts(L, n), M, 'full', 'full', 50, 7
     if role == 'battle':
         # One muscle-up set at the working dose: the muscle-up trains twice a week (the statics review).
         # The pull-up set day 1 gave up opens the battle at its full dose (the S&C review).
@@ -1597,6 +1621,8 @@ ROLE_SENTENCE = {
     'basics': 'The basics class: opening sets at the dose, then rounds of the basics at a lighter dose.',
     'basics_strength': 'The basics class: the lever sets, then the basics and the press at the dose, one strong set at a time.',
     'battle': 'The Battle: the basics at fixed rests, every set as written, no racing the clock.',
+    'battle_rehearsal': ('The Full Battle rehearsal: the champion test\'s stations, numbers and rests, three rounds of its five: '
+                         '30 s between stations, 90 s between rounds. Every set as written.'),
     'statics_chain': 'The Statics Chain: one run through the shapes with short transitions, holds kept short.',
 }
 KIND_TITLE = {'deload': 'Lighter', 'light': 'Light', 'reentry': 'Re-Entry', 'primer': 'Exam Prep', 'easy': 'Easy Basics', 'barlight': 'Light Bar',
@@ -1644,7 +1670,8 @@ SHORT = {'pullup': 'Pull-Ups', 'parallel_dip': 'Dips', 'pushup': 'Push-Ups', 'sq
          'bulgarian_split_squat': 'Split Squats', 'split_squat': 'Split Squats', 'assisted_pistol_squat': 'Assisted Pistols',
          'nordic_curl': 'Nordic Curls', 'nordic_negative': 'Nordic Negatives', 'pike_handstand_hold': 'Pike Handstand',
          'straight_bar_support': 'Bar Support', 'straight_bar_dip': 'Bar Dips', 'tuck_front_row': 'Tuck Front-Lever Rows',
-         'one_leg_lsit': 'One-Leg L-Sit', 'tuck_lsit': 'Tuck L-Sit', 'pause_pushup': 'Paused Push-Ups', 'pause_squat': 'Paused Squats', 'assisted_shrimp': 'Assisted Shrimp Squats',
+         'one_leg_lsit': 'One-Leg L-Sit', 'tuck_lsit': 'Tuck L-Sit', 'pause_pushup': 'Paused Push-Ups', 'pause_squat': 'Paused Squats', 'chinup': 'Chin-Ups',
+         'tuck_front_lever_row': 'Tuck Front-Lever Rows', 'tuck_planche_pushup': 'Tuck Planche Push-Ups', 'assisted_shrimp': 'Assisted Shrimp Squats',
          'assisted_partial_shrimp': 'Partial Shrimp Squats', 'freestanding_hspu': 'Freestanding Handstand Push-Ups', 'tuck_front_hold': 'Tuck Front Lever', 'tuck_back_hold': 'Tuck Back Lever'}
 # Movements a class can be named after: skills and strength work, not stretches, mobility or the warm-up drills.
 NOTABLE = {'fundamental', 'advanced_fundamental', 'skill', 'advanced_skill', 'mastery_skill', 'strength', 'advanced_strength', 'skill_strength'}
@@ -1773,6 +1800,8 @@ def build_raw(L, n, raw=None):
         M = [x for x in M if x[1] != 1 or x[0][0] not in {r for rs in LADDERS.values() for r in rs}]
     elif kind == 'carry':
         M = [((s[:1] + [max(1, s[1] - 1)] + s[2:]) if p == 0 and s[1] >= 3 else s, p) for s, p in M]  # 2-set steps stay at 2
+    if (L, n) == (10, 90):
+        dtype = 'battle_rehearsal'
     if role in ('practice_hand', 'practice_bar', 'core_balance'):
         dtype = {'practice_hand': 'practice_push_line', 'practice_bar': 'practice_bar_line', 'core_balance': 'practice_core_line'}[role]
     return dict(P=P, M=M, wk=wk, ck=ck, cap=cap, rpe=rpe, dtype=dtype, role=role, kind=kind)
@@ -2133,10 +2162,14 @@ def build_once(skip):
                 title = f'Recovery · {RECOVERY_THEMES[(pos(L, n) // 7) % 4][0]}'
             else:
                 title = class_name(kind, role, L, n, P, M, new, rose, tempo)
+                if (L, n) == (10, 90):
+                    title = 'Full Battle Rehearsal'
                 if role == 'basics' and not rounds_left:
                     title = title.replace('Basics & Endurance', 'Basics & Strength')  # no round of the basics left: no endurance part (the 10-year coach)
             if kind == 'exam':
                 first = EXAM_SENTENCE[r['dtype']]
+            elif (L, n) == (10, 90):
+                first = ROLE_SENTENCE['battle_rehearsal']
             elif role == 'recovery' or kind == 'recovery':
                 first = ROLE_SENTENCE['recovery']
             else:

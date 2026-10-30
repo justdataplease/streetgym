@@ -299,7 +299,7 @@ class SkillBook private constructor(
             SkillFamilySpec("front_lever", "Front lever", SkillGroup.PULL,
                 listOf("tuck_front_hold", "advanced_tuck_front", "straddle_front", "full_front"),
                 listOf("inverted_row", "feet_elevated_row", "scapular_pull", "hollow_body_hold", "tuck_front_row",
-                    "tuck_front_raise", "one_leg_front", "front_lever_raise", "front_lever_negative"),
+                    "tuck_front_lever_row", "tuck_front_raise", "one_leg_front", "front_lever_raise", "front_lever_negative"),
                 setOf("front_lever")),
             SkillFamilySpec("back_lever", "Back lever", SkillGroup.PULL,
                 listOf("tuck_back_hold", "advanced_tuck_back", "straddle_back", "full_back"),

@@ -87,7 +87,7 @@ for p in classes:
 # 2. The fixed week from Level 2: elbow-heavy days (pull, planche, bar) between arm-light ones (legs, handstand,
 #    basics), the same rotation position keeping the same role in every build class.
 ROLES = {1: ("front_pull", "front_onearm"), 2: ("legs_core",), 3: ("planche_push",), 4: ("handstand_press",),
-         5: ("back_flag",), 6: ("basics", "battle", "statics_chain"), 7: ("recovery",)}
+         5: ("back_flag",), 6: ("basics", "battle", "battle_rehearsal", "statics_chain"), 7: ("recovery",)}
 for p in classes:
     if p["level"] >= 2:
         t = p["schedule"]["day_type"]
@@ -381,6 +381,7 @@ GATES = {
     "one_leg_lsit": [("tuck_lsit", 15, 2)], "lsit": [("one_leg_lsit", 6, 1)], "v_sit": [("lsit", 20, 1)], "nordic_curl": [("nordic_negative", 5, 2)],
     "one_leg_dragon_negative": [("bent_dragon_negative", 3, 3)], "full_dragon_negative": [("one_leg_dragon_negative", 2, 3)],
     "dragon_flag": [("full_dragon_negative", 2, 3)],
+    "tuck_front_lever_row": [("tuck_front_hold", 10, 3)], "tuck_planche_pushup": [("tuck_planche", 10, 3), ("pseudo_planche_pushup", 10, 1)],
 }
 for rung, gates in GATES.items():
     i = debut[rung]

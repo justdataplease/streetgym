@@ -30,7 +30,14 @@ Round 11 builds on round 10 (2.5.1):
   - **The freestanding press before the wall reps**, and the Korean dip's starting position (the behind-bar support) in the bar-class warm-up from L7:019 to L9:040.
   - **Set notes:** the kick-up, bar walk, bear crawl and squat jumps read "controlled"; the Level 3 squat jumps open their class.
 
-  Belts stay at 163. The muscle-up's Beginner and Novice belts each come one week later, and the full flag's Beginner at L8:005. Not done: rehearsing the Full Battle's five rounds before L10:100, dynamic lever and planche strength (new movements with animations), and a real-athlete beta, which needs people.
+  Belts stay at 163. The muscle-up's Beginner and Novice belts each come one week later, and the full flag's Beginner at L8:005. Not done in 2.6.3: rehearsing the Full Battle before L10:100, dynamic lever and planche strength, and a real-athlete beta, which needs people.
+- **2.6.4, the owner's "go fix" of what review 9 left open:**
+  - **Dynamic lever strength:** the tuck front-lever row (new movement and animation, feet free on the high bar) takes the feet-elevated rows' place on the bar day in Levels 5–7, from L5:005.
+  - **Dynamic planche strength:** the tuck planche push-up (new movement and animation) takes the tuck back-off set on the Level 7 planche day in blocks 2 and 4. Blocks 1, 3 and 5 keep the hold, which still reaches its Elite target.
+  - **Chin-ups** for the slow pull-up negatives in Level 1's last block (L1:088, L1:095), 2 × 2 lowered in 3 s: the same sets, the grip that gives a novice an extra rep.
+  - **The Full Battle rehearsal (L10:090):** after the lever sets, three of the champion test's five rounds at its own numbers and rests (10 pull-ups, 20 dips, 30 push-ups, 40 squats; 30 s and 90 s), a day type of its own.
+
+  Both new movements have readiness gates checked by `validate_progressions.py`, and the app counts the row as a front-lever foundation (the push-up already was one for the planche). Belts stay at 163, each on the same class as in 2.6.3; the library has 184 movements.
 
 ## The frame
 
