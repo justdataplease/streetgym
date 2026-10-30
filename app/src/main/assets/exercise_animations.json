@@ -48782,6 +48782,95 @@
     ]
    ]
   },
+  "freestanding_hspu": {
+   "duration_ms": 3200,
+   "mode": "ping_pong",
+   "easing": "linear",
+   "reduced_motion_frame": 0.5,
+   "apparatus": [
+    "floor",
+    "backstop_wall",
+    "freestanding_mat"
+   ],
+   "keyframes": [
+    {
+     "at": 0,
+     "pose": "freestanding_down_0"
+    },
+    {
+     "at": 0.1,
+     "pose": "freestanding_down_0"
+    },
+    {
+     "at": 0.1469,
+     "pose": "freestanding_down_1"
+    },
+    {
+     "at": 0.1938,
+     "pose": "freestanding_down_2"
+    },
+    {
+     "at": 0.2406,
+     "pose": "freestanding_down_3"
+    },
+    {
+     "at": 0.2875,
+     "pose": "freestanding_down_4"
+    },
+    {
+     "at": 0.3344,
+     "pose": "freestanding_down_5"
+    },
+    {
+     "at": 0.3812,
+     "pose": "freestanding_down_6"
+    },
+    {
+     "at": 0.4281,
+     "pose": "freestanding_down_7"
+    },
+    {
+     "at": 0.475,
+     "pose": "freestanding_down_8"
+    },
+    {
+     "at": 0.5219,
+     "pose": "freestanding_down_9"
+    },
+    {
+     "at": 0.5687,
+     "pose": "freestanding_down_10"
+    },
+    {
+     "at": 0.6156,
+     "pose": "freestanding_down_11"
+    },
+    {
+     "at": 0.6625,
+     "pose": "freestanding_down_12"
+    },
+    {
+     "at": 0.7094,
+     "pose": "freestanding_down_13"
+    },
+    {
+     "at": 0.7562,
+     "pose": "freestanding_down_14"
+    },
+    {
+     "at": 0.8031,
+     "pose": "freestanding_down_15"
+    },
+    {
+     "at": 0.85,
+     "pose": "freestanding_down_16"
+    },
+    {
+     "at": 1,
+     "pose": "freestanding_down_16"
+    }
+   ]
+  },
   "one_arm_pullup": {
    "duration_ms": 3000,
    "mode": "ping_pong",
@@ -51043,6 +51132,7 @@
   "freestanding_handstand": "freestanding_handstand",
   "v_sit": "v_sit",
   "wall_kickup": "wall_kickup",
+  "freestanding_hspu": "freestanding_hspu",
   "wrist_pushup": "wrist_pushup",
   "wall_shoulder_flexion": "wall_shoulder_flexion",
   "pancake_compression": "pancake_compression",

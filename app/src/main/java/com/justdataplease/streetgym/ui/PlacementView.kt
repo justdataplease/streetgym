@@ -23,9 +23,9 @@ import java.util.Locale
 
 /**
  * Today's first-launch card: the placement test ([Placement]), taken like an exam. The athlete does one set each of
- * pull-ups, push-ups and squats and enters the counts; the card shows the start they give and one confirm. When the
- * counts reach Level 3, the skills step lists the level tests: the hardest one the athlete would pass suggests the next
- * level, held to the last level [tier] opens. The start is only a guide and says what it assumes. [answers] holds each
+ * pull-ups, push-ups and squats and enters the counts; the card shows the start they give and one confirm. The skills
+ * step lists the level tests whose pull-ups and push-ups the counts pass: the hardest one the athlete would pass suggests
+ * the next level, held to the last level [tier] opens. The start is only a guide and says what it assumes. [answers] holds each
  * count (-1 for none) and [skill] the chosen test (0 for none); both outlive a redraw of Today. [onStart] gets where to
  * start; skipping and "Start from scratch" are Level 1, day 1.
  */
@@ -50,9 +50,9 @@ fun Context.placementCard(
         }
         val (pullUps, pushUps, squats) = answers.toList()
         val counted = Placement.start(pullUps, pushUps, squats, starts)
-        // The level tests: each level's last class, from Level 3's to Level 9's.
-        val tests = if (counted.level < Placement.MAX_LEVEL) emptyList() else Placement.SKILL_TESTS.mapNotNull { number ->
-            programs.filter { it.levelNumber == number }.maxByOrNull { it.number }?.takeIf { it.isExam }
+        // The level tests (each level's last class, Level 3's to Level 9's) whose pull-ups and push-ups the counts pass.
+        val tests = Placement.SKILL_TESTS.mapNotNull { number ->
+            programs.filter { it.levelNumber == number }.maxByOrNull { it.number }?.takeIf { it.isExam && Placement.meets(it, pullUps, pushUps) }
         }
         if (tests.none { it.levelNumber == skill[0] }) skill[0] = 0
         val wanted = if (skill[0] > 0) Placement.skillStart(skill[0]) else counted

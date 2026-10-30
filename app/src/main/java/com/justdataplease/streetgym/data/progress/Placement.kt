@@ -9,8 +9,9 @@ import java.util.Locale
 /**
  * First-launch placement, taken like an exam: one set each of strict pull-ups, push-ups and squats, as many as the
  * athlete can with good form. A weighted [score] (pull-ups count most, squats least) picks one of the block starts of
- * Levels 1–3 ([starts]), and the [gate]s keep pull-ups honest: Level 2 needs eight and Level 3 fifteen. An athlete the
- * counts place at Level 3 can go on with the skills step ([skillStart]): the hardest level test they would pass today.
+ * Levels 1–3 ([starts]), and the [gate]s keep pull-ups honest: Level 2 needs eight and Level 3 fifteen. An athlete whose
+ * counts pass a level test's pull-ups and push-ups ([meets]) can go on with the skills step ([skillStart]): the hardest
+ * level test they would pass today.
  * The days before the start give no skill levels, like "Complete day". It's only a guide: the athlete can start from
  * scratch, or complete levels themselves, whenever they think they should.
  */
@@ -94,11 +95,25 @@ object Placement {
 
     /**
      * The level tests the skills step offers (review 6): passing the Level N test, every target with good form, suggests
-     * Level N + 1. The counts reach Level 3, so the step starts at its test and ends at Level 9's.
+     * Level N + 1. The counts place up to Level 3, so the step starts at its test and ends at Level 9's.
      */
     val SKILL_TESTS: IntRange = MAX_LEVEL until LAST_LEVEL
 
     fun skillStart(passed: Int): Start = Start(passed.coerceIn(SKILL_TESTS) + 1)
+
+    /**
+     * Whether the counts already pass [exam]'s pull-up and push-up targets (the teacher's review 7): the skills step
+     * offers a level test only then, so a start can't claim skills the counts deny.
+     */
+    fun meets(exam: TrainingProgram, pullUps: Int, pushUps: Int): Boolean = exam.exercises.filter { it.assessment }.all { test ->
+        val reps = test.sets.firstOrNull()?.repetitions
+        when {
+            reps == null -> true
+            test.movementId == "pullup" -> pullUps >= reps
+            test.movementId == "pushup" -> pushUps >= reps
+            else -> true
+        }
+    }
 
     /** The last level [tier] opens: Level 3 on Free, 5 on Plus, 10 on Pro. */
     fun lastOpenLevel(tier: Tier): Int = (1..LAST_LEVEL).last { !LevelAccess.locked(it, tier) }

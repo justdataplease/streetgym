@@ -40,6 +40,23 @@ def at(x):
     return f'L{x[0]}:{x[1]:03d}'
 
 
+# The first class where a set of each skill reaches each belt's target: where the athlete first meets that belt (the
+# owner, review 8). A belt held through a harder rung is first met where that rung first reaches its own target.
+first_seen = {sid: [None] * 5 for sid in bc.SKILLS}
+for p in programs:
+    for st in p['practice'] + p['main']:
+        sid = st[0]
+        if sid in bc.SKILLS and st[5] != 'readiness_check':
+            v = int(str(st[2] if st[2] is not None else st[3]).split('/')[0])
+            for k, t in enumerate(bc.SKILLS[sid]['t']):
+                if v >= t and first_seen[sid][k] is None:
+                    first_seen[sid][k] = (p['level'], p['number'])
+for sid in bc.SKILLS:
+    for k in range(5):
+        if first_seen[sid][k] is None and via[sid][k]:
+            first_seen[sid][k] = first_seen[via[sid][k]][k]
+
+
 # The first class whose set reaches each skill's Elite target: the max. Every skill reaches it once, or holds Elite
 # itself through a harder rung of its ladder.
 first_max = {}
@@ -63,16 +80,19 @@ def target(sid, k):
 def cell(sid, k):
     x = landed[sid][k]
     t = html.escape(target(sid, k))
+    seen = first_seen[sid][k]
+    first = f'<span class="seen">first {at(seen)}</span>' if seen else ''
     if x:
         through = via[sid][k]
         note = f'<span class="via">via {html.escape(bc.LIB[through]["name"]["en"])}</span>' if through else ''
-        return (f'<div class="chip done{" carried" if through else ""}"><b>{at(x)}</b><span>{t}</span>{note}'
+        return (f'<div class="chip done{" carried" if through else ""}"><b>{at(x)}</b><span>{t}</span>{first}{note}'
                 f'<span class="mo" data-c="{pos(*x)}"></span></div>')
-    extra = ''
-    if k == 4:
-        m = first_max[sid]
-        extra = f'<span class="max">max at {at(m)}</span><span class="mo" data-c="{pos(*m)}"></span>'
-    return f'<div class="chip window"><b>own</b><span>{t} · {counts[sid][k]}/{NEED[k]} sets</span>{extra}</div>'
+    # Not completed in the classes: how far the classes take it, by the sets they give at the target (the owner).
+    pct = min(99, round(100 * counts[sid][k] / NEED[k]))
+    first = first or '<span class="seen">not in the classes</span>'
+    return (f'<div class="chip window"><b>{pct}%</b><span class="bar"><i style="width:{pct}%"></i></span>'
+            f'<span>{t} · {counts[sid][k]}/{NEED[k]} sets</span>{first}'
+            + (f'<span class="mo" data-c="{pos(*seen)}"></span>' if seen else '') + '</div>')
 
 
 rows = []
@@ -170,7 +190,9 @@ thead th { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transf
 .chip .via { color: var(--ok-ink); font-weight: 600; white-space: normal; }
 .key-via { display: inline-block; width: 22px; height: 14px; border: 2px dashed var(--ok); border-radius: 5px; vertical-align: -2px; }
 .chip.window b { color: var(--muted); font-weight: 600; font-size: 13px; }
-.chip .max { color: var(--ink); font-weight: 600; }
+.chip .seen { color: var(--ink); }
+.chip .bar { display: block; height: 4px; border-radius: 2px; background: var(--line); margin: 3px 6px 1px; overflow: hidden; }
+.chip .bar i { display: block; height: 100%; background: var(--muted); }
 .key-ok { display: inline-block; width: 22px; height: 14px; border: 2px solid var(--ok); border-radius: 5px; vertical-align: -2px; }
 .notes { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; max-width: 76ch; color: var(--muted); font-size: 14px; }
 """
@@ -202,7 +224,7 @@ BODY = f"""<title>What You Can Achieve</title>
   <span class="eyebrow">Street Gymnastics {VERSION} · the program as written</span>
   <h1>What you can achieve</h1>
   <p>Every date on this page is counted from the app's 1,000 classes: if you do every set as written on the Normal toggle, this is the class where each belt lands. Repeating a block after a missed exam moves it later, and Harder days or your own workouts move it sooner.</p>
-  <div class="pace" role="group" aria-label="Classes a week"><span>Classes a week</span><button type="button" data-w="2">2</button><button type="button" data-w="3">3</button><button type="button" data-w="5">5</button><button type="button" data-w="7">7</button><button type="button" data-w="10">10</button><button type="button" data-w="14">14</button></div>
+  <div class="pace" role="group" aria-label="Classes a week"><span>Classes a week</span><button type="button" data-w="2">2</button><button type="button" data-w="3">3</button><button type="button" data-w="5">5</button><button type="button" data-w="7">7</button></div>
 </header>
 <section class="facts" aria-label="In numbers">
   <div class="fact"><b>{inplan}/{5 * SKILL_COUNT}</b><span>belts that land inside the program</span></div>
@@ -215,7 +237,7 @@ BODY = f"""<title>What You Can Achieve</title>
   <p class="staged">The class where each one comes, and roughly when at the pace you picked.</p></div>
   <ol class="miles">{mil}</ol></section>
 <section aria-labelledby="t-h"><div class="head"><h2 id="t-h">Every skill, every belt</h2>
-  <p class="staged">A belt is its target in good form, 10 sets for Beginner, 20 for Intermediate and 30 for each level above. <span class="key-ok"></span> A green outline is a belt the classes give: the class where it lands, its target and when. <span class="key-via"></span> A dashed one comes through a harder rung of the same ladder: a belt held on the full back lever is held on the straddle and tuck back levers too, never higher. "own" is a belt that needs repeated blocks or your own training; it shows how many of its sets the classes give. On those Elite cells, "max" is the class where you first do one set at the Elite target.</p></div>
+  <p class="staged">A belt is its target in good form, 10 sets for Beginner, 20 for Intermediate and 30 for each level above. <span class="key-ok"></span> A green outline is a belt the classes give: the class where it lands, its target and when. <span class="key-via"></span> A dashed one comes through a harder rung of the same ladder: a belt held on the full back lever is held on the straddle and tuck back levers too, never higher. "first" is the class where you first do a set at that belt's target. A grey cell is a belt the classes don't complete: it needs repeated blocks or your own training, and its percentage is how far the classes take you, the sets they give at the target out of the sets the belt needs.</p></div>
   <div class="scroll"><table class="map">{BADGES}<tbody>{''.join(rows)}</tbody></table></div></section>
 <section aria-labelledby="l-h"><div class="head"><h2 id="l-h">Belts by level</h2></div>
   <div class="scroll"><table><thead><tr><th scope="col">Level</th>{''.join(f'<th scope="col" class="num">{L}</th>' for L in range(1, 11))}</tr></thead>

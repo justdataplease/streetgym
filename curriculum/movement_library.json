@@ -1355,7 +1355,7 @@
       ],
       "regression_id": "band_muscleup",
       "safety": {
-        "en": "Attempt only with prerequisite high pull and dip strength; avoid chicken-wing transitions. Start when ten strict pull-ups, five chest-to-bar pull-ups and ten straight-bar dips are controlled."
+        "en": "Attempt only with prerequisite high pull and dip strength; avoid chicken-wing transitions. Start when eight strict pull-ups, four chest-to-bar pull-ups and six straight-bar dips are controlled; until then do band muscle-ups for the same sets."
       },
       "counts": {
         "en": "From a still hang on straight arms, pull and press over the bar to locked arms on top with no kip, swing or kick, then lower back to the hang. At most 2 s of rest between reps."
@@ -1447,7 +1447,7 @@
       ],
       "regression_id": "advanced_tuck_front",
       "safety": {
-        "en": "Alternate legs evenly and regress before the back arches. Start when three 10-second advanced-tuck holds are clean, at least six weeks after your first advanced-tuck practice."
+        "en": "Alternate legs evenly and regress before the back arches. Start when three 8-second advanced-tuck holds are clean, at least six weeks after your first advanced-tuck practice."
       },
       "counts": {
         "en": "One leg straight in line with a level body, the other tucked, arms straight. Hold each leg in turn; your weaker side counts."
@@ -1493,7 +1493,7 @@
       ],
       "regression_id": "straddle_front",
       "safety": {
-        "en": "Stop as soon as the line breaks and return to the straddle. Start when a previous class has completed three clean 8-second straddle holds. Through Level 6 it appears only as a single readiness check; Level 7 trains brief one-to-three-second holds and Levels 8-10 lengthen them, always with the straddle in the same class as the fallback."
+        "en": "Stop as soon as the line breaks and return to the straddle. Start when a previous class has completed three clean 5-second straddle holds. Through Level 6 it appears only as a single readiness check; Level 7 trains brief one-to-three-second holds and Levels 8-10 lengthen them, always with the straddle in the same class as the fallback."
       },
       "counts": {
         "en": "Legs straight and together, the body one straight line level with the floor, arms straight. The time starts once the line is level and ends when it breaks."
@@ -1728,7 +1728,7 @@
       ],
       "regression_id": "tuck_back_entry",
       "safety": {
-        "en": "Set up on low rings or a low bar with the feet on the floor or a box, as in the German hang, and unload the feet only as far as control allows; use a spotter if available. Stop before shoulder extension feels strained. Start when skin-the-cat and tuck entries are smooth and pain-free in the shoulders and elbows."
+        "en": "Set up on low rings or a low bar with the feet on the floor or a box, as in the German hang, and unload the feet only as far as control allows; use a spotter if available. Stop before shoulder extension feels strained. Start when partial skin-the-cats and German hangs are smooth and pain-free in the shoulders and elbows."
       },
       "counts": {
         "en": "Facing down behind the bar on straight arms, knees tight to the chest, back level with the floor. The time ends when the hips rise or drop or an elbow bends."
@@ -1800,7 +1800,7 @@
       ],
       "regression_id": "one_leg_back",
       "safety": {
-        "en": "Use submaximal holds and stop at the first loss of shoulder position. Start when three 8-second one-leg holds on each side are clean."
+        "en": "Use submaximal holds and stop at the first loss of shoulder position. Start when three 10-second advanced-tuck holds are clean."
       },
       "counts": {
         "en": "Facing down, legs straight and apart, the whole body level with the floor, arms straight."
@@ -1824,7 +1824,7 @@
       ],
       "regression_id": "straddle_back",
       "safety": {
-        "en": "Use a safe exit and stop as soon as the line breaks or the shoulders feel strained, then return to the straddle. Start when a previous class has completed three clean 8-second straddle holds. Through Level 6 it appears only as a single readiness check; Level 7 trains brief one-to-three-second holds and Levels 8-10 lengthen them, always with the straddle in the same class as the fallback."
+        "en": "Use a safe exit and stop as soon as the line breaks or the shoulders feel strained, then return to the straddle. Start when a previous class has completed three clean 6-second straddle holds. Through Level 6 it appears only as a single readiness check; Level 7 trains brief one-to-three-second holds and Levels 8-10 lengthen them, always with the straddle in the same class as the fallback."
       },
       "counts": {
         "en": "Facing down, legs straight and together, the body one straight line level with the floor, arms straight. The time starts once the line is level and ends when it breaks."
@@ -2010,7 +2010,7 @@
       ],
       "regression_id": "frog_stand",
       "safety": {
-        "en": "Use parallettes if wrists prefer neutral grip and stop before elbow lock changes. Start when three 20-second planche leans with pushed-away shoulders are clean."
+        "en": "Use parallettes if wrists prefer neutral grip and stop before elbow lock changes. Start when two 20-second planche leans with pushed-away shoulders and three 30-second frog stands are clean."
       },
       "counts": {
         "en": "Straight arms, knees tight to the chest, feet off the floor, hips level with the shoulders. The time starts once the feet lift and ends when they touch or an elbow bends."
@@ -2395,7 +2395,7 @@
       ],
       "regression_id": "pullover_lowbar",
       "safety": {
-        "en": "Use a safe way into support and stop before the shoulders roll forward or one side drops first. Start when six strict pull-ups and six straight-bar dips are controlled; until then do the foot-assisted low-bar pullover for the same sets."
+        "en": "Use a safe way into support and stop before the shoulders roll forward or one side drops first. Start when six strict pull-ups and four straight-bar dips are controlled."
       }
     },
     {
@@ -2599,7 +2599,7 @@
       "equipment": [],
       "regression_id": "assisted_pistol_squat",
       "safety": {
-        "en": "Use only a depth that preserves foot pressure, knee alignment, and balance. Start when three sets of eight assisted pistols per leg are controlled."
+        "en": "Use only a depth that preserves foot pressure, knee alignment, and balance. Start when two sets of six assisted pistols per leg are controlled."
       },
       "counts": {
         "en": "On one leg with the free leg straight in front and the heel down. Lower until the hip is below the knee, then stand to a straight leg without touching anything. Your weaker leg counts."
@@ -3006,7 +3006,7 @@
         "en": "Keep both hands ready to catch the balance."
       },
       "counts": {
-        "en": "A shift and a controlled return is one rep a side."
+        "en": "Hold the weight over one hand with the other hand light on the floor; the time on each side counts. Your weaker side counts."
       }
     },
     {
@@ -3134,7 +3134,7 @@
       ],
       "regression_id": "flag_ground_support",
       "safety": {
-        "en": "Use fixed stall bars or a rated flag pole, never a loose rail or door frame. Train both sides. Keep the lower arm straight, push with the lower hand and pull with the upper hand. Stop for elbow or shoulder discomfort; do not jump into the hold. Start when three 15-second grounded flag supports on each side are solid."
+        "en": "Use fixed stall bars or a rated flag pole, never a loose rail or door frame. Train both sides. Keep the lower arm straight, push with the lower hand and pull with the upper hand. Stop for elbow or shoulder discomfort; do not jump into the hold. Start when three 10-second grounded flag supports on each side are solid."
       }
     },
     {
@@ -3200,7 +3200,7 @@
       ],
       "regression_id": "straddle_flag",
       "safety": {
-        "en": "Use fixed stall bars or a rated flag pole, never a loose rail or door frame. Train both sides. Keep the lower arm straight, push with the lower hand and pull with the upper hand. Start when three 5-second straddle flags on each side are solid; if the line breaks, use the straddle flag."
+        "en": "Use fixed stall bars or a rated flag pole, never a loose rail or door frame. Train both sides. Keep the lower arm straight, push with the lower hand and pull with the upper hand. Start when two 4-second straddle flags on each side are solid; if the line breaks, use the straddle flag."
       },
       "counts": {
         "en": "Side-on to the pole, arms straight, legs straight and together, the body one line level with the floor. Hold each side; your weaker side counts."
@@ -3273,7 +3273,7 @@
       ],
       "regression_id": "typewriter_pullup",
       "safety": {
-        "en": "Keep the working shoulder packed and the elbow in front of the body, and stop at any elbow or shoulder pain. Move the towel hand lower only when every repetition is smooth, one change at a time. Start when three sets of three typewriter pull-ups per side are smooth."
+        "en": "Keep the working shoulder packed and the elbow in front of the body, and stop at any elbow or shoulder pain. Move the towel hand lower only when every repetition is smooth, one change at a time. Start when two sets of four archer pull-ups per side are controlled."
       }
     },
     {
@@ -3296,7 +3296,7 @@
       ],
       "regression_id": "assisted_one_arm_pullup",
       "safety": {
-        "en": "Use the box to reach the top so the working arm only lowers. Keep the shoulder packed through the whole descent and stop if the elbow or shoulder hurts or the descent turns into a drop. Start when three sets of three assisted one-arm pull-ups per side are controlled."
+        "en": "Use the box to reach the top so the working arm only lowers. Keep the shoulder packed through the whole descent and stop if the elbow or shoulder hurts or the descent turns into a drop. Start when two sets of two assisted one-arm pull-ups per side are controlled."
       }
     },
     {
@@ -3317,7 +3317,7 @@
       ],
       "regression_id": "one_arm_pullup_negative",
       "safety": {
-        "en": "Start when one-arm negatives of five seconds per side are smooth, three a side. Keep the shoulder engaged from the dead hang, never drop into a straight arm, and stop if the elbow or shoulder hurts."
+        "en": "Start when two sets of two 5-second one-arm negatives per side are smooth. Keep the shoulder engaged from the dead hang, never drop into a straight arm, and stop if the elbow or shoulder hurts."
       },
       "counts": {
         "en": "One hand on the bar, palm facing away, the free hand on the chest and off the arm. From a still hang on a straight arm, chin over the bar, back to a straight arm. No kick or twist. Your weaker side counts."
@@ -3385,7 +3385,7 @@
       ],
       "regression_id": "pike_pushup",
       "safety": {
-        "en": "Use a box that cannot slide, let the elbows travel back rather than flare, and stop before the head touches the floor. Return to floor pike push-ups if the hips drop."
+        "en": "Use a box that cannot slide, let the elbows travel back rather than flare, and lower until the head lightly touches the floor or a folded mat; never drop onto it. Return to floor pike push-ups if the hips drop."
       },
       "counts": {
         "en": "Feet on a box at about hip height, hips stacked over the hands. Lower until the head touches the floor in front of the hands, then press to locked arms."
@@ -3492,6 +3492,30 @@
       }
     },
     {
+      "id": "freestanding_hspu",
+      "name": {
+        "en": "Freestanding Handstand Push-Up"
+      },
+      "description": {
+        "en": "From a freestanding handstand a short step from a clear wall, lower under control until the head lightly touches a folded mat, then press back up to a straight, stacked handstand without touching the wall. The wall is only a backstop."
+      },
+      "category": "advanced_strength",
+      "patterns": [
+        "vertical_push",
+        "overhead_press",
+        "inversion",
+        "handstand"
+      ],
+      "equipment": [
+        "wall",
+        "mat"
+      ],
+      "regression_id": "freestanding_hspu_negative",
+      "safety": {
+        "en": "Start when two sets of two slow negatives are controlled and a 10-second freestanding hold is repeatable. Keep a mat under the head, never drop onto the head or neck, and cartwheel out whenever balance drifts or the press stalls."
+      }
+    },
+    {
       "id": "one_leg_lsit",
       "name": {
         "en": "One-Leg L-Sit"
@@ -3511,7 +3535,7 @@
       ],
       "regression_id": "tuck_lsit",
       "safety": {
-        "en": "Keep the arms locked and the shoulders pushed down. Return to the tuck L-sit if the hips sink behind the hands. Start after three clean 15-second tuck L-sits with both feet off the floor."
+        "en": "Keep the arms locked and the shoulders pushed down. Return to the tuck L-sit if the hips sink behind the hands. Start after two clean 15-second tuck L-sits with both feet off the floor."
       },
       "counts": {
         "en": "Locked arms, one leg straight at hip height or higher with the heel off the floor, the other tucked. Hold each leg in turn; your weaker side counts."
@@ -3537,7 +3561,7 @@
       ],
       "regression_id": "one_leg_lsit",
       "safety": {
-        "en": "Keep holds short and the shape exact; bend one knee as soon as the legs drop. Start after three clean 10-second holds on each leg in the one-leg version."
+        "en": "Keep holds short and the shape exact; bend one knee as soon as the legs drop. Start after a clean 6-second hold on each leg in the one-leg version."
       },
       "counts": {
         "en": "Locked arms, both legs straight and together at hip height or higher, heels off the floor."
@@ -3679,7 +3703,7 @@
       ],
       "regression_id": "nordic_negative",
       "safety": {
-        "en": "Use padding under the knees and a secure anchor. Start when two sets of eight Nordic negatives are controlled. Make each repetition a controlled attempt; if the pull back up fails, finish it as a negative."
+        "en": "Use padding under the knees and a secure anchor. Start when two sets of five Nordic negatives are controlled. Make each repetition a controlled attempt; if the pull back up fails, finish it as a negative."
       },
       "counts": {
         "en": "Knees on a pad, heels held. Lower the straight body from knees to head under control to the floor, then pull back up with the hamstrings alone. A push from the hands is good training, but only unassisted reps count here."
@@ -3766,7 +3790,7 @@
       ],
       "regression_id": "wall_handstand",
       "safety": {
-        "en": "Kick only as hard as the heels need to reach the wall softly, with the elbows locked and the eyes on the floor between the hands. Come down the way you went up, or cartwheel out if you overbalance. Start when two 45-second chest-to-wall holds and the cartwheel exit on both sides are calm."
+        "en": "Kick only as hard as the heels need to reach the wall softly, with the elbows locked and the eyes on the floor between the hands. Come down the way you went up, or cartwheel out if you overbalance. Start when 30-second chest-to-wall holds and the cartwheel exit on both sides are calm."
       }
     },
     {
@@ -3893,7 +3917,7 @@
       ],
       "regression_id": "straddle_flag",
       "safety": {
-        "en": "Use fixed stall bars or a rated flag pole, never a loose rail or door frame. Train both sides. Keep both arms straight, push with the lower hand and pull with the upper hand. Slow down most as the body passes level, and end the set when the lowering turns into a drop. Start when the vertical flag and three 5-second straddle flags on each side are solid."
+        "en": "Use fixed stall bars or a rated flag pole, never a loose rail or door frame. Train both sides. Keep both arms straight, push with the lower hand and pull with the upper hand. Slow down most as the body passes level, and end the set when the lowering turns into a drop. Start when the vertical flag and two 3-second straddle flags on each side are solid."
       },
       "counts": {
         "en": "One slow lowering from the vertical flag to the floor, arms straight and the body in one line, is one rep a side. Your weaker side counts."

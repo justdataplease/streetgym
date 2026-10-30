@@ -169,5 +169,8 @@ MOVEMENTS.update({name: name for name in ["one_arm_pullup", "one_arm_pushup", "f
 # Group G: kick-up to the wall, round 2 of the 2.4.0 pro-athlete reviews (group_g.py).
 MOVEMENTS["wall_kickup"] = "wall_kickup"
 
+# Review 7: the full freestanding handstand push-up after its negatives (group_f.py).
+MOVEMENTS["freestanding_hspu"] = "freestanding_hspu"
+
 # Joint-prep movements from round 5 of the pro reviews (form_review.py).
 MOVEMENTS.update({name: name for name in ["wrist_pushup", "wall_shoulder_flexion", "pancake_compression", "thoracic_extension"]})

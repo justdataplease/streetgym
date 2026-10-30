@@ -238,7 +238,7 @@ ELBOW = (set(LADDERS["planche"]) | set(LADDERS["back"]) | set(LADDERS["flag"]) |
          {"assisted_supinated_german_hang", "supinated_german_hang", "assisted_korean_dip", "assisted_partial_hefesto", "assisted_hefesto", "hefesto",
           "skin_the_cat", "flag_negative",
           "strict_muscleup", "band_muscleup", "negative_muscleup", "archer_pullup", "assisted_one_arm_pullup", "one_arm_pullup_negative",
-          "one_arm_pullup", "german_hang", "skin_cat_partial", "pseudo_planche_pushup", "one_arm_pushup", "straight_bar_dip"})
+          "one_arm_pullup", "german_hang", "skin_cat_partial", "pseudo_planche_pushup", "one_arm_pushup", "straight_bar_dip", "jump_muscleup"})
 HEFESTO = {"assisted_korean_dip", "assisted_partial_hefesto", "assisted_hefesto", "hefesto"}
 OAH = {"handstand_weight_shift", "fingertip_one_arm_handstand", "straddle_one_arm_handstand", "one_arm_handstand"}
 MIN3 = {"full_front", "full_back", "full_planche", "full_flag", "straddle_front", "straddle_back", "straddle_planche", "straddle_flag",
@@ -258,7 +258,9 @@ for p in classes:
         assert not (hold_sets(p, HEFESTO) and hold_sets(p, TUCK_OR_HARDER_PLANCHE)), f"{where(p)} holds the Hefesto and the planche"
         assert not (hold_sets(p, OAH) >= 2 and hold_sets(p, TUCK_OR_HARDER_PLANCHE) >= 2), f"{where(p)} leads the one-arm handstand and the planche"
     else:
-        assert elbow(p) <= 8, f"{where(p)} tests with {elbow(p)} elbow-load sets"
+        # An exam's ramp sets (a tuck rung at half its dose before a straddle or full shape) count toward no cap.
+        tested = sum(st[1] for st in work(p) if st[0] in ELBOW and st[5] != "ramp-up")
+        assert tested <= 8, f"{where(p)} tests with {tested} elbow-load sets"
     for st in work(p):
         if st[3] is not None and movements[st[0]]["category"] not in NOT_HOLDS and st[0] != "handstand_balance":
             assert value(st) >= (3 if st[0] in MIN3 else 5), f"{where(p)} holds {st[0]} for {value(st)} s"
@@ -356,9 +358,40 @@ for p in classes:
             rounds[st[0]] += 1
         assert len({v for v in rounds.values() if v > 1}) <= 1, f"{where(p)} cuts a circuit round"
 
+# 12. Review 9 (the class coaches): every "Start when" gate in the library is met before its step starts. Each gate is
+#     (movement, value, sets): some class before the step's first set trains that many sets at that value or more.
+GATES = {
+    "strict_muscleup": [("pullup", 8, 3), ("chest_to_bar", 4, 1), ("straight_bar_dip", 6, 2)],
+    "one_leg_front": [("advanced_tuck_front", 8, 3)], "straddle_front": [("one_leg_front", 8, 3)], "full_front": [("straddle_front", 5, 3)],
+    "assisted_hefesto": [("straight_bar_dip", 10, 1), ("full_back", 5, 1), ("strict_muscleup", 3, 1)],
+    "tuck_back_hold": [("skin_cat_partial", 1, 1), ("german_hang", 1, 1)], "straddle_back": [("advanced_tuck_back", 10, 3)],
+    "full_back": [("straddle_back", 6, 3)], "advanced_tuck_front": [("tuck_front_hold", 10, 3)], "advanced_tuck_back": [("tuck_back_hold", 10, 3)],
+    "tuck_planche": [("planche_lean", 20, 2), ("frog_stand", 30, 3)], "advanced_tuck_planche": [("tuck_planche", 8, 3)],
+    "straddle_planche": [("advanced_tuck_planche", 8, 3)], "full_planche": [("straddle_planche", 5, 2)],
+    "negative_muscleup": [("pullup", 6, 1), ("straight_bar_dip", 4, 1)], "pistol_squat": [("assisted_pistol_squat", 6, 2)],
+    "wall_kickup": [("wall_handstand", 30, 1), ("handstand_exit", 1, 1)], "handstand_toe_pull": [("wall_handstand", 40, 3), ("handstand_exit", 1, 1)],
+    "handstand_balance": [("handstand_toe_pull", 10, 1), ("wall_kickup", 1, 1), ("handstand_exit", 1, 1)],
+    "freestanding_handstand": [("handstand_balance", 10, 1)],
+    "assisted_tuck_flag": [("flag_ground_support", 10, 3)], "vertical_flag": [("assisted_tuck_flag", 8, 3)], "tuck_flag": [("assisted_tuck_flag", 8, 3)],
+    "straddle_flag": [("tuck_flag", 5, 3)], "flag_negative": [("vertical_flag", 1, 1), ("straddle_flag", 3, 2)], "full_flag": [("straddle_flag", 4, 2)],
+    "assisted_one_arm_pullup": [("archer_pullup", 4, 2)], "one_arm_pullup_negative": [("assisted_one_arm_pullup", 2, 2)],
+    "one_arm_pullup": [("one_arm_pullup_negative", 2, 2)], "one_arm_pushup": [("archer_pushup", 5, 1)],
+    "deficit_wall_hspu": [("wall_hspu", 5, 3)], "freestanding_hspu_negative": [("deficit_wall_hspu", 3, 3), ("freestanding_handstand", 5, 1)],
+    "freestanding_hspu": [("freestanding_hspu_negative", 2, 2), ("freestanding_handstand", 10, 1)],
+    "one_leg_lsit": [("tuck_lsit", 15, 2)], "lsit": [("one_leg_lsit", 6, 1)], "v_sit": [("lsit", 20, 1)], "nordic_curl": [("nordic_negative", 5, 2)],
+    "one_leg_dragon_negative": [("bent_dragon_negative", 3, 3)], "full_dragon_negative": [("one_leg_dragon_negative", 2, 3)],
+    "dragon_flag": [("full_dragon_negative", 2, 3)],
+}
+for rung, gates in GATES.items():
+    i = debut[rung]
+    for below, need, sets in gates:
+        got = max((sum(st[1] for st in work(q) if st[0] == below and st[5] not in ("assessment", "ramp-up") and value(st) >= need)
+                   for q in classes[:i]), default=0)
+        assert got >= sets, f"{rung} starts at {where(classes[i])} before its gate: {sets} x {need} of {below} (best class: {got} sets)"
+
 print(f"Plan checks passed: frozen exams with a re-entry after each, {len(TARGETS)} skills each reaching Elite at least once "
       f"({len(elite_in_plan & {s for s in TARGETS if reach[s] < TARGETS[s][4]})} through a harder rung), no progression record beside a harder rung, "
       f"every full shape tested at L9:100, {len(debuts)} lever, planche and flag rungs at least 60 classes apart, "
       f"easy days easy, lighter exam weeks, weekly hinge, pressing and compression, no stacked straight-arm, elbow, planche or flag days, "
       f"elbow-load caps, minimum holds, no skill left more than 14 classes, exams at the trained dose (two items a step over at most), two sets a week of the "
-      f"rung below before each new rung, the Hefesto's dip gate, no sets and dose rising together and whole circuit rounds.")
+      f"rung below before each new rung, the Hefesto's dip gate, every readiness gate met before its step, no sets and dose rising together and whole circuit rounds.")

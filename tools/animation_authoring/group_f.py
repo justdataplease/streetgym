@@ -161,6 +161,9 @@ _fs = dense("freestanding_down", _freestanding, 16, span=1.0, hold=False)
 _template("freestanding_hspu_negative", 5600,
           [(0, _fs[0][1])] + [(round(0.08 + 0.66 * t, 4), k) for t, k in _fs] + [(1.0, _fs[-1][1])],
           mode="loop", apparatus=("backstop_wall", "freestanding_mat"), easing="linear")
+# Review 7: the full freestanding rep, down to the mat and pressed back up to the stacked line, the wall only a backstop.
+_template("freestanding_hspu", 3200, [(0, _fs[0][1])] + [(round(0.1 + 0.75 * t, 4), k) for t, k in _fs] + [(1, _fs[-1][1])],
+          apparatus=("backstop_wall", "freestanding_mat"), easing="linear")
 
 
 # ---------- beyond the program: the top rung of four ladders ----------

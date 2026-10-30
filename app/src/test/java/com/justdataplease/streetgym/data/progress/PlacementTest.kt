@@ -133,6 +133,13 @@ class PlacementTest {
         assertNull(assumed(Start(1)))
         assertEquals(Start(1, 40), assumed(Start(1, 41)))
         assertEquals(Start(2, 100), assumed(Start(3)))
+        // A level test is offered only to counts that pass its pull-ups and push-ups (the teacher's review 7).
+        val levelThree = programs.first { it.levelNumber == 3 && it.number == 100 }
+        val levelNine = programs.first { it.levelNumber == 9 && it.number == 100 }
+        assertFalse(Placement.meets(levelThree, 0, 0))
+        assertTrue(Placement.meets(levelThree, 30, 60))
+        assertTrue(Placement.meets(levelNine, 20, 50))
+        assertFalse(Placement.meets(levelNine, 10, 50))
         // Each skills-step start assumes the level test it came from, which tests every skill family of that level.
         Placement.SKILL_TESTS.forEach { passed ->
             assertEquals(Start(passed, 100), assumed(Placement.skillStart(passed)))
