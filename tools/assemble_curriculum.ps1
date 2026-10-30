@@ -248,8 +248,8 @@ foreach ($levelDefinition in $levelDefinitions) {
             if ([int]$step[1] -gt [int]$progressionLimits.sets_per_exercise) { throw "Level $levelNumber program $($program.number) has a step above $($progressionLimits.sets_per_exercise) sets" }
             $sets += [int]$step[1]
         }
-        # The Full Battle (L10:100) tests the basics, five rounds of four stations, outside the class budget.
-        if ($sets -gt [int]$progressionLimits.main_sets_including_practice -and [string]$program.schedule.day_type -ne "exam_level_full_battle") {
+        # The Full Battle (L10:090, a challenge class) runs the basics, five rounds of four stations, outside the class budget.
+        if ($sets -gt [int]$progressionLimits.main_sets_including_practice -and [string]$program.schedule.day_type -ne "full_battle") {
             throw "Level $levelNumber program $($program.number) has $sets sets; the budget is $($progressionLimits.main_sets_including_practice)"
         }
         $program["practice"] = @($program.practice)

@@ -122,7 +122,8 @@ MILESTONES = [
     (landed['full_planche'][0], 'Full planche Beginner, 3 s.'),
     (landed['one_arm_handstand'][0], 'One-arm handstand Beginner, 3 s a side.'),
     ((9, 100), 'The Level 9 exam tests every full shape.'),
-    ((10, 100), 'The champion test ends with the Full Battle. By now every skill holds Master, and every Elite is at least 70% of the way.'),
+    ((10, 90), 'The Full Battle: five rounds of 10 pull-ups, 20 dips, 30 push-ups and 40 squats.'),
+    ((10, 100), 'The Level 10 test checks every skill family at its top rung. By now every skill holds Master, and every Elite is at least 70% of the way.'),
 ]
 mil = ''.join(f'<li><b>{at(x)}</b><span class="mo" data-c="{pos(*x)}"></span><span>{html.escape(t)}</span></li>' for x, t in MILESTONES)
 lvl = ''.join(f'<td class="num">{n}</td>' for n in per_level)

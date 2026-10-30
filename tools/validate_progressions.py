@@ -78,8 +78,8 @@ for p in classes:
     assert 15 <= s["minutes"] <= (60 if s["day_type"].startswith("exam") else 55), f"{where(p)} runs {s['minutes']} minutes"
     assert s["day"] == (p["number"] - 1) % 7 + 1 and s["week"] == (p["number"] - 1) // 7 + 1, where(p)
     lim = limits[p["level"]]
-    # The Full Battle tests the basics, outside the set budget.
-    assert s["day_type"] == "exam_level_full_battle" or sum(st[1] for st in work(p)) <= lim["main_sets_including_practice"], \
+    # The Full Battle (L10:090, a challenge class) runs the basics five rounds, outside the set budget.
+    assert s["day_type"] == "full_battle" or sum(st[1] for st in work(p)) <= lim["main_sets_including_practice"], \
         f"{where(p)} is over the set budget"
     assert all(st[1] <= lim["sets_per_exercise"] for st in work(p)), f"{where(p)} has a step over {lim['sets_per_exercise']} sets"
     for st in work(p):
@@ -90,7 +90,7 @@ for p in classes:
 # 2. The fixed week from Level 2: elbow-heavy days (pull, planche, bar) between arm-light ones (legs, handstand,
 #    basics), the same rotation position keeping the same role in every build class.
 ROLES = {1: ("front_pull", "front_onearm"), 2: ("legs_core",), 3: ("planche_push",), 4: ("handstand_press",),
-         5: ("back_flag",), 6: ("basics", "battle", "battle_rehearsal", "statics_chain"), 7: ("recovery",)}
+         5: ("back_flag",), 6: ("basics", "battle", "full_battle", "statics_chain"), 7: ("recovery",)}
 for p in classes:
     if p["level"] >= 2:
         t = p["schedule"]["day_type"]
@@ -113,15 +113,14 @@ for p in classes:
             assert sum(st[1] for st in p["main"]) <= 0.7 * sum(st[1] for st in before["main"]) + 1, where(p)
 
 # 5. Exams: assessments in the main part only. From Level 4 an exam tests at least 12 skill families, and at most 15 with
-#    8 elbow-load sets, the German hang included (checked with the elbow caps below; the Full Battle's 20 stations aside).
+#    8 elbow-load sets, the German hang included (checked with the elbow caps below). Every exam is a skills test (2.6.8).
 for p in classes:
     if p["schedule"]["day_type"].startswith("exam"):
         tests = [st for st in p["main"] if st[5] == "assessment"]
         assert not p["practice"] and tests, where(p)
-        if p["schedule"]["day_type"] != "exam_level_full_battle":
-            assert len(tests) <= 15, f"{where(p)} has {len(tests)} tests"
-            assert p["level"] < 4 or len(tests) >= 12, f"{where(p)} tests only {len(tests)} skills"
-            assert len({st[0] for st in tests}) == len(tests), f"{where(p)} tests a movement twice"
+        assert len(tests) <= 15, f"{where(p)} has {len(tests)} tests"
+        assert p["level"] < 4 or len(tests) >= 12, f"{where(p)} tests only {len(tests)} skills"
+        assert len({st[0] for st in tests}) == len(tests), f"{where(p)} tests a movement twice"
 
 # 6. Load between days: straight-arm classes never three in a row; heavy elbow days never back to back; the planche and
 #    the flag never on consecutive days, and never in one class outside an exam.
@@ -320,7 +319,7 @@ def one_step(v, seconds, level):
 
 
 for i, p in enumerate(classes):
-    if not p["schedule"]["day_type"].startswith("exam") or p["schedule"]["day_type"] == "exam_level_full_battle":
+    if not p["schedule"]["day_type"].startswith("exam"):
         continue
     trained = defaultdict(int)
     for q in classes[max(0, i - 21):i]:

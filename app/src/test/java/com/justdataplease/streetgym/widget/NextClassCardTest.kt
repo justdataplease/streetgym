@@ -91,7 +91,7 @@ class NextClassCardTest {
 
     @Test
     fun allDoneKeepsTheLastLeadMovingAndOpensHome() {
-        val last = program("Champion Test: the Full Battle", listOf(step("pullup", "Strict Pull-Up", true)), "exam_level", 10, 100)
+        val last = program("Level 10 Test: Beyond Gravity", listOf(step("pullup", "Strict Pull-Up", true)), "exam_level", 10, 100)
         val card = NextClassCard.allDone(last)
         assertEquals(NextClassCard.Kind.ALL_DONE, card.kind)
         assertNull(card.programId)

@@ -16784,7 +16784,7 @@
     "week": 12,
     "day": 4,
     "day_type": "exam_block",
-    "minutes": 37,
+    "minutes": 39,
     "rpe": 7,
     "focus": [
      "handstand",
@@ -16960,6 +16960,15 @@
      90,
      "assessment",
      "dead_bug"
+    ],
+    [
+     "dead_hang",
+     1,
+     null,
+     45,
+     90,
+     "assessment",
+     "foot_assisted_hang"
     ]
    ],
    "cooldown": [
@@ -20817,7 +20826,7 @@
     "week": 15,
     "day": 2,
     "day_type": "exam_level",
-    "minutes": 37,
+    "minutes": 39,
     "rpe": 7,
     "focus": [
      "handstand",
@@ -20993,6 +21002,15 @@
      90,
      "assessment",
      "dead_bug"
+    ],
+    [
+     "dead_hang",
+     1,
+     null,
+     45,
+     90,
+     "assessment",
+     "foot_assisted_hang"
     ]
    ],
    "cooldown": [
@@ -24534,7 +24552,7 @@
     "week": 3,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 37,
+    "minutes": 39,
     "rpe": 7,
     "focus": [
      "handstand",
@@ -24710,6 +24728,15 @@
      90,
      "assessment",
      "dead_bug"
+    ],
+    [
+     "dead_hang",
+     1,
+     null,
+     45,
+     90,
+     "assessment",
+     "foot_assisted_hang"
     ]
    ],
    "cooldown": [
@@ -28251,7 +28278,7 @@
     "week": 6,
     "day": 5,
     "day_type": "exam_block",
-    "minutes": 41,
+    "minutes": 44,
     "rpe": 7,
     "focus": [
      "handstand",
@@ -28445,6 +28472,15 @@
      90,
      "assessment",
      "knee_raise"
+    ],
+    [
+     "dead_hang",
+     1,
+     null,
+     50,
+     90,
+     "assessment",
+     "foot_assisted_hang"
     ]
    ],
    "cooldown": [
@@ -32455,7 +32491,7 @@
     "week": 9,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 42,
+    "minutes": 45,
     "rpe": 7,
     "focus": [
      "handstand",
@@ -32649,6 +32685,15 @@
      90,
      "assessment",
      "knee_raise"
+    ],
+    [
+     "dead_hang",
+     1,
+     null,
+     50,
+     90,
+     "assessment",
+     "foot_assisted_hang"
     ]
    ],
    "cooldown": [
@@ -36641,7 +36686,7 @@
     "week": 12,
     "day": 7,
     "day_type": "exam_block",
-    "minutes": 40,
+    "minutes": 43,
     "rpe": 7,
     "focus": [
      "handstand",
@@ -36826,6 +36871,15 @@
      90,
      "assessment",
      "knee_raise"
+    ],
+    [
+     "dead_hang",
+     1,
+     null,
+     60,
+     90,
+     "assessment",
+     "foot_assisted_hang"
     ]
    ],
    "cooldown": [
@@ -39727,7 +39781,7 @@
     "week": 15,
     "day": 2,
     "day_type": "exam_level",
-    "minutes": 43,
+    "minutes": 45,
     "rpe": 7,
     "focus": [
      "handstand",
@@ -39921,6 +39975,15 @@
      90,
      "assessment",
      "knee_raise"
+    ],
+    [
+     "dead_hang",
+     1,
+     null,
+     60,
+     90,
+     "assessment",
+     "foot_assisted_hang"
     ]
    ],
    "cooldown": [
@@ -47450,7 +47513,7 @@
     "week": 6,
     "day": 5,
     "day_type": "exam_block",
-    "minutes": 56,
+    "minutes": 55,
     "rpe": 7,
     "focus": [
      "handstand",
@@ -47551,6 +47614,15 @@
      45,
      "ramp-up",
      "pike_handstand_hold"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     20,
+     30,
+     "slow",
+     "skin_cat_partial"
     ]
    ],
    "practice": [],
@@ -47599,15 +47671,6 @@
      120,
      "assessment",
      "tuck_front_row"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     20,
-     60,
-     "slow",
-     "skin_cat_partial"
     ],
     [
      "tuck_back_hold",
@@ -52206,7 +52269,7 @@
     "week": 10,
     "day": 1,
     "day_type": "exam_block",
-    "minutes": 54,
+    "minutes": 53,
     "rpe": 7,
     "focus": [
      "handstand",
@@ -52307,6 +52370,15 @@
      45,
      "ramp-up",
      "pike_handstand_hold"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     20,
+     30,
+     "slow",
+     "skin_cat_partial"
     ]
    ],
    "practice": [],
@@ -52355,15 +52427,6 @@
      120,
      "assessment",
      "tuck_front_row"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     20,
-     60,
-     "slow",
-     "skin_cat_partial"
     ],
     [
      "tuck_back_hold",
@@ -56369,7 +56432,7 @@
     "week": 12,
     "day": 7,
     "day_type": "exam_block",
-    "minutes": 56,
+    "minutes": 54,
     "rpe": 7,
     "focus": [
      "handstand",
@@ -56500,15 +56563,6 @@
      120,
      "assessment",
      "tuck_front_row"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     20,
-     60,
-     "slow",
-     "skin_cat_partial"
     ],
     [
      "tuck_back_hold",
@@ -59787,6 +59841,15 @@
      45,
      "ramp-up",
      "pike_handstand_hold"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     20,
+     30,
+     "slow",
+     "skin_cat_partial"
     ]
    ],
    "practice": [],
@@ -59835,15 +59898,6 @@
      120,
      "assessment",
      "tuck_front_row"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     20,
-     60,
-     "slow",
-     "skin_cat_partial"
     ],
     [
      "tuck_back_hold",
@@ -62388,7 +62442,7 @@
     "week": 2,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 57,
+    "minutes": 56,
     "rpe": 8,
     "focus": [
      "handstand",
@@ -62489,6 +62543,15 @@
      45,
      "ramp-up",
      "pike_handstand_hold"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     20,
+     30,
+     "slow",
+     "skin_cat_partial"
     ]
    ],
    "practice": [],
@@ -62537,15 +62600,6 @@
      120,
      "assessment",
      "tuck_front_row"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     20,
-     60,
-     "slow",
-     "skin_cat_partial"
     ],
     [
      "tuck_back_hold",
@@ -66417,7 +66471,7 @@
     "week": 5,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 49,
+    "minutes": 48,
     "rpe": 8,
     "focus": [
      "handstand",
@@ -66518,6 +66572,15 @@
      45,
      "ramp-up",
      "handstand_toe_pull"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     20,
+     30,
+     "slow",
+     "skin_cat_partial"
     ]
    ],
    "practice": [],
@@ -66557,15 +66620,6 @@
      120,
      "assessment",
      "tuck_front_hold"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     20,
-     60,
-     "slow",
-     "skin_cat_partial"
     ],
     [
      "tuck_back_hold",
@@ -70402,7 +70456,7 @@
     "week": 8,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 49,
+    "minutes": 48,
     "rpe": 8,
     "focus": [
      "handstand",
@@ -70503,6 +70557,15 @@
      45,
      "ramp-up",
      "handstand_toe_pull"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     20,
+     30,
+     "slow",
+     "skin_cat_partial"
     ]
    ],
    "practice": [],
@@ -70542,15 +70605,6 @@
      120,
      "assessment",
      "tuck_front_hold"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     20,
-     60,
-     "slow",
-     "skin_cat_partial"
     ],
     [
      "tuck_back_hold",
@@ -74475,6 +74529,15 @@
      45,
      "ramp-up",
      "handstand_toe_pull"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     25,
+     30,
+     "slow",
+     "skin_cat_partial"
     ]
    ],
    "practice": [],
@@ -74514,15 +74577,6 @@
      120,
      "assessment",
      "tuck_front_hold"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     25,
-     60,
-     "slow",
-     "skin_cat_partial"
     ],
     [
      "advanced_tuck_back",
@@ -79054,6 +79108,15 @@
      45,
      "ramp-up",
      "handstand_toe_pull"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     25,
+     30,
+     "slow",
+     "skin_cat_partial"
     ]
    ],
    "practice": [],
@@ -79093,15 +79156,6 @@
      120,
      "assessment",
      "tuck_front_hold"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     25,
-     60,
-     "slow",
-     "skin_cat_partial"
     ],
     [
      "advanced_tuck_back",
@@ -81602,6 +81656,15 @@
      45,
      "ramp-up",
      "handstand_toe_pull"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     25,
+     30,
+     "slow",
+     "skin_cat_partial"
     ]
    ],
    "practice": [],
@@ -81641,15 +81704,6 @@
      150,
      "assessment",
      "tuck_front_hold"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     25,
-     60,
-     "slow",
-     "skin_cat_partial"
     ],
     [
      "advanced_tuck_back",
@@ -85486,7 +85540,7 @@
     "week": 5,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 60,
+    "minutes": 59,
     "rpe": 8,
     "focus": [
      "handstand",
@@ -85587,6 +85641,15 @@
      45,
      "ramp-up",
      "handstand_toe_pull"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     25,
+     30,
+     "slow",
+     "skin_cat_partial"
     ]
    ],
    "practice": [],
@@ -85617,15 +85680,6 @@
      150,
      "assessment",
      "tuck_front_hold"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     25,
-     60,
-     "slow",
-     "skin_cat_partial"
     ],
     [
      "advanced_tuck_back",
@@ -89483,7 +89537,7 @@
     "week": 8,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 59,
+    "minutes": 58,
     "rpe": 8,
     "focus": [
      "handstand",
@@ -89584,6 +89638,15 @@
      45,
      "ramp-up",
      "handstand_toe_pull"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     30,
+     30,
+     "slow",
+     "skin_cat_partial"
     ]
    ],
    "practice": [],
@@ -89623,15 +89686,6 @@
      150,
      "assessment",
      "tuck_front_hold"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     30,
-     60,
-     "slow",
-     "skin_cat_partial"
     ],
     [
      "advanced_tuck_back",
@@ -93583,6 +93637,15 @@
      45,
      "ramp-up",
      "handstand_toe_pull"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     30,
+     30,
+     "slow",
+     "skin_cat_partial"
     ]
    ],
    "practice": [],
@@ -93613,15 +93676,6 @@
      150,
      "assessment",
      "tuck_front_hold"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     30,
-     60,
-     "slow",
-     "skin_cat_partial"
     ],
     [
      "advanced_tuck_back",
@@ -98105,7 +98159,7 @@
     "week": 15,
     "day": 2,
     "day_type": "exam_level",
-    "minutes": 60,
+    "minutes": 58,
     "rpe": 8,
     "focus": [
      "handstand",
@@ -98206,6 +98260,24 @@
      45,
      "ramp-up",
      "handstand_toe_pull"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     30,
+     30,
+     "slow",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_back_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "skin_cat_partial"
     ]
    ],
    "practice": [],
@@ -98242,34 +98314,16 @@
      1,
      null,
      10,
-     150,
+     120,
      "assessment",
      "tuck_front_hold"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     30,
-     60,
-     "slow",
-     "skin_cat_partial"
-    ],
-    [
-     "tuck_back_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "skin_cat_partial"
     ],
     [
      "straddle_back",
      1,
      null,
      4,
-     150,
+     120,
      "assessment",
      "advanced_tuck_back"
     ],
@@ -98278,7 +98332,7 @@
      1,
      null,
      "8/side",
-     150,
+     120,
      "assessment",
      "vertical_flag"
     ],
@@ -98287,7 +98341,7 @@
      1,
      2,
      null,
-     150,
+     120,
      "assessment",
      "band_muscleup"
     ],
@@ -98296,7 +98350,7 @@
      1,
      "2/side",
      null,
-     150,
+     120,
      "assessment",
      "pullup"
     ],
@@ -98305,7 +98359,7 @@
      1,
      4,
      null,
-     150,
+     120,
      "assessment",
      "wall_hspu_negative"
     ],
@@ -98335,6 +98389,15 @@
      120,
      "assessment",
      "incline_pushup"
+    ],
+    [
+     "lsit",
+     1,
+     null,
+     15,
+     60,
+     "assessment",
+     "one_leg_lsit"
     ],
     [
      "hollow_body_hold",
@@ -100668,7 +100731,7 @@
     "week": 2,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 59,
+    "minutes": 60,
     "rpe": 8,
     "focus": [
      "handstand",
@@ -100769,6 +100832,24 @@
      45,
      "ramp-up",
      "handstand_toe_pull"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     30,
+     30,
+     "slow",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_back_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "skin_cat_partial"
     ]
    ],
    "practice": [],
@@ -100799,24 +100880,6 @@
      150,
      "assessment",
      "tuck_front_hold"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     30,
-     60,
-     "slow",
-     "skin_cat_partial"
-    ],
-    [
-     "tuck_back_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "skin_cat_partial"
     ],
     [
      "straddle_back",
@@ -100898,6 +100961,15 @@
      60,
      "assessment",
      "one_leg_lsit"
+    ],
+    [
+     "hollow_body_hold",
+     1,
+     null,
+     60,
+     60,
+     "assessment",
+     "dead_bug"
     ],
     [
      "toes_to_bar",
@@ -104712,7 +104784,7 @@
     "week": 5,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 60,
+    "minutes": 59,
     "rpe": 8,
     "focus": [
      "handstand",
@@ -104813,6 +104885,24 @@
      45,
      "ramp-up",
      "handstand_toe_pull"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     30,
+     30,
+     "slow",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_back_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "skin_cat_partial"
     ]
    ],
    "practice": [],
@@ -104852,24 +104942,6 @@
      150,
      "assessment",
      "tuck_front_hold"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     30,
-     60,
-     "slow",
-     "skin_cat_partial"
-    ],
-    [
-     "tuck_back_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "skin_cat_partial"
     ],
     [
      "straddle_back",
@@ -108917,6 +108989,24 @@
      45,
      "ramp-up",
      "handstand_toe_pull"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     30,
+     30,
+     "slow",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_back_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "skin_cat_partial"
     ]
    ],
    "practice": [],
@@ -108947,24 +109037,6 @@
      150,
      "assessment",
      "tuck_front_hold"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     30,
-     60,
-     "slow",
-     "skin_cat_partial"
-    ],
-    [
-     "tuck_back_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "skin_cat_partial"
     ],
     [
      "straddle_back",
@@ -109055,6 +109127,15 @@
      60,
      "assessment",
      "full_dragon_negative"
+    ],
+    [
+     "toes_to_bar",
+     1,
+     6,
+     null,
+     60,
+     "assessment",
+     "hanging_leg_raise"
     ]
    ],
    "cooldown": [
@@ -112959,7 +113040,7 @@
     "week": 11,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 60,
+    "minutes": 59,
     "rpe": 8,
     "focus": [
      "handstand",
@@ -113060,6 +113141,24 @@
      45,
      "ramp-up",
      "handstand_toe_pull"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     30,
+     30,
+     "slow",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_back_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "skin_cat_partial"
     ]
    ],
    "practice": [],
@@ -113099,24 +113198,6 @@
      150,
      "assessment",
      "tuck_front_hold"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     30,
-     60,
-     "slow",
-     "skin_cat_partial"
-    ],
-    [
-     "tuck_back_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "skin_cat_partial"
     ],
     [
      "full_back",
@@ -117754,14 +117835,14 @@
     "week": 15,
     "day": 2,
     "day_type": "exam_level",
-    "minutes": 60,
+    "minutes": 59,
     "rpe": 8,
     "focus": [
      "handstand",
      "balance",
      "planche",
      "straight_arm_push",
-     "front_lever"
+     "single_leg_squat"
     ],
     "headline": "straddle_flag"
    },
@@ -117855,6 +117936,33 @@
      45,
      "ramp-up",
      "handstand_toe_pull"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     30,
+     30,
+     "slow",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_back_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_flag",
+     1,
+     null,
+     "8/side",
+     30,
+     "ramp-up",
+     "vertical_flag"
     ]
    ],
    "practice": [],
@@ -117873,61 +117981,43 @@
      1,
      null,
      6,
-     150,
+     60,
      "assessment",
      "tuck_planche"
+    ],
+    [
+     "pistol_squat",
+     1,
+     "6/side",
+     null,
+     90,
+     "assessment",
+     "assisted_pistol_squat"
     ],
     [
      "advanced_tuck_front",
      1,
      null,
      15,
-     150,
+     120,
      "assessment",
      "tuck_front_hold"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     30,
-     60,
-     "slow",
-     "skin_cat_partial"
-    ],
-    [
-     "tuck_back_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "skin_cat_partial"
     ],
     [
      "full_back",
      1,
      null,
      4,
-     60,
+     120,
      "assessment",
      "straddle_back"
-    ],
-    [
-     "tuck_flag",
-     1,
-     null,
-     "8/side",
-     60,
-     "ramp-up",
-     "vertical_flag"
     ],
     [
      "straddle_flag",
      1,
      null,
      "3/side",
-     150,
+     120,
      "assessment",
      "tuck_flag"
     ],
@@ -117936,7 +118026,7 @@
      1,
      3,
      null,
-     150,
+     120,
      "assessment",
      "band_muscleup"
     ],
@@ -117945,7 +118035,7 @@
      1,
      "3/side",
      null,
-     150,
+     120,
      "assessment",
      "pullup"
     ],
@@ -117954,7 +118044,7 @@
      1,
      5,
      null,
-     150,
+     120,
      "assessment",
      "wall_hspu_negative"
     ],
@@ -117993,6 +118083,15 @@
      60,
      "assessment",
      "one_leg_lsit"
+    ],
+    [
+     "dragon_flag",
+     1,
+     2,
+     null,
+     60,
+     "assessment",
+     "full_dragon_negative"
     ],
     [
      "toes_to_bar",
@@ -120426,14 +120525,14 @@
     "week": 2,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 60,
+    "minutes": 59,
     "rpe": 8,
     "focus": [
      "handstand",
      "balance",
      "planche",
      "straight_arm_push",
-     "single_leg_squat"
+     "front_lever"
     ],
     "headline": "straddle_flag"
    },
@@ -120536,6 +120635,33 @@
      45,
      "ramp-up",
      "tuck_planche"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     30,
+     30,
+     "slow",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_back_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_flag",
+     1,
+     null,
+     "8/side",
+     30,
+     "ramp-up",
+     "vertical_flag"
     ]
    ],
    "practice": [],
@@ -120554,70 +120680,34 @@
      1,
      null,
      6,
-     60,
+     120,
      "assessment",
      "tuck_planche"
-    ],
-    [
-     "pistol_squat",
-     1,
-     "6/side",
-     null,
-     90,
-     "assessment",
-     "assisted_pistol_squat"
     ],
     [
      "advanced_tuck_front",
      1,
      null,
      15,
-     150,
+     120,
      "assessment",
      "tuck_front_hold"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     30,
-     60,
-     "slow",
-     "skin_cat_partial"
-    ],
-    [
-     "tuck_back_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "skin_cat_partial"
     ],
     [
      "full_back",
      1,
      null,
      4,
-     60,
+     120,
      "assessment",
      "straddle_back"
-    ],
-    [
-     "tuck_flag",
-     1,
-     null,
-     "8/side",
-     60,
-     "ramp-up",
-     "vertical_flag"
     ],
     [
      "straddle_flag",
      1,
      null,
      "4/side",
-     150,
+     120,
      "assessment",
      "tuck_flag"
     ],
@@ -120626,7 +120716,7 @@
      1,
      3,
      null,
-     150,
+     120,
      "assessment",
      "band_muscleup"
     ],
@@ -120635,7 +120725,7 @@
      1,
      "3/side",
      null,
-     150,
+     120,
      "assessment",
      "pullup"
     ],
@@ -120644,7 +120734,7 @@
      1,
      5,
      null,
-     150,
+     120,
      "assessment",
      "wall_hspu_negative"
     ],
@@ -120674,6 +120764,15 @@
      120,
      "assessment",
      "incline_pushup"
+    ],
+    [
+     "lsit",
+     1,
+     null,
+     18,
+     60,
+     "assessment",
+     "one_leg_lsit"
     ],
     [
      "dragon_flag",
@@ -124691,7 +124790,7 @@
      "balance",
      "planche",
      "straight_arm_push",
-     "front_lever"
+     "single_leg_squat"
     ],
     "headline": "straddle_front"
    },
@@ -124794,6 +124893,42 @@
      45,
      "ramp-up",
      "tuck_planche"
+    ],
+    [
+     "tuck_front_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "tuck_front_row"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     30,
+     30,
+     "slow",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_back_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_flag",
+     1,
+     null,
+     "8/side",
+     30,
+     "ramp-up",
+     "vertical_flag"
     ]
    ],
    "practice": [],
@@ -124817,65 +124952,38 @@
      "tuck_planche"
     ],
     [
-     "tuck_front_hold",
+     "pistol_squat",
      1,
+     "6/side",
      null,
-     10,
-     60,
-     "ramp-up",
-     "tuck_front_row"
+     90,
+     "assessment",
+     "assisted_pistol_squat"
     ],
     [
      "straddle_front",
      1,
      null,
      3,
-     150,
+     120,
      "assessment",
      "one_leg_front"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     30,
-     60,
-     "slow",
-     "skin_cat_partial"
-    ],
-    [
-     "tuck_back_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "skin_cat_partial"
     ],
     [
      "full_back",
      1,
      null,
      5,
-     60,
+     120,
      "assessment",
      "straddle_back"
-    ],
-    [
-     "tuck_flag",
-     1,
-     null,
-     "8/side",
-     60,
-     "ramp-up",
-     "vertical_flag"
     ],
     [
      "straddle_flag",
      1,
      null,
      "4/side",
-     150,
+     120,
      "assessment",
      "tuck_flag"
     ],
@@ -124884,7 +124992,7 @@
      1,
      4,
      null,
-     150,
+     120,
      "assessment",
      "band_muscleup"
     ],
@@ -124893,7 +125001,7 @@
      1,
      6,
      null,
-     150,
+     120,
      "assessment",
      "wall_hspu_negative"
     ],
@@ -124902,7 +125010,7 @@
      1,
      "2/side",
      null,
-     150,
+     120,
      "assessment",
      "archer_pushup"
     ],
@@ -124934,13 +125042,13 @@
      "incline_pushup"
     ],
     [
-     "lsit",
+     "dragon_flag",
      1,
+     3,
      null,
-     19,
      60,
      "assessment",
-     "one_leg_lsit"
+     "full_dragon_negative"
     ],
     [
      "toes_to_bar",
@@ -128947,7 +129055,7 @@
      "balance",
      "planche",
      "straight_arm_push",
-     "single_leg_squat"
+     "front_lever"
     ],
     "headline": "one_arm_pushup"
    },
@@ -129050,6 +129158,42 @@
      45,
      "ramp-up",
      "tuck_planche"
+    ],
+    [
+     "tuck_front_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "tuck_front_row"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     30,
+     30,
+     "slow",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_back_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_flag",
+     1,
+     null,
+     "8/side",
+     30,
+     "ramp-up",
+     "vertical_flag"
     ]
    ],
    "practice": [],
@@ -129068,79 +129212,34 @@
      1,
      null,
      8,
-     60,
+     120,
      "assessment",
      "tuck_planche"
-    ],
-    [
-     "pistol_squat",
-     1,
-     "8/side",
-     null,
-     60,
-     "assessment",
-     "assisted_pistol_squat"
-    ],
-    [
-     "tuck_front_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "tuck_front_row"
     ],
     [
      "straddle_front",
      1,
      null,
      4,
-     150,
+     120,
      "assessment",
      "one_leg_front"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     30,
-     60,
-     "slow",
-     "skin_cat_partial"
-    ],
-    [
-     "tuck_back_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "skin_cat_partial"
     ],
     [
      "full_back",
      1,
      null,
      6,
-     60,
+     120,
      "assessment",
      "straddle_back"
-    ],
-    [
-     "tuck_flag",
-     1,
-     null,
-     "8/side",
-     60,
-     "ramp-up",
-     "vertical_flag"
     ],
     [
      "straddle_flag",
      1,
      null,
      "4/side",
-     150,
+     120,
      "assessment",
      "tuck_flag"
     ],
@@ -129149,7 +129248,7 @@
      1,
      4,
      null,
-     150,
+     120,
      "assessment",
      "band_muscleup"
     ],
@@ -129158,7 +129257,7 @@
      1,
      6,
      null,
-     150,
+     120,
      "assessment",
      "wall_hspu_negative"
     ],
@@ -129167,7 +129266,7 @@
      1,
      "3/side",
      null,
-     150,
+     120,
      "assessment",
      "archer_pushup"
     ],
@@ -129199,6 +129298,15 @@
      "incline_pushup"
     ],
     [
+     "lsit",
+     1,
+     null,
+     20,
+     60,
+     "assessment",
+     "one_leg_lsit"
+    ],
+    [
      "dragon_flag",
      1,
      4,
@@ -129206,6 +129314,15 @@
      60,
      "assessment",
      "full_dragon_negative"
+    ],
+    [
+     "toes_to_bar",
+     1,
+     8,
+     null,
+     60,
+     "assessment",
+     "hanging_leg_raise"
     ]
    ],
    "cooldown": [
@@ -133214,7 +133331,7 @@
      "balance",
      "planche",
      "straight_arm_push",
-     "front_lever"
+     "single_leg_squat"
     ],
     "headline": "full_flag"
    },
@@ -133317,6 +133434,42 @@
      45,
      "ramp-up",
      "tuck_planche"
+    ],
+    [
+     "tuck_front_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "tuck_front_row"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     30,
+     30,
+     "slow",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_back_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_flag",
+     1,
+     null,
+     "8/side",
+     30,
+     "ramp-up",
+     "vertical_flag"
     ]
    ],
    "practice": [],
@@ -133340,13 +133493,13 @@
      "tuck_planche"
     ],
     [
-     "tuck_front_hold",
+     "pistol_squat",
      1,
+     "8/side",
      null,
-     10,
-     60,
-     "ramp-up",
-     "tuck_front_row"
+     90,
+     "assessment",
+     "assisted_pistol_squat"
     ],
     [
      "straddle_front",
@@ -133367,47 +133520,20 @@
      "assisted_held_shrimp"
     ],
     [
-     "german_hang",
-     1,
-     null,
-     30,
-     60,
-     "slow",
-     "skin_cat_partial"
-    ],
-    [
-     "tuck_back_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "skin_cat_partial"
-    ],
-    [
      "full_back",
      1,
      null,
      7,
-     60,
+     120,
      "assessment",
      "straddle_back"
-    ],
-    [
-     "tuck_flag",
-     1,
-     null,
-     "8/side",
-     60,
-     "ramp-up",
-     "vertical_flag"
     ],
     [
      "full_flag",
      1,
      null,
      "3/side",
-     150,
+     120,
      "assessment",
      "straddle_flag"
     ],
@@ -133416,7 +133542,7 @@
      1,
      4,
      null,
-     150,
+     120,
      "assessment",
      "band_muscleup"
     ],
@@ -133425,7 +133551,7 @@
      1,
      7,
      null,
-     150,
+     120,
      "assessment",
      "wall_hspu_negative"
     ],
@@ -133434,7 +133560,7 @@
      1,
      "2/side",
      null,
-     150,
+     120,
      "assessment",
      "archer_pushup"
     ],
@@ -138201,6 +138327,42 @@
      45,
      "ramp-up",
      "tuck_planche"
+    ],
+    [
+     "tuck_front_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "tuck_front_row"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     30,
+     30,
+     "slow",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_back_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_flag",
+     1,
+     null,
+     "8/side",
+     30,
+     "ramp-up",
+     "vertical_flag"
     ]
    ],
    "practice": [],
@@ -138228,18 +138390,9 @@
      1,
      "8/side",
      null,
-     60,
+     90,
      "assessment",
      "assisted_pistol_squat"
-    ],
-    [
-     "tuck_front_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "tuck_front_row"
     ],
     [
      "straddle_front",
@@ -138251,40 +138404,13 @@
      "one_leg_front"
     ],
     [
-     "german_hang",
-     1,
-     null,
-     30,
-     60,
-     "slow",
-     "skin_cat_partial"
-    ],
-    [
-     "tuck_back_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "skin_cat_partial"
-    ],
-    [
      "full_back",
      1,
      null,
      8,
-     60,
+     120,
      "assessment",
      "straddle_back"
-    ],
-    [
-     "tuck_flag",
-     1,
-     null,
-     "8/side",
-     60,
-     "ramp-up",
-     "vertical_flag"
     ],
     [
      "full_flag",
@@ -140917,6 +141043,42 @@
      45,
      "ramp-up",
      "tuck_planche"
+    ],
+    [
+     "tuck_front_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "tuck_front_row"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     30,
+     30,
+     "slow",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_back_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_flag",
+     1,
+     null,
+     "8/side",
+     30,
+     "ramp-up",
+     "vertical_flag"
     ]
    ],
    "practice": [],
@@ -140935,70 +141097,43 @@
      1,
      null,
      9,
-     60,
+     120,
      "assessment",
      "tuck_planche"
-    ],
-    [
-     "tuck_front_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "tuck_front_row"
     ],
     [
      "straddle_front",
      1,
      null,
      5,
-     150,
+     60,
      "assessment",
      "one_leg_front"
     ],
     [
-     "german_hang",
+     "shrimp_squat",
      1,
+     "3/side",
      null,
-     30,
-     60,
-     "slow",
-     "skin_cat_partial"
-    ],
-    [
-     "tuck_back_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "skin_cat_partial"
+     90,
+     "assessment",
+     "assisted_held_shrimp"
     ],
     [
      "full_back",
      1,
      null,
      8,
-     60,
+     120,
      "assessment",
      "straddle_back"
-    ],
-    [
-     "tuck_flag",
-     1,
-     null,
-     "8/side",
-     60,
-     "ramp-up",
-     "vertical_flag"
     ],
     [
      "full_flag",
      1,
      null,
      "4/side",
-     150,
+     120,
      "assessment",
      "straddle_flag"
     ],
@@ -141007,7 +141142,7 @@
      1,
      4,
      null,
-     150,
+     120,
      "assessment",
      "band_muscleup"
     ],
@@ -141016,7 +141151,7 @@
      1,
      7,
      null,
-     150,
+     120,
      "assessment",
      "wall_hspu_negative"
     ],
@@ -141025,7 +141160,7 @@
      1,
      "2/side",
      null,
-     150,
+     120,
      "assessment",
      "archer_pushup"
     ],
@@ -145117,7 +145252,7 @@
      "balance",
      "planche",
      "straight_arm_push",
-     "front_lever"
+     "single_leg_squat"
     ],
     "headline": "full_front"
    },
@@ -145220,6 +145355,42 @@
      45,
      "ramp-up",
      "frog_stand"
+    ],
+    [
+     "tuck_front_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "tuck_front_row"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     30,
+     30,
+     "slow",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_back_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_flag",
+     1,
+     null,
+     "8/side",
+     30,
+     "ramp-up",
+     "vertical_flag"
     ]
    ],
    "practice": [],
@@ -145243,74 +145414,38 @@
      "advanced_tuck_planche"
     ],
     [
-     "tuck_front_hold",
+     "pistol_squat",
      1,
+     "8/side",
      null,
-     10,
-     60,
-     "ramp-up",
-     "tuck_front_row"
+     90,
+     "assessment",
+     "assisted_pistol_squat"
     ],
     [
      "full_front",
      1,
      null,
      3,
-     60,
+     120,
      "assessment",
      "straddle_front"
-    ],
-    [
-     "shrimp_squat",
-     1,
-     "4/side",
-     null,
-     90,
-     "assessment",
-     "assisted_held_shrimp"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     30,
-     60,
-     "slow",
-     "skin_cat_partial"
-    ],
-    [
-     "tuck_back_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "skin_cat_partial"
     ],
     [
      "full_back",
      1,
      null,
      8,
-     60,
+     120,
      "assessment",
      "straddle_back"
-    ],
-    [
-     "tuck_flag",
-     1,
-     null,
-     "8/side",
-     60,
-     "ramp-up",
-     "vertical_flag"
     ],
     [
      "full_flag",
      1,
      null,
      "3/side",
-     150,
+     120,
      "assessment",
      "straddle_flag"
     ],
@@ -145319,7 +145454,7 @@
      1,
      4,
      null,
-     150,
+     120,
      "assessment",
      "band_muscleup"
     ],
@@ -145328,7 +145463,7 @@
      1,
      2,
      null,
-     150,
+     120,
      "assessment",
      "wall_hspu"
     ],
@@ -145337,7 +145472,7 @@
      1,
      "2/side",
      null,
-     150,
+     120,
      "assessment",
      "archer_pushup"
     ],
@@ -145376,6 +145511,15 @@
      60,
      "assessment",
      "lsit"
+    ],
+    [
+     "toes_to_bar",
+     1,
+     10,
+     null,
+     60,
+     "assessment",
+     "hanging_leg_raise"
     ]
    ],
    "cooldown": [
@@ -149418,7 +149562,7 @@
      "balance",
      "planche",
      "straight_arm_push",
-     "single_leg_squat"
+     "front_lever"
     ],
     "headline": "deficit_wall_hspu"
    },
@@ -149521,6 +149665,42 @@
      45,
      "ramp-up",
      "frog_stand"
+    ],
+    [
+     "tuck_front_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "tuck_front_row"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     30,
+     30,
+     "slow",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_back_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_flag",
+     1,
+     null,
+     "8/side",
+     30,
+     "ramp-up",
+     "vertical_flag"
     ]
    ],
    "practice": [],
@@ -149539,79 +149719,43 @@
      1,
      null,
      4,
-     60,
+     120,
      "assessment",
      "advanced_tuck_planche"
-    ],
-    [
-     "pistol_squat",
-     1,
-     "9/side",
-     null,
-     60,
-     "assessment",
-     "assisted_pistol_squat"
-    ],
-    [
-     "tuck_front_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "tuck_front_row"
     ],
     [
      "full_front",
      1,
      null,
      4,
-     150,
+     60,
      "assessment",
      "straddle_front"
     ],
     [
-     "german_hang",
+     "shrimp_squat",
      1,
+     "4/side",
      null,
-     30,
-     60,
-     "slow",
-     "skin_cat_partial"
-    ],
-    [
-     "tuck_back_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "skin_cat_partial"
+     90,
+     "assessment",
+     "assisted_held_shrimp"
     ],
     [
      "full_back",
      1,
      null,
      9,
-     60,
+     120,
      "assessment",
      "straddle_back"
-    ],
-    [
-     "tuck_flag",
-     1,
-     null,
-     "8/side",
-     60,
-     "ramp-up",
-     "vertical_flag"
     ],
     [
      "full_flag",
      1,
      null,
      "4/side",
-     150,
+     120,
      "assessment",
      "straddle_flag"
     ],
@@ -149620,7 +149764,7 @@
      1,
      4,
      null,
-     150,
+     120,
      "assessment",
      "band_muscleup"
     ],
@@ -149629,7 +149773,7 @@
      1,
      3,
      null,
-     150,
+     120,
      "assessment",
      "wall_hspu"
     ],
@@ -149638,7 +149782,7 @@
      1,
      "3/side",
      null,
-     150,
+     120,
      "assessment",
      "archer_pushup"
     ],
@@ -149668,6 +149812,24 @@
      120,
      "assessment",
      "incline_pushup"
+    ],
+    [
+     "dragon_flag",
+     1,
+     6,
+     null,
+     60,
+     "assessment",
+     "full_dragon_negative"
+    ],
+    [
+     "toes_to_bar",
+     1,
+     10,
+     null,
+     60,
+     "assessment",
+     "hanging_leg_raise"
     ]
    ],
    "cooldown": [
@@ -153705,10 +153867,10 @@
    "level": 8,
    "number": 76,
    "title": {
-    "en": "Block 4 Exam · Straddle Planche"
+    "en": "Block 4 Exam · V-Sit"
    },
    "description": {
-    "en": "Strength Endurance, block 4. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Straddle Planche."
+    "en": "Strength Endurance, block 4. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: V-Sit."
    },
    "schedule": {
     "week": 11,
@@ -153721,9 +153883,9 @@
      "balance",
      "planche",
      "straight_arm_push",
-     "front_lever"
+     "single_leg_squat"
     ],
-    "headline": "straddle_planche"
+    "headline": "v_sit"
    },
    "warmup": [
     [
@@ -153824,6 +153986,42 @@
      45,
      "ramp-up",
      "frog_stand"
+    ],
+    [
+     "tuck_front_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "tuck_front_row"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     30,
+     30,
+     "slow",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_back_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_flag",
+     1,
+     null,
+     "8/side",
+     30,
+     "ramp-up",
+     "vertical_flag"
     ]
    ],
    "practice": [],
@@ -153841,71 +154039,44 @@
      "straddle_planche",
      1,
      null,
-     6,
+     5,
      60,
      "assessment",
      "advanced_tuck_planche"
     ],
     [
-     "tuck_front_hold",
+     "pistol_squat",
      1,
+     "9/side",
      null,
-     10,
-     60,
-     "ramp-up",
-     "tuck_front_row"
+     90,
+     "assessment",
+     "assisted_pistol_squat"
     ],
     [
      "full_front",
      1,
      null,
      4,
-     150,
+     120,
      "assessment",
      "straddle_front"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     30,
-     60,
-     "slow",
-     "skin_cat_partial"
-    ],
-    [
-     "tuck_back_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "skin_cat_partial"
     ],
     [
      "full_back",
      1,
      null,
      10,
-     60,
+     120,
      "assessment",
      "straddle_back"
-    ],
-    [
-     "tuck_flag",
-     1,
-     null,
-     "8/side",
-     60,
-     "ramp-up",
-     "vertical_flag"
     ],
     [
      "full_flag",
      1,
      null,
      "4/side",
-     150,
+     120,
      "assessment",
      "straddle_flag"
     ],
@@ -153914,7 +154085,7 @@
      1,
      5,
      null,
-     150,
+     120,
      "assessment",
      "band_muscleup"
     ],
@@ -153923,7 +154094,7 @@
      1,
      3,
      null,
-     150,
+     120,
      "assessment",
      "wall_hspu"
     ],
@@ -153932,7 +154103,7 @@
      1,
      "5/side",
      null,
-     150,
+     120,
      "assessment",
      "archer_pushup"
     ],
@@ -153962,6 +154133,15 @@
      120,
      "assessment",
      "incline_pushup"
+    ],
+    [
+     "v_sit",
+     1,
+     null,
+     5,
+     60,
+     "assessment",
+     "lsit"
     ],
     [
      "toes_to_bar",
@@ -158165,7 +158345,7 @@
     ],
     [
      "squat",
-     2,
+     1,
      20,
      null,
      60,
@@ -158189,6 +158369,15 @@
      60,
      "isometric",
      "foot_assisted_hang"
+    ],
+    [
+     "one_arm_pushup",
+     1,
+     "3/side",
+     null,
+     60,
+     "2111",
+     "archer_pushup"
     ],
     [
      "straddle_front",
@@ -158646,7 +158835,7 @@
     "en": "Level 8 Test: Strength Endurance"
    },
    "description": {
-    "en": "Strength Endurance, block 5. One fresh set of each skill the level trained, at its top dose, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: One-Arm Push-Up."
+    "en": "Strength Endurance, block 5. One fresh set of each skill the level trained, at its top dose, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Straddle Planche."
    },
    "schedule": {
     "week": 15,
@@ -158661,7 +158850,7 @@
      "straight_arm_push",
      "front_lever"
     ],
-    "headline": "one_arm_pushup"
+    "headline": "straddle_planche"
    },
    "warmup": [
     [
@@ -158762,6 +158951,42 @@
      45,
      "ramp-up",
      "frog_stand"
+    ],
+    [
+     "tuck_front_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "tuck_front_row"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     30,
+     30,
+     "slow",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_back_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_flag",
+     1,
+     null,
+     "8/side",
+     30,
+     "ramp-up",
+     "vertical_flag"
     ]
    ],
    "practice": [],
@@ -158779,19 +159004,10 @@
      "straddle_planche",
      1,
      null,
-     5,
-     60,
+     6,
+     120,
      "assessment",
      "advanced_tuck_planche"
-    ],
-    [
-     "tuck_front_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "tuck_front_row"
     ],
     [
      "full_front",
@@ -158803,40 +159019,13 @@
      "straddle_front"
     ],
     [
-     "german_hang",
-     1,
-     null,
-     30,
-     60,
-     "slow",
-     "skin_cat_partial"
-    ],
-    [
-     "tuck_back_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "skin_cat_partial"
-    ],
-    [
      "full_back",
      1,
      null,
      10,
-     60,
+     120,
      "assessment",
      "straddle_back"
-    ],
-    [
-     "tuck_flag",
-     1,
-     null,
-     "8/side",
-     60,
-     "ramp-up",
-     "vertical_flag"
     ],
     [
      "full_flag",
@@ -158909,6 +159098,15 @@
      120,
      "assessment",
      "incline_pushup"
+    ],
+    [
+     "dragon_flag",
+     1,
+     6,
+     null,
+     60,
+     "assessment",
+     "full_dragon_negative"
     ]
    ],
    "cooldown": [
@@ -161478,6 +161676,42 @@
      45,
      "ramp-up",
      "frog_stand"
+    ],
+    [
+     "tuck_front_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "tuck_front_row"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     30,
+     30,
+     "slow",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_back_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_flag",
+     1,
+     null,
+     "8/side",
+     30,
+     "ramp-up",
+     "vertical_flag"
     ]
    ],
    "practice": [],
@@ -161496,70 +161730,43 @@
      1,
      null,
      5,
-     60,
+     120,
      "assessment",
      "advanced_tuck_planche"
-    ],
-    [
-     "tuck_front_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "tuck_front_row"
     ],
     [
      "full_front",
      1,
      null,
      5,
-     150,
+     60,
      "assessment",
      "straddle_front"
     ],
     [
-     "german_hang",
+     "shrimp_squat",
      1,
+     "5/side",
      null,
-     30,
-     60,
-     "slow",
-     "skin_cat_partial"
-    ],
-    [
-     "tuck_back_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "skin_cat_partial"
+     90,
+     "assessment",
+     "assisted_held_shrimp"
     ],
     [
      "full_back",
      1,
      null,
      10,
-     60,
+     120,
      "assessment",
      "straddle_back"
-    ],
-    [
-     "tuck_flag",
-     1,
-     null,
-     "8/side",
-     60,
-     "ramp-up",
-     "vertical_flag"
     ],
     [
      "full_flag",
      1,
      null,
      "4/side",
-     150,
+     120,
      "assessment",
      "straddle_flag"
     ],
@@ -161568,7 +161775,7 @@
      1,
      5,
      null,
-     150,
+     120,
      "assessment",
      "band_muscleup"
     ],
@@ -161577,7 +161784,7 @@
      1,
      3,
      null,
-     150,
+     120,
      "assessment",
      "wall_hspu"
     ],
@@ -161586,7 +161793,7 @@
      1,
      "5/side",
      null,
-     150,
+     120,
      "assessment",
      "archer_pushup"
     ],
@@ -161618,13 +161825,22 @@
      "incline_pushup"
     ],
     [
-     "dragon_flag",
+     "v_sit",
      1,
-     6,
+     null,
+     4,
+     60,
+     "assessment",
+     "lsit"
+    ],
+    [
+     "toes_to_bar",
+     1,
+     12,
      null,
      60,
      "assessment",
-     "full_dragon_negative"
+     "hanging_leg_raise"
     ]
    ],
    "cooldown": [
@@ -165651,7 +165867,7 @@
      "balance",
      "planche",
      "straight_arm_push",
-     "front_lever"
+     "single_leg_squat"
     ],
     "headline": "one_arm_pullup"
    },
@@ -165754,6 +165970,42 @@
      45,
      "ramp-up",
      "frog_stand"
+    ],
+    [
+     "tuck_front_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "tuck_front_row"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     30,
+     30,
+     "slow",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_back_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_flag",
+     1,
+     null,
+     "8/side",
+     30,
+     "ramp-up",
+     "vertical_flag"
     ]
    ],
    "practice": [],
@@ -165777,74 +166029,38 @@
      "advanced_tuck_planche"
     ],
     [
-     "tuck_front_hold",
+     "pistol_squat",
      1,
+     "9/side",
      null,
-     10,
-     60,
-     "ramp-up",
-     "tuck_front_row"
+     90,
+     "assessment",
+     "assisted_pistol_squat"
     ],
     [
      "full_front",
      1,
      null,
      5,
-     60,
+     120,
      "assessment",
      "straddle_front"
-    ],
-    [
-     "shrimp_squat",
-     1,
-     "6/side",
-     null,
-     90,
-     "assessment",
-     "assisted_held_shrimp"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     30,
-     60,
-     "slow",
-     "skin_cat_partial"
-    ],
-    [
-     "tuck_back_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "skin_cat_partial"
     ],
     [
      "full_back",
      1,
      null,
      10,
-     60,
+     120,
      "assessment",
      "straddle_back"
-    ],
-    [
-     "tuck_flag",
-     1,
-     null,
-     "8/side",
-     60,
-     "ramp-up",
-     "vertical_flag"
     ],
     [
      "full_flag",
      1,
      null,
      "4/side",
-     150,
+     120,
      "assessment",
      "straddle_flag"
     ],
@@ -165853,7 +166069,7 @@
      1,
      6,
      null,
-     150,
+     120,
      "assessment",
      "band_muscleup"
     ],
@@ -165862,7 +166078,7 @@
      1,
      "1/side",
      null,
-     150,
+     120,
      "assessment",
      "one_arm_pullup_negative"
     ],
@@ -165871,7 +166087,7 @@
      1,
      4,
      null,
-     150,
+     120,
      "assessment",
      "wall_hspu"
     ],
@@ -165903,13 +166119,22 @@
      "incline_pushup"
     ],
     [
-     "v_sit",
+     "dragon_flag",
      1,
+     7,
      null,
-     5,
      60,
      "assessment",
-     "lsit"
+     "full_dragon_negative"
+    ],
+    [
+     "toes_to_bar",
+     1,
+     13,
+     null,
+     60,
+     "assessment",
+     "hanging_leg_raise"
     ]
    ],
    "cooldown": [
@@ -169934,7 +170159,7 @@
      "balance",
      "planche",
      "straight_arm_push",
-     "single_leg_squat"
+     "front_lever"
     ],
     "headline": "hefesto"
    },
@@ -170037,6 +170262,42 @@
      45,
      "ramp-up",
      "frog_stand"
+    ],
+    [
+     "tuck_front_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "tuck_front_row"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     30,
+     30,
+     "slow",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_back_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_flag",
+     1,
+     null,
+     "8/side",
+     30,
+     "ramp-up",
+     "vertical_flag"
     ]
    ],
    "practice": [],
@@ -170055,79 +170316,43 @@
      1,
      null,
      6,
-     60,
+     120,
      "assessment",
      "advanced_tuck_planche"
-    ],
-    [
-     "pistol_squat",
-     1,
-     "9/side",
-     null,
-     60,
-     "assessment",
-     "assisted_pistol_squat"
-    ],
-    [
-     "tuck_front_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "tuck_front_row"
     ],
     [
      "full_front",
      1,
      null,
      6,
-     150,
+     60,
      "assessment",
      "straddle_front"
     ],
     [
-     "german_hang",
+     "shrimp_squat",
      1,
+     "6/side",
      null,
-     30,
-     60,
-     "slow",
-     "skin_cat_partial"
-    ],
-    [
-     "tuck_back_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "skin_cat_partial"
+     90,
+     "assessment",
+     "assisted_held_shrimp"
     ],
     [
      "full_back",
      1,
      null,
      11,
-     60,
+     120,
      "assessment",
      "straddle_back"
-    ],
-    [
-     "tuck_flag",
-     1,
-     null,
-     "8/side",
-     60,
-     "ramp-up",
-     "vertical_flag"
     ],
     [
      "full_flag",
      1,
      null,
      "4/side",
-     150,
+     120,
      "assessment",
      "straddle_flag"
     ],
@@ -170136,7 +170361,7 @@
      1,
      6,
      null,
-     150,
+     120,
      "assessment",
      "band_muscleup"
     ],
@@ -170145,7 +170370,7 @@
      1,
      4,
      null,
-     150,
+     120,
      "assessment",
      "wall_hspu"
     ],
@@ -170154,7 +170379,7 @@
      1,
      1,
      null,
-     150,
+     120,
      "assessment",
      "assisted_hefesto"
     ],
@@ -170184,6 +170409,24 @@
      120,
      "assessment",
      "incline_pushup"
+    ],
+    [
+     "v_sit",
+     1,
+     null,
+     6,
+     60,
+     "assessment",
+     "lsit"
+    ],
+    [
+     "toes_to_bar",
+     1,
+     14,
+     null,
+     60,
+     "assessment",
+     "hanging_leg_raise"
     ]
    ],
    "cooldown": [
@@ -174192,7 +174435,7 @@
      "balance",
      "planche",
      "straight_arm_push",
-     "front_lever"
+     "single_leg_squat"
     ],
     "headline": "full_planche"
    },
@@ -174295,6 +174538,42 @@
      45,
      "ramp-up",
      "tuck_planche"
+    ],
+    [
+     "tuck_front_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "tuck_front_row"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     30,
+     30,
+     "slow",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_back_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_flag",
+     1,
+     null,
+     "8/side",
+     30,
+     "ramp-up",
+     "vertical_flag"
     ]
    ],
    "practice": [],
@@ -174318,65 +174597,38 @@
      "straddle_planche"
     ],
     [
-     "tuck_front_hold",
+     "pistol_squat",
      1,
+     "9/side",
      null,
-     10,
-     60,
-     "ramp-up",
-     "tuck_front_row"
+     90,
+     "assessment",
+     "assisted_pistol_squat"
     ],
     [
      "full_front",
      1,
      null,
      6,
-     150,
+     120,
      "assessment",
      "straddle_front"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     30,
-     60,
-     "slow",
-     "skin_cat_partial"
-    ],
-    [
-     "tuck_back_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "skin_cat_partial"
     ],
     [
      "full_back",
      1,
      null,
      12,
-     60,
+     120,
      "assessment",
      "straddle_back"
-    ],
-    [
-     "tuck_flag",
-     1,
-     null,
-     "8/side",
-     60,
-     "ramp-up",
-     "vertical_flag"
     ],
     [
      "full_flag",
      1,
      null,
      "6/side",
-     150,
+     120,
      "assessment",
      "straddle_flag"
     ],
@@ -174385,7 +174637,7 @@
      1,
      6,
      null,
-     150,
+     120,
      "assessment",
      "band_muscleup"
     ],
@@ -174394,7 +174646,7 @@
      1,
      5,
      null,
-     150,
+     120,
      "assessment",
      "wall_hspu"
     ],
@@ -174403,7 +174655,7 @@
      1,
      2,
      null,
-     150,
+     120,
      "assessment",
      "assisted_hefesto"
     ],
@@ -174433,6 +174685,15 @@
      120,
      "assessment",
      "incline_pushup"
+    ],
+    [
+     "dragon_flag",
+     1,
+     7,
+     null,
+     60,
+     "assessment",
+     "full_dragon_negative"
     ],
     [
      "toes_to_bar",
@@ -178585,7 +178846,7 @@
     ],
     [
      "squat",
-     2,
+     1,
      20,
      null,
      60,
@@ -178609,6 +178870,15 @@
      60,
      "isometric",
      "foot_assisted_hang"
+    ],
+    [
+     "one_arm_pushup",
+     1,
+     "3/side",
+     null,
+     60,
+     "2111",
+     "archer_pushup"
     ],
     [
      "straddle_front",
@@ -179173,6 +179443,42 @@
      45,
      "ramp-up",
      "tuck_planche"
+    ],
+    [
+     "tuck_front_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "tuck_front_row"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     30,
+     30,
+     "slow",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_back_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_flag",
+     1,
+     null,
+     "8/side",
+     30,
+     "ramp-up",
+     "vertical_flag"
     ]
    ],
    "practice": [],
@@ -179191,70 +179497,34 @@
      1,
      null,
      4,
-     60,
+     120,
      "assessment",
      "straddle_planche"
-    ],
-    [
-     "tuck_front_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "tuck_front_row"
     ],
     [
      "full_front",
      1,
      null,
      6,
-     150,
+     120,
      "assessment",
      "straddle_front"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     30,
-     60,
-     "slow",
-     "skin_cat_partial"
-    ],
-    [
-     "tuck_back_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "skin_cat_partial"
     ],
     [
      "full_back",
      1,
      null,
      12,
-     60,
+     120,
      "assessment",
      "straddle_back"
-    ],
-    [
-     "tuck_flag",
-     1,
-     null,
-     "8/side",
-     60,
-     "ramp-up",
-     "vertical_flag"
     ],
     [
      "full_flag",
      1,
      null,
      "6/side",
-     150,
+     120,
      "assessment",
      "straddle_flag"
     ],
@@ -179263,7 +179533,7 @@
      1,
      6,
      null,
-     150,
+     120,
      "assessment",
      "band_muscleup"
     ],
@@ -179272,7 +179542,7 @@
      1,
      "2/side",
      null,
-     150,
+     120,
      "assessment",
      "one_arm_pullup_negative"
     ],
@@ -179281,7 +179551,7 @@
      1,
      5,
      null,
-     150,
+     120,
      "assessment",
      "wall_hspu"
     ],
@@ -179290,9 +179560,18 @@
      1,
      3,
      null,
-     150,
+     120,
      "assessment",
      "assisted_hefesto"
+    ],
+    [
+     "one_arm_pushup",
+     1,
+     "5/side",
+     null,
+     120,
+     "assessment",
+     "archer_pushup"
     ],
     [
      "pullup",
@@ -181093,7 +181372,7 @@
     [
      "pistol_squat",
      1,
-     "4/side",
+     "5/side",
      null,
      45,
      "ramp-up",
@@ -181105,7 +181384,7 @@
     [
      "pistol_squat",
      2,
-     "9/side",
+     "10/side",
      null,
      120,
      "2111",
@@ -181862,6 +182141,42 @@
      45,
      "ramp-up",
      "tuck_planche"
+    ],
+    [
+     "tuck_front_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "tuck_front_row"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     30,
+     30,
+     "slow",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_back_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_flag",
+     1,
+     null,
+     "8/side",
+     30,
+     "ramp-up",
+     "vertical_flag"
     ]
    ],
    "practice": [],
@@ -181880,70 +182195,43 @@
      1,
      null,
      4,
-     60,
+     120,
      "assessment",
      "straddle_planche"
-    ],
-    [
-     "tuck_front_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "tuck_front_row"
     ],
     [
      "full_front",
      1,
      null,
      6,
-     150,
+     60,
      "assessment",
      "straddle_front"
     ],
     [
-     "german_hang",
+     "shrimp_squat",
      1,
+     "7/side",
      null,
-     30,
-     60,
-     "slow",
-     "skin_cat_partial"
-    ],
-    [
-     "tuck_back_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "skin_cat_partial"
+     90,
+     "assessment",
+     "assisted_held_shrimp"
     ],
     [
      "full_back",
      1,
      null,
      12,
-     60,
+     120,
      "assessment",
      "straddle_back"
-    ],
-    [
-     "tuck_flag",
-     1,
-     null,
-     "8/side",
-     60,
-     "ramp-up",
-     "vertical_flag"
     ],
     [
      "full_flag",
      1,
      null,
      "6/side",
-     150,
+     120,
      "assessment",
      "straddle_flag"
     ],
@@ -181952,7 +182240,7 @@
      1,
      6,
      null,
-     150,
+     120,
      "assessment",
      "band_muscleup"
     ],
@@ -181961,7 +182249,7 @@
      1,
      5,
      null,
-     150,
+     120,
      "assessment",
      "wall_hspu"
     ],
@@ -181970,7 +182258,7 @@
      1,
      3,
      null,
-     150,
+     120,
      "assessment",
      "assisted_hefesto"
     ],
@@ -182011,13 +182299,13 @@
      "lsit"
     ],
     [
-     "dragon_flag",
+     "toes_to_bar",
      1,
-     7,
+     15,
      null,
      60,
      "assessment",
-     "full_dragon_negative"
+     "hanging_leg_raise"
     ]
    ],
    "cooldown": [
@@ -186113,6 +186401,42 @@
      45,
      "ramp-up",
      "tuck_planche"
+    ],
+    [
+     "tuck_front_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "tuck_front_row"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     30,
+     30,
+     "slow",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_back_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_flag",
+     1,
+     null,
+     "8/side",
+     30,
+     "ramp-up",
+     "vertical_flag"
     ]
    ],
    "practice": [],
@@ -186140,79 +186464,34 @@
      1,
      "10/side",
      null,
-     60,
+     90,
      "assessment",
      "assisted_pistol_squat"
-    ],
-    [
-     "tuck_front_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "tuck_front_row"
     ],
     [
      "full_front",
      1,
      null,
      8,
-     60,
+     120,
      "assessment",
      "straddle_front"
-    ],
-    [
-     "shrimp_squat",
-     1,
-     "8/side",
-     null,
-     90,
-     "assessment",
-     "assisted_held_shrimp"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     30,
-     60,
-     "slow",
-     "skin_cat_partial"
-    ],
-    [
-     "tuck_back_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "skin_cat_partial"
     ],
     [
      "full_back",
      1,
      null,
      14,
-     60,
+     120,
      "assessment",
      "straddle_back"
-    ],
-    [
-     "tuck_flag",
-     1,
-     null,
-     "8/side",
-     60,
-     "ramp-up",
-     "vertical_flag"
     ],
     [
      "full_flag",
      1,
      null,
      "6/side",
-     150,
+     120,
      "assessment",
      "straddle_flag"
     ],
@@ -186221,7 +186500,7 @@
      1,
      7,
      null,
-     150,
+     120,
      "assessment",
      "band_muscleup"
     ],
@@ -186230,7 +186509,7 @@
      1,
      6,
      null,
-     150,
+     120,
      "assessment",
      "wall_hspu"
     ],
@@ -186239,7 +186518,7 @@
      1,
      3,
      null,
-     150,
+     120,
      "assessment",
      "assisted_hefesto"
     ],
@@ -186269,6 +186548,24 @@
      120,
      "assessment",
      "incline_pushup"
+    ],
+    [
+     "dragon_flag",
+     1,
+     7,
+     null,
+     60,
+     "assessment",
+     "full_dragon_negative"
+    ],
+    [
+     "toes_to_bar",
+     1,
+     15,
+     null,
+     60,
+     "assessment",
+     "hanging_leg_raise"
     ]
    ],
    "cooldown": [
@@ -190387,6 +190684,42 @@
      45,
      "ramp-up",
      "tuck_planche"
+    ],
+    [
+     "tuck_front_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "tuck_front_row"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     30,
+     30,
+     "slow",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_back_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_flag",
+     1,
+     null,
+     "8/side",
+     30,
+     "ramp-up",
+     "vertical_flag"
     ]
    ],
    "practice": [],
@@ -190405,70 +190738,43 @@
      1,
      null,
      5,
-     60,
+     120,
      "assessment",
      "straddle_planche"
-    ],
-    [
-     "tuck_front_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "tuck_front_row"
     ],
     [
      "full_front",
      1,
      null,
      10,
-     150,
+     60,
      "assessment",
      "straddle_front"
     ],
     [
-     "german_hang",
+     "shrimp_squat",
      1,
+     "8/side",
      null,
-     30,
-     60,
-     "slow",
-     "skin_cat_partial"
-    ],
-    [
-     "tuck_back_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "skin_cat_partial"
+     90,
+     "assessment",
+     "assisted_held_shrimp"
     ],
     [
      "full_back",
      1,
      null,
      14,
-     60,
+     120,
      "assessment",
      "straddle_back"
-    ],
-    [
-     "tuck_flag",
-     1,
-     null,
-     "8/side",
-     60,
-     "ramp-up",
-     "vertical_flag"
     ],
     [
      "full_flag",
      1,
      null,
      "6/side",
-     150,
+     120,
      "assessment",
      "straddle_flag"
     ],
@@ -190477,7 +190783,7 @@
      1,
      7,
      null,
-     150,
+     120,
      "assessment",
      "band_muscleup"
     ],
@@ -190486,7 +190792,7 @@
      1,
      7,
      null,
-     150,
+     120,
      "assessment",
      "wall_hspu"
     ],
@@ -190495,7 +190801,7 @@
      1,
      3,
      null,
-     150,
+     120,
      "assessment",
      "assisted_hefesto"
     ],
@@ -190525,6 +190831,15 @@
      120,
      "assessment",
      "incline_pushup"
+    ],
+    [
+     "v_sit",
+     1,
+     null,
+     7,
+     60,
+     "assessment",
+     "lsit"
     ],
     [
      "toes_to_bar",
@@ -194537,16 +194852,16 @@
    "level": 10,
    "number": 76,
    "title": {
-    "en": "Champion Test: Statics & Strength"
+    "en": "Block 4 Exam · Full Front Lever"
    },
    "description": {
-    "en": "Beyond Gravity, block 4. Champion test, part one: every full shape and the hardest strength skills, plus the pistol and the hanging core. One fresh set each, full rest between. Headline: One-Arm Pull-Up."
+    "en": "Beyond Gravity, block 4. One fresh set of each skill at a dose you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Full Front Lever."
    },
    "schedule": {
     "week": 11,
     "day": 6,
-    "day_type": "exam_block_champion_statics_strength",
-    "minutes": 58,
+    "day_type": "exam_block",
+    "minutes": 60,
     "rpe": 8,
     "focus": [
      "handstand",
@@ -194555,7 +194870,7 @@
      "straight_arm_push",
      "single_leg_squat"
     ],
-    "headline": "one_arm_pullup"
+    "headline": "full_front"
    },
    "warmup": [
     [
@@ -194656,6 +194971,42 @@
      45,
      "ramp-up",
      "tuck_planche"
+    ],
+    [
+     "tuck_front_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "tuck_front_row"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     30,
+     30,
+     "slow",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_back_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_flag",
+     1,
+     null,
+     "8/side",
+     30,
+     "ramp-up",
+     "vertical_flag"
     ]
    ],
    "practice": [],
@@ -194683,70 +195034,34 @@
      1,
      "10/side",
      null,
-     60,
+     90,
      "assessment",
      "assisted_pistol_squat"
-    ],
-    [
-     "tuck_front_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "tuck_front_row"
     ],
     [
      "full_front",
      1,
      null,
      10,
-     150,
+     120,
      "assessment",
      "straddle_front"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     30,
-     60,
-     "slow",
-     "skin_cat_partial"
-    ],
-    [
-     "tuck_back_hold",
-     1,
-     null,
-     10,
-     60,
-     "ramp-up",
-     "skin_cat_partial"
     ],
     [
      "full_back",
      1,
      null,
      14,
-     60,
+     120,
      "assessment",
      "straddle_back"
-    ],
-    [
-     "tuck_flag",
-     1,
-     null,
-     "8/side",
-     60,
-     "ramp-up",
-     "vertical_flag"
     ],
     [
      "full_flag",
      1,
      null,
      "6/side",
-     150,
+     120,
      "assessment",
      "straddle_flag"
     ],
@@ -194755,25 +195070,16 @@
      1,
      7,
      null,
-     150,
+     120,
      "assessment",
      "band_muscleup"
-    ],
-    [
-     "one_arm_pullup",
-     1,
-     "2/side",
-     null,
-     150,
-     "assessment",
-     "one_arm_pullup_negative"
     ],
     [
      "deficit_wall_hspu",
      1,
      7,
      null,
-     150,
+     120,
      "assessment",
      "wall_hspu"
     ],
@@ -194782,18 +195088,45 @@
      1,
      3,
      null,
-     150,
+     120,
      "assessment",
      "assisted_hefesto"
     ],
     [
-     "one_arm_pushup",
+     "pullup",
      1,
-     "5/side",
+     20,
+     null,
+     120,
+     "assessment",
+     "assisted_pullup"
+    ],
+    [
+     "parallel_dip",
+     1,
+     30,
      null,
      150,
      "assessment",
-     "archer_pushup"
+     "assisted_dip"
+    ],
+    [
+     "pushup",
+     1,
+     50,
+     null,
+     120,
+     "assessment",
+     "incline_pushup"
+    ],
+    [
+     "dragon_flag",
+     1,
+     8,
+     null,
+     60,
+     "assessment",
+     "full_dragon_negative"
     ],
     [
      "toes_to_bar",
@@ -197359,7 +197692,7 @@
      "full_flag",
      1,
      null,
-     "6/side",
+     "5/side",
      150,
      "isometric",
      "straddle_flag"
@@ -197437,22 +197770,23 @@
    "level": 10,
    "number": 90,
    "title": {
-    "en": "Full Battle Rehearsal"
+    "en": "The Full Battle"
    },
    "description": {
-    "en": "Beyond Gravity, block 5. A Full Battle rehearsal: three of its five rounds at its numbers, 30 s between stations and 90 s between rounds. 10 classes to the level test."
+    "en": "Beyond Gravity, block 5. The Full Battle: five rounds of 10 pull-ups, 20 dips, 30 push-ups and 40 squats, 30 s between stations and 90 s between rounds. Every set as written. 10 classes to the level test."
    },
    "schedule": {
     "week": 13,
     "day": 6,
-    "day_type": "battle_rehearsal",
-    "minutes": 49,
+    "day_type": "full_battle",
+    "minutes": 54,
     "rpe": 7,
     "focus": [
-     "front_lever",
-     "back_lever",
      "vertical_pull",
-     "vertical_push"
+     "vertical_push",
+     "horizontal_push",
+     "squat",
+     "legs"
     ]
    },
    "warmup": [
@@ -197460,7 +197794,7 @@
      "march",
      1,
      null,
-     30,
+     60,
      0,
      "brisk",
      null
@@ -197473,24 +197807,6 @@
      10,
      "controlled",
      "shoulder_cars"
-    ],
-    [
-     "wrist_circles",
-     1,
-     10,
-     null,
-     10,
-     "controlled",
-     null
-    ],
-    [
-     "wrist_rocks",
-     1,
-     10,
-     null,
-     10,
-     "controlled",
-     "wrist_circles"
     ],
     [
      "hip_circles",
@@ -197529,53 +197845,88 @@
      "elevated_scapular_pushup"
     ],
     [
-     "advanced_tuck_front",
+     "pullup",
      1,
+     5,
      null,
-     8,
      45,
      "ramp-up",
-     "tuck_front_hold"
-    ],
-    [
-     "tuck_back_hold",
-     1,
-     null,
-     10,
-     45,
-     "ramp-up",
-     "skin_cat_partial"
+     "assisted_pullup"
     ]
    ],
-   "practice": [
-    [
-     "one_arm_handstand",
-     1,
-     null,
-     "7/side",
-     60,
-     "easy technique",
-     "straddle_one_arm_handstand"
-    ]
-   ],
+   "practice": [],
    "main": [
     [
-     "straddle_front",
+     "pullup",
      1,
+     10,
      null,
-     12,
-     120,
-     "isometric",
-     "one_leg_front"
+     30,
+     "controlled",
+     "assisted_pullup"
     ],
     [
-     "straddle_back",
+     "parallel_dip",
      1,
+     20,
      null,
-     12,
-     120,
-     "isometric",
-     "advanced_tuck_back"
+     30,
+     "controlled",
+     "assisted_dip"
+    ],
+    [
+     "pushup",
+     1,
+     30,
+     null,
+     30,
+     "controlled",
+     "incline_pushup"
+    ],
+    [
+     "squat",
+     1,
+     40,
+     null,
+     90,
+     "controlled",
+     "box_squat"
+    ],
+    [
+     "pullup",
+     1,
+     10,
+     null,
+     30,
+     "controlled",
+     "assisted_pullup"
+    ],
+    [
+     "parallel_dip",
+     1,
+     20,
+     null,
+     30,
+     "controlled",
+     "assisted_dip"
+    ],
+    [
+     "pushup",
+     1,
+     30,
+     null,
+     30,
+     "controlled",
+     "incline_pushup"
+    ],
+    [
+     "squat",
+     1,
+     40,
+     null,
+     90,
+     "controlled",
+     "box_squat"
     ],
     [
      "pullup",
@@ -197698,15 +198049,6 @@
     ],
     [
      "chest_stretch",
-     1,
-     null,
-     30,
-     10,
-     "easy",
-     null
-    ],
-    [
-     "forearm_stretch",
      1,
      null,
      30,
@@ -199033,7 +199375,7 @@
     ],
     [
      "squat",
-     2,
+     1,
      20,
      null,
      60,
@@ -199057,6 +199399,15 @@
      60,
      "isometric",
      "foot_assisted_hang"
+    ],
+    [
+     "one_arm_pushup",
+     1,
+     "3/side",
+     null,
+     60,
+     "2111",
+     "archer_pushup"
     ],
     [
      "straddle_front",
@@ -199511,24 +199862,25 @@
    "level": 10,
    "number": 100,
    "title": {
-    "en": "Champion Test: the Full Battle"
+    "en": "Level 10 Test: Beyond Gravity"
    },
    "description": {
-    "en": "Beyond Gravity, block 5. Champion test, part two: the Full Battle. Five rounds of 10 pull-ups, 20 dips, 30 push-ups and 40 squats, 30 s between stations and 90 s between rounds. Every set as written."
+    "en": "Beyond Gravity, block 5. One fresh set of each skill the level trained, at its top dose, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: One-Arm Pull-Up."
    },
    "schedule": {
     "week": 15,
     "day": 2,
-    "day_type": "exam_level_full_battle",
-    "minutes": 54,
+    "day_type": "exam_level",
+    "minutes": 60,
     "rpe": 8,
     "focus": [
-     "vertical_pull",
-     "vertical_push",
-     "horizontal_push",
-     "squat",
-     "legs"
-    ]
+     "handstand",
+     "balance",
+     "planche",
+     "straight_arm_push",
+     "front_lever"
+    ],
+    "headline": "one_arm_pullup"
    },
    "warmup": [
     [
@@ -199559,13 +199911,31 @@
      null
     ],
     [
-     "cat_cow",
+     "wrist_circles",
      1,
-     6,
+     10,
      null,
      10,
-     "slow",
+     "controlled",
      null
+    ],
+    [
+     "wrist_rocks",
+     1,
+     10,
+     null,
+     10,
+     "controlled",
+     "wrist_circles"
+    ],
+    [
+     "wrist_pushup",
+     1,
+     10,
+     null,
+     20,
+     "slow",
+     "wrist_rocks"
     ],
     [
      "scapular_pull",
@@ -199586,196 +199956,187 @@
      "elevated_scapular_pushup"
     ],
     [
-     "pullup",
+     "active_hang",
      1,
-     5,
      null,
+     15,
+     30,
+     "controlled",
+     "foot_assisted_hang"
+    ],
+    [
+     "fingertip_one_arm_handstand",
+     1,
+     null,
+     "5/side",
      45,
      "ramp-up",
-     "assisted_pullup"
+     "handstand_weight_shift"
+    ],
+    [
+     "advanced_tuck_planche",
+     1,
+     null,
+     5,
+     45,
+     "ramp-up",
+     "tuck_planche"
+    ],
+    [
+     "tuck_front_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "tuck_front_row"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     30,
+     30,
+     "slow",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_back_hold",
+     1,
+     null,
+     10,
+     30,
+     "ramp-up",
+     "skin_cat_partial"
+    ],
+    [
+     "tuck_flag",
+     1,
+     null,
+     "8/side",
+     30,
+     "ramp-up",
+     "vertical_flag"
     ]
    ],
    "practice": [],
    "main": [
     [
+     "one_arm_handstand",
+     1,
+     null,
+     "7/side",
+     120,
+     "assessment",
+     "straddle_one_arm_handstand"
+    ],
+    [
+     "full_planche",
+     1,
+     null,
+     6,
+     120,
+     "assessment",
+     "straddle_planche"
+    ],
+    [
+     "full_front",
+     1,
+     null,
+     10,
+     120,
+     "assessment",
+     "straddle_front"
+    ],
+    [
+     "full_back",
+     1,
+     null,
+     14,
+     120,
+     "assessment",
+     "straddle_back"
+    ],
+    [
+     "full_flag",
+     1,
+     null,
+     "6/side",
+     120,
+     "assessment",
+     "straddle_flag"
+    ],
+    [
+     "strict_muscleup",
+     1,
+     7,
+     null,
+     120,
+     "assessment",
+     "band_muscleup"
+    ],
+    [
+     "one_arm_pullup",
+     1,
+     "2/side",
+     null,
+     120,
+     "assessment",
+     "one_arm_pullup_negative"
+    ],
+    [
+     "deficit_wall_hspu",
+     1,
+     7,
+     null,
+     120,
+     "assessment",
+     "wall_hspu"
+    ],
+    [
+     "hefesto",
+     1,
+     3,
+     null,
+     120,
+     "assessment",
+     "assisted_hefesto"
+    ],
+    [
+     "one_arm_pushup",
+     1,
+     "5/side",
+     null,
+     120,
+     "assessment",
+     "archer_pushup"
+    ],
+    [
      "pullup",
      1,
-     10,
+     20,
      null,
-     30,
+     120,
      "assessment",
      "assisted_pullup"
     ],
     [
      "parallel_dip",
      1,
-     20,
-     null,
      30,
+     null,
+     150,
      "assessment",
      "assisted_dip"
     ],
     [
      "pushup",
      1,
-     30,
+     50,
      null,
-     30,
+     120,
      "assessment",
      "incline_pushup"
-    ],
-    [
-     "squat",
-     1,
-     40,
-     null,
-     90,
-     "assessment",
-     "box_squat"
-    ],
-    [
-     "pullup",
-     1,
-     10,
-     null,
-     30,
-     "assessment",
-     "assisted_pullup"
-    ],
-    [
-     "parallel_dip",
-     1,
-     20,
-     null,
-     30,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
-     "pushup",
-     1,
-     30,
-     null,
-     30,
-     "assessment",
-     "incline_pushup"
-    ],
-    [
-     "squat",
-     1,
-     40,
-     null,
-     90,
-     "assessment",
-     "box_squat"
-    ],
-    [
-     "pullup",
-     1,
-     10,
-     null,
-     30,
-     "assessment",
-     "assisted_pullup"
-    ],
-    [
-     "parallel_dip",
-     1,
-     20,
-     null,
-     30,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
-     "pushup",
-     1,
-     30,
-     null,
-     30,
-     "assessment",
-     "incline_pushup"
-    ],
-    [
-     "squat",
-     1,
-     40,
-     null,
-     90,
-     "assessment",
-     "box_squat"
-    ],
-    [
-     "pullup",
-     1,
-     10,
-     null,
-     30,
-     "assessment",
-     "assisted_pullup"
-    ],
-    [
-     "parallel_dip",
-     1,
-     20,
-     null,
-     30,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
-     "pushup",
-     1,
-     30,
-     null,
-     30,
-     "assessment",
-     "incline_pushup"
-    ],
-    [
-     "squat",
-     1,
-     40,
-     null,
-     90,
-     "assessment",
-     "box_squat"
-    ],
-    [
-     "pullup",
-     1,
-     10,
-     null,
-     30,
-     "assessment",
-     "assisted_pullup"
-    ],
-    [
-     "parallel_dip",
-     1,
-     20,
-     null,
-     30,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
-     "pushup",
-     1,
-     30,
-     null,
-     30,
-     "assessment",
-     "incline_pushup"
-    ],
-    [
-     "squat",
-     1,
-     40,
-     null,
-     90,
-     "assessment",
-     "box_squat"
     ]
    ],
    "cooldown": [
@@ -199798,11 +200159,20 @@
      null
     ],
     [
+     "forearm_stretch",
+     1,
+     null,
+     30,
+     10,
+     "easy",
+     null
+    ],
+    [
      "hip_flexor_stretch",
      1,
      null,
      "30/side",
-     10,
+     0,
      "easy",
      null
     ]

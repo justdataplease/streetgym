@@ -25,8 +25,9 @@ class ExamLogTest {
 
     @Test fun everyShippedExamNamesAHeadlineItTests() {
         val catalog = CurriculumJsonParser.parse(File("src/main/assets/curriculum.json").readText())
-        val exams = catalog.levels.flatMap { it.programs }.filter { it.isExam && it.dayType != "exam_level_full_battle" }
-        assertEquals(49, exams.size)
+        // Every exam is a skills test (2.6.8): the Full Battle is a class (L10:090), and L10:100 is the Level 10 test.
+        val exams = catalog.levels.flatMap { it.programs }.filter { it.isExam }
+        assertEquals(50, exams.size)
         exams.forEach { exam ->
             val tests = exam.exercises.filter { it.assessment }.map { it.movementId }
             assertTrue(exam.id, exam.headline != null && exam.headline in tests)
