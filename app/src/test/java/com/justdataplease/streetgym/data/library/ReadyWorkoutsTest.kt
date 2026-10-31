@@ -1,6 +1,8 @@
 package com.justdataplease.streetgym.data.library
 
 import com.justdataplease.streetgym.data.CurriculumJsonParser
+import com.justdataplease.streetgym.data.effort.Effort
+import com.justdataplease.streetgym.data.effort.WorkoutEffort
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -17,7 +19,7 @@ class ReadyWorkoutsTest {
 
     @Test
     fun everyReadyWorkoutIsAWholeClassOfTheProgramsMovements() {
-        assertEquals(100, catalog.workouts.size)
+        assertEquals(200, catalog.workouts.size)
         assertEquals(catalog.workouts.size, catalog.workouts.map { it.id }.toSet().size)
         assertEquals(catalog.workouts.size, catalog.workouts.map { it.name.resolve() }.toSet().size)
         catalog.workouts.forEach { workout ->
@@ -33,6 +35,21 @@ class ReadyWorkoutsTest {
                 assertTrue(exercise.id, exercise.sets.all { it.repetitions != null || it.repetitionsMax || it.durationSeconds != null })
             }
         }
+    }
+
+    @Test
+    fun everyFocusChipHasWorkoutsAndABeginnerFindsEasyOnes() {
+        // The Library's focus filter (2.9.1): each workout is tagged with its group and the skill families it trains.
+        assertEquals(FOCUS, catalog.workouts.flatMap { it.focusTags }.toSet())
+        catalog.workouts.forEach { assertTrue(it.id, it.group in it.focusTags && FOCUS.containsAll(it.focusTags)) }
+        fun easy(level: Int, focus: String): Int {
+            val effort = WorkoutEffort(catalog.movementGrades, emptyMap(), level, catalog.levels.first { it.number == level }.programs)
+            return catalog.workouts.count { focus in it.focusTags && effort.rate(it, onProgram = false) == Effort.EASY }
+        }
+        // The owner: "the library has no easy programs". A new athlete finds easy ones in every focus but one-arm work.
+        (FOCUS - "one_arm").forEach { assertTrue("Level 1, $it", easy(1, it) > 0) }
+        FOCUS.forEach { assertTrue("Level 5, $it", easy(5, it) > 0) }
+        assertTrue(catalog.workouts.count { it.grade == 1 } >= 50)
     }
 
     @Test
@@ -56,5 +73,7 @@ class ReadyWorkoutsTest {
     private companion object {
         /** The groups HomeActivity.readyGroupName names. */
         val GROUPS = setOf("full", "pull", "push", "legs", "core", "skills", "short", "mobility")
+        /** HomeActivity.READY_FOCUS: the groups, then the skill families. */
+        val FOCUS = GROUPS + setOf("handstand", "front_lever", "back_lever", "planche", "flag", "muscleup", "lsit", "one_arm")
     }
 }

@@ -57,7 +57,27 @@ fun Context.listChips(
     if (selected > 0) post { row.getChildAt(selected)?.let { smoothScrollTo((it.left - dp(24)).coerceAtLeast(0), 0) } }
 }
 
-private fun Context.chip(label: String, selected: Boolean, dashed: Boolean = false, onClick: () -> Unit) = TextView(this).apply {
+/**
+ * One row of filter chips, the Library's (2.9.1); it scrolls sideways like [listChips]. [colors]: a chip's colour when
+ * chosen (an effort's green, orange or red), or null for the usual one.
+ */
+fun Context.filterChips(labels: List<String>, selected: Int, colors: List<Int?> = emptyList(), onSelect: (Int) -> Unit): HorizontalScrollView =
+    HorizontalScrollView(this).apply {
+        isHorizontalScrollBarEnabled = false
+        clipToPadding = false
+        val row = LinearLayout(context).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL }
+        labels.forEachIndexed { index, label ->
+            row.addView(chip(label, index == selected, selectedColor = colors.getOrNull(index)) { if (index != selected) onSelect(index) },
+                LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { marginEnd = dp(8) })
+        }
+        addView(row)
+        if (selected > 0) post { row.getChildAt(selected)?.let { smoothScrollTo((it.left - dp(24)).coerceAtLeast(0), 0) } }
+    }
+
+/** A dashed chip that does something, such as Clear filters. */
+fun Context.actionChip(label: String, onClick: () -> Unit): TextView = chip(label, selected = false, dashed = true, onClick = onClick)
+
+private fun Context.chip(label: String, selected: Boolean, dashed: Boolean = false, selectedColor: Int? = null, onClick: () -> Unit) = TextView(this).apply {
     text = label
     textSize = 14f
     typeface = AppType.label
@@ -65,9 +85,10 @@ private fun Context.chip(label: String, selected: Boolean, dashed: Boolean = fal
     minHeight = dp(40)
     maxLines = 1
     setPadding(dp(16), dp(8), dp(16), dp(8))
-    setTextColor(if (selected) AppColors.contentOn(AppColors.PRIMARY) else AppColors.TEXT)
+    val chosen = selectedColor ?: AppColors.PRIMARY
+    setTextColor(if (selected) AppColors.contentOn(chosen) else AppColors.TEXT)
     background = when {
-        selected -> roundedDrawable(AppColors.PRIMARY, dp(20).toFloat())
+        selected -> roundedDrawable(chosen, dp(20).toFloat())
         dashed -> roundedDrawable(AppColors.SURFACE, dp(20).toFloat(), AppColors.DIVIDER, dp(1))
         else -> roundedDrawable(AppColors.INFO_SURFACE, dp(20).toFloat())
     }

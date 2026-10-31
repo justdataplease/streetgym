@@ -1929,7 +1929,10 @@ def build():
 
 # A movement's load in a set (the app's Easy / Moderate / Hard mark, WorkoutEffort.kt, uses the same numbers): its grade's
 # weight, how close the set is to the athlete's best (under 70% of it, up to it, past it) and 25% more at 45 s rest or less.
+# A stretch, mobility, warm-up, activation or recovery set weighs a quarter (2.9.1: a stretching day read Moderate).
 GRADE_WEIGHT = {1: 1.0, 2: 1.5, 3: 2.0, 4: 3.0, 5: 4.0}
+LIGHT_WEIGHT = 0.25
+LIGHT_CATEGORIES = ('dynamic_warmup', 'activation', 'mobility', 'static_stretch', 'static_cooldown', 'recovery')
 ADVANCED = ('advanced_skill', 'mastery_skill', 'advanced_strength', 'skill_strength')
 LIGHT_TYPES = ('exam', 'light', 'deload', 'primer', 'easy', 'reentry')  # never a typical class
 
@@ -1938,7 +1941,8 @@ def set_load(s, best):
     b = best.get(s[0]) if s[0] in SKILLS else None
     r = value_of(s) / b if b else None
     close = 1.0 if r is None else 0.7 if r < 0.7 else 1.0 if r <= 1.0 else 1.3
-    return s[1] * GRADE_WEIGHT[LIB[s[0]]['grade']] * close * (1.25 if (s[4] or 0) <= 45 else 1.0)
+    weight = LIGHT_WEIGHT if LIB[s[0]]['category'] in LIGHT_CATEGORIES else GRADE_WEIGHT[LIB[s[0]]['grade']]
+    return s[1] * weight * close * (1.25 if (s[4] or 0) <= 45 else 1.0)
 
 
 def honest_rpe(programs):

@@ -165,6 +165,10 @@ open class HomeActivity : Activity() {
     private var trainingTab = 0
     /** The list open in My workouts (Plus); null for Favorites, everything the athlete keeps. */
     private var workoutListId: String? = null
+    /** The Library's filters (2.9.1): how hard for the athlete, the grade and the focus; null shows all. */
+    private var readyEffort: Effort? = null
+    private var readyGrade: Int? = null
+    private var readyFocus: String? = null
     private var draft: CustomDay? = null
     /** The placement test's counts, one per test (-1 for none), kept through a redraw. */
     private var placementAnswers = IntArray(Placement.Test.entries.size) { -1 }
@@ -1265,16 +1269,68 @@ open class HomeActivity : Activity() {
 
     /**
      * Training › Library: Pro's ready workouts by group, for days off the program. Other tiers see them too, with the
-     * Pro offer on top; each opens its overview, which offers Pro instead of Start.
+     * Pro offer on top; each opens its overview, which offers Pro instead of Start. Three rows of chips filter them
+     * (2.9.1, the owner: "add some filters at the top … for skills and difficulty"): how hard for this athlete, the grade
+     * and the focus (a group or a skill family, the workout's focus tags).
      */
     private fun renderReadyWorkouts(page: LinearLayout, locale: Locale) {
         val ready = catalog?.workouts.orEmpty()
         page.addView(bodyText(getString(R.string.ready_intro)))
         if (!Entitlement.tier(this).readyWorkouts) page.addWithMargins(TiersPanel(this, billing, Paywall.Ready), topDp = 14)
-        ready.groupBy { it.group }.forEach { (group, workouts) ->
+        val efforts = listOf(null) + Effort.entries
+        page.addWithMargins(filterChips(efforts.map { it?.let(::effortText) ?: getString(R.string.ready_any_effort) },
+            efforts.indexOf(readyEffort), efforts.map { it?.let(::effortColor) }) { readyEffort = efforts[it]; renderLevels() }, topDp = 14)
+        val grades = listOf(null) + (1..5).toList()
+        page.addWithMargins(filterChips(grades.map { it?.let(::readyGradeName) ?: getString(R.string.ready_all_levels) },
+            grades.indexOf(readyGrade)) { readyGrade = grades[it]; renderLevels() }, topDp = 8)
+        val focuses = listOf(null) + READY_FOCUS.filter { focus -> ready.any { focus in it.focusTags } }
+        page.addWithMargins(filterChips(focuses.map { it?.let(::readyFocusName) ?: getString(R.string.ready_any_focus) },
+            focuses.indexOf(readyFocus).coerceAtLeast(0)) { readyFocus = focuses[it]; renderLevels() }, topDp = 8)
+        val shown = ready.filter { workout ->
+            (readyGrade == null || workout.grade == readyGrade) && (readyFocus == null || readyFocus in workout.focusTags) &&
+                (readyEffort == null || effortOf(workout) == readyEffort)
+        }
+        val filtered = readyEffort != null || readyGrade != null || readyFocus != null
+        page.addWithMargins(LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            addView(bodyText(resources.getQuantityString(R.plurals.ready_count, shown.size, shown.size), 13f).apply {
+                setTextColor(AppColors.PRIMARY)
+            }, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+            if (filtered) addView(actionChip(getString(R.string.ready_clear)) { clearReadyFilters(); renderLevels() })
+        }, topDp = 10)
+        if (shown.isEmpty()) page.addWithMargins(bodyText(getString(R.string.ready_none), 14f), topDp = 8)
+        shown.groupBy { it.group }.forEach { (group, workouts) ->
             page.addWithMargins(sectionLabel(readyGroupName(group)), topDp = 14)
             workouts.forEach { page.addWithMargins(libraryCard(it, locale), bottomDp = 10) }
         }
+    }
+
+    private fun clearReadyFilters() {
+        readyEffort = null
+        readyGrade = null
+        readyFocus = null
+    }
+
+    private fun readyGradeName(grade: Int): String = getString(when (grade) {
+        1 -> R.string.ready_grade_1
+        3 -> R.string.ready_grade_3
+        4 -> R.string.ready_grade_4
+        5 -> R.string.ready_grade_5
+        else -> R.string.ready_grade_2
+    })
+
+    /** A focus chip's name: a Library group (Full body, Pull…) or a skill family (Front lever, Flag…). */
+    private fun readyFocusName(focus: String): String = when (focus) {
+        "handstand" -> getString(R.string.ready_focus_handstand)
+        "front_lever" -> getString(R.string.ready_focus_front_lever)
+        "back_lever" -> getString(R.string.ready_focus_back_lever)
+        "planche" -> getString(R.string.ready_focus_planche)
+        "flag" -> getString(R.string.ready_focus_flag)
+        "muscleup" -> getString(R.string.ready_focus_muscleup)
+        "lsit" -> getString(R.string.ready_focus_lsit)
+        "one_arm" -> getString(R.string.ready_focus_one_arm)
+        else -> readyGroupName(focus)
     }
 
     private fun readyGroupName(group: String?): String = getString(when (group) {
@@ -1290,13 +1346,7 @@ open class HomeActivity : Activity() {
 
     /** "Intermediate · 6 exercises · About 30 min". */
     private fun readyMeta(program: TrainingProgram): String = getString(R.string.ready_meta,
-        getString(when (program.grade) {
-            1 -> R.string.ready_grade_1
-            3 -> R.string.ready_grade_3
-            4 -> R.string.ready_grade_4
-            5 -> R.string.ready_grade_5
-            else -> R.string.ready_grade_2
-        }),
+        readyGradeName(program.grade ?: 2),
         resources.getQuantityString(R.plurals.custom_exercises, program.exercises.size, program.exercises.size),
         program.estimatedMinutes ?: 1)
 
@@ -1894,9 +1944,8 @@ open class HomeActivity : Activity() {
         summary.addWithMargins(secondaryButton(getString(R.string.rename_level)) { renameLevel(level) }, topDp = 10)
         val programs = level.programs.sortedBy { it.number }
         val effort = workoutEffort()
-        val rows = ProgramListAdapter(this, programs, completed, assigned?.id, locale, progressRepository.examLog(), switchedOff) {
-            effort?.rate(it)
-        }
+        val rows = ProgramListAdapter(this, programs, completed, assigned?.id, locale, progressRepository.examLog(), switchedOff,
+            effortOf = { effort?.rate(it) }, hardestOf = { effort?.hardest(it) })
         // Free: one ad card after the first three classes (a tier change draws this screen again).
         val withAd = if (Entitlement.adFree(this)) null else AdRowAdapter(rows, LinearLayout(this).apply {
             setPadding(dp(12), dp(4), dp(12), dp(4))
@@ -3162,6 +3211,9 @@ open class HomeActivity : Activity() {
         private const val MAX_NAME_LENGTH = 60
         /** A library card's icon: its hardest exercise on a ringed tile, in dp. */
         private const val TILE_DP = 56
+        /** The Library's focus chips, in order: its groups, then the skill families (tools/build_ready_workouts.py). */
+        private val READY_FOCUS = listOf("full", "pull", "push", "legs", "core", "skills", "short", "mobility",
+            "handstand", "front_lever", "back_lever", "planche", "flag", "muscleup", "lsit", "one_arm")
         private const val REQUEST_LOCATION = 720
         /** In ParksUpdater's preferences: the list instead of the map, and whether the map asked for location yet. */
         private const val KEY_PARKS_LIST = "show_list"

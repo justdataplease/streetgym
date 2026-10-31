@@ -16,9 +16,10 @@ import java.io.File
 class WorkoutEffortTest {
     private val grades = mapOf("pushup" to 1, "pullup" to 2, "tuck_planche" to 3, "full_front" to 5, "march" to 1)
 
-    private fun step(movement: String, sets: Int, reps: Int? = null, seconds: Int? = null, rest: Int = 90) = TrainingExercise(
+    private fun step(movement: String, sets: Int, reps: Int? = null, seconds: Int? = null, rest: Int = 90, category: String? = null) = TrainingExercise(
         id = movement, movementId = movement, number = 1, name = LocalizedText(movement), description = LocalizedText.EMPTY,
         sets = List(sets) { TrainingSet("$movement:$it", it + 1, LocalizedText.EMPTY, LocalizedText.EMPTY, reps, false, seconds, rest) },
+        category = category,
     )
 
     private fun day(vararg steps: TrainingExercise, level: Int = 1, type: String = "build_a", rpe: Int? = 6) = TrainingProgram(
@@ -53,6 +54,14 @@ class WorkoutEffortTest {
         val effort = WorkoutEffort(grades, emptyMap(), 1, level)
         assertEquals(Effort.MODERATE, effort.rate(day(step("pushup", 14, reps = 8)), onProgram = false))
         assertEquals(Effort.HARD, effort.rate(day(step("pushup", 14, reps = 8, rest = 30)), onProgram = false))
+    }
+
+    @Test
+    fun stretchingSetsWeighAQuarter() {
+        val effort = WorkoutEffort(grades, emptyMap(), 1, level)
+        // Twelve stretch sets weigh 3, not 12: a stretching day is easy, not a moderate workout.
+        assertEquals(Effort.EASY, effort.rate(day(step("hamstring_stretch", 12, seconds = 30, category = "static_stretch")), onProgram = false))
+        assertEquals(Effort.MODERATE, effort.rate(day(step("pushup", 12, reps = 8)), onProgram = false))
     }
 
     @Test

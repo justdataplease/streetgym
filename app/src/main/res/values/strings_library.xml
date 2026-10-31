@@ -22,6 +22,23 @@
     <string name="ready_group_skills">Skills</string>
     <string name="ready_group_short">Short on time</string>
     <string name="ready_group_mobility">Mobility</string>
+    <string name="ready_any_effort">Any effort</string>
+    <string name="ready_all_levels">All levels</string>
+    <string name="ready_any_focus">Any focus</string>
+    <string name="ready_focus_handstand">Handstand</string>
+    <string name="ready_focus_front_lever">Front lever</string>
+    <string name="ready_focus_back_lever">Back lever</string>
+    <string name="ready_focus_planche">Planche</string>
+    <string name="ready_focus_flag">Flag</string>
+    <string name="ready_focus_muscleup">Muscle-up</string>
+    <string name="ready_focus_lsit">L-sit</string>
+    <string name="ready_focus_one_arm">One-arm</string>
+    <plurals name="ready_count">
+        <item quantity="one">%d workout</item>
+        <item quantity="other">%d workouts</item>
+    </plurals>
+    <string name="ready_none">No workout matches. Try fewer filters.</string>
+    <string name="ready_clear">Clear filters</string>
     <string name="library_intro">Save any day with the heart on its overview, or build your own from every exercise in the program.</string>
     <string name="library_usage">%1$d of %2$d saved and custom days</string>
     <string name="library_over_limit">You have more than %1$d. Nothing is removed; remove some to add new ones.</string>

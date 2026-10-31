@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.justdataplease.streetgym.R
 import com.justdataplease.streetgym.data.effort.Effort
+import com.justdataplease.streetgym.data.model.TrainingExercise
 import com.justdataplease.streetgym.data.model.TrainingProgram
 import com.justdataplease.streetgym.data.progress.ExamLog
 import java.util.Locale
@@ -23,8 +24,10 @@ class ProgramListAdapter(
     private val exams: ExamLog = ExamLog(),
     /** Classes the skill switches leave with nothing to train: passed, shown greyed (review 12). */
     private val switchedOffIds: Set<String> = emptySet(),
-    /** How hard each class is for the athlete (WorkoutEffort): the number's ring and a word in its details. */
+    /** How hard each class is for the athlete (WorkoutEffort): the tile's ring and a word in its details. */
     private val effortOf: (TrainingProgram) -> Effort? = { null },
+    /** Each class's hardest exercise, playing on its tile (2.9.1: it replaced the number in a dark circle). */
+    private val hardestOf: (TrainingProgram) -> TrainingExercise? = { null },
 ) : BaseAdapter() {
     override fun getCount(): Int = programs.size
 
@@ -41,7 +44,12 @@ class ProgramListAdapter(
 
     /** One day's row: its views are made once, and [bind] fills them in and shows only what the day needs. */
     private inner class Row {
-        private val number = context.numberCircle("", "")
+        private val tile = WorkoutTile(context, TILE_DP)
+        /** The class number, quiet before the name (2.9.1: it left the dark circle for the tile). */
+        private val number = context.oneLineText("", bold = true).apply {
+            setTextColor(AppColors.TEXT_SECONDARY)
+            importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+        }
         private val title = context.oneLineText("", bold = true)
         private val meta = context.bodyText("", 13f).apply { maxLines = 2 }
         private val exam = context.bodyText("", 13f).apply { setTextColor(AppColors.ACTION) }
@@ -62,11 +70,17 @@ class ProgramListAdapter(
             background = roundedDrawable(AppColors.SURFACE, context.dp(24).toFloat())
             elevation = context.dp(1).toFloat()
             isFocusable = false
-            addView(number, LinearLayout.LayoutParams(context.dp(44), context.dp(44)))
+            addView(tile, LinearLayout.LayoutParams(context.dp(TILE_DP), context.dp(TILE_DP)))
             addView(LinearLayout(context).apply {
                 orientation = LinearLayout.VERTICAL
                 setPadding(context.dp(14), 0, context.dp(8), 0)
-                addView(title)
+                addView(LinearLayout(context).apply {
+                    orientation = LinearLayout.HORIZONTAL
+                    gravity = Gravity.CENTER_VERTICAL
+                    addView(number, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                        .apply { marginEnd = context.dp(8) })
+                    addView(title, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+                })
                 addView(meta)
                 addView(exam)
             }, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
@@ -89,11 +103,11 @@ class ProgramListAdapter(
             val off = !completed && program.id in switchedOffIds
             val unlocked = completed || assigned
             val effort = effortOf(program)
-            val programMeta = listOfNotNull(context.programMeta(program).ifBlank { null }, effort?.let(context::effortText)).joinToString(" • ")
+            // The number leads the title, so the details skip "Workout 12 of 100".
+            val programMeta = listOfNotNull(context.programMeta(program, position = false).ifBlank { null }, effort?.let(context::effortText))
+                .joinToString(" • ")
+            tile.bind(hardestOf(program), effort, locale)
             number.text = program.number.toString()
-            number.background = roundedDrawable(AppColors.NUMBER, context.dp(22).toFloat(),
-                effort?.let(::effortColor), if (effort != null) context.dp(3) else 0)
-            number.contentDescription = context.getString(R.string.workout_number, program.number)
             title.text = name
             meta.text = programMeta.ifBlank {
                 program.description.resolve(locale).ifBlank { context.getString(R.string.empty_description) }
@@ -112,7 +126,7 @@ class ProgramListAdapter(
             later.text = context.getString(if (off) R.string.switch_off_day else R.string.locked_later).uppercase()
             row.alpha = if (off) 0.5f else 1f
             row.contentDescription = buildString {
-                append(name)
+                append(context.getString(R.string.workout_number, program.number)).append(", ").append(name)
                 if (unlocked && programMeta.isNotBlank()) append(", ").append(programMeta)
                 append(", ").append(context.getString(when {
                     completed -> R.string.completed
@@ -122,5 +136,10 @@ class ProgramListAdapter(
                 }))
             }
         }
+    }
+
+    private companion object {
+        /** The class tile, a little larger than the old 44 dp number so the figure reads. */
+        const val TILE_DP = 52
     }
 }

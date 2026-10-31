@@ -24,25 +24,39 @@ fun Context.effortText(effort: Effort): String = getString(R.string.effort_for_y
 }))
 
 /**
- * A workout's icon (the owner, 2.9.0: "the icon of the most difficult exercise"): its hardest exercise's figure on a
+ * A workout's icon (the owner, 2.9.0: "the icon of the most difficult exercise"): its hardest exercise playing on a
  * tile [size] dp wide, ringed in the workout's effort colour for this athlete, as a skill medal is in its difficulty's.
+ * It replaced the class number in the level lists too (2.9.1, the owner: "add the most difficult exercise as an
+ * animation"). A list row keeps one tile and calls [bind] again as it scrolls.
  */
-fun Context.workoutTile(exercise: TrainingExercise?, effort: Effort?, size: Int, locale: Locale): FrameLayout = FrameLayout(this).apply {
-    val ring = (size / 16).coerceAtLeast(3)
-    background = GradientDrawable().apply {
-        shape = GradientDrawable.RECTANGLE
-        cornerRadius = dp(ring) + 0.22f * dp(size - 2 * ring)
-        setColor(AppColors.BACKGROUND)
-        setStroke(dp(ring), effort?.let(::effortColor) ?: AppColors.DIVIDER)
-    }
-    addView(ExerciseAnimationView(context).apply {
-        bind(exercise?.movementId, exercise?.name?.resolve(locale).orEmpty(), exercise?.category, exercise?.equipment.orEmpty())
+class WorkoutTile(context: Context, private val size: Int) : FrameLayout(context) {
+    private val ring = (size / 16).coerceAtLeast(3)
+    private val figure = ExerciseAnimationView(context).apply {
         setBadgeStyle(ExerciseAnimationView.BadgeStyle(
             AppColors.INFO_SURFACE, AppColors.PRIMARY, blendColor(AppColors.PRIMARY, AppColors.INFO_SURFACE, 0.5f),
-            blendColor(AppColors.TEXT_SECONDARY, AppColors.INFO_SURFACE, 0.4f)))
+            blendColor(AppColors.TEXT_SECONDARY, AppColors.INFO_SURFACE, 0.4f)), moving = true)
         importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
-    }, FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT).apply {
-        setMargins(dp(ring), dp(ring), dp(ring), dp(ring))
-    })
-    importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+    }
+
+    init {
+        addView(figure, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT).apply {
+            val margin = context.dp(ring)
+            setMargins(margin, margin, margin, margin)
+        })
+        importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+    }
+
+    fun bind(exercise: TrainingExercise?, effort: Effort?, locale: Locale): WorkoutTile {
+        background = GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = context.dp(ring) + 0.22f * context.dp(size - 2 * ring)
+            setColor(AppColors.BACKGROUND)
+            setStroke(context.dp(ring), effort?.let(::effortColor) ?: AppColors.DIVIDER)
+        }
+        figure.bind(exercise?.movementId, exercise?.name?.resolve(locale).orEmpty(), exercise?.category, exercise?.equipment.orEmpty())
+        return this
+    }
 }
+
+fun Context.workoutTile(exercise: TrainingExercise?, effort: Effort?, size: Int, locale: Locale): WorkoutTile =
+    WorkoutTile(this, size).bind(exercise, effort, locale)

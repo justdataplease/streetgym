@@ -520,11 +520,21 @@ class TrainingInstrumentation : Instrumentation() {
             Entitlement.setSimulatedTier(targetContext, null)
             await { Entitlement.tier(targetContext) == Tier.PRO }
             nav(R.string.nav_levels); clickText(R.string.training_tab_ready)
-            check(!shown(R.string.paywall_ready) && catalog.workouts.size == 100)
+            check(!shown(R.string.paywall_ready) && catalog.workouts.size == 200)
             // Each card: its hardest exercise ringed in how hard it is for the athlete, and the word (2.9.0).
             val forYou = targetContext.getString(R.string.effort_for_you, "")
             check(findAll { it is TextView && it.isShown && it.text.contains(forYou) }.isNotEmpty())
             screenshot("library.png")
+            // The filters (2.9.1): Easy for you leaves only easy cards, Clear filters brings back all 200.
+            val easy = targetContext.getString(R.string.effort_for_you, targetContext.getString(R.string.effort_easy))
+            clickLabel(easy)
+            check(shown(R.string.ready_clear) && !shown(targetContext.resources.getQuantityString(R.plurals.ready_count, 200, 200)))
+            // The cards' lines ("Beginner · 4 exercises · About 15 min · Easy for you"), not the chips.
+            val cardLines = findAll { it is TextView && it.isShown && it.text.contains(" · ") && it.text.contains(forYou) }
+            check(cardLines.isNotEmpty() && cardLines.all { (it as TextView).text.contains(easy) })
+            screenshot("library_easy.png")
+            clickText(R.string.ready_clear)
+            check(shown(targetContext.resources.getQuantityString(R.plurals.ready_count, 200, 200)))
             clickLabel(ready.name.resolve())
             check(shown(R.string.start_workout) && !shown(R.string.paywall_ready) && !shown("Complete day"))
             check(find { it is TextView && it.isShown && it.text.toString().endsWith(forYou, ignoreCase = true) } != null)
@@ -534,7 +544,7 @@ class TrainingInstrumentation : Instrumentation() {
             check(findAll { it is TextView && it.isShown && it.text.contains(forYou) }.isNotEmpty())
             screenshot("level_marks.png")
             nav(R.string.nav_levels); clickText(R.string.training_tab_levels)
-            report("Library: 100 ready workouts; Plus sees them with the Pro offer, Pro can start one; every card and class says how hard it is for you")
+            report("Library: 200 ready workouts with filters; Plus sees them with the Pro offer, Pro can start one; every card and class says how hard it is for you")
 
             nav(R.string.nav_timer); clickLabel("30 sec"); clickLabel("Start")
             val timing = TimingStore(targetContext)

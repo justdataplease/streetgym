@@ -45,8 +45,9 @@ fun Context.examTarget(exercise: TrainingExercise, locale: Locale): String {
     return (listOfNotNull(displayName(exercise, locale), dose) + sides).joinToString(" · ")
 }
 
-fun Context.programMeta(program: TrainingProgram): String = buildList {
-    add(getString(
+/** "Workout 12 of 100 • About 35 min • RPE 6"; [position] false leaves out the number where it shows already. */
+fun Context.programMeta(program: TrainingProgram, position: Boolean = true): String = buildList {
+    if (position) add(getString(
         R.string.workout_sequence_position,
         program.number,
     ))

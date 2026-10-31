@@ -9,8 +9,9 @@ enum class Effort { EASY, MODERATE, HARD }
 /**
  * Rates workouts for one athlete (the owner, 2.9.0: "green, orange, red like the skills, on every workout, custom or
  * not"; the three coach reviews gave the inputs). A workout's load is the sum over its working sets (practice and main)
- * of its movement's grade weight (1, 1.5, 2, 3 and 4 for grades 1 to 5), how close the set is to the athlete's best for
- * a logged skill (under 70% of it 0.7, up to it 1, past it 1.3), and 25% more at 45 s rest or less. It is compared with
+ * of its movement's grade weight (1, 1.5, 2, 3 and 4 for grades 1 to 5; a quarter for a stretch, mobility, warm-up,
+ * activation or recovery set, 2.9.1), how close the set is to the athlete's best for a logged skill (under 70% of it 0.7,
+ * up to it 1, past it 1.3), and 25% more at 45 s rest or less. It is compared with
  * the typical class of the athlete's level, the median load of that level's training classes scored the same way:
  * over 1.25 times it, or two sets past a best, is Hard; under 0.7 times it is Easy; the rest Moderate. A class of the
  * athlete's own level labelled RPE 8 or more is Hard and an exam there never Easy, as the program meant them for that
@@ -49,7 +50,7 @@ class WorkoutEffort(
     fun load(program: TrainingProgram): Double = working(program).sumOf(::exerciseLoad)
 
     private fun exerciseLoad(exercise: TrainingExercise): Double {
-        val weight = GRADE_WEIGHT[grade(exercise) - 1]
+        val weight = if (exercise.category in LIGHT_CATEGORIES) LIGHT_WEIGHT else GRADE_WEIGHT[grade(exercise) - 1]
         val best = exercise.movementId?.let(bests::get)?.takeIf { it > 0 }
         return exercise.sets.sumOf { set ->
             val dose = set.repetitions ?: set.durationSeconds
@@ -73,6 +74,9 @@ class WorkoutEffort(
 
     companion object {
         private val GRADE_WEIGHT = doubleArrayOf(1.0, 1.5, 2.0, 3.0, 4.0)
+        /** A stretching or mobility set is no working set: a whole stretching day read Moderate (2.9.1). */
+        private const val LIGHT_WEIGHT = 0.25
+        private val LIGHT_CATEGORIES = setOf("dynamic_warmup", "activation", "mobility", "static_stretch", "static_cooldown", "recovery")
         private const val SHORT_REST = 45
         private const val DENSE = 1.25
         private const val HARD_ABOVE = 1.25
