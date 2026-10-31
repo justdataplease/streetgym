@@ -21,31 +21,40 @@ class LeaderboardTest {
             session("sg:l01:p0001", at = 5, repeat = true),
             session("custom:abc", at = 7).copy(credits = mapOf("pushup" to 3)),
         )
-        // In the order they were trained, with their ticks, length and each set's reps; an own day with its planned
-        // length when it still exists. Complete day and the days placement skipped are left out.
+        // In the order they were trained, with their ticks and each set's reps. Complete day and the days placement
+        // skipped are left out.
         assertEquals(listOf(
-            SkillCredit("sg:l01:p0001", null, 60),
-            SkillCredit("sg:l01:p0001", null, 60),
-            SkillCredit("custom:abc", mapOf("pushup" to 3), 60, minutes = 12),
-            SkillCredit("sg:l01:p0003", mapOf("pullup" to 2), 60, doses = mapOf("pullup" to listOf(8, 10))),
-        ), Scores.credits(sessions) { if (it == "custom:abc") 12 else null })
+            SkillCredit("sg:l01:p0001", null),
+            SkillCredit("sg:l01:p0001", null),
+            SkillCredit("custom:abc", mapOf("pushup" to 3)),
+            SkillCredit("sg:l01:p0003", mapOf("pullup" to 2), doses = mapOf("pullup" to listOf(8, 10))),
+        ), Scores.credits(sessions))
         assertEquals(2, Scores.markedComplete(sessions))
     }
 
     @Test fun aScoreIsPublishedWhenItChangesAndAtMostEveryTenMinutes() {
-        val a = Score(10, mapOf("pullup" to 100))
-        val b = Score(12, mapOf("pullup" to 120), listOf("archer_pullup"))
+        val a = Score(1_000, "2026-10", 400)
+        val b = Score(1_200, "2026-10", 600)
         assertTrue(Scores.shouldPublish(null, 0, a, 1_000))
         assertFalse(Scores.shouldPublish(a, 1_000, a, 99_000_000))
         assertFalse(Scores.shouldPublish(a, 1_000, b, 1_000 + Scores.PUBLISH_MILLIS - 1))
         assertTrue(Scores.shouldPublish(a, 1_000, b, 1_000 + Scores.PUBLISH_MILLIS))
     }
 
-    @Test fun boardIdsCoverOverallAndFamiliesWorldwideAndByCountry() {
-        assertEquals("overall_world", Boards.id(null, null))
-        assertEquals("overall_GR", Boards.id(null, "GR"))
-        assertEquals("family_front_lever_world", Boards.id("front_lever", null))
-        assertEquals("family_front_lever_DE", Boards.id("front_lever", "DE"))
+    @Test fun boardIdsCoverAllTimeAndThisMonthWorldwideAndByCountry() {
+        assertEquals("all_world", Boards.id(month = false, country = null))
+        assertEquals("all_GR", Boards.id(month = false, country = "GR"))
+        assertEquals("month_world", Boards.id(month = true, country = null))
+        assertEquals("month_DE", Boards.id(month = true, country = "DE"))
+    }
+
+    @Test fun theAppAndTheServerAgreeOnTheScoreDocument() {
+        // boards.py (VERSION, the board ids) and the rules (the keys) are what the published score must match.
+        val boards = java.io.File("../firebase/functions/boards.py").readText()
+        assertEquals(Score.VERSION, Regex("(?m)^VERSION = (\\d+)").find(boards)?.groupValues?.get(1)?.toInt())
+        listOf("all_world", "month_world").forEach { assertTrue(it, boards.contains(it.substringBefore("_") + "_")) }
+        val rules = java.io.File("../firebase/firestore.rules").readText()
+        assertTrue(rules.contains("['v', 'username', 'country', 'points', 'month', 'month_points', 'updated_at']"))
     }
 
     @Test fun aCachedBoardIsFreshForSixHours() {
@@ -54,7 +63,7 @@ class LeaderboardTest {
         assertFalse(Boards.fresh(10_000, 5_000))   // a clock moved back reads again
     }
 
-    private val board = Board("overall_world", listOf(BoardEntry("ana", "GR", 900), BoardEntry("ben", "DE", 800)),
+    private val board = Board("all_world", listOf(BoardEntry("ana", "GR", 900), BoardEntry("ben", "DE", 800)),
         players = 200, updatedAt = 1, percentiles = (0 until 100).map { 1000 - it * 10 })
 
     @Test fun standingIsTheRankInsideTheListElseTheTopShare() {

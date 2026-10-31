@@ -12,31 +12,59 @@ import androidx.credentials.exceptions.GetCredentialException
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.firebase.auth.AuthCredential
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 
-/** Sign in with Google (Plus and Pro) through Credential Manager, then Firebase Auth. */
+/** Connect Google (any tier, to keep the username and Pro's progress) through Credential Manager, then Firebase Auth. */
 object GoogleAccount {
     // Activity.getMainExecutor needs API 28; the app supports 23.
     private val main = java.util.concurrent.Executor { android.os.Handler(android.os.Looper.getMainLooper()).post(it) }
 
     sealed interface Result {
-        data class Signed(val user: FirebaseUser) : Result
+        /** [released]: this phone's profile, given up because the Google account had a user of its own. */
+        data class Signed(val user: FirebaseUser, val released: Profile? = null) : Result
         data object Cancelled : Result
         data class Failed(val reason: String) : Result
     }
 
+    /**
+     * Connects Google (the owner, 2026-10-31: "the connect to keep data"). The anonymous user that holds this phone's
+     * profile, or only its progress analytics, is linked to the account, so its uid, username and score stay. When that
+     * Google account already has a user (from another phone), this phone's profile is released ([Profiles.release]) and
+     * the account signs in instead; the caller may claim the released name again for an account that has no profile.
+     */
     fun signIn(activity: Activity, onResult: (Result) -> Unit) {
         googleCredential(activity) { credential, failure ->
             val auth = Cloud.auth(activity)
             if (credential == null || auth == null) { onResult(failure ?: Result.Failed("unavailable")); return@googleCredential }
-            // An anonymous user (progress analytics) is simply replaced by the account, and stays if this fails.
             Cloud.afterAnonymousSignIn {
-                auth.signInWithCredential(credential).addOnCompleteListener(activity) { task ->
+                val anonymous = auth.currentUser?.takeIf(FirebaseUser::isAnonymous)
+                if (anonymous == null) return@afterAnonymousSignIn signInWith(activity, auth, credential, null, onResult)
+                anonymous.linkWithCredential(credential).addOnCompleteListener(activity) { task ->
                     val user = if (task.isSuccessful) task.result?.user else null
-                    onResult(if (user != null) Result.Signed(user) else Result.Failed(task.exception?.message ?: "sign-in"))
+                    val collision = task.exception as? FirebaseAuthUserCollisionException
+                    when {
+                        user != null -> onResult(Result.Signed(user))
+                        collision != null -> Profiles.release(activity, anonymous.uid) { released, profile ->
+                            if (!released) return@release onResult(Result.Failed("release"))
+                            // Best effort: nothing is left on the anonymous user, and signing in replaces it anyway.
+                            anonymous.delete().addOnCompleteListener(activity) {
+                                signInWith(activity, auth, collision.updatedCredential ?: credential, profile, onResult)
+                            }
+                        }
+                        else -> onResult(Result.Failed(task.exception?.message ?: "link"))
+                    }
                 }
             }
+        }
+    }
+
+    private fun signInWith(activity: Activity, auth: FirebaseAuth, credential: AuthCredential, released: Profile?, onResult: (Result) -> Unit) {
+        auth.signInWithCredential(credential).addOnCompleteListener(activity) { task ->
+            val user = if (task.isSuccessful) task.result?.user else null
+            onResult(if (user != null) Result.Signed(user, released) else Result.Failed(task.exception?.message ?: "sign-in"))
         }
     }
 

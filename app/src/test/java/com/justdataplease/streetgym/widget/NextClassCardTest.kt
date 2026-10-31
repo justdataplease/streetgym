@@ -41,6 +41,26 @@ class NextClassCardTest {
     }
 
     @Test
+    fun aHoldGivesWayToTheFirstStepThatMoves() {
+        // A hold keeps one pose, so its flip-book would stand still (2.9.3).
+        val holds = setOf("tuck_front_hold", "wall_handstand")
+        val moves = { exercise: TrainingExercise -> exercise.movementId !in holds }
+        val card = NextClassCard.of(program("Basics & Strength · Tuck Front-Lever Hold", listOf(
+            step("tuck_front_hold", "Tuck Front-Lever Hold"), step("pullup", "Strict Pull-Up"), step("parallel_dip", "Dip"),
+        )), locked = false, moves = moves)
+        assertEquals("pullup", card.movementId)
+        assertEquals("Strict Pull-Up", card.movementName)
+        assertEquals("Strict Pull-Up", card.detail)
+        // Only holds: the first one, as before.
+        val still = NextClassCard.of(program("Balance · Handstand", listOf(step("wall_handstand", "Chest-to-Wall Handstand"))),
+            locked = false, moves = moves)
+        assertEquals("wall_handstand", still.movementId)
+        val last = NextClassCard.allDone(program("Finale", listOf(step("wall_handstand", "Chest-to-Wall Handstand"),
+            step("pullup", "Strict Pull-Up"))), moves)
+        assertEquals("pullup", last.movementId)
+    }
+
+    @Test
     fun theLeadComesFromTheMainPartNotTheTitle() {
         val card = NextClassCard.of(program("Pull & Push Circuit · Something Else", listOf(step("inverted_row", "Inverted Row"))),
             locked = false)

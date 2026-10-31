@@ -3,6 +3,7 @@ package com.justdataplease.streetgym.data.progress
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.SharedPreferences
+import com.justdataplease.streetgym.data.points.Points
 import com.justdataplease.streetgym.data.skills.SkillCurriculumReader
 import com.justdataplease.streetgym.leaderboard.Scores
 import org.json.JSONObject
@@ -46,7 +47,7 @@ class RepeatDayTest {
         points.statuses.zip(after.statuses).forEach { (before, now) ->
             assertTrue(before.skill.id, now.sets >= before.sets && now.level >= before.level)
         }
-        assertTrue(after.overall.score >= points.overall.score)
+        assertTrue(Points.chevrons(after.statuses) >= Points.chevrons(points.statuses))
     }
 
     @Test fun theDaysIntensityAndThePlacementAreKeptWithTheirSessions() {
@@ -71,7 +72,9 @@ class RepeatDayTest {
         train(days[0], 0L)
         repository.startWorkout(days[0].id, DAY, repeat = true)
         repository.setCompleted("set", true)
-        assertEquals(ActiveWorkout(days[0].id, DAY, setOf("set"), repeat = true), repository.activeWorkout())
+        // The tick keeps its time, for the 30% rule (WorkoutFlow.counted).
+        assertEquals(setOf("set"), repository.activeWorkout()?.tickedAt?.keys)
+        assertEquals(ActiveWorkout(days[0].id, DAY, setOf("set"), repeat = true), repository.activeWorkout()?.copy(tickedAt = emptyMap()))
         val session = repository.finishWorkout(DAY + 40 * MINUTE, effortRating = 9)
 
         assertNull(repository.activeWorkout())
@@ -119,7 +122,7 @@ class RepeatDayTest {
         repository.setCompleted("set", true)
         // "Complete day" on Today: the repeat in progress is of a day already done, so it keeps running.
         repository.completePrograms(listOf(days[0].id, days[1].id), at = DAY)
-        assertEquals(ActiveWorkout(days[0].id, DAY, setOf("set"), repeat = true), repository.activeWorkout())
+        assertEquals(ActiveWorkout(days[0].id, DAY, setOf("set"), repeat = true), repository.activeWorkout()?.copy(tickedAt = emptyMap()))
         repository.abandonWorkout()
 
         assertEquals(setOf(days[0].id, days[1].id), repository.completedProgramIds())

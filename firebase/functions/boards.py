@@ -1,12 +1,14 @@
-"""The leaderboard boards from the Pro scores: pure, so it can be tested without Firebase.
+"""The leaderboard boards from the Plus and Pro scores: pure, so it can be tested without Firebase.
 
-Each score document (scores/{uid}, version 3) holds username, country, overall (the overall score, 0 to 1000),
-families ({family id: ten times the family's points}) and verified (the rungs the athlete passed a test for). A
-hidden, older or inconsistent one is skipped: the overall must match the families it is made of. Every board is one
-document: the top TOP entries, the number of players and 100 percentiles (the score at each 1% step from the top), so
-the app shows anyone's place with that single read.
+Each score document (scores/{uid}, version 4) holds username, country, points (every point the athlete has earned,
+from the sets they trained and the chevrons they reached), month (the UTC month, "2026-10") and month_points (the
+points earned in that month). A hidden, older or malformed one is skipped. Every board is one document: the top TOP
+entries, the number of players and 100 percentiles (the score at each 1% step from the top), so the app shows anyone's
+place with that single read.
 
-    boards/overall_world   boards/overall_GR   boards/family_front_lever_world   boards/family_front_lever_GR
+    boards/all_world   boards/all_GR   boards/month_world   boards/month_GR
+
+A month board only takes the scores of the month it is built in, so it starts empty on the 1st.
 """
 import hashlib
 import json
@@ -15,44 +17,30 @@ import re
 
 TOP = 100
 COUNTRY = re.compile(r"[A-Z]{2}")
-# Version 3 (round 11): the one-arm handstand raises the handstand family to 110, the shrimp squat and Hefesto families
-# join, and the Nordic curl family, retired from the app in round 9, is gone. Older scores are dropped until the app
-# republishes them.
-VERSION = 3
-SCORE_MAX = 1000
-# Each family's top value, as the app's OverallScore.SKILL_VALUES gives it (SkillBookTest checks they agree): a
-# family's points never exceed it, and the overall is 1000 times the families' points over their sum.
-FAMILY_CEILINGS = {
-    "pullup": 110, "muscleup": 32, "front_lever": 100, "back_lever": 50, "hefesto": 50, "dip": 12, "pushup": 24,
-    "hspu": 55, "planche": 200, "handstand": 110, "pistol": 12, "shrimp": 14, "hanging_core": 10, "lsit": 30,
-    "dragon_flag": 18, "human_flag": 60,
-}
-# Each family is rounded on the phone before the server adds them up.
-OVERALL_TOLERANCE = 2
+MONTH = re.compile(r"[0-9]{4}-(0[1-9]|1[0-2])")
+# Version 4 (the owner, 2026-10-31): points for training and chevrons, all time and this month, instead of the overall
+# score out of 1000 and its family boards. Older scores are dropped until the app republishes them.
+VERSION = 4
+POINTS_MAX = 100_000_000
 
 
-def expected_overall(families: dict) -> int:
-    """The overall score the families add up to."""
-    return round(SCORE_MAX * sum(families.values()) / 10 / sum(FAMILY_CEILINGS.values()))
+def _count(value, most) -> bool:
+    return isinstance(value, int) and not isinstance(value, bool) and 0 <= value <= most
 
 
 def _valid(score: dict) -> bool:
-    families = score.get("families")
-    if (score.get("hidden") or score.get("v") != VERSION
-            or not (isinstance(score.get("username"), str) and score["username"])
-            # The country names boards (boards/overall_GR), so anything but two capitals, like "a/", is refused.
-            or not (isinstance(score.get("country"), str) and COUNTRY.fullmatch(score["country"]))
-            or not (isinstance(score.get("overall"), int) and 0 <= score["overall"] <= SCORE_MAX)
-            or not isinstance(families, dict)):
-        return False
-    for family, points in families.items():
-        if family not in FAMILY_CEILINGS or not isinstance(points, int) or not 0 <= points <= 10 * FAMILY_CEILINGS[family]:
-            return False
-    return abs(expected_overall(families) - score["overall"]) <= OVERALL_TOLERANCE
+    return (not score.get("hidden") and score.get("v") == VERSION
+            and isinstance(score.get("username"), str) and bool(score["username"])
+            # The country names boards (boards/all_GR), so anything but two capitals, like "a/", is refused.
+            and isinstance(score.get("country"), str) and bool(COUNTRY.fullmatch(score["country"]))
+            and _count(score.get("points"), POINTS_MAX)
+            and isinstance(score.get("month"), str) and bool(MONTH.fullmatch(score["month"]))
+            and _count(score.get("month_points"), score["points"]))
 
 
-def build_boards(scores: list) -> dict:
-    """{board id: {"entries": [...], "players": n, "percentiles": [100 ints]}} from the score documents."""
+def build_boards(scores: list, month: str) -> dict:
+    """{board id: {"entries": [...], "players": n, "percentiles": [100 ints]}} from the score documents, with the month
+    boards for [month] ("2026-10")."""
     lists = {}
 
     def add(board, username, country, points):
@@ -62,12 +50,12 @@ def build_boards(scores: list) -> dict:
         if not _valid(score):
             continue
         name, country = score["username"], score["country"]
-        add("overall_world", name, country, score["overall"])
-        add(f"overall_{country}", name, country, score["overall"])
-        for family, points in score["families"].items():
-            if points > 0:
-                add(f"family_{family}_world", name, country, points)
-                add(f"family_{family}_{country}", name, country, points)
+        if score["points"] > 0:
+            add("all_world", name, country, score["points"])
+            add(f"all_{country}", name, country, score["points"])
+        if score["month"] == month and score["month_points"] > 0:
+            add("month_world", name, country, score["month_points"])
+            add(f"month_{country}", name, country, score["month_points"])
 
     boards = {}
     for board, entries in lists.items():

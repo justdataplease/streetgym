@@ -39,14 +39,12 @@ data class SkillProgram(
  * One finished class as skills credit it. [sets]: the sets ticked per movement, with a set done as the easier option
  * credited to the easier movement and readiness checks left out; null for a class saved before ticks were kept, whose
  * prescription counts. [doses]: each of those sets in its skill's measure, reps or seconds held (0 when unknown); null
- * for a class saved before doses were kept, whose prescribed doses count. [seconds]: how long the class took.
- * [minutes]: the planned length of a class outside the program (the athlete's own day), when known.
+ * for a class saved before doses were kept, whose prescribed doses count. Since 2.10.0 the sets are only those whose
+ * exercise ran its share of the time (WorkoutFlow.counted), in place of the old 20% of the whole class.
  */
 data class SkillCredit(
     val programId: String,
     val sets: Map<String, Int>? = null,
-    val seconds: Long = Long.MAX_VALUE,
-    val minutes: Int? = null,
     val doses: Map<String, List<Int>>? = null,
 )
 
@@ -76,8 +74,6 @@ data class Skill(
     val expected: SkillProgram?,
     /** Past what the program trains: only offered as a readiness check, or never scheduled. */
     val beyondProgram: Boolean,
-    /** What the skill is worth in the overall score at Elite ([OverallScore.SKILL_VALUES]). */
-    val value: Int,
     /** Its measure, difficulty and the targets of its levels. */
     val standard: SkillStandard,
     /** What a set must be to count toward its levels: the shape, range and timing a judge would ask for. */
@@ -87,10 +83,7 @@ data class Skill(
     val difficulty: Int get() = standard.grade
 }
 
-data class SkillFamily(val spec: SkillFamilySpec, val skills: List<Skill>) {
-    /** The family's top value: what Elite of its hardest rung is worth. */
-    val ceiling: Int get() = skills.maxOfOrNull { it.value } ?: 0
-}
+data class SkillFamily(val spec: SkillFamilySpec, val skills: List<Skill>)
 
 /**
  * Where an athlete stands on one skill. [sets]: its ticked sets. [best]: its best set, in reps or seconds (0 when none
@@ -122,20 +115,11 @@ data class SkillStatus(
 }
 
 data class SkillProgress(val families: List<Pair<SkillFamily, List<SkillStatus>>>) {
-    /** The weighted overall score, from the same statuses. */
-    val overall: OverallScore by lazy { OverallScore.of(families) }
     val statuses: List<SkillStatus> get() = families.flatMap { it.second }
 
-    /** Levels earned across every skill, out of [totalLevels]. */
+    /** Ranks reached across every skill (the chevrons), out of [totalLevels]. */
     val levels: Int get() = statuses.sumOf { it.level.ordinal }
     val totalLevels: Int get() = statuses.size * SkillLevel.ELITE.ordinal
-
-    /**
-     * Skills the athlete has started and can still raise, closest to their next level first; a level that comes through
-     * a harder rung (its level or its sets), with no sets of its own, has nothing to raise yet.
-     */
-    fun closest(limit: Int): List<SkillStatus> = statuses.filter { it.started && it.next != null && it.sets > 0 }
-        .sortedWith(compareByDescending<SkillStatus> { it.progress }.thenByDescending { it.sets }).take(limit)
 }
 
 /**
@@ -178,9 +162,6 @@ class SkillBook private constructor(
             val program = programs[credit.programId]
             // A class outside the program (the athlete's own day) counts its ticks as they are.
             if (program == null && credit.sets == null) continue
-            // A class counts once it ran at least [MIN_SHARE_PERCENT] of its planned length.
-            val minutes = program?.minutes ?: credit.minutes
-            if (minutes != null && credit.seconds < minutes * 60L * MIN_SHARE_PERCENT / 100) continue
             val ticked = if (program == null) credit.sets.orEmpty().filter { (id, count) -> count > 0 && id in movements }
                 else creditedSets(credit, program)
             for ((id, count) in ticked) {
@@ -232,9 +213,6 @@ class SkillBook private constructor(
     }
 
     companion object {
-        /** A class counts toward skills when it took at least this share of its planned minutes. */
-        const val MIN_SHARE_PERCENT = 20
-
         /** The level [atTargets] reach: the sets at each target, Beginner up, each level standing on the one below. */
         fun levelOf(atTargets: List<Int>): SkillLevel =
             SkillLevel.entries[SkillLevel.entries.drop(1).zip(atTargets).takeWhile { (level, sets) -> sets >= level.sets }.size]
@@ -243,7 +221,6 @@ class SkillBook private constructor(
             movements: Map<String, SkillMovement>,
             schedule: List<SkillProgram>,
             specs: List<SkillFamilySpec> = DEFAULT_FAMILIES,
-            values: Map<String, Int> = OverallScore.SKILL_VALUES,
             standards: (String) -> SkillStandard = SkillStandards::of,
         ): SkillBook {
             val ladders = resolveLadders(movements, specs)
@@ -253,7 +230,7 @@ class SkillBook private constructor(
                 SkillFamily(spec, ladder.mapIndexed { rung, id ->
                     val trained = schedule.firstOrNull { program -> program.steps.any { it.movementId == id && !it.readinessCheck } }
                     val checked = schedule.firstOrNull { program -> program.steps.any { it.movementId == id && it.readinessCheck } }
-                    Skill(id, movements.getValue(id).name, rung, trained ?: checked, trained == null, values[id] ?: 0, standards(id),
+                    Skill(id, movements.getValue(id).name, rung, trained ?: checked, trained == null, standards(id),
                         movements.getValue(id).counts)
                 })
             }

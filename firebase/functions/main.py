@@ -1,8 +1,9 @@
-"""Street Gym's scheduled functions: the leaderboard, rebuilt from the Pro scores every six hours, and the daily
-deletion of progress analytics older than 24 months (expiry.py).
+"""Street Gym's scheduled functions: the leaderboard, rebuilt from the Plus and Pro scores every six hours, and the
+daily deletion of progress analytics older than 24 months (expiry.py).
 
-Cost: a run with no new or removed score is two reads (one changed-score probe, one count) and stops. Otherwise it
-reads each score once, reads the boards' hashes, and writes only the boards that changed. Deploy with
+Cost: a run with no new or removed score in the same month is three reads (the bookkeeping, one changed-score probe,
+one count) and stops. Otherwise, or on the first run of a month (the month boards start empty), it reads each score
+once, reads the boards' hashes, and writes only the boards that changed. Deploy with
 `firebase deploy --only functions,firestore` from streetgymnastics/firebase (docs/TIERS.md, "Pro account setup").
 """
 import datetime
@@ -24,15 +25,17 @@ def rebuild_boards(event: scheduler_fn.ScheduledEvent) -> None:
     started = firestore.SERVER_TIMESTAMP
     scores = db.collection("scores")
 
+    # The month boards are this UTC month's; the app sends its month points under the same month.
+    month = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m")
     count = scores.count().get()[0][0].value
     since = meta.get("built_at")
     changed = True
-    if since is not None and count == meta.get("count"):
+    if since is not None and count == meta.get("count") and month == meta.get("month"):
         changed = any(True for _ in scores.where(filter=firestore.FieldFilter("updated_at", ">", since)).limit(1).stream())
     if not changed:
         return
 
-    boards = build_boards([doc.to_dict() for doc in scores.stream()])
+    boards = build_boards([doc.to_dict() for doc in scores.stream()], month)
     existing = {doc.id: (doc.to_dict() or {}).get("hash") for doc in db.collection("boards").select(["hash"]).stream()}
     batch, pending = db.batch(), 0
 
@@ -56,7 +59,7 @@ def rebuild_boards(event: scheduler_fn.ScheduledEvent) -> None:
         if pending == 400:
             flush()
     flush()
-    meta_ref.set({"built_at": started, "count": count})
+    meta_ref.set({"built_at": started, "count": count, "month": month})
 
 
 # Cost: two reads when nothing is due (two queries with no result), else a read and a delete per document.

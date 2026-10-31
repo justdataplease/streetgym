@@ -108,27 +108,4 @@ class SkillSwitchesTest {
         // Nothing switched off passes nothing.
         assertEquals(emptySet<String>(), NextClass.passed(ordered, emptySet(), SkillSwitches()))
     }
-
-    @Test
-    fun theScoreIsOutOfTheSkillsTrained() {
-        val book = SkillBook.build(SkillBook.DEFAULT_FAMILIES.flatMap { it.ladder }.associateWith { SkillMovement(it, it, "skill", emptySet(), null) },
-            emptyList())
-        fun elite(id: String): SkillCredit {
-            val target = SkillStandards.of(id).target(SkillLevel.ELITE)!!
-            return SkillCredit("custom:$id", mapOf(id to SkillLevel.ELITE.sets), doses = mapOf(id to List(SkillLevel.ELITE.sets) { target }))
-        }
-        val progress = book.progress(listOf(elite("pullup"), elite("parallel_dip")))
-        // The planche and handstand switched off: the same points out of a smaller whole.
-        val switches = SkillSwitches().with("planche", 0).with("handstand", 0)
-        val trained = progress.trained(switches)
-        assertTrue(trained.overall.score > progress.overall.score)
-        assertEquals(progress.overall.families.sumOf { it.points }, trained.overall.families.sumOf { it.points }, 1e-9)
-        assertFalse(trained.families.any { (family, _) -> family.spec.id in setOf("planche", "handstand") })
-        // Only the one-arm handstand off: the handstand family stays, topped by the freestanding handstand.
-        val noOneArm = progress.trained(SkillSwitches().with("handstand", 2))
-        val handstand = noOneArm.families.first { (family, _) -> family.spec.id == "handstand" }.first
-        assertEquals(listOf("wall_handstand", "freestanding_handstand"), handstand.skills.map { it.id })
-        // Nothing off: the same progress.
-        assertEquals(progress, progress.trained(SkillSwitches()))
-    }
 }

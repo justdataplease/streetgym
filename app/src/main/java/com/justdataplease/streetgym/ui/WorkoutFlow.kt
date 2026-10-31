@@ -2,7 +2,9 @@ package com.justdataplease.streetgym.ui
 
 import com.justdataplease.streetgym.data.model.TrainingExercise
 import com.justdataplease.streetgym.data.model.TrainingSet
+import com.justdataplease.streetgym.data.points.Points
 import com.justdataplease.streetgym.data.skills.SkillStandard
+import kotlin.math.roundToInt
 
 /** One set of a class in training order, with the progress key both workout views save. */
 data class WorkoutStep(
@@ -19,6 +21,8 @@ data class WorkoutStep(
     val setCount: Int get() = exercise.sets.size
     /** A set that counts toward skills, whose reps or seconds the athlete can log. */
     val credited: Boolean get() = section in WorkoutFlow.CREDITED_SECTIONS && !exercise.readinessCheck
+    /** 2 for a set done on each side ("per side"), else 1. */
+    val sides: Int get() = if (SetNotes.parse(set.description.resolve()).sides.isEmpty()) 1 else 2
 }
 
 /** A hold, measured in seconds; otherwise a set of reps. */
@@ -88,6 +92,61 @@ class WorkoutFlow(val steps: List<WorkoutStep>) {
         }
         .groupBy({ it.first }, { it.second })
 
+    /**
+     * The ticked sets that count, for points and ranks alike (the owner, 2.10.0: "it only counts if 30% of the time
+     * passes for each exercise"): an exercise's sets count once its ticks took at least [share] of their planned time
+     * ([plannedSeconds]). The time from one tick to the next goes to the set ticked; sets ticked together share it by
+     * their planned time. A class started before ticks were timed ([tickedAt] empty) counts every tick, and so does a
+     * set ticked before then.
+     */
+    fun counted(completed: Set<String>, tickedAt: Map<String, Long>, startedAt: Long, share: Double = Points.timeShare): Set<String> {
+        if (tickedAt.isEmpty() || share <= 0.0) return completed
+        val byKey = steps.associateBy(WorkoutStep::key)
+        val spent = HashMap<String, Double>()
+        var previous = startedAt
+        tickedAt.filterKeys { it in completed && it in byKey }.entries.groupBy({ it.value }, { it.key }).toSortedMap()
+            .forEach { (at, keys) ->
+                val elapsed = (at - previous).coerceAtLeast(0L) / 1_000.0
+                previous = maxOf(previous, at)
+                val planned = keys.map { plannedSeconds(byKey.getValue(it)) }
+                val total = planned.sum()
+                keys.forEachIndexed { index, key ->
+                    val part = if (total > 0) elapsed * planned[index] / total else elapsed / keys.size
+                    spent.merge(byKey.getValue(key).exerciseKey, part, Double::plus)
+                }
+            }
+        val ticked = steps.filter { it.key in completed }
+        val needed = ticked.filter { it.key in tickedAt }.groupBy(WorkoutStep::exerciseKey)
+            .mapValues { (_, sets) -> sets.sumOf(::plannedSeconds) * share }
+        return ticked.filter { step -> step.key !in tickedAt || (spent[step.exerciseKey] ?: 0.0) >= (needed[step.exerciseKey] ?: 0.0) }
+            .map(WorkoutStep::key).toSet()
+    }
+
+    /**
+     * What the [counted] practice and main sets earn ([Points]): the reps or seconds the athlete logged ([done]), else the
+     * plan's (a logged number up to twice the plan), times the difficulty of the movement done ([difficultyOf], the easier
+     * option's when they chose it). [movementOf] and [standardOf] give the measure a skill is logged in, as [doses] does.
+     */
+    fun points(
+        counted: Set<String>,
+        easier: Set<String>,
+        done: Map<String, Int>,
+        movementOf: (TrainingExercise) -> String?,
+        standardOf: (String) -> SkillStandard?,
+        difficultyOf: (String?) -> Int,
+    ): Int = steps.filter { it.credited && it.key in counted }.sumOf { step ->
+        val measure = measure(step, movement(step, easier, movementOf)?.let(standardOf))
+        val logged = done[step.key]
+        val (amount, timed) = when {
+            logged != null -> logged to measure.timed
+            measure.planned != null -> measure.planned to measure.timed
+            else -> (step.set.planned ?: 0) to step.set.timed
+        }
+        val cap = measure.planned?.let { it * Points.LOGGED_CAP } ?: if (timed) Points.MAX_SECONDS else Points.MAX_REPS
+        val moved = step.exercise.easier?.takeIf { step.exerciseKey in easier }?.movementId ?: step.exercise.movementId
+        Points.set(amount.coerceIn(0, cap), timed, step.sides, difficultyOf(moved))
+    }.roundToInt()
+
     /** The ticked sets that train skills, each with the movement it credits. */
     private fun credited(completed: Set<String>, easier: Set<String>, movementOf: (TrainingExercise) -> String?) = steps
         .filter { it.credited && it.key in completed }
@@ -124,6 +183,16 @@ class WorkoutFlow(val steps: List<WorkoutStep>) {
 
         /** The sections whose sets train skills: warm-up and cooldown only prepare and recover. */
         val CREDITED_SECTIONS = setOf("practice", "main")
+
+        /**
+         * How long a set is planned to take: its work (a hold as written, reps at [Points.SECONDS_PER_REP] each, a "max"
+         * set as ten, both sides when per side) and the rest before it.
+         */
+        fun plannedSeconds(step: WorkoutStep): Double {
+            val work = if (step.set.timed) step.set.durationSeconds ?: 0 else (step.set.planned ?: 10) * Points.SECONDS_PER_REP
+            val rest = if (step.setIndex > 0) step.exercise.sets[step.setIndex - 1].breakSeconds ?: 0 else 0
+            return (work * step.sides + rest).toDouble()
+        }
 
         /** The movement [step] trains: its easier option when [easier] holds its exercise, else what [movementOf] names. */
         fun movement(step: WorkoutStep, easier: Set<String>, movementOf: (TrainingExercise) -> String?): String? =

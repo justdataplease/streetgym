@@ -3,12 +3,12 @@ package com.justdataplease.streetgym.ui
 import android.app.Activity
 import android.app.AlertDialog
 import android.text.InputType
-import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.Switch
+import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.justdataplease.streetgym.R
@@ -27,9 +27,12 @@ import java.util.Date
 import java.util.Locale
 
 /**
- * The Pro account in Settings: Sign in with Google, the leaderboard profile, cloud progress, sign out and account
- * deletion. Only create it when [Cloud.signInAvailable]: builds without a Firebase configuration (README) show
- * nothing here. [onChanged] runs after sign-in or a profile change, so the score and sync catch up.
+ * Settings › Profile, at the top for every tier (the owner, 2026-10-31: "anyone can have a username… also the connect
+ * to keep data will be there"). A username needs no sign-in: the first one signs in anonymously and the profile lives
+ * under that user ([Cloud.profileUser]); the boards show Plus and Pro. Below it, Connect Google links that user, so the
+ * username, the score and Pro's cloud progress follow to a new phone; once connected: cloud progress (Pro), sign out and
+ * account deletion. Only create it when [Cloud.available]: a build without a Firebase configuration (README) shows
+ * nothing here. [onChanged] runs after a connection or a profile change, so the score and sync catch up.
  */
 class AccountSettingsView(
     private val activity: Activity,
@@ -53,48 +56,18 @@ class AccountSettingsView(
 
     private fun render() {
         removeAllViews()
-        // The Google account only: the anonymous user progress analytics signs in with is no account.
-        val user = Cloud.user(activity)
-        addView(context.titleText(context.getString(R.string.account_title), 20f))
+        val uid = Cloud.profileUid(activity)
+        // The Google account only; the anonymous user holds a profile but keeps nothing beyond this phone.
+        val google = Cloud.user(activity)
         val tier = Entitlement.tier(activity)
-        if (!tier.account) {
-            // Plus and Pro sign in; an account from a lapsed plan stays signed in, but nothing syncs or publishes.
-            if (user != null) {
-                addWithMargins(context.bodyText(context.getString(R.string.account_lapsed), 14f), topDp = 6)
-                addWithMargins(context.secondaryButton(context.getString(R.string.account_sign_out)) { GoogleAccount.signOut(activity) }, topDp = 12)
-            } else visibility = View.GONE
-            return
-        }
-        visibility = View.VISIBLE
+        val profile = uid?.let(store::profile)
         val status = context.bodyText("", 13f)
-        if (user == null) {
-            addWithMargins(context.bodyText(context.getString(if (tier.cloud) R.string.account_intro else R.string.account_intro_plus), 14f), topDp = 6)
-            addWithMargins(context.primaryButton(context.getString(R.string.account_sign_in)) {
-                if (busy) return@primaryButton
-                busy = true; status.setText(R.string.account_working)
-                GoogleAccount.signIn(activity) { result ->
-                    busy = false
-                    when (result) {
-                        is GoogleAccount.Result.Signed -> Profiles.load(activity, result.user.uid) { profile ->
-                            sync.sync(force = true) { onChanged() }
-                            render()
-                            if (profile == null) editProfile(result.user.uid, null)
-                        }
-                        GoogleAccount.Result.Cancelled -> status.text = ""
-                        is GoogleAccount.Result.Failed -> status.setText(R.string.account_sign_in_failed)
-                    }
-                }
-            }, topDp = 12)
-            addWithMargins(status, topDp = 8)
-            return
-        }
-        addWithMargins(context.bodyText(user.email.orEmpty(), 14f), topDp = 4)
-        val profile = store.profile(user.uid)
-        if (profile == null) {
-            addWithMargins(context.bodyText(context.getString(R.string.account_pick_name), 14f), topDp = 10)
-            addWithMargins(context.primaryButton(context.getString(R.string.account_choose_profile)) { editProfile(user.uid, null) }, topDp = 10)
+
+        if (uid == null || profile == null) {
+            addView(context.bodyText(context.getString(R.string.profile_intro), 14f))
+            addWithMargins(context.primaryButton(context.getString(R.string.account_choose_profile)) { pickUsername(status) }, topDp = 12)
         } else {
-            addWithMargins(context.titleText("${Countries.flag(profile.country)} ${profile.username}", 18f), topDp = 12)
+            addView(context.titleText("${Countries.flag(profile.country)} ${profile.username}", 18f))
             addWithMargins(context.bodyText(Countries.name(profile.country), 13f), topDp = 2)
             addWithMargins(Switch(context).apply {
                 text = context.getString(R.string.account_visible)
@@ -102,29 +75,84 @@ class AccountSettingsView(
                 setTextColor(AppColors.TEXT)
                 isChecked = profile.visible
                 minHeight = context.dp(56)
-                setOnCheckedChangeListener { _, visible -> saveProfile(user.uid, profile.copy(visible = visible)) }
+                setOnCheckedChangeListener { _, visible -> saveProfile(uid, profile.copy(visible = visible)) }
             }, topDp = 6)
-            addWithMargins(context.secondaryButton(context.getString(R.string.account_edit_profile)) { editProfile(user.uid, profile) }, topDp = 4)
+            addWithMargins(context.secondaryButton(context.getString(R.string.account_edit_profile)) { editProfile(uid, profile) }, topDp = 4)
         }
-        // Plus is on the leaderboard only; its progress stays on the phone.
+        if (!tier.account) addWithMargins(context.bodyText(context.getString(R.string.profile_board_note), 12f), topDp = 8)
+
+        if (google == null) {
+            // Connect Google, when this build can (it needs the web client id).
+            if (Cloud.signInAvailable(activity)) {
+                addWithMargins(context.bodyText(context.getString(if (tier.cloud) R.string.account_intro else R.string.account_intro_plus), 14f), topDp = 18)
+                addWithMargins(context.secondaryButton(context.getString(R.string.account_sign_in)) { connect(status) }, topDp = 10)
+            } else if (profile != null) addWithMargins(context.bodyText(context.getString(R.string.profile_keep_note), 12f), topDp = 12)
+            addWithMargins(status, topDp = 8)
+            if (uid != null && profile != null) {
+                addWithMargins(context.secondaryButton(context.getString(R.string.profile_delete)) { confirmDeleteProfile(uid) }, topDp = 8)
+            }
+            return
+        }
+
+        addWithMargins(context.bodyText(context.getString(R.string.profile_google, google.email.orEmpty()), 14f), topDp = 18)
+        // Plus and Free keep their progress on the phone; Pro's syncs.
         if (tier.cloud) {
             status.text = if (store.lastSyncAt > 0) context.getString(R.string.account_synced,
                 DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(Date(store.lastSyncAt)))
                 else context.getString(R.string.account_not_synced)
-            addWithMargins(status, topDp = 14)
+            addWithMargins(status, topDp = 8)
             addWithMargins(context.secondaryButton(context.getString(R.string.account_sync_now)) {
                 status.setText(R.string.account_working)
                 sync.sync(force = true) { result ->
                     if (result == CloudSync.Result.Failed) status.setText(R.string.account_sync_failed) else { render(); onChanged() }
                 }
             }, topDp = 8)
-        } else addWithMargins(context.bodyText(context.getString(R.string.account_plus_note), 13f), topDp = 14)
+        } else addWithMargins(context.bodyText(context.getString(R.string.account_plus_note), 13f), topDp = 8)
         addWithMargins(context.secondaryButton(context.getString(R.string.account_sign_out)) { GoogleAccount.signOut(activity) }, topDp = 8)
         addWithMargins(context.bodyText(context.getString(R.string.account_sign_out_note), 12f), topDp = 4)
-        addWithMargins(context.secondaryButton(context.getString(R.string.account_delete)) { confirmDelete(user.uid) }, topDp = 12)
+        addWithMargins(context.secondaryButton(context.getString(R.string.account_delete)) { confirmDelete(google.uid) }, topDp = 12)
     }
 
-    /** Username (unique) and country; first shown right after the first sign-in. */
+    /** The first username: signs in anonymously when no one is signed in, then asks for the name and country. */
+    private fun pickUsername(status: TextView) {
+        if (busy) return
+        Cloud.profileUser(activity)?.let { return editProfile(it.uid, null) }
+        busy = true
+        status.setText(R.string.account_working)
+        Cloud.signInAnonymously(activity) { user ->
+            busy = false
+            if (user == null) status.setText(R.string.profile_offline)
+            else { status.text = ""; editProfile(user.uid, null) }
+        }
+    }
+
+    /**
+     * Connect Google. A linked anonymous user keeps its uid, so the profile stays. A Google account with a user of its
+     * own gave up this phone's profile ([GoogleAccount.Result.Signed.released]): its own profile loads, and when it has
+     * none the released name is claimed again for it.
+     */
+    private fun connect(status: TextView) {
+        if (busy) return
+        busy = true
+        status.setText(R.string.account_working)
+        GoogleAccount.signIn(activity) { result ->
+            when (result) {
+                is GoogleAccount.Result.Signed -> Profiles.load(activity, result.user.uid) { profile ->
+                    val reclaim = result.released?.takeIf { profile == null }
+                    fun done() {
+                        busy = false
+                        sync.sync(force = true) { onChanged() }
+                        render()
+                    }
+                    if (reclaim == null) done() else Profiles.save(activity, result.user.uid, reclaim) { done() }
+                }
+                GoogleAccount.Result.Cancelled -> { busy = false; status.text = "" }
+                is GoogleAccount.Result.Failed -> { busy = false; status.setText(R.string.account_sign_in_failed) }
+            }
+        }
+    }
+
+    /** Username (unique) and country. */
     private fun editProfile(uid: String, previous: Profile?) {
         val countries = Countries.all()
         val name = EditText(context).apply {
@@ -167,6 +195,20 @@ class AccountSettingsView(
                 Profiles.Claim.Failed -> { render(); done(context.getString(R.string.profile_failed)) }
             }
         }
+    }
+
+    /** A profile kept without Google: its username, profile and score go, then (best effort) the anonymous user. */
+    private fun confirmDeleteProfile(uid: String) {
+        AlertDialog.Builder(activity).setTitle(R.string.profile_delete_title).setMessage(R.string.profile_delete_message)
+            .setNegativeButton(R.string.cancel, null)
+            .setPositiveButton(R.string.delete) { _, _ ->
+                Profiles.release(activity, uid) { released, _ ->
+                    if (!released) return@release Toast.makeText(activity, R.string.profile_delete_failed, Toast.LENGTH_LONG).show()
+                    Cloud.profileUser(activity)?.takeIf { it.isAnonymous && it.uid == uid }?.delete()
+                    Toast.makeText(activity, R.string.profile_deleted, Toast.LENGTH_LONG).show()
+                    render()
+                }
+            }.show()
     }
 
     /**

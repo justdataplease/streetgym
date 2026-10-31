@@ -12,4 +12,8 @@
     <instrumentation
         android:name="com.justdataplease.streetgym.WidgetShots"
         android:targetPackage="com.justdataplease.streetgym.debug" />
+    <!-- Another: the Today park greeting an athlete by name, in each bubble style (see ParkBubbleShots). -->
+    <instrumentation
+        android:name="com.justdataplease.streetgym.ParkBubbleShots"
+        android:targetPackage="com.justdataplease.streetgym.debug" />
 </manifest>

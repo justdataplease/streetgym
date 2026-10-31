@@ -16,12 +16,14 @@ import android.util.SizeF
 import com.justdataplease.streetgym.billing.Entitlement
 import com.justdataplease.streetgym.billing.LevelAccess
 import com.justdataplease.streetgym.data.AssetCurriculumRepository
+import com.justdataplease.streetgym.data.model.TrainingExercise
 import com.justdataplease.streetgym.data.progress.NextClass
 import com.justdataplease.streetgym.data.progress.Placement
 import com.justdataplease.streetgym.data.progress.SharedPreferencesProgressRepository
 import com.justdataplease.streetgym.ui.AppSettings
 import com.justdataplease.streetgym.ui.AppType
 import com.justdataplease.streetgym.ui.HomeActivity
+import com.justdataplease.streetgym.ui.MotionClip
 import com.justdataplease.streetgym.ui.systemAnimationsEnabled
 import java.util.concurrent.Executors
 
@@ -70,11 +72,15 @@ internal object NextClassState {
         val progress = SharedPreferencesProgressRepository(context)
         val completed = progress.completedProgramIds()
         val passed = NextClass.passed(ordered, completed, AppSettings(context).skillSwitches)
-        val next = NextClass.of(ordered, passed, progress.levelReplay()) ?: return NextClassCard.allDone(ordered.lastOrNull())
+        // The flip-book plays a step that moves: a hold's drawings would all be the same pose.
+        val moves = { exercise: TrainingExercise ->
+            MotionClip.moves(context, exercise.movementId, exercise.name.resolve(), exercise.category, exercise.equipment)
+        }
+        val next = NextClass.of(ordered, passed, progress.levelReplay()) ?: return NextClassCard.allDone(ordered.lastOrNull(), moves)
         val locked = LevelAccess.locked(next.levelNumber, Entitlement.tier(context))
         // A new athlete first answers the placement on Today, so the tap goes there instead of to Level 1, class 1.
         val placement = Placement.shouldAsk(AppSettings(context).placementDone, completed.size, progress.activeWorkout() != null)
-        return NextClassCard.of(next, locked, opens = !placement)
+        return NextClassCard.of(next, locked, opens = !placement, moves = moves)
     }
 }
 

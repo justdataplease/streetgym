@@ -49,7 +49,7 @@ class LeaderboardRepository(private val context: Context) {
     fun publish(uid: String, profile: Profile, score: Score, done: (Boolean) -> Unit) {
         val db = Cloud.firestore(context) ?: return done(false)
         db.document("scores/$uid").set(mapOf("v" to Score.VERSION, "username" to profile.username, "country" to profile.country,
-            "overall" to score.overall, "families" to score.families, "verified" to score.verified,
+            "points" to score.points, "month" to score.month, "month_points" to score.monthPoints,
             "updated_at" to FieldValue.serverTimestamp()))
             .addOnCompleteListener { done(it.isSuccessful) }
     }

@@ -45,14 +45,17 @@ class SharedPreferencesProgressRepository(
         setCompleted(listOf(setId), completed)
 
     /** Update a whole section in one saved snapshot. Other sections stay untouched. */
-    fun setCompleted(setIds: Collection<String>, completed: Boolean) = synchronized(lock) {
+    fun setCompleted(setIds: Collection<String>, completed: Boolean, at: Long = System.currentTimeMillis()) = synchronized(lock) {
         require(setIds.all(String::isNotBlank)) { "setId cannot be blank" }
         val active = activeWorkout() ?: return@synchronized
         val updated = active.completedSetIds.toMutableSet().apply {
             if (completed) addAll(setIds) else removeAll(setIds.toSet())
         }
+        // Each newly ticked set keeps the time it was ticked; unticking forgets it.
+        val ticked = if (completed) active.tickedAt + setIds.filter { it !in active.completedSetIds }.associateWith { at }
+            else active.tickedAt - setIds.toSet()
         preferences.edit()
-            .putString(KEY_ACTIVE_WORKOUT, encode(active.copy(completedSetIds = updated)).toString())
+            .putString(KEY_ACTIVE_WORKOUT, encode(active.copy(completedSetIds = updated, tickedAt = ticked)).toString())
             .apply()
     }
 
@@ -82,6 +85,7 @@ class SharedPreferencesProgressRepository(
         effortRating: Int?,
         credits: Map<String, Int>?,
         doses: Map<String, List<Int>>?,
+        points: Int?,
     ): WorkoutSession? = synchronized(lock) {
         require(effortRating == null || effortRating in 1..10) {
             "effortRating must be between 1 and 10"
@@ -98,6 +102,7 @@ class SharedPreferencesProgressRepository(
             credits = credits?.filterValues { it > 0 },
             intensity = active.intensity,
             doses = doses?.filterValues { it.isNotEmpty() },
+            points = points?.coerceAtLeast(0),
         )
         val sessions = decodeSessions(preferences.getString(KEY_SESSION_HISTORY, null)) + session
         val edit = preferences.edit()
@@ -216,6 +221,7 @@ class SharedPreferencesProgressRepository(
             easierExercises = json.optJSONArray("easier_exercises").toStringSet(),
             intensity = Intensity.fromName(json.optString("intensity", "")),
             done = json.optJSONObject("done")?.let { done -> done.keys().asSequence().associateWith { done.optInt(it) } }.orEmpty(),
+            tickedAt = json.optJSONObject("ticked_at")?.let { at -> at.keys().asSequence().associateWith { at.optLong(it) } }.orEmpty(),
         )
     }.getOrNull()
 
@@ -243,6 +249,7 @@ class SharedPreferencesProgressRepository(
                                 doses.optJSONArray(id)?.let { list -> List(list.length()) { list.optInt(it) } }.orEmpty()
                             }
                         },
+                        points = if (json.has("points")) json.optInt("points").coerceAtLeast(0) else null,
                         effortRating = if (json.isNull("effort_rating")) {
                             null
                         } else {
@@ -262,6 +269,7 @@ class SharedPreferencesProgressRepository(
         .put("easier_exercises", JSONArray(active.easierExercises.sorted()))
         .put("intensity", active.intensity.name)
         .put("done", JSONObject(active.done.toSortedMap()))
+        .put("ticked_at", JSONObject(active.tickedAt.toSortedMap()))
 
     private fun encodeSessions(sessions: List<WorkoutSession>): JSONArray = JSONArray().apply {
         sessions.forEach { session ->
@@ -278,7 +286,8 @@ class SharedPreferencesProgressRepository(
                     // Written only when set, so the cloud copy of every older session stays as it was.
                     .apply { if (session.placed) put("placed", true) }
                     .apply { if (session.intensity != Intensity.NORMAL) put("intensity", session.intensity.name) }
-                    .apply { session.doses?.let { doses -> put("doses", JSONObject(doses.toSortedMap().mapValues { JSONArray(it.value) })) } },
+                    .apply { session.doses?.let { doses -> put("doses", JSONObject(doses.toSortedMap().mapValues { JSONArray(it.value) })) } }
+                    .apply { session.points?.let { put("points", it) } },
             )
         }
     }

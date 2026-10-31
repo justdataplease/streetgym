@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="progress_tab_leaderboard">Leaderboard</string>
-    <string name="leaderboard_intro">Compare your skills: your overall score out of 100 and a board for every skill family, worldwide and by country.</string>
+    <string name="leaderboard_intro">Points from your training, all time and this month, worldwide and by country.</string>
     <string name="leaderboard_unavailable">The leaderboard isn’t available in this build.</string>
     <string name="leaderboard_world">World</string>
-    <string name="leaderboard_overall">Overall</string>
-    <string name="leaderboard_board">Board: %1$s ▾</string>
-    <string name="leaderboard_pick">Choose a board</string>
+    <string name="leaderboard_all">All time</string>
+    <string name="leaderboard_month">This month</string>
     <string name="leaderboard_loading">Loading the leaderboard…</string>
     <string name="leaderboard_offline">Couldn’t load the leaderboard. Check your connection.</string>
     <string name="leaderboard_empty">No one is on this board yet.</string>
     <string name="leaderboard_rank">#%1$d</string>
     <string name="leaderboard_you_rank">You’re #%1$d · %2$s points</string>
     <string name="leaderboard_you_top">You’re in the top %1$d%% · %2$s points</string>
-    <string name="leaderboard_you_none">Train to raise your skill levels and earn points on this board.</string>
+    <string name="leaderboard_you_none">Train to earn points on this board.</string>
     <string name="leaderboard_hidden">You’re hidden from the leaderboard. Turn it on in Settings.</string>
-    <string name="leaderboard_sign_in">Sign in from Settings to appear on the leaderboard.</string>
+    <string name="leaderboard_sign_in">Pick a username in Settings to appear on the leaderboard.</string>
     <string name="leaderboard_updated">%1$s players · updated %2$s · boards refresh every 6 hours</string>
-    <string name="leaderboard_how">Your overall score from Skills: each family counts its best skill, by how hard it is and its level. Ticked sets count from program days, repeats and your own workouts; placed or completed days don\'t. Tiers: Beginner, Novice from 7.5, Intermediate 20, Advanced 42.5, Elite 65, World-class 85.</string>
+    <string name="leaderboard_how">Every set you tick earns its reps times how hard the exercise is, and every skill rank adds 100 points times how hard the skill is. Program days, repeats and your own workouts count; placed or completed days don\'t. The month starts again on the 1st (UTC).</string>
     <string name="paywall_leaderboard">The leaderboard is part of Plus</string>
 </resources>

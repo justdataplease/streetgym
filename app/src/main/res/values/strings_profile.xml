@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Settings › Profile (2026-10-31): a username for anyone, Google optional. -->
+    <string name="profile_section">Profile</string>
+    <string name="profile_intro">Pick a username for the leaderboard. No sign-in needed.</string>
+    <string name="profile_board_note">The leaderboard shows Plus and Pro members.</string>
+    <string name="profile_offline">Couldn’t reach the server. Check your connection and try again.</string>
+    <string name="profile_google">Google: %1$s</string>
+    <string name="profile_keep_note">Without Google, your username stays on this phone only.</string>
+    <string name="profile_delete">Delete profile</string>
+    <string name="profile_delete_title">Delete your profile?</string>
+    <string name="profile_delete_message">Your username and leaderboard points go for good. Your progress on this phone stays.</string>
+    <string name="profile_deleted">Profile deleted.</string>
+    <string name="profile_delete_failed">Couldn’t delete the profile. Try again.</string>
+</resources>

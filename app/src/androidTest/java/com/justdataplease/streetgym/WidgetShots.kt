@@ -24,10 +24,12 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.ViewFlipper
 import com.justdataplease.streetgym.data.AssetCurriculumRepository
+import com.justdataplease.streetgym.data.model.TrainingExercise
 import com.justdataplease.streetgym.data.progress.NextClass
 import com.justdataplease.streetgym.data.progress.SharedPreferencesProgressRepository
 import com.justdataplease.streetgym.ui.AppSettings
 import com.justdataplease.streetgym.ui.AppType
+import com.justdataplease.streetgym.ui.MotionClip
 import com.justdataplease.streetgym.ui.StreetTheme
 import com.justdataplease.streetgym.widget.NextClassCard
 import com.justdataplease.streetgym.widget.NextClassWidget
@@ -49,6 +51,9 @@ class WidgetShots : Instrumentation() {
     private val app: Context get() = targetContext
     private val widthDp = 380
     private val heightDp = 116
+    private val moves = { exercise: TrainingExercise ->
+        MotionClip.moves(app, exercise.movementId, exercise.name.resolve(), exercise.category, exercise.equipment)
+    }
     private fun px(dp: Int) = (dp * app.resources.displayMetrics.density).roundToInt()
 
     private var arguments: Bundle? = null
@@ -83,11 +88,14 @@ class WidgetShots : Instrumentation() {
     private fun direct(out: File) {
         val catalog = AssetCurriculumRepository(app).load().getOrThrow()
         val sample = NextClass.ordered(catalog).first { it.levelNumber == 4 && it.number == 20 }
-        val card = NextClassCard.of(sample, locked = false)
+        // As the provider builds it: the first main step that moves (this class opens with a tuck front-lever hold).
+        val card = NextClassCard.of(sample, locked = false, moves = moves)
         log.append("sample: $card\n")
         for (theme in StreetTheme.entries) runOnMainSync {
             AppType.init(app)
             val frames = WidgetRenderer.frames(app, card, theme, animate = true)
+            // A flip-book whose drawings are all alike stands still on the home screen (2.9.3).
+            log.append("${theme.key}: drawings 0 and 8 ${if (frames.bitmaps[0].sameAs(frames.bitmaps[8])) "THE SAME" else "differ"}\n")
             val built = WidgetRenderer.views(app, card, theme, frames, widthDp, heightDp, AppType.display(theme), WidgetRenderer.Layout.FULL)
             log.append("${theme.key}: ${frames.bitmaps.size} drawings of ${frames.bitmaps[0].width}x${frames.bitmaps[0].height} " +
                 "${frames.bitmaps[0].config}, flip every ${frames.intervalMs} ms; drawings ${frames.bytes} B, " +
@@ -117,10 +125,10 @@ class WidgetShots : Instrumentation() {
         val ordered = NextClass.ordered(catalog)
         val exam = ordered.first { it.levelNumber == 4 && it.isExam }
         val others = listOf(
-            Triple("exam", NextClassCard.of(exam, locked = false), widthDp),
-            Triple("locked", NextClassCard.of(ordered.first { it.levelNumber == 6 }, locked = true), widthDp),
-            Triple("all_done", NextClassCard.allDone(ordered.last()), widthDp),
-            Triple("narrow", NextClassCard.of(ordered.last(), locked = false), 280),
+            Triple("exam", NextClassCard.of(exam, locked = false, moves = moves), widthDp),
+            Triple("locked", NextClassCard.of(ordered.first { it.levelNumber == 6 }, locked = true, moves = moves), widthDp),
+            Triple("all_done", NextClassCard.allDone(ordered.last(), moves), widthDp),
+            Triple("narrow", NextClassCard.of(ordered.last(), locked = false, moves = moves), 280),
         )
         for ((name, other, width) in others) runOnMainSync {
             val theme = if (name == "locked") StreetTheme.NIGHT_PARK else StreetTheme.CONCRETE

@@ -1,5 +1,6 @@
 package com.justdataplease.streetgym.widget
 
+import com.justdataplease.streetgym.data.model.TrainingExercise
 import com.justdataplease.streetgym.data.model.TrainingProgram
 import kotlin.math.roundToInt
 
@@ -8,6 +9,8 @@ import kotlin.math.roundToInt
  * "Role · Lead" ("Basics & Endurance · Strict Pull-Up"); the widget puts the role in the headline and takes the lead
  * from the main part's first step, which is what the title names. A recovery day names its theme after the dot and
  * leads with an easy walk; an exam leads with its first test and lists how many targets it holds.
+ * A hold keeps one pose, so a flip-book of it stands still: the lead is the main part's first step that moves, and the
+ * line names it (2.9.3: 441 of the 1,000 classes open with a hold, and the widget stood still on those days).
  */
 data class NextClassCard(
     /** The class the tap opens; null opens the app's home (all done, or the first-run placement still to answer). */
@@ -23,7 +26,7 @@ data class NextClassCard(
     /** An exam's targets (its assessment sets); 0 otherwise. */
     val targets: Int,
     val minutes: Int?,
-    /** The movement the tile plays: the main part's first step. */
+    /** The movement the tile plays: the main part's first step that moves. */
     val movementId: String?,
     val movementName: String,
     /** The class's level is beyond the athlete's tier; the tap still opens it and the app shows the tiers. */
@@ -34,13 +37,17 @@ data class NextClassCard(
     companion object {
         const val SEPARATOR = " · "
 
-        /** The card for [program]; [opens] false sends the tap to the app's home instead of the class. */
-        fun of(program: TrainingProgram, locked: Boolean, opens: Boolean = true): NextClassCard {
+        /**
+         * The card for [program]; [opens] false sends the tap to the app's home instead of the class. [moves] says
+         * whether an exercise's clip moves (MotionClip.moves); a class of holds only leads with its first.
+         */
+        fun of(program: TrainingProgram, locked: Boolean, opens: Boolean = true,
+               moves: (TrainingExercise) -> Boolean = { true }): NextClassCard {
             val title = program.name.resolve().trim()
             val split = title.indexOf(SEPARATOR)
             val role = if (split > 0) title.substring(0, split).trim() else title
             val named = if (split > 0) title.substring(split + SEPARATOR.length).trim() else ""
-            val lead = program.exercises.firstOrNull()
+            val lead = lead(program, moves)
             val leadName = lead?.name?.resolve()?.trim().orEmpty()
             val kind = when {
                 program.isExam -> Kind.EXAM
@@ -67,11 +74,14 @@ data class NextClassCard(
         }
 
         /** Every class is done: the last class's lead keeps the tile moving, and the tap opens the app's home. */
-        fun allDone(last: TrainingProgram?): NextClassCard {
-            val lead = last?.exercises?.firstOrNull()
+        fun allDone(last: TrainingProgram?, moves: (TrainingExercise) -> Boolean = { true }): NextClassCard {
+            val lead = last?.let { lead(it, moves) }
             return NextClassCard(null, last?.levelNumber ?: 0, last?.number ?: 0, Kind.ALL_DONE, "", "", 0, null,
                 lead?.movementId, lead?.name?.resolve().orEmpty(), locked = false)
         }
+
+        private fun lead(program: TrainingProgram, moves: (TrainingExercise) -> Boolean): TrainingExercise? =
+            program.exercises.firstOrNull(moves) ?: program.exercises.firstOrNull()
 
         private const val RECOVERY = "recovery"
     }

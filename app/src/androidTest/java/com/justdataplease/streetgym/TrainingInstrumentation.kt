@@ -22,6 +22,8 @@ import com.justdataplease.streetgym.data.progress.Intensity
 import com.justdataplease.streetgym.data.progress.Placement
 import com.justdataplease.streetgym.data.progress.SharedPreferencesProgressRepository
 import com.justdataplease.streetgym.data.skills.SkillCurriculumReader
+import com.justdataplease.streetgym.data.points.Points
+import com.justdataplease.streetgym.data.progress.ActiveWorkout
 import com.justdataplease.streetgym.data.skills.SkillLevel
 import com.justdataplease.streetgym.data.skills.SkillSwitches
 import com.justdataplease.streetgym.leaderboard.Scores
@@ -32,7 +34,6 @@ import com.justdataplease.streetgym.ui.FocusWorkoutView
 import com.justdataplease.streetgym.ui.StreetTheme
 import com.justdataplease.streetgym.ui.HistoryView
 import com.justdataplease.streetgym.ui.ParkSceneView
-import com.justdataplease.streetgym.ui.RankBadgeView
 import com.justdataplease.streetgym.ui.WorkoutView
 import com.justdataplease.streetgym.ui.setPrescription
 import com.justdataplease.streetgym.ui.systemAnimationsEnabled
@@ -70,6 +71,8 @@ class TrainingInstrumentation : Instrumentation() {
         var failure: Throwable? = null
         try {
             prefsNames.forEach { check(preferences(it).edit().clear().commit()) }
+            // The scripted classes tick in milliseconds; the 30% rule (WorkoutFlow.counted) has its own unit tests.
+            Points.timeShare = 0.0
             // Isolate workout/timing tests from the external ad network using test-only cached ownership.
             check(preferences(Entitlement.PREFS).edit().putBoolean(Entitlement.PLUS_OWNED, true).commit())
             if (!basketball) check(preferences("street_basketball_progress").edit().putString("legacy_marker", "kept").commit())
@@ -120,7 +123,7 @@ class TrainingInstrumentation : Instrumentation() {
             runOnMainSync { warmup.performClick() }; settle()
             check(repository.activeWorkout()?.completedSetIds?.isEmpty() == true && scroller.scrollY == scrollY)
             runOnMainSync { first.performClick() }; settle()
-            check(repository.activeWorkout() == active)
+            check(untimed(repository.activeWorkout()) == untimed(active))
             report("Whole-section completion and undo preserve other sets and scroll position")
 
 
@@ -128,7 +131,7 @@ class TrainingInstrumentation : Instrumentation() {
             check(themeRow(StreetTheme.CONCRETE).isSelected && StreetTheme.entries.size == 3)
             pickTheme(StreetTheme.NIGHT_PARK)
             check(AppSettings(targetContext).theme == StreetTheme.NIGHT_PARK && AppColors.darkMode)
-            check(repository.activeWorkout() == active)
+            check(untimed(repository.activeWorkout()) == untimed(active))
             check(themeRow(StreetTheme.NIGHT_PARK).isSelected && !themeRow(StreetTheme.CONCRETE).isSelected)
             nav(R.string.nav_today); clickText(R.string.resume_workout)
             check((find { it is CheckBox && it.contentDescription?.toString()?.startsWith("Mark set ") == true } as CheckBox).isChecked)
@@ -136,7 +139,7 @@ class TrainingInstrumentation : Instrumentation() {
 
             runOnMainSync { activity.finish() }; settle(); launch()
             check(AppSettings(targetContext).theme == StreetTheme.NIGHT_PARK && AppColors.darkMode)
-            check(repository.activeWorkout() == active)
+            check(untimed(repository.activeWorkout()) == untimed(active))
             clickText(R.string.resume_workout)
             check((find { it is CheckBox && it.contentDescription?.toString()?.startsWith("Mark set ") == true } as CheckBox).isChecked)
             report("Cold activity restart retains the picked theme and training progress")
@@ -146,7 +149,7 @@ class TrainingInstrumentation : Instrumentation() {
             clickLabel(programs[2].name.resolve())
             val locked = find { it is TextView && it.text == targetContext.getString(R.string.assigned_later) }
             check(locked != null && !locked.isEnabled)
-            check(repository.activeWorkout() == active)
+            check(untimed(repository.activeWorkout()) == untimed(active))
             report("Future sessions remain locked after the sport split")
 
             val versionLine = targetContext.getString(R.string.version_format,
@@ -164,7 +167,7 @@ class TrainingInstrumentation : Instrumentation() {
             check(shown(R.string.inspect_only_note) && find { it is ExerciseAnimationView } != null)
             check(!shown(R.string.start_workout) && !shown(R.string.assigned_later) && !shown("Complete day"))
             check(find { it is TextView && it.text == targetContext.getString(R.string.inspect_only) && !it.isEnabled } != null)
-            check(repository.activeWorkout() == active && repository.completedProgramIds().isEmpty())
+            check(untimed(repository.activeWorkout()) == untimed(active) && repository.completedProgramIds().isEmpty())
             nav(R.string.nav_settings)
             clickLabel(versionLine); clickDialog(R.string.developer_hide)
             check(!AppSettings(targetContext).developerUnlocked && !AppSettings(targetContext).inspectAllDays)
@@ -240,26 +243,19 @@ class TrainingInstrumentation : Instrumentation() {
             check(find { it is TextView && it.text.startsWith(targetContext.getString(R.string.history_repeat, "")) } != null)
             report("Repeating a completed day asks before replacing a workout, logs a set done bigger than planned that counts toward skills, and leaves progress and Today unchanged")
 
-            // The owner (2.8.1): every level's shield is on show, and each closest skill names its next level. A repeated
-            // day of three push-up sets gives the push-up a next level to show.
+            // The owner (2.10.0): Skills shows the points and, below, every skill wearing its rank. A repeated day of
+            // three push-up sets gives the push-up its first sets.
             repository.startWorkout(repeatDay.id, System.currentTimeMillis() - 40 * 60_000L, repeat = true)
             repository.finishWorkout(credits = mapOf("pushup" to 3), doses = mapOf("pushup" to listOf(8, 8, 8)))
-            check(skills().closest(3).isNotEmpty())
+            check(skills().statuses.any { it.sets > 0 })
             nav(R.string.nav_today); nav(R.string.nav_progress); clickText(R.string.progress_tab_skills)
-            val ranks = SkillLevel.entries.filter { it > SkillLevel.NONE }
-            check(shown(targetContext.getString(R.string.skills_ranks).uppercase()))
-            check(ranks.all { shown(targetContext.resources.getQuantityString(R.plurals.skills_sets, it.sets, it.sets)) })
-            check(listOf(R.string.skills_level_1, R.string.skills_level_2, R.string.skills_level_3, R.string.skills_level_4,
-                R.string.skills_level_5).all { shown(it) })
-            val legend = checkNotNull(find { it.contentDescription?.startsWith(targetContext.getString(R.string.skills_ranks)) == true })
-            check(findAll { it is RankBadgeView }.size > ranks.size && shown(R.string.skills_next_short))
-            if (shots) {
-                runOnMainSync { legend.requestRectangleOnScreen(Rect(0, 0, legend.width, legend.height + 900), true) }; settle()
-                File(targetContext.getExternalFilesDir(null), "skills_levels.png").outputStream().use {
-                    uiAutomation.takeScreenshot().compress(Bitmap.CompressFormat.PNG, 100, it)
-                }
+            check(shown(targetContext.getString(R.string.skills_points_kicker).uppercase()))
+            check(!shown("Overall score".uppercase()) && !shown(R.string.leaderboard_all))
+            check(shown(R.string.skills_level_0))
+            if (shots) File(targetContext.getExternalFilesDir(null), "skills_points.png").outputStream().use {
+                uiAutomation.takeScreenshot().compress(Bitmap.CompressFormat.PNG, 100, it)
             }
-            report("Skills shows every level's shield with its sets, and a closest skill shows the next level's shield")
+            report("Skills shows the points and every skill wearing its rank, with nothing else above them")
             if (basketball) {
                 nav(R.string.nav_levels); clickLabel(catalog.levels.first().name.resolve()); clickLabel(programs.first().name.resolve())
                 clickText(R.string.start_workout)
@@ -876,6 +872,8 @@ class TrainingInstrumentation : Instrumentation() {
         }
     }
     private fun shown(resource: Int) = shown(targetContext.getString(resource))
+    /** A workout without its tick times (2.10.0), which change each time a set is ticked again. */
+    private fun untimed(active: ActiveWorkout?) = active?.copy(tickedAt = emptyMap())
     private fun findAll(predicate: (View) -> Boolean): List<View> {
         val result = mutableListOf<View>()
         runOnMainSync { fun visit(view: View) { if (predicate(view)) result += view; if (view is ViewGroup) for (i in 0 until view.childCount) visit(view.getChildAt(i)) }; visit(activity.window.decorView) }

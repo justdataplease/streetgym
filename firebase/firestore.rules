@@ -4,10 +4,15 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // A Google account. The anonymous user the app signs in with for progress analytics is none: it may only write
-    // analytics/, never a profile, a username, cloud progress or a score.
-    function signedIn() {
-      return request.auth != null && request.auth.token.firebase.sign_in_provider != 'anonymous';
+    // Anyone the app signed in, the anonymous user included (the owner, 2026-10-31): any athlete picks a username
+    // without Google, and Google linked later keeps the same uid, so the name, profile and score stay theirs.
+    function authed() {
+      return request.auth != null;
+    }
+
+    // A Google account: the only one that keeps cloud progress, which an anonymous user would lose with the phone.
+    function google() {
+      return authed() && request.auth.token.firebase.sign_in_provider != 'anonymous';
     }
 
     // Leaderboards: the app reads them without signing in (Plus); only the scheduled function writes them.
@@ -23,21 +28,21 @@ service cloud.firestore {
 
     // A username belongs to one account: claimed once, released only by its owner.
     match /usernames/{name} {
-      allow get: if signedIn();
+      allow get: if authed();
       // Claimed only together with the profile that uses it, so one account can't hoard names.
-      allow create: if signedIn()
+      allow create: if authed()
         && name.matches('^[a-z0-9_.]{3,20}$')
         && request.resource.data.keys().hasOnly(['uid'])
         && request.resource.data.uid == request.auth.uid
         && getAfter(/databases/$(database)/documents/users/$(request.auth.uid)).data.username.lower() == name;
-      allow delete: if signedIn() && resource.data.uid == request.auth.uid;
+      allow delete: if authed() && resource.data.uid == request.auth.uid;
       allow list, update: if false;
     }
 
-    // A profile: its username must be the one this account holds.
+    // A profile, any athlete's: its username must be the one this account holds.
     match /users/{uid} {
-      allow get, delete: if signedIn() && request.auth.uid == uid;
-      allow create, update: if signedIn() && request.auth.uid == uid
+      allow get, delete: if authed() && request.auth.uid == uid;
+      allow create, update: if authed() && request.auth.uid == uid
         && request.resource.data.username is string
         && request.resource.data.username.matches('^[A-Za-z0-9_.]{3,20}$')
         && getAfter(/databases/$(database)/documents/usernames/$(request.resource.data.username.lower())).data.uid == uid
@@ -45,29 +50,30 @@ service cloud.firestore {
         && request.resource.data.visible is bool;
       allow list: if false;
 
-      // Cloud progress (Pro): only its owner reads or writes it.
+      // Cloud progress (Pro): only its owner reads or writes it, with Google.
       match /data/{doc} {
-        allow read, write: if signedIn() && request.auth.uid == uid && doc in ['progress', 'library'];
+        allow read, write: if google() && request.auth.uid == uid && doc in ['progress', 'library'];
       }
     }
 
-    // Public scores (version 3, round 11): written by their owner under their profile's name, which the account still
-    // holds, read only by the function, which also checks that the overall adds up from the families. The time is the
-    // server's, so the function's "changed since the last run" check can't be gamed. At most 16 families, one per
-    // skill family (FAMILY_CEILINGS in functions/boards.py).
+    // Public scores (version 4, the owner, 2026-10-31): all-time points and this month's (functions/boards.py), written
+    // by their owner, anonymous or Google, under their profile's name, which the account still holds, and read only by
+    // the function. month is the UTC month month_points belong to. The time is the server's, so the function's "changed
+    // since the last run" check can't be gamed.
     match /scores/{uid} {
-      allow create, update: if signedIn() && request.auth.uid == uid
-        && request.resource.data.keys().hasOnly(['v', 'username', 'country', 'overall', 'families', 'verified', 'updated_at'])
-        && request.resource.data.v == 3
+      allow create, update: if authed() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['v', 'username', 'country', 'points', 'month', 'month_points', 'updated_at'])
+        && request.resource.data.v == 4
         && request.resource.data.username == get(/databases/$(database)/documents/users/$(uid)).data.username
         && get(/databases/$(database)/documents/usernames/$(request.resource.data.username.lower())).data.uid == uid
         && request.resource.data.updated_at == request.time
         && request.resource.data.country is string && request.resource.data.country.matches('^[A-Z]{2}$')
-        && request.resource.data.overall is int
-        && request.resource.data.overall >= 0 && request.resource.data.overall <= 1000
-        && request.resource.data.families is map && request.resource.data.families.size() <= 16
-        && request.resource.data.verified is list && request.resource.data.verified.size() <= 120;
-      allow delete: if signedIn() && request.auth.uid == uid;
+        && request.resource.data.points is int
+        && request.resource.data.points >= 0 && request.resource.data.points <= 100000000
+        && request.resource.data.month is string && request.resource.data.month.matches('^[0-9]{4}-(0[1-9]|1[0-2])$')
+        && request.resource.data.month_points is int
+        && request.resource.data.month_points >= 0 && request.resource.data.month_points <= request.resource.data.points;
+      allow delete: if authed() && request.auth.uid == uid;
       allow read: if false;
     }
 
@@ -104,7 +110,7 @@ service cloud.firestore {
 
     // No accountUid, or the signed-in Google account's own.
     function ownAccount(data) {
-      return !('accountUid' in data) || signedIn() && data.accountUid == request.auth.uid;
+      return !('accountUid' in data) || google() && data.accountUid == request.auth.uid;
     }
 
     function validInstall(data) {

@@ -67,6 +67,7 @@
     <string name="effort_title">How hard did that feel?</string>
     <string name="effort_item">RPE %1$d</string>
     <string name="workout_saved">Workout completed</string>
+    <string name="workout_points">Workout completed · +%1$s points</string>
     <string name="abandon_title">End this session?</string>
     <string name="abandon_message">Checked sets from this active session will be cleared.</string>
     <string name="abandon">End session</string>

@@ -180,7 +180,7 @@ class AnalyticsPayloadTest {
     }
 
     @Test fun skillsAreTheStartedOnesWithLevelSetsAndBest() {
-        val progress = book.progress(listOf(SkillCredit("sg:l01:p0001", sets = mapOf("pullup" to 12), seconds = 1_800L,
+        val progress = book.progress(listOf(SkillCredit("sg:l01:p0001", sets = mapOf("pullup" to 12),
             doses = mapOf("pullup" to List(12) { 9 }))))
         val skills = AnalyticsPayload.skills(progress)
 

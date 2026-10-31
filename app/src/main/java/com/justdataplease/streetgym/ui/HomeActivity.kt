@@ -113,16 +113,15 @@ import com.justdataplease.streetgym.data.progress.LevelReplay
 import com.justdataplease.streetgym.data.progress.NextClass
 import com.justdataplease.streetgym.data.progress.Placement
 import com.justdataplease.streetgym.data.progress.SharedPreferencesProgressRepository
+import com.justdataplease.streetgym.data.points.Points
+import com.justdataplease.streetgym.data.points.PointsTotal
 import com.justdataplease.streetgym.data.progress.WorkoutSession
-import com.justdataplease.streetgym.data.skills.OverallScore
 import com.justdataplease.streetgym.data.skills.SkillBook
 import com.justdataplease.streetgym.data.skills.SkillCurriculumReader
-import com.justdataplease.streetgym.data.skills.SkillGroup
 import com.justdataplease.streetgym.data.skills.SkillProgress
 import com.justdataplease.streetgym.data.skills.SkillFamilySpec
 import com.justdataplease.streetgym.data.skills.SkillSwitches
 import com.justdataplease.streetgym.data.skills.switchedOff
-import com.justdataplease.streetgym.data.skills.trained
 import com.justdataplease.streetgym.widget.NextClassWidget
 import java.text.DateFormat
 import java.text.NumberFormat
@@ -225,12 +224,12 @@ open class HomeActivity : Activity() {
     private lateinit var cloudSync: CloudSync
     private lateinit var analytics: Analytics
     private lateinit var leaderboard: LeaderboardRepository
-    private var boardSkill: String? = null
+    /** The leaderboard shows this month's points instead of all time's (all time first, the owner, 2.10.0). */
+    private var boardMonth = false
     private var boardInCountry = false
     private val cloudHandler = Handler(Looper.getMainLooper())
     // A burst of changes (a finished workout, My workouts edits) becomes one sync and at most one score write.
     private val cloudCatchUp = Runnable { cloudSync.sync(force = true, done = ::afterSync) }
-    private var skillGroup: SkillGroup? = null
     private var currentScreen: Screen? = null
     private var restTimer: CountDownTimer? = null
     private var restEndsAtEpochMillis: Long? = null
@@ -406,30 +405,20 @@ open class HomeActivity : Activity() {
             page.addWithMargins(card().apply { addView(bodyText(getString(R.string.leaderboard_unavailable))) }, topDp = 12)
             return
         }
-        val uid = Cloud.uid(this)?.takeIf { tier.account }
+        val uid = Cloud.profileUid(this)?.takeIf { tier.account }
         val profile = uid?.let(accountStore::profile)
         val country = profile?.country ?: Locale.getDefault().country.takeIf(Countries::valid)
+        page.addWithMargins(segmentedSwitch(listOf(getString(R.string.leaderboard_all), getString(R.string.leaderboard_month)),
+            if (boardMonth) 1 else 0) { boardMonth = it == 1; renderProgress() }, width = ViewGroup.LayoutParams.WRAP_CONTENT, topDp = 12)
         if (country != null) page.addWithMargins(segmentedSwitch(listOf(getString(R.string.leaderboard_world),
             "${Countries.flag(country)} ${Countries.name(country)}"), if (boardInCountry) 1 else 0) {
             boardInCountry = it == 1; renderProgress()
-        }, width = ViewGroup.LayoutParams.WRAP_CONTENT, topDp = 12)
-        val families = book.families.map { it.spec }
-        val boardName = families.firstOrNull { it.id == boardSkill }?.name ?: run { boardSkill = null; getString(R.string.leaderboard_overall) }
-        page.addWithMargins(secondaryButton(getString(R.string.leaderboard_board, boardName)) {
-            val choices = listOf<Pair<String?, String>>(null to getString(R.string.leaderboard_overall)) + families.map { it.id to it.name }
-            AlertDialog.Builder(this).setTitle(R.string.leaderboard_pick)
-                .setItems(choices.map { it.second }.toTypedArray()) { _, which -> boardSkill = choices[which].first; renderProgress() }
-                .setNegativeButton(R.string.cancel, null).show()
-        }, topDp = 10)
-        val id = Boards.id(boardSkill, country?.takeIf { boardInCountry })
+        }, width = ViewGroup.LayoutParams.WRAP_CONTENT, topDp = 10)
+        val id = Boards.id(boardMonth, country?.takeIf { boardInCountry })
         val holder = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         page.addWithMargins(holder, topDp = 12)
         page.addWithMargins(bodyText(getString(R.string.leaderboard_how), 12f), topDp = 14)
-        val score = if (uid != null && profile != null) currentScore(book).let { if (boardSkill == null) it.overall else it.families[boardSkill] ?: 0 } else 0
-        // Family boards rank ten times the family's raw value; they read on the same scale as Skills, out of 100.
-        val scoreMax = OverallScore.scoreMax(book.families)
-        val overallBoard = boardSkill == null
-        fun shown(points: Int): String = scoreText(if (overallBoard || scoreMax == 0) points else points * 100.0 / scoreMax)
+        val score = if (uid != null && profile != null) pointsTotal(book).let { if (boardMonth) it.month else it.all } else 0
         fun show(board: Board?, loading: Boolean) {
             holder.removeAllViews()
             if (board == null) { holder.addView(bodyText(getString(if (loading) R.string.leaderboard_loading else R.string.leaderboard_offline), 14f)); return }
@@ -439,8 +428,8 @@ open class HomeActivity : Activity() {
                     profile == null -> addView(bodyText(getString(R.string.account_pick_name), 14f))
                     !profile.visible -> addView(bodyText(getString(R.string.leaderboard_hidden), 14f))
                     else -> addView(titleText(when (val standing = Boards.standing(board, profile.username, score)) {
-                        is Standing.Rank -> getString(R.string.leaderboard_you_rank, standing.rank, shown(score))
-                        is Standing.TopPercent -> getString(R.string.leaderboard_you_top, standing.percent, shown(score))
+                        is Standing.Rank -> getString(R.string.leaderboard_you_rank, standing.rank, pointsText(score))
+                        is Standing.TopPercent -> getString(R.string.leaderboard_you_top, standing.percent, pointsText(score))
                         null -> getString(R.string.leaderboard_you_none)
                     }, 16f))
                 }
@@ -456,8 +445,7 @@ open class HomeActivity : Activity() {
                     addView(bodyText(getString(R.string.leaderboard_rank, index + 1), 14f), LinearLayout.LayoutParams(dp(48), ViewGroup.LayoutParams.WRAP_CONTENT))
                     addView(oneLineText("${Countries.flag(entry.country)} ${entry.username}", bold = mine),
                         LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
-                    if (overallBoard) addView(bodyText(tierName(OverallScore.Tier.of(entry.score)), 12f).apply { setPadding(0, 0, dp(10), 0) })
-                    addView(titleText(shown(entry.score), 15f))
+                    addView(titleText(pointsText(entry.score), 15f))
                 }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { bottomMargin = dp(4) })
             }
             if (board.updatedAt > 0) holder.addView(bodyText(getString(R.string.leaderboard_updated,
@@ -467,7 +455,7 @@ open class HomeActivity : Activity() {
         show(leaderboard.cached(id)?.first, loading = true)
         leaderboard.board(id) { board ->
             // Only if the athlete is still looking at this board.
-            if (holder.isAttachedToWindow && Boards.id(boardSkill, country?.takeIf { boardInCountry }) == id) show(board, loading = false)
+            if (holder.isAttachedToWindow && Boards.id(boardMonth, country?.takeIf { boardInCountry }) == id) show(board, loading = false)
         }
     }
 
@@ -481,7 +469,7 @@ open class HomeActivity : Activity() {
 
     /** Something to save changed on the phone: sync and update the score shortly, once for a burst of changes. */
     private fun cloudChanged() {
-        if (!Entitlement.tier(this).account || Cloud.uid(this) == null) return
+        if (!Entitlement.tier(this).account || Cloud.profileUid(this) == null) return
         cloudHandler.removeCallbacks(cloudCatchUp)
         cloudHandler.postDelayed(cloudCatchUp, 3_000L)
     }
@@ -493,7 +481,7 @@ open class HomeActivity : Activity() {
     private fun publishScore() {
         val book = skillBook ?: return
         if (!Entitlement.tier(this).account) return
-        val uid = Cloud.uid(this) ?: return
+        val uid = Cloud.profileUid(this) ?: return
         val profile = accountStore.profile(uid) ?: return
         val published = accountStore.publishedScore(uid)
         if (!profile.visible) {
@@ -501,7 +489,7 @@ open class HomeActivity : Activity() {
             return
         }
         val now = System.currentTimeMillis()
-        val score = currentScore(book)
+        val score = Scores.from(pointsTotal(book))
         if (!Scores.shouldPublish(published?.first, published?.second ?: 0, score, now)) return
         leaderboard.publish(uid, profile, score) { ok -> if (ok) accountStore.savePublishedScore(uid, score, now) }
     }
@@ -526,7 +514,7 @@ open class HomeActivity : Activity() {
             tier = Entitlement.tier(this),
             debug = BuildConfig.DEBUG,
             skills = progress?.let(AnalyticsPayload::skills),
-            score = progress?.overall?.score,
+            score = null,
             switches = SkillSwitches.format(settings.skillSwitches),
             completedClasses = progressRepository.completedProgramIds().size,
             trainedClasses = history.count { !it.manuallyCompleted },
@@ -541,9 +529,20 @@ open class HomeActivity : Activity() {
 
     /** Skills from the classes that count ([Scores.credits]): the Skills tab and the board agree. */
     private fun skillProgress(book: SkillBook, history: List<WorkoutSession> = progressRepository.sessionHistory()): SkillProgress =
-        book.progress(Scores.credits(history) { id -> library.customDay(id)?.let(CustomDays::estimatedMinutes) ?: readyIndex[id]?.estimatedMinutes })
+        book.progress(Scores.credits(history))
 
-    private fun currentScore(book: SkillBook): Score = Scores.from(skillProgress(book))
+    /**
+     * The athlete's points ([Points]): every class's, plus the ranks'. This month's are the month's classes and the ranks
+     * reached since it began (the ranks then, from the classes before, against the ranks now).
+     */
+    private fun pointsTotal(book: SkillBook, history: List<WorkoutSession> = progressRepository.sessionHistory(),
+                            now: Long = System.currentTimeMillis()): PointsTotal {
+        val start = Points.monthStart(now)
+        val (before, during) = history.partition { it.completedAtEpochMillis < start }
+        val ranks = Points.chevrons(skillProgress(book, history).statuses)
+        val ranksBefore = if (during.isEmpty()) ranks else Points.chevrons(skillProgress(book, before).statuses)
+        return PointsTotal(Points.classes(history) + ranks, Points.classes(during) + (ranks - ranksBefore).coerceAtLeast(0), Points.month(now))
+    }
 
     /** Rates workouts for this athlete (WorkoutEffort): the typical class of their level and their best sets. */
     private fun workoutEffort(): WorkoutEffort? {
@@ -1044,7 +1043,11 @@ open class HomeActivity : Activity() {
             background = roundedDrawable(AppColors.PRIMARY_DARK, dp(24).toFloat())
             addView(bodyText(getString(R.string.brand_kicker), 12f).apply { setTextColor(AppColors.HERO_KICKER) })
             addWithMargins(titleText(getString(R.string.brand_line), 30f).apply { setTextColor(AppColors.HERO_TEXT) }, topDp = 8)
-            addWithMargins(ParkSceneView(context), height = dp(180), topDp = 4)
+            // With a username, the park says "Well done, <name>!" as the final skill lands (the owner, 2.10.0).
+            addWithMargins(ParkSceneView(context).apply {
+                username = Cloud.profileUid(this@HomeActivity)?.let(accountStore::profile)?.username
+                bubbleStyle = ParkSceneView.BubbleStyle.CLOUD
+            }, height = dp(180), topDp = 4)
         }
         // A new athlete first says where to start; that screen brings its own header, and Today's day card follows once
         // it's answered or skipped.
@@ -2596,18 +2599,24 @@ open class HomeActivity : Activity() {
                 val flow = workoutFlow(program)
                 val ticked = active?.completedSetIds.orEmpty()
                 val easier = active?.easierExercises.orEmpty()
+                // Only the exercises that ran their share of the time count, for ranks and points (WorkoutFlow.counted).
+                val counted = if (active == null) emptySet() else flow.counted(ticked, active.tickedAt, active.startedAtEpochMillis)
                 val book = skillBook
-                val credits = if (book == null) emptyMap() else flow.credits(ticked, easier, ::skillMovement)
+                val credits = if (book == null) emptyMap() else flow.credits(counted, easier, ::skillMovement)
                 val doses = if (book == null) emptyMap()
-                    else flow.doses(ticked, easier, active?.done.orEmpty(), ::skillMovement) { id -> book.skill(id)?.standard }
+                    else flow.doses(counted, easier, active?.done.orEmpty(), ::skillMovement) { id -> book.skill(id)?.standard }
+                val grades = catalog?.movementGrades.orEmpty()
+                val points = flow.points(counted, easier, active?.done.orEmpty(), ::skillMovement, { id -> book?.skill(id)?.standard },
+                    { id -> id?.let(grades::get) ?: 1 })
                 // A repeat's rating is kept on its own history entry only; see WorkoutSession.
-                val session = progressRepository.finishWorkout(effortRating = values[selected], credits = credits, doses = doses)
+                val session = progressRepository.finishWorkout(effortRating = values[selected], credits = credits, doses = doses,
+                    points = points)
                 cloudChanged()
                 if (session != null) analytics.classFinished(AnalyticsPayload.sessionId(session),
                     AnalyticsPayload.session(session, program, flow, active, leftOutKeys(program, flow), ::analyticsMovement), ::analyticsSnapshot)
                 clearRest()
-                Toast.makeText(this, if (session?.repeat == true) R.string.repeat_saved else R.string.workout_saved,
-                    Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(if (session?.repeat == true) R.string.repeat_points else R.string.workout_points,
+                    pointsText(points)), Toast.LENGTH_SHORT).show()
                 backStack.clear()
                 showScreen(
                     Screen.Progress,
@@ -2712,16 +2721,9 @@ open class HomeActivity : Activity() {
                 page.addWithMargins(
                     skillsContent(
                         progress,
-                        Scores.markedComplete(history),
-                        skillGroup,
-                        onGroup = { group ->
-                            skillGroup = group
-                            renderProgress()
-                        },
+                        pointsTotal(skills, history).all,
                         onOpen = { status, family, statuses ->
-                            val switches = settings.skillSwitches
-                            showSkillSheet(status, family, statuses, progress.trained(switches).overall,
-                                off = switches.isRungOff(family.spec.id, status.skill.rung))
+                            showSkillSheet(status, family, statuses, off = settings.skillSwitches.isRungOff(family.spec.id, status.skill.rung))
                         },
                         switches = settings.skillSwitches,
                         // Free: one ad card partway down the ladders.
@@ -2810,16 +2812,17 @@ open class HomeActivity : Activity() {
     private fun renderSettings() {
         val page = verticalPage()
 
+        // The profile comes first, for every tier: a username without signing in, and Connect Google below it to keep
+        // it (the owner, 2026-10-31). A build without Firebase shows none.
+        if (Cloud.available(this)) {
+            page.addView(sectionLabel(getString(R.string.profile_section)))
+            page.addWithMargins(AccountSettingsView(this, cloudSync) { publishScore() }, bottomDp = 16)
+        }
         page.addView(sectionLabel(getString(R.string.theme_section)))
         page.addWithMargins(themePicker(settings.theme) { picked ->
             settings.theme = picked
             recreate()
         }, bottomDp = 18)
-        // Plus and Pro sign in; a build without Firebase shows no account at all.
-        if (Cloud.signInAvailable(this) && (Entitlement.tier(this).account || Cloud.uid(this) != null)) {
-            page.addView(sectionLabel(getString(R.string.account_section)))
-            page.addWithMargins(AccountSettingsView(this, cloudSync) { publishScore() }, bottomDp = 16)
-        }
         val tiersPanel = TiersPanel(this, billing)
         page.addWithMargins(tiersPanel, bottomDp = 16)
         if (BuildConfig.DEBUG) page.addWithMargins(card().apply {
@@ -2894,7 +2897,7 @@ open class HomeActivity : Activity() {
                 settings.placementDone = false
                 placementAnswers.fill(-1)
                 // The score goes up again from zero, at once rather than after the usual ten minutes.
-                Cloud.uid(this)?.let { accountStore.savePublishedScore(it, null, 0) }
+                Cloud.profileUid(this)?.let { accountStore.savePublishedScore(it, null, 0) }
                 cloudChanged()
                 Toast.makeText(this, R.string.reset_done, Toast.LENGTH_LONG).show()
                 openRoot(Screen.Dashboard)

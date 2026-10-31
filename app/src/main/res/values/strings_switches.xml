@@ -28,6 +28,5 @@
 
     <!-- On the Skills screen. -->
     <string name="skills_switched_off">Switched off</string>
-    <string name="skills_switched_off_note">Switched off in Settings: it stays out of your score until you switch it back on.</string>
-    <string name="skills_score_trained">Out of the skills you train. On the leaderboard: %1$s of %2$s.</string>
+    <string name="skills_switched_off_note">Switched off in Settings: the classes leave it out until you switch it back on.</string>
 </resources>

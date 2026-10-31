@@ -3,7 +3,10 @@ package com.justdataplease.streetgym.account
 import org.junit.Assert.*
 import org.junit.Test
 
-/** The anonymous user progress analytics signs in with is no account: Cloud.uid, sync and the leaderboard never see it. */
+/**
+ * The anonymous user is no account: Cloud.uid and cloud progress never see it. It may hold a profile (Cloud.profileUid),
+ * and connecting Google links it, so the uid, username and score stay.
+ */
 class CloudAccountTest {
     private data class User(val uid: String, val anonymous: Boolean)
 

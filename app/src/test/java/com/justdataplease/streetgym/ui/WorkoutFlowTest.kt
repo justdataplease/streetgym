@@ -189,6 +189,47 @@ class WorkoutFlowTest {
 
     private fun standard(seconds: Boolean = false, window: Boolean = false) = SkillStandard(seconds, 1, listOf(1), window = window)
 
+    @Test fun anExerciseCountsOnlyOnceItRanAThirdOfItsTime() {
+        // Pull-ups, 3 sets of 8 at 3 s a rep with 60 s rests: 24 + 84 + 84 = 192 s planned, so 57.6 s count. Dips: 108 s.
+        val flow = WorkoutFlow.of("p1", listOf("main" to main))
+        val pullups = flow.steps.filter { it.exercise.id == "pullup" }
+        val dips = flow.steps.filter { it.exercise.id == "dip" }.map { it.key }
+        assertEquals(192.0, pullups.sumOf(WorkoutFlow::plannedSeconds), 1e-9)
+        val start = 1_000_000L
+        val sets = pullups.map { it.key } + dips
+        // Ticked a minute apart, both count; all five within 20 seconds, neither does.
+        val slow = sets.mapIndexed { index, key -> key to start + (index + 1) * 60_000L }.toMap()
+        assertEquals(sets.toSet(), flow.counted(slow.keys, slow, start, 0.3))
+        val fast = sets.mapIndexed { index, key -> key to start + (index + 1) * 4_000L }.toMap()
+        assertEquals(emptySet<String>(), flow.counted(fast.keys, fast, start, 0.3))
+        // The pull-ups done, the dips ticked a second apart right after: only the pull-ups count.
+        val mixed = pullups.mapIndexed { index, step -> step.key to start + (index + 1) * 60_000L }.toMap() +
+            dips.mapIndexed { index, key -> key to start + 180_000L + (index + 1) * 1_000L }
+        assertEquals(pullups.map { it.key }.toSet(), flow.counted(mixed.keys, mixed, start, 0.3))
+        // Ticked together after three minutes, the sets share the time by their plan: enough for both.
+        val together = sets.associateWith { start + 180_000L }
+        assertEquals(together.keys, flow.counted(together.keys, together, start, 0.3))
+        // A class started before ticks were timed counts every tick, and so does the rule at 0.
+        assertEquals(together.keys, flow.counted(together.keys, emptyMap(), start, 0.3))
+        assertEquals(fast.keys, flow.counted(fast.keys, fast, start, 0.0))
+    }
+
+    @Test fun pointsAreRepsTimesDifficultyAndAHoldEarnsARepEveryThreeSeconds() {
+        fun moving(exercise: TrainingExercise) = exercise.copy(movementId = exercise.id)
+        val hold = moving(exercise("wall_handstand", 2)).let { e -> e.copy(sets = e.sets.map { it.copy(repetitions = null, durationSeconds = 30) }) }
+        val flow = WorkoutFlow.of("p1", listOf("warmup" to warmup, "practice" to listOf(hold), "main" to main.map(::moving)))
+        val grades = mapOf("wall_handstand" to 2, "pullup" to 2, "dip" to 1)
+        fun points(counted: Set<String> = flow.keys.toSet(), done: Map<String, Int> = emptyMap()) =
+            flow.points(counted, emptySet(), done, { it.id }, { null }, { id -> grades[id] ?: 1 })
+        // Holds 2 × 10 × 2, pull-ups 3 × 8 × 2, dips 2 × 8 × 1; the warm-up earns nothing.
+        assertEquals(40 + 48 + 16, points())
+        // A logged number counts up to twice the plan.
+        val pullup = flow.steps.first { it.exercise.id == "pullup" }.key
+        assertEquals(40 + (16 + 8 + 8) * 2 + 16, points(done = mapOf(pullup to 100)))
+        // Only the counted sets earn.
+        assertEquals(48, points(counted = flow.steps.filter { it.exercise.id == "pullup" }.map { it.key }.toSet()))
+    }
+
     @Test fun anExamTargetStartsReachedOnlyWhenEverySetWasDoneInFullAsWritten() {
         val easierOption = EasierOption("assisted_pullup", LocalizedText("Assisted Pull-Up"))
         val pullup = exercise("pullup", 2).copy(assessment = true, easier = easierOption)

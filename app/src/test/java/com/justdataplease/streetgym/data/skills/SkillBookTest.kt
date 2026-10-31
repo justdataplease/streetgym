@@ -110,22 +110,12 @@ class SkillBookTest {
     }
 
     @Test
-    fun aClassCountsOnlyWhenItRanLongEnough() {
-        // p6 plans 50 minutes: 20% is 10.
-        assertEquals(0, book.progress(listOf(SkillCredit("p6", seconds = 9 * 60L))).status("pullup").sets)
-        assertEquals(2, book.progress(listOf(SkillCredit("p6", seconds = 10 * 60L))).status("pullup").sets)
-        // Classes without a planned length always count.
-        assertEquals(2, book.progress(listOf(SkillCredit("p3", seconds = 0))).status("pullup").sets)
-    }
-
-    @Test
     fun anOwnDayCountsItsTicksAsTheyAre() {
         // Not in the program: four pull-up sets count, with no prescription to cap them.
-        assertEquals(4, book.progress(listOf(SkillCredit("custom:a", mapOf("pullup" to 4), seconds = 600, minutes = 20))).status("pullup").sets)
+        assertEquals(4, book.progress(listOf(SkillCredit("custom:a", mapOf("pullup" to 4)))).status("pullup").sets)
         // Without doses its sets count toward no target.
         assertEquals(0, book.progress(listOf(SkillCredit("custom:a", mapOf("pullup" to 40)))).status("pullup").atTargets[0])
-        // It still has to run 20% of its length, and an own day without ticks counts nothing.
-        assertEquals(0, book.progress(listOf(SkillCredit("custom:a", mapOf("pullup" to 4), seconds = 200, minutes = 20))).status("pullup").sets)
+        // An own day without ticks counts nothing.
         assertEquals(0, book.progress(listOf(SkillCredit("custom:b"))).status("pullup").sets)
         // Unknown movements are left out.
         assertEquals(book.progress(emptyList()), book.progress(listOf(SkillCredit("custom:c", mapOf("burpee" to 9)))))
@@ -180,17 +170,6 @@ class SkillBookTest {
         assertTrue(front.beyondProgram)
         assertEquals(0, book.progress(listOf(SkillCredit("p1"), SkillCredit("p2"))).status("full_front").sets)
         assertFalse(book.skill("pullup")!!.beyondProgram)
-    }
-
-    @Test
-    fun closestListsOnlySkillsTheAthleteStarted() {
-        val progress = book.progress(listOf(SkillCredit("p1")))
-        assertEquals(listOf("assisted_pullup"), progress.closest(3).map { it.skill.id })
-        // The archer's sets make the rungs below Intermediate; the pull-up, with no sets of its own, has nothing to raise
-        // yet, while the assisted pull-up's own sets keep it open.
-        val both = book.progress(listOf(sets("archer_pullup", 30, 3), SkillCredit("p1")))
-        assertEquals(SkillLevel.INTERMEDIATE, both.status("pullup").level)
-        assertEquals(setOf("archer_pullup", "assisted_pullup"), both.closest(3).map { it.skill.id }.toSet())
     }
 
     @Test
@@ -264,33 +243,24 @@ class SkillBookTest {
         // The freestanding handstand is a plain hold now: no skill's time is a practice window.
         assertTrue(SkillStandards.ALL.values.none { it.window })
         // Every rung has a coach's standard: five targets that never drop, Elite above Beginner, and a grade that never
-        // drops up the ladder; and a value.
+        // drops up the ladder.
         SkillStandards.ALL.forEach { (id, standard) ->
             assertEquals(id, 5, standard.targets.size)
             assertTrue("$id ${standard.targets}", standard.targets.zipWithNext().all { (a, b) -> b >= a } && standard.targets[0] > 0)
             assertTrue("$id ${standard.targets}", standard.targets.last() > standard.targets.first())
             assertTrue(id, standard.grade in 1..5)
         }
-        assertEquals("rungs without a value", emptyList<String>(), skillIds.filterNot(OverallScore.SKILL_VALUES::containsKey))
-        assertEquals("values for no rung", emptyList<String>(), OverallScore.SKILL_VALUES.keys.filterNot(skillIds::contains))
         everyRung.families.forEach { family ->
-            val values = family.skills.map { it.value }
-            assertEquals("${family.spec.id} values $values", values.sorted(), values)
-            assertTrue("${family.spec.id} has a value", family.ceiling > 0)
             val grades = family.skills.map { it.difficulty }
             assertEquals("${family.spec.id} grades $grades", grades.sorted(), grades)
         }
-        // The full planche and the one-arm pull-up are the hardest: extreme, and the planche the most valuable.
+        // The full planche and the one-arm pull-up are the hardest: extreme.
         assertEquals(5, SkillStandards.of("full_planche").grade)
         assertEquals(5, SkillStandards.of("one_arm_pullup").grade)
         listOf("straddle_planche", "full_front", "full_flag").forEach { assertTrue(it, SkillStandards.of(it).grade in 4..5) }
         listOf("strict_muscleup", "full_back").forEach { assertEquals(it, 4, SkillStandards.of(it).grade) }
         listOf("one_arm_handstand", "hefesto").forEach { assertEquals(it, 5, SkillStandards.of(it).grade) }
         assertEquals(3, SkillStandards.of("shrimp_squat").grade)
-        assertEquals("full_planche", OverallScore.SKILL_VALUES.maxBy { it.value }.key)
-        // Round 11's values: the one-arm handstand tops the handstand family at the one-arm pull-up's 110.
-        assertEquals(mapOf("one_arm_handstand" to 110, "hefesto" to 50, "shrimp_squat" to 14),
-            listOf("one_arm_handstand", "hefesto", "shrimp_squat").associateWith { OverallScore.SKILL_VALUES.getValue(it) })
     }
 
     @Test
@@ -311,39 +281,6 @@ class SkillBookTest {
             .filter { it.optString("category") in skillCategories }.map { it.getString("id") }
             .filterNot { book.skill(it) != null || it in foundations }
         assertEquals("skill movements outside every ladder", emptyList<String>(), loose)
-    }
-
-    @Test
-    fun theDeployedLeaderboardFunctionAcceptsEveryFamily() {
-        // boards.py refuses a family it doesn't know or above its ceiling, and checks the overall against the sum of all
-        // its ceilings. Score version 3 (round 11) knows the 16 families and nothing retired: the Nordic curl is gone.
-        val boards = File("../firebase/functions/boards.py").readText()
-        val ceilings = Regex("\"(\\w+)\": (\\d+)").findAll(boards.substringAfter("FAMILY_CEILINGS = {").substringBefore("}"))
-            .associate { it.groupValues[1] to it.groupValues[2].toInt() }
-        assertEquals(everyRung.families.associate { it.spec.id to it.ceiling } + OverallScore.RETIRED_CEILINGS, ceilings)
-        assertTrue(OverallScore.RETIRED_CEILINGS.keys.none { id -> everyRung.families.any { it.spec.id == id } })
-        assertEquals(ceilings.values.sum(), OverallScore.scoreMax(everyRung.families))
-        assertEquals(emptyMap<String, Int>(), OverallScore.RETIRED_CEILINGS)
-        assertFalse("nordic" in ceilings)
-        assertEquals(887, ceilings.values.sum())
-        assertEquals(mapOf("handstand" to 110, "shrimp" to 14, "hefesto" to 50), listOf("handstand", "shrimp", "hefesto").associateWith(ceilings::getValue))
-        assertEquals(3, Regex("(?m)^VERSION = (\\d+)").find(boards)?.groupValues?.get(1)?.toInt())
-        assertEquals(3, com.justdataplease.streetgym.leaderboard.Score.VERSION)
-        // The parallel dip carries the dip family's old top value, the straight-bar dip's 12.
-        assertEquals(12, OverallScore.SKILL_VALUES["parallel_dip"])
-        // What the app publishes passes the function's check (boards.py _valid): known families, each within its
-        // ceiling, and an overall that adds up from them.
-        fun elite(vararg ids: String) = everyRung.progress(ids.map { id ->
-            val target = SkillStandards.of(id).target(SkillLevel.ELITE)!!
-            SkillCredit("custom:$id", mapOf(id to SkillLevel.ELITE.sets), doses = mapOf(id to List(SkillLevel.ELITE.sets) { target }))
-        })
-        val tops = everyRung.families.map { it.skills.last().id }
-        listOf(elite(*tops.toTypedArray()), elite("pullup", "parallel_dip", "squat"), elite("hollow_body_hold")).forEach { progress ->
-            val score = Scores.from(progress)
-            assertTrue(score.families.toString(), score.families.all { (id, points) -> id in ceilings && points in 0..10 * ceilings.getValue(id) })
-            val expected = (OverallScore.MAX * score.families.values.sum() / 10.0 / ceilings.values.sum()).roundToInt()
-            assertTrue("${score.overall} published, $expected expected", abs(expected - score.overall) <= 2)
-        }
     }
 
     @Test

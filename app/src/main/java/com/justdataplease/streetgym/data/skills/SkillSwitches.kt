@@ -119,14 +119,3 @@ fun TrainingProgram.switchedOff(switches: SkillSwitches): Boolean {
     val work = (practice + exercises).filterNot { it.readinessCheck }
     return work.isNotEmpty() && work.all { exercise -> exercise.movementId?.let(switches::isOff) == true }
 }
-
-/**
- * The skills the athlete trains: each family with its switched-off rungs left out (a family all off goes), so the
- * overall score is out of what they train. The leaderboard keeps the whole scale ([SkillProgress.overall]).
- */
-fun SkillProgress.trained(switches: SkillSwitches): SkillProgress = if (!switches.any) this else SkillProgress(
-    families.mapNotNull { (family, statuses) ->
-        val on = statuses.filter { status -> !switches.isRungOff(family.spec.id, status.skill.rung) }
-        if (on.isEmpty()) null else SkillFamily(family.spec, on.map { it.skill }) to on
-    },
-)

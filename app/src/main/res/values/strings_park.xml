@@ -11,4 +11,6 @@
     <string name="park_move_tuck_lever">a tuck front lever</string>
     <string name="park_move_front_lever">a front lever</string>
     <string name="park_move_human_flag">a human flag on the bar\'s post</string>
+    <!-- Today hero: what the park says to an athlete with a username as the routine ends. -->
+    <string name="park_well_done">Well done, %1$s!</string>
 </resources>

@@ -21,11 +21,15 @@ data class WorkoutSession(
     val placed: Boolean = false,
     val intensity: Intensity = Intensity.NORMAL,
     val doses: Map<String, List<Int>>? = null,
+    /** Points the class earned (Points, 2.10.0); null for a class saved before points, or marked complete. */
+    val points: Int? = null,
 )
 
 /**
  * A class in progress. [easierExercises]: the exercises the athlete does as their easier option (WorkoutFlow.exerciseKey).
  * [done]: what the athlete did in a set, by set key, where it differs from the plan or the plan says "max".
+ * [tickedAt]: when each ticked set was ticked, by set key, so an exercise counts only after its share of the time
+ * (WorkoutFlow.counted, 2.10.0); empty for a class started before.
  */
 data class ActiveWorkout(
     val programId: String,
@@ -35,6 +39,7 @@ data class ActiveWorkout(
     val easierExercises: Set<String> = emptySet(),
     val intensity: Intensity = Intensity.NORMAL,
     val done: Map<String, Int> = emptyMap(),
+    val tickedAt: Map<String, Long> = emptyMap(),
 )
 
 interface ProgressRepository {
@@ -61,6 +66,7 @@ interface ProgressRepository {
         effortRating: Int? = null,
         credits: Map<String, Int>? = null,
         doses: Map<String, List<Int>>? = null,
+        points: Int? = null,
     ): WorkoutSession?
     /** Exam results ([ExamLog]); a repository without them keeps none. */
     fun examLog(): ExamLog = ExamLog()
