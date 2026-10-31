@@ -66,8 +66,11 @@ class ReadyWorkoutsTest {
     }
 
     @Test
-    fun theProOfferCountsThem() {
-        assertTrue(File("src/main/res/values/strings_billing.xml").readText().contains("<item>${catalog.workouts.size} ready workouts</item>"))
+    fun theProOfferNamesThemWithoutACount() {
+        // The owner (2.10.1): "ready workouts", no number, in the app as on Play.
+        val billing = File("src/main/res/values/strings_billing.xml").readText()
+        assertTrue(billing.contains("<item>Ready workouts</item>"))
+        assertFalse(Regex("\\d+ ready workouts", RegexOption.IGNORE_CASE).containsMatchIn(billing))
     }
 
     private companion object {

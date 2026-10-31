@@ -20,11 +20,11 @@
     <string name="plus_buy_price">Get Plus · %1$s</string>
     <string name="plus_owned">Plus is yours.</string>
     <string name="pro_title">Pro · yearly or for life</string>
-    <!-- The ready workouts' count is checked against assets/workouts.json (ReadyWorkoutsTest). -->
+    <!-- No count of ready workouts (the owner, 2.10.1): the Library grows without the offer changing (ReadyWorkoutsTest). -->
     <string-array name="pro_features">
         <item>Everything in Plus</item>
         <item>Levels 7 to 10</item>
-        <item>200 ready workouts</item>
+        <item>Ready workouts</item>
         <item>Cloud saves on all your phones</item>
         <item>300 saved days, 10 lists</item>
     </string-array>
