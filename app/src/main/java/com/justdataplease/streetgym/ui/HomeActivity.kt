@@ -106,6 +106,8 @@ import com.justdataplease.streetgym.data.model.TrainingProgram
 import com.justdataplease.streetgym.data.progress.ActiveWorkout
 import com.justdataplease.streetgym.data.progress.DayAssignment
 import com.justdataplease.streetgym.data.progress.ExamResult
+import com.justdataplease.streetgym.data.effort.Effort
+import com.justdataplease.streetgym.data.effort.WorkoutEffort
 import com.justdataplease.streetgym.data.progress.Intensity
 import com.justdataplease.streetgym.data.progress.LevelReplay
 import com.justdataplease.streetgym.data.progress.NextClass
@@ -207,6 +209,8 @@ open class HomeActivity : Activity() {
     private var programIndex: Map<String, TrainingProgram> = emptyMap()
     /** Pro's ready workouts by id ([ReadyWorkouts]); they're no part of the day order. */
     private var readyIndex: Map<String, TrainingProgram> = emptyMap()
+    /** The athlete's workout rater and what it was made from: the catalog, the history and the level. */
+    private var effortCache: Pair<List<Any?>, WorkoutEffort>? = null
     /** The Easier, Normal or Harder [catalog] is scaled to ([syncIntensity]). */
     private var scaledFor = Intensity.NORMAL
     private var skillBook: SkillBook? = null
@@ -536,6 +540,21 @@ open class HomeActivity : Activity() {
         book.progress(Scores.credits(history) { id -> library.customDay(id)?.let(CustomDays::estimatedMinutes) ?: readyIndex[id]?.estimatedMinutes })
 
     private fun currentScore(book: SkillBook): Score = Scores.from(skillProgress(book))
+
+    /** Rates workouts for this athlete (WorkoutEffort): the typical class of their level and their best sets. */
+    private fun workoutEffort(): WorkoutEffort? {
+        val catalog = catalog ?: return null
+        val history = progressRepository.sessionHistory()
+        val level = assignedProgram()?.levelNumber ?: catalog.levels.firstOrNull()?.number ?: 1
+        val key = listOf(System.identityHashCode(catalog), history.size, history.lastOrNull()?.completedAtEpochMillis, level)
+        effortCache?.takeIf { it.first == key }?.let { return it.second }
+        val bests = skillBook?.let { book -> skillProgress(book, history).statuses.associate { it.skill.id to it.best } }.orEmpty()
+        return WorkoutEffort(catalog.movementGrades, bests, level, catalog.levels.firstOrNull { it.number == level }?.programs.orEmpty())
+            .also { effortCache = key to it }
+    }
+
+    private fun effortOf(program: TrainingProgram): Effort? =
+        workoutEffort()?.rate(program, onProgram = !CustomDays.offProgram(program.id))
 
     /**
      * After an exam class: the athlete ticks the targets reached (a fully ticked set starts ticked). The result is
@@ -1219,14 +1238,28 @@ open class HomeActivity : Activity() {
 
     /** A saved or custom day in My workouts, or a ready workout: its name and what it holds, opening its overview. */
     private fun libraryCard(program: TrainingProgram, locale: Locale): LinearLayout = card(clickable = true).apply {
-        addView(titleText(displayName(program, locale), 18f))
-        addWithMargins(bodyText(when {
+        // Its hardest exercise as its icon, ringed in how hard the day is for the athlete (the owner, 2.9.0).
+        val effort = effortOf(program)
+        val meta = listOfNotNull(when {
             CustomDays.isCustom(program.id) -> customMeta(program.exercises.size, program.estimatedMinutes ?: 1)
             ReadyWorkouts.isReady(program.id) -> readyMeta(program)
             else -> listOf(getString(R.string.level_number, program.levelNumber), programMeta(program)).joinToString(" • ")
-        }, 13f), topDp = 4)
-        if (ReadyWorkouts.isReady(program.id)) program.description.resolve(locale).takeIf(String::isNotBlank)
-            ?.let { addWithMargins(bodyText(it, 13f), topDp = 4) }
+        }, effort?.let(::effortText)).joinToString(" · ")
+        val text = LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            addView(titleText(displayName(program, locale), 18f))
+            addWithMargins(bodyText(meta, 13f), topDp = 4)
+            if (ReadyWorkouts.isReady(program.id)) program.description.resolve(locale).takeIf(String::isNotBlank)
+                ?.let { addWithMargins(bodyText(it, 13f), topDp = 4) }
+        }
+        addView(LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            addView(workoutTile(workoutEffort()?.hardest(program), effort, TILE_DP, locale),
+                LinearLayout.LayoutParams(dp(TILE_DP), dp(TILE_DP)).apply { marginEnd = dp(14) })
+            addView(text, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+        })
+        contentDescription = listOf(displayName(program, locale), meta).joinToString(", ")
         setOnClickListener { navigate(Screen.Overview(program.id)) }
     }
 
@@ -1257,7 +1290,13 @@ open class HomeActivity : Activity() {
 
     /** "Intermediate · 6 exercises · About 30 min". */
     private fun readyMeta(program: TrainingProgram): String = getString(R.string.ready_meta,
-        getString(when (program.grade) { 1 -> R.string.ready_grade_1; 3 -> R.string.ready_grade_3; else -> R.string.ready_grade_2 }),
+        getString(when (program.grade) {
+            1 -> R.string.ready_grade_1
+            3 -> R.string.ready_grade_3
+            4 -> R.string.ready_grade_4
+            5 -> R.string.ready_grade_5
+            else -> R.string.ready_grade_2
+        }),
         resources.getQuantityString(R.plurals.custom_exercises, program.exercises.size, program.exercises.size),
         program.estimatedMinutes ?: 1)
 
@@ -1854,7 +1893,10 @@ open class HomeActivity : Activity() {
         }
         summary.addWithMargins(secondaryButton(getString(R.string.rename_level)) { renameLevel(level) }, topDp = 10)
         val programs = level.programs.sortedBy { it.number }
-        val rows = ProgramListAdapter(this, programs, completed, assigned?.id, locale, progressRepository.examLog(), switchedOff)
+        val effort = workoutEffort()
+        val rows = ProgramListAdapter(this, programs, completed, assigned?.id, locale, progressRepository.examLog(), switchedOff) {
+            effort?.rate(it)
+        }
         // Free: one ad card after the first three classes (a tier change draws this screen again).
         val withAd = if (Entitlement.adFree(this)) null else AdRowAdapter(rows, LinearLayout(this).apply {
             setPadding(dp(12), dp(4), dp(12), dp(4))
@@ -1931,6 +1973,9 @@ open class HomeActivity : Activity() {
                 ?.let { add(intensityLabels()[it.ordinal]) }
         }.joinToString(" • ")
         hero.addWithMargins(bodyText(meta, 14f), topDp = 4)
+        effortOf(program)?.let { effort ->
+            hero.addWithMargins(badge(effortText(effort), effortColor(effort)), width = ViewGroup.LayoutParams.WRAP_CONTENT, topDp = 8)
+        }
         if (!custom) hero.addWithMargins(
             bodyText(
                 program.description.resolve(locale).ifBlank { getString(R.string.empty_description) },
@@ -3115,6 +3160,8 @@ open class HomeActivity : Activity() {
         internal val loadedCatalog: CurriculumCatalog? get() = loaded?.catalog
         /** The longest name for a custom day or a renamed level: room for any built-in one, short enough for a card. */
         private const val MAX_NAME_LENGTH = 60
+        /** A library card's icon: its hardest exercise on a ringed tile, in dp. */
+        private const val TILE_DP = 56
         private const val REQUEST_LOCATION = 720
         /** In ParksUpdater's preferences: the list instead of the map, and whether the map asked for location yet. */
         private const val KEY_PARKS_LIST = "show_list"

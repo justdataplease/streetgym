@@ -40,7 +40,7 @@ FLAGS = set(LADDERS["flag"]) | {"assisted_tuck_flag", "vertical_flag", "flag_neg
 HEAVY_ELBOW = {"pullup", "archer_pullup", "one_arm_pullup", "assisted_one_arm_pullup", "one_arm_pullup_negative", "strict_muscleup",
                "band_muscleup", "chest_to_bar", "negative_muscleup", "parallel_dip", "eccentric_dip"}
 EASY_TYPES = re.compile(r"^(recovery|reentry_recovery|primer_easy|easy_)")
-REP_CAP = {"pushup": 50, "squat": 40, "parallel_dip": 30, "pullup": 21, "hanging_leg_raise": 15, "toes_to_bar": 15}
+REP_CAP = {"pushup": 40, "squat": 50, "parallel_dip": 25, "pullup": 21, "hanging_leg_raise": 15, "toes_to_bar": 15}
 FULL_SHAPES = ["full_front", "full_back", "full_planche", "full_flag", "one_arm_pullup"]
 
 classes = [p for level in sorted(catalog["levels"], key=lambda x: x["number"]) for p in sorted(level["programs"], key=lambda x: x["number"])]
@@ -112,14 +112,15 @@ for p in classes:
         if before and not before["schedule"]["day_type"].startswith(("deload_", "exam", "reentry", "primer", "light_")):
             assert sum(st[1] for st in p["main"]) <= 0.7 * sum(st[1] for st in before["main"]) + 1, where(p)
 
-# 5. Exams: assessments in the main part only. From Level 4 an exam tests at least 12 skill families, and at most 15 with
-#    8 elbow-load sets, the German hang included (checked with the elbow caps below). Every exam is a skills test (2.6.8).
+# 5. Exams: assessments in the main part only, a check of the skills and rest (2.9.0, the three coaches): 4 to 9 tests (a
+#    level's first exam, which follows the level test, 3 to 4; a level test from Level 7, every full shape, up to 11), with at most 5 elbow-load sets, the German hang included
+#    (checked with the elbow caps below). Every exam is a skills test (2.6.8).
 for p in classes:
     if p["schedule"]["day_type"].startswith("exam"):
         tests = [st for st in p["main"] if st[5] == "assessment"]
         assert not p["practice"] and tests, where(p)
-        assert len(tests) <= 15, f"{where(p)} has {len(tests)} tests"
-        assert p["level"] < 4 or len(tests) >= 12, f"{where(p)} tests only {len(tests)} skills"
+        assert len(tests) <= 11, f"{where(p)} has {len(tests)} tests"
+        assert len(tests) >= 3, f"{where(p)} tests only {len(tests)} skills"
         assert len({st[0] for st in tests}) == len(tests), f"{where(p)} tests a movement twice"
 
 # 6. Load between days: straight-arm classes never three in a row; heavy elbow days never back to back; the planche and
@@ -322,17 +323,12 @@ def one_step(v, seconds, level):
 EXAM_BASICS = ("pushup", "squat", "pullup", "parallel_dip")
 
 
-def exam_floor(mid, best):
-    """The lowest an exam may test a skill (2.8.1: about 70% of the trained best): the belt its trained best reached (the
-    rep basics at most Master), the best itself under the first belt; off the belts, half the best, allowing for the
-    Level 1-2 palette."""
-    t = TARGETS.get(mid)
-    if not t:
-        return max(1, best // 2)
-    under = [x for x in t if x <= best]
-    if not under:
-        return best
-    return min(under[-1], t[3]) if mid in EXAM_BASICS else under[-1]
+def exam_floor(mid, best, seconds):
+    """The lowest an exam may test a skill (2.9.0, the coaches: a check at 65-70% of the trained best, no belt floor):
+    half the best, one rep of a skill trained for three or fewer, the shortest hold the classes give (3 or 5 s)."""
+    if not seconds and best <= 3:
+        return 1
+    return min(best, max(1, best // 2, (3 if mid in MIN3 else 5) if seconds else 1))
 
 
 for i, p in enumerate(classes):
@@ -344,15 +340,18 @@ for i, p in enumerate(classes):
             for st in work(q):
                 if st[5] != "assessment":
                     trained[st[0]] = max(trained[st[0]], value(st))
-    above = 0
-    for st in p["main"]:
-        if st[5] == "assessment" and trained[st[0]]:
-            floor = exam_floor(st[0], trained[st[0]])
-            assert value(st) >= floor, f"{where(p)} tests {st[0]} at {value(st)}, under the belt {floor} its trained {trained[st[0]]} reached"
-            if value(st) > trained[st[0]]:
-                above += 1
-                assert value(st) <= one_step(trained[st[0]], st[3] is not None, p["level"]),                     f"{where(p)} tests {st[0]} at {value(st)}, more than a step over the {trained[st[0]]} it trained"
-    assert above <= 2, f"{where(p)} tests {above} items above what was trained"
+    tests = [st for st in p["main"] if st[5] == "assessment"]
+    first = p["number"] == min(q["number"] for q in classes if q["level"] == p["level"] and q["schedule"]["day_type"].startswith("exam"))
+    most = 4 if first and p["level"] >= 2 else 11 if p["number"] == 100 and p["level"] >= 7 else 9
+    assert len(tests) <= most, f"{where(p)} holds {len(tests)} tests"
+    assert not {"hefesto", "one_arm_pullup"} <= {st[0] for st in tests}, f"{where(p)} tests the Hefesto and the one-arm pull-up together"
+    for st in tests:
+        if trained[st[0]]:
+            floor = exam_floor(st[0], trained[st[0]], st[3] is not None)
+            assert value(st) >= floor, f"{where(p)} tests {st[0]} at {value(st)}, under half its trained {trained[st[0]]}"
+            assert value(st) <= trained[st[0]], f"{where(p)} tests {st[0]} at {value(st)}, over the {trained[st[0]]} it trained"
+            t = TARGETS.get(st[0])
+            assert not (t and st[0] in EXAM_BASICS and value(st) > t[2]), f"{where(p)} tests {st[0]} at {value(st)}, over its Advanced target"
 debut = {}
 for i, p in enumerate(classes):
     for st in work(p):
@@ -423,5 +422,5 @@ print(f"Plan checks passed: frozen exams with a re-entry after each, {len(TARGET
       f"({len(elite_in_plan & {s for s in TARGETS if reach[s] < TARGETS[s][4]})} through a harder rung), no progression record beside a harder rung, "
       f"every full shape tested at L9:100, {len(debuts)} lever, planche and flag rungs at least 60 classes apart, "
       f"easy days easy, lighter exam weeks, weekly hinge, pressing and compression, no stacked straight-arm, elbow, planche or flag days, "
-      f"elbow-load caps, minimum holds, no skill left more than 14 classes, exams at about 70% of the trained dose, never under the belt it reached (two items a step over at most), two sets a week of the "
+      f"elbow-load caps, minimum holds, no skill left more than 14 classes, exams of at most 9 tests (4 in a level's first, 11 in a level test from Level 7) at 50-100% of the trained dose, never over it, two sets a week of the "
       f"rung below before each new rung, the Hefesto's dip gate, every readiness gate met before its step, no sets and dose rising together and whole circuit rounds.")

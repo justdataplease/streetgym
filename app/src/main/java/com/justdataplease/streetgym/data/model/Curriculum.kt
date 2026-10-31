@@ -7,6 +7,8 @@ data class CurriculumCatalog(
     val levels: List<TrainingLevel>,
     /** Pro's ready workouts (assets/workouts.json): days outside the ten levels, run any time. */
     val workouts: List<TrainingProgram> = emptyList(),
+    /** Each movement's grade, 1 easy to 5 extreme (the movement library): what WorkoutEffort weighs a set by. */
+    val movementGrades: Map<String, Int> = emptyMap(),
 )
 
 data class TrainingLevel(

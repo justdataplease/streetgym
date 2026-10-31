@@ -9,6 +9,7 @@ import android.widget.BaseAdapter
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.justdataplease.streetgym.R
+import com.justdataplease.streetgym.data.effort.Effort
 import com.justdataplease.streetgym.data.model.TrainingProgram
 import com.justdataplease.streetgym.data.progress.ExamLog
 import java.util.Locale
@@ -22,6 +23,8 @@ class ProgramListAdapter(
     private val exams: ExamLog = ExamLog(),
     /** Classes the skill switches leave with nothing to train: passed, shown greyed (review 12). */
     private val switchedOffIds: Set<String> = emptySet(),
+    /** How hard each class is for the athlete (WorkoutEffort): the number's ring and a word in its details. */
+    private val effortOf: (TrainingProgram) -> Effort? = { null },
 ) : BaseAdapter() {
     override fun getCount(): Int = programs.size
 
@@ -85,8 +88,11 @@ class ProgramListAdapter(
             val assigned = program.id == assignedProgramId
             val off = !completed && program.id in switchedOffIds
             val unlocked = completed || assigned
-            val programMeta = context.programMeta(program)
+            val effort = effortOf(program)
+            val programMeta = listOfNotNull(context.programMeta(program).ifBlank { null }, effort?.let(context::effortText)).joinToString(" • ")
             number.text = program.number.toString()
+            number.background = roundedDrawable(AppColors.NUMBER, context.dp(22).toFloat(),
+                effort?.let(::effortColor), if (effort != null) context.dp(3) else 0)
             number.contentDescription = context.getString(R.string.workout_number, program.number)
             title.text = name
             meta.text = programMeta.ifBlank {

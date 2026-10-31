@@ -60,7 +60,7 @@ class TrainingInstrumentation : Instrumentation() {
     private var checks = 0
     private fun preferences(name: String) = targetContext.getSharedPreferences(name, Context.MODE_PRIVATE)
 
-    /** `-e shots true` saves a screenshot of the skill levels to the app's external files. */
+    /** `-e shots true` saves screenshots (the skill levels, the library, a level's marks) to the app's external files. */
     private var shots = false
 
     override fun onCreate(arguments: Bundle?) { super.onCreate(arguments); shots = arguments?.getString("shots") == "true"; start() }
@@ -520,11 +520,21 @@ class TrainingInstrumentation : Instrumentation() {
             Entitlement.setSimulatedTier(targetContext, null)
             await { Entitlement.tier(targetContext) == Tier.PRO }
             nav(R.string.nav_levels); clickText(R.string.training_tab_ready)
-            check(!shown(R.string.paywall_ready) && catalog.workouts.size == 36)
+            check(!shown(R.string.paywall_ready) && catalog.workouts.size == 100)
+            // Each card: its hardest exercise ringed in how hard it is for the athlete, and the word (2.9.0).
+            val forYou = targetContext.getString(R.string.effort_for_you, "")
+            check(findAll { it is TextView && it.isShown && it.text.contains(forYou) }.isNotEmpty())
+            screenshot("library.png")
             clickLabel(ready.name.resolve())
             check(shown(R.string.start_workout) && !shown(R.string.paywall_ready) && !shown("Complete day"))
+            check(find { it is TextView && it.isShown && it.text.toString().endsWith(forYou, ignoreCase = true) } != null)
+            screenshot("ready_overview.png")
             nav(R.string.nav_levels); clickText(R.string.training_tab_levels)
-            report("Library: 36 ready workouts; Plus sees them with the Pro offer, Pro can start one")
+            clickLabel(catalog.levels.first().name.resolve())
+            check(findAll { it is TextView && it.isShown && it.text.contains(forYou) }.isNotEmpty())
+            screenshot("level_marks.png")
+            nav(R.string.nav_levels); clickText(R.string.training_tab_levels)
+            report("Library: 100 ready workouts; Plus sees them with the Pro offer, Pro can start one; every card and class says how hard it is for you")
 
             nav(R.string.nav_timer); clickLabel("30 sec"); clickLabel("Start")
             val timing = TimingStore(targetContext)
@@ -837,6 +847,15 @@ class TrainingInstrumentation : Instrumentation() {
         error("No text field in the dialog")
     }
     private fun shown(label: String) = find { it is TextView && it.text.toString() == label } != null
+
+    /** `-e shots true`: the screen as it is now, to the app's external files. */
+    private fun screenshot(name: String) {
+        if (!shots) return
+        settle()
+        File(targetContext.getExternalFilesDir(null), name).outputStream().use {
+            uiAutomation.takeScreenshot().compress(Bitmap.CompressFormat.PNG, 100, it)
+        }
+    }
     private fun shown(resource: Int) = shown(targetContext.getString(resource))
     private fun findAll(predicate: (View) -> Boolean): List<View> {
         val result = mutableListOf<View>()

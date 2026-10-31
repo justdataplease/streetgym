@@ -8,6 +8,12 @@
     <string name="ready_grade_1">Beginner</string>
     <string name="ready_grade_2">Intermediate</string>
     <string name="ready_grade_3">Advanced</string>
+    <string name="ready_grade_4">Master</string>
+    <string name="ready_grade_5">Elite</string>
+    <string name="effort_easy">Easy</string>
+    <string name="effort_moderate">Moderate</string>
+    <string name="effort_hard">Hard</string>
+    <string name="effort_for_you">%1$s&#160;for&#160;you</string>
     <string name="ready_group_full">Full body</string>
     <string name="ready_group_pull">Pull</string>
     <string name="ready_group_push">Push</string>

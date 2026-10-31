@@ -17,14 +17,14 @@ class ReadyWorkoutsTest {
 
     @Test
     fun everyReadyWorkoutIsAWholeClassOfTheProgramsMovements() {
-        assertEquals(36, catalog.workouts.size)
+        assertEquals(100, catalog.workouts.size)
         assertEquals(catalog.workouts.size, catalog.workouts.map { it.id }.toSet().size)
         assertEquals(catalog.workouts.size, catalog.workouts.map { it.name.resolve() }.toSet().size)
         catalog.workouts.forEach { workout ->
             assertTrue(workout.id, ReadyWorkouts.isReady(workout.id) && CustomDays.offProgram(workout.id))
             assertFalse(workout.id, CustomDays.isCustom(workout.id))
             assertEquals(workout.id, 0, workout.levelNumber)
-            assertTrue(workout.id, workout.group in GROUPS && workout.grade in 1..3)
+            assertTrue(workout.id, workout.group in GROUPS && workout.grade in 1..5)
             assertTrue(workout.id, (workout.estimatedMinutes ?: 0) in 10..60 && workout.description.resolve().isNotBlank())
             assertTrue(workout.id, workout.warmup.isNotEmpty() && workout.exercises.isNotEmpty() && workout.cooldown.isNotEmpty())
             (workout.warmup + workout.exercises + workout.cooldown).forEach { exercise ->

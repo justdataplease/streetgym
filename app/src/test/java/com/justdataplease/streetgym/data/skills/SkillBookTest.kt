@@ -235,21 +235,21 @@ class SkillBookTest {
         // Working-set targets (a set at one or two reps in reserve), as the owner took them for round 9.
         assertEquals(listOf(30, 45, 60, 75, 90), SkillStandards.of("dead_hang").targets)
         assertEquals(listOf(6, 12, 20, 30, 40), SkillStandards.of("pushup").targets)
-        assertEquals(listOf(15, 20, 25, 30, 40), SkillStandards.of("squat").targets)
+        assertEquals(listOf(15, 20, 30, 40, 50), SkillStandards.of("squat").targets)
         assertEquals(listOf(20, 30, 40, 50, 60), SkillStandards.of("hollow_body_hold").targets)
         // The rarest rungs stay reachable inside the program, so two levels may share a target and differ by their sets.
         // Round 11 starts the hardest holds at 3 s.
-        assertEquals(listOf(3, 3, 4, 5, 6), SkillStandards.of("full_planche").targets)
+        assertEquals(listOf(2, 3, 4, 5, 6), SkillStandards.of("full_planche").targets)
         // Review 11 fits the hardest rungs' targets to the classes (the owner).
         assertEquals(listOf(1, 1, 1, 1, 2), SkillStandards.of("one_arm_pullup").targets)
         assertEquals(listOf(1, 2, 4, 6, 7), SkillStandards.of("strict_muscleup").targets)
         assertEquals(listOf(5, 15, 30, 45, 60), SkillStandards.of("freestanding_handstand").targets)
         assertEquals(listOf(3, 4, 5, 6, 7), SkillStandards.of("one_arm_handstand").targets)
         assertEquals(listOf(2, 3, 5, 7, 8), SkillStandards.of("shrimp_squat").targets)
-        assertEquals(listOf(1, 1, 2, 2, 3), SkillStandards.of("hefesto").targets)
-        assertEquals(listOf(1, 3, 4, 4, 5), SkillStandards.of("one_arm_pushup").targets)
-        assertEquals(listOf(3, 4, 5, 5, 6), SkillStandards.of("full_flag").targets)
-        // Beginner and Intermediate share the full planche's 3 s and differ by their sets; from Advanced each asks longer.
+        assertEquals(listOf(1, 1, 1, 1, 2), SkillStandards.of("hefesto").targets)
+        assertEquals(listOf(1, 2, 3, 4, 5), SkillStandards.of("one_arm_pushup").targets)
+        assertEquals(listOf(2, 3, 4, 5, 6), SkillStandards.of("full_flag").targets)
+        // The full planche asks 2, 3, 4, 5 and 6 s (2.9.0): 14 sets of 3 s hold Beginner, 30 of them Intermediate.
         assertEquals(SkillLevel.BEGINNER, everyRung.progress(listOf(sets("full_planche", 14, 3))).status("full_planche").level)
         assertEquals(SkillLevel.INTERMEDIATE, everyRung.progress(listOf(sets("full_planche", 30, 3))).status("full_planche").level)
         assertEquals(SkillLevel.ADVANCED, everyRung.progress(listOf(sets("full_planche", 30, 4))).status("full_planche").level)

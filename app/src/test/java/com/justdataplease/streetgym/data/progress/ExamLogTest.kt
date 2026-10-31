@@ -31,8 +31,8 @@ class ExamLogTest {
         exams.forEach { exam ->
             val tests = exam.exercises.filter { it.assessment }.map { it.movementId }
             assertTrue(exam.id, exam.headline != null && exam.headline in tests)
-            // From Level 4 an exam tests every skill family the block trained: twelve tests or more (review 6).
-            if (exam.levelNumber >= 4) assertTrue("${exam.id}: ${tests.size}", tests.size in 12..15)
+            // A check of the skills, then rest (2.9.0, the three coaches): 3 to 9 tests, a level test from Level 7 up to 11.
+            assertTrue("${exam.id}: ${tests.size}", tests.size in 3..(if (exam.number == 100 && exam.levelNumber >= 7) 11 else 9))
         }
     }
 

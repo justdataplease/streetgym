@@ -3883,14 +3883,14 @@
     "week": 3,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 31,
+    "minutes": 26,
     "rpe": 7,
     "focus": [
      "squat",
      "legs",
      "horizontal_pull",
-     "support",
-     "push"
+     "horizontal_push",
+     "hang"
     ],
     "headline": "pushup"
    },
@@ -3982,7 +3982,7 @@
     [
      "squat",
      1,
-     15,
+     10,
      null,
      90,
      "assessment",
@@ -3991,44 +3991,26 @@
     [
      "inverted_row",
      1,
-     6,
+     5,
      null,
      90,
      "assessment",
      "high_inverted_row"
     ],
     [
-     "support_hold",
-     1,
-     null,
-     15,
-     90,
-     "assessment",
-     "foot_assisted_support"
-    ],
-    [
      "pushup",
      1,
-     6,
+     5,
      null,
      90,
      "assessment",
      "incline_pushup"
     ],
     [
-     "hollow_body_hold",
-     1,
-     null,
-     20,
-     90,
-     "assessment",
-     "dead_bug"
-    ],
-    [
      "dead_hang",
      1,
      null,
-     30,
+     20,
      90,
      "assessment",
      "foot_assisted_hang"
@@ -8014,14 +7996,14 @@
     "week": 6,
     "day": 5,
     "day_type": "exam_block",
-    "minutes": 34,
+    "minutes": 29,
     "rpe": 7,
     "focus": [
      "handstand",
-     "squat",
-     "legs",
      "vertical_pull",
-     "vertical_push"
+     "vertical_push",
+     "core",
+     "bodyline"
     ],
     "headline": "wall_handstand"
    },
@@ -8129,15 +8111,6 @@
      "pike_handstand_hold"
     ],
     [
-     "squat",
-     1,
-     20,
-     null,
-     90,
-     "assessment",
-     "box_squat"
-    ],
-    [
      "eccentric_pullup",
      1,
      1,
@@ -8154,15 +8127,6 @@
      90,
      "assessment",
      "support_hold"
-    ],
-    [
-     "pushup",
-     1,
-     6,
-     null,
-     90,
-     "assessment",
-     "incline_pushup"
     ],
     [
      "hollow_body_hold",
@@ -12280,7 +12244,7 @@
     "week": 9,
     "day": 4,
     "day_type": "exam_block",
-    "minutes": 39,
+    "minutes": 34,
     "rpe": 7,
     "focus": [
      "handstand",
@@ -12406,7 +12370,7 @@
     [
      "squat",
      1,
-     20,
+     12,
      null,
      90,
      "assessment",
@@ -12415,7 +12379,7 @@
     [
      "pike_pushup",
      1,
-     6,
+     4,
      null,
      90,
      "assessment",
@@ -12424,7 +12388,7 @@
     [
      "eccentric_pullup",
      1,
-     2,
+     1,
      null,
      90,
      "assessment",
@@ -12438,24 +12402,6 @@
      90,
      "assessment",
      "assisted_dip"
-    ],
-    [
-     "pushup",
-     1,
-     12,
-     null,
-     90,
-     "assessment",
-     "incline_pushup"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     30,
-     90,
-     "assessment",
-     "dead_bug"
     ],
     [
      "dead_hang",
@@ -16775,14 +16721,14 @@
     "week": 12,
     "day": 4,
     "day_type": "exam_block",
-    "minutes": 39,
+    "minutes": 34,
     "rpe": 7,
     "focus": [
      "handstand",
      "planche",
      "balance",
-     "squat",
-     "legs"
+     "vertical_push",
+     "vertical_pull"
     ],
     "headline": "pullup"
    },
@@ -16884,7 +16830,7 @@
      "wall_handstand",
      1,
      null,
-     30,
+     20,
      90,
      "assessment",
      "pike_handstand_hold"
@@ -16899,18 +16845,9 @@
      "incline_plank"
     ],
     [
-     "squat",
-     1,
-     20,
-     null,
-     90,
-     "assessment",
-     "box_squat"
-    ],
-    [
      "pike_pushup",
      1,
-     8,
+     5,
      null,
      90,
      "assessment",
@@ -16919,7 +16856,7 @@
     [
      "pullup",
      1,
-     2,
+     1,
      null,
      90,
      "assessment",
@@ -16928,26 +16865,17 @@
     [
      "parallel_dip",
      1,
-     4,
+     3,
      null,
      90,
      "assessment",
      "assisted_dip"
     ],
     [
-     "pushup",
-     1,
-     12,
-     null,
-     90,
-     "assessment",
-     "incline_pushup"
-    ],
-    [
      "hollow_body_hold",
      1,
      null,
-     30,
+     20,
      90,
      "assessment",
      "dead_bug"
@@ -16956,7 +16884,7 @@
      "dead_hang",
      1,
      null,
-     45,
+     30,
      90,
      "assessment",
      "foot_assisted_hang"
@@ -20817,7 +20745,7 @@
     "week": 15,
     "day": 2,
     "day_type": "exam_level",
-    "minutes": 39,
+    "minutes": 34,
     "rpe": 7,
     "focus": [
      "handstand",
@@ -20926,7 +20854,7 @@
      "wall_handstand",
      1,
      null,
-     30,
+     20,
      90,
      "assessment",
      "pike_handstand_hold"
@@ -20943,7 +20871,7 @@
     [
      "squat",
      1,
-     20,
+     12,
      null,
      90,
      "assessment",
@@ -20952,7 +20880,7 @@
     [
      "pike_pushup",
      1,
-     8,
+     5,
      null,
      90,
      "assessment",
@@ -20961,44 +20889,26 @@
     [
      "pullup",
      1,
-     3,
+     1,
      null,
      90,
      "assessment",
      "assisted_pullup"
     ],
     [
-     "parallel_dip",
-     1,
-     4,
-     null,
-     90,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
      "pushup",
      1,
-     12,
+     10,
      null,
      90,
      "assessment",
      "incline_pushup"
     ],
     [
-     "hollow_body_hold",
-     1,
-     null,
-     30,
-     90,
-     "assessment",
-     "dead_bug"
-    ],
-    [
      "dead_hang",
      1,
      null,
-     45,
+     30,
      90,
      "assessment",
      "foot_assisted_hang"
@@ -24543,14 +24453,14 @@
     "week": 3,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 39,
+    "minutes": 27,
     "rpe": 7,
     "focus": [
      "handstand",
      "planche",
      "balance",
-     "squat",
-     "legs"
+     "vertical_push",
+     "vertical_pull"
     ],
     "headline": "pullup"
    },
@@ -24652,7 +24562,7 @@
      "wall_handstand",
      1,
      null,
-     30,
+     20,
      90,
      "assessment",
      "pike_handstand_hold"
@@ -24667,18 +24577,9 @@
      "incline_plank"
     ],
     [
-     "squat",
-     1,
-     20,
-     null,
-     90,
-     "assessment",
-     "box_squat"
-    ],
-    [
      "pike_pushup",
      1,
-     8,
+     5,
      null,
      90,
      "assessment",
@@ -24687,47 +24588,11 @@
     [
      "pullup",
      1,
-     3,
+     1,
      null,
      90,
      "assessment",
      "assisted_pullup"
-    ],
-    [
-     "parallel_dip",
-     1,
-     4,
-     null,
-     90,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
-     "pushup",
-     1,
-     12,
-     null,
-     90,
-     "assessment",
-     "incline_pushup"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     30,
-     90,
-     "assessment",
-     "dead_bug"
-    ],
-    [
-     "dead_hang",
-     1,
-     null,
-     45,
-     90,
-     "assessment",
-     "foot_assisted_hang"
     ]
    ],
    "cooldown": [
@@ -28269,14 +28134,14 @@
     "week": 6,
     "day": 5,
     "day_type": "exam_block",
-    "minutes": 44,
+    "minutes": 33,
     "rpe": 7,
     "focus": [
      "handstand",
      "planche",
      "balance",
-     "squat",
-     "legs"
+     "front_lever",
+     "horizontal_pull"
     ],
     "headline": "pullup"
    },
@@ -28378,7 +28243,7 @@
      "wall_handstand",
      1,
      null,
-     30,
+     20,
      90,
      "assessment",
      "pike_handstand_hold"
@@ -28393,15 +28258,6 @@
      "incline_plank"
     ],
     [
-     "squat",
-     1,
-     20,
-     null,
-     90,
-     "assessment",
-     "box_squat"
-    ],
-    [
      "tuck_front_hold",
      1,
      null,
@@ -28413,7 +28269,7 @@
     [
      "pike_pushup",
      1,
-     8,
+     5,
      null,
      90,
      "assessment",
@@ -28431,47 +28287,20 @@
     [
      "parallel_dip",
      1,
-     6,
+     5,
      null,
      90,
      "assessment",
      "assisted_dip"
     ],
     [
-     "pushup",
-     1,
-     20,
-     null,
-     90,
-     "assessment",
-     "incline_pushup"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     30,
-     90,
-     "assessment",
-     "dead_bug"
-    ],
-    [
      "hanging_leg_raise",
      1,
-     5,
+     3,
      null,
      90,
      "assessment",
      "knee_raise"
-    ],
-    [
-     "dead_hang",
-     1,
-     null,
-     45,
-     90,
-     "assessment",
-     "foot_assisted_hang"
     ]
    ],
    "cooldown": [
@@ -32482,14 +32311,14 @@
     "week": 9,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 44,
+    "minutes": 34,
     "rpe": 7,
     "focus": [
      "handstand",
      "planche",
      "balance",
-     "squat",
-     "legs"
+     "front_lever",
+     "horizontal_pull"
     ],
     "headline": "tuck_front_hold"
    },
@@ -32606,19 +32435,10 @@
      "planche_lean"
     ],
     [
-     "squat",
-     1,
-     25,
-     null,
-     90,
-     "assessment",
-     "box_squat"
-    ],
-    [
      "tuck_front_hold",
      1,
      null,
-     8,
+     5,
      90,
      "assessment",
      "tuck_front_row"
@@ -32626,7 +32446,7 @@
     [
      "pike_pushup",
      1,
-     10,
+     6,
      null,
      90,
      "assessment",
@@ -32642,49 +32462,22 @@
      "assisted_pullup"
     ],
     [
-     "parallel_dip",
-     1,
-     6,
-     null,
-     90,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
      "pushup",
      1,
-     20,
+     12,
      null,
      90,
      "assessment",
      "incline_pushup"
     ],
     [
-     "hollow_body_hold",
-     1,
-     null,
-     40,
-     90,
-     "assessment",
-     "dead_bug"
-    ],
-    [
      "hanging_leg_raise",
      1,
-     5,
+     4,
      null,
      90,
      "assessment",
      "knee_raise"
-    ],
-    [
-     "dead_hang",
-     1,
-     null,
-     45,
-     90,
-     "assessment",
-     "foot_assisted_hang"
     ]
    ],
    "cooldown": [
@@ -36677,7 +36470,7 @@
     "week": 12,
     "day": 7,
     "day_type": "exam_block",
-    "minutes": 42,
+    "minutes": 32,
     "rpe": 7,
     "focus": [
      "handstand",
@@ -36804,7 +36597,7 @@
      "tuck_front_hold",
      1,
      null,
-     8,
+     5,
      90,
      "assessment",
      "tuck_front_row"
@@ -36812,7 +36605,7 @@
     [
      "pike_pushup",
      1,
-     10,
+     6,
      null,
      90,
      "assessment",
@@ -36821,7 +36614,7 @@
     [
      "pullup",
      1,
-     4,
+     3,
      null,
      90,
      "assessment",
@@ -36830,47 +36623,11 @@
     [
      "parallel_dip",
      1,
-     10,
+     6,
      null,
      90,
      "assessment",
      "assisted_dip"
-    ],
-    [
-     "pushup",
-     1,
-     20,
-     null,
-     90,
-     "assessment",
-     "incline_pushup"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     40,
-     90,
-     "assessment",
-     "dead_bug"
-    ],
-    [
-     "hanging_leg_raise",
-     1,
-     5,
-     null,
-     90,
-     "assessment",
-     "knee_raise"
-    ],
-    [
-     "dead_hang",
-     1,
-     null,
-     60,
-     90,
-     "assessment",
-     "foot_assisted_hang"
     ]
    ],
    "cooldown": [
@@ -39772,7 +39529,7 @@
     "week": 15,
     "day": 2,
     "day_type": "exam_level",
-    "minutes": 45,
+    "minutes": 37,
     "rpe": 7,
     "focus": [
      "handstand",
@@ -39881,7 +39638,7 @@
      "wall_handstand",
      1,
      null,
-     45,
+     30,
      90,
      "assessment",
      "pike_handstand_hold"
@@ -39907,7 +39664,7 @@
     [
      "squat",
      1,
-     25,
+     15,
      null,
      90,
      "assessment",
@@ -39916,7 +39673,7 @@
     [
      "pike_pushup",
      1,
-     10,
+     6,
      null,
      90,
      "assessment",
@@ -39925,25 +39682,16 @@
     [
      "pullup",
      1,
-     6,
+     3,
      null,
      90,
      "assessment",
      "assisted_pullup"
     ],
     [
-     "parallel_dip",
-     1,
-     10,
-     null,
-     90,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
      "pushup",
      1,
-     20,
+     12,
      null,
      90,
      "assessment",
@@ -39953,28 +39701,10 @@
      "hollow_body_hold",
      1,
      null,
-     40,
+     30,
      90,
      "assessment",
      "dead_bug"
-    ],
-    [
-     "hanging_leg_raise",
-     1,
-     8,
-     null,
-     90,
-     "assessment",
-     "knee_raise"
-    ],
-    [
-     "dead_hang",
-     1,
-     null,
-     60,
-     90,
-     "assessment",
-     "foot_assisted_hang"
     ]
    ],
    "cooldown": [
@@ -43620,14 +43350,14 @@
     "week": 3,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 49,
+    "minutes": 29,
     "rpe": 7,
     "focus": [
      "handstand",
-     "planche",
-     "balance",
-     "straight_arm_push",
-     "squat"
+     "front_lever",
+     "horizontal_pull",
+     "bodyline",
+     "horizontal_push"
     ],
     "headline": "pseudo_planche_pushup"
    },
@@ -43729,60 +43459,24 @@
      "wall_handstand",
      1,
      null,
-     45,
+     30,
      120,
      "assessment",
      "pike_handstand_hold"
     ],
     [
-     "frog_stand",
-     1,
-     null,
-     14,
-     120,
-     "assessment",
-     "planche_lean"
-    ],
-    [
-     "planche_lean",
-     1,
-     null,
-     11,
-     60,
-     "assessment",
-     "incline_plank"
-    ],
-    [
-     "squat",
-     1,
-     25,
-     null,
-     90,
-     "assessment",
-     "box_squat"
-    ],
-    [
      "tuck_front_hold",
      1,
      null,
-     8,
+     6,
      120,
      "assessment",
      "tuck_front_row"
     ],
     [
-     "pike_pushup",
-     1,
-     10,
-     null,
-     120,
-     "assessment",
-     "incline_pushup"
-    ],
-    [
      "pseudo_planche_pushup",
      1,
-     5,
+     4,
      null,
      120,
      "assessment",
@@ -43791,47 +43485,11 @@
     [
      "pullup",
      1,
-     4,
+     3,
      null,
      120,
      "assessment",
      "assisted_pullup"
-    ],
-    [
-     "parallel_dip",
-     1,
-     10,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
-     "pushup",
-     1,
-     20,
-     null,
-     120,
-     "assessment",
-     "incline_pushup"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     40,
-     60,
-     "assessment",
-     "dead_bug"
-    ],
-    [
-     "hanging_leg_raise",
-     1,
-     8,
-     null,
-     60,
-     "assessment",
-     "knee_raise"
     ]
    ],
    "cooldown": [
@@ -47504,14 +47162,14 @@
     "week": 6,
     "day": 5,
     "day_type": "exam_block",
-    "minutes": 55,
+    "minutes": 37,
     "rpe": 7,
     "focus": [
      "handstand",
      "planche",
      "balance",
      "straight_arm_push",
-     "squat"
+     "front_lever"
     ],
     "headline": "lsit"
    },
@@ -47622,7 +47280,7 @@
      "wall_handstand",
      1,
      null,
-     45,
+     35,
      120,
      "assessment",
      "pike_handstand_hold"
@@ -47641,18 +47299,9 @@
      1,
      null,
      11,
-     60,
+     120,
      "assessment",
      "incline_plank"
-    ],
-    [
-     "squat",
-     1,
-     30,
-     null,
-     90,
-     "assessment",
-     "box_squat"
     ],
     [
      "tuck_front_hold",
@@ -47667,55 +47316,19 @@
      "tuck_back_hold",
      1,
      null,
-     8,
+     6,
      120,
      "assessment",
      "skin_cat_partial"
     ],
     [
-     "pike_pushup",
-     1,
-     10,
-     null,
-     120,
-     "assessment",
-     "incline_pushup"
-    ],
-    [
-     "pseudo_planche_pushup",
-     1,
-     5,
-     null,
-     120,
-     "assessment",
-     "pushup"
-    ],
-    [
      "pullup",
      1,
-     6,
+     4,
      null,
      120,
      "assessment",
      "assisted_pullup"
-    ],
-    [
-     "parallel_dip",
-     1,
-     10,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
-     "pushup",
-     1,
-     20,
-     null,
-     120,
-     "assessment",
-     "incline_pushup"
     ],
     [
      "lsit",
@@ -47725,24 +47338,6 @@
      60,
      "assessment",
      "one_leg_lsit"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     40,
-     60,
-     "assessment",
-     "dead_bug"
-    ],
-    [
-     "hanging_leg_raise",
-     1,
-     8,
-     null,
-     60,
-     "assessment",
-     "knee_raise"
     ]
    ],
    "cooldown": [
@@ -49523,7 +49118,7 @@
     "day": 1,
     "day_type": "front_pull",
     "minutes": 42,
-    "rpe": 7,
+    "rpe": 8,
     "focus": [
      "front_lever",
      "horizontal_pull",
@@ -52260,14 +51855,14 @@
     "week": 10,
     "day": 1,
     "day_type": "exam_block",
-    "minutes": 53,
+    "minutes": 38,
     "rpe": 7,
     "focus": [
      "handstand",
      "planche",
-     "balance",
      "straight_arm_push",
-     "squat"
+     "front_lever",
+     "horizontal_pull"
     ],
     "headline": "tuck_back_hold"
    },
@@ -52378,43 +51973,25 @@
      "wall_handstand",
      1,
      null,
-     45,
+     35,
      120,
      "assessment",
      "pike_handstand_hold"
-    ],
-    [
-     "frog_stand",
-     1,
-     null,
-     18,
-     120,
-     "assessment",
-     "planche_lean"
     ],
     [
      "planche_lean",
      1,
      null,
      13,
-     60,
+     120,
      "assessment",
      "incline_plank"
-    ],
-    [
-     "squat",
-     1,
-     30,
-     null,
-     90,
-     "assessment",
-     "box_squat"
     ],
     [
      "tuck_front_hold",
      1,
      null,
-     12,
+     8,
      120,
      "assessment",
      "tuck_front_row"
@@ -52423,7 +52000,7 @@
      "tuck_back_hold",
      1,
      null,
-     12,
+     8,
      120,
      "assessment",
      "skin_cat_partial"
@@ -52438,18 +52015,9 @@
      "low_bar_transition"
     ],
     [
-     "pseudo_planche_pushup",
-     1,
-     5,
-     null,
-     120,
-     "assessment",
-     "pushup"
-    ],
-    [
      "pullup",
      1,
-     6,
+     4,
      null,
      120,
      "assessment",
@@ -52458,38 +52026,11 @@
     [
      "parallel_dip",
      1,
-     10,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
-     "pushup",
-     1,
-     20,
+     8,
      null,
      120,
      "assessment",
-     "incline_pushup"
-    ],
-    [
-     "lsit",
-     1,
-     null,
-     5,
-     60,
-     "assessment",
-     "one_leg_lsit"
-    ],
-    [
-     "hanging_leg_raise",
-     1,
-     8,
-     null,
-     60,
-     "assessment",
-     "knee_raise"
+     "assisted_dip"
     ]
    ],
    "cooldown": [
@@ -55116,7 +54657,7 @@
     "day": 1,
     "day_type": "front_pull",
     "minutes": 45,
-    "rpe": 7,
+    "rpe": 8,
     "focus": [
      "front_lever",
      "horizontal_pull",
@@ -56414,25 +55955,25 @@
    "level": 3,
    "number": 84,
    "title": {
-    "en": "Block 4 Exam · Hanging Straight-Leg Raise"
+    "en": "Block 4 Exam · Tuck Front-Lever Hold"
    },
    "description": {
-    "en": "First Skills, block 4. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Hanging Straight-Leg Raise."
+    "en": "First Skills, block 4. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Tuck Front-Lever Hold."
    },
    "schedule": {
     "week": 12,
     "day": 7,
     "day_type": "exam_block",
-    "minutes": 53,
+    "minutes": 36,
     "rpe": 7,
     "focus": [
      "handstand",
      "planche",
      "balance",
-     "straight_arm_push",
-     "front_lever"
+     "front_lever",
+     "horizontal_pull"
     ],
-    "headline": "hanging_leg_raise"
+    "headline": "tuck_front_hold"
    },
    "warmup": [
     [
@@ -56523,7 +56064,7 @@
      "wall_handstand",
      1,
      null,
-     45,
+     40,
      120,
      "assessment",
      "pike_handstand_hold"
@@ -56538,19 +56079,10 @@
      "planche_lean"
     ],
     [
-     "planche_lean",
-     1,
-     null,
-     13,
-     120,
-     "assessment",
-     "incline_plank"
-    ],
-    [
      "tuck_front_hold",
      1,
      null,
-     12,
+     10,
      120,
      "assessment",
      "tuck_front_row"
@@ -56559,7 +56091,7 @@
      "tuck_back_hold",
      1,
      null,
-     16,
+     13,
      120,
      "assessment",
      "skin_cat_partial"
@@ -56574,76 +56106,22 @@
      "jump_muscleup"
     ],
     [
-     "pike_pushup",
-     1,
-     12,
-     null,
-     120,
-     "assessment",
-     "incline_pushup"
-    ],
-    [
-     "pseudo_planche_pushup",
-     1,
-     5,
-     null,
-     120,
-     "assessment",
-     "pushup"
-    ],
-    [
      "pullup",
      1,
-     6,
+     5,
      null,
      120,
      "assessment",
      "assisted_pullup"
     ],
     [
-     "parallel_dip",
-     1,
-     10,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
      "pushup",
      1,
-     20,
+     13,
      null,
      120,
      "assessment",
      "incline_pushup"
-    ],
-    [
-     "lsit",
-     1,
-     null,
-     6,
-     60,
-     "assessment",
-     "one_leg_lsit"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     50,
-     60,
-     "assessment",
-     "dead_bug"
-    ],
-    [
-     "hanging_leg_raise",
-     1,
-     10,
-     null,
-     60,
-     "assessment",
-     "knee_raise"
     ]
    ],
    "cooldown": [
@@ -59725,22 +59203,22 @@
     "en": "Level 3 Test: First Skills"
    },
    "description": {
-    "en": "First Skills, block 5. One clean set of each skill the level trained, at the belt you reached, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Tuck Front-Lever Hold."
+    "en": "First Skills, block 5. One clean set of each skill the level trained, at the belt you reached, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Strict Pull-Up."
    },
    "schedule": {
     "week": 15,
     "day": 2,
     "day_type": "exam_level",
-    "minutes": 56,
+    "minutes": 41,
     "rpe": 7,
     "focus": [
      "handstand",
      "planche",
      "balance",
      "straight_arm_push",
-     "squat"
+     "front_lever"
     ],
-    "headline": "tuck_front_hold"
+    "headline": "pullup"
    },
    "warmup": [
     [
@@ -59849,7 +59327,7 @@
      "wall_handstand",
      1,
      null,
-     60,
+     40,
      120,
      "assessment",
      "pike_handstand_hold"
@@ -59868,24 +59346,15 @@
      1,
      null,
      14,
-     60,
+     120,
      "assessment",
      "incline_plank"
-    ],
-    [
-     "squat",
-     1,
-     30,
-     null,
-     90,
-     "assessment",
-     "box_squat"
     ],
     [
      "tuck_front_hold",
      1,
      null,
-     16,
+     10,
      120,
      "assessment",
      "tuck_front_row"
@@ -59894,7 +59363,7 @@
      "tuck_back_hold",
      1,
      null,
-     20,
+     14,
      120,
      "assessment",
      "skin_cat_partial"
@@ -59902,47 +59371,20 @@
     [
      "pike_pushup",
      1,
-     12,
+     8,
      null,
      120,
      "assessment",
      "incline_pushup"
     ],
     [
-     "pseudo_planche_pushup",
+     "pullup",
      1,
      5,
      null,
      120,
      "assessment",
-     "pushup"
-    ],
-    [
-     "pullup",
-     1,
-     6,
-     null,
-     120,
-     "assessment",
      "assisted_pullup"
-    ],
-    [
-     "parallel_dip",
-     1,
-     10,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
-     "pushup",
-     1,
-     20,
-     null,
-     120,
-     "assessment",
-     "incline_pushup"
     ],
     [
      "lsit",
@@ -59952,24 +59394,6 @@
      60,
      "assessment",
      "one_leg_lsit"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     50,
-     60,
-     "assessment",
-     "dead_bug"
-    ],
-    [
-     "hanging_leg_raise",
-     1,
-     10,
-     null,
-     60,
-     "assessment",
-     "knee_raise"
     ]
    ],
    "cooldown": [
@@ -62424,25 +61848,24 @@
    "level": 4,
    "number": 13,
    "title": {
-    "en": "Block 1 Exam · L-Sit"
+    "en": "Block 1 Exam · Tuck Back Lever"
    },
    "description": {
-    "en": "Skill Control, block 1. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: L-Sit."
+    "en": "Skill Control, block 1. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Tuck Back Lever."
    },
    "schedule": {
     "week": 2,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 56,
-    "rpe": 8,
+    "minutes": 31,
+    "rpe": 7,
     "focus": [
      "handstand",
-     "planche",
-     "balance",
-     "straight_arm_push",
-     "squat"
+     "back_lever",
+     "muscle_up",
+     "vertical_pull"
     ],
-    "headline": "lsit"
+    "headline": "tuck_back_hold"
    },
    "warmup": [
     [
@@ -62551,52 +61974,16 @@
      "wall_handstand",
      1,
      null,
-     60,
+     40,
      120,
      "assessment",
      "pike_handstand_hold"
     ],
     [
-     "frog_stand",
-     1,
-     null,
-     20,
-     120,
-     "assessment",
-     "planche_lean"
-    ],
-    [
-     "planche_lean",
-     1,
-     null,
-     14,
-     60,
-     "assessment",
-     "incline_plank"
-    ],
-    [
-     "squat",
-     1,
-     30,
-     null,
-     90,
-     "assessment",
-     "box_squat"
-    ],
-    [
-     "tuck_front_hold",
-     1,
-     null,
-     12,
-     120,
-     "assessment",
-     "tuck_front_row"
-    ],
-    [
      "tuck_back_hold",
      1,
      null,
-     20,
+     14,
      120,
      "assessment",
      "skin_cat_partial"
@@ -62604,74 +61991,20 @@
     [
      "band_muscleup",
      1,
-     2,
+     1,
      null,
      120,
      "assessment",
      "jump_muscleup"
     ],
     [
-     "pseudo_planche_pushup",
+     "pullup",
      1,
      5,
      null,
      120,
      "assessment",
-     "pushup"
-    ],
-    [
-     "pullup",
-     1,
-     6,
-     null,
-     120,
-     "assessment",
      "assisted_pullup"
-    ],
-    [
-     "parallel_dip",
-     1,
-     10,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
-     "pushup",
-     1,
-     20,
-     null,
-     120,
-     "assessment",
-     "incline_pushup"
-    ],
-    [
-     "lsit",
-     1,
-     null,
-     6,
-     60,
-     "assessment",
-     "one_leg_lsit"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     50,
-     60,
-     "assessment",
-     "dead_bug"
-    ],
-    [
-     "hanging_leg_raise",
-     1,
-     10,
-     null,
-     60,
-     "assessment",
-     "knee_raise"
     ]
    ],
    "cooldown": [
@@ -66462,14 +65795,14 @@
     "week": 5,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 48,
-    "rpe": 8,
+    "minutes": 36,
+    "rpe": 7,
     "focus": [
      "handstand",
      "balance",
      "planche",
      "straight_arm_push",
-     "single_leg_squat"
+     "front_lever"
     ],
     "headline": "toes_to_bar"
    },
@@ -66590,18 +65923,9 @@
      1,
      null,
      5,
-     60,
+     120,
      "assessment",
      "frog_stand"
-    ],
-    [
-     "pistol_squat",
-     1,
-     "2/side",
-     null,
-     90,
-     "assessment",
-     "assisted_pistol_squat"
     ],
     [
      "advanced_tuck_front",
@@ -66616,7 +65940,7 @@
      "tuck_back_hold",
      1,
      null,
-     20,
+     14,
      120,
      "assessment",
      "skin_cat_partial"
@@ -66624,7 +65948,7 @@
     [
      "band_muscleup",
      1,
-     2,
+     1,
      null,
      120,
      "assessment",
@@ -66633,52 +65957,16 @@
     [
      "pullup",
      1,
-     6,
+     5,
      null,
      120,
      "assessment",
      "assisted_pullup"
     ],
     [
-     "parallel_dip",
-     1,
-     10,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
-     "pushup",
-     1,
-     20,
-     null,
-     120,
-     "assessment",
-     "incline_pushup"
-    ],
-    [
-     "lsit",
-     1,
-     null,
-     10,
-     60,
-     "assessment",
-     "one_leg_lsit"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     50,
-     60,
-     "assessment",
-     "dead_bug"
-    ],
-    [
      "toes_to_bar",
      1,
-     2,
+     1,
      null,
      60,
      "assessment",
@@ -70447,14 +69735,14 @@
     "week": 8,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 48,
-    "rpe": 8,
+    "minutes": 37,
+    "rpe": 7,
     "focus": [
      "handstand",
      "balance",
      "planche",
      "straight_arm_push",
-     "single_leg_squat"
+     "front_lever"
     ],
     "headline": "strict_muscleup"
    },
@@ -70575,18 +69863,9 @@
      1,
      null,
      5,
-     60,
+     120,
      "assessment",
      "frog_stand"
-    ],
-    [
-     "pistol_squat",
-     1,
-     "2/side",
-     null,
-     90,
-     "assessment",
-     "assisted_pistol_squat"
     ],
     [
      "advanced_tuck_front",
@@ -70601,7 +69880,7 @@
      "tuck_back_hold",
      1,
      null,
-     20,
+     14,
      120,
      "assessment",
      "skin_cat_partial"
@@ -70618,7 +69897,7 @@
     [
      "pullup",
      1,
-     6,
+     5,
      null,
      120,
      "assessment",
@@ -70627,47 +69906,11 @@
     [
      "parallel_dip",
      1,
-     10,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
-     "pushup",
-     1,
-     20,
+     9,
      null,
      120,
      "assessment",
-     "incline_pushup"
-    ],
-    [
-     "lsit",
-     1,
-     null,
-     10,
-     60,
-     "assessment",
-     "one_leg_lsit"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     50,
-     60,
-     "assessment",
-     "dead_bug"
-    ],
-    [
-     "toes_to_bar",
-     1,
-     2,
-     null,
-     60,
-     "assessment",
-     "hanging_leg_raise"
+     "assisted_dip"
     ]
    ],
    "cooldown": [
@@ -70866,7 +70109,7 @@
     "day": 1,
     "day_type": "front_pull",
     "minutes": 46,
-    "rpe": 7,
+    "rpe": 8,
     "focus": [
      "front_lever",
      "horizontal_pull",
@@ -74419,14 +73662,14 @@
     "week": 11,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 50,
-    "rpe": 8,
+    "minutes": 38,
+    "rpe": 7,
     "focus": [
      "handstand",
      "balance",
-     "planche",
-     "straight_arm_push",
-     "single_leg_squat"
+     "front_lever",
+     "back_lever",
+     "muscle_up"
     ],
     "headline": "wall_hspu"
    },
@@ -74543,24 +73786,6 @@
      "handstand_toe_pull"
     ],
     [
-     "tuck_planche",
-     1,
-     null,
-     8,
-     60,
-     "assessment",
-     "frog_stand"
-    ],
-    [
-     "pistol_squat",
-     1,
-     "2/side",
-     null,
-     90,
-     "assessment",
-     "assisted_pistol_squat"
-    ],
-    [
      "advanced_tuck_front",
      1,
      null,
@@ -74590,7 +73815,7 @@
     [
      "wall_hspu",
      1,
-     2,
+     1,
      null,
      120,
      "assessment",
@@ -74606,49 +73831,13 @@
      "assisted_pullup"
     ],
     [
-     "parallel_dip",
-     1,
-     10,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
      "pushup",
      1,
-     20,
+     16,
      null,
      120,
      "assessment",
      "incline_pushup"
-    ],
-    [
-     "lsit",
-     1,
-     null,
-     10,
-     60,
-     "assessment",
-     "one_leg_lsit"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     60,
-     60,
-     "assessment",
-     "dead_bug"
-    ],
-    [
-     "toes_to_bar",
-     1,
-     3,
-     null,
-     60,
-     "assessment",
-     "hanging_leg_raise"
     ]
    ],
    "cooldown": [
@@ -74838,7 +74027,7 @@
     "day": 1,
     "day_type": "front_pull",
     "minutes": 46,
-    "rpe": 7,
+    "rpe": 8,
     "focus": [
      "front_lever",
      "horizontal_pull",
@@ -78998,14 +78187,14 @@
     "week": 15,
     "day": 2,
     "day_type": "exam_level",
-    "minutes": 50,
-    "rpe": 8,
+    "minutes": 40,
+    "rpe": 7,
     "focus": [
      "handstand",
      "balance",
      "planche",
      "straight_arm_push",
-     "single_leg_squat"
+     "front_lever"
     ],
     "headline": "advanced_tuck_back"
    },
@@ -79125,19 +78314,10 @@
      "tuck_planche",
      1,
      null,
-     8,
-     60,
+     6,
+     120,
      "assessment",
      "frog_stand"
-    ],
-    [
-     "pistol_squat",
-     1,
-     "2/side",
-     null,
-     90,
-     "assessment",
-     "assisted_pistol_squat"
     ],
     [
      "advanced_tuck_front",
@@ -79152,7 +78332,7 @@
      "advanced_tuck_back",
      1,
      null,
-     10,
+     7,
      120,
      "assessment",
      "tuck_back_hold"
@@ -79169,7 +78349,7 @@
     [
      "wall_hspu",
      1,
-     2,
+     1,
      null,
      120,
      "assessment",
@@ -79187,47 +78367,11 @@
     [
      "parallel_dip",
      1,
-     10,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
-     "pushup",
-     1,
-     20,
+     9,
      null,
      120,
      "assessment",
-     "incline_pushup"
-    ],
-    [
-     "lsit",
-     1,
-     null,
-     10,
-     60,
-     "assessment",
-     "one_leg_lsit"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     60,
-     60,
-     "assessment",
-     "dead_bug"
-    ],
-    [
-     "toes_to_bar",
-     1,
-     3,
-     null,
-     60,
-     "assessment",
-     "hanging_leg_raise"
+     "assisted_dip"
     ]
    ],
    "cooldown": [
@@ -81546,14 +80690,14 @@
     "week": 2,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 52,
-    "rpe": 8,
+    "minutes": 29,
+    "rpe": 7,
     "focus": [
      "handstand",
      "balance",
-     "planche",
-     "straight_arm_push",
-     "single_leg_squat"
+     "muscle_up",
+     "vertical_push",
+     "overhead_press"
     ],
     "headline": "wall_hspu"
    },
@@ -81647,15 +80791,6 @@
      45,
      "ramp-up",
      "handstand_toe_pull"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     25,
-     30,
-     "slow",
-     "skin_cat_partial"
     ]
    ],
    "practice": [],
@@ -81670,42 +80805,6 @@
      "handstand_toe_pull"
     ],
     [
-     "tuck_planche",
-     1,
-     null,
-     8,
-     60,
-     "assessment",
-     "frog_stand"
-    ],
-    [
-     "pistol_squat",
-     1,
-     "2/side",
-     null,
-     90,
-     "assessment",
-     "assisted_pistol_squat"
-    ],
-    [
-     "advanced_tuck_front",
-     1,
-     null,
-     5,
-     150,
-     "assessment",
-     "tuck_front_hold"
-    ],
-    [
-     "advanced_tuck_back",
-     1,
-     null,
-     10,
-     150,
-     "assessment",
-     "tuck_back_hold"
-    ],
-    [
      "strict_muscleup",
      1,
      1,
@@ -81717,7 +80816,7 @@
     [
      "wall_hspu",
      1,
-     2,
+     1,
      null,
      150,
      "assessment",
@@ -81731,51 +80830,6 @@
      120,
      "assessment",
      "assisted_pullup"
-    ],
-    [
-     "parallel_dip",
-     1,
-     10,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
-     "pushup",
-     1,
-     20,
-     null,
-     120,
-     "assessment",
-     "incline_pushup"
-    ],
-    [
-     "lsit",
-     1,
-     null,
-     10,
-     60,
-     "assessment",
-     "one_leg_lsit"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     60,
-     60,
-     "assessment",
-     "dead_bug"
-    ],
-    [
-     "toes_to_bar",
-     1,
-     3,
-     null,
-     60,
-     "assessment",
-     "hanging_leg_raise"
     ]
    ],
    "cooldown": [
@@ -81974,7 +81028,7 @@
     "day": 1,
     "day_type": "front_pull",
     "minutes": 49,
-    "rpe": 7,
+    "rpe": 8,
     "focus": [
      "front_lever",
      "horizontal_pull",
@@ -83287,7 +82341,7 @@
     "day": 1,
     "day_type": "front_pull",
     "minutes": 52,
-    "rpe": 7,
+    "rpe": 8,
     "focus": [
      "front_lever",
      "horizontal_pull",
@@ -85531,14 +84585,14 @@
     "week": 5,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 59,
-    "rpe": 8,
+    "minutes": 40,
+    "rpe": 7,
     "focus": [
      "handstand",
      "balance",
-     "planche",
-     "straight_arm_push",
-     "front_lever"
+     "front_lever",
+     "back_lever",
+     "human_flag"
     ],
     "headline": "archer_pullup"
    },
@@ -85655,19 +84709,10 @@
      "handstand_toe_pull"
     ],
     [
-     "tuck_planche",
-     1,
-     null,
-     8,
-     150,
-     "assessment",
-     "frog_stand"
-    ],
-    [
      "advanced_tuck_front",
      1,
      null,
-     8,
+     6,
      150,
      "assessment",
      "tuck_front_hold"
@@ -85691,85 +84736,31 @@
      "vertical_flag"
     ],
     [
-     "strict_muscleup",
-     1,
-     2,
-     null,
-     150,
-     "assessment",
-     "band_muscleup"
-    ],
-    [
      "archer_pullup",
      1,
-     "3/side",
+     "1/side",
      null,
      150,
      "assessment",
      "pullup"
     ],
     [
-     "wall_hspu",
-     1,
-     2,
-     null,
-     150,
-     "assessment",
-     "wall_hspu_negative"
-    ],
-    [
      "pullup",
      1,
-     10,
+     7,
      null,
      120,
      "assessment",
      "assisted_pullup"
     ],
     [
-     "parallel_dip",
-     1,
-     15,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
      "pushup",
      1,
-     30,
+     20,
      null,
      120,
      "assessment",
      "incline_pushup"
-    ],
-    [
-     "lsit",
-     1,
-     null,
-     10,
-     60,
-     "assessment",
-     "one_leg_lsit"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     60,
-     60,
-     "assessment",
-     "dead_bug"
-    ],
-    [
-     "toes_to_bar",
-     1,
-     3,
-     null,
-     60,
-     "assessment",
-     "hanging_leg_raise"
     ]
    ],
    "cooldown": [
@@ -89528,14 +88519,14 @@
     "week": 8,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 58,
-    "rpe": 8,
+    "minutes": 39,
+    "rpe": 7,
     "focus": [
      "handstand",
      "balance",
      "planche",
      "straight_arm_push",
-     "single_leg_squat"
+     "human_flag"
     ],
     "headline": "tuck_flag"
    },
@@ -89629,15 +88620,6 @@
      45,
      "ramp-up",
      "handstand_toe_pull"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     30,
-     30,
-     "slow",
-     "skin_cat_partial"
     ]
    ],
    "practice": [],
@@ -89646,7 +88628,7 @@
      "freestanding_handstand",
      1,
      null,
-     15,
+     13,
      120,
      "assessment",
      "handstand_toe_pull"
@@ -89655,37 +88637,10 @@
      "tuck_planche",
      1,
      null,
-     10,
-     60,
+     7,
+     150,
      "assessment",
      "frog_stand"
-    ],
-    [
-     "pistol_squat",
-     1,
-     "4/side",
-     null,
-     90,
-     "assessment",
-     "assisted_pistol_squat"
-    ],
-    [
-     "advanced_tuck_front",
-     1,
-     null,
-     8,
-     150,
-     "assessment",
-     "tuck_front_hold"
-    ],
-    [
-     "advanced_tuck_back",
-     1,
-     null,
-     15,
-     150,
-     "assessment",
-     "tuck_back_hold"
     ],
     [
      "tuck_flag",
@@ -89699,7 +88654,7 @@
     [
      "strict_muscleup",
      1,
-     2,
+     1,
      null,
      150,
      "assessment",
@@ -89708,25 +88663,16 @@
     [
      "archer_pullup",
      1,
-     "2/side",
+     "1/side",
      null,
      150,
      "assessment",
      "pullup"
     ],
     [
-     "wall_hspu",
-     1,
-     4,
-     null,
-     150,
-     "assessment",
-     "wall_hspu_negative"
-    ],
-    [
      "pullup",
      1,
-     10,
+     7,
      null,
      120,
      "assessment",
@@ -89735,38 +88681,11 @@
     [
      "parallel_dip",
      1,
-     15,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
-     "pushup",
-     1,
-     30,
+     10,
      null,
      120,
      "assessment",
-     "incline_pushup"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     60,
-     60,
-     "assessment",
-     "dead_bug"
-    ],
-    [
-     "toes_to_bar",
-     1,
-     3,
-     null,
-     60,
-     "assessment",
-     "hanging_leg_raise"
+     "assisted_dip"
     ]
    ],
    "cooldown": [
@@ -91276,7 +90195,7 @@
     "day": 1,
     "day_type": "front_pull",
     "minutes": 52,
-    "rpe": 7,
+    "rpe": 8,
     "focus": [
      "front_lever",
      "muscle_up",
@@ -93527,14 +92446,14 @@
     "week": 11,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 59,
-    "rpe": 8,
+    "minutes": 40,
+    "rpe": 7,
     "focus": [
      "handstand",
      "balance",
-     "planche",
-     "straight_arm_push",
-     "front_lever"
+     "front_lever",
+     "back_lever",
+     "muscle_up"
     ],
     "headline": "advanced_tuck_back"
    },
@@ -93645,25 +92564,16 @@
      "freestanding_handstand",
      1,
      null,
-     15,
+     14,
      120,
      "assessment",
      "handstand_toe_pull"
     ],
     [
-     "tuck_planche",
-     1,
-     null,
-     10,
-     150,
-     "assessment",
-     "frog_stand"
-    ],
-    [
      "advanced_tuck_front",
      1,
      null,
-     8,
+     6,
      150,
      "assessment",
      "tuck_front_hold"
@@ -93672,24 +92582,15 @@
      "advanced_tuck_back",
      1,
      null,
-     20,
+     14,
      150,
      "assessment",
      "tuck_back_hold"
     ],
     [
-     "tuck_flag",
-     1,
-     null,
-     "5/side",
-     150,
-     "assessment",
-     "vertical_flag"
-    ],
-    [
      "strict_muscleup",
      1,
-     2,
+     1,
      null,
      150,
      "assessment",
@@ -93698,74 +92599,29 @@
     [
      "archer_pullup",
      1,
-     "2/side",
+     "1/side",
      null,
      150,
      "assessment",
      "pullup"
     ],
     [
-     "wall_hspu",
-     1,
-     4,
-     null,
-     150,
-     "assessment",
-     "wall_hspu_negative"
-    ],
-    [
      "pullup",
      1,
-     10,
+     7,
      null,
      120,
      "assessment",
      "assisted_pullup"
     ],
     [
-     "parallel_dip",
-     1,
-     15,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
      "pushup",
      1,
-     30,
+     20,
      null,
      120,
      "assessment",
      "incline_pushup"
-    ],
-    [
-     "lsit",
-     1,
-     null,
-     15,
-     60,
-     "assessment",
-     "one_leg_lsit"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     60,
-     60,
-     "assessment",
-     "dead_bug"
-    ],
-    [
-     "toes_to_bar",
-     1,
-     3,
-     null,
-     60,
-     "assessment",
-     "hanging_leg_raise"
     ]
    ],
    "cooldown": [
@@ -93955,7 +92811,7 @@
     "day": 1,
     "day_type": "front_pull",
     "minutes": 50,
-    "rpe": 7,
+    "rpe": 8,
     "focus": [
      "front_lever",
      "muscle_up",
@@ -95265,7 +94121,7 @@
     "day": 1,
     "day_type": "front_pull",
     "minutes": 53,
-    "rpe": 7,
+    "rpe": 8,
     "focus": [
      "front_lever",
      "muscle_up",
@@ -98150,14 +97006,14 @@
     "week": 15,
     "day": 2,
     "day_type": "exam_level",
-    "minutes": 58,
-    "rpe": 8,
+    "minutes": 44,
+    "rpe": 7,
     "focus": [
      "handstand",
      "balance",
      "planche",
      "straight_arm_push",
-     "single_leg_squat"
+     "front_lever"
     ],
     "headline": "straddle_back"
    },
@@ -98286,26 +97142,17 @@
      "tuck_planche",
      1,
      null,
-     10,
-     60,
+     7,
+     150,
      "assessment",
      "frog_stand"
-    ],
-    [
-     "pistol_squat",
-     1,
-     "4/side",
-     null,
-     90,
-     "assessment",
-     "assisted_pistol_squat"
     ],
     [
      "advanced_tuck_front",
      1,
      null,
-     10,
-     120,
+     7,
+     150,
      "assessment",
      "tuck_front_hold"
     ],
@@ -98314,7 +97161,7 @@
      1,
      null,
      3,
-     120,
+     150,
      "assessment",
      "advanced_tuck_back"
     ],
@@ -98322,42 +97169,24 @@
      "tuck_flag",
      1,
      null,
-     "8/side",
-     120,
+     "6/side",
+     150,
      "assessment",
      "vertical_flag"
     ],
     [
      "strict_muscleup",
      1,
-     2,
+     1,
      null,
-     120,
+     150,
      "assessment",
      "band_muscleup"
     ],
     [
-     "archer_pullup",
-     1,
-     "2/side",
-     null,
-     120,
-     "assessment",
-     "pullup"
-    ],
-    [
-     "wall_hspu",
-     1,
-     4,
-     null,
-     120,
-     "assessment",
-     "wall_hspu_negative"
-    ],
-    [
      "pullup",
      1,
-     10,
+     7,
      null,
      120,
      "assessment",
@@ -98366,47 +97195,11 @@
     [
      "parallel_dip",
      1,
-     15,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
-     "pushup",
-     1,
-     30,
+     10,
      null,
      120,
      "assessment",
-     "incline_pushup"
-    ],
-    [
-     "lsit",
-     1,
-     null,
-     15,
-     60,
-     "assessment",
-     "one_leg_lsit"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     60,
-     60,
-     "assessment",
-     "dead_bug"
-    ],
-    [
-     "toes_to_bar",
-     1,
-     4,
-     null,
-     60,
-     "assessment",
-     "hanging_leg_raise"
+     "assisted_dip"
     ]
    ],
    "cooldown": [
@@ -100722,14 +99515,14 @@
     "week": 2,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 60,
-    "rpe": 8,
+    "minutes": 32,
+    "rpe": 7,
     "focus": [
      "handstand",
      "balance",
-     "planche",
-     "straight_arm_push",
-     "front_lever"
+     "back_lever",
+     "muscle_up",
+     "vertical_pull"
     ],
     "headline": "straddle_back"
    },
@@ -100855,121 +99648,31 @@
      "handstand_toe_pull"
     ],
     [
-     "tuck_planche",
-     1,
-     null,
-     10,
-     150,
-     "assessment",
-     "frog_stand"
-    ],
-    [
-     "advanced_tuck_front",
-     1,
-     null,
-     10,
-     150,
-     "assessment",
-     "tuck_front_hold"
-    ],
-    [
      "straddle_back",
      1,
      null,
-     5,
+     3,
      150,
      "assessment",
      "advanced_tuck_back"
     ],
     [
-     "tuck_flag",
-     1,
-     null,
-     "8/side",
-     150,
-     "assessment",
-     "vertical_flag"
-    ],
-    [
      "strict_muscleup",
      1,
-     2,
+     1,
      null,
      150,
      "assessment",
      "band_muscleup"
     ],
     [
-     "archer_pullup",
-     1,
-     "2/side",
-     null,
-     150,
-     "assessment",
-     "pullup"
-    ],
-    [
-     "wall_hspu",
-     1,
-     4,
-     null,
-     150,
-     "assessment",
-     "wall_hspu_negative"
-    ],
-    [
      "pullup",
      1,
-     10,
+     7,
      null,
      120,
      "assessment",
      "assisted_pullup"
-    ],
-    [
-     "parallel_dip",
-     1,
-     15,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
-     "pushup",
-     1,
-     30,
-     null,
-     120,
-     "assessment",
-     "incline_pushup"
-    ],
-    [
-     "lsit",
-     1,
-     null,
-     15,
-     60,
-     "assessment",
-     "one_leg_lsit"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     60,
-     60,
-     "assessment",
-     "dead_bug"
-    ],
-    [
-     "toes_to_bar",
-     1,
-     4,
-     null,
-     60,
-     "assessment",
-     "hanging_leg_raise"
     ]
    ],
    "cooldown": [
@@ -104775,14 +103478,14 @@
     "week": 5,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 59,
-    "rpe": 8,
+    "minutes": 38,
+    "rpe": 7,
     "focus": [
      "handstand",
      "balance",
      "planche",
      "straight_arm_push",
-     "single_leg_squat"
+     "front_lever"
     ],
     "headline": "dragon_flag"
    },
@@ -104876,24 +103579,6 @@
      45,
      "ramp-up",
      "handstand_toe_pull"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     30,
-     30,
-     "slow",
-     "skin_cat_partial"
-    ],
-    [
-     "tuck_back_hold",
-     1,
-     null,
-     10,
-     30,
-     "ramp-up",
-     "skin_cat_partial"
     ]
    ],
    "practice": [],
@@ -104902,7 +103587,7 @@
      "freestanding_handstand",
      1,
      null,
-     30,
+     20,
      120,
      "assessment",
      "handstand_toe_pull"
@@ -104911,43 +103596,25 @@
      "advanced_tuck_planche",
      1,
      null,
-     4,
-     60,
+     3,
+     150,
      "assessment",
      "tuck_planche"
-    ],
-    [
-     "pistol_squat",
-     1,
-     "4/side",
-     null,
-     90,
-     "assessment",
-     "assisted_pistol_squat"
     ],
     [
      "advanced_tuck_front",
      1,
      null,
-     10,
+     8,
      150,
      "assessment",
      "tuck_front_hold"
     ],
     [
-     "straddle_back",
-     1,
-     null,
-     5,
-     150,
-     "assessment",
-     "advanced_tuck_back"
-    ],
-    [
      "tuck_flag",
      1,
      null,
-     "10/side",
+     "7/side",
      150,
      "assessment",
      "vertical_flag"
@@ -104955,56 +103622,20 @@
     [
      "strict_muscleup",
      1,
-     2,
+     1,
      null,
      150,
      "assessment",
      "band_muscleup"
     ],
     [
-     "archer_pullup",
-     1,
-     "2/side",
-     null,
-     150,
-     "assessment",
-     "pullup"
-    ],
-    [
-     "wall_hspu",
-     1,
-     4,
-     null,
-     150,
-     "assessment",
-     "wall_hspu_negative"
-    ],
-    [
      "pullup",
      1,
-     10,
+     8,
      null,
      120,
      "assessment",
      "assisted_pullup"
-    ],
-    [
-     "parallel_dip",
-     1,
-     15,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
-     "pushup",
-     1,
-     30,
-     null,
-     120,
-     "assessment",
-     "incline_pushup"
     ],
     [
      "dragon_flag",
@@ -105014,15 +103645,6 @@
      60,
      "assessment",
      "full_dragon_negative"
-    ],
-    [
-     "toes_to_bar",
-     1,
-     6,
-     null,
-     60,
-     "assessment",
-     "hanging_leg_raise"
     ]
    ],
    "cooldown": [
@@ -108870,25 +107492,25 @@
    "level": 6,
    "number": 55,
    "title": {
-    "en": "Block 3 Exam · Advanced-Tuck Planche"
+    "en": "Block 3 Exam · Tuck Human Flag"
    },
    "description": {
-    "en": "Confident Calisthenics, block 3. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Advanced-Tuck Planche."
+    "en": "Confident Calisthenics, block 3. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Tuck Human Flag."
    },
    "schedule": {
     "week": 8,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 60,
-    "rpe": 8,
+    "minutes": 40,
+    "rpe": 7,
     "focus": [
      "handstand",
      "balance",
-     "planche",
-     "straight_arm_push",
-     "front_lever"
+     "front_lever",
+     "back_lever",
+     "human_flag"
     ],
-    "headline": "advanced_tuck_planche"
+    "headline": "tuck_flag"
    },
    "warmup": [
     [
@@ -109006,25 +107628,16 @@
      "freestanding_handstand",
      1,
      null,
-     30,
+     20,
      120,
      "assessment",
      "handstand_toe_pull"
     ],
     [
-     "advanced_tuck_planche",
-     1,
-     null,
-     6,
-     150,
-     "assessment",
-     "tuck_planche"
-    ],
-    [
      "advanced_tuck_front",
      1,
      null,
-     12,
+     8,
      150,
      "assessment",
      "tuck_front_hold"
@@ -109033,7 +107646,7 @@
      "straddle_back",
      1,
      null,
-     5,
+     4,
      150,
      "assessment",
      "advanced_tuck_back"
@@ -109042,7 +107655,7 @@
      "tuck_flag",
      1,
      null,
-     "12/side",
+     "8/side",
      150,
      "assessment",
      "vertical_flag"
@@ -109050,65 +107663,20 @@
     [
      "strict_muscleup",
      1,
-     2,
+     1,
      null,
      150,
      "assessment",
      "band_muscleup"
     ],
     [
-     "archer_pullup",
-     1,
-     "3/side",
-     null,
-     150,
-     "assessment",
-     "pullup"
-    ],
-    [
-     "wall_hspu",
-     1,
-     4,
-     null,
-     150,
-     "assessment",
-     "wall_hspu_negative"
-    ],
-    [
      "pullup",
      1,
-     10,
+     8,
      null,
      120,
      "assessment",
      "assisted_pullup"
-    ],
-    [
-     "parallel_dip",
-     1,
-     15,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
-     "pushup",
-     1,
-     30,
-     null,
-     120,
-     "assessment",
-     "incline_pushup"
-    ],
-    [
-     "lsit",
-     1,
-     null,
-     15,
-     60,
-     "assessment",
-     "one_leg_lsit"
     ],
     [
      "dragon_flag",
@@ -109118,15 +107686,6 @@
      60,
      "assessment",
      "full_dragon_negative"
-    ],
-    [
-     "toes_to_bar",
-     1,
-     6,
-     null,
-     60,
-     "assessment",
-     "hanging_leg_raise"
     ]
    ],
    "cooldown": [
@@ -113031,14 +111590,14 @@
     "week": 11,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 59,
-    "rpe": 8,
+    "minutes": 42,
+    "rpe": 7,
     "focus": [
      "handstand",
      "balance",
      "planche",
      "straight_arm_push",
-     "single_leg_squat"
+     "back_lever"
     ],
     "headline": "full_back"
    },
@@ -113158,7 +111717,7 @@
      "freestanding_handstand",
      1,
      null,
-     30,
+     20,
      120,
      "assessment",
      "handstand_toe_pull"
@@ -113167,34 +111726,16 @@
      "advanced_tuck_planche",
      1,
      null,
-     6,
-     60,
-     "assessment",
-     "tuck_planche"
-    ],
-    [
-     "pistol_squat",
-     1,
-     "6/side",
-     null,
-     90,
-     "assessment",
-     "assisted_pistol_squat"
-    ],
-    [
-     "advanced_tuck_front",
-     1,
-     null,
-     12,
+     4,
      150,
      "assessment",
-     "tuck_front_hold"
+     "tuck_planche"
     ],
     [
      "full_back",
      1,
      null,
-     5,
+     3,
      150,
      "assessment",
      "straddle_back"
@@ -113203,7 +111744,7 @@
      "tuck_flag",
      1,
      null,
-     "15/side",
+     "11/side",
      150,
      "assessment",
      "vertical_flag"
@@ -113211,74 +111752,29 @@
     [
      "strict_muscleup",
      1,
-     2,
+     1,
      null,
      150,
      "assessment",
      "band_muscleup"
     ],
     [
-     "archer_pullup",
-     1,
-     "3/side",
-     null,
-     150,
-     "assessment",
-     "pullup"
-    ],
-    [
-     "wall_hspu",
-     1,
-     4,
-     null,
-     150,
-     "assessment",
-     "wall_hspu_negative"
-    ],
-    [
      "pullup",
      1,
-     10,
+     8,
      null,
      120,
      "assessment",
      "assisted_pullup"
     ],
     [
-     "parallel_dip",
-     1,
-     15,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
      "pushup",
      1,
-     30,
+     20,
      null,
      120,
      "assessment",
      "incline_pushup"
-    ],
-    [
-     "dragon_flag",
-     1,
-     1,
-     null,
-     60,
-     "assessment",
-     "full_dragon_negative"
-    ],
-    [
-     "toes_to_bar",
-     1,
-     6,
-     null,
-     60,
-     "assessment",
-     "hanging_leg_raise"
     ]
    ],
    "cooldown": [
@@ -117826,14 +116322,14 @@
     "week": 15,
     "day": 2,
     "day_type": "exam_level",
-    "minutes": 59,
-    "rpe": 8,
+    "minutes": 46,
+    "rpe": 7,
     "focus": [
      "handstand",
      "balance",
      "planche",
      "straight_arm_push",
-     "single_leg_squat"
+     "front_lever"
     ],
     "headline": "straddle_flag"
    },
@@ -117962,7 +116458,7 @@
      "freestanding_handstand",
      1,
      null,
-     30,
+     25,
      120,
      "assessment",
      "handstand_toe_pull"
@@ -117971,26 +116467,17 @@
      "advanced_tuck_planche",
      1,
      null,
-     6,
-     60,
+     4,
+     150,
      "assessment",
      "tuck_planche"
-    ],
-    [
-     "pistol_squat",
-     1,
-     "6/side",
-     null,
-     90,
-     "assessment",
-     "assisted_pistol_squat"
     ],
     [
      "advanced_tuck_front",
      1,
      null,
-     15,
-     120,
+     11,
+     150,
      "assessment",
      "tuck_front_hold"
     ],
@@ -117999,7 +116486,7 @@
      1,
      null,
      3,
-     120,
+     150,
      "assessment",
      "straddle_back"
     ],
@@ -118008,41 +116495,23 @@
      1,
      null,
      "3/side",
-     120,
+     150,
      "assessment",
      "tuck_flag"
     ],
     [
      "strict_muscleup",
      1,
-     2,
+     1,
      null,
-     120,
+     150,
      "assessment",
      "band_muscleup"
     ],
     [
-     "archer_pullup",
-     1,
-     "3/side",
-     null,
-     120,
-     "assessment",
-     "pullup"
-    ],
-    [
-     "wall_hspu",
-     1,
-     4,
-     null,
-     120,
-     "assessment",
-     "wall_hspu_negative"
-    ],
-    [
      "pullup",
      1,
-     10,
+     8,
      null,
      120,
      "assessment",
@@ -118051,47 +116520,11 @@
     [
      "parallel_dip",
      1,
-     15,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
-     "pushup",
-     1,
-     30,
+     12,
      null,
      120,
      "assessment",
-     "incline_pushup"
-    ],
-    [
-     "lsit",
-     1,
-     null,
-     15,
-     60,
-     "assessment",
-     "one_leg_lsit"
-    ],
-    [
-     "dragon_flag",
-     1,
-     1,
-     null,
-     60,
-     "assessment",
-     "full_dragon_negative"
-    ],
-    [
-     "toes_to_bar",
-     1,
-     6,
-     null,
-     60,
-     "assessment",
-     "hanging_leg_raise"
+     "assisted_dip"
     ]
    ],
    "cooldown": [
@@ -120516,14 +118949,14 @@
     "week": 2,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 59,
-    "rpe": 8,
+    "minutes": 31,
+    "rpe": 7,
     "focus": [
      "handstand",
      "balance",
-     "planche",
-     "straight_arm_push",
-     "front_lever"
+     "human_flag",
+     "muscle_up",
+     "vertical_pull"
     ],
     "headline": "straddle_flag"
    },
@@ -120619,33 +119052,6 @@
      "handstand_toe_pull"
     ],
     [
-     "advanced_tuck_planche",
-     1,
-     null,
-     3,
-     45,
-     "ramp-up",
-     "tuck_planche"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     30,
-     30,
-     "slow",
-     "skin_cat_partial"
-    ],
-    [
-     "tuck_back_hold",
-     1,
-     null,
-     10,
-     30,
-     "ramp-up",
-     "skin_cat_partial"
-    ],
-    [
      "tuck_flag",
      1,
      null,
@@ -120661,127 +119067,37 @@
      "freestanding_handstand",
      1,
      null,
-     30,
+     25,
      120,
      "assessment",
      "handstand_toe_pull"
     ],
     [
-     "advanced_tuck_planche",
-     1,
-     null,
-     6,
-     120,
-     "assessment",
-     "tuck_planche"
-    ],
-    [
-     "advanced_tuck_front",
-     1,
-     null,
-     15,
-     120,
-     "assessment",
-     "tuck_front_hold"
-    ],
-    [
-     "full_back",
-     1,
-     null,
-     3,
-     120,
-     "assessment",
-     "straddle_back"
-    ],
-    [
      "straddle_flag",
      1,
      null,
-     "4/side",
-     120,
+     "3/side",
+     150,
      "assessment",
      "tuck_flag"
     ],
     [
      "strict_muscleup",
      1,
-     2,
+     1,
      null,
-     120,
+     150,
      "assessment",
      "band_muscleup"
     ],
     [
-     "archer_pullup",
-     1,
-     "3/side",
-     null,
-     120,
-     "assessment",
-     "pullup"
-    ],
-    [
-     "wall_hspu",
-     1,
-     4,
-     null,
-     120,
-     "assessment",
-     "wall_hspu_negative"
-    ],
-    [
      "pullup",
      1,
-     10,
+     8,
      null,
      120,
      "assessment",
      "assisted_pullup"
-    ],
-    [
-     "parallel_dip",
-     1,
-     15,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
-     "pushup",
-     1,
-     30,
-     null,
-     120,
-     "assessment",
-     "incline_pushup"
-    ],
-    [
-     "lsit",
-     1,
-     null,
-     15,
-     60,
-     "assessment",
-     "one_leg_lsit"
-    ],
-    [
-     "dragon_flag",
-     1,
-     1,
-     null,
-     60,
-     "assessment",
-     "full_dragon_negative"
-    ],
-    [
-     "toes_to_bar",
-     1,
-     6,
-     null,
-     60,
-     "assessment",
-     "hanging_leg_raise"
     ]
    ],
    "cooldown": [
@@ -124774,14 +123090,14 @@
     "week": 5,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 59,
-    "rpe": 8,
+    "minutes": 44,
+    "rpe": 7,
     "focus": [
      "handstand",
      "balance",
      "planche",
      "straight_arm_push",
-     "single_leg_squat"
+     "front_lever"
     ],
     "headline": "straddle_front"
    },
@@ -124911,15 +123227,6 @@
      30,
      "ramp-up",
      "skin_cat_partial"
-    ],
-    [
-     "tuck_flag",
-     1,
-     null,
-     "8/side",
-     30,
-     "ramp-up",
-     "vertical_flag"
     ]
    ],
    "practice": [],
@@ -124937,26 +123244,17 @@
      "advanced_tuck_planche",
      1,
      null,
-     8,
-     60,
+     6,
+     150,
      "assessment",
      "tuck_planche"
-    ],
-    [
-     "pistol_squat",
-     1,
-     "6/side",
-     null,
-     90,
-     "assessment",
-     "assisted_pistol_squat"
     ],
     [
      "straddle_front",
      1,
      null,
      3,
-     120,
+     150,
      "assessment",
      "one_leg_front"
     ],
@@ -124964,91 +123262,37 @@
      "full_back",
      1,
      null,
-     5,
-     120,
+     4,
+     150,
      "assessment",
      "straddle_back"
     ],
     [
-     "straddle_flag",
-     1,
-     null,
-     "4/side",
-     120,
-     "assessment",
-     "tuck_flag"
-    ],
-    [
      "strict_muscleup",
      1,
-     4,
+     3,
      null,
-     120,
+     150,
      "assessment",
      "band_muscleup"
     ],
     [
-     "wall_hspu",
-     1,
-     6,
-     null,
-     120,
-     "assessment",
-     "wall_hspu_negative"
-    ],
-    [
-     "one_arm_pushup",
-     1,
-     "1/side",
-     null,
-     120,
-     "assessment",
-     "archer_pushup"
-    ],
-    [
      "pullup",
      1,
-     10,
+     9,
      null,
      120,
      "assessment",
      "assisted_pullup"
     ],
     [
-     "parallel_dip",
-     1,
-     15,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
      "pushup",
      1,
-     30,
+     20,
      null,
      120,
      "assessment",
      "incline_pushup"
-    ],
-    [
-     "dragon_flag",
-     1,
-     3,
-     null,
-     60,
-     "assessment",
-     "full_dragon_negative"
-    ],
-    [
-     "toes_to_bar",
-     1,
-     8,
-     null,
-     60,
-     "assessment",
-     "hanging_leg_raise"
     ]
    ],
    "cooldown": [
@@ -129030,25 +127274,25 @@
    "level": 7,
    "number": 55,
    "title": {
-    "en": "Block 3 Exam · One-Arm Push-Up"
+    "en": "Block 3 Exam · Full Back Lever"
    },
    "description": {
-    "en": "Full Shapes, block 3. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: One-Arm Push-Up."
+    "en": "Full Shapes, block 3. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Full Back Lever."
    },
    "schedule": {
     "week": 8,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 60,
-    "rpe": 8,
+    "minutes": 45,
+    "rpe": 7,
     "focus": [
      "handstand",
      "balance",
-     "planche",
-     "straight_arm_push",
-     "front_lever"
+     "front_lever",
+     "back_lever",
+     "human_flag"
     ],
-    "headline": "one_arm_pushup"
+    "headline": "full_back"
    },
    "warmup": [
     [
@@ -129142,13 +127386,13 @@
      "handstand_toe_pull"
     ],
     [
-     "advanced_tuck_planche",
+     "advanced_tuck_front",
      1,
      null,
-     4,
+     8,
      45,
      "ramp-up",
-     "tuck_planche"
+     "tuck_front_hold"
     ],
     [
      "tuck_front_hold",
@@ -129199,20 +127443,11 @@
      "handstand_toe_pull"
     ],
     [
-     "advanced_tuck_planche",
-     1,
-     null,
-     8,
-     120,
-     "assessment",
-     "tuck_planche"
-    ],
-    [
      "straddle_front",
      1,
      null,
      3,
-     120,
+     150,
      "assessment",
      "one_leg_front"
     ],
@@ -129220,8 +127455,8 @@
      "full_back",
      1,
      null,
-     5,
-     120,
+     4,
+     150,
      "assessment",
      "straddle_back"
     ],
@@ -129229,42 +127464,24 @@
      "straddle_flag",
      1,
      null,
-     "4/side",
-     120,
+     "3/side",
+     150,
      "assessment",
      "tuck_flag"
     ],
     [
      "strict_muscleup",
      1,
-     4,
+     3,
      null,
-     120,
+     150,
      "assessment",
      "band_muscleup"
     ],
     [
-     "wall_hspu",
-     1,
-     6,
-     null,
-     120,
-     "assessment",
-     "wall_hspu_negative"
-    ],
-    [
-     "one_arm_pushup",
-     1,
-     "3/side",
-     null,
-     120,
-     "assessment",
-     "archer_pushup"
-    ],
-    [
      "pullup",
      1,
-     10,
+     9,
      null,
      120,
      "assessment",
@@ -129273,47 +127490,11 @@
     [
      "parallel_dip",
      1,
-     20,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
-     "pushup",
-     1,
-     30,
+     13,
      null,
      120,
      "assessment",
-     "incline_pushup"
-    ],
-    [
-     "lsit",
-     1,
-     null,
-     20,
-     60,
-     "assessment",
-     "one_leg_lsit"
-    ],
-    [
-     "dragon_flag",
-     1,
-     3,
-     null,
-     60,
-     "assessment",
-     "full_dragon_negative"
-    ],
-    [
-     "toes_to_bar",
-     1,
-     8,
-     null,
-     60,
-     "assessment",
-     "hanging_leg_raise"
+     "assisted_dip"
     ]
    ],
    "cooldown": [
@@ -133315,14 +131496,14 @@
     "week": 11,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 59,
-    "rpe": 8,
+    "minutes": 44,
+    "rpe": 7,
     "focus": [
      "handstand",
      "balance",
      "planche",
      "straight_arm_push",
-     "single_leg_squat"
+     "back_lever"
     ],
     "headline": "full_flag"
    },
@@ -133427,15 +131608,6 @@
      "tuck_planche"
     ],
     [
-     "tuck_front_hold",
-     1,
-     null,
-     10,
-     30,
-     "ramp-up",
-     "tuck_front_row"
-    ],
-    [
      "german_hang",
      1,
      null,
@@ -133478,44 +131650,17 @@
      "advanced_tuck_planche",
      1,
      null,
-     8,
-     60,
+     6,
+     150,
      "assessment",
      "tuck_planche"
-    ],
-    [
-     "pistol_squat",
-     1,
-     "8/side",
-     null,
-     90,
-     "assessment",
-     "assisted_pistol_squat"
-    ],
-    [
-     "straddle_front",
-     1,
-     null,
-     5,
-     60,
-     "assessment",
-     "one_leg_front"
-    ],
-    [
-     "shrimp_squat",
-     1,
-     "2/side",
-     null,
-     90,
-     "assessment",
-     "assisted_held_shrimp"
     ],
     [
      "full_back",
      1,
      null,
      5,
-     120,
+     150,
      "assessment",
      "straddle_back"
     ],
@@ -133524,72 +131669,36 @@
      1,
      null,
      "3/side",
-     120,
+     150,
      "assessment",
      "straddle_flag"
     ],
     [
      "strict_muscleup",
      1,
-     4,
+     3,
      null,
-     120,
+     150,
      "assessment",
      "band_muscleup"
     ],
     [
-     "wall_hspu",
-     1,
-     6,
-     null,
-     120,
-     "assessment",
-     "wall_hspu_negative"
-    ],
-    [
-     "one_arm_pushup",
-     1,
-     "1/side",
-     null,
-     120,
-     "assessment",
-     "archer_pushup"
-    ],
-    [
      "pullup",
      1,
-     15,
+     10,
      null,
      120,
      "assessment",
      "assisted_pullup"
     ],
     [
-     "parallel_dip",
-     1,
-     20,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
      "pushup",
      1,
-     30,
+     20,
      null,
      120,
      "assessment",
      "incline_pushup"
-    ],
-    [
-     "toes_to_bar",
-     1,
-     8,
-     null,
-     60,
-     "assessment",
-     "hanging_leg_raise"
     ]
    ],
    "cooldown": [
@@ -137712,7 +135821,7 @@
    "main": [
     [
      "freestanding_handstand",
-     2,
+     1,
      null,
      25,
      60,
@@ -137731,7 +135840,7 @@
     [
      "squat",
      2,
-     20,
+     25,
      null,
      60,
      "2111",
@@ -138202,22 +136311,22 @@
     "en": "Level 7 Test: Advanced Athlete"
    },
    "description": {
-    "en": "Full Shapes, block 5. The Advanced Athlete exam: this program's standard for an advanced athlete, plus one fresh set of every other skill you train. Rest fully between tests. Headline: Full Back Lever."
+    "en": "Full Shapes, block 5. The Advanced Athlete exam: this program's standard for an advanced athlete, plus one fresh set of every other skill you train. Rest fully between tests. Headline: Shrimp Squat."
    },
    "schedule": {
     "week": 15,
     "day": 2,
     "day_type": "exam_level_advanced_athlete",
-    "minutes": 60,
-    "rpe": 8,
+    "minutes": 55,
+    "rpe": 7,
     "focus": [
      "handstand",
      "balance",
      "planche",
      "straight_arm_push",
-     "single_leg_squat"
+     "front_lever"
     ],
-    "headline": "full_back"
+    "headline": "shrimp_squat"
    },
    "warmup": [
     [
@@ -138362,7 +136471,7 @@
      "freestanding_handstand",
      1,
      null,
-     45,
+     30,
      120,
      "assessment",
      "handstand_toe_pull"
@@ -138371,35 +136480,35 @@
      "advanced_tuck_planche",
      1,
      null,
-     8,
-     60,
+     6,
+     150,
      "assessment",
      "tuck_planche"
-    ],
-    [
-     "pistol_squat",
-     1,
-     "8/side",
-     null,
-     90,
-     "assessment",
-     "assisted_pistol_squat"
     ],
     [
      "straddle_front",
      1,
      null,
-     5,
-     120,
+     4,
+     60,
      "assessment",
      "one_leg_front"
+    ],
+    [
+     "shrimp_squat",
+     1,
+     "1/side",
+     null,
+     90,
+     "assessment",
+     "assisted_held_shrimp"
     ],
     [
      "full_back",
      1,
      null,
-     8,
-     120,
+     6,
+     150,
      "assessment",
      "straddle_back"
     ],
@@ -138408,34 +136517,25 @@
      1,
      null,
      "3/side",
-     120,
+     150,
      "assessment",
      "straddle_flag"
     ],
     [
      "strict_muscleup",
      1,
-     4,
+     3,
      null,
-     120,
+     150,
      "assessment",
      "band_muscleup"
     ],
     [
-     "archer_pullup",
-     1,
-     "4/side",
-     null,
-     120,
-     "assessment",
-     "pullup"
-    ],
-    [
      "wall_hspu",
      1,
-     6,
+     5,
      null,
-     120,
+     150,
      "assessment",
      "wall_hspu_negative"
     ],
@@ -138444,14 +136544,14 @@
      1,
      "1/side",
      null,
-     120,
+     150,
      "assessment",
      "archer_pushup"
     ],
     [
      "pullup",
      1,
-     15,
+     10,
      null,
      120,
      "assessment",
@@ -138460,29 +136560,11 @@
     [
      "parallel_dip",
      1,
-     20,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
-     "pushup",
-     1,
-     30,
+     13,
      null,
      120,
      "assessment",
-     "incline_pushup"
-    ],
-    [
-     "lsit",
-     1,
-     null,
-     20,
-     60,
-     "assessment",
-     "one_leg_lsit"
+     "assisted_dip"
     ]
    ],
    "cooldown": [
@@ -138761,7 +136843,7 @@
     "week": 1,
     "day": 2,
     "day_type": "legs_core",
-    "minutes": 47,
+    "minutes": 45,
     "rpe": 6,
     "focus": [
      "single_leg_squat",
@@ -138893,15 +136975,6 @@
      "full_dragon_negative"
     ],
     [
-     "hollow_body_hold",
-     1,
-     null,
-     60,
-     60,
-     "isometric",
-     "dead_bug"
-    ],
-    [
      "straight_side_plank",
      1,
      null,
@@ -138965,7 +137038,7 @@
     "week": 1,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 40,
+    "minutes": 39,
     "rpe": 7,
     "focus": [
      "planche",
@@ -139098,8 +137171,17 @@
     ],
     [
      "pushup",
-     2,
+     1,
      35,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     25,
      null,
      90,
      "2111",
@@ -139151,7 +137233,7 @@
     "week": 1,
     "day": 4,
     "day_type": "handstand_press",
-    "minutes": 41,
+    "minutes": 36,
     "rpe": 6,
     "focus": [
      "handstand",
@@ -139255,15 +137337,6 @@
      150,
      "2111",
      "wall_hspu_negative"
-    ],
-    [
-     "elevated_pike_pushup",
-     2,
-     12,
-     null,
-     120,
-     "2111",
-     "pike_pushup"
     ],
     [
      "shrimp_squat",
@@ -140188,7 +138261,7 @@
     "week": 2,
     "day": 2,
     "day_type": "legs_core",
-    "minutes": 49,
+    "minutes": 47,
     "rpe": 6,
     "focus": [
      "single_leg_squat",
@@ -140318,15 +138391,6 @@
      120,
      "2111",
      "full_dragon_negative"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     60,
-     60,
-     "isometric",
-     "dead_bug"
     ]
    ],
    "cooldown": [
@@ -140383,7 +138447,7 @@
     "week": 2,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 46,
+    "minutes": 42,
     "rpe": 7,
     "focus": [
      "planche",
@@ -140507,7 +138571,7 @@
     ],
     [
      "parallel_dip",
-     2,
+     1,
      15,
      null,
      120,
@@ -140516,8 +138580,17 @@
     ],
     [
      "pushup",
-     2,
+     1,
      35,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     25,
      null,
      90,
      "2111",
@@ -140924,14 +138997,14 @@
     "week": 2,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 60,
-    "rpe": 8,
+    "minutes": 32,
+    "rpe": 7,
     "focus": [
      "handstand",
      "balance",
-     "planche",
-     "straight_arm_push",
-     "front_lever"
+     "human_flag",
+     "muscle_up",
+     "vertical_pull"
     ],
     "headline": "full_flag"
    },
@@ -141027,42 +139100,6 @@
      "handstand_toe_pull"
     ],
     [
-     "advanced_tuck_planche",
-     1,
-     null,
-     5,
-     45,
-     "ramp-up",
-     "tuck_planche"
-    ],
-    [
-     "tuck_front_hold",
-     1,
-     null,
-     10,
-     30,
-     "ramp-up",
-     "tuck_front_row"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     30,
-     30,
-     "slow",
-     "skin_cat_partial"
-    ],
-    [
-     "tuck_back_hold",
-     1,
-     null,
-     10,
-     30,
-     "ramp-up",
-     "skin_cat_partial"
-    ],
-    [
      "tuck_flag",
      1,
      null,
@@ -141078,127 +139115,37 @@
      "freestanding_handstand",
      1,
      null,
-     45,
+     30,
      120,
      "assessment",
      "handstand_toe_pull"
     ],
     [
-     "advanced_tuck_planche",
-     1,
-     null,
-     8,
-     120,
-     "assessment",
-     "tuck_planche"
-    ],
-    [
-     "straddle_front",
-     1,
-     null,
-     5,
-     60,
-     "assessment",
-     "one_leg_front"
-    ],
-    [
-     "shrimp_squat",
-     1,
-     "3/side",
-     null,
-     90,
-     "assessment",
-     "assisted_held_shrimp"
-    ],
-    [
-     "full_back",
-     1,
-     null,
-     8,
-     120,
-     "assessment",
-     "straddle_back"
-    ],
-    [
      "full_flag",
      1,
      null,
-     "4/side",
-     120,
+     "3/side",
+     150,
      "assessment",
      "straddle_flag"
     ],
     [
      "strict_muscleup",
      1,
-     4,
+     3,
      null,
-     120,
+     150,
      "assessment",
      "band_muscleup"
     ],
     [
-     "wall_hspu",
-     1,
-     6,
-     null,
-     120,
-     "assessment",
-     "wall_hspu_negative"
-    ],
-    [
-     "one_arm_pushup",
-     1,
-     "1/side",
-     null,
-     120,
-     "assessment",
-     "archer_pushup"
-    ],
-    [
      "pullup",
      1,
-     15,
+     10,
      null,
      120,
      "assessment",
      "assisted_pullup"
-    ],
-    [
-     "parallel_dip",
-     1,
-     20,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
-     "pushup",
-     1,
-     30,
-     null,
-     120,
-     "assessment",
-     "incline_pushup"
-    ],
-    [
-     "dragon_flag",
-     1,
-     3,
-     null,
-     60,
-     "assessment",
-     "full_dragon_negative"
-    ],
-    [
-     "toes_to_bar",
-     1,
-     8,
-     null,
-     60,
-     "assessment",
-     "hanging_leg_raise"
     ]
    ],
    "cooldown": [
@@ -141848,7 +139795,7 @@
     "week": 3,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 46,
+    "minutes": 42,
     "rpe": 7,
     "focus": [
      "planche",
@@ -141972,7 +139919,7 @@
     ],
     [
      "parallel_dip",
-     2,
+     1,
      15,
      null,
      120,
@@ -141981,8 +139928,17 @@
     ],
     [
      "pushup",
-     2,
+     1,
      35,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     25,
      null,
      90,
      "2111",
@@ -143284,7 +141240,7 @@
     "week": 4,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 49,
+    "minutes": 45,
     "rpe": 7,
     "focus": [
      "planche",
@@ -143408,7 +141364,7 @@
     ],
     [
      "parallel_dip",
-     2,
+     1,
      15,
      null,
      120,
@@ -143417,8 +141373,17 @@
     ],
     [
      "pushup",
-     2,
+     1,
      35,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     25,
      null,
      90,
      "2111",
@@ -144704,7 +142669,7 @@
     "week": 5,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 46,
+    "minutes": 42,
     "rpe": 7,
     "focus": [
      "planche",
@@ -144819,7 +142784,7 @@
     ],
     [
      "parallel_dip",
-     2,
+     1,
      15,
      null,
      120,
@@ -144828,8 +142793,17 @@
     ],
     [
      "pushup",
-     2,
+     1,
      35,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     25,
      null,
      90,
      "2111",
@@ -145236,14 +143210,14 @@
     "week": 5,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 60,
-    "rpe": 8,
+    "minutes": 45,
+    "rpe": 7,
     "focus": [
      "handstand",
      "balance",
      "planche",
      "straight_arm_push",
-     "single_leg_squat"
+     "front_lever"
     ],
     "headline": "full_front"
    },
@@ -145373,15 +143347,6 @@
      30,
      "ramp-up",
      "skin_cat_partial"
-    ],
-    [
-     "tuck_flag",
-     1,
-     null,
-     "8/side",
-     30,
-     "ramp-up",
-     "vertical_flag"
     ]
    ],
    "practice": [],
@@ -145390,7 +143355,7 @@
      "freestanding_handstand",
      1,
      null,
-     45,
+     35,
      120,
      "assessment",
      "handstand_toe_pull"
@@ -145399,26 +143364,17 @@
      "straddle_planche",
      1,
      null,
-     4,
-     60,
+     3,
+     180,
      "assessment",
      "advanced_tuck_planche"
-    ],
-    [
-     "pistol_squat",
-     1,
-     "8/side",
-     null,
-     90,
-     "assessment",
-     "assisted_pistol_squat"
     ],
     [
      "full_front",
      1,
      null,
      3,
-     120,
+     180,
      "assessment",
      "straddle_front"
     ],
@@ -145426,91 +143382,37 @@
      "full_back",
      1,
      null,
-     8,
-     120,
+     6,
+     150,
      "assessment",
      "straddle_back"
     ],
     [
-     "full_flag",
-     1,
-     null,
-     "3/side",
-     120,
-     "assessment",
-     "straddle_flag"
-    ],
-    [
      "strict_muscleup",
      1,
-     4,
+     3,
      null,
-     120,
+     150,
      "assessment",
      "band_muscleup"
     ],
     [
-     "deficit_wall_hspu",
-     1,
-     2,
-     null,
-     120,
-     "assessment",
-     "wall_hspu"
-    ],
-    [
-     "one_arm_pushup",
-     1,
-     "1/side",
-     null,
-     120,
-     "assessment",
-     "archer_pushup"
-    ],
-    [
      "pullup",
      1,
-     15,
+     10,
      null,
      120,
      "assessment",
      "assisted_pullup"
     ],
     [
-     "parallel_dip",
-     1,
-     20,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
      "pushup",
      1,
-     30,
+     20,
      null,
      120,
      "assessment",
      "incline_pushup"
-    ],
-    [
-     "v_sit",
-     1,
-     null,
-     4,
-     60,
-     "assessment",
-     "lsit"
-    ],
-    [
-     "toes_to_bar",
-     1,
-     8,
-     null,
-     60,
-     "assessment",
-     "hanging_leg_raise"
     ]
    ],
    "cooldown": [
@@ -145947,7 +143849,7 @@
     "week": 6,
     "day": 2,
     "day_type": "legs_core",
-    "minutes": 50,
+    "minutes": 47,
     "rpe": 6,
     "focus": [
      "single_leg_squat",
@@ -146077,15 +143979,6 @@
      120,
      "2111",
      "full_dragon_negative"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     60,
-     60,
-     "isometric",
-     "dead_bug"
     ]
    ],
    "cooldown": [
@@ -146142,7 +144035,7 @@
     "week": 6,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 50,
+    "minutes": 45,
     "rpe": 7,
     "focus": [
      "planche",
@@ -146266,7 +144159,7 @@
     ],
     [
      "parallel_dip",
-     2,
+     1,
      15,
      null,
      120,
@@ -146275,8 +144168,17 @@
     ],
     [
      "pushup",
-     2,
+     1,
      40,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     20,
      null,
      90,
      "2111",
@@ -147127,7 +145029,7 @@
     "day": 1,
     "day_type": "front_onearm",
     "minutes": 54,
-    "rpe": 7,
+    "rpe": 8,
     "focus": [
      "front_lever",
      "muscle_up",
@@ -147249,7 +145151,7 @@
    "main": [
     [
      "full_front",
-     4,
+     3,
      null,
      4,
      150,
@@ -147374,7 +145276,7 @@
     "week": 7,
     "day": 2,
     "day_type": "legs_core",
-    "minutes": 50,
+    "minutes": 48,
     "rpe": 6,
     "focus": [
      "single_leg_squat",
@@ -147504,15 +145406,6 @@
      120,
      "2111",
      "full_dragon_negative"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     60,
-     60,
-     "isometric",
-     "dead_bug"
     ]
    ],
    "cooldown": [
@@ -147569,7 +145462,7 @@
     "week": 7,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 50,
+    "minutes": 45,
     "rpe": 7,
     "focus": [
      "planche",
@@ -147693,7 +145586,7 @@
     ],
     [
      "parallel_dip",
-     2,
+     1,
      15,
      null,
      120,
@@ -147702,8 +145595,17 @@
     ],
     [
      "pushup",
-     2,
+     1,
      40,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     20,
      null,
      90,
      "2111",
@@ -148792,7 +146694,7 @@
     "week": 8,
     "day": 2,
     "day_type": "deload_legs_core",
-    "minutes": 43,
+    "minutes": 40,
     "rpe": 5,
     "focus": [
      "single_leg_squat",
@@ -148931,15 +146833,6 @@
      120,
      "2111",
      "full_dragon_negative"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     60,
-     60,
-     "isometric",
-     "dead_bug"
     ],
     [
      "straight_side_plank",
@@ -149537,25 +147430,25 @@
    "level": 8,
    "number": 55,
    "title": {
-    "en": "Block 3 Exam · Deficit Wall Handstand Push-Up"
+    "en": "Block 3 Exam · Full Back Lever"
    },
    "description": {
-    "en": "Strength Endurance, block 3. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Deficit Wall Handstand Push-Up."
+    "en": "Strength Endurance, block 3. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Full Back Lever."
    },
    "schedule": {
     "week": 8,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 60,
-    "rpe": 8,
+    "minutes": 46,
+    "rpe": 7,
     "focus": [
      "handstand",
      "balance",
-     "planche",
-     "straight_arm_push",
-     "front_lever"
+     "front_lever",
+     "back_lever",
+     "human_flag"
     ],
-    "headline": "deficit_wall_hspu"
+    "headline": "full_back"
    },
    "warmup": [
     [
@@ -149649,13 +147542,13 @@
      "handstand_toe_pull"
     ],
     [
-     "tuck_planche",
+     "one_leg_front",
      1,
      null,
-     8,
+     "5/side",
      45,
      "ramp-up",
-     "frog_stand"
+     "advanced_tuck_front"
     ],
     [
      "tuck_front_hold",
@@ -149700,44 +147593,26 @@
      "freestanding_handstand",
      1,
      null,
-     45,
+     35,
      120,
      "assessment",
      "handstand_toe_pull"
     ],
     [
-     "straddle_planche",
-     1,
-     null,
-     4,
-     120,
-     "assessment",
-     "advanced_tuck_planche"
-    ],
-    [
      "full_front",
      1,
      null,
-     4,
-     60,
+     3,
+     180,
      "assessment",
      "straddle_front"
-    ],
-    [
-     "shrimp_squat",
-     1,
-     "3/side",
-     null,
-     90,
-     "assessment",
-     "assisted_held_shrimp"
     ],
     [
      "full_back",
      1,
      null,
-     8,
-     120,
+     6,
+     150,
      "assessment",
      "straddle_back"
     ],
@@ -149745,42 +147620,24 @@
      "full_flag",
      1,
      null,
-     "4/side",
-     120,
+     "3/side",
+     150,
      "assessment",
      "straddle_flag"
     ],
     [
      "strict_muscleup",
      1,
-     4,
+     3,
      null,
-     120,
+     150,
      "assessment",
      "band_muscleup"
     ],
     [
-     "deficit_wall_hspu",
-     1,
-     3,
-     null,
-     120,
-     "assessment",
-     "wall_hspu"
-    ],
-    [
-     "one_arm_pushup",
-     1,
-     "3/side",
-     null,
-     120,
-     "assessment",
-     "archer_pushup"
-    ],
-    [
      "pullup",
      1,
-     15,
+     10,
      null,
      120,
      "assessment",
@@ -149789,38 +147646,11 @@
     [
      "parallel_dip",
      1,
-     20,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
-     "pushup",
-     1,
-     30,
+     13,
      null,
      120,
      "assessment",
-     "incline_pushup"
-    ],
-    [
-     "dragon_flag",
-     1,
-     6,
-     null,
-     60,
-     "assessment",
-     "full_dragon_negative"
-    ],
-    [
-     "toes_to_bar",
-     1,
-     8,
-     null,
-     60,
-     "assessment",
-     "hanging_leg_raise"
+     "assisted_dip"
     ]
    ],
    "cooldown": [
@@ -150010,7 +147840,7 @@
     "day": 1,
     "day_type": "front_onearm",
     "minutes": 55,
-    "rpe": 7,
+    "rpe": 8,
     "focus": [
      "front_lever",
      "muscle_up",
@@ -150461,7 +148291,7 @@
     "week": 9,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 50,
+    "minutes": 45,
     "rpe": 7,
     "focus": [
      "planche",
@@ -150585,7 +148415,7 @@
     ],
     [
      "parallel_dip",
-     2,
+     1,
      15,
      null,
      120,
@@ -150594,8 +148424,17 @@
     ],
     [
      "pushup",
-     2,
+     1,
      40,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     20,
      null,
      90,
      "2111",
@@ -151446,7 +149285,7 @@
     "day": 1,
     "day_type": "front_onearm",
     "minutes": 55,
-    "rpe": 7,
+    "rpe": 8,
     "focus": [
      "front_lever",
      "muscle_up",
@@ -151568,7 +149407,7 @@
    "main": [
     [
      "full_front",
-     4,
+     3,
      null,
      4,
      150,
@@ -151897,7 +149736,7 @@
     "week": 10,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 50,
+    "minutes": 45,
     "rpe": 7,
     "focus": [
      "planche",
@@ -152021,7 +149860,7 @@
     ],
     [
      "parallel_dip",
-     2,
+     1,
      15,
      null,
      120,
@@ -152030,8 +149869,17 @@
     ],
     [
      "pushup",
-     2,
+     1,
      40,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     20,
      null,
      90,
      "2111",
@@ -153335,7 +151183,7 @@
     "week": 11,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 47,
+    "minutes": 42,
     "rpe": 7,
     "focus": [
      "planche",
@@ -153450,7 +151298,7 @@
     ],
     [
      "parallel_dip",
-     2,
+     1,
      15,
      null,
      120,
@@ -153459,8 +151307,17 @@
     ],
     [
      "pushup",
-     2,
+     1,
      40,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     20,
      null,
      90,
      "2111",
@@ -153858,25 +151715,25 @@
    "level": 8,
    "number": 76,
    "title": {
-    "en": "Block 4 Exam · V-Sit"
+    "en": "Block 4 Exam · Straddle Planche"
    },
    "description": {
-    "en": "Strength Endurance, block 4. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: V-Sit."
+    "en": "Strength Endurance, block 4. One clean set of each skill at the belt you reached in the last three weeks, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Straddle Planche."
    },
    "schedule": {
     "week": 11,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 60,
-    "rpe": 8,
+    "minutes": 44,
+    "rpe": 7,
     "focus": [
      "handstand",
      "balance",
      "planche",
      "straight_arm_push",
-     "single_leg_squat"
+     "front_lever"
     ],
-    "headline": "v_sit"
+    "headline": "straddle_planche"
    },
    "warmup": [
     [
@@ -153988,24 +151845,6 @@
      "tuck_front_row"
     ],
     [
-     "german_hang",
-     1,
-     null,
-     30,
-     30,
-     "slow",
-     "skin_cat_partial"
-    ],
-    [
-     "tuck_back_hold",
-     1,
-     null,
-     10,
-     30,
-     "ramp-up",
-     "skin_cat_partial"
-    ],
-    [
      "tuck_flag",
      1,
      null,
@@ -154021,7 +151860,7 @@
      "freestanding_handstand",
      1,
      null,
-     45,
+     40,
      120,
      "assessment",
      "handstand_toe_pull"
@@ -154030,118 +151869,55 @@
      "straddle_planche",
      1,
      null,
-     5,
-     60,
+     4,
+     180,
      "assessment",
      "advanced_tuck_planche"
-    ],
-    [
-     "pistol_squat",
-     1,
-     "8/side",
-     null,
-     90,
-     "assessment",
-     "assisted_pistol_squat"
     ],
     [
      "full_front",
      1,
      null,
-     4,
-     120,
+     3,
+     180,
      "assessment",
      "straddle_front"
-    ],
-    [
-     "full_back",
-     1,
-     null,
-     8,
-     120,
-     "assessment",
-     "straddle_back"
     ],
     [
      "full_flag",
      1,
      null,
-     "4/side",
-     120,
+     "3/side",
+     150,
      "assessment",
      "straddle_flag"
     ],
     [
      "strict_muscleup",
      1,
-     4,
+     3,
      null,
-     120,
+     150,
      "assessment",
      "band_muscleup"
     ],
     [
-     "deficit_wall_hspu",
-     1,
-     3,
-     null,
-     120,
-     "assessment",
-     "wall_hspu"
-    ],
-    [
-     "one_arm_pushup",
-     1,
-     "5/side",
-     null,
-     120,
-     "assessment",
-     "archer_pushup"
-    ],
-    [
      "pullup",
      1,
-     15,
+     10,
      null,
      120,
      "assessment",
      "assisted_pullup"
     ],
     [
-     "parallel_dip",
-     1,
-     20,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
      "pushup",
      1,
-     30,
+     20,
      null,
      120,
      "assessment",
      "incline_pushup"
-    ],
-    [
-     "v_sit",
-     1,
-     null,
-     5,
-     60,
-     "assessment",
-     "lsit"
-    ],
-    [
-     "toes_to_bar",
-     1,
-     8,
-     null,
-     60,
-     "assessment",
-     "hanging_leg_raise"
     ]
    ],
    "cooldown": [
@@ -154340,7 +152116,7 @@
     "day": 1,
     "day_type": "front_onearm",
     "minutes": 55,
-    "rpe": 7,
+    "rpe": 8,
     "focus": [
      "front_lever",
      "muscle_up",
@@ -154587,7 +152363,7 @@
     "week": 12,
     "day": 2,
     "day_type": "legs_core",
-    "minutes": 50,
+    "minutes": 49,
     "rpe": 6,
     "focus": [
      "single_leg_squat",
@@ -154717,15 +152493,6 @@
      120,
      "2111",
      "full_dragon_negative"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     60,
-     60,
-     "isometric",
-     "dead_bug"
     ]
    ],
    "cooldown": [
@@ -154782,7 +152549,7 @@
     "week": 12,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 51,
+    "minutes": 46,
     "rpe": 7,
     "focus": [
      "planche",
@@ -154906,8 +152673,8 @@
     ],
     [
      "parallel_dip",
-     2,
-     19,
+     1,
+     15,
      null,
      120,
      "2111",
@@ -154915,8 +152682,17 @@
     ],
     [
      "pushup",
-     2,
+     1,
      40,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     20,
      null,
      90,
      "2111",
@@ -155758,7 +153534,7 @@
     "day": 1,
     "day_type": "front_onearm",
     "minutes": 55,
-    "rpe": 7,
+    "rpe": 8,
     "focus": [
      "front_lever",
      "muscle_up",
@@ -155880,7 +153656,7 @@
    "main": [
     [
      "full_front",
-     4,
+     3,
      null,
      4,
      150,
@@ -155996,10 +153772,10 @@
    "level": 8,
    "number": 86,
    "title": {
-    "en": "Pistols & Shrimp Squats"
+    "en": "Tempo · Pistols & Shrimp Squats"
    },
    "description": {
-    "en": "Strength Endurance, block 5. Same doses as last time: make every rep cleaner. Legs and trunk. A day off for the elbows."
+    "en": "Strength Endurance, block 5. Same doses this week: lower every rep in 3 s. Legs and trunk. A day off for the elbows."
    },
    "schedule": {
     "week": 13,
@@ -156088,7 +153864,7 @@
      "9/side",
      null,
      120,
-     "2111",
+     "3111",
      "assisted_pistol_squat"
     ],
     [
@@ -156097,7 +153873,7 @@
      "5/side",
      null,
      120,
-     "2111",
+     "3111",
      "assisted_held_shrimp"
     ],
     [
@@ -156106,7 +153882,7 @@
      "12/side",
      null,
      75,
-     "2111",
+     "3111",
      "single_leg_bridge"
     ],
     [
@@ -156133,17 +153909,8 @@
      6,
      null,
      120,
-     "2111",
+     "3111",
      "full_dragon_negative"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     60,
-     60,
-     "isometric",
-     "dead_bug"
     ]
    ],
    "cooldown": [
@@ -156200,7 +153967,7 @@
     "week": 13,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 51,
+    "minutes": 46,
     "rpe": 7,
     "focus": [
      "planche",
@@ -156324,8 +154091,8 @@
     ],
     [
      "parallel_dip",
-     2,
-     19,
+     1,
+     15,
      null,
      120,
      "2111",
@@ -156333,8 +154100,17 @@
     ],
     [
      "pushup",
-     2,
+     1,
      40,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     20,
      null,
      90,
      "2111",
@@ -157414,7 +155190,7 @@
     "week": 14,
     "day": 2,
     "day_type": "deload_legs_core",
-    "minutes": 43,
+    "minutes": 41,
     "rpe": 5,
     "focus": [
      "single_leg_squat",
@@ -157553,15 +155329,6 @@
      120,
      "2111",
      "full_dragon_negative"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     60,
-     60,
-     "isometric",
-     "dead_bug"
     ],
     [
      "straight_side_plank",
@@ -157752,7 +155519,7 @@
     [
      "parallel_dip",
      1,
-     19,
+     15,
      null,
      120,
      "2111",
@@ -158337,7 +156104,7 @@
     [
      "squat",
      1,
-     20,
+     25,
      null,
      60,
      "2111",
@@ -158826,22 +156593,22 @@
     "en": "Level 8 Test: Strength Endurance"
    },
    "description": {
-    "en": "Strength Endurance, block 5. One clean set of each skill the level trained, at the belt you reached, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Straddle Planche."
+    "en": "Strength Endurance, block 5. One clean set of each skill the level trained, at the belt you reached, in order: balance, holds, strength, basics, trunk. Rest fully between tests. Missing the headline or three targets offers a block repeat. Headline: Deficit Wall Handstand Push-Up."
    },
    "schedule": {
     "week": 15,
     "day": 2,
     "day_type": "exam_level",
-    "minutes": 60,
-    "rpe": 8,
+    "minutes": 56,
+    "rpe": 7,
     "focus": [
      "handstand",
      "balance",
      "planche",
      "straight_arm_push",
-     "front_lever"
+     "single_leg_squat"
     ],
-    "headline": "straddle_planche"
+    "headline": "deficit_wall_hspu"
    },
    "warmup": [
     [
@@ -158986,7 +156753,7 @@
      "freestanding_handstand",
      1,
      null,
-     60,
+     40,
      120,
      "assessment",
      "handstand_toe_pull"
@@ -158995,17 +156762,26 @@
      "straddle_planche",
      1,
      null,
-     6,
-     120,
+     4,
+     60,
      "assessment",
      "advanced_tuck_planche"
+    ],
+    [
+     "pistol_squat",
+     1,
+     "6/side",
+     null,
+     90,
+     "assessment",
+     "assisted_pistol_squat"
     ],
     [
      "full_front",
      1,
      null,
-     4,
-     120,
+     3,
+     180,
      "assessment",
      "straddle_front"
     ],
@@ -159013,8 +156789,8 @@
      "full_back",
      1,
      null,
-     8,
-     120,
+     7,
+     150,
      "assessment",
      "straddle_back"
     ],
@@ -159022,51 +156798,42 @@
      "full_flag",
      1,
      null,
-     "4/side",
-     120,
+     "3/side",
+     150,
      "assessment",
      "straddle_flag"
     ],
     [
      "strict_muscleup",
      1,
-     4,
+     3,
      null,
-     120,
+     150,
      "assessment",
      "band_muscleup"
     ],
     [
-     "archer_pullup",
-     1,
-     "6/side",
-     null,
-     120,
-     "assessment",
-     "pullup"
-    ],
-    [
      "deficit_wall_hspu",
      1,
-     3,
+     1,
      null,
-     120,
+     150,
      "assessment",
      "wall_hspu"
     ],
     [
      "one_arm_pushup",
      1,
-     "5/side",
+     "3/side",
      null,
-     120,
+     150,
      "assessment",
      "archer_pushup"
     ],
     [
      "pullup",
      1,
-     15,
+     10,
      null,
      120,
      "assessment",
@@ -159075,29 +156842,11 @@
     [
      "parallel_dip",
      1,
-     20,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
-     "pushup",
-     1,
-     30,
+     15,
      null,
      120,
      "assessment",
-     "incline_pushup"
-    ],
-    [
-     "dragon_flag",
-     1,
-     6,
-     null,
-     60,
-     "assessment",
-     "full_dragon_negative"
+     "assisted_dip"
     ]
    ],
    "cooldown": [
@@ -159385,7 +157134,7 @@
     "week": 1,
     "day": 2,
     "day_type": "legs_core",
-    "minutes": 49,
+    "minutes": 46,
     "rpe": 6,
     "focus": [
      "single_leg_squat",
@@ -159524,15 +157273,6 @@
      120,
      "2111",
      "full_dragon_negative"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     60,
-     60,
-     "isometric",
-     "dead_bug"
     ]
    ],
    "cooldown": [
@@ -159589,7 +157329,7 @@
     "week": 1,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 45,
+    "minutes": 43,
     "rpe": 7,
     "focus": [
      "planche",
@@ -159714,7 +157454,7 @@
     [
      "parallel_dip",
      1,
-     19,
+     15,
      null,
      120,
      "2111",
@@ -159722,8 +157462,17 @@
     ],
     [
      "pushup",
-     2,
+     1,
      40,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     20,
      null,
      90,
      "2111",
@@ -160574,7 +158323,7 @@
     "day": 1,
     "day_type": "front_onearm",
     "minutes": 55,
-    "rpe": 7,
+    "rpe": 8,
     "focus": [
      "front_lever",
      "muscle_up",
@@ -160696,7 +158445,7 @@
    "main": [
     [
      "full_front",
-     4,
+     3,
      null,
      4,
      150,
@@ -160821,7 +158570,7 @@
     "week": 2,
     "day": 2,
     "day_type": "legs_core",
-    "minutes": 50,
+    "minutes": 49,
     "rpe": 6,
     "focus": [
      "single_leg_squat",
@@ -160951,15 +158700,6 @@
      120,
      "2111",
      "full_dragon_negative"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     60,
-     60,
-     "isometric",
-     "dead_bug"
     ]
    ],
    "cooldown": [
@@ -161016,7 +158756,7 @@
     "week": 2,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 51,
+    "minutes": 46,
     "rpe": 7,
     "focus": [
      "planche",
@@ -161140,8 +158880,8 @@
     ],
     [
      "parallel_dip",
-     2,
-     19,
+     1,
+     15,
      null,
      120,
      "2111",
@@ -161149,8 +158889,17 @@
     ],
     [
      "pushup",
-     2,
+     1,
      40,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     20,
      null,
      90,
      "2111",
@@ -161557,14 +159306,14 @@
     "week": 2,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 60,
-    "rpe": 8,
+    "minutes": 33,
+    "rpe": 7,
     "focus": [
      "handstand",
      "balance",
-     "planche",
-     "straight_arm_push",
-     "front_lever"
+     "front_lever",
+     "muscle_up",
+     "vertical_pull"
     ],
     "headline": "full_front"
    },
@@ -161660,13 +159409,13 @@
      "handstand_toe_pull"
     ],
     [
-     "tuck_planche",
+     "one_leg_front",
      1,
      null,
-     8,
+     "5/side",
      45,
      "ramp-up",
-     "frog_stand"
+     "advanced_tuck_front"
     ],
     [
      "tuck_front_hold",
@@ -161676,33 +159425,6 @@
      30,
      "ramp-up",
      "tuck_front_row"
-    ],
-    [
-     "german_hang",
-     1,
-     null,
-     30,
-     30,
-     "slow",
-     "skin_cat_partial"
-    ],
-    [
-     "tuck_back_hold",
-     1,
-     null,
-     10,
-     30,
-     "ramp-up",
-     "skin_cat_partial"
-    ],
-    [
-     "tuck_flag",
-     1,
-     null,
-     "8/side",
-     30,
-     "ramp-up",
-     "vertical_flag"
     ]
    ],
    "practice": [],
@@ -161711,127 +159433,37 @@
      "freestanding_handstand",
      1,
      null,
-     60,
+     40,
      120,
      "assessment",
      "handstand_toe_pull"
     ],
     [
-     "straddle_planche",
-     1,
-     null,
-     5,
-     120,
-     "assessment",
-     "advanced_tuck_planche"
-    ],
-    [
      "full_front",
      1,
      null,
-     5,
-     60,
+     3,
+     180,
      "assessment",
      "straddle_front"
     ],
     [
-     "shrimp_squat",
-     1,
-     "5/side",
-     null,
-     90,
-     "assessment",
-     "assisted_held_shrimp"
-    ],
-    [
-     "full_back",
-     1,
-     null,
-     8,
-     120,
-     "assessment",
-     "straddle_back"
-    ],
-    [
-     "full_flag",
-     1,
-     null,
-     "4/side",
-     120,
-     "assessment",
-     "straddle_flag"
-    ],
-    [
      "strict_muscleup",
      1,
-     4,
+     3,
      null,
-     120,
+     150,
      "assessment",
      "band_muscleup"
     ],
     [
-     "deficit_wall_hspu",
-     1,
-     3,
-     null,
-     120,
-     "assessment",
-     "wall_hspu"
-    ],
-    [
-     "one_arm_pushup",
-     1,
-     "5/side",
-     null,
-     120,
-     "assessment",
-     "archer_pushup"
-    ],
-    [
      "pullup",
      1,
-     15,
+     10,
      null,
      120,
      "assessment",
      "assisted_pullup"
-    ],
-    [
-     "parallel_dip",
-     1,
-     20,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
-     "pushup",
-     1,
-     30,
-     null,
-     120,
-     "assessment",
-     "incline_pushup"
-    ],
-    [
-     "v_sit",
-     1,
-     null,
-     4,
-     60,
-     "assessment",
-     "lsit"
-    ],
-    [
-     "toes_to_bar",
-     1,
-     12,
-     null,
-     60,
-     "assessment",
-     "hanging_leg_raise"
     ]
    ],
    "cooldown": [
@@ -162021,7 +159653,7 @@
     "day": 1,
     "day_type": "front_onearm",
     "minutes": 55,
-    "rpe": 7,
+    "rpe": 8,
     "focus": [
      "front_lever",
      "muscle_up",
@@ -162472,7 +160104,7 @@
     "week": 3,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 51,
+    "minutes": 46,
     "rpe": 7,
     "focus": [
      "planche",
@@ -162596,8 +160228,8 @@
     ],
     [
      "parallel_dip",
-     2,
-     19,
+     1,
+     15,
      null,
      120,
      "2111",
@@ -162605,8 +160237,17 @@
     ],
     [
      "pushup",
-     2,
+     1,
      40,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     20,
      null,
      90,
      "2111",
@@ -163048,7 +160689,7 @@
     "week": 3,
     "day": 6,
     "day_type": "statics_chain",
-    "minutes": 50,
+    "minutes": 47,
     "rpe": 7,
     "focus": [
      "front_lever",
@@ -163217,7 +160858,7 @@
     ],
     [
      "pullup",
-     2,
+     1,
      13,
      null,
      150,
@@ -163438,8 +161079,8 @@
     "week": 4,
     "day": 1,
     "day_type": "front_onearm",
-    "minutes": 55,
-    "rpe": 7,
+    "minutes": 52,
+    "rpe": 8,
     "focus": [
      "front_lever",
      "muscle_up",
@@ -163605,15 +161246,6 @@
      "one_arm_pullup_negative"
     ],
     [
-     "archer_pullup",
-     1,
-     "6/side",
-     null,
-     120,
-     "2111",
-     "pullup"
-    ],
-    [
      "pullup",
      1,
      18,
@@ -163625,7 +161257,7 @@
     [
      "pullup",
      1,
-     14,
+     12,
      null,
      150,
      "2111",
@@ -163890,7 +161522,7 @@
     "week": 4,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 51,
+    "minutes": 46,
     "rpe": 7,
     "focus": [
      "planche",
@@ -164014,8 +161646,8 @@
     ],
     [
      "parallel_dip",
-     2,
-     19,
+     1,
+     15,
      null,
      120,
      "2111",
@@ -164023,8 +161655,17 @@
     ],
     [
      "pushup",
-     2,
+     1,
      40,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     20,
      null,
      90,
      "2111",
@@ -164875,7 +162516,7 @@
     "day": 1,
     "day_type": "front_onearm",
     "minutes": 53,
-    "rpe": 7,
+    "rpe": 8,
     "focus": [
      "front_lever",
      "muscle_up",
@@ -165054,7 +162695,7 @@
     [
      "pullup",
      1,
-     14,
+     12,
      null,
      150,
      "2111",
@@ -165319,7 +162960,7 @@
     "week": 5,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 49,
+    "minutes": 43,
     "rpe": 7,
     "focus": [
      "planche",
@@ -165434,8 +163075,8 @@
     ],
     [
      "parallel_dip",
-     2,
-     19,
+     1,
+     15,
      null,
      120,
      "2111",
@@ -165443,8 +163084,17 @@
     ],
     [
      "pushup",
-     2,
+     1,
      40,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     20,
      null,
      90,
      "2111",
@@ -165851,14 +163501,14 @@
     "week": 5,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 60,
-    "rpe": 8,
+    "minutes": 46,
+    "rpe": 7,
     "focus": [
      "handstand",
      "balance",
      "planche",
      "straight_arm_push",
-     "single_leg_squat"
+     "back_lever"
     ],
     "headline": "one_arm_pullup"
    },
@@ -165963,15 +163613,6 @@
      "frog_stand"
     ],
     [
-     "tuck_front_hold",
-     1,
-     null,
-     10,
-     30,
-     "ramp-up",
-     "tuck_front_row"
-    ],
-    [
      "german_hang",
      1,
      null,
@@ -166005,7 +163646,7 @@
      "freestanding_handstand",
      1,
      null,
-     60,
+     40,
      120,
      "assessment",
      "handstand_toe_pull"
@@ -166014,35 +163655,17 @@
      "straddle_planche",
      1,
      null,
-     6,
-     60,
+     4,
+     180,
      "assessment",
      "advanced_tuck_planche"
-    ],
-    [
-     "pistol_squat",
-     1,
-     "8/side",
-     null,
-     90,
-     "assessment",
-     "assisted_pistol_squat"
-    ],
-    [
-     "full_front",
-     1,
-     null,
-     5,
-     120,
-     "assessment",
-     "straddle_front"
     ],
     [
      "full_back",
      1,
      null,
-     8,
-     120,
+     7,
+     150,
      "assessment",
      "straddle_back"
     ],
@@ -166050,82 +163673,37 @@
      "full_flag",
      1,
      null,
-     "4/side",
-     120,
+     "3/side",
+     150,
      "assessment",
      "straddle_flag"
-    ],
-    [
-     "strict_muscleup",
-     1,
-     6,
-     null,
-     120,
-     "assessment",
-     "band_muscleup"
     ],
     [
      "one_arm_pullup",
      1,
      "1/side",
      null,
-     120,
+     180,
      "assessment",
      "one_arm_pullup_negative"
     ],
     [
-     "deficit_wall_hspu",
-     1,
-     3,
-     null,
-     120,
-     "assessment",
-     "wall_hspu"
-    ],
-    [
      "pullup",
      1,
-     15,
+     10,
      null,
      120,
      "assessment",
      "assisted_pullup"
     ],
     [
-     "parallel_dip",
-     1,
-     20,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
      "pushup",
      1,
-     30,
+     20,
      null,
      120,
      "assessment",
      "incline_pushup"
-    ],
-    [
-     "dragon_flag",
-     1,
-     6,
-     null,
-     60,
-     "assessment",
-     "full_dragon_negative"
-    ],
-    [
-     "toes_to_bar",
-     1,
-     12,
-     null,
-     60,
-     "assessment",
-     "hanging_leg_raise"
     ]
    ],
    "cooldown": [
@@ -166323,8 +163901,8 @@
     "week": 6,
     "day": 1,
     "day_type": "front_onearm",
-    "minutes": 55,
-    "rpe": 7,
+    "minutes": 52,
+    "rpe": 8,
     "focus": [
      "front_lever",
      "muscle_up",
@@ -166490,15 +164068,6 @@
      "one_arm_pullup_negative"
     ],
     [
-     "archer_pullup",
-     1,
-     "7/side",
-     null,
-     120,
-     "2111",
-     "pullup"
-    ],
-    [
      "pullup",
      1,
      18,
@@ -166510,7 +164079,7 @@
     [
      "pullup",
      1,
-     14,
+     12,
      null,
      150,
      "2111",
@@ -166571,7 +164140,7 @@
     "week": 6,
     "day": 2,
     "day_type": "legs_core",
-    "minutes": 48,
+    "minutes": 46,
     "rpe": 6,
     "focus": [
      "single_leg_squat",
@@ -166701,15 +164270,6 @@
      120,
      "2111",
      "full_dragon_negative"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     60,
-     60,
-     "isometric",
-     "dead_bug"
     ]
    ],
    "cooldown": [
@@ -166766,7 +164326,7 @@
     "week": 6,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 51,
+    "minutes": 46,
     "rpe": 7,
     "focus": [
      "planche",
@@ -166890,8 +164450,8 @@
     ],
     [
      "parallel_dip",
-     2,
-     19,
+     1,
+     15,
      null,
      120,
      "2111",
@@ -166899,8 +164459,17 @@
     ],
     [
      "pushup",
-     2,
+     1,
      40,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     20,
      null,
      90,
      "2111",
@@ -167351,7 +164920,7 @@
     "week": 6,
     "day": 6,
     "day_type": "statics_chain",
-    "minutes": 50,
+    "minutes": 47,
     "rpe": 7,
     "focus": [
      "front_lever",
@@ -167520,8 +165089,8 @@
     ],
     [
      "pullup",
-     2,
-     14,
+     1,
+     12,
      null,
      150,
      "2111",
@@ -167742,7 +165311,7 @@
     "day": 1,
     "day_type": "front_onearm",
     "minutes": 55,
-    "rpe": 7,
+    "rpe": 8,
     "focus": [
      "front_lever",
      "muscle_up",
@@ -167864,7 +165433,7 @@
    "main": [
     [
      "full_front",
-     4,
+     3,
      null,
      6,
      150,
@@ -167928,7 +165497,7 @@
     [
      "pullup",
      1,
-     14,
+     12,
      null,
      150,
      "2111",
@@ -167989,7 +165558,7 @@
     "week": 7,
     "day": 2,
     "day_type": "legs_core",
-    "minutes": 48,
+    "minutes": 46,
     "rpe": 6,
     "focus": [
      "single_leg_squat",
@@ -168119,15 +165688,6 @@
      120,
      "2111",
      "full_dragon_negative"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     60,
-     60,
-     "isometric",
-     "dead_bug"
     ]
    ],
    "cooldown": [
@@ -168184,7 +165744,7 @@
     "week": 7,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 51,
+    "minutes": 46,
     "rpe": 7,
     "focus": [
      "planche",
@@ -168308,8 +165868,8 @@
     ],
     [
      "parallel_dip",
-     2,
-     19,
+     1,
+     15,
      null,
      120,
      "2111",
@@ -168317,8 +165877,17 @@
     ],
     [
      "pushup",
-     2,
+     1,
      40,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     20,
      null,
      90,
      "2111",
@@ -168760,7 +166329,7 @@
     "week": 7,
     "day": 6,
     "day_type": "battle",
-    "minutes": 49,
+    "minutes": 48,
     "rpe": 7,
     "focus": [
      "front_lever",
@@ -168939,7 +166508,7 @@
     [
      "pullup",
      1,
-     14,
+     12,
      null,
      30,
      "controlled",
@@ -169159,7 +166728,7 @@
     "week": 8,
     "day": 1,
     "day_type": "deload_front_onearm",
-    "minutes": 48,
+    "minutes": 44,
     "rpe": 6,
     "focus": [
      "front_lever",
@@ -169326,15 +166895,6 @@
      "one_arm_pullup_negative"
     ],
     [
-     "archer_pullup",
-     1,
-     "7/side",
-     null,
-     120,
-     "2111",
-     "pullup"
-    ],
-    [
      "pullup",
      1,
      18,
@@ -169398,7 +166958,7 @@
     "week": 8,
     "day": 2,
     "day_type": "deload_legs_core",
-    "minutes": 44,
+    "minutes": 41,
     "rpe": 5,
     "focus": [
      "single_leg_squat",
@@ -169537,15 +167097,6 @@
      120,
      "2111",
      "full_dragon_negative"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     60,
-     60,
-     "isometric",
-     "dead_bug"
     ],
     [
      "straight_side_plank",
@@ -169736,7 +167287,7 @@
     [
      "parallel_dip",
      1,
-     19,
+     15,
      null,
      120,
      "2111",
@@ -170143,14 +167694,14 @@
     "week": 8,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 60,
-    "rpe": 8,
+    "minutes": 46,
+    "rpe": 7,
     "focus": [
      "handstand",
      "balance",
-     "planche",
-     "straight_arm_push",
-     "front_lever"
+     "front_lever",
+     "human_flag",
+     "muscle_up"
     ],
     "headline": "hefesto"
    },
@@ -170246,13 +167797,13 @@
      "handstand_toe_pull"
     ],
     [
-     "tuck_planche",
+     "one_leg_front",
      1,
      null,
-     8,
+     "5/side",
      45,
      "ramp-up",
-     "frog_stand"
+     "advanced_tuck_front"
     ],
     [
      "tuck_front_hold",
@@ -170264,24 +167815,6 @@
      "tuck_front_row"
     ],
     [
-     "german_hang",
-     1,
-     null,
-     30,
-     30,
-     "slow",
-     "skin_cat_partial"
-    ],
-    [
-     "tuck_back_hold",
-     1,
-     null,
-     10,
-     30,
-     "ramp-up",
-     "skin_cat_partial"
-    ],
-    [
      "tuck_flag",
      1,
      null,
@@ -170289,6 +167822,15 @@
      30,
      "ramp-up",
      "vertical_flag"
+    ],
+    [
+     "german_hang",
+     1,
+     null,
+     30,
+     30,
+     "slow",
+     "skin_cat_partial"
     ]
    ],
    "practice": [],
@@ -170297,87 +167839,51 @@
      "freestanding_handstand",
      1,
      null,
-     60,
+     40,
      120,
      "assessment",
      "handstand_toe_pull"
     ],
     [
-     "straddle_planche",
-     1,
-     null,
-     6,
-     120,
-     "assessment",
-     "advanced_tuck_planche"
-    ],
-    [
      "full_front",
      1,
      null,
-     5,
-     60,
+     4,
+     180,
      "assessment",
      "straddle_front"
-    ],
-    [
-     "shrimp_squat",
-     1,
-     "5/side",
-     null,
-     90,
-     "assessment",
-     "assisted_held_shrimp"
-    ],
-    [
-     "full_back",
-     1,
-     null,
-     8,
-     120,
-     "assessment",
-     "straddle_back"
     ],
     [
      "full_flag",
      1,
      null,
-     "4/side",
-     120,
+     "3/side",
+     150,
      "assessment",
      "straddle_flag"
     ],
     [
      "strict_muscleup",
      1,
-     6,
+     4,
      null,
-     120,
+     150,
      "assessment",
      "band_muscleup"
-    ],
-    [
-     "deficit_wall_hspu",
-     1,
-     3,
-     null,
-     120,
-     "assessment",
-     "wall_hspu"
     ],
     [
      "hefesto",
      1,
      1,
      null,
-     120,
+     180,
      "assessment",
      "assisted_hefesto"
     ],
     [
      "pullup",
      1,
-     15,
+     10,
      null,
      120,
      "assessment",
@@ -170386,38 +167892,11 @@
     [
      "parallel_dip",
      1,
-     20,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
-     "pushup",
-     1,
-     30,
+     15,
      null,
      120,
      "assessment",
-     "incline_pushup"
-    ],
-    [
-     "v_sit",
-     1,
-     null,
-     6,
-     60,
-     "assessment",
-     "lsit"
-    ],
-    [
-     "toes_to_bar",
-     1,
-     12,
-     null,
-     60,
-     "assessment",
-     "hanging_leg_raise"
+     "assisted_dip"
     ]
    ],
    "cooldown": [
@@ -170802,7 +168281,7 @@
     [
      "pullup",
      1,
-     14,
+     12,
      null,
      150,
      "2111",
@@ -171067,7 +168546,7 @@
     "week": 9,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 49,
+    "minutes": 42,
     "rpe": 7,
     "focus": [
      "planche",
@@ -171191,8 +168670,8 @@
     ],
     [
      "parallel_dip",
-     2,
-     19,
+     1,
+     15,
      null,
      120,
      "2111",
@@ -171200,8 +168679,17 @@
     ],
     [
      "pushup",
-     2,
-     45,
+     1,
+     40,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     20,
      null,
      90,
      "2111",
@@ -171547,7 +169035,7 @@
      "full_flag",
      1,
      null,
-     "5/side",
+     "6/side",
      150,
      "isometric",
      "straddle_flag"
@@ -171564,7 +169052,7 @@
     [
      "hefesto",
      2,
-     2,
+     1,
      null,
      180,
      "2111",
@@ -171634,7 +169122,7 @@
     "week": 9,
     "day": 6,
     "day_type": "statics_chain",
-    "minutes": 50,
+    "minutes": 47,
     "rpe": 7,
     "focus": [
      "front_lever",
@@ -171803,8 +169291,8 @@
     ],
     [
      "pullup",
-     2,
-     14,
+     1,
+     12,
      null,
      150,
      "2111",
@@ -172033,8 +169521,8 @@
     "week": 10,
     "day": 1,
     "day_type": "front_onearm",
-    "minutes": 55,
-    "rpe": 7,
+    "minutes": 51,
+    "rpe": 8,
     "focus": [
      "front_lever",
      "muscle_up",
@@ -172200,15 +169688,6 @@
      "one_arm_pullup_negative"
     ],
     [
-     "archer_pullup",
-     1,
-     "8/side",
-     null,
-     120,
-     "2111",
-     "pullup"
-    ],
-    [
      "pullup",
      1,
      19,
@@ -172220,7 +169699,7 @@
     [
      "pullup",
      1,
-     14,
+     11,
      null,
      150,
      "2111",
@@ -172485,7 +169964,7 @@
     "week": 10,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 49,
+    "minutes": 42,
     "rpe": 7,
     "focus": [
      "planche",
@@ -172609,8 +170088,8 @@
     ],
     [
      "parallel_dip",
-     2,
-     19,
+     1,
+     15,
      null,
      120,
      "2111",
@@ -172618,8 +170097,17 @@
     ],
     [
      "pushup",
-     2,
-     45,
+     1,
+     40,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     20,
      null,
      90,
      "2111",
@@ -172982,7 +170470,7 @@
     [
      "hefesto",
      2,
-     2,
+     1,
      null,
      180,
      "2111",
@@ -173052,7 +170540,7 @@
     "week": 10,
     "day": 6,
     "day_type": "battle",
-    "minutes": 49,
+    "minutes": 48,
     "rpe": 7,
     "focus": [
      "front_lever",
@@ -173231,7 +170719,7 @@
     [
      "pullup",
      1,
-     14,
+     12,
      null,
      30,
      "controlled",
@@ -173249,7 +170737,7 @@
     [
      "pushup",
      1,
-     35,
+     30,
      null,
      30,
      "controlled",
@@ -173452,7 +170940,7 @@
     "day": 1,
     "day_type": "front_onearm",
     "minutes": 54,
-    "rpe": 7,
+    "rpe": 8,
     "focus": [
      "front_lever",
      "muscle_up",
@@ -173631,7 +171119,7 @@
     [
      "pullup",
      1,
-     14,
+     11,
      null,
      150,
      "2111",
@@ -173896,7 +171384,7 @@
     "week": 11,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 47,
+    "minutes": 40,
     "rpe": 7,
     "focus": [
      "planche",
@@ -174011,8 +171499,8 @@
     ],
     [
      "parallel_dip",
-     2,
-     19,
+     1,
+     15,
      null,
      120,
      "2111",
@@ -174020,8 +171508,17 @@
     ],
     [
      "pushup",
-     2,
-     45,
+     1,
+     40,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     20,
      null,
      90,
      "2111",
@@ -174419,14 +171916,14 @@
     "week": 11,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 60,
-    "rpe": 8,
+    "minutes": 44,
+    "rpe": 7,
     "focus": [
      "handstand",
      "balance",
      "planche",
      "straight_arm_push",
-     "single_leg_squat"
+     "back_lever"
     ],
     "headline": "full_planche"
    },
@@ -174531,15 +172028,6 @@
      "tuck_planche"
     ],
     [
-     "tuck_front_hold",
-     1,
-     null,
-     10,
-     30,
-     "ramp-up",
-     "tuck_front_row"
-    ],
-    [
      "german_hang",
      1,
      null,
@@ -174556,15 +172044,6 @@
      30,
      "ramp-up",
      "skin_cat_partial"
-    ],
-    [
-     "tuck_flag",
-     1,
-     null,
-     "8/side",
-     30,
-     "ramp-up",
-     "vertical_flag"
     ]
    ],
    "practice": [],
@@ -174573,7 +172052,7 @@
      "freestanding_handstand",
      1,
      null,
-     60,
+     40,
      120,
      "assessment",
      "handstand_toe_pull"
@@ -174583,117 +172062,54 @@
      1,
      null,
      3,
-     60,
+     180,
      "assessment",
      "straddle_planche"
-    ],
-    [
-     "pistol_squat",
-     1,
-     "8/side",
-     null,
-     90,
-     "assessment",
-     "assisted_pistol_squat"
-    ],
-    [
-     "full_front",
-     1,
-     null,
-     5,
-     120,
-     "assessment",
-     "straddle_front"
     ],
     [
      "full_back",
      1,
      null,
-     12,
-     120,
+     8,
+     150,
      "assessment",
      "straddle_back"
     ],
     [
-     "full_flag",
-     1,
-     null,
-     "6/side",
-     120,
-     "assessment",
-     "straddle_flag"
-    ],
-    [
      "strict_muscleup",
      1,
-     6,
+     4,
      null,
-     120,
+     150,
      "assessment",
      "band_muscleup"
     ],
     [
-     "deficit_wall_hspu",
-     1,
-     5,
-     null,
-     120,
-     "assessment",
-     "wall_hspu"
-    ],
-    [
      "hefesto",
      1,
-     2,
+     1,
      null,
-     120,
+     180,
      "assessment",
      "assisted_hefesto"
     ],
     [
      "pullup",
      1,
-     15,
+     10,
      null,
      120,
      "assessment",
      "assisted_pullup"
     ],
     [
-     "parallel_dip",
-     1,
-     20,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
      "pushup",
      1,
-     30,
+     20,
      null,
      120,
      "assessment",
      "incline_pushup"
-    ],
-    [
-     "dragon_flag",
-     1,
-     6,
-     null,
-     60,
-     "assessment",
-     "full_dragon_negative"
-    ],
-    [
-     "toes_to_bar",
-     1,
-     12,
-     null,
-     60,
-     "assessment",
-     "hanging_leg_raise"
     ]
    ],
    "cooldown": [
@@ -174882,7 +172298,7 @@
     "week": 12,
     "day": 1,
     "day_type": "front_onearm",
-    "minutes": 55,
+    "minutes": 51,
     "rpe": 7,
     "focus": [
      "front_lever",
@@ -175049,15 +172465,6 @@
      "one_arm_pullup_negative"
     ],
     [
-     "archer_pullup",
-     1,
-     "8/side",
-     null,
-     120,
-     "2111",
-     "pullup"
-    ],
-    [
      "pullup",
      1,
      19,
@@ -175069,7 +172476,7 @@
     [
      "pullup",
      1,
-     14,
+     11,
      null,
      150,
      "2111",
@@ -175130,7 +172537,7 @@
     "week": 12,
     "day": 2,
     "day_type": "legs_core",
-    "minutes": 49,
+    "minutes": 46,
     "rpe": 6,
     "focus": [
      "single_leg_squat",
@@ -175260,15 +172667,6 @@
      120,
      "2111",
      "full_dragon_negative"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     60,
-     60,
-     "isometric",
-     "dead_bug"
     ]
    ],
    "cooldown": [
@@ -175325,7 +172723,7 @@
     "week": 12,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 52,
+    "minutes": 45,
     "rpe": 7,
     "focus": [
      "planche",
@@ -175449,8 +172847,8 @@
     ],
     [
      "parallel_dip",
-     2,
-     19,
+     1,
+     15,
      null,
      120,
      "2111",
@@ -175458,8 +172856,17 @@
     ],
     [
      "pushup",
-     2,
-     45,
+     1,
+     40,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     20,
      null,
      90,
      "2111",
@@ -175804,17 +173211,35 @@
     ],
     [
      "full_back",
-     2,
+     1,
      null,
-     12,
+     14,
+     150,
+     "isometric",
+     "straddle_back"
+    ],
+    [
+     "full_back",
+     1,
+     null,
+     14,
      150,
      "isometric",
      "straddle_back"
     ],
     [
      "hefesto",
+     1,
      2,
-     2,
+     null,
+     180,
+     "2111",
+     "assisted_hefesto"
+    ],
+    [
+     "hefesto",
+     1,
+     1,
      null,
      180,
      "2111",
@@ -175884,7 +173309,7 @@
     "week": 12,
     "day": 6,
     "day_type": "statics_chain",
-    "minutes": 50,
+    "minutes": 47,
     "rpe": 7,
     "focus": [
      "front_lever",
@@ -176053,8 +173478,8 @@
     ],
     [
      "pullup",
-     2,
-     14,
+     1,
+     11,
      null,
      150,
      "2111",
@@ -176284,7 +173709,7 @@
     "day": 1,
     "day_type": "front_onearm",
     "minutes": 55,
-    "rpe": 7,
+    "rpe": 8,
     "focus": [
      "front_lever",
      "muscle_up",
@@ -176406,7 +173831,7 @@
    "main": [
     [
      "full_front",
-     4,
+     3,
      null,
      6,
      150,
@@ -176470,7 +173895,7 @@
     [
      "pullup",
      1,
-     14,
+     11,
      null,
      150,
      "2111",
@@ -176531,7 +173956,7 @@
     "week": 13,
     "day": 2,
     "day_type": "legs_core",
-    "minutes": 50,
+    "minutes": 49,
     "rpe": 6,
     "focus": [
      "single_leg_squat",
@@ -176661,15 +174086,6 @@
      120,
      "3111",
      "full_dragon_negative"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     60,
-     60,
-     "isometric",
-     "dead_bug"
     ]
    ],
    "cooldown": [
@@ -176726,7 +174142,7 @@
     "week": 13,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 52,
+    "minutes": 45,
     "rpe": 7,
     "focus": [
      "planche",
@@ -176850,8 +174266,8 @@
     ],
     [
      "parallel_dip",
-     2,
-     19,
+     1,
+     15,
      null,
      120,
      "2111",
@@ -176859,8 +174275,17 @@
     ],
     [
      "pushup",
-     2,
-     45,
+     1,
+     40,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     20,
      null,
      90,
      "2111",
@@ -177114,8 +174539,7 @@
      "human_flag",
      "back_lever",
      "hefesto",
-     "shoulder_extension",
-     "hanging_core"
+     "shoulder_extension"
     ]
    },
    "warmup": [
@@ -177196,9 +174620,18 @@
    "main": [
     [
      "full_flag",
-     3,
+     2,
      null,
      "6/side",
+     150,
+     "isometric",
+     "straddle_flag"
+    ],
+    [
+     "full_flag",
+     1,
+     null,
+     "5/side",
      150,
      "isometric",
      "straddle_flag"
@@ -177215,7 +174648,7 @@
     [
      "hefesto",
      2,
-     3,
+     2,
      null,
      180,
      "2111",
@@ -177464,7 +174897,7 @@
     [
      "pullup",
      1,
-     14,
+     11,
      null,
      30,
      "controlled",
@@ -177482,7 +174915,7 @@
     [
      "pushup",
      1,
-     35,
+     30,
      null,
      30,
      "controlled",
@@ -177693,7 +175126,7 @@
     "week": 14,
     "day": 1,
     "day_type": "deload_front_onearm",
-    "minutes": 48,
+    "minutes": 44,
     "rpe": 6,
     "focus": [
      "front_lever",
@@ -177860,15 +175293,6 @@
      "one_arm_pullup_negative"
     ],
     [
-     "archer_pullup",
-     1,
-     "8/side",
-     null,
-     120,
-     "2111",
-     "pullup"
-    ],
-    [
      "pullup",
      1,
      19,
@@ -177932,7 +175356,7 @@
     "week": 14,
     "day": 2,
     "day_type": "deload_legs_core",
-    "minutes": 44,
+    "minutes": 42,
     "rpe": 5,
     "focus": [
      "single_leg_squat",
@@ -178071,15 +175495,6 @@
      120,
      "2111",
      "full_dragon_negative"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     60,
-     60,
-     "isometric",
-     "dead_bug"
     ],
     [
      "straight_side_plank",
@@ -178270,7 +175685,7 @@
     [
      "parallel_dip",
      1,
-     19,
+     15,
      null,
      120,
      "2111",
@@ -178279,7 +175694,7 @@
     [
      "pushup",
      1,
-     45,
+     40,
      null,
      90,
      "2111",
@@ -178634,7 +176049,7 @@
     [
      "hefesto",
      2,
-     2,
+     1,
      null,
      180,
      "2111",
@@ -178829,7 +176244,7 @@
     [
      "pushup",
      1,
-     25,
+     20,
      null,
      60,
      "2111",
@@ -178838,7 +176253,7 @@
     [
      "squat",
      1,
-     20,
+     25,
      null,
      60,
      "2111",
@@ -179094,7 +176509,7 @@
     "week": 15,
     "day": 1,
     "day_type": "primer_easy",
-    "minutes": 36,
+    "minutes": 35,
     "rpe": 4,
     "focus": [
      "horizontal_push",
@@ -179188,7 +176603,7 @@
     [
      "pushup",
      1,
-     12,
+     10,
      null,
      45,
      "ramp-up",
@@ -179209,7 +176624,7 @@
     [
      "pushup",
      1,
-     25,
+     20,
      null,
      60,
      "2111",
@@ -179324,8 +176739,8 @@
     "week": 15,
     "day": 2,
     "day_type": "exam_level",
-    "minutes": 60,
-    "rpe": 8,
+    "minutes": 57,
+    "rpe": 7,
     "focus": [
      "handstand",
      "balance",
@@ -179478,7 +176893,7 @@
      "one_arm_handstand",
      1,
      null,
-     "4/side",
+     "3/side",
      120,
      "assessment",
      "straddle_one_arm_handstand"
@@ -179487,8 +176902,8 @@
      "full_planche",
      1,
      null,
-     4,
-     120,
+     3,
+     180,
      "assessment",
      "straddle_planche"
     ],
@@ -179496,8 +176911,8 @@
      "full_front",
      1,
      null,
-     5,
-     120,
+     4,
+     180,
      "assessment",
      "straddle_front"
     ],
@@ -179505,8 +176920,8 @@
      "full_back",
      1,
      null,
-     12,
-     120,
+     8,
+     150,
      "assessment",
      "straddle_back"
     ],
@@ -179514,60 +176929,42 @@
      "full_flag",
      1,
      null,
-     "6/side",
-     120,
+     "4/side",
+     150,
      "assessment",
      "straddle_flag"
     ],
     [
      "strict_muscleup",
      1,
-     6,
+     4,
      null,
-     120,
+     150,
      "assessment",
      "band_muscleup"
     ],
     [
      "one_arm_pullup",
      1,
-     "2/side",
+     "1/side",
      null,
-     120,
+     180,
      "assessment",
      "one_arm_pullup_negative"
     ],
     [
      "deficit_wall_hspu",
      1,
-     5,
+     3,
      null,
-     120,
+     150,
      "assessment",
      "wall_hspu"
     ],
     [
-     "hefesto",
-     1,
-     3,
-     null,
-     120,
-     "assessment",
-     "assisted_hefesto"
-    ],
-    [
-     "one_arm_pushup",
-     1,
-     "5/side",
-     null,
-     120,
-     "assessment",
-     "archer_pushup"
-    ],
-    [
      "pullup",
      1,
-     15,
+     10,
      null,
      120,
      "assessment",
@@ -179576,20 +176973,20 @@
     [
      "parallel_dip",
      1,
-     20,
+     15,
      null,
-     150,
+     120,
      "assessment",
      "assisted_dip"
     ],
     [
-     "pushup",
+     "v_sit",
      1,
-     30,
      null,
-     120,
+     5,
+     60,
      "assessment",
-     "incline_pushup"
+     "lsit"
     ]
    ],
    "cooldown": [
@@ -179762,7 +177159,7 @@
     [
      "pushup",
      1,
-     25,
+     20,
      null,
      60,
      "2111",
@@ -179770,7 +177167,7 @@
     ],
     [
      "pistol_squat",
-     1,
+     2,
      "5/side",
      null,
      60,
@@ -179877,7 +177274,7 @@
     "week": 1,
     "day": 2,
     "day_type": "legs_core",
-    "minutes": 50,
+    "minutes": 48,
     "rpe": 6,
     "focus": [
      "single_leg_squat",
@@ -180009,15 +177406,6 @@
      "full_dragon_negative"
     ],
     [
-     "hollow_body_hold",
-     1,
-     null,
-     60,
-     60,
-     "isometric",
-     "dead_bug"
-    ],
-    [
      "straight_side_plank",
      1,
      null,
@@ -180081,7 +177469,7 @@
     "week": 1,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 46,
+    "minutes": 43,
     "rpe": 7,
     "focus": [
      "planche",
@@ -180206,7 +177594,7 @@
     [
      "parallel_dip",
      1,
-     19,
+     15,
      null,
      120,
      "2111",
@@ -180214,8 +177602,17 @@
     ],
     [
      "pushup",
-     2,
-     45,
+     1,
+     40,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     20,
      null,
      90,
      "2111",
@@ -180463,7 +177860,7 @@
     "week": 1,
     "day": 5,
     "day_type": "back_flag",
-    "minutes": 41,
+    "minutes": 40,
     "rpe": 7,
     "focus": [
      "back_lever",
@@ -180578,7 +177975,7 @@
     [
      "hefesto",
      2,
-     3,
+     2,
      null,
      180,
      "2111",
@@ -180827,7 +178224,7 @@
     [
      "pullup",
      1,
-     14,
+     11,
      null,
      30,
      "controlled",
@@ -180845,7 +178242,7 @@
     [
      "pushup",
      1,
-     35,
+     30,
      null,
      30,
      "controlled",
@@ -181047,8 +178444,8 @@
     "week": 2,
     "day": 1,
     "day_type": "front_onearm",
-    "minutes": 55,
-    "rpe": 7,
+    "minutes": 52,
+    "rpe": 8,
     "focus": [
      "front_lever",
      "muscle_up",
@@ -181214,15 +178611,6 @@
      "one_arm_pullup_negative"
     ],
     [
-     "archer_pullup",
-     1,
-     "8/side",
-     null,
-     120,
-     "2111",
-     "pullup"
-    ],
-    [
      "pullup",
      1,
      19,
@@ -181234,7 +178622,7 @@
     [
      "pullup",
      1,
-     14,
+     11,
      null,
      150,
      "2111",
@@ -181295,7 +178683,7 @@
     "week": 2,
     "day": 2,
     "day_type": "legs_core",
-    "minutes": 49,
+    "minutes": 47,
     "rpe": 6,
     "focus": [
      "single_leg_squat",
@@ -181425,15 +178813,6 @@
      120,
      "2111",
      "full_dragon_negative"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     60,
-     60,
-     "isometric",
-     "dead_bug"
     ]
    ],
    "cooldown": [
@@ -181490,7 +178869,7 @@
     "week": 2,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 52,
+    "minutes": 45,
     "rpe": 7,
     "focus": [
      "planche",
@@ -181614,8 +178993,8 @@
     ],
     [
      "parallel_dip",
-     2,
-     19,
+     1,
+     15,
      null,
      120,
      "2111",
@@ -181623,8 +179002,17 @@
     ],
     [
      "pushup",
-     2,
-     45,
+     1,
+     40,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     20,
      null,
      90,
      "2111",
@@ -182022,14 +179410,14 @@
     "week": 2,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 60,
-    "rpe": 8,
+    "minutes": 32,
+    "rpe": 7,
     "focus": [
      "handstand",
      "balance",
-     "planche",
-     "straight_arm_push",
-     "front_lever"
+     "muscle_up",
+     "hefesto",
+     "shoulder_extension"
     ],
     "headline": "one_arm_handstand"
    },
@@ -182125,24 +179513,6 @@
      "handstand_weight_shift"
     ],
     [
-     "advanced_tuck_planche",
-     1,
-     null,
-     5,
-     45,
-     "ramp-up",
-     "tuck_planche"
-    ],
-    [
-     "tuck_front_hold",
-     1,
-     null,
-     10,
-     30,
-     "ramp-up",
-     "tuck_front_row"
-    ],
-    [
      "german_hang",
      1,
      null,
@@ -182150,24 +179520,6 @@
      30,
      "slow",
      "skin_cat_partial"
-    ],
-    [
-     "tuck_back_hold",
-     1,
-     null,
-     10,
-     30,
-     "ramp-up",
-     "skin_cat_partial"
-    ],
-    [
-     "tuck_flag",
-     1,
-     null,
-     "8/side",
-     30,
-     "ramp-up",
-     "vertical_flag"
     ]
    ],
    "practice": [],
@@ -182176,127 +179528,37 @@
      "one_arm_handstand",
      1,
      null,
-     "4/side",
+     "3/side",
      120,
      "assessment",
      "straddle_one_arm_handstand"
     ],
     [
-     "full_planche",
-     1,
-     null,
-     4,
-     120,
-     "assessment",
-     "straddle_planche"
-    ],
-    [
-     "full_front",
-     1,
-     null,
-     5,
-     60,
-     "assessment",
-     "straddle_front"
-    ],
-    [
-     "shrimp_squat",
-     1,
-     "7/side",
-     null,
-     90,
-     "assessment",
-     "assisted_held_shrimp"
-    ],
-    [
-     "full_back",
-     1,
-     null,
-     12,
-     120,
-     "assessment",
-     "straddle_back"
-    ],
-    [
-     "full_flag",
-     1,
-     null,
-     "6/side",
-     120,
-     "assessment",
-     "straddle_flag"
-    ],
-    [
      "strict_muscleup",
      1,
-     6,
+     4,
      null,
-     120,
+     150,
      "assessment",
      "band_muscleup"
     ],
     [
-     "deficit_wall_hspu",
-     1,
-     5,
-     null,
-     120,
-     "assessment",
-     "wall_hspu"
-    ],
-    [
      "hefesto",
      1,
-     3,
+     1,
      null,
-     120,
+     180,
      "assessment",
      "assisted_hefesto"
     ],
     [
      "pullup",
      1,
-     15,
+     10,
      null,
      120,
      "assessment",
      "assisted_pullup"
-    ],
-    [
-     "parallel_dip",
-     1,
-     20,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
-     "pushup",
-     1,
-     30,
-     null,
-     120,
-     "assessment",
-     "incline_pushup"
-    ],
-    [
-     "v_sit",
-     1,
-     null,
-     7,
-     60,
-     "assessment",
-     "lsit"
-    ],
-    [
-     "toes_to_bar",
-     1,
-     15,
-     null,
-     60,
-     "assessment",
-     "hanging_leg_raise"
     ]
    ],
    "cooldown": [
@@ -182495,7 +179757,7 @@
     "day": 1,
     "day_type": "front_onearm",
     "minutes": 55,
-    "rpe": 7,
+    "rpe": 8,
     "focus": [
      "front_lever",
      "muscle_up",
@@ -182681,7 +179943,7 @@
     [
      "pullup",
      1,
-     14,
+     11,
      null,
      150,
      "2111",
@@ -182742,7 +180004,7 @@
     "week": 3,
     "day": 2,
     "day_type": "legs_core",
-    "minutes": 50,
+    "minutes": 48,
     "rpe": 6,
     "focus": [
      "single_leg_squat",
@@ -182881,15 +180143,6 @@
      120,
      "2111",
      "full_dragon_negative"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     60,
-     60,
-     "isometric",
-     "dead_bug"
     ]
    ],
    "cooldown": [
@@ -182946,7 +180199,7 @@
     "week": 3,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 52,
+    "minutes": 45,
     "rpe": 7,
     "focus": [
      "planche",
@@ -183070,8 +180323,8 @@
     ],
     [
      "parallel_dip",
-     2,
-     19,
+     1,
+     15,
      null,
      120,
      "2111",
@@ -183079,8 +180332,17 @@
     ],
     [
      "pushup",
-     2,
-     45,
+     1,
+     40,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     20,
      null,
      90,
      "2111",
@@ -183328,7 +180590,7 @@
     "week": 3,
     "day": 5,
     "day_type": "back_flag",
-    "minutes": 38,
+    "minutes": 37,
     "rpe": 7,
     "focus": [
      "human_flag",
@@ -183435,7 +180697,7 @@
     [
      "hefesto",
      2,
-     3,
+     2,
      null,
      180,
      "2111",
@@ -183505,7 +180767,7 @@
     "week": 3,
     "day": 6,
     "day_type": "statics_chain",
-    "minutes": 50,
+    "minutes": 47,
     "rpe": 7,
     "focus": [
      "front_lever",
@@ -183674,8 +180936,8 @@
     ],
     [
      "pullup",
-     2,
-     14,
+     1,
+     11,
      null,
      150,
      "2111",
@@ -183692,7 +180954,7 @@
     ],
     [
      "one_arm_pushup",
-     1,
+     2,
      "5/side",
      null,
      150,
@@ -183904,8 +181166,8 @@
     "week": 4,
     "day": 1,
     "day_type": "front_onearm",
-    "minutes": 53,
-    "rpe": 7,
+    "minutes": 49,
+    "rpe": 8,
     "focus": [
      "front_lever",
      "muscle_up",
@@ -184071,15 +181333,6 @@
      "one_arm_pullup_negative"
     ],
     [
-     "archer_pullup",
-     1,
-     "8/side",
-     null,
-     120,
-     "2111",
-     "pullup"
-    ],
-    [
      "pullup",
      1,
      20,
@@ -184091,7 +181344,7 @@
     [
      "pullup",
      1,
-     15,
+     10,
      null,
      150,
      "2111",
@@ -184143,10 +181396,10 @@
    "level": 10,
    "number": 23,
    "title": {
-    "en": "Shrimp Squats & Pistols"
+    "en": "Tempo · Shrimp Squats & Pistols"
    },
    "description": {
-    "en": "Beyond Gravity, block 2. Same doses as last time: make every rep cleaner. Legs and trunk. A day off for the elbows."
+    "en": "Beyond Gravity, block 2. Same doses this week: lower every rep in 3 s. Legs and trunk. A day off for the elbows."
    },
    "schedule": {
     "week": 4,
@@ -184235,7 +181488,7 @@
      "8/side",
      null,
      120,
-     "2111",
+     "3111",
      "assisted_held_shrimp"
     ],
     [
@@ -184244,7 +181497,7 @@
      "6/side",
      null,
      120,
-     "2111",
+     "3111",
      "floating_shrimp"
     ],
     [
@@ -184253,7 +181506,7 @@
      "10/side",
      null,
      120,
-     "2111",
+     "3111",
      "assisted_pistol_squat"
     ],
     [
@@ -184262,7 +181515,7 @@
      "12/side",
      null,
      75,
-     "2111",
+     "3111",
      "single_leg_bridge"
     ],
     [
@@ -184289,17 +181542,8 @@
      7,
      null,
      120,
-     "2111",
+     "3111",
      "full_dragon_negative"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     60,
-     60,
-     "isometric",
-     "dead_bug"
     ]
    ],
    "cooldown": [
@@ -184356,7 +181600,7 @@
     "week": 4,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 52,
+    "minutes": 46,
     "rpe": 7,
     "focus": [
      "planche",
@@ -184480,8 +181724,8 @@
     ],
     [
      "parallel_dip",
-     2,
-     19,
+     1,
+     15,
      null,
      120,
      "2111",
@@ -184489,8 +181733,17 @@
     ],
     [
      "pushup",
-     2,
-     45,
+     1,
+     40,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     20,
      null,
      90,
      "2111",
@@ -184744,8 +181997,7 @@
      "human_flag",
      "back_lever",
      "hefesto",
-     "shoulder_extension",
-     "hanging_core"
+     "shoulder_extension"
     ]
    },
    "warmup": [
@@ -184826,7 +182078,16 @@
    "main": [
     [
      "full_flag",
-     3,
+     2,
+     null,
+     "6/side",
+     150,
+     "isometric",
+     "straddle_flag"
+    ],
+    [
+     "full_flag",
+     1,
      null,
      "6/side",
      150,
@@ -184845,7 +182106,7 @@
     [
      "hefesto",
      2,
-     3,
+     2,
      null,
      180,
      "2111",
@@ -185094,7 +182355,7 @@
     [
      "pullup",
      1,
-     14,
+     11,
      null,
      30,
      "controlled",
@@ -185112,7 +182373,7 @@
     [
      "pushup",
      1,
-     35,
+     30,
      null,
      30,
      "controlled",
@@ -185314,8 +182575,8 @@
     "week": 5,
     "day": 1,
     "day_type": "front_onearm",
-    "minutes": 55,
-    "rpe": 7,
+    "minutes": 54,
+    "rpe": 8,
     "focus": [
      "front_lever",
      "muscle_up",
@@ -185494,7 +182755,7 @@
     [
      "pullup",
      1,
-     15,
+     10,
      null,
      150,
      "2111",
@@ -185555,7 +182816,7 @@
     "week": 5,
     "day": 2,
     "day_type": "legs_core",
-    "minutes": 50,
+    "minutes": 48,
     "rpe": 6,
     "focus": [
      "single_leg_squat",
@@ -185694,15 +182955,6 @@
      120,
      "2111",
      "full_dragon_negative"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     60,
-     60,
-     "isometric",
-     "dead_bug"
     ]
    ],
    "cooldown": [
@@ -185759,7 +183011,7 @@
     "week": 5,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 49,
+    "minutes": 43,
     "rpe": 7,
     "focus": [
      "planche",
@@ -185874,8 +183126,8 @@
     ],
     [
      "parallel_dip",
-     2,
-     19,
+     1,
+     15,
      null,
      120,
      "2111",
@@ -185883,8 +183135,17 @@
     ],
     [
      "pushup",
-     2,
-     45,
+     1,
+     40,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     20,
      null,
      90,
      "2111",
@@ -186282,14 +183543,14 @@
     "week": 5,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 60,
-    "rpe": 8,
+    "minutes": 46,
+    "rpe": 7,
     "focus": [
      "handstand",
      "balance",
      "planche",
      "straight_arm_push",
-     "single_leg_squat"
+     "front_lever"
     ],
     "headline": "full_planche"
    },
@@ -186436,7 +183697,7 @@
      "one_arm_handstand",
      1,
      null,
-     "4/side",
+     "3/side",
      120,
      "assessment",
      "straddle_one_arm_handstand"
@@ -186445,26 +183706,17 @@
      "full_planche",
      1,
      null,
-     6,
-     60,
+     4,
+     180,
      "assessment",
      "straddle_planche"
-    ],
-    [
-     "pistol_squat",
-     1,
-     "10/side",
-     null,
-     90,
-     "assessment",
-     "assisted_pistol_squat"
     ],
     [
      "full_front",
      1,
      null,
-     7,
-     120,
+     6,
+     180,
      "assessment",
      "straddle_front"
     ],
@@ -186472,8 +183724,8 @@
      "full_back",
      1,
      null,
-     14,
-     120,
+     10,
+     150,
      "assessment",
      "straddle_back"
     ],
@@ -186481,82 +183733,28 @@
      "full_flag",
      1,
      null,
-     "6/side",
-     120,
+     "4/side",
+     150,
      "assessment",
      "straddle_flag"
     ],
     [
-     "strict_muscleup",
-     1,
-     7,
-     null,
-     120,
-     "assessment",
-     "band_muscleup"
-    ],
-    [
-     "deficit_wall_hspu",
-     1,
-     6,
-     null,
-     120,
-     "assessment",
-     "wall_hspu"
-    ],
-    [
-     "hefesto",
-     1,
-     3,
-     null,
-     120,
-     "assessment",
-     "assisted_hefesto"
-    ],
-    [
      "pullup",
      1,
-     15,
+     10,
      null,
      120,
      "assessment",
      "assisted_pullup"
     ],
     [
-     "parallel_dip",
-     1,
-     20,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
      "pushup",
      1,
-     30,
+     20,
      null,
      120,
      "assessment",
      "incline_pushup"
-    ],
-    [
-     "dragon_flag",
-     1,
-     6,
-     null,
-     60,
-     "assessment",
-     "full_dragon_negative"
-    ],
-    [
-     "toes_to_bar",
-     1,
-     15,
-     null,
-     60,
-     "assessment",
-     "hanging_leg_raise"
     ]
    ],
    "cooldown": [
@@ -186745,8 +183943,8 @@
     "week": 6,
     "day": 1,
     "day_type": "front_onearm",
-    "minutes": 55,
-    "rpe": 7,
+    "minutes": 52,
+    "rpe": 8,
     "focus": [
      "front_lever",
      "muscle_up",
@@ -186868,7 +184066,34 @@
    "main": [
     [
      "full_front",
-     4,
+     1,
+     null,
+     10,
+     150,
+     "isometric",
+     "straddle_front"
+    ],
+    [
+     "full_front",
+     1,
+     null,
+     10,
+     150,
+     "isometric",
+     "straddle_front"
+    ],
+    [
+     "full_front",
+     1,
+     null,
+     10,
+     150,
+     "isometric",
+     "straddle_front"
+    ],
+    [
+     "full_front",
+     1,
      null,
      8,
      150,
@@ -186897,7 +184122,7 @@
      "full_flag",
      1,
      null,
-     "4/side",
+     "5/side",
      120,
      "isometric",
      "straddle_flag"
@@ -186912,15 +184137,6 @@
      "one_arm_pullup_negative"
     ],
     [
-     "archer_pullup",
-     1,
-     "8/side",
-     null,
-     120,
-     "2111",
-     "pullup"
-    ],
-    [
      "pullup",
      1,
      20,
@@ -186932,7 +184148,7 @@
     [
      "pullup",
      1,
-     15,
+     10,
      null,
      150,
      "2111",
@@ -186993,7 +184209,7 @@
     "week": 6,
     "day": 2,
     "day_type": "legs_core",
-    "minutes": 50,
+    "minutes": 47,
     "rpe": 6,
     "focus": [
      "single_leg_squat",
@@ -187117,7 +184333,7 @@
     ],
     [
      "dragon_flag",
-     3,
+     2,
      8,
      null,
      120,
@@ -187125,13 +184341,13 @@
      "full_dragon_negative"
     ],
     [
-     "hollow_body_hold",
+     "dragon_flag",
      1,
+     8,
      null,
-     60,
-     60,
-     "isometric",
-     "dead_bug"
+     120,
+     "2111",
+     "full_dragon_negative"
     ]
    ],
    "cooldown": [
@@ -187179,7 +184395,7 @@
    "level": 10,
    "number": 38,
    "title": {
-    "en": "Full Planche & Push-Ups"
+    "en": "Full Planche & Dips"
    },
    "description": {
     "en": "Beyond Gravity, block 3. Planche day: a short handstand, the planche, then pushing."
@@ -187188,7 +184404,7 @@
     "week": 6,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 53,
+    "minutes": 46,
     "rpe": 7,
     "focus": [
      "planche",
@@ -187276,9 +184492,36 @@
    "main": [
     [
      "full_planche",
-     4,
+     1,
      null,
-     5,
+     6,
+     150,
+     "isometric",
+     "straddle_planche"
+    ],
+    [
+     "full_planche",
+     1,
+     null,
+     6,
+     150,
+     "isometric",
+     "straddle_planche"
+    ],
+    [
+     "full_planche",
+     1,
+     null,
+     6,
+     150,
+     "isometric",
+     "straddle_planche"
+    ],
+    [
+     "full_planche",
+     1,
+     null,
+     6,
      150,
      "isometric",
      "straddle_planche"
@@ -187312,8 +184555,8 @@
     ],
     [
      "parallel_dip",
-     2,
-     19,
+     1,
+     15,
      null,
      120,
      "2111",
@@ -187321,8 +184564,17 @@
     ],
     [
      "pushup",
-     2,
-     50,
+     1,
+     40,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     20,
      null,
      90,
      "2111",
@@ -187481,8 +184733,26 @@
     ],
     [
      "deficit_wall_hspu",
-     3,
-     6,
+     1,
+     7,
+     null,
+     150,
+     "2111",
+     "wall_hspu"
+    ],
+    [
+     "deficit_wall_hspu",
+     1,
+     7,
+     null,
+     150,
+     "2111",
+     "wall_hspu"
+    ],
+    [
+     "deficit_wall_hspu",
+     1,
+     7,
      null,
      150,
      "2111",
@@ -187583,9 +184853,7 @@
     "rpe": 7,
     "focus": [
      "back_lever",
-     "human_flag",
-     "hefesto",
-     "shoulder_extension"
+     "human_flag"
     ]
    },
    "warmup": [
@@ -187666,7 +184934,16 @@
    "main": [
     [
      "full_back",
-     3,
+     2,
+     null,
+     14,
+     150,
+     "isometric",
+     "straddle_back"
+    ],
+    [
+     "full_back",
+     1,
      null,
      14,
      150,
@@ -187694,7 +184971,7 @@
     [
      "hefesto",
      2,
-     3,
+     2,
      null,
      180,
      "2111",
@@ -187934,7 +185211,7 @@
     [
      "pullup",
      1,
-     15,
+     10,
      null,
      150,
      "2111",
@@ -187951,7 +185228,7 @@
     ],
     [
      "one_arm_pushup",
-     1,
+     2,
      "5/side",
      null,
      150,
@@ -188163,12 +185440,11 @@
     "week": 7,
     "day": 1,
     "day_type": "front_onearm",
-    "minutes": 54,
-    "rpe": 7,
+    "minutes": 53,
+    "rpe": 8,
     "focus": [
      "front_lever",
-     "muscle_up",
-     "human_flag"
+     "muscle_up"
     ]
    },
    "warmup": [
@@ -188286,9 +185562,18 @@
    "main": [
     [
      "full_front",
-     3,
+     2,
      null,
      10,
+     150,
+     "isometric",
+     "straddle_front"
+    ],
+    [
+     "full_front",
+     1,
+     null,
+     7,
      150,
      "isometric",
      "straddle_front"
@@ -188350,7 +185635,7 @@
     [
      "pullup",
      1,
-     15,
+     10,
      null,
      150,
      "2111",
@@ -188402,10 +185687,10 @@
    "level": 10,
    "number": 44,
    "title": {
-    "en": "Pistols & Shrimp Squats"
+    "en": "Tempo · Pistols & Shrimp Squats"
    },
    "description": {
-    "en": "Beyond Gravity, block 3. Same doses as last time: make every rep cleaner. Legs and trunk. A day off for the elbows."
+    "en": "Beyond Gravity, block 3. Same doses this week: lower every rep in 3 s. Legs and trunk. A day off for the elbows."
    },
    "schedule": {
     "week": 7,
@@ -188494,7 +185779,7 @@
      "10/side",
      null,
      120,
-     "2111",
+     "3111",
      "assisted_pistol_squat"
     ],
     [
@@ -188503,7 +185788,7 @@
      "8/side",
      null,
      120,
-     "2111",
+     "3111",
      "assisted_held_shrimp"
     ],
     [
@@ -188512,7 +185797,7 @@
      "12/side",
      null,
      75,
-     "2111",
+     "3111",
      "single_leg_bridge"
     ],
     [
@@ -188535,21 +185820,21 @@
     ],
     [
      "dragon_flag",
-     3,
+     2,
      8,
      null,
      120,
-     "2111",
+     "3111",
      "full_dragon_negative"
     ],
     [
-     "hollow_body_hold",
+     "dragon_flag",
      1,
+     6,
      null,
-     60,
-     60,
-     "isometric",
-     "dead_bug"
+     120,
+     "3111",
+     "full_dragon_negative"
     ]
    ],
    "cooldown": [
@@ -188600,13 +185885,13 @@
     "en": "Full Planche & Dips"
    },
    "description": {
-    "en": "Beyond Gravity, block 3. One step up since last time. Planche day: a short handstand, the planche, then pushing."
+    "en": "Beyond Gravity, block 3. Same doses as last time: make every rep cleaner. Planche day: a short handstand, the planche, then pushing."
    },
    "schedule": {
     "week": 7,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 54,
+    "minutes": 46,
     "rpe": 7,
     "focus": [
      "planche",
@@ -188722,15 +186007,6 @@
     [
      "parallel_dip",
      1,
-     30,
-     null,
-     120,
-     "2111",
-     "assisted_dip"
-    ],
-    [
-     "parallel_dip",
-     2,
      25,
      null,
      120,
@@ -188738,9 +186014,27 @@
      "assisted_dip"
     ],
     [
+     "parallel_dip",
+     1,
+     15,
+     null,
+     120,
+     "2111",
+     "assisted_dip"
+    ],
+    [
      "pushup",
-     2,
-     50,
+     1,
+     40,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     20,
      null,
      90,
      "2111",
@@ -188899,8 +186193,17 @@
     ],
     [
      "deficit_wall_hspu",
-     3,
+     2,
      7,
+     null,
+     150,
+     "2111",
+     "wall_hspu"
+    ],
+    [
+     "deficit_wall_hspu",
+     1,
+     6,
      null,
      150,
      "2111",
@@ -189001,9 +186304,7 @@
     "rpe": 7,
     "focus": [
      "back_lever",
-     "human_flag",
-     "hefesto",
-     "shoulder_extension"
+     "human_flag"
     ]
    },
    "warmup": [
@@ -189084,9 +186385,18 @@
    "main": [
     [
      "full_back",
-     3,
+     2,
      null,
      14,
+     150,
+     "isometric",
+     "straddle_back"
+    ],
+    [
+     "full_back",
+     1,
+     null,
+     12,
      150,
      "isometric",
      "straddle_back"
@@ -189112,7 +186422,7 @@
     [
      "hefesto",
      2,
-     3,
+     2,
      null,
      180,
      "2111",
@@ -189361,7 +186671,7 @@
     [
      "pullup",
      1,
-     15,
+     10,
      null,
      30,
      "controlled",
@@ -189379,7 +186689,7 @@
     [
      "pushup",
      1,
-     40,
+     30,
      null,
      30,
      "controlled",
@@ -189590,7 +186900,7 @@
     "week": 8,
     "day": 1,
     "day_type": "deload_front_onearm",
-    "minutes": 48,
+    "minutes": 45,
     "rpe": 6,
     "focus": [
      "front_lever",
@@ -189757,15 +187067,6 @@
      "one_arm_pullup_negative"
     ],
     [
-     "archer_pullup",
-     1,
-     "8/side",
-     null,
-     120,
-     "2111",
-     "pullup"
-    ],
-    [
      "pullup",
      1,
      20,
@@ -189829,7 +187130,7 @@
     "week": 8,
     "day": 2,
     "day_type": "deload_legs_core",
-    "minutes": 42,
+    "minutes": 40,
     "rpe": 5,
     "focus": [
      "single_leg_squat",
@@ -189961,15 +187262,6 @@
      "full_dragon_negative"
     ],
     [
-     "hollow_body_hold",
-     1,
-     null,
-     60,
-     60,
-     "isometric",
-     "dead_bug"
-    ],
-    [
      "straight_side_plank",
      1,
      null,
@@ -190033,7 +187325,7 @@
     "week": 8,
     "day": 3,
     "day_type": "deload_planche_push",
-    "minutes": 39,
+    "minutes": 38,
     "rpe": 6,
     "focus": [
      "planche",
@@ -190158,7 +187450,7 @@
     [
      "parallel_dip",
      1,
-     19,
+     15,
      null,
      120,
      "2111",
@@ -190167,7 +187459,7 @@
     [
      "pushup",
      1,
-     50,
+     40,
      null,
      90,
      "2111",
@@ -190565,14 +187857,14 @@
     "week": 8,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 60,
-    "rpe": 8,
+    "minutes": 43,
+    "rpe": 7,
     "focus": [
      "handstand",
      "balance",
-     "planche",
-     "straight_arm_push",
-     "front_lever"
+     "back_lever",
+     "human_flag",
+     "muscle_up"
     ],
     "headline": "hefesto"
    },
@@ -190668,24 +187960,6 @@
      "handstand_weight_shift"
     ],
     [
-     "advanced_tuck_planche",
-     1,
-     null,
-     5,
-     45,
-     "ramp-up",
-     "tuck_planche"
-    ],
-    [
-     "tuck_front_hold",
-     1,
-     null,
-     10,
-     30,
-     "ramp-up",
-     "tuck_front_row"
-    ],
-    [
      "german_hang",
      1,
      null,
@@ -190719,44 +187993,17 @@
      "one_arm_handstand",
      1,
      null,
-     "6/side",
+     "4/side",
      120,
      "assessment",
      "straddle_one_arm_handstand"
     ],
     [
-     "full_planche",
-     1,
-     null,
-     5,
-     120,
-     "assessment",
-     "straddle_planche"
-    ],
-    [
-     "full_front",
-     1,
-     null,
-     10,
-     60,
-     "assessment",
-     "straddle_front"
-    ],
-    [
-     "shrimp_squat",
-     1,
-     "8/side",
-     null,
-     90,
-     "assessment",
-     "assisted_held_shrimp"
-    ],
-    [
      "full_back",
      1,
      null,
-     14,
-     120,
+     10,
+     150,
      "assessment",
      "straddle_back"
     ],
@@ -190764,42 +188011,33 @@
      "full_flag",
      1,
      null,
-     "6/side",
-     120,
+     "4/side",
+     150,
      "assessment",
      "straddle_flag"
     ],
     [
      "strict_muscleup",
      1,
-     7,
+     5,
      null,
-     120,
+     150,
      "assessment",
      "band_muscleup"
     ],
     [
-     "deficit_wall_hspu",
-     1,
-     7,
-     null,
-     120,
-     "assessment",
-     "wall_hspu"
-    ],
-    [
      "hefesto",
      1,
-     3,
+     1,
      null,
-     120,
+     180,
      "assessment",
      "assisted_hefesto"
     ],
     [
      "pullup",
      1,
-     15,
+     10,
      null,
      120,
      "assessment",
@@ -190808,38 +188046,11 @@
     [
      "parallel_dip",
      1,
-     20,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
-     "pushup",
-     1,
-     30,
+     15,
      null,
      120,
      "assessment",
-     "incline_pushup"
-    ],
-    [
-     "v_sit",
-     1,
-     null,
-     7,
-     60,
-     "assessment",
-     "lsit"
-    ],
-    [
-     "toes_to_bar",
-     1,
-     15,
-     null,
-     60,
-     "assessment",
-     "hanging_leg_raise"
+     "assisted_dip"
     ]
    ],
    "cooldown": [
@@ -191029,11 +188240,10 @@
     "day": 1,
     "day_type": "front_onearm",
     "minutes": 55,
-    "rpe": 7,
+    "rpe": 8,
     "focus": [
      "front_lever",
-     "muscle_up",
-     "human_flag"
+     "muscle_up"
     ]
    },
    "warmup": [
@@ -191142,7 +188352,7 @@
      "one_arm_handstand",
      1,
      null,
-     "6/side",
+     "7/side",
      60,
      "easy technique",
      "straddle_one_arm_handstand"
@@ -191151,7 +188361,25 @@
    "main": [
     [
      "full_front",
-     4,
+     2,
+     null,
+     10,
+     150,
+     "isometric",
+     "straddle_front"
+    ],
+    [
+     "full_front",
+     1,
+     null,
+     10,
+     150,
+     "isometric",
+     "straddle_front"
+    ],
+    [
+     "full_front",
+     1,
      null,
      10,
      150,
@@ -191180,7 +188408,7 @@
      "full_flag",
      1,
      null,
-     "4/side",
+     "5/side",
      120,
      "isometric",
      "straddle_flag"
@@ -191215,7 +188443,7 @@
     [
      "pullup",
      1,
-     15,
+     10,
      null,
      150,
      "2111",
@@ -191276,7 +188504,7 @@
     "week": 9,
     "day": 2,
     "day_type": "legs_core",
-    "minutes": 50,
+    "minutes": 49,
     "rpe": 6,
     "focus": [
      "single_leg_squat",
@@ -191409,7 +188637,7 @@
     ],
     [
      "dragon_flag",
-     3,
+     2,
      8,
      null,
      120,
@@ -191417,13 +188645,13 @@
      "full_dragon_negative"
     ],
     [
-     "hollow_body_hold",
+     "dragon_flag",
      1,
+     8,
      null,
-     60,
-     60,
-     "isometric",
-     "dead_bug"
+     120,
+     "2111",
+     "full_dragon_negative"
     ]
    ],
    "cooldown": [
@@ -191480,13 +188708,12 @@
     "week": 9,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 54,
+    "minutes": 46,
     "rpe": 7,
     "focus": [
      "planche",
      "straight_arm_push",
-     "horizontal_push",
-     "vertical_push"
+     "horizontal_push"
     ]
    },
    "warmup": [
@@ -191568,7 +188795,25 @@
    "main": [
     [
      "full_planche",
-     4,
+     2,
+     null,
+     6,
+     150,
+     "isometric",
+     "straddle_planche"
+    ],
+    [
+     "full_planche",
+     1,
+     null,
+     6,
+     150,
+     "isometric",
+     "straddle_planche"
+    ],
+    [
+     "full_planche",
+     1,
      null,
      6,
      150,
@@ -191596,15 +188841,6 @@
     [
      "parallel_dip",
      1,
-     30,
-     null,
-     120,
-     "2111",
-     "assisted_dip"
-    ],
-    [
-     "parallel_dip",
-     2,
      25,
      null,
      120,
@@ -191612,9 +188848,27 @@
      "assisted_dip"
     ],
     [
+     "parallel_dip",
+     1,
+     15,
+     null,
+     120,
+     "2111",
+     "assisted_dip"
+    ],
+    [
      "pushup",
-     2,
-     50,
+     1,
+     40,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     20,
      null,
      90,
      "2111",
@@ -191746,7 +189000,16 @@
    "main": [
     [
      "one_arm_handstand",
-     3,
+     2,
+     null,
+     "7/side",
+     90,
+     "isometric",
+     "straddle_one_arm_handstand"
+    ],
+    [
+     "one_arm_handstand",
+     1,
      null,
      "7/side",
      90,
@@ -191782,7 +189045,16 @@
     ],
     [
      "deficit_wall_hspu",
-     3,
+     2,
+     7,
+     null,
+     150,
+     "2111",
+     "wall_hspu"
+    ],
+    [
+     "deficit_wall_hspu",
+     1,
      7,
      null,
      150,
@@ -191880,7 +189152,7 @@
     "week": 9,
     "day": 5,
     "day_type": "back_flag",
-    "minutes": 38,
+    "minutes": 37,
     "rpe": 7,
     "focus": [
      "human_flag",
@@ -191987,7 +189259,7 @@
     [
      "hefesto",
      2,
-     3,
+     2,
      null,
      180,
      "2111",
@@ -192227,7 +189499,7 @@
     [
      "pullup",
      1,
-     15,
+     10,
      null,
      150,
      "2111",
@@ -192236,7 +189508,7 @@
     [
      "parallel_dip",
      1,
-     20,
+     18,
      null,
      120,
      "2111",
@@ -192244,7 +189516,7 @@
     ],
     [
      "one_arm_pushup",
-     1,
+     2,
      "5/side",
      null,
      150,
@@ -192447,12 +189719,11 @@
     "week": 10,
     "day": 1,
     "day_type": "front_onearm",
-    "minutes": 54,
-    "rpe": 7,
+    "minutes": 50,
+    "rpe": 8,
     "focus": [
      "front_lever",
-     "muscle_up",
-     "human_flag"
+     "muscle_up"
     ]
    },
    "warmup": [
@@ -192570,9 +189841,18 @@
    "main": [
     [
      "full_front",
-     3,
+     2,
      null,
      10,
+     150,
+     "isometric",
+     "straddle_front"
+    ],
+    [
+     "full_front",
+     1,
+     null,
+     7,
      150,
      "isometric",
      "straddle_front"
@@ -192614,15 +189894,6 @@
      "one_arm_pullup_negative"
     ],
     [
-     "archer_pullup",
-     1,
-     "8/side",
-     null,
-     120,
-     "2111",
-     "pullup"
-    ],
-    [
      "pullup",
      1,
      20,
@@ -192634,7 +189905,7 @@
     [
      "pullup",
      1,
-     15,
+     10,
      null,
      150,
      "2111",
@@ -192686,10 +189957,10 @@
    "level": 10,
    "number": 65,
    "title": {
-    "en": "Shrimp Squats & Pistols"
+    "en": "Tempo · Shrimp Squats & Pistols"
    },
    "description": {
-    "en": "Beyond Gravity, block 4. Same doses as last time: make every rep cleaner. Legs and trunk. A day off for the elbows."
+    "en": "Beyond Gravity, block 4. Same doses this week: lower every rep in 3 s. Legs and trunk. A day off for the elbows."
    },
    "schedule": {
     "week": 10,
@@ -192778,7 +190049,7 @@
      "8/side",
      null,
      120,
-     "2111",
+     "3111",
      "assisted_held_shrimp"
     ],
     [
@@ -192787,7 +190058,7 @@
      "6/side",
      null,
      120,
-     "2111",
+     "3111",
      "floating_shrimp"
     ],
     [
@@ -192796,7 +190067,7 @@
      "10/side",
      null,
      120,
-     "2111",
+     "3111",
      "assisted_pistol_squat"
     ],
     [
@@ -192805,7 +190076,7 @@
      "12/side",
      null,
      75,
-     "2111",
+     "3111",
      "single_leg_bridge"
     ],
     [
@@ -192828,21 +190099,21 @@
     ],
     [
      "dragon_flag",
-     3,
+     2,
      8,
      null,
      120,
-     "2111",
+     "3111",
      "full_dragon_negative"
     ],
     [
-     "hollow_body_hold",
+     "dragon_flag",
      1,
+     6,
      null,
-     60,
-     60,
-     "isometric",
-     "dead_bug"
+     120,
+     "3111",
+     "full_dragon_negative"
     ]
    ],
    "cooldown": [
@@ -192899,13 +190170,12 @@
     "week": 10,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 54,
+    "minutes": 46,
     "rpe": 7,
     "focus": [
      "planche",
      "straight_arm_push",
-     "horizontal_push",
-     "vertical_push"
+     "horizontal_push"
     ]
    },
    "warmup": [
@@ -192987,9 +190257,18 @@
    "main": [
     [
      "full_planche",
-     4,
+     2,
      null,
      6,
+     150,
+     "isometric",
+     "straddle_planche"
+    ],
+    [
+     "full_planche",
+     2,
+     null,
+     5,
      150,
      "isometric",
      "straddle_planche"
@@ -193015,15 +190294,6 @@
     [
      "parallel_dip",
      1,
-     30,
-     null,
-     120,
-     "2111",
-     "assisted_dip"
-    ],
-    [
-     "parallel_dip",
-     2,
      25,
      null,
      120,
@@ -193031,9 +190301,27 @@
      "assisted_dip"
     ],
     [
+     "parallel_dip",
+     1,
+     15,
+     null,
+     120,
+     "2111",
+     "assisted_dip"
+    ],
+    [
      "pushup",
-     2,
-     50,
+     1,
+     40,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     20,
      null,
      90,
      "2111",
@@ -193165,9 +190453,18 @@
    "main": [
     [
      "one_arm_handstand",
-     3,
+     2,
      null,
      "7/side",
+     90,
+     "isometric",
+     "straddle_one_arm_handstand"
+    ],
+    [
+     "one_arm_handstand",
+     1,
+     null,
+     "6/side",
      90,
      "isometric",
      "straddle_one_arm_handstand"
@@ -193201,8 +190498,17 @@
     ],
     [
      "deficit_wall_hspu",
-     3,
+     2,
      7,
+     null,
+     150,
+     "2111",
+     "wall_hspu"
+    ],
+    [
+     "deficit_wall_hspu",
+     1,
+     6,
      null,
      150,
      "2111",
@@ -193305,8 +190611,7 @@
      "human_flag",
      "back_lever",
      "hefesto",
-     "shoulder_extension",
-     "hanging_core"
+     "shoulder_extension"
     ]
    },
    "warmup": [
@@ -193387,7 +190692,16 @@
    "main": [
     [
      "full_flag",
-     3,
+     2,
+     null,
+     "6/side",
+     150,
+     "isometric",
+     "straddle_flag"
+    ],
+    [
+     "full_flag",
+     1,
      null,
      "6/side",
      150,
@@ -193406,7 +190720,7 @@
     [
      "hefesto",
      2,
-     3,
+     2,
      null,
      180,
      "2111",
@@ -193476,7 +190790,7 @@
     "week": 10,
     "day": 6,
     "day_type": "battle",
-    "minutes": 50,
+    "minutes": 49,
     "rpe": 7,
     "focus": [
      "front_lever",
@@ -193655,7 +190969,7 @@
     [
      "pullup",
      1,
-     15,
+     10,
      null,
      30,
      "controlled",
@@ -193664,7 +190978,7 @@
     [
      "parallel_dip",
      1,
-     25,
+     19,
      null,
      30,
      "controlled",
@@ -193673,7 +190987,7 @@
     [
      "pushup",
      1,
-     40,
+     30,
      null,
      30,
      "controlled",
@@ -193885,13 +191199,11 @@
     "day": 1,
     "day_type": "front_onearm",
     "minutes": 55,
-    "rpe": 7,
+    "rpe": 8,
     "focus": [
      "front_lever",
      "muscle_up",
-     "human_flag",
-     "vertical_pull",
-     "unilateral_pull"
+     "human_flag"
     ]
    },
    "warmup": [
@@ -194009,9 +191321,18 @@
    "main": [
     [
      "full_front",
-     4,
+     2,
      null,
      10,
+     150,
+     "isometric",
+     "straddle_front"
+    ],
+    [
+     "full_front",
+     2,
+     null,
+     7,
      150,
      "isometric",
      "straddle_front"
@@ -194064,7 +191385,7 @@
     [
      "pullup",
      1,
-     15,
+     10,
      null,
      150,
      "2111",
@@ -194125,7 +191446,7 @@
     "week": 11,
     "day": 2,
     "day_type": "legs_core",
-    "minutes": 50,
+    "minutes": 49,
     "rpe": 6,
     "focus": [
      "single_leg_squat",
@@ -194258,7 +191579,7 @@
     ],
     [
      "dragon_flag",
-     3,
+     2,
      8,
      null,
      120,
@@ -194266,13 +191587,13 @@
      "full_dragon_negative"
     ],
     [
-     "hollow_body_hold",
+     "dragon_flag",
      1,
+     6,
      null,
-     60,
-     60,
-     "isometric",
-     "dead_bug"
+     120,
+     "2111",
+     "full_dragon_negative"
     ]
    ],
    "cooldown": [
@@ -194329,7 +191650,7 @@
     "week": 11,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 52,
+    "minutes": 43,
     "rpe": 7,
     "focus": [
      "planche",
@@ -194417,9 +191738,18 @@
    "main": [
     [
      "full_planche",
-     4,
+     2,
      null,
      6,
+     150,
+     "isometric",
+     "straddle_planche"
+    ],
+    [
+     "full_planche",
+     2,
+     null,
+     5,
      150,
      "isometric",
      "straddle_planche"
@@ -194436,15 +191766,6 @@
     [
      "parallel_dip",
      1,
-     30,
-     null,
-     120,
-     "2111",
-     "assisted_dip"
-    ],
-    [
-     "parallel_dip",
-     2,
      25,
      null,
      120,
@@ -194452,9 +191773,27 @@
      "assisted_dip"
     ],
     [
+     "parallel_dip",
+     1,
+     15,
+     null,
+     120,
+     "2111",
+     "assisted_dip"
+    ],
+    [
      "pushup",
-     2,
-     50,
+     1,
+     40,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     20,
      null,
      90,
      "2111",
@@ -194852,14 +192191,14 @@
     "week": 11,
     "day": 6,
     "day_type": "exam_block",
-    "minutes": 60,
-    "rpe": 8,
+    "minutes": 44,
+    "rpe": 7,
     "focus": [
      "handstand",
      "balance",
      "planche",
      "straight_arm_push",
-     "single_leg_squat"
+     "front_lever"
     ],
     "headline": "full_front"
    },
@@ -194980,24 +192319,6 @@
      30,
      "slow",
      "skin_cat_partial"
-    ],
-    [
-     "tuck_back_hold",
-     1,
-     null,
-     10,
-     30,
-     "ramp-up",
-     "skin_cat_partial"
-    ],
-    [
-     "tuck_flag",
-     1,
-     null,
-     "8/side",
-     30,
-     "ramp-up",
-     "vertical_flag"
     ]
    ],
    "practice": [],
@@ -195006,7 +192327,7 @@
      "one_arm_handstand",
      1,
      null,
-     "7/side",
+     "5/side",
      120,
      "assessment",
      "straddle_one_arm_handstand"
@@ -195015,118 +192336,55 @@
      "full_planche",
      1,
      null,
-     6,
-     60,
+     4,
+     180,
      "assessment",
      "straddle_planche"
-    ],
-    [
-     "pistol_squat",
-     1,
-     "10/side",
-     null,
-     90,
-     "assessment",
-     "assisted_pistol_squat"
     ],
     [
      "full_front",
      1,
      null,
-     10,
-     120,
+     7,
+     180,
      "assessment",
      "straddle_front"
     ],
     [
-     "full_back",
-     1,
-     null,
-     14,
-     120,
-     "assessment",
-     "straddle_back"
-    ],
-    [
-     "full_flag",
-     1,
-     null,
-     "6/side",
-     120,
-     "assessment",
-     "straddle_flag"
-    ],
-    [
      "strict_muscleup",
      1,
-     7,
+     5,
      null,
-     120,
+     150,
      "assessment",
      "band_muscleup"
     ],
     [
-     "deficit_wall_hspu",
-     1,
-     7,
-     null,
-     120,
-     "assessment",
-     "wall_hspu"
-    ],
-    [
      "hefesto",
      1,
-     3,
+     1,
      null,
-     120,
+     180,
      "assessment",
      "assisted_hefesto"
     ],
     [
      "pullup",
      1,
-     15,
+     10,
      null,
      120,
      "assessment",
      "assisted_pullup"
     ],
     [
-     "parallel_dip",
-     1,
-     20,
-     null,
-     150,
-     "assessment",
-     "assisted_dip"
-    ],
-    [
      "pushup",
      1,
-     30,
+     20,
      null,
      120,
      "assessment",
      "incline_pushup"
-    ],
-    [
-     "dragon_flag",
-     1,
-     8,
-     null,
-     60,
-     "assessment",
-     "full_dragon_negative"
-    ],
-    [
-     "toes_to_bar",
-     1,
-     15,
-     null,
-     60,
-     "assessment",
-     "hanging_leg_raise"
     ]
    ],
    "cooldown": [
@@ -195324,12 +192582,11 @@
     "week": 12,
     "day": 1,
     "day_type": "front_onearm",
-    "minutes": 55,
-    "rpe": 7,
+    "minutes": 52,
+    "rpe": 8,
     "focus": [
      "front_lever",
-     "muscle_up",
-     "human_flag"
+     "muscle_up"
     ]
    },
    "warmup": [
@@ -195436,7 +192693,7 @@
     ],
     [
      "one_arm_handstand",
-     1,
+     2,
      null,
      "7/side",
      60,
@@ -195447,7 +192704,25 @@
    "main": [
     [
      "full_front",
-     4,
+     2,
+     null,
+     10,
+     150,
+     "isometric",
+     "straddle_front"
+    ],
+    [
+     "full_front",
+     1,
+     null,
+     10,
+     150,
+     "isometric",
+     "straddle_front"
+    ],
+    [
+     "full_front",
+     1,
      null,
      10,
      150,
@@ -195476,7 +192751,7 @@
      "full_flag",
      1,
      null,
-     "4/side",
+     "5/side",
      120,
      "isometric",
      "straddle_flag"
@@ -195491,15 +192766,6 @@
      "one_arm_pullup_negative"
     ],
     [
-     "archer_pullup",
-     1,
-     "8/side",
-     null,
-     120,
-     "2111",
-     "pullup"
-    ],
-    [
      "pullup",
      1,
      20,
@@ -195511,7 +192777,7 @@
     [
      "pullup",
      1,
-     15,
+     10,
      null,
      150,
      "2111",
@@ -195572,7 +192838,7 @@
     "week": 12,
     "day": 2,
     "day_type": "legs_core",
-    "minutes": 50,
+    "minutes": 47,
     "rpe": 6,
     "focus": [
      "single_leg_squat",
@@ -195696,7 +192962,7 @@
     ],
     [
      "dragon_flag",
-     3,
+     2,
      8,
      null,
      120,
@@ -195704,13 +192970,13 @@
      "full_dragon_negative"
     ],
     [
-     "hollow_body_hold",
+     "dragon_flag",
      1,
+     8,
      null,
-     60,
-     60,
-     "isometric",
-     "dead_bug"
+     120,
+     "2111",
+     "full_dragon_negative"
     ]
    ],
    "cooldown": [
@@ -195767,13 +193033,12 @@
     "week": 12,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 54,
+    "minutes": 46,
     "rpe": 7,
     "focus": [
      "planche",
      "straight_arm_push",
-     "horizontal_push",
-     "vertical_push"
+     "horizontal_push"
     ]
    },
    "warmup": [
@@ -195855,7 +193120,25 @@
    "main": [
     [
      "full_planche",
-     4,
+     2,
+     null,
+     6,
+     150,
+     "isometric",
+     "straddle_planche"
+    ],
+    [
+     "full_planche",
+     1,
+     null,
+     6,
+     150,
+     "isometric",
+     "straddle_planche"
+    ],
+    [
+     "full_planche",
+     1,
      null,
      6,
      150,
@@ -195883,15 +193166,6 @@
     [
      "parallel_dip",
      1,
-     30,
-     null,
-     120,
-     "2111",
-     "assisted_dip"
-    ],
-    [
-     "parallel_dip",
-     2,
      25,
      null,
      120,
@@ -195899,9 +193173,27 @@
      "assisted_dip"
     ],
     [
+     "parallel_dip",
+     1,
+     15,
+     null,
+     120,
+     "2111",
+     "assisted_dip"
+    ],
+    [
      "pushup",
-     2,
-     50,
+     1,
+     40,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     20,
      null,
      90,
      "2111",
@@ -196033,7 +193325,16 @@
    "main": [
     [
      "one_arm_handstand",
-     3,
+     2,
+     null,
+     "7/side",
+     90,
+     "isometric",
+     "straddle_one_arm_handstand"
+    ],
+    [
+     "one_arm_handstand",
+     1,
      null,
      "7/side",
      90,
@@ -196069,7 +193370,16 @@
     ],
     [
      "deficit_wall_hspu",
-     3,
+     2,
+     7,
+     null,
+     150,
+     "2111",
+     "wall_hspu"
+    ],
+    [
+     "deficit_wall_hspu",
+     1,
      7,
      null,
      150,
@@ -196171,9 +193481,7 @@
     "rpe": 7,
     "focus": [
      "back_lever",
-     "human_flag",
-     "hefesto",
-     "shoulder_extension"
+     "human_flag"
     ]
    },
    "warmup": [
@@ -196254,7 +193562,16 @@
    "main": [
     [
      "full_back",
-     3,
+     2,
+     null,
+     14,
+     150,
+     "isometric",
+     "straddle_back"
+    ],
+    [
+     "full_back",
+     1,
      null,
      14,
      150,
@@ -196282,7 +193599,7 @@
     [
      "hefesto",
      2,
-     3,
+     2,
      null,
      180,
      "2111",
@@ -196522,7 +193839,7 @@
     [
      "pullup",
      1,
-     15,
+     10,
      null,
      150,
      "2111",
@@ -196531,7 +193848,7 @@
     [
      "parallel_dip",
      1,
-     20,
+     18,
      null,
      120,
      "2111",
@@ -196539,7 +193856,7 @@
     ],
     [
      "one_arm_pushup",
-     1,
+     2,
      "5/side",
      null,
      150,
@@ -196742,12 +194059,11 @@
     "week": 13,
     "day": 1,
     "day_type": "front_onearm",
-    "minutes": 54,
-    "rpe": 7,
+    "minutes": 53,
+    "rpe": 8,
     "focus": [
      "front_lever",
-     "muscle_up",
-     "human_flag"
+     "muscle_up"
     ]
    },
    "warmup": [
@@ -196865,9 +194181,18 @@
    "main": [
     [
      "full_front",
-     3,
+     2,
      null,
      10,
+     150,
+     "isometric",
+     "straddle_front"
+    ],
+    [
+     "full_front",
+     1,
+     null,
+     7,
      150,
      "isometric",
      "straddle_front"
@@ -196929,7 +194254,7 @@
     [
      "pullup",
      1,
-     15,
+     10,
      null,
      150,
      "2111",
@@ -196981,23 +194306,23 @@
    "level": 10,
    "number": 86,
    "title": {
-    "en": "Pistols & Shrimp Squats"
+    "en": "Record · Bodyweight Squat"
    },
    "description": {
-    "en": "Beyond Gravity, block 5. Same doses as last time: make every rep cleaner. Legs and trunk. A day off for the elbows."
+    "en": "Beyond Gravity, block 5. Same doses as last time: make every rep cleaner. Legs and trunk. A day off for the elbows. Record set: Bodyweight Squat 1 × 50: one fresh set at the Elite target. Elite takes 30 of them."
    },
    "schedule": {
     "week": 13,
     "day": 2,
     "day_type": "legs_core",
-    "minutes": 50,
+    "minutes": 48,
     "rpe": 6,
     "focus": [
+     "squat",
+     "legs",
      "single_leg_squat",
      "shrimp",
-     "hinge",
-     "posterior_chain",
-     "single_leg"
+     "hinge"
     ]
    },
    "warmup": [
@@ -197056,17 +194381,26 @@
      "box_squat"
     ],
     [
-     "pistol_squat",
+     "squat",
      1,
-     "5/side",
+     25,
      null,
      45,
      "ramp-up",
-     "assisted_pistol_squat"
+     "box_squat"
     ]
    ],
    "practice": [],
    "main": [
+    [
+     "squat",
+     1,
+     50,
+     null,
+     180,
+     "assessment",
+     "box_squat"
+    ],
     [
      "pistol_squat",
      2,
@@ -197105,7 +194439,7 @@
     ],
     [
      "v_sit",
-     3,
+     2,
      null,
      7,
      120,
@@ -197114,21 +194448,12 @@
     ],
     [
      "dragon_flag",
-     3,
+     2,
      8,
      null,
      120,
      "2111",
      "full_dragon_negative"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     60,
-     60,
-     "isometric",
-     "dead_bug"
     ]
    ],
    "cooldown": [
@@ -197185,13 +194510,12 @@
     "week": 13,
     "day": 3,
     "day_type": "planche_push",
-    "minutes": 54,
+    "minutes": 46,
     "rpe": 7,
     "focus": [
      "planche",
      "straight_arm_push",
-     "horizontal_push",
-     "vertical_push"
+     "horizontal_push"
     ]
    },
    "warmup": [
@@ -197273,9 +194597,27 @@
    "main": [
     [
      "full_planche",
-     4,
+     2,
      null,
      6,
+     150,
+     "isometric",
+     "straddle_planche"
+    ],
+    [
+     "full_planche",
+     1,
+     null,
+     6,
+     150,
+     "isometric",
+     "straddle_planche"
+    ],
+    [
+     "full_planche",
+     1,
+     null,
+     5,
      150,
      "isometric",
      "straddle_planche"
@@ -197301,15 +194643,6 @@
     [
      "parallel_dip",
      1,
-     30,
-     null,
-     120,
-     "2111",
-     "assisted_dip"
-    ],
-    [
-     "parallel_dip",
-     2,
      25,
      null,
      120,
@@ -197317,9 +194650,27 @@
      "assisted_dip"
     ],
     [
+     "parallel_dip",
+     1,
+     15,
+     null,
+     120,
+     "2111",
+     "assisted_dip"
+    ],
+    [
      "pushup",
-     2,
-     50,
+     1,
+     40,
+     null,
+     90,
+     "2111",
+     "incline_pushup"
+    ],
+    [
+     "pushup",
+     1,
+     20,
      null,
      90,
      "2111",
@@ -197451,9 +194802,18 @@
    "main": [
     [
      "one_arm_handstand",
-     3,
+     2,
      null,
      "7/side",
+     90,
+     "isometric",
+     "straddle_one_arm_handstand"
+    ],
+    [
+     "one_arm_handstand",
+     1,
+     null,
+     "6/side",
      90,
      "isometric",
      "straddle_one_arm_handstand"
@@ -197487,8 +194847,17 @@
     ],
     [
      "deficit_wall_hspu",
-     3,
+     2,
      7,
+     null,
+     150,
+     "2111",
+     "wall_hspu"
+    ],
+    [
+     "deficit_wall_hspu",
+     1,
+     6,
      null,
      150,
      "2111",
@@ -197589,9 +194958,7 @@
     "rpe": 7,
     "focus": [
      "back_lever",
-     "human_flag",
-     "hefesto",
-     "shoulder_extension"
+     "human_flag"
     ]
    },
    "warmup": [
@@ -197672,7 +195039,16 @@
    "main": [
     [
      "full_back",
-     3,
+     2,
+     null,
+     14,
+     150,
+     "isometric",
+     "straddle_back"
+    ],
+    [
+     "full_back",
+     1,
      null,
      14,
      150,
@@ -197683,7 +195059,7 @@
      "full_flag",
      1,
      null,
-     "5/side",
+     "6/side",
      150,
      "isometric",
      "straddle_flag"
@@ -197700,7 +195076,7 @@
     [
      "hefesto",
      2,
-     3,
+     2,
      null,
      180,
      "2111",
@@ -197764,14 +195140,14 @@
     "en": "The Full Battle"
    },
    "description": {
-    "en": "Beyond Gravity, block 5. The Full Battle: five rounds of 10 pull-ups, 20 dips, 30 push-ups and 40 squats, 30 s between stations and 90 s between rounds. Every set as written. 10 classes to the level test."
+    "en": "Beyond Gravity, block 5. The Full Battle: four rounds of 8 pull-ups, 15 dips, 25 push-ups and 30 squats, 30 s between stations and 90 s between rounds. Every set as written. 10 classes to the level test."
    },
    "schedule": {
     "week": 13,
     "day": 6,
     "day_type": "full_battle",
-    "minutes": 54,
-    "rpe": 7,
+    "minutes": 43,
+    "rpe": 8,
     "focus": [
      "vertical_pull",
      "vertical_push",
@@ -197838,7 +195214,7 @@
     [
      "pullup",
      1,
-     5,
+     4,
      null,
      45,
      "ramp-up",
@@ -197850,7 +195226,7 @@
     [
      "pullup",
      1,
-     10,
+     8,
      null,
      30,
      "controlled",
@@ -197859,7 +195235,7 @@
     [
      "parallel_dip",
      1,
-     20,
+     15,
      null,
      30,
      "controlled",
@@ -197868,7 +195244,7 @@
     [
      "pushup",
      1,
-     30,
+     25,
      null,
      30,
      "controlled",
@@ -197877,7 +195253,7 @@
     [
      "squat",
      1,
-     40,
+     30,
      null,
      90,
      "controlled",
@@ -197886,7 +195262,7 @@
     [
      "pullup",
      1,
-     10,
+     8,
      null,
      30,
      "controlled",
@@ -197895,7 +195271,7 @@
     [
      "parallel_dip",
      1,
-     20,
+     15,
      null,
      30,
      "controlled",
@@ -197904,7 +195280,7 @@
     [
      "pushup",
      1,
-     30,
+     25,
      null,
      30,
      "controlled",
@@ -197913,7 +195289,7 @@
     [
      "squat",
      1,
-     40,
+     30,
      null,
      90,
      "controlled",
@@ -197922,7 +195298,7 @@
     [
      "pullup",
      1,
-     10,
+     8,
      null,
      30,
      "controlled",
@@ -197931,7 +195307,7 @@
     [
      "parallel_dip",
      1,
-     20,
+     15,
      null,
      30,
      "controlled",
@@ -197940,7 +195316,7 @@
     [
      "pushup",
      1,
-     30,
+     25,
      null,
      30,
      "controlled",
@@ -197949,7 +195325,7 @@
     [
      "squat",
      1,
-     40,
+     30,
      null,
      90,
      "controlled",
@@ -197958,7 +195334,7 @@
     [
      "pullup",
      1,
-     10,
+     8,
      null,
      30,
      "controlled",
@@ -197967,7 +195343,7 @@
     [
      "parallel_dip",
      1,
-     20,
+     15,
      null,
      30,
      "controlled",
@@ -197976,7 +195352,7 @@
     [
      "pushup",
      1,
-     30,
+     25,
      null,
      30,
      "controlled",
@@ -197985,43 +195361,7 @@
     [
      "squat",
      1,
-     40,
-     null,
-     90,
-     "controlled",
-     "box_squat"
-    ],
-    [
-     "pullup",
-     1,
-     10,
-     null,
      30,
-     "controlled",
-     "assisted_pullup"
-    ],
-    [
-     "parallel_dip",
-     1,
-     20,
-     null,
-     30,
-     "controlled",
-     "assisted_dip"
-    ],
-    [
-     "pushup",
-     1,
-     30,
-     null,
-     30,
-     "controlled",
-     "incline_pushup"
-    ],
-    [
-     "squat",
-     1,
-     40,
      null,
      90,
      "controlled",
@@ -198205,7 +195545,7 @@
     "week": 14,
     "day": 1,
     "day_type": "deload_front_onearm",
-    "minutes": 48,
+    "minutes": 45,
     "rpe": 6,
     "focus": [
      "front_lever",
@@ -198372,15 +195712,6 @@
      "one_arm_pullup_negative"
     ],
     [
-     "archer_pullup",
-     1,
-     "8/side",
-     null,
-     120,
-     "2111",
-     "pullup"
-    ],
-    [
      "pullup",
      1,
      20,
@@ -198444,7 +195775,7 @@
     "week": 14,
     "day": 2,
     "day_type": "deload_legs_core",
-    "minutes": 42,
+    "minutes": 40,
     "rpe": 5,
     "focus": [
      "single_leg_squat",
@@ -198559,7 +195890,7 @@
     ],
     [
      "v_sit",
-     2,
+     1,
      null,
      7,
      120,
@@ -198574,15 +195905,6 @@
      120,
      "2111",
      "full_dragon_negative"
-    ],
-    [
-     "hollow_body_hold",
-     1,
-     null,
-     60,
-     60,
-     "isometric",
-     "dead_bug"
     ],
     [
      "straight_side_plank",
@@ -198648,7 +195970,7 @@
     "week": 14,
     "day": 3,
     "day_type": "deload_planche_push",
-    "minutes": 40,
+    "minutes": 38,
     "rpe": 6,
     "focus": [
      "planche",
@@ -198764,7 +196086,7 @@
     [
      "parallel_dip",
      1,
-     30,
+     25,
      null,
      120,
      "2111",
@@ -198773,7 +196095,7 @@
     [
      "parallel_dip",
      1,
-     25,
+     15,
      null,
      120,
      "2111",
@@ -198782,7 +196104,7 @@
     [
      "pushup",
      1,
-     50,
+     40,
      null,
      90,
      "2111",
@@ -198914,9 +196236,18 @@
    "main": [
     [
      "one_arm_handstand",
-     3,
+     2,
      null,
      "7/side",
+     90,
+     "isometric",
+     "straddle_one_arm_handstand"
+    ],
+    [
+     "one_arm_handstand",
+     1,
+     null,
+     "6/side",
      90,
      "isometric",
      "straddle_one_arm_handstand"
@@ -198950,8 +196281,17 @@
     ],
     [
      "deficit_wall_hspu",
-     3,
+     2,
      7,
+     null,
+     150,
+     "2111",
+     "wall_hspu"
+    ],
+    [
+     "deficit_wall_hspu",
+     1,
+     6,
      null,
      150,
      "2111",
@@ -199163,7 +196503,7 @@
     [
      "hefesto",
      2,
-     2,
+     1,
      null,
      180,
      "2111",
@@ -199358,7 +196698,7 @@
     [
      "pushup",
      1,
-     25,
+     20,
      null,
      60,
      "2111",
@@ -199367,7 +196707,7 @@
     [
      "squat",
      1,
-     20,
+     25,
      null,
      60,
      "2111",
@@ -199632,7 +196972,7 @@
     "week": 15,
     "day": 1,
     "day_type": "primer_easy",
-    "minutes": 36,
+    "minutes": 35,
     "rpe": 4,
     "focus": [
      "horizontal_push",
@@ -199726,7 +197066,7 @@
     [
      "pushup",
      1,
-     12,
+     10,
      null,
      45,
      "ramp-up",
@@ -199747,7 +197087,7 @@
     [
      "pushup",
      1,
-     25,
+     20,
      null,
      60,
      "2111",
@@ -199765,7 +197105,7 @@
     [
      "parallel_dip",
      1,
-     15,
+     13,
      null,
      60,
      "2111",
@@ -199862,8 +197202,8 @@
     "week": 15,
     "day": 2,
     "day_type": "exam_level",
-    "minutes": 60,
-    "rpe": 8,
+    "minutes": 57,
+    "rpe": 7,
     "focus": [
      "handstand",
      "balance",
@@ -200016,7 +197356,7 @@
      "one_arm_handstand",
      1,
      null,
-     "7/side",
+     "5/side",
      120,
      "assessment",
      "straddle_one_arm_handstand"
@@ -200025,8 +197365,8 @@
      "full_planche",
      1,
      null,
-     6,
-     120,
+     4,
+     180,
      "assessment",
      "straddle_planche"
     ],
@@ -200034,8 +197374,8 @@
      "full_front",
      1,
      null,
-     10,
-     120,
+     7,
+     180,
      "assessment",
      "straddle_front"
     ],
@@ -200043,8 +197383,8 @@
      "full_back",
      1,
      null,
-     14,
-     120,
+     10,
+     150,
      "assessment",
      "straddle_back"
     ],
@@ -200052,60 +197392,42 @@
      "full_flag",
      1,
      null,
-     "6/side",
-     120,
+     "4/side",
+     150,
      "assessment",
      "straddle_flag"
     ],
     [
      "strict_muscleup",
      1,
-     7,
+     5,
      null,
-     120,
+     150,
      "assessment",
      "band_muscleup"
     ],
     [
      "one_arm_pullup",
      1,
-     "2/side",
+     "1/side",
      null,
-     120,
+     180,
      "assessment",
      "one_arm_pullup_negative"
     ],
     [
      "deficit_wall_hspu",
      1,
-     7,
+     5,
      null,
-     120,
+     150,
      "assessment",
      "wall_hspu"
     ],
     [
-     "hefesto",
-     1,
-     3,
-     null,
-     120,
-     "assessment",
-     "assisted_hefesto"
-    ],
-    [
-     "one_arm_pushup",
-     1,
-     "5/side",
-     null,
-     120,
-     "assessment",
-     "archer_pushup"
-    ],
-    [
      "pullup",
      1,
-     15,
+     10,
      null,
      120,
      "assessment",
@@ -200114,20 +197436,20 @@
     [
      "parallel_dip",
      1,
-     20,
+     15,
      null,
-     150,
+     120,
      "assessment",
      "assisted_dip"
     ],
     [
-     "pushup",
+     "toes_to_bar",
      1,
-     30,
+     10,
      null,
-     120,
+     60,
      "assessment",
-     "incline_pushup"
+     "hanging_leg_raise"
     ]
    ],
    "cooldown": [

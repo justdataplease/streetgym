@@ -138,11 +138,11 @@ class PlacementTest {
         assertFalse(Placement.meets(levelThree, 0, 0))
         assertTrue(Placement.meets(levelThree, 30, 60))
         assertTrue(Placement.meets(levelNine, 20, 50))
-        assertFalse(Placement.meets(levelNine, 10, 50))
-        // Each skills-step start assumes the level test it came from, which tests every skill family of that level.
+        assertFalse(Placement.meets(levelNine, 9, 50))  // its pull-up test: 10, at most the Advanced target (2.9.0)
+        // Each skills-step start assumes the level test it came from, which checks the level's skills (seven tests or more).
         Placement.SKILL_TESTS.forEach { passed ->
             assertEquals(Start(passed, 100), assumed(Placement.skillStart(passed)))
-            assertTrue(programs.first { it.levelNumber == passed && it.number == 100 }.exercises.count { it.assessment } >= 12)
+            assertTrue(programs.first { it.levelNumber == passed && it.number == 100 }.exercises.count { it.assessment } >= 7)
         }
     }
 

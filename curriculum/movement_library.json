@@ -23,6 +23,7 @@
         "en": "March lightly while swinging the arms and gradually raising body temperature."
       },
       "category": "dynamic_warmup",
+      "grade": 1,
       "patterns": [
         "locomotion"
       ],
@@ -41,6 +42,7 @@
         "en": "Walk at an easy pace to recover while keeping a little daily movement."
       },
       "category": "recovery",
+      "grade": 1,
       "patterns": [
         "locomotion"
       ],
@@ -59,6 +61,7 @@
         "en": "Step one foot sideways as both arms arc overhead, then alternate."
       },
       "category": "dynamic_warmup",
+      "grade": 1,
       "patterns": [
         "locomotion",
         "shoulder"
@@ -78,6 +81,7 @@
         "en": "Make slow circles in both directions with relaxed fingers."
       },
       "category": "dynamic_warmup",
+      "grade": 1,
       "patterns": [
         "wrist"
       ],
@@ -96,6 +100,7 @@
         "en": "From hands and knees, gently shift shoulders forward and back over the palms."
       },
       "category": "dynamic_warmup",
+      "grade": 1,
       "patterns": [
         "wrist",
         "push"
@@ -115,6 +120,7 @@
         "en": "Draw slow, controlled circles with straight arms and quiet ribs."
       },
       "category": "dynamic_warmup",
+      "grade": 1,
       "patterns": [
         "shoulder"
       ],
@@ -133,6 +139,7 @@
         "en": "Alternate open-and-cross arm swings without forcing end range."
       },
       "category": "dynamic_warmup",
+      "grade": 1,
       "patterns": [
         "shoulder"
       ],
@@ -151,6 +158,7 @@
         "en": "Move the spine gently between rounded and extended positions with the breath."
       },
       "category": "mobility",
+      "grade": 1,
       "patterns": [
         "spine"
       ],
@@ -169,6 +177,7 @@
         "en": "On hands and knees with one hand behind the head, rotate the upper back to open the elbow toward the ceiling while the hips stay over the knees; breathe slowly."
       },
       "category": "mobility",
+      "grade": 1,
       "patterns": [
         "spine",
         "shoulder"
@@ -188,6 +197,7 @@
         "en": "Trace controlled circles through a comfortable hip range."
       },
       "category": "dynamic_warmup",
+      "grade": 1,
       "patterns": [
         "hip"
       ],
@@ -206,6 +216,7 @@
         "en": "Drive the knee gently over the middle toes while the heel stays down."
       },
       "category": "dynamic_warmup",
+      "grade": 1,
       "patterns": [
         "ankle",
         "squat"
@@ -225,6 +236,7 @@
         "en": "Hold a support and swing one leg front to back with a quiet trunk."
       },
       "category": "dynamic_warmup",
+      "grade": 1,
       "patterns": [
         "hip"
       ],
@@ -245,6 +257,7 @@
         "en": "From a straight-arm hang, draw shoulders down without bending the elbows."
       },
       "category": "activation",
+      "grade": 1,
       "patterns": [
         "pull",
         "scapula"
@@ -266,6 +279,7 @@
         "en": "Keep elbows straight while the shoulder blades glide together and apart."
       },
       "category": "activation",
+      "grade": 1,
       "patterns": [
         "push",
         "scapula"
@@ -285,6 +299,7 @@
         "en": "Perform straight-arm shoulder-blade motion with hands on a secure high support."
       },
       "category": "activation",
+      "grade": 1,
       "patterns": [
         "push",
         "scapula"
@@ -306,6 +321,7 @@
         "en": "Hang with feet ready to assist and let the grip and shoulders acclimate."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "hang",
         "grip"
@@ -330,6 +346,7 @@
         "en": "Hold the bar while the feet carry enough weight to maintain comfortable shoulders."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "hang",
         "grip"
@@ -351,6 +368,7 @@
         "en": "Maintain straight elbows, shoulders gently down, and ribs stacked over pelvis."
       },
       "category": "skill_foundation",
+      "grade": 2,
       "patterns": [
         "hang",
         "pull",
@@ -376,6 +394,7 @@
         "en": "Use only enough leg help to pull the chest toward a low bar with a smooth path."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "vertical_pull"
       ],
@@ -396,6 +415,7 @@
         "en": "Step to the top and lower through a controlled range before stepping down."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "vertical_pull"
       ],
@@ -417,6 +437,7 @@
         "en": "Pull from an active hang without kicking, then return to straight arms under control."
       },
       "category": "fundamental",
+      "grade": 2,
       "patterns": [
         "vertical_pull"
       ],
@@ -440,6 +461,7 @@
         "en": "Pull with palms facing you, a quiet body, and a controlled full descent."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "vertical_pull"
       ],
@@ -463,6 +485,7 @@
         "en": "Keep a straight body and pull the chest to a secure waist-high bar."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "horizontal_pull"
       ],
@@ -483,6 +506,7 @@
         "en": "Use a more upright body angle and pull the sternum toward the bar."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "horizontal_pull"
       ],
@@ -503,6 +527,7 @@
         "en": "Row a rigid body to the bar while the heels rest on a secure support."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "horizontal_pull"
       ],
@@ -524,6 +549,7 @@
         "en": "Stand tall on straight arms with shoulders gently depressed and feet ready to assist."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "support",
         "push"
@@ -548,6 +574,7 @@
         "en": "Use the feet to unload a straight-arm support between stable bars."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "support",
         "push"
@@ -569,6 +596,7 @@
         "en": "Descend between bars while the feet provide just enough assistance to press back up."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "vertical_push"
       ],
@@ -590,6 +618,7 @@
         "en": "Start in support, lower slowly to a comfortable depth, then step back up."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "vertical_push"
       ],
@@ -611,6 +640,7 @@
         "en": "Lower with stable shoulders, then press to a tall straight-arm support."
       },
       "category": "fundamental",
+      "grade": 2,
       "patterns": [
         "vertical_push"
       ],
@@ -634,6 +664,7 @@
         "en": "Hold above a waist-high bar with straight arms, a hollow trunk, and light contact if needed."
       },
       "category": "skill_foundation",
+      "grade": 1,
       "patterns": [
         "support",
         "muscle_up"
@@ -658,6 +689,7 @@
         "en": "Keep a straight body and lower the chest to a secure elevated surface."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "horizontal_push"
       ],
@@ -678,6 +710,7 @@
         "en": "Lower a rigid body to comfortable depth and press the floor away."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "horizontal_push"
       ],
@@ -699,6 +732,7 @@
         "en": "Pause briefly near the bottom while maintaining a rigid body, then press smoothly."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "horizontal_push"
       ],
@@ -720,6 +754,7 @@
         "en": "Use a comfortable close hand position and keep elbows tracking back."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "horizontal_push",
         "triceps"
@@ -742,6 +777,7 @@
         "en": "With hips high, bend the elbows and guide the head forward between the hands."
       },
       "category": "fundamental",
+      "grade": 2,
       "patterns": [
         "vertical_push"
       ],
@@ -763,6 +799,7 @@
         "en": "Sit between the hips with balanced feet, then stand tall."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "squat",
         "legs"
@@ -782,6 +819,7 @@
         "en": "Reach the hips to a stable seat and use light hand support as needed."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "squat",
         "legs"
@@ -804,6 +842,7 @@
         "en": "Descend slowly, stay balanced, and stand without bouncing."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "squat",
         "legs"
@@ -823,6 +862,7 @@
         "en": "Pause at a stable depth, keep the whole foot grounded, then stand."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "squat",
         "legs"
@@ -842,6 +882,7 @@
         "en": "Step back, lower with a tall torso, and drive through the front foot to return."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "lunge",
         "legs"
@@ -861,6 +902,7 @@
         "en": "Use a staggered stance and light hand support while lowering straight down."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "lunge",
         "legs"
@@ -882,6 +924,7 @@
         "en": "Shift toward one leg while the other lengthens, using support for balance."
       },
       "category": "mobility_strength",
+      "grade": 2,
       "patterns": [
         "lateral_lunge",
         "legs"
@@ -903,6 +946,7 @@
         "en": "Rise onto the balls of the feet, pause, and lower with control."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "ankle",
         "legs"
@@ -924,6 +968,7 @@
         "en": "Press through the feet and lift the hips without arching the low back."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "posterior_chain",
         "hip_extension"
@@ -943,6 +988,7 @@
         "en": "Keep the pelvis level while one leg supplies the bridge effort."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "posterior_chain",
         "hip_extension"
@@ -962,6 +1008,7 @@
         "en": "Maintain a long body line while breathing behind a gently braced abdomen."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "core",
         "bodyline"
@@ -981,6 +1028,7 @@
         "en": "Hold a straight body with hands on a secure elevated surface."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "core",
         "bodyline"
@@ -1002,6 +1050,7 @@
         "en": "Flatten the low back gently while holding bent knees over the hips."
       },
       "category": "skill_foundation",
+      "grade": 1,
       "patterns": [
         "core",
         "bodyline"
@@ -1021,6 +1070,7 @@
         "en": "Lie on your back, press the low back into the floor and lift the shoulders and straight legs a little off the floor, arms by the ears or by the sides. Hold one long, slightly curved line."
       },
       "category": "skill_foundation",
+      "grade": 1,
       "patterns": [
         "core",
         "bodyline"
@@ -1040,6 +1090,7 @@
         "en": "Alternate opposite arm and leg while the trunk stays quiet against the floor."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "core",
         "coordination"
@@ -1059,6 +1110,7 @@
         "en": "Reach opposite arm and leg long while keeping hips and ribs square."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "core",
         "posterior_chain"
@@ -1078,6 +1130,7 @@
         "en": "Support on one forearm and bent lower knee while keeping hips forward."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "core",
         "lateral_chain"
@@ -1097,6 +1150,7 @@
         "en": "On one forearm, elbow under the shoulder, legs straight and feet stacked or staggered. Lift the hips into one line from head to heels and hold without rolling forward. Then the other side."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "core",
         "lateral_chain"
@@ -1116,6 +1170,7 @@
         "en": "From an active hang, lift bent knees without swinging and lower slowly."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "core",
         "hang"
@@ -1140,6 +1195,7 @@
         "en": "Draw bent knees toward the trunk while keeping the low back controlled."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "core"
       ],
@@ -1158,6 +1214,7 @@
         "en": "Lower bent legs away from the trunk only as far as the low back stays quiet."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "core"
       ],
@@ -1176,6 +1233,7 @@
         "en": "Lift the chest and legs slightly while reaching long through fingers and toes."
       },
       "category": "skill_foundation",
+      "grade": 2,
       "patterns": [
         "posterior_chain",
         "bodyline"
@@ -1195,6 +1253,7 @@
         "en": "Press tall between supports, lighten the feet, and draw knees toward the chest. Once steady, lift both feet off the floor for the last seconds of each hold."
       },
       "category": "skill_foundation",
+      "grade": 2,
       "patterns": [
         "support",
         "core",
@@ -1217,6 +1276,7 @@
         "en": "Roll onto the upper back, stack hips gently, and return without loading the neck."
       },
       "category": "skill_foundation",
+      "grade": 1,
       "patterns": [
         "core",
         "dragon_flag"
@@ -1238,6 +1298,7 @@
         "en": "At a low bar, use the legs to guide chest from below the bar to a straight-bar support."
       },
       "category": "skill",
+      "grade": 2,
       "patterns": [
         "muscle_up",
         "transition"
@@ -1259,6 +1320,7 @@
         "en": "Use a low bar and leg support to rehearse bringing hips toward the bar into support."
       },
       "category": "skill",
+      "grade": 3,
       "patterns": [
         "muscle_up",
         "inversion"
@@ -1281,6 +1343,7 @@
         "en": "Use a low bar and a small leg drive to pass smoothly into support, then step down."
       },
       "category": "skill",
+      "grade": 2,
       "patterns": [
         "muscle_up",
         "transition"
@@ -1302,6 +1365,7 @@
         "en": "Pull the lower chest toward the bar without kicking or craning the neck."
       },
       "category": "skill_strength",
+      "grade": 3,
       "patterns": [
         "muscle_up",
         "vertical_pull"
@@ -1326,6 +1390,7 @@
         "en": "Use a securely anchored band to practice a close, symmetrical transition above the bar."
       },
       "category": "skill",
+      "grade": 3,
       "patterns": [
         "muscle_up"
       ],
@@ -1347,6 +1412,7 @@
         "en": "Pull high, pass both shoulders over together, and finish in stable straight-bar support."
       },
       "category": "advanced_skill",
+      "grade": 4,
       "patterns": [
         "muscle_up"
       ],
@@ -1370,6 +1436,7 @@
         "en": "Under a low bar, tuck the knees and use light foot contact while drawing the hips upward."
       },
       "category": "skill_foundation",
+      "grade": 1,
       "patterns": [
         "front_lever",
         "horizontal_pull"
@@ -1391,6 +1458,7 @@
         "en": "Hang from a high bar in a tuck front lever, trunk level and knees tucked, feet free. Row until the elbows reach about a right angle with the trunk still level, then lower back to straight arms."
       },
       "category": "advanced_strength",
+      "grade": 4,
       "patterns": [
         "front_lever",
         "horizontal_pull"
@@ -1415,6 +1483,7 @@
         "en": "Hold a compact tuck under the bar with active shoulders and hips near shoulder height."
       },
       "category": "skill",
+      "grade": 2,
       "patterns": [
         "front_lever",
         "horizontal_pull",
@@ -1440,6 +1509,7 @@
         "en": "Open the hip angle from tuck while maintaining a level trunk and active shoulders."
       },
       "category": "advanced_skill",
+      "grade": 3,
       "patterns": [
         "front_lever"
       ],
@@ -1463,6 +1533,7 @@
         "en": "Extend one leg from an advanced tuck without rotating the pelvis."
       },
       "category": "advanced_skill",
+      "grade": 3,
       "patterns": [
         "front_lever"
       ],
@@ -1486,6 +1557,7 @@
         "en": "Hold a straight body with legs opened only as wide as needed for control."
       },
       "category": "advanced_skill",
+      "grade": 4,
       "patterns": [
         "front_lever"
       ],
@@ -1509,6 +1581,7 @@
         "en": "Maintain a straight horizontal body under the bar with locked elbows and active shoulders."
       },
       "category": "advanced_skill",
+      "grade": 5,
       "patterns": [
         "front_lever"
       ],
@@ -1532,6 +1605,7 @@
         "en": "With low rings or a low bar and feet available, rotate only through a comfortable shoulder range."
       },
       "category": "skill_foundation",
+      "grade": 1,
       "patterns": [
         "back_lever",
         "inversion",
@@ -1555,6 +1629,7 @@
         "en": "On low rings or a low bar, feet on the floor, roll back through a partial skin-the-cat until the hands are behind you. Open the shoulders only as far as is comfortable and hold, feet down for support."
       },
       "category": "skill_foundation",
+      "grade": 2,
       "patterns": [
         "back_lever",
         "shoulder_extension"
@@ -1577,6 +1652,7 @@
         "en": "On a low, secure bar, palms facing you, feet down and taking most of the weight. Turn back to a comfortable hang with the hands behind you and elbows straight, then step out easily."
       },
       "category": "skill_foundation",
+      "grade": 2,
       "patterns": [
         "hefesto",
         "shoulder_extension"
@@ -1601,6 +1677,7 @@
         "en": "With an underhand grip and the bar behind the hips, hold a straight-arm support with the feet helping. Practise lowering and stepping out."
       },
       "category": "skill_foundation",
+      "grade": 1,
       "patterns": [
         "hefesto",
         "shoulder_extension"
@@ -1625,6 +1702,7 @@
         "en": "From the behind-bar support with the feet helping, bend the elbows through a comfortable range, then press back to straight elbows."
       },
       "category": "skill_strength",
+      "grade": 2,
       "patterns": [
         "hefesto",
         "shoulder_extension"
@@ -1649,6 +1727,7 @@
         "en": "From a foot-assisted supinated German hang, pull only through the part of the transition you control, then return with the feet helping."
       },
       "category": "advanced_strength",
+      "grade": 3,
       "patterns": [
         "hefesto",
         "shoulder_extension"
@@ -1673,6 +1752,7 @@
         "en": "Use the same foot-assisted set-up each time. Pull from the straight-arm German hang, move behind the bar and press to a straight-arm support."
       },
       "category": "advanced_strength",
+      "grade": 4,
       "patterns": [
         "hefesto",
         "shoulder_extension"
@@ -1697,6 +1777,7 @@
         "en": "From a still supinated German hang with straight elbows, pull and move behind the bar, then press to a straight-arm support behind it. A steady high false grip is allowed."
       },
       "category": "mastery_skill",
+      "grade": 5,
       "patterns": [
         "hefesto",
         "shoulder_extension"
@@ -1721,6 +1802,7 @@
         "en": "From a supported inverted tuck, lower only slightly toward a tucked back-lever line."
       },
       "category": "skill",
+      "grade": 2,
       "patterns": [
         "back_lever"
       ],
@@ -1743,6 +1825,7 @@
         "en": "Hold a compact tuck behind the bar with straight elbows and controlled shoulders."
       },
       "category": "skill",
+      "grade": 2,
       "patterns": [
         "back_lever"
       ],
@@ -1767,6 +1850,7 @@
         "en": "Open the hips from tuck while retaining straight elbows and a level trunk."
       },
       "category": "advanced_skill",
+      "grade": 3,
       "patterns": [
         "back_lever"
       ],
@@ -1791,6 +1875,7 @@
         "en": "Extend one leg from advanced tuck while keeping hips square."
       },
       "category": "advanced_skill",
+      "grade": 3,
       "patterns": [
         "back_lever"
       ],
@@ -1815,6 +1900,7 @@
         "en": "Extend into a straight straddle line behind the bar with controlled shoulders."
       },
       "category": "advanced_skill",
+      "grade": 4,
       "patterns": [
         "back_lever"
       ],
@@ -1839,6 +1925,7 @@
         "en": "Hold a straight horizontal line behind the bar with locked elbows."
       },
       "category": "advanced_skill",
+      "grade": 4,
       "patterns": [
         "back_lever"
       ],
@@ -1863,6 +1950,7 @@
         "en": "Anchor the shoulders, keep weight off the neck, and lower a bent-knee body line slowly."
       },
       "category": "skill",
+      "grade": 2,
       "patterns": [
         "dragon_flag",
         "core"
@@ -1885,6 +1973,7 @@
         "en": "Lower with one leg longer while maintaining a single rigid line from shoulders through hips."
       },
       "category": "advanced_skill",
+      "grade": 3,
       "patterns": [
         "dragon_flag",
         "core"
@@ -1907,6 +1996,7 @@
         "en": "Lower a straight body slowly from the shoulders while gripping a secure anchor."
       },
       "category": "advanced_skill",
+      "grade": 3,
       "patterns": [
         "dragon_flag",
         "core"
@@ -1929,6 +2019,7 @@
         "en": "Raise and lower a rigid body from shoulder support without hinging at the hips."
       },
       "category": "advanced_skill",
+      "grade": 4,
       "patterns": [
         "dragon_flag",
         "core"
@@ -1954,6 +2045,7 @@
         "en": "Hold a long body line with hands on a secure support and shoulder blades gently spread."
       },
       "category": "skill_foundation",
+      "grade": 1,
       "patterns": [
         "planche",
         "push",
@@ -1976,6 +2068,7 @@
         "en": "From a protracted plank, shift shoulders slightly beyond the hands while keeping elbows straight."
       },
       "category": "skill",
+      "grade": 2,
       "patterns": [
         "planche",
         "straight_arm_push"
@@ -2000,6 +2093,7 @@
         "en": "Balance knees lightly on the upper arms with hands planted and a cushion ahead."
       },
       "category": "skill",
+      "grade": 2,
       "patterns": [
         "planche",
         "balance"
@@ -2024,6 +2118,7 @@
         "en": "With straight elbows and protracted shoulders, lift tucked feet from the floor."
       },
       "category": "advanced_skill",
+      "grade": 3,
       "patterns": [
         "planche",
         "straight_arm_push"
@@ -2049,6 +2144,7 @@
         "en": "Open the hips from tuck while shoulders stay protracted and elbows remain straight."
       },
       "category": "advanced_skill",
+      "grade": 4,
       "patterns": [
         "planche",
         "straight_arm_push"
@@ -2074,6 +2170,7 @@
         "en": "Hold a straight-arm horizontal position with the legs opened for leverage."
       },
       "category": "advanced_skill",
+      "grade": 5,
       "patterns": [
         "planche",
         "straight_arm_push"
@@ -2099,6 +2196,7 @@
         "en": "Hold the body horizontal on straight arms with no foot support."
       },
       "category": "mastery_skill",
+      "grade": 5,
       "patterns": [
         "planche",
         "straight_arm_push"
@@ -2124,6 +2222,7 @@
         "en": "With a soft elbow, gently bend the wrist back or forward until you feel a mild stretch. Each timed set is for one side; switch sides each set, and start on the other side next session."
       },
       "category": "static_stretch",
+      "grade": 1,
       "patterns": [
         "wrist",
         "forearm"
@@ -2143,6 +2242,7 @@
         "en": "Hold a secure support, send hips back, and breathe into the sides of the ribs."
       },
       "category": "static_stretch",
+      "grade": 1,
       "patterns": [
         "shoulder",
         "lat"
@@ -2164,6 +2264,7 @@
         "en": "Place the forearm on a support and turn away slightly while breathing calmly. Each timed set is for one side; switch sides each set, and start on the other side next session."
       },
       "category": "static_stretch",
+      "grade": 1,
       "patterns": [
         "chest",
         "shoulder"
@@ -2185,6 +2286,7 @@
         "en": "Tuck the pelvis gently and shift forward until the front of the rear hip stretches mildly. Each timed set is for one side; switch sides each set, and start on the other side next session."
       },
       "category": "static_stretch",
+      "grade": 1,
       "patterns": [
         "hip"
       ],
@@ -2205,6 +2307,7 @@
         "en": "Hinge from the hips over a slightly bent leg while holding a support. Each timed set is for one side; switch sides each set, and start on the other side next session."
       },
       "category": "static_stretch",
+      "grade": 1,
       "patterns": [
         "hamstring",
         "hip"
@@ -2226,6 +2329,7 @@
         "en": "Hold a support, bring one heel gently toward the seat and keep the knees close. Each timed set is for one side; switch sides each set, and start on the other side next session."
       },
       "category": "static_stretch",
+      "grade": 1,
       "patterns": [
         "quadriceps",
         "hip"
@@ -2247,6 +2351,7 @@
         "en": "Keep the rear heel down and lean forward gently into a wall. Each timed set is for one side; switch sides each set, and start on the other side next session."
       },
       "category": "static_stretch",
+      "grade": 1,
       "patterns": [
         "calf",
         "ankle"
@@ -2268,6 +2373,7 @@
         "en": "Sit hips back toward heels and rest the arms or chest on support while breathing slowly."
       },
       "category": "static_stretch",
+      "grade": 1,
       "patterns": [
         "spine",
         "shoulder"
@@ -2289,6 +2395,7 @@
         "en": "Let bent knees drift slightly to one side while the shoulders stay relaxed. Each timed set is for one side; switch sides each set, and start on the other side next session."
       },
       "category": "static_stretch",
+      "grade": 1,
       "patterns": [
         "spine"
       ],
@@ -2309,6 +2416,7 @@
         "en": "Breathe quietly through the nose with a slightly longer exhale."
       },
       "category": "recovery",
+      "grade": 1,
       "patterns": [
         "breathing"
       ],
@@ -2327,6 +2435,7 @@
         "en": "Shift gently to one side until the inner thigh lengthens, keeping the supported foot flat. Each timed set is for one side; switch sides each set, and start on the other side next session."
       },
       "category": "static_cooldown",
+      "grade": 1,
       "patterns": [
         "mobility",
         "adductors"
@@ -2346,6 +2455,7 @@
         "en": "Crawl with knees hovering low, opposite hand and foot moving together, and the trunk quiet."
       },
       "category": "conditioning",
+      "grade": 1,
       "patterns": [
         "locomotion",
         "core",
@@ -2366,6 +2476,7 @@
         "en": "Hold a post if needed, sit into a comfortable deep squat, and keep the whole foot grounded."
       },
       "category": "mobility",
+      "grade": 1,
       "patterns": [
         "squat",
         "ankle_mobility",
@@ -2388,6 +2499,7 @@
         "en": "From an active hang, alternate a small hollow and arch shape without bending the arms."
       },
       "category": "skill_drill",
+      "grade": 1,
       "patterns": [
         "bar_swing",
         "bodyline"
@@ -2409,6 +2521,7 @@
         "en": "Begin in straight-bar support and lower slowly through the transition into a controlled hang."
       },
       "category": "advanced_skill",
+      "grade": 3,
       "patterns": [
         "muscle_up",
         "eccentric_pull",
@@ -2431,6 +2544,7 @@
         "en": "Sit in a 90/90 position and lean forward gently over the front shin with a long spine. Each timed set is for one side; switch sides each set, and start on the other side next session."
       },
       "category": "static_cooldown",
+      "grade": 1,
       "patterns": [
         "hip_mobility"
       ],
@@ -2449,6 +2563,7 @@
         "en": "Rotate both knees from one 90/90 side to the other under control; each arrival counts as one alternating repetition unless the workout explicitly says per side."
       },
       "category": "mobility",
+      "grade": 1,
       "patterns": [
         "hip_rotation"
       ],
@@ -2467,6 +2582,7 @@
         "en": "From a stable support, take short alternating hand steps along the parallel bars."
       },
       "category": "skill_drill",
+      "grade": 1,
       "patterns": [
         "support",
         "locomotion",
@@ -2489,6 +2605,7 @@
         "en": "Lean shoulders slightly beyond the hands and perform a controlled push-up while keeping the body rigid."
       },
       "category": "advanced_strength",
+      "grade": 3,
       "patterns": [
         "horizontal_push",
         "planche"
@@ -2511,6 +2628,7 @@
         "en": "From a tuck planche, bend the elbows straight back along the body while the shoulders lean further forward and the hips rise, the feet never touching, then press back to the locked tuck planche."
       },
       "category": "advanced_strength",
+      "grade": 4,
       "patterns": [
         "planche",
         "horizontal_push"
@@ -2536,6 +2654,7 @@
         "en": "Place the whole foot on a stable step, stand tall through that leg, and lower with control."
       },
       "category": "strength",
+      "grade": 1,
       "patterns": [
         "single_leg",
         "squat"
@@ -2557,6 +2676,7 @@
         "en": "From straight-bar support, lower the chest toward the bar and press to a stable lockout."
       },
       "category": "strength",
+      "grade": 3,
       "patterns": [
         "vertical_push",
         "bar_support"
@@ -2581,6 +2701,7 @@
         "en": "Keep a straight body line, lower the chest toward a wall, and press away smoothly."
       },
       "category": "strength_regression",
+      "grade": 1,
       "patterns": [
         "horizontal_push"
       ],
@@ -2601,6 +2722,7 @@
         "en": "Slide the arms upward against a wall while keeping ribs quiet and shoulders comfortable."
       },
       "category": "mobility",
+      "grade": 1,
       "patterns": [
         "shoulder_mobility",
         "scapular_control"
@@ -2622,6 +2744,7 @@
         "en": "Hold a secure support and descend on one leg only as far as balance and knee control allow."
       },
       "category": "fundamental",
+      "grade": 2,
       "patterns": [
         "single_leg_squat"
       ],
@@ -2642,6 +2765,7 @@
         "en": "Perform a controlled single-leg squat while the free leg reaches forward and the working heel stays grounded."
       },
       "category": "advanced_fundamental",
+      "grade": 3,
       "patterns": [
         "single_leg_squat"
       ],
@@ -2663,6 +2787,7 @@
         "en": "Hold a secure support and bend the free knee behind you. Lower that knee toward a raised pad, then stand up on the front leg. The rear foot stays off the floor."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "single_leg_squat",
         "shrimp"
@@ -2688,6 +2813,7 @@
         "en": "Hold a secure support and lower the floating rear knee to a thin pad. Stand up on the front leg without help from the rear foot."
       },
       "category": "strength",
+      "grade": 2,
       "patterns": [
         "single_leg_squat",
         "shrimp"
@@ -2713,6 +2839,7 @@
         "en": "Without hand support, bend the rear knee behind you, touch it lightly to a thin pad and stand up. The rear foot stays clear and is not held."
       },
       "category": "skill_strength",
+      "grade": 2,
       "patterns": [
         "single_leg_squat",
         "shrimp"
@@ -2737,6 +2864,7 @@
         "en": "Hold the rear foot with one hand and a secure support with the other. Lower the rear knee toward a pad and stand up. Use less depth if needed."
       },
       "category": "skill_strength",
+      "grade": 2,
       "patterns": [
         "single_leg_squat",
         "shrimp"
@@ -2762,6 +2890,7 @@
         "en": "Hold the rear foot with one hand the whole time and reach the other arm forward. Touch the rear knee lightly to a thin pad and stand up on the front leg."
       },
       "category": "advanced_strength",
+      "grade": 3,
       "patterns": [
         "single_leg_squat",
         "shrimp"
@@ -2786,6 +2915,7 @@
         "en": "From an active hang, raise straight legs without swinging and lower with trunk control."
       },
       "category": "fundamental",
+      "grade": 2,
       "patterns": [
         "hanging_core",
         "compression"
@@ -2810,6 +2940,7 @@
         "en": "Raise the feet toward the bar from a controlled active hang without a kip, then lower slowly."
       },
       "category": "advanced_fundamental",
+      "grade": 3,
       "patterns": [
         "hanging_core",
         "compression"
@@ -2834,6 +2965,7 @@
         "en": "Stand tall with ribs stacked over pelvis. Reach both arms overhead without arching the back; gently elevate the shoulders. This rehearses the handstand line with feet grounded."
       },
       "category": "skill_foundation",
+      "grade": 1,
       "patterns": [
         "handstand"
       ],
@@ -2852,6 +2984,7 @@
         "en": "Lie on one side, elbow below shoulder and knees bent. Lift hips into line with shoulders and knees; hold without rolling. Repeat on the other side."
       },
       "category": "skill_foundation",
+      "grade": 1,
       "patterns": [
         "human_flag"
       ],
@@ -2870,6 +3003,7 @@
         "en": "Feet on a stable box, hands on the floor, hips bent into an L. Lock the elbows and push the floor away, shoulders toward the hands only as far as you can step down calmly. Keep the head off the floor."
       },
       "category": "skill_foundation",
+      "grade": 1,
       "patterns": [
         "handstand"
       ],
@@ -2890,6 +3024,7 @@
         "en": "From a plank with your feet at a clear wall, walk the feet up and the hands in only as far as you can safely reverse. Push tall, elbows straight, ribs in. Walk down before you tire. A partial walk is fine."
       },
       "category": "skill_foundation",
+      "grade": 2,
       "patterns": [
         "handstand"
       ],
@@ -2913,6 +3048,7 @@
         "en": "In a chest-to-wall handstand, press through the fingertips until the toes go light for a moment, then return to light wall contact. The time is practice time, not a hold you must reach."
       },
       "category": "skill_foundation",
+      "grade": 2,
       "patterns": [
         "handstand"
       ],
@@ -2933,6 +3069,7 @@
         "en": "From a chest-to-wall handstand, shift onto one hand, turn the hips and step down one foot at a time, like the end of a cartwheel. Practise both ways until it happens without thinking."
       },
       "category": "skill_foundation",
+      "grade": 2,
       "patterns": [
         "handstand"
       ],
@@ -2954,6 +3091,7 @@
         "en": "Near a clear wall, kick up gently and try brief balances, using the exit you've rehearsed. Reset between tries. The time is practice time: go back to wall work whenever you need."
       },
       "category": "skill_foundation",
+      "grade": 3,
       "patterns": [
         "handstand"
       ],
@@ -2977,6 +3115,7 @@
         "en": "Kick up away from the wall into a straight, stacked handstand: hands shoulder-width, shoulders open, ribs in, legs together. Balance with the fingers and come down with your exit."
       },
       "category": "advanced_skill",
+      "grade": 4,
       "patterns": [
         "handstand",
         "balance"
@@ -2999,6 +3138,7 @@
         "en": "Hold a freestanding handstand on two straight arms with the legs in a controlled straddle. Enter, open the legs and come down under control."
       },
       "category": "skill",
+      "grade": 3,
       "patterns": [
         "handstand",
         "balance"
@@ -3021,6 +3161,7 @@
         "en": "With the toes lightly on a wall, shift the hips over one hand and back to the centre. Both arms stay straight. Work both sides."
       },
       "category": "skill_foundation",
+      "grade": 2,
       "patterns": [
         "handstand",
         "balance"
@@ -3045,6 +3186,7 @@
         "en": "From a steady straddle handstand, shift over one hand and take weight off the other, then come back to the centre under control."
       },
       "category": "advanced_skill",
+      "grade": 3,
       "patterns": [
         "handstand",
         "balance"
@@ -3067,6 +3209,7 @@
         "en": "In a straddle, stack over one straight arm with the other hand's fingertips lightly on the floor. Use the same set-up every session."
       },
       "category": "advanced_skill",
+      "grade": 4,
       "patterns": [
         "handstand",
         "balance"
@@ -3089,6 +3232,7 @@
         "en": "From a fingertip-assisted straddle, lift the assisting hand briefly and put it back with control. Practise both sides."
       },
       "category": "mastery_skill",
+      "grade": 4,
       "patterns": [
         "handstand",
         "balance"
@@ -3111,6 +3255,7 @@
         "en": "Hold a straddle handstand on one straight arm with the other hand clear. Stack the hips over the supporting hand and come down under control."
       },
       "category": "mastery_skill",
+      "grade": 4,
       "patterns": [
         "handstand",
         "balance"
@@ -3133,6 +3278,7 @@
         "en": "Hold a handstand on one straight arm with the legs together and the free hand clear. Practise both sides, always with a safe exit."
       },
       "category": "mastery_skill",
+      "grade": 5,
       "patterns": [
         "handstand",
         "balance"
@@ -3155,6 +3301,7 @@
         "en": "Stand beside a fixed vertical support and take a comfortable wide split grip. Keep both feet down and lean slightly away to rehearse upper-hand pulling and lower-hand pushing. Reverse sides."
       },
       "category": "skill_foundation",
+      "grade": 1,
       "patterns": [
         "human_flag"
       ],
@@ -3175,6 +3322,7 @@
         "en": "On fixed stall bars with a low foothold (or a spotter), take the split grip and draw the knees in, the foot still helping. Lift just enough to feel the sideways line, then lower slowly."
       },
       "category": "skill_foundation",
+      "grade": 1,
       "patterns": [
         "human_flag"
       ],
@@ -3195,6 +3343,7 @@
         "en": "Knees tucked, take the foot off the foothold for a short hold. Trunk faces forward, shoulders active. Put the foot back before the shape changes."
       },
       "category": "skill_foundation",
+      "grade": 3,
       "patterns": [
         "human_flag"
       ],
@@ -3218,6 +3367,7 @@
         "en": "From a solid tuck flag, open both legs into a wide straddle for a brief sideways hold, then tuck again and lower under control. Keep the trunk facing forward and the hips in line with the shoulders."
       },
       "category": "advanced_skill",
+      "grade": 4,
       "patterns": [
         "human_flag"
       ],
@@ -3241,6 +3391,7 @@
         "en": "From the straddle flag, bring the legs together into one straight sideways line for a short hold, then return to the straddle or the tuck."
       },
       "category": "advanced_skill",
+      "grade": 4,
       "patterns": [
         "human_flag"
       ],
@@ -3264,6 +3415,7 @@
         "en": "From a wide overhand hang, pull toward one hand while the other arm stays nearly straight along the bar. Lower under control, then pull to the other side; repetitions are per side."
       },
       "category": "advanced_strength",
+      "grade": 3,
       "patterns": [
         "vertical_pull",
         "unilateral_pull"
@@ -3288,6 +3440,7 @@
         "en": "From a wide overhand hang, pull up to one hand, slide the chin along the bar to the other hand without dropping, then lower under control. Alternate the starting side; reps are per side."
       },
       "category": "advanced_strength",
+      "grade": 3,
       "patterns": [
         "vertical_pull",
         "unilateral_pull"
@@ -3312,6 +3465,7 @@
         "en": "One hand on the bar, the other low on a towel looped over the bar (or a light band). Pull mainly with the bar arm, the towel hand helping only as needed, then lower under control. Reps are per side."
       },
       "category": "advanced_strength",
+      "grade": 3,
       "patterns": [
         "vertical_pull",
         "unilateral_pull"
@@ -3334,6 +3488,7 @@
         "en": "Step up from a box to the top with both hands, let go with one and lower on the working arm as slowly as you can, about 4-6 s, to a straight arm. Step down and reset. Reps are per side."
       },
       "category": "advanced_strength",
+      "grade": 4,
       "patterns": [
         "vertical_pull",
         "unilateral_pull",
@@ -3357,6 +3512,7 @@
         "en": "Hang from one hand, shoulder packed, free hand on the chest. Pull until the chin clears the bar with no kick or twist, then lower under control to a straight arm. Reps are per side."
       },
       "category": "mastery_skill",
+      "grade": 5,
       "patterns": [
         "vertical_pull",
         "unilateral_pull"
@@ -3381,6 +3537,7 @@
         "en": "From a wide push-up, lower toward one hand while the other arm slides out nearly straight. Press back to the middle, then lower to the other side; repetitions are per side."
       },
       "category": "advanced_strength",
+      "grade": 3,
       "patterns": [
         "horizontal_push",
         "unilateral_push"
@@ -3403,6 +3560,7 @@
         "en": "Feet wide, one hand under the shoulder and the other behind the back. Lower the chest to fist height with the body in one line and the hips square, then press back up; repetitions are per side."
       },
       "category": "advanced_strength",
+      "grade": 4,
       "patterns": [
         "horizontal_push",
         "unilateral_push"
@@ -3425,6 +3583,7 @@
         "en": "With the feet on a stable box and the hips stacked high over the hands, lower the head forward of the hands toward the floor, then press back to straight arms."
       },
       "category": "fundamental",
+      "grade": 2,
       "patterns": [
         "vertical_push",
         "overhead_press"
@@ -3449,6 +3608,7 @@
         "en": "From a chest-to-wall handstand, lower slowly until the head lightly touches a folded mat, then walk the feet down the wall to exit. Reset standing instead of pressing back up."
       },
       "category": "advanced_strength",
+      "grade": 3,
       "patterns": [
         "vertical_push",
         "overhead_press",
@@ -3472,6 +3632,7 @@
         "en": "From a chest-to-wall handstand, lower the head to a folded mat under control and press back to straight arms, then walk down the wall to exit."
       },
       "category": "advanced_strength",
+      "grade": 4,
       "patterns": [
         "vertical_push",
         "overhead_press",
@@ -3498,6 +3659,7 @@
         "en": "In a chest-to-wall handstand with the hands on low parallettes or stable blocks, lower the head below hand level toward a mat, press back to straight arms, then walk down the wall."
       },
       "category": "advanced_strength",
+      "grade": 4,
       "patterns": [
         "vertical_push",
         "overhead_press",
@@ -3525,6 +3687,7 @@
         "en": "Kick up to a freestanding handstand a step from a clear wall and lower slowly, elbows forward, until the head lightly touches a mat. Tuck and step down instead of pressing up. The wall is only a backstop."
       },
       "category": "advanced_strength",
+      "grade": 4,
       "patterns": [
         "vertical_push",
         "overhead_press",
@@ -3549,6 +3712,7 @@
         "en": "From a freestanding handstand a step from a clear wall, lower under control until the head lightly touches a mat, then press back up to a straight handstand without touching the wall."
       },
       "category": "advanced_strength",
+      "grade": 5,
       "patterns": [
         "vertical_push",
         "overhead_press",
@@ -3573,6 +3737,7 @@
         "en": "Support on straight arms on parallel bars or blocks with one leg straight forward at hip height and the other knee tucked. Hold the listed time on each leg, switching legs within the set."
       },
       "category": "skill_foundation",
+      "grade": 2,
       "patterns": [
         "support",
         "core",
@@ -3599,6 +3764,7 @@
         "en": "Support on straight arms with both legs straight together at hip height, toes pointed and shoulders pushed down away from the ears."
       },
       "category": "skill",
+      "grade": 3,
       "patterns": [
         "support",
         "core",
@@ -3625,6 +3791,7 @@
         "en": "From an L-sit, push the shoulders down and lean them back while lifting the straight legs above hip height into a V, toes pointed."
       },
       "category": "advanced_skill",
+      "grade": 4,
       "patterns": [
         "support",
         "core",
@@ -3651,6 +3818,7 @@
         "en": "Sit tall with the legs straight together and the hands flat beside the knees. Lift both heels a few centimetres using the hip flexors and abdominals, pause, then lower slowly."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "core",
         "compression"
@@ -3672,6 +3840,7 @@
         "en": "With the rear foot on a knee-high bench or box behind you, lower the back knee toward the floor over the front foot and drive up through the front heel. Repetitions are per leg."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "lunge",
         "legs",
@@ -3694,6 +3863,7 @@
         "en": "Lie on your back with the heels on a towel or sliders and lift the hips into a bridge. Slide the heels out until the legs are nearly straight, then curl them back in while the hips stay high."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "posterior_chain",
         "knee_flexion",
@@ -3719,6 +3889,7 @@
         "en": "Kneel on a mat, heels anchored under a low bar or held by a partner. Hips straight, lower forward as slowly as you can, catch yourself with the hands and push back up to kneeling."
       },
       "category": "advanced_strength",
+      "grade": 4,
       "patterns": [
         "posterior_chain",
         "knee_flexion",
@@ -3742,6 +3913,7 @@
         "en": "Kneel with the heels anchored and the hips straight. Lower slowly all the way down, then pull back up with the hamstrings, with a light push from the hands if needed."
       },
       "category": "advanced_strength",
+      "grade": 4,
       "patterns": [
         "posterior_chain",
         "knee_flexion"
@@ -3767,6 +3939,7 @@
         "en": "Stand on one leg with a soft knee and hinge at the hip so the torso and free leg move together toward horizontal, then drive the hip forward to stand tall. Repetitions are per leg."
       },
       "category": "fundamental",
+      "grade": 1,
       "patterns": [
         "hinge",
         "posterior_chain",
@@ -3788,6 +3961,7 @@
         "en": "Lie face down with the forehead on a towel. Lift straight arms into a Y, then a T, then bend them into a W, drawing the shoulder blades back and down. One repetition is one full Y-T-W sequence."
       },
       "category": "activation",
+      "grade": 1,
       "patterns": [
         "shoulder",
         "scapula",
@@ -3810,6 +3984,7 @@
         "en": "From a half squat, jump straight up, land softly through the whole foot with the knees tracking over the toes, and reset before the next jump."
       },
       "category": "power",
+      "grade": 2,
       "patterns": [
         "squat",
         "legs",
@@ -3830,6 +4005,7 @@
         "en": "Lunge facing a clear wall, hands down a hand's width from it. Kick up to a back-to-wall handstand, touch the heels softly, then come down the way you went up. Alternate legs; reps are per side."
       },
       "category": "skill_foundation",
+      "grade": 2,
       "patterns": [
         "handstand"
       ],
@@ -3851,6 +4027,7 @@
         "en": "On all fours, hands flat under the shoulders, fingers forward. Lift the heels of the hands onto the fingers, pause, lower slowly. End the set with the backs of the hands on the floor, rocking gently. One rep is one lift or one rock."
       },
       "category": "activation",
+      "grade": 1,
       "patterns": [
         "wrist",
         "push"
@@ -3872,6 +4049,7 @@
         "en": "Hands on a wall or a chest-high bar, shoulder-width, arms straight. Walk the feet back and hinge at the hips, letting the chest sink until the arms line up with the trunk. Ribs in, breathe slowly."
       },
       "category": "mobility",
+      "grade": 1,
       "patterns": [
         "shoulder_mobility",
         "shoulder"
@@ -3893,6 +4071,7 @@
         "en": "Sit tall in a wide straddle, knees and toes up, hands beside the knees. Lean forward from the hips with a long back and lift both heels a few centimetres. Pause, lower slowly, lean a little further each rep."
       },
       "category": "mobility_strength",
+      "grade": 2,
       "patterns": [
         "compression",
         "hip_mobility"
@@ -3914,6 +4093,7 @@
         "en": "Sit with a bench edge just below the shoulder blades, hands cradling the head (never pull the neck), elbows forward. Breathe out and arch the upper back over the edge, hips down. Pause 2 s, come back."
       },
       "category": "mobility",
+      "grade": 1,
       "patterns": [
         "spine",
         "shoulder_mobility"
@@ -3935,6 +4115,7 @@
         "en": "Take the flag grip, top hand pulling, bottom hand pushing. Kick up into a vertical line beside the pole, hips over the shoulders, legs together, arms locked. Hold briefly, come down under control, then switch sides."
       },
       "category": "skill_foundation",
+      "grade": 2,
       "patterns": [
         "human_flag"
       ],
@@ -3958,6 +4139,7 @@
         "en": "From the vertical flag, lower the straight body slowly away from the pole, 3-5 s, through the level line to the floor. Arms locked, hips in line. Straddle the legs while together is too hard. Reps are per side."
       },
       "category": "advanced_skill",
+      "grade": 4,
       "patterns": [
         "human_flag"
       ],
@@ -3981,6 +4163,7 @@
         "en": "Hang from rings or a bar, feet off the floor. Tuck, roll back through the upside-down tuck and lower the legs behind into a German hang, then return the same way. Move slowly, elbows straight."
       },
       "category": "skill_foundation",
+      "grade": 2,
       "patterns": [
         "back_lever",
         "inversion",
@@ -4007,6 +4190,7 @@
         "en": "The German hang with an underhand grip, feet off the floor: hands behind you, elbows straight, shoulders open only as far as is comfortable. It's the Hefesto's start. Get in slowly and come out the way you went in."
       },
       "category": "skill_foundation",
+      "grade": 3,
       "patterns": [
         "hefesto",
         "shoulder_extension"
