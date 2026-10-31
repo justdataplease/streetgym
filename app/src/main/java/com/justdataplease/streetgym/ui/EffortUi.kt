@@ -6,7 +6,9 @@ import android.view.View
 import android.widget.FrameLayout
 import com.justdataplease.streetgym.R
 import com.justdataplease.streetgym.data.effort.Effort
+import com.justdataplease.streetgym.data.effort.WorkoutEffort
 import com.justdataplease.streetgym.data.model.TrainingExercise
+import com.justdataplease.streetgym.data.model.TrainingProgram
 import java.util.Locale
 
 /** Easy green, Moderate orange, Hard red: the skills' difficulty colours (Easy, Very hard and Extreme). */
@@ -57,6 +59,10 @@ class WorkoutTile(context: Context, private val size: Int) : FrameLayout(context
         return this
     }
 }
+
+/** The exercise a workout's tile plays: its hardest, one that moves before a hold of the same grade (2.9.2). */
+fun Context.tileExercise(effort: WorkoutEffort?, program: TrainingProgram, locale: Locale): TrainingExercise? =
+    effort?.hardest(program) { MotionClip.moves(this, it.movementId, it.name.resolve(locale), it.category, it.equipment) }
 
 fun Context.workoutTile(exercise: TrainingExercise?, effort: Effort?, size: Int, locale: Locale): WorkoutTile =
     WorkoutTile(this, size).bind(exercise, effort, locale)

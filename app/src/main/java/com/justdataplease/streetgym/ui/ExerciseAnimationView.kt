@@ -129,8 +129,15 @@ class ExerciseAnimationView @JvmOverloads constructor(
     /** A moving badge plays the clip in its tile, framed on the whole cycle so the figure doesn't zoom. */
     private var badgeMoves = false
     private var badgeBounds: FloatArray? = null
-    /** A list keeps scrapped rows attached; their clips stop until the row is reused. */
-    private var parked = false
+    /**
+     * A list re-attaches a reused row without telling its views, so a clip that should play but was drawn standing
+     * still checks again after that frame (2.9.2: the level lists' tiles stood still after scrolling).
+     */
+    private var idleCheckPosted = false
+    private val idleCheck = Runnable {
+        idleCheckPosted = false
+        updateAnimationState()
+    }
 
     /**
      * Bar work and sideways movements also show from the front ([FrontView]), so the grip and any shift to a side show;
@@ -308,19 +315,21 @@ class ExerciseAnimationView @JvmOverloads constructor(
                 ?.removeOnScrollChangedListener(scrollChangedListener)
             scrollListenerAttached = false
         }
+        removeCallbacks(idleCheck)
+        idleCheckPosted = false
         stopAnimator()
         super.onDetachedFromWindow()
     }
 
+    // A list keeps scrapped rows attached; their clips stop until the row is reused. The platform's own flag says
+    // when a row is scrapped: a flag of ours could miss the end of it and hold the clip forever (2.9.1).
     override fun onStartTemporaryDetach() {
         super.onStartTemporaryDetach()
-        parked = true
         stopAnimator()
     }
 
     override fun onFinishTemporaryDetach() {
         super.onFinishTemporaryDetach()
-        parked = false
         updateAnimationState()
     }
 
@@ -336,6 +345,10 @@ class ExerciseAnimationView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        if (animator == null && !held && (badge == null || badgeMoves) && !idleCheckPosted) {
+            idleCheckPosted = true
+            postOnAnimation(idleCheck)
+        }
         badge?.let {
             drawBadge(canvas)
             return
@@ -1022,7 +1035,7 @@ class ExerciseAnimationView @JvmOverloads constructor(
     private fun shouldAnimate(): Boolean =
         !held &&
             (badge == null || badgeMoves) &&
-            !parked &&
+            !isTemporarilyDetached &&
             isAttachedToWindow &&
             windowVisibility == VISIBLE &&
             visibility == VISIBLE &&
@@ -1036,6 +1049,8 @@ class ExerciseAnimationView @JvmOverloads constructor(
     /** One loop of the bound clip and where it starts, for drawings made ahead with [hold] (the home-screen widget). */
     internal val loopDurationMs: Long get() = resolved.template.cycleDurationMs
     internal val loopStartPhase: Float get() = resolved.template.startPhase
+    /** Whether the clip is playing now (the androidTest checks the level lists' tiles). */
+    internal val playing: Boolean get() = animator?.isRunning == true
 
     /**
      * Draws the frame at [phase] of the loop, [cycle] reps in, as if playing: the androidTest gallery's review sheets
@@ -1156,6 +1171,10 @@ internal class MotionClip private constructor(private val curve: MotionCurve) {
 
         fun named(context: Context, name: String): MotionClip? =
             AnimationLibrary.load(context.applicationContext).template(name)?.let { MotionClip(it.curve) }
+
+        /** Whether the clip an exercise shows moves; a hold's stands still. */
+        fun moves(context: Context, movementId: String?, name: String, category: String?, equipment: Collection<String>): Boolean =
+            !AnimationLibrary.load(context.applicationContext).resolve(movementId, name, "", category, equipment).template.still
     }
 }
 
@@ -1650,6 +1669,9 @@ private class MotionTemplate(
         private set
     var markerLabel = R.string.motion_marker_range
         private set
+    /** No joint travels more than 3 canvas units: a hold. */
+    var still = false
+        private set
 
     val usesTempo: Boolean get() = mode == "ping_pong"
 
@@ -1688,6 +1710,12 @@ private class MotionTemplate(
             effort > 0 -> PhaseLabels.RISE
             effort < 0 -> PhaseLabels.SINK
             else -> PhaseLabels.MOVE
+        }
+        // A hold keeps one pose all the way through; a workout's tile prefers a clip that moves (2.9.2).
+        val sample = FloatArray(Rig.JOINT_COUNT * 2)
+        still = floatArrayOf(0.25f, 0.5f, 0.75f, 1f).all { at ->
+            curve.evaluate(at, pose, sample)
+            sample.indices.all { abs(sample[it] - start[it]) < 3f }
         }
         if (usesTempo) {
             fun travel(joint: Int) = abs(end[joint * 2 + 1] - start[joint * 2 + 1])

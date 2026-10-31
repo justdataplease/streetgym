@@ -1259,7 +1259,7 @@ open class HomeActivity : Activity() {
         addView(LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
-            addView(workoutTile(workoutEffort()?.hardest(program), effort, TILE_DP, locale),
+            addView(workoutTile(tileExercise(workoutEffort(), program, locale), effort, TILE_DP, locale),
                 LinearLayout.LayoutParams(dp(TILE_DP), dp(TILE_DP)).apply { marginEnd = dp(14) })
             addView(text, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
         })
@@ -1945,7 +1945,7 @@ open class HomeActivity : Activity() {
         val programs = level.programs.sortedBy { it.number }
         val effort = workoutEffort()
         val rows = ProgramListAdapter(this, programs, completed, assigned?.id, locale, progressRepository.examLog(), switchedOff,
-            effortOf = { effort?.rate(it) }, hardestOf = { effort?.hardest(it) })
+            effortOf = { effort?.rate(it) }, hardestOf = { tileExercise(effort, it, locale) })
         // Free: one ad card after the first three classes (a tier change draws this screen again).
         val withAd = if (Entitlement.adFree(this)) null else AdRowAdapter(rows, LinearLayout(this).apply {
             setPadding(dp(12), dp(4), dp(12), dp(4))

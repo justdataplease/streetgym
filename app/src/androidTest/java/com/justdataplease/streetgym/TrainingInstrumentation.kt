@@ -12,6 +12,7 @@ import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.AdapterView
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.ListView
 import android.widget.TextView
 import com.justdataplease.streetgym.billing.Entitlement
 import com.justdataplease.streetgym.billing.Tier
@@ -542,9 +543,17 @@ class TrainingInstrumentation : Instrumentation() {
             nav(R.string.nav_levels); clickText(R.string.training_tab_levels)
             clickLabel(catalog.levels.first().name.resolve())
             check(findAll { it is TextView && it.isShown && it.text.contains(forYou) }.isNotEmpty())
+            // Every class tile on screen plays its hardest exercise, after a scroll too (2.9.2: reused rows stood still).
+            fun tilesPlay() = findAll { it is ExerciseAnimationView && it.isShown && it.getGlobalVisibleRect(Rect()) }
+                .let { tiles -> tiles.size >= 3 && tiles.all { (it as ExerciseAnimationView).playing } }
+            await(::tilesPlay)
+            val classes = find { it is ListView } as ListView
+            runOnMainSync { classes.smoothScrollBy(targetContext.resources.displayMetrics.heightPixels * 2, 400) }
+            SystemClock.sleep(800); settle()
+            await(::tilesPlay)
             screenshot("level_marks.png")
             nav(R.string.nav_levels); clickText(R.string.training_tab_levels)
-            report("Library: 200 ready workouts with filters; Plus sees them with the Pro offer, Pro can start one; every card and class says how hard it is for you")
+            report("Library: 200 ready workouts with filters; Plus sees them with the Pro offer, Pro can start one; every card and class says how hard it is for you; the level list's tiles play after a scroll")
 
             nav(R.string.nav_timer); clickLabel("30 sec"); clickLabel("Start")
             val timing = TimingStore(targetContext)

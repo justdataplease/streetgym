@@ -79,6 +79,10 @@ class WorkoutEffortTest {
         val effort = WorkoutEffort(grades, emptyMap(), 1, level)
         assertEquals("full_front", effort.hardest(day(step("pushup", 10, reps = 20), step("full_front", 1, seconds = 3)))?.movementId)
         assertEquals("pullup", effort.hardest(day(step("pushup", 2, reps = 5), step("pullup", 3, reps = 5)))?.movementId)
+        // A clip that moves beats a hold of the same grade, never a harder one (2.9.2).
+        val moves = { exercise: TrainingExercise -> exercise.movementId != "march" && exercise.movementId != "full_front" }
+        assertEquals("pushup", effort.hardest(day(step("march", 6, seconds = 60), step("pushup", 1, reps = 5)), moves)?.movementId)
+        assertEquals("full_front", effort.hardest(day(step("pushup", 10, reps = 20), step("full_front", 1, seconds = 3)), moves)?.movementId)
     }
 
     @Test

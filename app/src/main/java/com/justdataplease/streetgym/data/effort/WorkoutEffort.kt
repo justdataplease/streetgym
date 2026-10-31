@@ -41,9 +41,12 @@ class WorkoutEffort(
         }
     }
 
-    /** The workout's hardest exercise, its icon: the highest grade, then the most load. */
-    fun hardest(program: TrainingProgram): TrainingExercise? = working(program)
-        .maxWithOrNull(compareBy<TrainingExercise>({ grade(it) }, { exerciseLoad(it) }))
+    /**
+     * The workout's hardest exercise, its icon: the highest grade, then one whose clip [moves] (a hold stands still, so
+     * the tiles stood still on most early classes, 2.9.2), then the most load.
+     */
+    fun hardest(program: TrainingProgram, moves: (TrainingExercise) -> Boolean = { true }): TrainingExercise? =
+        working(program).maxWithOrNull(compareBy<TrainingExercise>({ grade(it) }, { moves(it) }, { exerciseLoad(it) }))
 
     fun grade(exercise: TrainingExercise): Int = exercise.movementId?.let(grades::get)?.coerceIn(1, 5) ?: 1
 
