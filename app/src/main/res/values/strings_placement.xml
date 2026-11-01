@@ -14,7 +14,8 @@
     <string name="placement_start_line">%1$s · %2$s</string>
     <string name="placement_less">One rep fewer</string>
     <string name="placement_more">One rep more</string>
-    <string name="placement_answer_all">Enter all three to see where you start.</string>
+    <string name="placement_calculate">Calculate</string>
+    <string name="placement_answer_all">Enter all three, then tap Calculate.</string>
     <string name="placement_no_credit">Only a guide. Skipped days earn no points or ranks.</string>
     <string name="placement_better">%1$s → %2$s</string>
     <plurals name="placement_more_pull_ups"><item quantity="one">%d more pull-up</item><item quantity="other">%d more pull-ups</item></plurals>

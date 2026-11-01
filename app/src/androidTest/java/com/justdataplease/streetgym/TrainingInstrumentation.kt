@@ -640,16 +640,24 @@ class TrainingInstrumentation : Instrumentation() {
             check(shown(R.string.placement_skip) && shown(R.string.placement_answer_all) &&
                 !shown(targetContext.getString(R.string.placement_confirm, atDayFortyOne)))
             enter(R.string.placement_squats, 30)
+            // The start waits for Calculate (2.10.2), so it doesn't jump in while the squats are being typed.
+            check(shown(R.string.placement_calculate) && !shown(R.string.placement_answer_all) &&
+                !shown(targetContext.getString(R.string.placement_confirm, atDayFortyOne)))
+            clickText(R.string.placement_calculate)
             check(shown(targetContext.getString(R.string.placement_start_line, atDayFortyOne, catalog.levels.first().name.resolve())))
             check(shown(R.string.placement_scratch) && shown(R.string.placement_no_credit) && !shown(R.string.placement_skip) &&
-                !shown(R.string.placement_answer_all))
+                !shown(R.string.placement_answer_all) && !shown(R.string.placement_calculate))
+            // A changed count hides the start until Calculate again.
             enter(R.string.placement_pull_ups, 10); enter(R.string.placement_push_ups, 30)
+            check(shown(R.string.placement_calculate) && !shown(R.string.placement_scratch))
+            clickText(R.string.placement_calculate)
             check(shown(targetContext.getString(R.string.placement_start_line, atLevelTwo, levelTwo.name.resolve())))
             check(shown(targetContext.getString(R.string.placement_confirm, atLevelTwo)))
             // Counts that reach Level 3 offer the skills step (review 6), folded under its title: passing the Level 6
             // test suggests Level 7, held to the athlete's plan, and the card names what the start assumes; a second
             // tap clears the test.
             enter(R.string.placement_pull_ups, 20); enter(R.string.placement_push_ups, 50); enter(R.string.placement_squats, 75)
+            clickText(R.string.placement_calculate)
             check(shown(R.string.placement_skills_title) && !shown(targetContext.getString(R.string.placement_skill_test, 9)))
             clickText(R.string.placement_skills_title)
             check(shown(targetContext.getString(R.string.placement_skill_test, 9)))
@@ -663,6 +671,7 @@ class TrainingInstrumentation : Instrumentation() {
             check(shown(targetContext.getString(R.string.placement_confirm, targetContext.getString(R.string.level_number, 3))))
             enter(R.string.placement_squats, 30)
             enter(R.string.placement_pull_ups, 0); enter(R.string.placement_push_ups, 20)
+            clickText(R.string.placement_calculate)
             clickLabel(targetContext.getString(R.string.placement_confirm, atDayFortyOne))
             check(AppSettings(targetContext).placementDone &&
                 repository.completedProgramIds() == levelOneDays.filter { it.number < 41 }.map { it.id }.toSet())
@@ -679,6 +688,7 @@ class TrainingInstrumentation : Instrumentation() {
             nav(R.string.nav_today)
             check(shown(R.string.placement_title))
             enter(R.string.placement_pull_ups, 10); enter(R.string.placement_push_ups, 30); enter(R.string.placement_squats, 0)
+            clickText(R.string.placement_calculate)
             check(shown(targetContext.getString(R.string.placement_better,
                 targetContext.resources.getQuantityString(R.plurals.placement_more_pull_ups, 4, 4),
                 targetContext.getString(R.string.placement_level_day, 2, 21))))

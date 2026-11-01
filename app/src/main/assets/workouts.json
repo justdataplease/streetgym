@@ -173,79 +173,6 @@
    "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
   },
   {
-   "id": "ready:two_rounds_in_the_park",
-   "title": {"en": "Two Rounds in the Park"},
-   "description": {"en": "One set of five moves, twice through."},
-   "group": "full",
-   "grade": 1,
-   "focus": ["full", "pull"],
-   "schedule": {"minutes": 30, "rpe": 5},
-   "warmup": [
-    ["march", 1, null, 30, 0, "brisk", null],
-    ["arm_swings", 1, 10, null, 10, "controlled", null],
-    ["wrist_circles", 1, 10, null, 10, "controlled", null],
-    ["scapular_pull", 1, 6, null, 20, "2111", null],
-    ["scapular_pushup", 1, 8, null, 20, "2111", null],
-    ["inverted_row", 1, 5, null, 45, "ramp-up", null]
-   ],
-   "main": [
-    ["inverted_row", 1, 8, null, 50, "2111", null],
-    ["pushup", 1, 8, null, 50, "2111", null],
-    ["squat", 1, 12, null, 50, "2111", null],
-    ["knee_raise", 1, 8, null, 50, "2111", null],
-    ["dead_hang", 1, null, 20, 120, "isometric", null],
-    ["inverted_row", 1, 8, null, 50, "2111", null],
-    ["pushup", 1, 8, null, 50, "2111", null],
-    ["squat", 1, 12, null, 50, "2111", null],
-    ["knee_raise", 1, 8, null, 50, "2111", null],
-    ["dead_hang", 1, null, 20, 120, "isometric", null]
-   ],
-   "cooldown": [
-    ["lat_stretch", 1, null, 30, 10, "easy", null],
-    ["chest_stretch", 1, null, 30, 10, "easy", null],
-    ["hip_flexor_stretch", 1, null, "30/side", 10, "easy", null],
-    ["hamstring_stretch", 1, null, 30, 10, "easy", null],
-    ["child_pose", 1, null, 45, 0, "easy", null]
-   ],
-   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
-  },
-  {
-   "id": "ready:beginner_circuit",
-   "title": {"en": "Beginner Circuit"},
-   "description": {"en": "Three rounds of three easy moves."},
-   "group": "full",
-   "grade": 1,
-   "focus": ["full", "push"],
-   "schedule": {"minutes": 30, "rpe": 5},
-   "warmup": [
-    ["march", 1, null, 30, 0, "brisk", null],
-    ["arm_swings", 1, 10, null, 10, "controlled", null],
-    ["wrist_circles", 1, 10, null, 10, "controlled", null],
-    ["hip_circles", 1, 8, null, 10, "controlled", null],
-    ["cat_cow", 1, 6, null, 10, "slow", null],
-    ["scapular_pushup", 1, 8, null, 20, "2111", null]
-   ],
-   "main": [
-    ["squat", 1, 10, null, 50, "2111", null],
-    ["incline_pushup", 1, 8, null, 50, "2111", null],
-    ["glute_bridge", 1, 10, null, 120, "2111", null],
-    ["squat", 1, 10, null, 50, "2111", null],
-    ["incline_pushup", 1, 8, null, 50, "2111", null],
-    ["glute_bridge", 1, 10, null, 120, "2111", null],
-    ["squat", 1, 10, null, 50, "2111", null],
-    ["incline_pushup", 1, 8, null, 50, "2111", null],
-    ["glute_bridge", 1, 10, null, 120, "2111", null]
-   ],
-   "cooldown": [
-    ["lat_stretch", 1, null, 30, 10, "easy", null],
-    ["chest_stretch", 1, null, 30, 10, "easy", null],
-    ["hip_flexor_stretch", 1, null, "30/side", 10, "easy", null],
-    ["hamstring_stretch", 1, null, 30, 10, "easy", null],
-    ["child_pose", 1, null, 45, 0, "easy", null]
-   ],
-   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
-  },
-  {
    "id": "ready:slow_basics",
    "title": {"en": "Slow Basics"},
    "description": {"en": "Slow lowering and short pauses: fewer reps, better control."},
@@ -265,38 +192,6 @@
     ["tempo_squat", 3, 8, null, 60, "3111", null],
     ["pause_pushup", 3, 6, null, 60, "2111", null],
     ["inverted_row", 3, 6, null, 60, "3111", null]
-   ],
-   "cooldown": [
-    ["lat_stretch", 1, null, 30, 10, "easy", null],
-    ["chest_stretch", 1, null, 30, 10, "easy", null],
-    ["hip_flexor_stretch", 1, null, "30/side", 10, "easy", null],
-    ["hamstring_stretch", 1, null, 30, 10, "easy", null],
-    ["child_pose", 1, null, 45, 0, "easy", null]
-   ],
-   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
-  },
-  {
-   "id": "ready:no_bar_no_problem",
-   "title": {"en": "No Bar, No Problem"},
-   "description": {"en": "Floor-only basics for when there is no park nearby."},
-   "group": "full",
-   "grade": 1,
-   "focus": ["full", "push"],
-   "schedule": {"minutes": 30, "rpe": 5},
-   "warmup": [
-    ["march", 1, null, 30, 0, "brisk", null],
-    ["arm_swings", 1, 10, null, 10, "controlled", null],
-    ["wrist_circles", 1, 10, null, 10, "controlled", null],
-    ["hip_circles", 1, 8, null, 10, "controlled", null],
-    ["cat_cow", 1, 6, null, 10, "slow", null],
-    ["scapular_pushup", 1, 8, null, 20, "2111", null]
-   ],
-   "main": [
-    ["pushup", 3, 8, null, 60, "2111", null],
-    ["split_squat", 2, "8/side", null, 60, "2111", null],
-    ["glute_bridge", 2, 12, null, 50, "2111", null],
-    ["plank", 2, null, 30, 50, "isometric", null],
-    ["side_plank", 1, null, "20/side", 50, "isometric", null]
    ],
    "cooldown": [
     ["lat_stretch", 1, null, 30, 10, "easy", null],
@@ -328,6 +223,74 @@
     ["incline_pushup", 3, 10, null, 60, "2111", null],
     ["calf_raise", 2, 15, null, 50, "2111", null],
     ["bird_dog", 2, "6/side", null, 50, "slow", null]
+   ],
+   "cooldown": [
+    ["lat_stretch", 1, null, 30, 10, "easy", null],
+    ["chest_stretch", 1, null, 30, 10, "easy", null],
+    ["hip_flexor_stretch", 1, null, "30/side", 10, "easy", null],
+    ["hamstring_stretch", 1, null, 30, 10, "easy", null],
+    ["child_pose", 1, null, 45, 0, "easy", null]
+   ],
+   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
+  },
+  {
+   "id": "ready:basics_four_sets",
+   "title": {"en": "Basics, Four Sets"},
+   "description": {"en": "Rows, push-ups and squats, four sets each, then planks."},
+   "group": "full",
+   "grade": 1,
+   "focus": ["full", "pull", "push"],
+   "schedule": {"minutes": 35, "rpe": 6},
+   "warmup": [
+    ["march", 1, null, 30, 0, "brisk", null],
+    ["arm_swings", 1, 10, null, 10, "controlled", null],
+    ["wrist_circles", 1, 10, null, 10, "controlled", null],
+    ["scapular_pull", 1, 6, null, 20, "2111", null],
+    ["scapular_pushup", 1, 8, null, 20, "2111", null],
+    ["inverted_row", 1, 5, null, 45, "ramp-up", null]
+   ],
+   "main": [
+    ["inverted_row", 4, 8, null, 60, "2111", null],
+    ["pushup", 4, 8, null, 60, "2111", null],
+    ["squat", 4, 15, null, 60, "2111", null],
+    ["plank", 3, null, 30, 50, "isometric", null]
+   ],
+   "cooldown": [
+    ["lat_stretch", 1, null, 30, 10, "easy", null],
+    ["chest_stretch", 1, null, 30, 10, "easy", null],
+    ["hip_flexor_stretch", 1, null, "30/side", 10, "easy", null],
+    ["hamstring_stretch", 1, null, 30, 10, "easy", null],
+    ["child_pose", 1, null, 45, 0, "easy", null]
+   ],
+   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
+  },
+  {
+   "id": "ready:push_and_row",
+   "title": {"en": "Push and Row"},
+   "description": {"en": "Push-ups and rows in pairs, then split squats and a hang."},
+   "group": "full",
+   "grade": 1,
+   "focus": ["full", "pull", "push"],
+   "schedule": {"minutes": 40, "rpe": 6},
+   "warmup": [
+    ["march", 1, null, 30, 0, "brisk", null],
+    ["arm_swings", 1, 10, null, 10, "controlled", null],
+    ["wrist_circles", 1, 10, null, 10, "controlled", null],
+    ["scapular_pull", 1, 6, null, 20, "2111", null],
+    ["scapular_pushup", 1, 8, null, 20, "2111", null],
+    ["inverted_row", 1, 5, null, 45, "ramp-up", null]
+   ],
+   "main": [
+    ["pushup", 1, 10, null, 45, "2111", null],
+    ["inverted_row", 1, 10, null, 90, "2111", null],
+    ["pushup", 1, 10, null, 45, "2111", null],
+    ["inverted_row", 1, 10, null, 90, "2111", null],
+    ["pushup", 1, 10, null, 45, "2111", null],
+    ["inverted_row", 1, 10, null, 90, "2111", null],
+    ["pushup", 1, 10, null, 45, "2111", null],
+    ["inverted_row", 1, 10, null, 90, "2111", null],
+    ["split_squat", 3, "8/side", null, 60, "2111", null],
+    ["dead_hang", 3, null, 25, 60, "isometric", null]
    ],
    "cooldown": [
     ["lat_stretch", 1, null, 30, 10, "easy", null],
@@ -536,6 +499,81 @@
    "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
   },
   {
+   "id": "ready:strong_five",
+   "title": {"en": "Strong Five"},
+   "description": {"en": "Chin-ups, pike push-ups, pull-ups, supported pistols and one-leg hinges."},
+   "group": "full",
+   "grade": 2,
+   "focus": ["full", "pull", "push"],
+   "schedule": {"minutes": 45, "rpe": 7},
+   "warmup": [
+    ["march", 1, null, 30, 0, "brisk", null],
+    ["arm_swings", 1, 10, null, 10, "controlled", null],
+    ["wrist_circles", 1, 10, null, 10, "controlled", null],
+    ["scapular_pull", 1, 6, null, 20, "2111", null],
+    ["scapular_pushup", 1, 8, null, 20, "2111", null],
+    ["inverted_row", 1, 5, null, 45, "ramp-up", null]
+   ],
+   "main": [
+    ["chinup", 4, 6, null, 90, "2111", null],
+    ["pike_pushup", 4, 8, null, 75, "2111", null],
+    ["pullup", 3, 5, null, 90, "2111", null],
+    ["assisted_pistol_squat", 3, "5/side", null, 90, "2111", null],
+    ["single_leg_rdl", 3, "8/side", null, 60, "2111", null]
+   ],
+   "cooldown": [
+    ["lat_stretch", 1, null, 30, 10, "easy", null],
+    ["chest_stretch", 1, null, 30, 10, "easy", null],
+    ["hip_flexor_stretch", 1, null, "30/side", 10, "easy", null],
+    ["hamstring_stretch", 1, null, 30, 10, "easy", null],
+    ["child_pose", 1, null, 45, 0, "easy", null]
+   ],
+   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
+  },
+  {
+   "id": "ready:push_pull_pairs",
+   "title": {"en": "Push-Pull Pairs"},
+   "description": {"en": "Pull-ups with push-ups, then dips with rows: four pairs of each."},
+   "group": "full",
+   "grade": 2,
+   "focus": ["full", "pull", "push"],
+   "schedule": {"minutes": 40, "rpe": 7},
+   "warmup": [
+    ["march", 1, null, 30, 0, "brisk", null],
+    ["arm_swings", 1, 10, null, 10, "controlled", null],
+    ["wrist_circles", 1, 10, null, 10, "controlled", null],
+    ["scapular_pull", 1, 6, null, 20, "2111", null],
+    ["scapular_pushup", 1, 8, null, 20, "2111", null],
+    ["inverted_row", 1, 5, null, 45, "ramp-up", null]
+   ],
+   "main": [
+    ["pullup", 1, 4, null, 45, "2111", null],
+    ["pushup", 1, 12, null, 90, "2111", null],
+    ["pullup", 1, 4, null, 45, "2111", null],
+    ["pushup", 1, 12, null, 90, "2111", null],
+    ["pullup", 1, 4, null, 45, "2111", null],
+    ["pushup", 1, 12, null, 90, "2111", null],
+    ["pullup", 1, 4, null, 45, "2111", null],
+    ["pushup", 1, 12, null, 90, "2111", null],
+    ["parallel_dip", 1, 6, null, 45, "2111", null],
+    ["inverted_row", 1, 10, null, 90, "2111", null],
+    ["parallel_dip", 1, 6, null, 45, "2111", null],
+    ["inverted_row", 1, 10, null, 90, "2111", null],
+    ["parallel_dip", 1, 6, null, 45, "2111", null],
+    ["inverted_row", 1, 10, null, 90, "2111", null],
+    ["parallel_dip", 1, 6, null, 45, "2111", null],
+    ["inverted_row", 1, 10, null, 90, "2111", null]
+   ],
+   "cooldown": [
+    ["lat_stretch", 1, null, 30, 10, "easy", null],
+    ["chest_stretch", 1, null, 30, 10, "easy", null],
+    ["hip_flexor_stretch", 1, null, "30/side", 10, "easy", null],
+    ["hamstring_stretch", 1, null, 30, 10, "easy", null],
+    ["child_pose", 1, null, 45, 0, "easy", null]
+   ],
+   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
+  },
+  {
    "id": "ready:strength_round",
    "title": {"en": "Strength Round"},
    "description": {"en": "Muscle-ups, dips, pistols, toes-to-bar and an L-sit."},
@@ -706,6 +744,37 @@
    "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
   },
   {
+   "id": "ready:advanced_bars",
+   "title": {"en": "Advanced Bars"},
+   "description": {"en": "Chest-to-bar pull-ups, bar dips, pistols and toes-to-bar."},
+   "group": "full",
+   "grade": 3,
+   "focus": ["full", "pull", "push"],
+   "schedule": {"minutes": 40, "rpe": 7},
+   "warmup": [
+    ["march", 1, null, 30, 0, "brisk", null],
+    ["arm_swings", 1, 10, null, 10, "controlled", null],
+    ["wrist_circles", 1, 10, null, 10, "controlled", null],
+    ["scapular_pull", 1, 6, null, 20, "2111", null],
+    ["scapular_pushup", 1, 8, null, 20, "2111", null],
+    ["inverted_row", 1, 5, null, 45, "ramp-up", null]
+   ],
+   "main": [
+    ["chest_to_bar", 4, 4, null, 90, "2111", null],
+    ["straight_bar_dip", 4, 6, null, 90, "2111", null],
+    ["pistol_squat", 3, "3/side", null, 120, "2111", null],
+    ["toes_to_bar", 3, 6, null, 90, "2111", null]
+   ],
+   "cooldown": [
+    ["lat_stretch", 1, null, 30, 10, "easy", null],
+    ["chest_stretch", 1, null, 30, 10, "easy", null],
+    ["hip_flexor_stretch", 1, null, "30/side", 10, "easy", null],
+    ["hamstring_stretch", 1, null, 30, 10, "easy", null],
+    ["child_pose", 1, null, 45, 0, "easy", null]
+   ],
+   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
+  },
+  {
    "id": "ready:advanced_basics",
    "title": {"en": "Advanced Basics"},
    "description": {"en": "Muscle-up doubles, archer pull-ups, dips, pistols and toes-to-bar."},
@@ -834,6 +903,37 @@
     ["archer_pullup", 2, "2/side", null, 120, "2111", null],
     ["parallel_dip", 2, 10, null, 90, "2111", null],
     ["toes_to_bar", 2, 4, null, 90, "2111", null]
+   ],
+   "cooldown": [
+    ["lat_stretch", 1, null, 30, 10, "easy", null],
+    ["chest_stretch", 1, null, 30, 10, "easy", null],
+    ["hip_flexor_stretch", 1, null, "30/side", 10, "easy", null],
+    ["hamstring_stretch", 1, null, 30, 10, "easy", null],
+    ["child_pose", 1, null, 45, 0, "easy", null]
+   ],
+   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
+  },
+  {
+   "id": "ready:muscleups_and_pistols",
+   "title": {"en": "Muscle-Ups and Pistols"},
+   "description": {"en": "Strict muscle-ups, pistols, archer push-ups and toes-to-bar."},
+   "group": "full",
+   "grade": 4,
+   "focus": ["full", "push", "muscleup", "one_arm"],
+   "schedule": {"minutes": 45, "rpe": 7},
+   "warmup": [
+    ["march", 1, null, 30, 0, "brisk", null],
+    ["arm_swings", 1, 10, null, 10, "controlled", null],
+    ["wrist_circles", 1, 10, null, 10, "controlled", null],
+    ["scapular_pull", 1, 6, null, 20, "2111", null],
+    ["scapular_pushup", 1, 8, null, 20, "2111", null],
+    ["inverted_row", 1, 5, null, 45, "ramp-up", null]
+   ],
+   "main": [
+    ["strict_muscleup", 4, 2, null, 150, "2111", null],
+    ["pistol_squat", 3, "5/side", null, 120, "2111", null],
+    ["archer_pushup", 3, "5/side", null, 120, "2111", null],
+    ["toes_to_bar", 3, 8, null, 90, "2111", null]
    ],
    "cooldown": [
     ["lat_stretch", 1, null, 30, 10, "easy", null],
@@ -1004,35 +1104,6 @@
    "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
   },
   {
-   "id": "ready:hang_strong",
-   "title": {"en": "Hang Strong"},
-   "description": {"en": "Dead hangs, active hangs and scapular pulls for grip and shoulders."},
-   "group": "pull",
-   "grade": 1,
-   "focus": ["pull"],
-   "schedule": {"minutes": 20, "rpe": 5},
-   "warmup": [
-    ["march", 1, null, 30, 0, "brisk", null],
-    ["arm_swings", 1, 10, null, 10, "controlled", null],
-    ["wrist_circles", 1, 10, null, 10, "controlled", null],
-    ["scapular_pull", 1, 6, null, 20, "2111", null],
-    ["scapular_pushup", 1, 8, null, 20, "2111", null],
-    ["inverted_row", 1, 5, null, 45, "ramp-up", null]
-   ],
-   "main": [
-    ["dead_hang", 3, null, 25, 60, "isometric", null],
-    ["active_hang", 3, null, 15, 60, "isometric", null],
-    ["scapular_pull", 2, 8, null, 30, "2111", null]
-   ],
-   "cooldown": [
-    ["lat_stretch", 1, null, 30, 10, "easy", null],
-    ["chest_stretch", 1, null, 30, 10, "easy", null],
-    ["forearm_stretch", 1, null, 30, 10, "easy", null],
-    ["child_pose", 1, null, 45, 0, "easy", null]
-   ],
-   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
-  },
-  {
    "id": "ready:row_variety",
    "title": {"en": "Row Variety"},
    "description": {"en": "Three row angles, from easy to harder."},
@@ -1082,6 +1153,67 @@
     ["chinup", 4, 3, null, 90, "2111", null],
     ["inverted_row", 3, 8, null, 60, "2111", null],
     ["dead_hang", 2, null, 20, 60, "isometric", null]
+   ],
+   "cooldown": [
+    ["lat_stretch", 1, null, 30, 10, "easy", null],
+    ["chest_stretch", 1, null, 30, 10, "easy", null],
+    ["forearm_stretch", 1, null, 30, 10, "easy", null],
+    ["child_pose", 1, null, 45, 0, "easy", null]
+   ],
+   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
+  },
+  {
+   "id": "ready:pullup_builder",
+   "title": {"en": "Pull-Up Builder"},
+   "description": {"en": "Assisted pull-ups, slow lowerings, rows and hangs, more sets of each."},
+   "group": "pull",
+   "grade": 1,
+   "focus": ["pull"],
+   "schedule": {"minutes": 35, "rpe": 6},
+   "warmup": [
+    ["march", 1, null, 30, 0, "brisk", null],
+    ["arm_swings", 1, 10, null, 10, "controlled", null],
+    ["wrist_circles", 1, 10, null, 10, "controlled", null],
+    ["scapular_pull", 1, 6, null, 20, "2111", null],
+    ["scapular_pushup", 1, 8, null, 20, "2111", null],
+    ["inverted_row", 1, 5, null, 45, "ramp-up", null]
+   ],
+   "main": [
+    ["assisted_pullup", 5, 6, null, 75, "2111", null],
+    ["eccentric_pullup", 3, 3, null, 90, "5010", null],
+    ["inverted_row", 4, 8, null, 60, "2111", null],
+    ["dead_hang", 3, null, 20, 60, "isometric", null]
+   ],
+   "cooldown": [
+    ["lat_stretch", 1, null, 30, 10, "easy", null],
+    ["chest_stretch", 1, null, 30, 10, "easy", null],
+    ["forearm_stretch", 1, null, 30, 10, "easy", null],
+    ["child_pose", 1, null, 45, 0, "easy", null]
+   ],
+   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
+  },
+  {
+   "id": "ready:chinups_and_rows",
+   "title": {"en": "Chin-Ups and Rows"},
+   "description": {"en": "Short chin-up sets, slow lowerings, rows and knee raises."},
+   "group": "pull",
+   "grade": 1,
+   "focus": ["pull"],
+   "schedule": {"minutes": 40, "rpe": 6},
+   "warmup": [
+    ["march", 1, null, 30, 0, "brisk", null],
+    ["arm_swings", 1, 10, null, 10, "controlled", null],
+    ["wrist_circles", 1, 10, null, 10, "controlled", null],
+    ["scapular_pull", 1, 6, null, 20, "2111", null],
+    ["scapular_pushup", 1, 8, null, 20, "2111", null],
+    ["inverted_row", 1, 5, null, 45, "ramp-up", null]
+   ],
+   "main": [
+    ["chinup", 5, 3, null, 90, "2111", null],
+    ["eccentric_pullup", 2, 3, null, 90, "5010", null],
+    ["inverted_row", 4, 10, null, 60, "2111", null],
+    ["knee_raise", 3, 8, null, 60, "2111", null],
+    ["dead_hang", 2, null, 30, 60, "isometric", null]
    ],
    "cooldown": [
     ["lat_stretch", 1, null, 30, 10, "easy", null],
@@ -1299,13 +1431,13 @@
    "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
   },
   {
-   "id": "ready:pull_ladder_123",
-   "title": {"en": "Pull Ladder 1-2-3"},
-   "description": {"en": "Two climbs of one, two and three pull-ups."},
+   "id": "ready:pullup_pyramid",
+   "title": {"en": "Pull-Up Pyramid"},
+   "description": {"en": "Pull-ups 2 up to 4 and back, then chin-ups, rows and leg raises."},
    "group": "pull",
    "grade": 2,
-   "focus": ["pull"],
-   "schedule": {"minutes": 20, "rpe": 6},
+   "focus": ["pull", "front_lever"],
+   "schedule": {"minutes": 40, "rpe": 7},
    "warmup": [
     ["march", 1, null, 30, 0, "brisk", null],
     ["arm_swings", 1, 10, null, 10, "controlled", null],
@@ -1315,8 +1447,42 @@
     ["inverted_row", 1, 5, null, 45, "ramp-up", null]
    ],
    "main": [
-    ["pullup", 6, "1-2-3-1-2-3", null, 60, "2111", null],
-    ["inverted_row", 2, 8, null, 60, "2111", null]
+    ["pullup", 5, "2-3-4-3-2", null, 60, "2111", null],
+    ["chinup", 4, 5, null, 90, "2111", null],
+    ["feet_elevated_row", 3, 10, null, 60, "2111", null],
+    ["tuck_front_row", 3, 6, null, 75, "2111", null],
+    ["hanging_leg_raise", 3, 6, null, 75, "2111", null]
+   ],
+   "cooldown": [
+    ["lat_stretch", 1, null, 30, 10, "easy", null],
+    ["chest_stretch", 1, null, 30, 10, "easy", null],
+    ["forearm_stretch", 1, null, 30, 10, "easy", null],
+    ["child_pose", 1, null, 45, 0, "easy", null]
+   ],
+   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
+  },
+  {
+   "id": "ready:muscleup_base",
+   "title": {"en": "Muscle-Up Base"},
+   "description": {"en": "Pull-ups, low-bar turnovers, bar support and dips: the muscle-up in parts."},
+   "group": "pull",
+   "grade": 2,
+   "focus": ["pull", "push", "muscleup"],
+   "schedule": {"minutes": 40, "rpe": 7},
+   "warmup": [
+    ["march", 1, null, 30, 0, "brisk", null],
+    ["arm_swings", 1, 10, null, 10, "controlled", null],
+    ["wrist_circles", 1, 10, null, 10, "controlled", null],
+    ["scapular_pull", 1, 6, null, 20, "2111", null],
+    ["scapular_pushup", 1, 8, null, 20, "2111", null],
+    ["inverted_row", 1, 5, null, 45, "ramp-up", null]
+   ],
+   "main": [
+    ["pullup", 4, 5, null, 90, "2111", null],
+    ["low_bar_transition", 3, 4, null, 75, "controlled", null],
+    ["straight_bar_support", 3, null, 20, 60, "isometric", null],
+    ["parallel_dip", 4, 8, null, 90, "2111", null],
+    ["hanging_leg_raise", 2, 8, null, 75, "2111", null]
    ],
    "cooldown": [
     ["lat_stretch", 1, null, 30, 10, "easy", null],
@@ -1437,6 +1603,36 @@
     ["archer_pullup", 4, "2/side", null, 120, "2111", null],
     ["pullup", 3, 5, null, 90, "2111", null],
     ["active_hang", 2, null, 20, 60, "isometric", null]
+   ],
+   "cooldown": [
+    ["lat_stretch", 1, null, 30, 10, "easy", null],
+    ["chest_stretch", 1, null, 30, 10, "easy", null],
+    ["forearm_stretch", 1, null, 30, 10, "easy", null],
+    ["child_pose", 1, null, 45, 0, "easy", null]
+   ],
+   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
+  },
+  {
+   "id": "ready:high_pulls",
+   "title": {"en": "High Pulls"},
+   "description": {"en": "Chest-to-bar pull-ups, slow muscle-up negatives and pull-ups."},
+   "group": "pull",
+   "grade": 3,
+   "focus": ["pull", "muscleup"],
+   "schedule": {"minutes": 40, "rpe": 7},
+   "warmup": [
+    ["march", 1, null, 30, 0, "brisk", null],
+    ["arm_swings", 1, 10, null, 10, "controlled", null],
+    ["wrist_circles", 1, 10, null, 10, "controlled", null],
+    ["scapular_pull", 1, 6, null, 20, "2111", null],
+    ["scapular_pushup", 1, 8, null, 20, "2111", null],
+    ["inverted_row", 1, 5, null, 45, "ramp-up", null]
+   ],
+   "main": [
+    ["chest_to_bar", 5, 4, null, 120, "2111", null],
+    ["negative_muscleup", 3, 2, null, 120, "5010", null],
+    ["pullup", 4, 6, null, 90, "2111", null],
+    ["active_hang", 2, null, 20, 45, "isometric", null]
    ],
    "cooldown": [
     ["lat_stretch", 1, null, 30, 10, "easy", null],
@@ -1806,6 +2002,68 @@
    "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
   },
   {
+   "id": "ready:push_day",
+   "title": {"en": "Push Day"},
+   "description": {"en": "Push-ups four ways, then a plank. No bar needed."},
+   "group": "push",
+   "grade": 1,
+   "focus": ["push"],
+   "schedule": {"minutes": 35, "rpe": 6},
+   "warmup": [
+    ["march", 1, null, 30, 0, "brisk", null],
+    ["arm_swings", 1, 10, null, 10, "controlled", null],
+    ["wrist_circles", 1, 10, null, 10, "controlled", null],
+    ["hip_circles", 1, 8, null, 10, "controlled", null],
+    ["cat_cow", 1, 6, null, 10, "slow", null],
+    ["scapular_pushup", 1, 8, null, 20, "2111", null]
+   ],
+   "main": [
+    ["pushup", 5, 8, null, 60, "2111", null],
+    ["incline_pushup", 3, 12, null, 60, "2111", null],
+    ["pause_pushup", 3, 5, null, 60, "2111", null],
+    ["close_pushup", 3, 6, null, 60, "2111", null],
+    ["plank", 2, null, 30, 45, "isometric", null]
+   ],
+   "cooldown": [
+    ["lat_stretch", 1, null, 30, 10, "easy", null],
+    ["chest_stretch", 1, null, 30, 10, "easy", null],
+    ["forearm_stretch", 1, null, 30, 10, "easy", null],
+    ["child_pose", 1, null, 45, 0, "easy", null]
+   ],
+   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
+  },
+  {
+   "id": "ready:dips_and_pushups",
+   "title": {"en": "Dips and Push-Ups"},
+   "description": {"en": "Support holds, assisted and slow dips, then push-ups."},
+   "group": "push",
+   "grade": 1,
+   "focus": ["push"],
+   "schedule": {"minutes": 35, "rpe": 6},
+   "warmup": [
+    ["march", 1, null, 30, 0, "brisk", null],
+    ["arm_swings", 1, 10, null, 10, "controlled", null],
+    ["wrist_circles", 1, 10, null, 10, "controlled", null],
+    ["scapular_pull", 1, 6, null, 20, "2111", null],
+    ["scapular_pushup", 1, 8, null, 20, "2111", null],
+    ["inverted_row", 1, 5, null, 45, "ramp-up", null]
+   ],
+   "main": [
+    ["support_hold", 3, null, 20, 60, "isometric", null],
+    ["assisted_dip", 4, 6, null, 75, "2111", null],
+    ["eccentric_dip", 3, 3, null, 90, "5010", null],
+    ["pushup", 4, 8, null, 60, "2111", null],
+    ["plank", 2, null, 30, 45, "isometric", null]
+   ],
+   "cooldown": [
+    ["lat_stretch", 1, null, 30, 10, "easy", null],
+    ["chest_stretch", 1, null, 30, 10, "easy", null],
+    ["forearm_stretch", 1, null, 30, 10, "easy", null],
+    ["child_pose", 1, null, 45, 0, "easy", null]
+   ],
+   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
+  },
+  {
    "id": "ready:dip_station",
    "title": {"en": "Dip Station"},
    "description": {"en": "Support holds, then dips on both bars and push-ups to finish."},
@@ -1975,6 +2233,68 @@
    "main": [
     ["planche_lean", 4, null, 10, 75, "isometric", null],
     ["frog_stand", 3, null, 15, 75, "isometric", null]
+   ],
+   "cooldown": [
+    ["lat_stretch", 1, null, 30, 10, "easy", null],
+    ["chest_stretch", 1, null, 30, 10, "easy", null],
+    ["forearm_stretch", 1, null, 30, 10, "easy", null],
+    ["child_pose", 1, null, 45, 0, "easy", null]
+   ],
+   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
+  },
+  {
+   "id": "ready:dips_and_pikes",
+   "title": {"en": "Dips and Pikes"},
+   "description": {"en": "Dips, pike push-ups, push-ups and a support hold."},
+   "group": "push",
+   "grade": 2,
+   "focus": ["push"],
+   "schedule": {"minutes": 40, "rpe": 7},
+   "warmup": [
+    ["march", 1, null, 30, 0, "brisk", null],
+    ["arm_swings", 1, 10, null, 10, "controlled", null],
+    ["wrist_circles", 1, 10, null, 10, "controlled", null],
+    ["scapular_pull", 1, 6, null, 20, "2111", null],
+    ["scapular_pushup", 1, 8, null, 20, "2111", null],
+    ["inverted_row", 1, 5, null, 45, "ramp-up", null]
+   ],
+   "main": [
+    ["parallel_dip", 5, 8, null, 90, "2111", null],
+    ["pike_pushup", 4, 8, null, 75, "2111", null],
+    ["pushup", 3, 15, null, 60, "2111", null],
+    ["close_pushup", 2, 10, null, 60, "2111", null],
+    ["support_hold", 2, null, 30, 45, "isometric", null]
+   ],
+   "cooldown": [
+    ["lat_stretch", 1, null, 30, 10, "easy", null],
+    ["chest_stretch", 1, null, 30, 10, "easy", null],
+    ["forearm_stretch", 1, null, 30, 10, "easy", null],
+    ["child_pose", 1, null, 45, 0, "easy", null]
+   ],
+   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
+  },
+  {
+   "id": "ready:wall_and_pike",
+   "title": {"en": "Wall and Pike"},
+   "description": {"en": "Wall holds, kick-ups and pike push-ups, feet on the floor and raised."},
+   "group": "push",
+   "grade": 2,
+   "focus": ["push", "handstand"],
+   "schedule": {"minutes": 35, "rpe": 7},
+   "warmup": [
+    ["march", 1, null, 30, 0, "brisk", null],
+    ["wrist_circles", 1, 10, null, 10, "controlled", null],
+    ["wrist_rocks", 1, 10, null, 10, "controlled", null],
+    ["wrist_pushup", 1, 10, null, 20, "2111", null],
+    ["arm_swings", 1, 10, null, 10, "controlled", null],
+    ["wall_slide", 1, 8, null, 20, "slow", null],
+    ["scapular_pushup", 1, 8, null, 20, "2111", null]
+   ],
+   "main": [
+    ["wall_handstand", 4, null, 30, 60, "isometric", null],
+    ["wall_kickup", 3, "3/side", null, 60, "easy technique", null],
+    ["elevated_pike_pushup", 4, 6, null, 90, "2111", null],
+    ["pike_pushup", 3, 8, null, 75, "2111", null]
    ],
    "cooldown": [
     ["lat_stretch", 1, null, 30, 10, "easy", null],
@@ -2196,6 +2516,36 @@
    "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
   },
   {
+   "id": "ready:dips_and_archers",
+   "title": {"en": "Dips and Archers"},
+   "description": {"en": "Bar dips, archer push-ups, dips and raised pike push-ups."},
+   "group": "push",
+   "grade": 3,
+   "focus": ["push", "one_arm"],
+   "schedule": {"minutes": 40, "rpe": 7},
+   "warmup": [
+    ["march", 1, null, 30, 0, "brisk", null],
+    ["arm_swings", 1, 10, null, 10, "controlled", null],
+    ["wrist_circles", 1, 10, null, 10, "controlled", null],
+    ["scapular_pull", 1, 6, null, 20, "2111", null],
+    ["scapular_pushup", 1, 8, null, 20, "2111", null],
+    ["inverted_row", 1, 5, null, 45, "ramp-up", null]
+   ],
+   "main": [
+    ["straight_bar_dip", 4, 8, null, 90, "2111", null],
+    ["archer_pushup", 3, "4/side", null, 120, "2111", null],
+    ["parallel_dip", 3, 12, null, 90, "2111", null],
+    ["elevated_pike_pushup", 3, 8, null, 90, "2111", null]
+   ],
+   "cooldown": [
+    ["lat_stretch", 1, null, 30, 10, "easy", null],
+    ["chest_stretch", 1, null, 30, 10, "easy", null],
+    ["forearm_stretch", 1, null, 30, 10, "easy", null],
+    ["child_pose", 1, null, 45, 0, "easy", null]
+   ],
+   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
+  },
+  {
    "id": "ready:advanced_tuck_planche",
    "title": {"en": "Advanced Tuck Planche"},
    "description": {"en": "Tuck and advanced tuck planche holds, tuck planche push-ups, dips."},
@@ -2311,6 +2661,37 @@
     ["archer_pushup", 3, "3/side", null, 90, "2111", null],
     ["one_arm_pushup", 3, "1/side", null, 120, "2111", null],
     ["straight_side_plank", 2, null, "20/side", 50, "isometric", null]
+   ],
+   "cooldown": [
+    ["lat_stretch", 1, null, 30, 10, "easy", null],
+    ["chest_stretch", 1, null, 30, 10, "easy", null],
+    ["forearm_stretch", 1, null, 30, 10, "easy", null],
+    ["child_pose", 1, null, 45, 0, "easy", null]
+   ],
+   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
+  },
+  {
+   "id": "ready:press_volume",
+   "title": {"en": "Press Volume"},
+   "description": {"en": "Wall handstand push-ups, pseudo-planche push-ups and bar dips, steady."},
+   "group": "push",
+   "grade": 4,
+   "focus": ["push", "handstand", "planche"],
+   "schedule": {"minutes": 40, "rpe": 7},
+   "warmup": [
+    ["march", 1, null, 30, 0, "brisk", null],
+    ["wrist_circles", 1, 10, null, 10, "controlled", null],
+    ["wrist_rocks", 1, 10, null, 10, "controlled", null],
+    ["wrist_pushup", 1, 10, null, 20, "2111", null],
+    ["arm_swings", 1, 10, null, 10, "controlled", null],
+    ["wall_slide", 1, 8, null, 20, "slow", null],
+    ["scapular_pushup", 1, 8, null, 20, "2111", null]
+   ],
+   "main": [
+    ["wall_hspu", 5, 5, null, 120, "2111", null],
+    ["pseudo_planche_pushup", 3, 8, null, 120, "2111", null],
+    ["straight_bar_dip", 3, 8, null, 90, "2111", null],
+    ["wall_handstand", 2, null, 40, 60, "isometric", null]
    ],
    "cooldown": [
     ["lat_stretch", 1, null, 30, 10, "easy", null],
@@ -2537,13 +2918,13 @@
    "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
   },
   {
-   "id": "ready:squat_endurance",
-   "title": {"en": "Squat Endurance"},
-   "description": {"en": "High-rep squats and lunges with time to breathe."},
+   "id": "ready:squat_step_bridge",
+   "title": {"en": "Squat, Step, Bridge"},
+   "description": {"en": "Squats, split squats, step-ups, one-leg bridges and calf raises."},
    "group": "legs",
    "grade": 1,
    "focus": ["legs"],
-   "schedule": {"minutes": 35, "rpe": 6},
+   "schedule": {"minutes": 40, "rpe": 6},
    "warmup": [
     ["march", 1, null, 30, 0, "brisk", null],
     ["hip_circles", 1, 8, null, 10, "controlled", null],
@@ -2553,9 +2934,42 @@
     ["squat", 1, 6, null, 45, "ramp-up", null]
    ],
    "main": [
-    ["squat", 4, 20, null, 75, "2111", null],
-    ["reverse_lunge", 3, "10/side", null, 75, "2111", null],
-    ["calf_raise", 3, 20, null, 50, "2111", null]
+    ["squat", 4, 15, null, 60, "2111", null],
+    ["split_squat", 3, "8/side", null, 60, "2111", null],
+    ["step_up", 3, "8/side", null, 60, "2111", null],
+    ["single_leg_bridge", 3, "8/side", null, 60, "2111", null],
+    ["calf_raise", 3, 15, null, 45, "2111", null]
+   ],
+   "cooldown": [
+    ["quad_stretch", 1, null, 30, 10, "easy", null],
+    ["hamstring_stretch", 1, null, 30, 10, "easy", null],
+    ["hip_flexor_stretch", 1, null, "30/side", 10, "easy", null],
+    ["calf_stretch", 1, null, 30, 10, "easy", null]
+   ],
+   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
+  },
+  {
+   "id": "ready:lunge_day",
+   "title": {"en": "Lunge Day"},
+   "description": {"en": "Lunges, slow squats, leg curls and one-leg hinges."},
+   "group": "legs",
+   "grade": 1,
+   "focus": ["legs"],
+   "schedule": {"minutes": 40, "rpe": 6},
+   "warmup": [
+    ["march", 1, null, 30, 0, "brisk", null],
+    ["hip_circles", 1, 8, null, 10, "controlled", null],
+    ["ankle_rocks", 1, "10/side", null, 10, "controlled", null],
+    ["leg_swings", 1, "8/side", null, 10, "controlled", null],
+    ["glute_bridge", 1, 10, null, 20, "2111", null],
+    ["squat", 1, 6, null, 45, "ramp-up", null]
+   ],
+   "main": [
+    ["reverse_lunge", 4, "10/side", null, 60, "2111", null],
+    ["tempo_squat", 3, 8, null, 60, "3111", null],
+    ["sliding_leg_curl", 3, 6, null, 60, "2111", null],
+    ["single_leg_rdl", 3, "6/side", null, 60, "2111", null],
+    ["calf_raise", 3, 15, null, 45, "2111", null]
    ],
    "cooldown": [
     ["quad_stretch", 1, null, 30, 10, "easy", null],
@@ -2757,13 +3171,13 @@
    "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
   },
   {
-   "id": "ready:easy_jumps",
-   "title": {"en": "Easy Jumps"},
-   "description": {"en": "Low, soft squat jumps and calf raises for spring."},
+   "id": "ready:split_pistol_jump",
+   "title": {"en": "Split, Pistol, Jump"},
+   "description": {"en": "Split squats, supported pistols, squat jumps and leg curls."},
    "group": "legs",
    "grade": 2,
    "focus": ["legs"],
-   "schedule": {"minutes": 25, "rpe": 6},
+   "schedule": {"minutes": 50, "rpe": 7},
    "warmup": [
     ["march", 1, null, 30, 0, "brisk", null],
     ["hip_circles", 1, 8, null, 10, "controlled", null],
@@ -2773,9 +3187,11 @@
     ["squat", 1, 6, null, 45, "ramp-up", null]
    ],
    "main": [
-    ["squat_jump", 4, 4, null, 75, "controlled", null],
-    ["calf_raise", 2, 15, null, 50, "2111", null],
-    ["squat", 2, 12, null, 60, "2111", null]
+    ["bulgarian_split_squat", 4, "10/side", null, 90, "2111", null],
+    ["assisted_pistol_squat", 4, "5/side", null, 90, "2111", null],
+    ["squat_jump", 4, 6, null, 75, "controlled", null],
+    ["sliding_leg_curl", 3, 8, null, 75, "2111", null],
+    ["calf_raise", 3, 20, null, 45, "2111", null]
    ],
    "cooldown": [
     ["quad_stretch", 1, null, 30, 10, "easy", null],
@@ -2895,6 +3311,37 @@
     ["nordic_negative", 3, 2, null, 150, "5010", null],
     ["sliding_leg_curl", 2, 8, null, 75, "2111", null],
     ["single_leg_bridge", 2, "8/side", null, 60, "2111", null]
+   ],
+   "cooldown": [
+    ["quad_stretch", 1, null, 30, 10, "easy", null],
+    ["hamstring_stretch", 1, null, 30, 10, "easy", null],
+    ["hip_flexor_stretch", 1, null, "30/side", 10, "easy", null],
+    ["calf_stretch", 1, null, 30, 10, "easy", null]
+   ],
+   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
+  },
+  {
+   "id": "ready:one_leg_strength",
+   "title": {"en": "One-Leg Strength"},
+   "description": {"en": "Pistols, shrimp squats, split squats, jumps and leg curls."},
+   "group": "legs",
+   "grade": 3,
+   "focus": ["legs"],
+   "schedule": {"minutes": 50, "rpe": 7},
+   "warmup": [
+    ["march", 1, null, 30, 0, "brisk", null],
+    ["hip_circles", 1, 8, null, 10, "controlled", null],
+    ["ankle_rocks", 1, "10/side", null, 10, "controlled", null],
+    ["leg_swings", 1, "8/side", null, 10, "controlled", null],
+    ["glute_bridge", 1, 10, null, 20, "2111", null],
+    ["squat", 1, 6, null, 45, "ramp-up", null]
+   ],
+   "main": [
+    ["pistol_squat", 4, "3/side", null, 120, "2111", null],
+    ["shrimp_squat", 3, "3/side", null, 120, "2111", null],
+    ["bulgarian_split_squat", 3, "10/side", null, 90, "2111", null],
+    ["squat_jump", 3, 8, null, 75, "controlled", null],
+    ["sliding_leg_curl", 3, 10, null, 75, "2111", null]
    ],
    "cooldown": [
     ["quad_stretch", 1, null, 30, 10, "easy", null],
@@ -3177,13 +3624,13 @@
    "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
   },
   {
-   "id": "ready:side_core",
-   "title": {"en": "Side Core"},
-   "description": {"en": "Side planks in three forms for strong obliques."},
+   "id": "ready:core_floor_and_bar",
+   "title": {"en": "Core, Floor and Bar"},
+   "description": {"en": "Knee raises on the bar, leg raises, planks and hollow holds."},
    "group": "core",
    "grade": 1,
    "focus": ["core"],
-   "schedule": {"minutes": 25, "rpe": 5},
+   "schedule": {"minutes": 35, "rpe": 6},
    "warmup": [
     ["march", 1, null, 30, 0, "brisk", null],
     ["cat_cow", 1, 6, null, 10, "slow", null],
@@ -3192,10 +3639,11 @@
     ["arch_hold", 1, null, 15, 20, "isometric", null]
    ],
    "main": [
-    ["kneeling_side_plank", 2, null, "20/side", 50, "isometric", null],
-    ["side_plank", 3, null, "20/side", 50, "isometric", null],
-    ["straight_side_plank", 2, null, "15/side", 50, "isometric", null],
-    ["bird_dog", 2, "6/side", null, 50, "slow", null]
+    ["knee_raise", 4, 10, null, 60, "2111", null],
+    ["lying_leg_raise", 3, 10, null, 60, "2111", null],
+    ["plank", 3, null, 40, 45, "isometric", null],
+    ["side_plank", 2, null, "25/side", 45, "isometric", null],
+    ["hollow_hold", 3, null, 20, 50, "isometric", null]
    ],
    "cooldown": [
     ["child_pose", 1, null, 45, 0, "easy", null],
@@ -3320,13 +3768,13 @@
    "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
   },
   {
-   "id": "ready:core_endurance",
-   "title": {"en": "Core Endurance"},
-   "description": {"en": "Longer holds at an easy pace."},
+   "id": "ready:raise_tuck_hold",
+   "title": {"en": "Raise, Tuck, Hold"},
+   "description": {"en": "Leg raises on the bar, tuck L-sits, hollow and arch holds."},
    "group": "core",
    "grade": 2,
-   "focus": ["core"],
-   "schedule": {"minutes": 25, "rpe": 6},
+   "focus": ["core", "lsit"],
+   "schedule": {"minutes": 35, "rpe": 7},
    "warmup": [
     ["march", 1, null, 30, 0, "brisk", null],
     ["cat_cow", 1, 6, null, 10, "slow", null],
@@ -3335,10 +3783,11 @@
     ["arch_hold", 1, null, 15, 20, "isometric", null]
    ],
    "main": [
-    ["plank", 3, null, 45, 60, "isometric", null],
-    ["hollow_body_hold", 3, null, 25, 60, "isometric", null],
-    ["side_plank", 2, null, "30/side", 60, "isometric", null],
-    ["arch_hold", 2, null, 20, 60, "isometric", null]
+    ["hanging_leg_raise", 4, 8, null, 75, "2111", null],
+    ["tuck_lsit", 4, null, 12, 60, "isometric", null],
+    ["hollow_body_hold", 3, null, 30, 60, "isometric", null],
+    ["arch_hold", 3, null, 20, 45, "isometric", null],
+    ["side_plank", 2, null, "30/side", 45, "isometric", null]
    ],
    "cooldown": [
     ["child_pose", 1, null, 45, 0, "easy", null],
@@ -3727,6 +4176,37 @@
    "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
   },
   {
+   "id": "ready:bar_holds",
+   "title": {"en": "Bar Holds"},
+   "description": {"en": "Support, hang and hollow holds: the base under every skill."},
+   "group": "skills",
+   "grade": 1,
+   "focus": ["skills", "muscleup"],
+   "schedule": {"minutes": 35, "rpe": 6},
+   "warmup": [
+    ["march", 1, null, 30, 0, "brisk", null],
+    ["arm_swings", 1, 10, null, 10, "controlled", null],
+    ["wrist_circles", 1, 10, null, 10, "controlled", null],
+    ["scapular_pull", 1, 6, null, 20, "2111", null],
+    ["scapular_pushup", 1, 8, null, 20, "2111", null],
+    ["inverted_row", 1, 5, null, 45, "ramp-up", null]
+   ],
+   "main": [
+    ["support_hold", 4, null, 20, 60, "isometric", null],
+    ["straight_bar_support", 3, null, 20, 60, "isometric", null],
+    ["dead_hang", 3, null, 30, 60, "isometric", null],
+    ["active_hang", 3, null, 15, 60, "isometric", null],
+    ["hollow_body_hold", 3, null, 20, 50, "isometric", null]
+   ],
+   "cooldown": [
+    ["lat_stretch", 1, null, 30, 10, "easy", null],
+    ["chest_stretch", 1, null, 30, 10, "easy", null],
+    ["forearm_stretch", 1, null, 30, 10, "easy", null],
+    ["child_pose", 1, null, 45, 0, "easy", null]
+   ],
+   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
+  },
+  {
    "id": "ready:balance_practice",
    "title": {"en": "Balance Practice"},
    "description": {"en": "Short, fresh attempts to find your freestanding handstand."},
@@ -3895,6 +4375,37 @@
     ["straight_bar_support", 3, null, 20, 60, "isometric", null],
     ["low_bar_transition", 3, 3, null, 75, "controlled", null],
     ["inverted_row", 2, 8, null, 60, "2111", null]
+   ],
+   "cooldown": [
+    ["lat_stretch", 1, null, 30, 10, "easy", null],
+    ["chest_stretch", 1, null, 30, 10, "easy", null],
+    ["forearm_stretch", 1, null, 30, 10, "easy", null],
+    ["child_pose", 1, null, 45, 0, "easy", null]
+   ],
+   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
+  },
+  {
+   "id": "ready:flag_base",
+   "title": {"en": "Flag Base"},
+   "description": {"en": "Side planks, vertical and assisted tuck flags on both sides, then pull-ups."},
+   "group": "skills",
+   "grade": 2,
+   "focus": ["pull", "skills", "flag"],
+   "schedule": {"minutes": 40, "rpe": 7},
+   "warmup": [
+    ["march", 1, null, 30, 0, "brisk", null],
+    ["arm_swings", 1, 10, null, 10, "controlled", null],
+    ["wrist_circles", 1, 10, null, 10, "controlled", null],
+    ["scapular_pull", 1, 6, null, 20, "2111", null],
+    ["scapular_pushup", 1, 8, null, 20, "2111", null],
+    ["inverted_row", 1, 5, null, 45, "ramp-up", null]
+   ],
+   "main": [
+    ["straight_side_plank", 3, null, "30/side", 45, "isometric", null],
+    ["flag_ground_support", 3, null, "10/side", 60, "isometric", null],
+    ["vertical_flag", 4, null, "8/side", 90, "isometric", null],
+    ["assisted_tuck_flag", 4, null, "6/side", 90, "isometric", null],
+    ["pullup", 3, 5, null, 90, "2111", null]
    ],
    "cooldown": [
     ["lat_stretch", 1, null, 30, 10, "easy", null],
@@ -4212,6 +4723,36 @@
     ["child_pose", 1, null, 45, 0, "easy", null],
     ["supine_twist", 1, null, 30, 10, "easy", null],
     ["hip_flexor_stretch", 1, null, "30/side", 10, "easy", null]
+   ],
+   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
+  },
+  {
+   "id": "ready:two_levers",
+   "title": {"en": "Two Levers"},
+   "description": {"en": "Skin-the-cats, advanced-tuck front and back levers, hollow holds."},
+   "group": "skills",
+   "grade": 3,
+   "focus": ["skills", "front_lever", "back_lever"],
+   "schedule": {"minutes": 40, "rpe": 7},
+   "warmup": [
+    ["march", 1, null, 30, 0, "brisk", null],
+    ["arm_swings", 1, 10, null, 10, "controlled", null],
+    ["wrist_circles", 1, 10, null, 10, "controlled", null],
+    ["scapular_pull", 1, 6, null, 20, "2111", null],
+    ["scapular_pushup", 1, 8, null, 20, "2111", null],
+    ["inverted_row", 1, 5, null, 45, "ramp-up", null]
+   ],
+   "main": [
+    ["skin_the_cat", 3, 3, null, 90, "slow", null],
+    ["advanced_tuck_front", 4, null, 8, 120, "isometric", null],
+    ["advanced_tuck_back", 4, null, 8, 120, "isometric", null],
+    ["hollow_body_hold", 3, null, 25, 60, "isometric", null]
+   ],
+   "cooldown": [
+    ["lat_stretch", 1, null, 30, 10, "easy", null],
+    ["chest_stretch", 1, null, 30, 10, "easy", null],
+    ["forearm_stretch", 1, null, 30, 10, "easy", null],
+    ["child_pose", 1, null, 45, 0, "easy", null]
    ],
    "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
   },
@@ -4670,31 +5211,6 @@
    "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
   },
   {
-   "id": "ready:floor_only_15",
-   "title": {"en": "Floor Only 15"},
-   "description": {"en": "No bar: squats, push-ups and planks in about 15 minutes."},
-   "group": "short",
-   "grade": 1,
-   "focus": ["push", "short"],
-   "schedule": {"minutes": 15, "rpe": 6},
-   "warmup": [
-    ["march", 1, null, 30, 0, "brisk", null],
-    ["arm_swings", 1, 10, null, 10, "controlled", null],
-    ["wrist_circles", 1, 10, null, 10, "controlled", null],
-    ["hip_circles", 1, 8, null, 10, "controlled", null]
-   ],
-   "main": [
-    ["squat", 3, 12, null, 45, "2111", null],
-    ["pushup", 3, 8, null, 45, "2111", null],
-    ["plank", 2, null, 20, 20, "isometric", null]
-   ],
-   "cooldown": [
-    ["lat_stretch", 1, null, 30, 10, "easy", null],
-    ["hamstring_stretch", 1, null, 30, 10, "easy", null]
-   ],
-   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
-  },
-  {
    "id": "ready:ten_minute_push",
    "title": {"en": "Ten-Minute Push"},
    "description": {"en": "Three short push-up sets, close push-ups and a plank."},
@@ -4770,90 +5286,13 @@
    "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
   },
   {
-   "id": "ready:ten_minute_core",
-   "title": {"en": "Ten-Minute Core"},
-   "description": {"en": "Dead bugs, planks, side planks and bird dogs."},
+   "id": "ready:four_quick_rounds",
+   "title": {"en": "Four Quick Rounds"},
+   "description": {"en": "Push-ups, squats and rows, four rounds with short rests."},
    "group": "short",
    "grade": 1,
-   "focus": ["short"],
-   "schedule": {"minutes": 20, "rpe": 5},
-   "warmup": [
-    ["march", 1, null, 30, 0, "brisk", null],
-    ["arm_swings", 1, 10, null, 10, "controlled", null],
-    ["wrist_circles", 1, 10, null, 10, "controlled", null],
-    ["hip_circles", 1, 8, null, 10, "controlled", null]
-   ],
-   "main": [
-    ["dead_bug", 2, "6/side", null, 50, "slow", null],
-    ["plank", 2, null, 30, 50, "isometric", null],
-    ["side_plank", 2, null, "20/side", 50, "isometric", null],
-    ["bird_dog", 2, "6/side", null, 50, "slow", null]
-   ],
-   "cooldown": [
-    ["lat_stretch", 1, null, 30, 10, "easy", null],
-    ["hamstring_stretch", 1, null, 30, 10, "easy", null]
-   ],
-   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
-  },
-  {
-   "id": "ready:no_sweat_ten",
-   "title": {"en": "No-Sweat Ten"},
-   "description": {"en": "Nothing sweaty: wall push-ups, squats and calf raises."},
-   "group": "short",
-   "grade": 1,
-   "focus": ["push", "short"],
-   "schedule": {"minutes": 20, "rpe": 4},
-   "warmup": [
-    ["march", 1, null, 30, 0, "brisk", null],
-    ["arm_swings", 1, 10, null, 10, "controlled", null],
-    ["wrist_circles", 1, 10, null, 10, "controlled", null],
-    ["hip_circles", 1, 8, null, 10, "controlled", null]
-   ],
-   "main": [
-    ["wall_pushup", 2, 12, null, 50, "2111", null],
-    ["squat", 2, 10, null, 50, "2111", null],
-    ["calf_raise", 2, 15, null, 50, "2111", null],
-    ["wall_slide", 2, 10, null, 30, "slow", null]
-   ],
-   "cooldown": [
-    ["lat_stretch", 1, null, 30, 10, "easy", null],
-    ["hamstring_stretch", 1, null, 30, 10, "easy", null]
-   ],
-   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
-  },
-  {
-   "id": "ready:wall_handstand_ten",
-   "title": {"en": "Wall Handstand Ten"},
-   "description": {"en": "Pike holds, wall holds and exits: ten minutes upside down."},
-   "group": "short",
-   "grade": 1,
-   "focus": ["short", "handstand"],
-   "schedule": {"minutes": 15, "rpe": 4},
-   "warmup": [
-    ["march", 1, null, 30, 0, "brisk", null],
-    ["wrist_circles", 1, 10, null, 10, "controlled", null],
-    ["wrist_rocks", 1, 10, null, 10, "controlled", null],
-    ["arm_swings", 1, 10, null, 10, "controlled", null]
-   ],
-   "main": [
-    ["pike_handstand_hold", 2, null, 20, 50, "isometric", null],
-    ["wall_handstand", 3, null, 20, 60, "isometric", null],
-    ["handstand_exit", 2, "2/side", null, 60, "easy technique", null]
-   ],
-   "cooldown": [
-    ["lat_stretch", 1, null, 30, 10, "easy", null],
-    ["hamstring_stretch", 1, null, 30, 10, "easy", null]
-   ],
-   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
-  },
-  {
-   "id": "ready:ten_minute_full_body",
-   "title": {"en": "Ten-Minute Full Body"},
-   "description": {"en": "Two rounds of push, squat, row and plank."},
-   "group": "short",
-   "grade": 1,
-   "focus": ["push", "short"],
-   "schedule": {"minutes": 20, "rpe": 5},
+   "focus": ["pull", "push", "short"],
+   "schedule": {"minutes": 25, "rpe": 6},
    "warmup": [
     ["march", 1, null, 30, 0, "brisk", null],
     ["arm_swings", 1, 10, null, 10, "controlled", null],
@@ -4861,14 +5300,18 @@
     ["scapular_pushup", 1, 8, null, 20, "2111", null]
    ],
    "main": [
-    ["pushup", 1, 6, null, 50, "2111", null],
-    ["squat", 1, 10, null, 50, "2111", null],
-    ["inverted_row", 1, 6, null, 50, "2111", null],
-    ["plank", 1, null, 20, 90, "isometric", null],
-    ["pushup", 1, 6, null, 50, "2111", null],
-    ["squat", 1, 10, null, 50, "2111", null],
-    ["inverted_row", 1, 6, null, 50, "2111", null],
-    ["plank", 1, null, 20, 90, "isometric", null]
+    ["pushup", 1, 8, null, 30, "2111", null],
+    ["squat", 1, 12, null, 30, "2111", null],
+    ["inverted_row", 1, 8, null, 60, "2111", null],
+    ["pushup", 1, 8, null, 30, "2111", null],
+    ["squat", 1, 12, null, 30, "2111", null],
+    ["inverted_row", 1, 8, null, 60, "2111", null],
+    ["pushup", 1, 8, null, 30, "2111", null],
+    ["squat", 1, 12, null, 30, "2111", null],
+    ["inverted_row", 1, 8, null, 60, "2111", null],
+    ["pushup", 1, 8, null, 30, "2111", null],
+    ["squat", 1, 12, null, 30, "2111", null],
+    ["inverted_row", 1, 8, null, 60, "2111", null]
    ],
    "cooldown": [
     ["lat_stretch", 1, null, 30, 10, "easy", null],
@@ -4877,24 +5320,36 @@
    "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
   },
   {
-   "id": "ready:stretch_break",
-   "title": {"en": "Stretch Break"},
-   "description": {"en": "Four stretches between meetings, two holds each."},
+   "id": "ready:floor_minutes",
+   "title": {"en": "Floor Minutes"},
+   "description": {"en": "Every minute, in turn: 12 squats or 6 push-ups. Twelve minutes, no bar."},
    "group": "short",
    "grade": 1,
-   "focus": ["short"],
-   "schedule": {"minutes": 15, "rpe": 2},
+   "focus": ["push", "short"],
+   "schedule": {"minutes": 25, "rpe": 6},
    "warmup": [
-    ["march", 1, null, 60, 0, "easy", null]
+    ["march", 1, null, 30, 0, "brisk", null],
+    ["arm_swings", 1, 10, null, 10, "controlled", null],
+    ["wrist_circles", 1, 10, null, 10, "controlled", null],
+    ["hip_circles", 1, 8, null, 10, "controlled", null]
    ],
    "main": [
-    ["lat_stretch", 2, null, 30, 10, "easy", null],
-    ["chest_stretch", 2, null, 30, 10, "easy", null],
-    ["hip_flexor_stretch", 2, null, "30/side", 10, "easy", null],
-    ["hamstring_stretch", 2, null, 30, 10, "easy", null]
+    ["squat", 1, 12, null, 24, "2111", null],
+    ["pushup", 1, 6, null, 42, "2111", null],
+    ["squat", 1, 12, null, 24, "2111", null],
+    ["pushup", 1, 6, null, 42, "2111", null],
+    ["squat", 1, 12, null, 24, "2111", null],
+    ["pushup", 1, 6, null, 42, "2111", null],
+    ["squat", 1, 12, null, 24, "2111", null],
+    ["pushup", 1, 6, null, 42, "2111", null],
+    ["squat", 1, 12, null, 24, "2111", null],
+    ["pushup", 1, 6, null, 42, "2111", null],
+    ["squat", 1, 12, null, 24, "2111", null],
+    ["pushup", 1, 6, null, 42, "2111", null]
    ],
    "cooldown": [
-    ["slow_breathing", 1, null, 120, 0, "easy", null]
+    ["lat_stretch", 1, null, 30, 10, "easy", null],
+    ["hamstring_stretch", 1, null, 30, 10, "easy", null]
    ],
    "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
   },
@@ -4971,54 +5426,6 @@
    "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
   },
   {
-   "id": "ready:easy_pullup_doubles",
-   "title": {"en": "Easy Pull-Up Doubles"},
-   "description": {"en": "Five easy doubles: practise the pull-up without tiring."},
-   "group": "short",
-   "grade": 2,
-   "focus": ["pull", "short"],
-   "schedule": {"minutes": 20, "rpe": 5},
-   "warmup": [
-    ["march", 1, null, 30, 0, "brisk", null],
-    ["arm_swings", 1, 10, null, 10, "controlled", null],
-    ["scapular_pull", 1, 6, null, 20, "2111", null],
-    ["scapular_pushup", 1, 8, null, 20, "2111", null]
-   ],
-   "main": [
-    ["pullup", 5, 2, null, 90, "2111", null],
-    ["dead_hang", 2, null, 20, 60, "isometric", null]
-   ],
-   "cooldown": [
-    ["lat_stretch", 1, null, 30, 10, "easy", null],
-    ["hamstring_stretch", 1, null, 30, 10, "easy", null]
-   ],
-   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
-  },
-  {
-   "id": "ready:easy_dip_practice",
-   "title": {"en": "Easy Dip Practice"},
-   "description": {"en": "Short dip sets and support holds, far from failure."},
-   "group": "short",
-   "grade": 2,
-   "focus": ["push", "short"],
-   "schedule": {"minutes": 20, "rpe": 5},
-   "warmup": [
-    ["march", 1, null, 30, 0, "brisk", null],
-    ["wrist_circles", 1, 10, null, 10, "controlled", null],
-    ["wrist_rocks", 1, 10, null, 10, "controlled", null],
-    ["arm_swings", 1, 10, null, 10, "controlled", null]
-   ],
-   "main": [
-    ["parallel_dip", 4, 3, null, 90, "2111", null],
-    ["support_hold", 2, null, 20, 60, "isometric", null]
-   ],
-   "cooldown": [
-    ["lat_stretch", 1, null, 30, 10, "easy", null],
-    ["hamstring_stretch", 1, null, 30, 10, "easy", null]
-   ],
-   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
-  },
-  {
    "id": "ready:hanging_ten",
    "title": {"en": "Hanging Ten"},
    "description": {"en": "Knee raises, leg raises and active hangs on the bar."},
@@ -5069,13 +5476,13 @@
    "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
   },
   {
-   "id": "ready:shoulder_extension_ten",
-   "title": {"en": "Shoulder Extension Ten"},
-   "description": {"en": "Partial skin-the-cats and German hangs, gently."},
+   "id": "ready:six_bar_rounds",
+   "title": {"en": "Six Bar Rounds"},
+   "description": {"en": "Pull-ups and dips in turn, six rounds."},
    "group": "short",
    "grade": 2,
-   "focus": ["short", "back_lever"],
-   "schedule": {"minutes": 20, "rpe": 5},
+   "focus": ["pull", "push", "short"],
+   "schedule": {"minutes": 25, "rpe": 7},
    "warmup": [
     ["march", 1, null, 30, 0, "brisk", null],
     ["arm_swings", 1, 10, null, 10, "controlled", null],
@@ -5083,34 +5490,18 @@
     ["scapular_pushup", 1, 8, null, 20, "2111", null]
    ],
    "main": [
-    ["skin_cat_partial", 3, 3, null, 60, "slow", null],
-    ["german_hang", 3, null, 10, 60, "easy", null],
-    ["arch_hold", 2, null, 20, 50, "isometric", null]
-   ],
-   "cooldown": [
-    ["lat_stretch", 1, null, 30, 10, "easy", null],
-    ["hamstring_stretch", 1, null, 30, 10, "easy", null]
-   ],
-   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
-  },
-  {
-   "id": "ready:flag_basics_ten",
-   "title": {"en": "Flag Basics Ten"},
-   "description": {"en": "Side planks and ground support: the first flag steps."},
-   "group": "short",
-   "grade": 2,
-   "focus": ["short", "flag"],
-   "schedule": {"minutes": 20, "rpe": 5},
-   "warmup": [
-    ["march", 1, null, 30, 0, "brisk", null],
-    ["arm_swings", 1, 10, null, 10, "controlled", null],
-    ["wrist_circles", 1, 10, null, 10, "controlled", null],
-    ["hip_circles", 1, 8, null, 10, "controlled", null]
-   ],
-   "main": [
-    ["side_plank", 2, null, "20/side", 50, "isometric", null],
-    ["straight_side_plank", 2, null, "15/side", 50, "isometric", null],
-    ["flag_ground_support", 3, null, "10/side", 60, "isometric", null]
+    ["pullup", 1, 4, null, 45, "2111", null],
+    ["parallel_dip", 1, 6, null, 60, "2111", null],
+    ["pullup", 1, 4, null, 45, "2111", null],
+    ["parallel_dip", 1, 6, null, 60, "2111", null],
+    ["pullup", 1, 4, null, 45, "2111", null],
+    ["parallel_dip", 1, 6, null, 60, "2111", null],
+    ["pullup", 1, 4, null, 45, "2111", null],
+    ["parallel_dip", 1, 6, null, 60, "2111", null],
+    ["pullup", 1, 4, null, 45, "2111", null],
+    ["parallel_dip", 1, 6, null, 60, "2111", null],
+    ["pullup", 1, 4, null, 45, "2111", null],
+    ["parallel_dip", 1, 6, null, 60, "2111", null]
    ],
    "cooldown": [
     ["lat_stretch", 1, null, 30, 10, "easy", null],
@@ -5158,30 +5549,6 @@
    "main": [
     ["wall_handstand", 1, null, 35, 60, "isometric", null],
     ["freestanding_handstand", 5, null, 15, 60, "isometric", null]
-   ],
-   "cooldown": [
-    ["lat_stretch", 1, null, 30, 10, "easy", null],
-    ["hamstring_stretch", 1, null, 30, 10, "easy", null]
-   ],
-   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
-  },
-  {
-   "id": "ready:quick_planche",
-   "title": {"en": "Quick Planche"},
-   "description": {"en": "No bar: planche leans and pseudo-planche push-ups, three sets each."},
-   "group": "short",
-   "grade": 3,
-   "focus": ["short", "planche"],
-   "schedule": {"minutes": 15, "rpe": 7},
-   "warmup": [
-    ["march", 1, null, 30, 0, "brisk", null],
-    ["wrist_circles", 1, 10, null, 10, "controlled", null],
-    ["wrist_rocks", 1, 10, null, 10, "controlled", null],
-    ["arm_swings", 1, 10, null, 10, "controlled", null]
-   ],
-   "main": [
-    ["planche_lean", 3, null, 15, 60, "isometric", null],
-    ["pseudo_planche_pushup", 3, 7, null, 75, "2111", null]
    ],
    "cooldown": [
     ["lat_stretch", 1, null, 30, 10, "easy", null],
@@ -5392,30 +5759,6 @@
    "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
   },
   {
-   "id": "ready:morning_wake_up",
-   "title": {"en": "Morning Wake-Up"},
-   "description": {"en": "Ten gentle minutes for your back, hips and shoulders."},
-   "group": "mobility",
-   "grade": 1,
-   "focus": ["mobility"],
-   "schedule": {"minutes": 15, "rpe": 2},
-   "warmup": [
-    ["march", 1, null, 60, 0, "easy", null]
-   ],
-   "main": [
-    ["cat_cow", 2, 8, null, 10, "slow", null],
-    ["thoracic_rotation", 2, "6/side", null, 10, "slow", null],
-    ["hip_circles", 2, 8, null, 10, "controlled", null],
-    ["deep_squat_hold", 2, null, 30, 20, "easy", null],
-    ["wall_slide", 2, 10, null, 20, "slow", null],
-    ["easy_walk", 1, null, 120, 0, "easy", null]
-   ],
-   "cooldown": [
-    ["slow_breathing", 1, null, 120, 0, "easy", null]
-   ],
-   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
-  },
-  {
    "id": "ready:desk_break",
    "title": {"en": "Desk Break"},
    "description": {"en": "Undo a day of sitting: shoulders, upper back and hips."},
@@ -5433,53 +5776,6 @@
     ["hip_flexor_stretch", 2, null, "30/side", 10, "easy", null],
     ["chest_stretch", 2, null, 30, 10, "easy", null],
     ["lat_stretch", 2, null, 30, 10, "easy", null]
-   ],
-   "cooldown": [
-    ["slow_breathing", 1, null, 120, 0, "easy", null]
-   ],
-   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
-  },
-  {
-   "id": "ready:evening_unwind",
-   "title": {"en": "Evening Unwind"},
-   "description": {"en": "Slow stretches and breathing to end the day."},
-   "group": "mobility",
-   "grade": 1,
-   "focus": ["mobility"],
-   "schedule": {"minutes": 15, "rpe": 2},
-   "warmup": [
-    ["march", 1, null, 60, 0, "easy", null]
-   ],
-   "main": [
-    ["child_pose", 2, null, 45, 10, "easy", null],
-    ["supine_twist", 2, null, 30, 10, "easy", null],
-    ["ninety_ninety_hip_stretch", 2, null, "30/side", 10, "easy", null],
-    ["hamstring_stretch", 2, null, 30, 10, "easy", null],
-    ["calf_stretch", 2, null, 30, 10, "easy", null]
-   ],
-   "cooldown": [
-    ["slow_breathing", 1, null, 120, 0, "easy", null]
-   ],
-   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
-  },
-  {
-   "id": "ready:wrist_care",
-   "title": {"en": "Wrist Care"},
-   "description": {"en": "Warm, strong wrists for handstand and push days."},
-   "group": "mobility",
-   "grade": 1,
-   "focus": ["mobility"],
-   "schedule": {"minutes": 15, "rpe": 3},
-   "warmup": [
-    ["march", 1, null, 60, 0, "easy", null]
-   ],
-   "main": [
-    ["wrist_circles", 2, 10, null, 10, "controlled", null],
-    ["wrist_rocks", 2, 10, null, 10, "controlled", null],
-    ["wrist_pushup", 2, 8, null, 20, "2111", null],
-    ["elevated_scapular_pushup", 2, 8, null, 20, "2111", null],
-    ["forearm_stretch", 2, null, 30, 10, "easy", null],
-    ["child_pose", 1, null, 45, 0, "easy", null]
    ],
    "cooldown": [
     ["slow_breathing", 1, null, 120, 0, "easy", null]
@@ -5510,98 +5806,6 @@
    "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
   },
   {
-   "id": "ready:recovery_walk",
-   "title": {"en": "Recovery Walk"},
-   "description": {"en": "A walk and a few stretches the day after a hard session."},
-   "group": "mobility",
-   "grade": 1,
-   "focus": ["mobility"],
-   "schedule": {"minutes": 20, "rpe": 2},
-   "warmup": [
-    ["march", 1, null, 60, 0, "easy", null]
-   ],
-   "main": [
-    ["easy_walk", 1, null, 480, 30, "easy", null],
-    ["hamstring_stretch", 2, null, 30, 10, "easy", null],
-    ["quad_stretch", 1, null, "30/side", 10, "easy", null],
-    ["calf_stretch", 2, null, 30, 10, "easy", null],
-    ["chest_stretch", 1, null, 30, 10, "easy", null]
-   ],
-   "cooldown": [
-    ["slow_breathing", 1, null, 120, 0, "easy", null]
-   ],
-   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
-  },
-  {
-   "id": "ready:hip_opener",
-   "title": {"en": "Hip Opener"},
-   "description": {"en": "Ninety-ninety switches, side squats and long hip holds."},
-   "group": "mobility",
-   "grade": 1,
-   "focus": ["mobility"],
-   "schedule": {"minutes": 15, "rpe": 3},
-   "warmup": [
-    ["march", 1, null, 60, 0, "easy", null]
-   ],
-   "main": [
-    ["ninety_ninety_hip_switch", 3, "5/side", null, 10, "slow", null],
-    ["cossack_squat", 2, "4/side", null, 30, "slow", null],
-    ["adductor_stretch", 2, null, 30, 10, "easy", null],
-    ["hip_flexor_stretch", 2, null, "30/side", 10, "easy", null],
-    ["deep_squat_hold", 2, null, 40, 20, "easy", null]
-   ],
-   "cooldown": [
-    ["slow_breathing", 1, null, 120, 0, "easy", null]
-   ],
-   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
-  },
-  {
-   "id": "ready:shoulder_reset",
-   "title": {"en": "Shoulder Reset"},
-   "description": {"en": "Circles, raises and wall work for tight shoulders."},
-   "group": "mobility",
-   "grade": 1,
-   "focus": ["mobility"],
-   "schedule": {"minutes": 15, "rpe": 3},
-   "warmup": [
-    ["march", 1, null, 60, 0, "easy", null]
-   ],
-   "main": [
-    ["shoulder_cars", 2, "5/side", null, 10, "slow", null],
-    ["prone_ytw", 2, 8, null, 20, "controlled", null],
-    ["wall_shoulder_flexion", 2, null, 30, 20, "slow", null],
-    ["wall_slide", 2, 10, null, 20, "slow", null],
-    ["lat_stretch", 2, null, 30, 10, "easy", null]
-   ],
-   "cooldown": [
-    ["slow_breathing", 1, null, 120, 0, "easy", null]
-   ],
-   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
-  },
-  {
-   "id": "ready:back_relief",
-   "title": {"en": "Back Relief"},
-   "description": {"en": "Easy moves for a stiff lower back."},
-   "group": "mobility",
-   "grade": 1,
-   "focus": ["mobility"],
-   "schedule": {"minutes": 15, "rpe": 2},
-   "warmup": [
-    ["march", 1, null, 60, 0, "easy", null]
-   ],
-   "main": [
-    ["cat_cow", 3, 8, null, 10, "slow", null],
-    ["bird_dog", 2, "6/side", null, 20, "slow", null],
-    ["glute_bridge", 2, 10, null, 30, "2111", null],
-    ["child_pose", 2, null, 45, 10, "easy", null],
-    ["supine_twist", 2, null, 30, 10, "easy", null]
-   ],
-   "cooldown": [
-    ["slow_breathing", 1, null, 120, 0, "easy", null]
-   ],
-   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
-  },
-  {
    "id": "ready:full_body_stretch",
    "title": {"en": "Full-Body Stretch"},
    "description": {"en": "Every big muscle, two easy holds each."},
@@ -5620,54 +5824,6 @@
     ["quad_stretch", 2, null, "30/side", 10, "easy", null],
     ["calf_stretch", 2, null, 30, 10, "easy", null],
     ["adductor_stretch", 2, null, 30, 10, "easy", null]
-   ],
-   "cooldown": [
-    ["slow_breathing", 1, null, 120, 0, "easy", null]
-   ],
-   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
-  },
-  {
-   "id": "ready:after_a_run",
-   "title": {"en": "After a Run"},
-   "description": {"en": "Stretches and bridges for legs that just ran."},
-   "group": "mobility",
-   "grade": 1,
-   "focus": ["mobility"],
-   "schedule": {"minutes": 20, "rpe": 2},
-   "warmup": [
-    ["march", 1, null, 60, 0, "easy", null]
-   ],
-   "main": [
-    ["quad_stretch", 2, null, "30/side", 10, "easy", null],
-    ["hamstring_stretch", 2, null, 30, 10, "easy", null],
-    ["calf_stretch", 2, null, "30/side", 10, "easy", null],
-    ["hip_flexor_stretch", 2, null, "30/side", 10, "easy", null],
-    ["glute_bridge", 2, 10, null, 30, "2111", null],
-    ["child_pose", 1, null, 45, 0, "easy", null]
-   ],
-   "cooldown": [
-    ["slow_breathing", 1, null, 120, 0, "easy", null]
-   ],
-   "safety": {"en": "Stop a set when your form breaks, and take the easier option whenever you need it."}
-  },
-  {
-   "id": "ready:rest_day_flow",
-   "title": {"en": "Rest Day Flow"},
-   "description": {"en": "Move without training: a slow flow for rest days."},
-   "group": "mobility",
-   "grade": 1,
-   "focus": ["mobility"],
-   "schedule": {"minutes": 15, "rpe": 2},
-   "warmup": [
-    ["march", 1, null, 60, 0, "easy", null]
-   ],
-   "main": [
-    ["cat_cow", 2, 8, null, 10, "slow", null],
-    ["thoracic_rotation", 2, "6/side", null, 10, "slow", null],
-    ["ninety_ninety_hip_switch", 2, "5/side", null, 10, "slow", null],
-    ["deep_squat_hold", 2, null, 30, 20, "easy", null],
-    ["wall_slide", 2, 10, null, 20, "slow", null],
-    ["slow_breathing", 1, null, 90, 0, "easy", null]
    ],
    "cooldown": [
     ["slow_breathing", 1, null, 120, 0, "easy", null]

@@ -53,6 +53,19 @@ class ReadyWorkoutsTest {
     }
 
     @Test
+    fun aBeginnerFindsMoreSteadyDaysThanEasyOnes() {
+        // 2.10.2, the owner: "a lot are easy; remove some easy ones and have some medium". For a new athlete at Level 1
+        // or 3 the Library has more Moderate days than Easy ones, and still some of each in its own grades.
+        listOf(1, 3).forEach { level ->
+            val effort = WorkoutEffort(catalog.movementGrades, emptyMap(), level, catalog.levels.first { it.number == level }.programs)
+            val rated = catalog.workouts.groupingBy { effort.rate(it, onProgram = false) }.eachCount()
+            assertTrue("Level $level: $rated", rated.getValue(Effort.MODERATE) > rated.getValue(Effort.EASY))
+            val own = catalog.workouts.filter { it.grade == (level + 1) / 2 }.groupingBy { effort.rate(it, onProgram = false) }.eachCount()
+            assertTrue("Level $level, grade ${(level + 1) / 2}: $own", (own[Effort.MODERATE] ?: 0) >= 15 && (own[Effort.EASY] ?: 0) >= 15)
+        }
+    }
+
+    @Test
     fun theyStayOutOfTheTenLevels() {
         val classes = CurriculumJsonParser.parse(root)
         assertTrue(classes.workouts.isEmpty())

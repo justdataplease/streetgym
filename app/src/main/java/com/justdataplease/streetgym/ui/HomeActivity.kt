@@ -173,6 +173,8 @@ open class HomeActivity : Activity() {
     private var placementAnswers = IntArray(Placement.Test.entries.size) { -1 }
     /** The level test the athlete would pass, from the placement's skills step; 0 for none. */
     private val placementSkill = IntArray(1)
+    /** Whether the placement's Calculate was tapped for the counts above. */
+    private val placementShown = BooleanArray(1)
     private var parks: List<Park>? = null
     private var parksLoading = false
     private var parkOrigin: Pair<Double, Double>? = null
@@ -296,6 +298,7 @@ open class HomeActivity : Activity() {
         trainingTab = savedInstanceState?.getInt(STATE_TRAINING_TAB) ?: 0
         workoutListId = savedInstanceState?.getString(STATE_WORKOUT_LIST)
         savedInstanceState?.getIntArray(STATE_PLACEMENT)?.takeIf { it.size == placementAnswers.size }?.let { placementAnswers = it }
+        placementShown[0] = savedInstanceState?.getBoolean(STATE_PLACEMENT_SHOWN) ?: false
         billing = TierBilling(this)
         tier = Entitlement.tier(this)
         Entitlement.prefs(this).registerOnSharedPreferenceChangeListener(entitlementChanged)
@@ -386,6 +389,7 @@ open class HomeActivity : Activity() {
         outState.putInt(STATE_TRAINING_TAB, trainingTab)
         workoutListId?.let { outState.putString(STATE_WORKOUT_LIST, it) }
         outState.putIntArray(STATE_PLACEMENT, placementAnswers)
+        outState.putBoolean(STATE_PLACEMENT_SHOWN, placementShown[0])
         restEndsAtEpochMillis?.let { outState.putLong(STATE_REST_END, it) }
         restProgramId?.let { outState.putString(STATE_REST_PROGRAM, it) }
     }
@@ -1085,7 +1089,7 @@ open class HomeActivity : Activity() {
             today.addWithMargins(bodyText(getString(R.string.all_complete_body)), topDp = 8)
         }
         page.addWithMargins(if (placing) placementCard(orderedPrograms, catalog?.levels.orEmpty(),
-            uiLocale(), placementAnswers, placementSkill, Entitlement.tier(this), settings, ::startPlacement) else today, bottomDp = 16)
+            uiLocale(), placementAnswers, placementSkill, placementShown, Entitlement.tier(this), settings, ::startPlacement) else today, bottomDp = 16)
         if (paywallLevel != null) page.addWithMargins(TiersPanel(this, billing, Paywall.Level(paywallLevel)), bottomDp = 16)
         val done = all.count { it.id in completed }
         // Nothing done yet while placing: the placement screen ends with its sharing note.
@@ -1124,6 +1128,7 @@ open class HomeActivity : Activity() {
         syncAnalytics(force = true)
         placementAnswers.fill(-1)
         placementSkill[0] = 0
+        placementShown[0] = false
         clearRest(); openRoot(Screen.Dashboard)
     }
 
@@ -2896,6 +2901,7 @@ open class HomeActivity : Activity() {
                 progressRepository.reset(System.currentTimeMillis())
                 settings.placementDone = false
                 placementAnswers.fill(-1)
+                placementShown[0] = false
                 // The score goes up again from zero, at once rather than after the usual ten minutes.
                 Cloud.profileUid(this)?.let { accountStore.savePublishedScore(it, null, 0) }
                 cloudChanged()
@@ -3227,6 +3233,7 @@ open class HomeActivity : Activity() {
         private const val STATE_TRAINING_TAB = "training_tab"
         private const val STATE_WORKOUT_LIST = "workout_list"
         private const val STATE_PLACEMENT = "placement_answers"
+        private const val STATE_PLACEMENT_SHOWN = "placement_shown"
         private const val STATE_SCREEN = "screen"
         private const val STATE_LEVEL = "level"
         private const val STATE_PROGRAM = "program"
