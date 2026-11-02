@@ -9,6 +9,7 @@ import android.graphics.drawable.RippleDrawable
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -260,8 +261,22 @@ private fun Context.skillCell(status: SkillStatus, lock: Tier?, off: Boolean, on
     }
     contentDescription = medalDescription(status, state)
     setOnClickListener { onClick() }
-    addView(skillMedal(status, 78), LinearLayout.LayoutParams(dp(86), medalHeight(78)))
-    // The name sits right under the medal, and the rank right under the name (no blank line for a one-line name).
+    // Everything sits on the medal (the owner, 2.11.4): the rank shield on its corner, Plus or Pro on its top corner and
+    // the bar to the next rank right under it, so only the name is below and every row of the ladder lines up.
+    addView(FrameLayout(context).apply {
+        addView(skillMedal(status, 78), FrameLayout.LayoutParams(dp(86), medalHeight(78)))
+        if (lock != null && !off) {
+            addView(lockBadge(getString(if (lock == Tier.PRO) R.string.tier_pro else R.string.tier_plus)).apply {
+                textSize = 10f
+                setPadding(dp(6), dp(3), dp(6), dp(3))
+            }, FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT,
+                Gravity.TOP or Gravity.END))
+        }
+    }, LinearLayout.LayoutParams(dp(86), medalHeight(78)))
+    // The bar keeps its place when there is nothing to show (a top rank, a lock), so the names start level.
+    addWithMargins(horizontalProgress(status.progress).apply {
+        visibility = if (status.next != null && lock == null && !off) View.VISIBLE else View.INVISIBLE
+    }, width = dp(70), height = dp(4), topDp = 4)
     addWithMargins(TextView(context).apply {
         text = status.skill.name
         textSize = 12f
@@ -270,20 +285,7 @@ private fun Context.skillCell(status: SkillStatus, lock: Tier?, off: Boolean, on
         includeFontPadding = false
         maxLines = 2
         ellipsize = TextUtils.TruncateAt.END
-    }, topDp = 2)
-    if (status.next != null && lock == null && !off) {
-        addWithMargins(horizontalProgress(status.progress), width = dp(70), height = dp(4), topDp = 3)
-    }
-    if (lock != null && !off) {
-        addWithMargins(lockBadge(getString(if (lock == Tier.PRO) R.string.tier_pro else R.string.tier_plus)), width = LinearLayout.LayoutParams.WRAP_CONTENT, topDp = 4)
-    } else {
-        addWithMargins(bodyText(state, 11f).apply {
-            if (status.level > SkillLevel.NONE) {
-                setTextColor(AppColors.PRIMARY)
-                typeface = Typeface.DEFAULT_BOLD
-            }
-        }, width = LinearLayout.LayoutParams.WRAP_CONTENT, topDp = 2)
-    }
+    }, topDp = 5)
 }
 
 /**

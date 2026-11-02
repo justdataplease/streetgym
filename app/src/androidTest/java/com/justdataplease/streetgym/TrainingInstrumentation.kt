@@ -32,7 +32,6 @@ import com.justdataplease.streetgym.ui.AppSettings
 import com.justdataplease.streetgym.ui.ExerciseAnimationView
 import com.justdataplease.streetgym.ui.FocusWorkoutView
 import com.justdataplease.streetgym.ui.StreetTheme
-import com.justdataplease.streetgym.ui.HistoryView
 import com.justdataplease.streetgym.ui.ParkSceneView
 import com.justdataplease.streetgym.ui.WorkoutView
 import com.justdataplease.streetgym.ui.setPrescription
@@ -188,9 +187,8 @@ class TrainingInstrumentation : Instrumentation() {
             val firstName = programs.first().name.resolve()
             val monthCount = targetContext.resources.getQuantityString(R.plurals.calendar_month_count_current, 1, 1)
             nav(R.string.nav_progress); clickText(R.string.progress_tab_history)
-            check(AppSettings(targetContext).historyView == HistoryView.LIST && shown(firstName) && !shown(monthCount))
-            clickText(R.string.history_view_calendar)
-            check(AppSettings(targetContext).historyView == HistoryView.CALENDAR && shown(monthCount) && !shown(firstName))
+            // History (2.11.4): the month, then the levels, the one in progress open on its newest classes.
+            check(shown(monthCount) && shown(firstName))
             val todayParts = setOf(targetContext.getString(R.string.calendar_today_description),
                 targetContext.resources.getQuantityString(R.plurals.calendar_workouts_description, 1, 1))
             val todayCell = checkNotNull(find { it.contentDescription?.split(", ")?.containsAll(todayParts) == true }) { "Today is not marked" }
@@ -200,9 +198,7 @@ class TrainingInstrumentation : Instrumentation() {
             check(shown(R.string.workout_overview) && shown(R.string.repeat_day))
             nav(R.string.nav_progress)
             check(shown(monthCount) && shown(firstName))
-            clickText(R.string.history_view_list)
-            check(AppSettings(targetContext).historyView == HistoryView.LIST && !shown(monthCount) && shown(firstName))
-            report("History calendar marks today's workout, lists it under the day, opens its overview and returns to the list")
+            report("History's month marks today's workout and lists it under the day and under its open level, and opens its overview")
 
             val skillBook = targetContext.assets.open("curriculum.json").bufferedReader().use { SkillCurriculumReader.read(it.readText()) }
             fun skills() = skillBook.progress(Scores.credits(repository.sessionHistory()))
@@ -251,7 +247,8 @@ class TrainingInstrumentation : Instrumentation() {
             nav(R.string.nav_today); nav(R.string.nav_progress); clickText(R.string.progress_tab_skills)
             check(shown(targetContext.getString(R.string.skills_points_kicker).uppercase()))
             check(!shown("Overall score".uppercase()) && !shown(R.string.leaderboard_all))
-            check(shown(R.string.skills_level_0))
+            // Everything sits on the medal (2.11.4): no rank words under the cells, only each skill's name.
+            check(!shown(R.string.skills_level_0) && shown(skills().statuses.first { it.sets > 0 }.skill.name))
             if (shots) File(targetContext.getExternalFilesDir(null), "skills_points.png").outputStream().use {
                 uiAutomation.takeScreenshot().compress(Bitmap.CompressFormat.PNG, 100, it)
             }

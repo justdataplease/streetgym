@@ -16,7 +16,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.justdataplease.streetgym.R
@@ -43,44 +42,15 @@ class HistoryCalendarState {
 }
 
 /**
- * Progress's History section: its label with a List | Calendar switch, then the newest 100 classes as [row]s or
- * [HistoryCalendarView]. The switch redraws this section only, so the page keeps its scroll position.
+ * Progress's History section: the month ([HistoryCalendarView]), whose days list their classes as [row]s. Since 2.11.4
+ * there is no List | Calendar switch: the classes are listed by level under it (the owner).
  */
 fun Context.historySection(
     settings: AppSettings,
     history: List<WorkoutSession>,
     state: HistoryCalendarState,
     row: (WorkoutSession) -> View,
-): LinearLayout = LinearLayout(this).apply {
-    orientation = LinearLayout.VERTICAL
-    val toggle = FrameLayout(context)
-    addWithMargins(LinearLayout(context).apply {
-        orientation = LinearLayout.HORIZONTAL
-        gravity = Gravity.CENTER_VERTICAL
-        addView(sectionLabel(getString(R.string.history)), LinearLayout.LayoutParams(0, WRAP, 1f))
-        addView(toggle)
-    }, topDp = 4, bottomDp = 8)
-    val body = LinearLayout(context).apply { orientation = LinearLayout.VERTICAL }
-    addView(body)
-    fun bind() {
-        val view = settings.historyView
-        toggle.removeAllViews()
-        toggle.addView(segmentedSwitch(
-            listOf(getString(R.string.history_view_list), getString(R.string.history_view_calendar)),
-            view.ordinal,
-        ) { index ->
-            settings.historyView = HistoryView.entries[index]
-            bind()
-        }.apply { getChildAt(view.ordinal).isSelected = true })
-        body.removeAllViews()
-        when {
-            view == HistoryView.CALENDAR -> body.addView(HistoryCalendarView(context, history, state, settings.selectedLocale(), row))
-            history.isEmpty() -> body.addWithMargins(card().apply { addView(bodyText(getString(R.string.no_history))) }, bottomDp = 10)
-            else -> history.take(100).forEach { body.addWithMargins(row(it), bottomDp = 8) }
-        }
-    }
-    bind()
-}
+): View = HistoryCalendarView(this, history, state, settings.selectedLocale(), row)
 
 /**
  * History as a month. Trained days are filled in the accent, a repeat adds a ring under the day and one of the athlete's

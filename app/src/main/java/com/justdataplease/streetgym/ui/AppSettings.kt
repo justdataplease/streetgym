@@ -8,9 +8,6 @@ import java.util.TimeZone
 
 enum class WorkoutView(val key: String) { FOCUS("focus"), LIST("list") }
 
-/** Progress → History as the list of classes or the month calendar ([historySection]). */
-enum class HistoryView(val key: String) { LIST("list"), CALENDAR("calendar") }
-
 class AppSettings(context: Context) {
     private val preferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
 
@@ -28,10 +25,6 @@ class AppSettings(context: Context) {
         get() = preferences.getBoolean(KEY_SOUND_CUES, true)
         set(value) = preferences.edit().putBoolean(KEY_SOUND_CUES, value).apply()
 
-    /** The History section's last choice, kept on this device; the list until the calendar is picked. */
-    var historyView: HistoryView
-        get() = if (preferences.getString(KEY_HISTORY_VIEW, null) == HistoryView.CALENDAR.key) HistoryView.CALENDAR else HistoryView.LIST
-        set(value) = preferences.edit().putString(KEY_HISTORY_VIEW, value.key).apply()
 
     var workoutView: WorkoutView
         get() = if (preferences.getString(KEY_WORKOUT_VIEW, null) == WorkoutView.LIST.key) WorkoutView.LIST else WorkoutView.FOCUS
@@ -79,7 +72,6 @@ class AppSettings(context: Context) {
         private const val KEY_DEVELOPER_UNLOCKED = "developer_unlocked"
         private const val KEY_INSPECT_ALL_DAYS = "inspect_all_days"
         private const val KEY_SKILL_SWITCHES = "skill_switches"
-        private const val KEY_HISTORY_VIEW = "history_view"
         private const val PREFERENCES_NAME = "streetgym_settings"
         private const val KEY_THEME = "theme"
         private const val KEY_LEGACY_DARK_MODE = "dark_mode"

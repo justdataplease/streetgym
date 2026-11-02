@@ -73,8 +73,7 @@
     <string name="abandon">End session</string>
     <string name="progress_title">Your progress</string>
     <string name="level_breakdown">Level breakdown</string>
-    <string name="history">History</string>
-    <string name="no_history">Complete a workout to begin your history.</string>
+    <string name="level_history_all">All classes ›</string>
     <string name="completed_on">Completed %1$s • %2$d min</string>
     <string name="settings_title">Settings</string>
     <string name="keep_screen_awake">Keep screen awake</string>

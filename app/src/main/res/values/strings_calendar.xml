@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="history_view_list">List</string>
-    <string name="history_view_calendar">Calendar</string>
     <string name="calendar_previous_month">Previous month</string>
     <string name="calendar_next_month">Next month</string>
     <plurals name="calendar_month_count_current">
