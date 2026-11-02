@@ -2,7 +2,6 @@ import java.util.Properties
 
 plugins {
     id("com.android.application")
-    id("org.jetbrains.kotlin.android")
 }
 
 // Street Gym's own AdMob app (since 2.7.0): admob.streetgymnastics.appId, .nativeId and .interstitialId in the suite's
@@ -35,8 +34,8 @@ android {
         applicationId = "com.justdataplease.streetgym"
         minSdk = 24
         targetSdk = 36
-        versionCode = 40
-        versionName = "2.11.0"
+        versionCode = 41
+        versionName = "2.11.1"
         testInstrumentationRunner = "com.justdataplease.streetgym.TrainingInstrumentation"
 
         vectorDrawables.useSupportLibrary = false
