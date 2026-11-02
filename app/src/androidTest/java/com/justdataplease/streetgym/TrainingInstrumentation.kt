@@ -470,6 +470,8 @@ class TrainingInstrumentation : Instrumentation() {
             check(!shown(R.string.start_today) && !shown(R.string.resume_workout) && !shown("Complete day"))
             check(find { it is NativeAdSlot } != null)
             check(repository.activeWorkout() == lockedActive)
+            // 2.11.0: every page closes with an ad card on Free, also those that had none (Timer, Settings).
+            listOf(R.string.nav_timer, R.string.nav_settings).forEach { tab -> nav(tab); check(find { it is NativeAdSlot } != null) }
             nav(R.string.nav_levels)
             // Levels 1-3 are free; Levels 4 to 6 carry the Plus badge and 7 to 10 the Pro one.
             fun badges(tier: Int) = findAll { it is TextView && it.text.toString() == targetContext.getString(tier).uppercase() }.size
@@ -479,7 +481,7 @@ class TrainingInstrumentation : Instrumentation() {
             nav(R.string.nav_today); clickLabel(levelFour.name.resolve())
             check(shown(paywall) && !shown(R.string.start_workout) && !shown(R.string.resume_workout))
             check(repository.activeWorkout() == lockedActive)
-            report("Free tier: Today, Training and Overview show the paywall, Complete level is hidden and ads show")
+            report("Free tier: Today, Training and Overview show the paywall, Complete level is hidden and ads show, Timer and Settings included")
 
             check(billing.edit().putBoolean(Entitlement.PLUS_OWNED, true).commit())
             await { Entitlement.tier(targetContext) == Tier.PLUS }
@@ -508,12 +510,13 @@ class TrainingInstrumentation : Instrumentation() {
             check(shown(targetContext.getString(R.string.paywall_level_pro, 7)) && plusOffer == null && !shown("Complete level"))
             report("Plus opens Levels 4 to 6; Levels 7 to 10 offer Pro only")
 
-            // Training > Library: every tier sees the ready workouts; below Pro an overview offers Pro instead of Start.
+            // Training > Library: every tier sees the ready workouts; below Pro a tap shows the Pro offer, not the workout (2.11.0).
             val ready = catalog.workouts.first()
             nav(R.string.nav_levels); clickText(R.string.training_tab_ready)
             check(shown(R.string.paywall_ready) && shown(ready.name.resolve()))
             clickLabel(ready.name.resolve())
-            check(shown(R.string.paywall_ready) && !shown(R.string.start_workout) && shown(ready.exercises.first().name.resolve()))
+            clickDialog(R.string.cancel)
+            check(shown(R.string.ready_intro) && !shown(R.string.start_workout) && !shown(ready.exercises.first().name.resolve()))
             Entitlement.setSimulatedTier(targetContext, null)
             await { Entitlement.tier(targetContext) == Tier.PRO }
             nav(R.string.nav_levels); clickText(R.string.training_tab_ready)

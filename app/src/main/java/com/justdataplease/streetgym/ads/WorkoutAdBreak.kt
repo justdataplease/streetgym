@@ -16,8 +16,8 @@ import com.justdataplease.streetgym.billing.Entitlement
 import com.justdataplease.streetgym.timer.TimingStore
 
 /**
- * The full-screen ad: an AdMob interstitial on its own unit ([BuildConfig.ADMOB_INTERSTITIAL_ID]), Free only, at a
- * natural break and at most once per [AdBreakClock.GAP_MS] of foreground use ([AdBreakPolicy]).
+ * The full-screen ad: an AdMob interstitial on its own unit ([BuildConfig.ADMOB_INTERSTITIAL_ID]), Free only, at the
+ * first change of screen once [AdBreakClock.GAP_MS] of foreground use has passed ([AdBreakPolicy]).
  */
 class WorkoutAdBreak(private val activity: Activity) {
     private val prefs = activity.getSharedPreferences("streetgym_ad_breaks", Context.MODE_PRIVATE)
@@ -29,10 +29,15 @@ class WorkoutAdBreak(private val activity: Activity) {
     private var resumed = false
     private var destroyed = false
     private var showing = false
+    private var resumedAt = 0L
 
     private fun consent() = UserMessagingPlatform.getConsentInformation(activity).canRequestAds()
 
-    fun resume() { resumed = true; clock.resume(SystemClock.elapsedRealtime()) }
+    fun resume() {
+        resumed = true
+        resumedAt = SystemClock.elapsedRealtime()
+        clock.resume(resumedAt)
+    }
     fun pause() {
         resumed = false
         prefs.edit().putLong("foreground_ms", clock.pause(SystemClock.elapsedRealtime())).apply()
@@ -67,11 +72,13 @@ class WorkoutAdBreak(private val activity: Activity) {
     }
 
     /**
-     * Called only by a finished section or a deliberate navigation away from a workout, never mid-set or during a rest.
-     * [covered]: a paywall is in view, as a dialog or on the screen.
+     * Called on a change of screen or tab and at a finished section, never mid-set or during a rest. [covered]: a
+     * paywall is in view, as a dialog or on the screen.
      */
     fun atNaturalBreak(covered: Boolean = false) {
         val now = SystemClock.elapsedRealtime()
+        // Never as the app opens or comes back: the first taps after that are the athlete's own.
+        if (now - resumedAt < AdBreakPolicy.AFTER_RESUME_MS) return
         val timing = TimingStore(activity).load()
         val timingBusy = timing.countdown.running || timing.stopwatch.running || timing.timerRinging || timing.alarmRinging
         if (destroyed || showing || activity.isFinishing || !AdBreakPolicy.mayShow(adFree = Entitlement.adFree(activity),

@@ -83,6 +83,10 @@ fun Context.skillsContent(
         addWithMargins(titleText(pointsText(points), 38f).apply { setTextColor(Color.WHITE) }, topDp = 4)
     }, topDp = 4)
 
+    // Every shield a skill can earn, with its sets, so anyone sees what's ahead (the owner, 2.11.0: "i liked the chevrons").
+    addWithMargins(sectionLabel(getString(R.string.skills_ranks)), topDp = 14)
+    addWithMargins(rankLegend(), topDp = 6)
+
     val adAt = minOf(4, progress.families.size)
     fun placeAd() { if (ad != null) addWithMargins(ad, topDp = if (tier.adFree) 0 else 14) }
     progress.families.forEachIndexed { index, (family, statuses) ->
@@ -178,6 +182,34 @@ private fun Context.targetText(standard: SkillStandard, amount: Int): String = w
 }
 
 private fun Context.sets(count: Int): String = resources.getQuantityString(R.plurals.skills_sets, count, count)
+
+/** The five ranks a skill can earn, each as its shield with its name and the sets it takes; tapping explains them. */
+private fun Context.rankLegend(): View = LinearLayout(this).apply {
+    orientation = LinearLayout.HORIZONTAL
+    gravity = Gravity.BOTTOM
+    setPadding(dp(4), dp(10), dp(4), dp(10))
+    background = tappable(AppColors.SURFACE, dp(18).toFloat())
+    isClickable = true
+    isFocusable = true
+    val levels = SkillLevel.entries.filter { it > SkillLevel.NONE }
+    contentDescription = getString(R.string.skills_ranks_description,
+        levels.joinToString { getString(R.string.skills_rank_line, levelName(it), sets(it.sets)) })
+    setOnClickListener { showSkillsHelp() }
+    levels.forEach { level ->
+        addView(LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.CENTER_HORIZONTAL
+            importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
+            addView(RankBadgeView(context, level, 0.85f), LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT))
+            addWithMargins(oneLineText(levelName(level), bold = true).apply {
+                textSize = 11f
+                gravity = Gravity.CENTER_HORIZONTAL
+            }, topDp = 4)
+            addView(bodyText(sets(level.sets), 11f).apply { gravity = Gravity.CENTER_HORIZONTAL })
+        }, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+    }
+}
 
 /** What the next level still takes: "18 sets of 12+ reps for Intermediate", or without the level's name. */
 fun Context.needText(status: SkillStatus, named: Boolean = true): String {

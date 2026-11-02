@@ -35,8 +35,8 @@ android {
         applicationId = "com.justdataplease.streetgym"
         minSdk = 24
         targetSdk = 36
-        versionCode = 39
-        versionName = "2.10.2"
+        versionCode = 40
+        versionName = "2.11.0"
         testInstrumentationRunner = "com.justdataplease.streetgym.TrainingInstrumentation"
 
         vectorDrawables.useSupportLibrary = false
@@ -69,7 +69,10 @@ android {
             buildConfigField("String", "ADMOB_NATIVE_ID", "\"${nativeAdId("nativeId", true)}\"")
             buildConfigField("String", "ADMOB_INTERSTITIAL_ID", "\"${nativeAdId("interstitialId", true)}\"")
             signingConfigs.findByName("release")?.let { signingConfig = it }
-            isMinifyEnabled = false
+            // R8 shrinks and obfuscates the Play build (2.11.0): Play flagged 1% obfuscation. The mapping travels in
+            // the bundle, so Play's crash reports stay readable.
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",

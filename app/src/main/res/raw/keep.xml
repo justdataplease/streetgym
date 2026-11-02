@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Found by name at run time (Cloud.kt, ParksUpdater.kt), from the release-only firebase.xml: the resource shrinker keeps them. -->
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@string/default_web_client_id,@string/parks_url" />

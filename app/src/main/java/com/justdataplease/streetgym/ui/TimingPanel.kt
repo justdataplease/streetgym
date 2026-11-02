@@ -12,6 +12,7 @@ import android.text.Spanned
 import android.text.style.ReplacementSpan
 import android.text.format.DateFormat
 import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
@@ -56,7 +57,7 @@ private class TabularDigits : ReplacementSpan() {
 
 /** A branded, independent timing tool. No workout state is changed here. */
 class TimingPanel(private val host: Activity, private val askNotifications: () -> Unit,
-    private val askExact: () -> Unit) : ScrollView(host) {
+    private val askExact: () -> Unit, endAd: View? = null) : ScrollView(host) {
     private val store = TimingStore(host)
     private val page = host.verticalPage()
     private val content = LinearLayout(host).apply { orientation = LinearLayout.VERTICAL }
@@ -90,6 +91,8 @@ class TimingPanel(private val host: Activity, private val askNotifications: () -
         }
         page.addWithMargins(strip, bottomDp = 16)
         page.addView(content)
+        // Free: the page's closing ad card (2.11.0).
+        endAd?.let { page.addWithMargins(it, topDp = 16, bottomDp = 8) }
         addView(page)
         refresh(store.load())
     }

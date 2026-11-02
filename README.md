@@ -40,15 +40,11 @@ The nested project also retains its standalone Gradle wrapper (`gradlew.bat asse
 
 ## Ads and privacy
 
-Ads are for Free only; Plus and Pro have none. One Google native card at most per screen (the current theme, 24 dp corners, an Ad label and the SDK AdChoices control), in these places:
-- **Today:** below the progress card.
-- **Training › a level's class list:** after the first three classes.
-- **Class overview:** below the exercises.
-- **Workout (list view):** after the last section, above Finish. Focus view has none.
-- **Progress › Skills:** after the fourth skill ladder (or the last, when a filter shows fewer).
-- **Progress › History:** below the totals, above the level breakdown. Finishing a class lands on Progress, so its card is the class-finished one.
+Ads are for Free only; Plus and Pro have none. Google native cards (the current theme, 24 dp corners, an Ad label and the SDK AdChoices control):
+- **At the end of every page** (2.11.0, the owner: "one at the end of each page"): Today, Training's Levels, My workouts, Library and Parks list, a level's class list, a class overview, the workout (below Finish), the class editor, Skills, History, the leaderboard, Timer and Settings (`endAd` in `HomeActivity`). Not on the Parks map or in Focus view.
+- **Inside a page:** a level's class list after the first three classes; Skills after the fourth ladder; History below the totals; a class overview and the list workout between sections.
 
-A full-screen AdMob interstitial may appear at a natural break, a finished section or leaving a workout, at most once every 5 minutes of foreground use (`AdBreakClock.GAP_MS`, `AdBreakPolicy`). Never on app open, mid-set, while a rest, timer, stopwatch or alarm runs, or over the paywall or the consent form. Background time does not count and missed breaks don't stack. Timer, Parks and the class editor have no ads. Training works offline; ads and configured account sign-in use the network. AdMob can process device identifiers, IP address and ad interactions; the integration does not send workout content or progress. Settings > Ad privacy opens Google's available privacy choices. Consent is handled by UMP before ad requests.
+A full-screen AdMob interstitial shows at most once every 5 minutes of foreground use (`AdBreakClock.GAP_MS`, `AdBreakPolicy`): at the first change of screen or tab once the gap has passed (2.11.0: anywhere in the app), or at a finished section. Never in the first 10 s after the app opens or comes back, never mid-set, while a rest, timer, stopwatch or alarm runs, or over the paywall or the consent form, and never between a workout and its Timer. Background time does not count and missed breaks don't stack. Training works offline; ads and configured account sign-in use the network. AdMob can process device identifiers, IP address and ad interactions; the integration does not send workout content or progress. Settings > Ad privacy opens Google's available privacy choices. Consent is handled by UMP before ad requests.
 
 Debug builds always use Google demo IDs. Release builds read Street Gym's own AdMob app (2026-10-30) from the suite's `gradle.properties`: `admob.streetgymnastics.appId`, `admob.streetgymnastics.nativeId` and `admob.streetgymnastics.interstitialId`. They never fall back to Toolbox's `admob.*` IDs; a build without them (standalone CI) uses demo IDs. Canonical native ad code lives in the suite's `shared/nativeads`; run `tools/sync_native_ads.py` after changes. Copies inside the app keep standalone exports self-contained.
 

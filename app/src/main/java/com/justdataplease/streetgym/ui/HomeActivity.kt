@@ -671,7 +671,7 @@ open class HomeActivity : Activity() {
             Screen.Levels, Screen.Progress, Screen.Settings, Screen.Timing -> openRoot(Screen.Dashboard)
             else -> {
                 val prior = backStack.pollLast()
-                if (prior != null) showScreen(prior, pushCurrent = false) else openRoot(Screen.Dashboard)
+                if (prior != null) { showScreen(prior, pushCurrent = false); adBreakNow() } else openRoot(Screen.Dashboard)
             }
         }
         return true
@@ -710,8 +710,8 @@ open class HomeActivity : Activity() {
 
     @Suppress("DEPRECATION")
     private fun configureWindow() {
-        window.statusBarColor = AppColors.BACKGROUND
-        window.navigationBarColor = AppColors.BACKGROUND
+        // The bars' colours come from the theme (styles.xml), not the deprecated Window setters Play flags for
+        // Android 15 (2.11.0); from Android 15 the page draws behind them anyway and pads itself by the insets.
         window.decorView.systemUiVisibility = if (AppColors.darkMode) 0 else View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or
             (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR else 0)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -975,7 +975,8 @@ open class HomeActivity : Activity() {
             Screen.Progress -> renderProgress()
             Screen.Settings -> renderSettings()
             Screen.Timing -> {
-                timingPanel = TimingPanel(this, ::enableTimingNotifications, ::enableExactTiming)
+                timingPanel = TimingPanel(this, ::enableTimingNotifications, ::enableExactTiming,
+                    endAd = if (Entitlement.adFree(this)) null else ManagedNativePlacement(this))
                 setBody(timingPanel!!)
                 // Back to ten ticks a second at once, not after the slower tick of the other screens.
                 if (activityResumed) { timingHandler.removeCallbacks(timingTick); timingHandler.post(timingTick) }
@@ -984,13 +985,17 @@ open class HomeActivity : Activity() {
     }
 
     private fun openRoot(screen: Screen) {
-        val leavingWorkout = currentScreen is Screen.Active && screen != Screen.Timing
+        // A workout's own Timer trip is part of the workout, not a break.
+        val midWorkout = currentScreen is Screen.Active && screen == Screen.Timing
         backStack.clear()
         showScreen(screen, pushCurrent = false)
-        if (leavingWorkout && restEndsAtEpochMillis == null) adBreakNow()
+        if (!midWorkout) adBreakNow()
     }
 
-    private fun navigate(screen: Screen) = showScreen(screen, pushCurrent = true)
+    private fun navigate(screen: Screen) {
+        showScreen(screen, pushCurrent = true)
+        adBreakNow()
+    }
 
     private fun rebuildBottomNavigation(screen: Screen) {
         bottomNavigation.removeAllViews()
@@ -1175,6 +1180,7 @@ open class HomeActivity : Activity() {
             trainingTab, compact = true) { index ->
             trainingTab = index
             renderLevels()
+            adBreakNow()
         }, width = ViewGroup.LayoutParams.WRAP_CONTENT, bottomDp = 14)
         if (trainingTab != 0) {
             val map = when (trainingTab) {
@@ -1183,6 +1189,7 @@ open class HomeActivity : Activity() {
                 else -> renderParks(page)
             }
             // The Parks map fills the screen instead of scrolling with the page.
+            if (!map) endAd(page)
             setBody(if (map) page else scroll(page))
             return
         }
@@ -1199,6 +1206,7 @@ open class HomeActivity : Activity() {
             page.addWithMargins(decorateLevel(levelCard(level, locale, completed), state, index, index == 0, index == levels.lastIndex),
                 bottomDp = if (levelsOnRoute) 0 else 12)
         }
+        endAd(page)
         setBody(scroll(page))
     }
 
@@ -1272,12 +1280,18 @@ open class HomeActivity : Activity() {
             addView(text, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
         })
         contentDescription = listOf(displayName(program, locale), meta).joinToString(", ")
-        setOnClickListener { navigate(Screen.Overview(program.id)) }
+        // Below Pro a ready workout doesn't open: the Pro offer instead (the owner, 2.11.0).
+        setOnClickListener {
+            if (readyLocked(program.id)) showPaywall(Paywall.Ready) else navigate(Screen.Overview(program.id))
+        }
     }
 
+    /** A ready workout on a tier without them, which shows only its name and the Pro offer. */
+    private fun readyLocked(id: String): Boolean = ReadyWorkouts.isReady(id) && !Entitlement.tier(this).readyWorkouts
+
     /**
-     * Training › Library: Pro's ready workouts by group, for days off the program. Other tiers see them too, with the
-     * Pro offer on top; each opens its overview, which offers Pro instead of Start. Three rows of chips filter them
+     * Training › Library: Pro's ready workouts by group, for days off the program. Other tiers see the list too, with
+     * the Pro offer on top; a tap there shows the offer instead of the workout (2.11.0). Three rows of chips filter them
      * (2.9.1, the owner: "add some filters at the top … for skills and difficulty"): how hard for this athlete, the grade
      * and the focus (a group or a skill family, the workout's focus tags).
      */
@@ -1597,13 +1611,23 @@ open class HomeActivity : Activity() {
     }
 
     /**
-     * A natural break for the full-screen ad ([WorkoutAdBreak]): a finished section, or leaving a workout. Never over a
-     * paywall, whether a dialog or a panel on the screen just shown.
+     * A break for the full-screen ad ([WorkoutAdBreak]): any change of screen or tab, or a finished section (the owner,
+     * 2.11.0: "every 5 minutes … wherever we are"). Never during a rest, nor over a paywall, whether a dialog or a panel
+     * on the screen just shown.
      */
     private fun adBreakNow() {
+        if ((restEndsAtEpochMillis ?: 0L) > System.currentTimeMillis()) return
         fun hasPaywall(view: View): Boolean = view is TiersPanel ||
             (view is ViewGroup && (0 until view.childCount).any { hasPaywall(view.getChildAt(it)) })
         adBreak.atNaturalBreak(covered = paywallDialog?.isShowing == true || hasPaywall(bodyContainer))
+    }
+
+    /**
+     * Free: an ad card closing the page (the owner, 2.11.0: "one at the end of each page"). [training]: a workout page,
+     * where the card waits for ad consent instead of raising the form.
+     */
+    private fun endAd(page: LinearLayout, training: Boolean = false) {
+        if (!Entitlement.adFree(this)) page.addWithMargins(ManagedNativePlacement(this, training), topDp = 16, bottomDp = 8)
     }
 
     private fun requestNewDay() {
@@ -1685,6 +1709,7 @@ open class HomeActivity : Activity() {
                 }
             }
         }, topDp = 10)
+        endAd(page)
         setBody(scroll(page))
     }
 
@@ -1962,6 +1987,12 @@ open class HomeActivity : Activity() {
         }, after = 3)
         val list = ListView(this).apply {
             addHeaderView(summary, null, false)
+            // Free: and one closing the list, unless the list is short enough for the first to be last (2.11.0).
+            if (withAd != null && programs.size > 3) addFooterView(LinearLayout(this@HomeActivity).apply {
+                setPadding(dp(12), dp(12), dp(12), dp(4))
+                addView(ManagedNativePlacement(this@HomeActivity),
+                    LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+            }, null, false)
             adapter = withAd ?: rows
             divider = ColorDrawable(Color.TRANSPARENT)
             dividerHeight = 0
@@ -1990,18 +2021,30 @@ open class HomeActivity : Activity() {
                     .filter(String::isNotBlank).joinToString(" • "), 14f), topDp = 4)
             }, bottomDp = 14)
             page.addView(TiersPanel(this, billing, Paywall.Level(program.levelNumber)))
+            endAd(page)
             setBody(scroll(page))
             return
         }
         val ready = ReadyWorkouts.isReady(program.id)
-        // A ready workout shows what it holds on every tier; below Pro the offer takes Start's place.
-        val readyLocked = ready && !Entitlement.tier(this).readyWorkouts
+        // Below Pro a ready workout stays closed: its name and the Pro offer, none of its exercises (the owner, 2.11.0).
+        val readyLocked = readyLocked(program.id)
+        if (!inspecting && readyLocked) {
+            page.addWithMargins(card().apply {
+                addView(titleText(displayName(program, locale), 25f))
+                addWithMargins(bodyText(readyMeta(program), 14f), topDp = 4)
+            }, bottomDp = 14)
+            page.addView(TiersPanel(this, billing, Paywall.Ready))
+            endAd(page)
+            setBody(scroll(page))
+            return
+        }
         if (!inspecting && !ready && !canStart(program.id) && !progressRepository.isProgramCompleted(program.id)) {
             page.addView(card().apply {
                 addView(titleText(displayName(program, locale), 25f))
                 addWithMargins(bodyText("This daily plan is locked."), topDp = 12)
                 addWithMargins(primaryButton(getString(R.string.assigned_later), AppColors.TEXT_SECONDARY) {}.apply { isEnabled = false }, topDp = 16)
             })
+            endAd(page)
             setBody(scroll(page))
             return
         }
@@ -2073,16 +2116,15 @@ open class HomeActivity : Activity() {
         if (sections.all { it.exercises.isEmpty() }) {
             page.addWithMargins(card().apply { addView(bodyText(getString(R.string.no_exercises))) }, bottomDp = 14)
         } else {
-            sections.filter { it.exercises.isNotEmpty() }.forEach { section ->
-                addExerciseSection(page, program, section, locale)
+            val shown = sections.filter { it.exercises.isNotEmpty() }
+            shown.forEach { section ->
+                addExerciseSection(page, program, section, locale, ad = section != shown.last())
             }
             if (inspecting) {
                 page.addWithMargins(bodyText(getString(R.string.inspect_only_note), 14f), topDp = 8)
                 page.addWithMargins(primaryButton(getString(R.string.inspect_only), AppColors.TEXT_SECONDARY) {}.apply {
                     isEnabled = false
                 }, topDp = 8)
-            } else if (readyLocked) {
-                page.addWithMargins(TiersPanel(this, billing, Paywall.Ready), topDp = 8)
             } else if (custom || ready || assigned?.id == program.id) {
                 val isResume = active?.programId == program.id && !active.repeat
                 page.addWithMargins(workoutViewSetting(settings), topDp = 4)
@@ -2130,6 +2172,7 @@ open class HomeActivity : Activity() {
                 page.addWithMargins(locked, topDp = 8)
             }
         }
+        endAd(page, training = true)
         setBody(scroll(page))
     }
 
@@ -2138,6 +2181,8 @@ open class HomeActivity : Activity() {
         program: TrainingProgram,
         section: ExerciseSection,
         locale: Locale,
+        /** An ad card after the section; the last section leaves it to the page's closing card. */
+        ad: Boolean = true,
     ) {
         page.addView(sectionLabel(getString(section.titleRes)))
         section.exercises.forEachIndexed { index, exercise ->
@@ -2205,7 +2250,7 @@ open class HomeActivity : Activity() {
             }
             page.addWithMargins(exerciseCard, bottomDp = 10)
         }
-        page.addWithMargins(ManagedNativePlacement(this, training = true), bottomDp = 14)
+        if (ad) page.addWithMargins(ManagedNativePlacement(this, training = true), bottomDp = 14)
     }
 
     private fun repeatButton(program: TrainingProgram, resume: Boolean): View =
@@ -2481,7 +2526,7 @@ open class HomeActivity : Activity() {
                 }
                 page.addWithMargins(exerciseCard, bottomDp = 10)
             }
-            page.addWithMargins(ManagedNativePlacement(this, training = true), bottomDp = 14)
+            if (section != sections.last()) page.addWithMargins(ManagedNativePlacement(this, training = true), bottomDp = 14)
         }
 
         page.addWithMargins(primaryButton(getString(R.string.finish_workout)) {
@@ -2490,6 +2535,7 @@ open class HomeActivity : Activity() {
         page.addWithMargins(secondaryButton(getString(R.string.abandon_workout)) {
             requestAbandon()
         }, topDp = 6)
+        endAd(page, training = true)
         refreshChecks()
         setBody(scroll(page))
         scheduleRestUpdates()
@@ -2712,11 +2758,13 @@ open class HomeActivity : Activity() {
                 ) { index ->
                     progressTab = index
                     renderProgress()
+                    adBreakNow()
                 },
                 width = ViewGroup.LayoutParams.WRAP_CONTENT,
             )
             if (progressTab == 2) {
                 renderLeaderboard(page, skills)
+                endAd(page)
                 setBody(scroll(page))
                 return
             }
@@ -2736,6 +2784,7 @@ open class HomeActivity : Activity() {
                     ),
                     topDp = 14,
                 )
+                endAd(page)
                 setBody(scroll(page))
                 return
             }
@@ -2779,6 +2828,7 @@ open class HomeActivity : Activity() {
         // The list or the month calendar ([historySection]); both use the same rows.
         val formatter = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, locale)
         page.addView(historySection(settings, progressRepository.sessionHistory(), historyCalendar) { historyRow(it, formatter, locale) })
+        endAd(page)
         setBody(scroll(page))
     }
 
@@ -2885,6 +2935,7 @@ open class HomeActivity : Activity() {
         }
         about.addWithMargins(secondaryButton("Ad privacy") { NativeAds.showPrivacy(this, BuildConfig.ADMOB_NATIVE_ID) }, topDp = 12)
         page.addView(about)
+        endAd(page)
         setBody(scroll(page))
     }
 

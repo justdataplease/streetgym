@@ -16,11 +16,14 @@ class AdBreakClock(private var banked: Long = 0, val interval: Long = GAP_MS) {
 }
 
 /**
- * When the full-screen ad may show: Free only, at a natural break (a finished section, or leaving a workout), once the
- * gap has passed, never while a rest, timer, stopwatch or alarm runs, never over the paywall or the consent form, and
- * only with ad consent. App open is never a break, so the ad never greets an opening app.
+ * When the full-screen ad may show: Free only, at a change of screen or tab or a finished section (2.11.0; before, only
+ * a finished section or leaving a workout), once the gap has passed, never while a rest, timer, stopwatch or alarm
+ * runs, never over the paywall or the consent form, and only with ad consent. Never within [AFTER_RESUME_MS] of the app
+ * opening or coming back, so the ad never greets an opening app.
  */
 object AdBreakPolicy {
+    const val AFTER_RESUME_MS = 10_000L
+
     fun mayShow(adFree: Boolean, due: Boolean, resumed: Boolean, timing: Boolean, covered: Boolean, consent: Boolean): Boolean =
         !adFree && due && resumed && !timing && !covered && consent
 
