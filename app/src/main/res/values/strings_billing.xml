@@ -7,7 +7,8 @@
     <string name="tier_current_free">You’re on Free: Levels 1–3, with ads.</string>
     <string name="tier_current_plus">You have Plus: Levels 1–6, no ads, the leaderboard.</string>
     <string name="tier_current_pro">You have Pro: everything is open.</string>
-    <string name="plus_title">Plus · one payment</string>
+    <string name="plus_title">Plus</string>
+    <string name="plan_once">one payment, for life</string>
     <string-array name="plus_features">
         <item>Levels 4 to 6</item>
         <item>No ads</item>
@@ -17,10 +18,10 @@
         <item>Rename levels</item>
     </string-array>
     <string name="plus_buy">Get Plus</string>
-    <string name="plus_buy_price">Get Plus · %1$s</string>
     <string name="plus_owned">Plus is yours.</string>
-    <string name="pro_title">Pro · yearly or for life</string>
+    <string name="pro_title">Pro</string>
     <!-- No count of ready workouts (the owner, 2.10.1): the Library grows without the offer changing (ReadyWorkoutsTest). -->
+
     <string-array name="pro_features">
         <item>Everything in Plus</item>
         <item>Levels 7 to 10</item>
@@ -28,11 +29,10 @@
         <item>Cloud saves on all your phones</item>
         <item>300 saved days, 10 lists</item>
     </string-array>
-    <string name="pro_why">The yearly plan pays for the servers and renews until you cancel it in Google Play. Pro for life is one payment.</string>
-    <string name="pro_buy">Get Pro</string>
-    <string name="pro_buy_price">Get Pro · %1$s a year</string>
-    <string name="pro_life_buy">Pro for life</string>
-    <string name="pro_life_buy_price">Pro for life · %1$s once</string>
+    <string name="pro_life_buy">Get Pro for life</string>
+    <string name="pro_yearly_buy">Or pay yearly</string>
+    <string name="pro_yearly_buy_price">Or %1$s a year</string>
+    <string name="pro_yearly_note">Yearly renews until you cancel it in Google Play.</string>
     <string name="pro_active">Pro is active.</string>
     <string name="pro_life_owned">Pro is yours for life.</string>
     <string name="pro_manage">Manage subscription</string>

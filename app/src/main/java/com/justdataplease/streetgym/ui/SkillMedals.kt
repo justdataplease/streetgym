@@ -28,8 +28,8 @@ fun difficultyColor(grade: Int): Int = when (grade.coerceIn(1, 5)) {
 
 /**
  * A skill as a medal: its figure on a rounded square [size] dp wide whose outline shows how hard the skill is
- * ([difficultyColor]), with the athlete's rank shield ([RankBadgeView]) hanging from its foot. The medal is
- * [medalHeight] tall.
+ * ([difficultyColor]), with the athlete's rank shield ([RankBadgeView]) pinned to its bottom-right corner and hanging
+ * a little below it. The medal is [medalHeight] tall.
  */
 fun Context.skillMedal(status: SkillStatus, size: Int): FrameLayout = FrameLayout(this).apply {
     val ring = (size / 16).coerceAtLeast(3)
@@ -47,7 +47,7 @@ fun Context.skillMedal(status: SkillStatus, size: Int): FrameLayout = FrameLayou
     if (status.level > SkillLevel.NONE) {
         addView(RankBadgeView(context, status.level, size / MEDAL_SIZE),
             FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT,
-                Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL))
+                Gravity.BOTTOM or Gravity.END))
     }
 }
 
@@ -56,7 +56,7 @@ fun Context.medalHeight(size: Int): Int = dp(size) + dp((OVERHANG * size / MEDAL
 
 /** The size the rank shields are drawn for; smaller medals scale them down. */
 private const val MEDAL_SIZE = 78f
-private const val OVERHANG = 28f
+private const val OVERHANG = 10f
 private const val TILE_CORNER = 0.22f
 
 /** Elite: the night tile with the mint figure. Started: light tint. Not started: muted. */

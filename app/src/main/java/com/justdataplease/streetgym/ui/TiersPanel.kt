@@ -3,9 +3,11 @@ package com.justdataplease.streetgym.ui
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.TextView
 import com.justdataplease.streetgym.R
 import com.justdataplease.streetgym.billing.Entitlement
 import com.justdataplease.streetgym.billing.LevelAccess
@@ -45,23 +47,29 @@ class TiersPanel(
     }, (paywall as? Paywall.Level)?.number ?: (paywall as? Paywall.Saved)?.limit ?: (paywall as? Paywall.Lists)?.limit ?: 0), 20f)
     private val current = activity.bodyText("", 14f)
     private val plusBlock = block()
+    private val plusPrice = priceText()
+    private val plusTerms = termsText()
     private val plusNote = activity.bodyText("", 13f)
     private val plusBuy = activity.primaryButton(activity.getString(R.string.plus_buy)) {
         if (!billing.buyPlus(activity)) showMessage(activity.getString(R.string.purchase_unavailable_retry))
     }
-    private val proBlock = block()
+    /** Pro for life is the offer; the yearly plan is the smaller way in under it. */
+    private val proBlock = block(AppColors.ACTION)
+    private val proPrice = priceText()
+    private val proTerms = termsText()
     private val proNote = activity.bodyText("", 13f)
-    private val proBuy = activity.primaryButton(activity.getString(R.string.pro_buy)) {
+    private val proLifeBuy = activity.primaryButton(activity.getString(R.string.pro_life_buy)) {
+        if (!billing.buyProLife(activity)) showMessage(activity.getString(R.string.purchase_unavailable_retry))
+    }
+    private val proYearlyBuy = activity.secondaryButton(activity.getString(R.string.pro_yearly_buy)) {
         if (!billing.buyPro(activity)) showMessage(activity.getString(R.string.purchase_unavailable_retry))
     }
-    private val proLifeBuy = activity.secondaryButton(activity.getString(R.string.pro_life_buy)) {
-        if (!billing.buyProLife(activity)) showMessage(activity.getString(R.string.purchase_unavailable_retry))
+    private val proYearlyNote = activity.bodyText(activity.getString(R.string.pro_yearly_note), 12f).apply {
+        gravity = Gravity.CENTER_HORIZONTAL
     }
     private val proManage = activity.secondaryButton(activity.getString(R.string.pro_manage)) {
         runCatching { activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(TierBilling.manageProUrl(activity.packageName)))) }
     }
-    /** What the yearly price pays for, and that Pro for life is one payment. */
-    private val proWhy = activity.bodyText(activity.getString(R.string.pro_why), 12f)
     private val message = activity.bodyText("", 13f)
     private val restore = activity.secondaryButton(activity.getString(R.string.restore_purchase)) {
         showMessage(activity.getString(R.string.purchase_checking))
@@ -87,19 +95,19 @@ class TiersPanel(
             if (proOnly) R.string.paywall_level_pro_body else R.string.paywall_level_body), 14f), topDp = 6)
         if (paywall == Paywall.Ready) addWithMargins(activity.bodyText(activity.getString(R.string.paywall_ready_body), 14f), topDp = 6)
         addWithMargins(current, topDp = 6)
-        plusBlock.addView(activity.titleText(activity.getString(R.string.plus_title), 17f))
-        plusBlock.addWithMargins(features(R.array.plus_features), topDp = 6)
+        plusBlock.addView(planHeader(R.string.plus_title, plusPrice, plusTerms))
+        plusBlock.addWithMargins(features(R.array.plus_features), topDp = 10)
         plusBlock.addWithMargins(plusNote, topDp = 6)
         plusBlock.addWithMargins(plusBuy, topDp = 12)
         addWithMargins(plusBlock, topDp = 14)
-        proBlock.addView(activity.titleText(activity.getString(R.string.pro_title), 17f))
-        proBlock.addWithMargins(features(R.array.pro_features), topDp = 6)
+        proBlock.addView(planHeader(R.string.pro_title, proPrice, proTerms))
+        proBlock.addWithMargins(features(R.array.pro_features), topDp = 10)
         proBlock.addWithMargins(proNote, topDp = 6)
-        proBlock.addWithMargins(proBuy, topDp = 12)
-        proBlock.addWithMargins(proLifeBuy, topDp = 8)
+        proBlock.addWithMargins(proLifeBuy, topDp = 12)
+        proBlock.addWithMargins(proYearlyBuy, topDp = 8)
+        proBlock.addWithMargins(proYearlyNote, topDp = 6)
         proBlock.addWithMargins(proManage, topDp = 8)
         addWithMargins(proBlock, topDp = 12)
-        addWithMargins(proWhy, topDp = 8)
         addWithMargins(restore, topDp = 12)
         addWithMargins(message, topDp = 8)
         render()
@@ -108,10 +116,34 @@ class TiersPanel(
     override fun onAttachedToWindow() { super.onAttachedToWindow(); billing.listeners += changed; billing.connect(); render() }
     override fun onDetachedFromWindow() { billing.listeners -= changed; super.onDetachedFromWindow() }
 
-    private fun block() = LinearLayout(activity).apply {
+    private fun block(outline: Int? = null) = LinearLayout(activity).apply {
         orientation = VERTICAL
         setPadding(activity.dp(14), activity.dp(14), activity.dp(14), activity.dp(14))
-        background = roundedDrawable(AppColors.INFO_SURFACE, activity.dp(18).toFloat())
+        background = roundedDrawable(AppColors.INFO_SURFACE, activity.dp(18).toFloat(), outline, activity.dp(2))
+    }
+
+    private fun priceText() = activity.titleText("", 24f).apply { gravity = Gravity.END }
+
+    private fun termsText() = activity.bodyText(activity.getString(R.string.plan_once), 12f).apply { gravity = Gravity.END }
+
+    /** The plan's name on the left; its price on the right, and what that price is ("one payment, for life") under it. */
+    private fun planHeader(name: Int, price: View, terms: View) = LinearLayout(activity).apply {
+        orientation = HORIZONTAL
+        gravity = Gravity.CENTER_VERTICAL
+        addView(activity.titleText(activity.getString(name), 20f), LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+        addView(LinearLayout(activity).apply {
+            orientation = VERTICAL
+            gravity = Gravity.END
+            addView(price)
+            addView(terms)
+        })
+    }
+
+    /** A plan's price, or nothing while Play hasn't sent it or once the plan is owned. */
+    private fun showPrice(price: TextView, terms: View, value: String?, owned: Boolean) {
+        price.text = value.orEmpty()
+        price.visibility = if (value == null || owned) View.GONE else View.VISIBLE
+        terms.visibility = if (owned) View.GONE else View.VISIBLE
     }
 
     /** What a plan includes, one bullet a line. */
@@ -144,11 +176,11 @@ class TiersPanel(
         // A paywall offers only what unlocks the feature; Settings always shows both, with what's owned.
         plusBlock.visibility = if (proOnly || paywall != null && tier >= Tier.PLUS) View.GONE else View.VISIBLE
         proBlock.visibility = if (paywall != null && tier == Tier.PRO) View.GONE else View.VISIBLE
-        proWhy.visibility = proBlock.visibility
         val ready = billing.status == TierBilling.Status.Ready
         // Only Play's formatted price is ever shown; until it arrives the buttons stay disabled.
+        showPrice(plusPrice, plusTerms, billing.plusPrice, tier >= Tier.PLUS)
+        showPrice(proPrice, proTerms, billing.proLifePrice, tier == Tier.PRO)
         plusBuy.visibility = if (tier >= Tier.PLUS) View.GONE else View.VISIBLE
-        plusBuy.text = billing.plusPrice?.let { activity.getString(R.string.plus_buy_price, it) } ?: activity.getString(R.string.plus_buy)
         plusBuy.isEnabled = tier < Tier.PLUS && ready && billing.plusPrice != null
         plusBuy.alpha = if (plusBuy.isEnabled) 1f else .45f
         plusNote.text = when {
@@ -157,15 +189,15 @@ class TiersPanel(
             else -> ""
         }
         plusNote.visibility = if (plusNote.text.isEmpty()) View.GONE else View.VISIBLE
-        proBuy.visibility = if (tier == Tier.PRO) View.GONE else View.VISIBLE
-        proBuy.text = billing.proPrice?.let { activity.getString(R.string.pro_buy_price, it) } ?: activity.getString(R.string.pro_buy)
-        proBuy.isEnabled = tier < Tier.PRO && ready && billing.proPrice != null
-        proBuy.alpha = if (proBuy.isEnabled) 1f else .45f
-        proLifeBuy.visibility = proBuy.visibility
-        proLifeBuy.text = billing.proLifePrice?.let { activity.getString(R.string.pro_life_buy_price, it) }
-            ?: activity.getString(R.string.pro_life_buy)
+        proLifeBuy.visibility = if (tier == Tier.PRO) View.GONE else View.VISIBLE
         proLifeBuy.isEnabled = tier < Tier.PRO && ready && billing.proLifePrice != null
         proLifeBuy.alpha = if (proLifeBuy.isEnabled) 1f else .45f
+        proYearlyBuy.visibility = proLifeBuy.visibility
+        proYearlyNote.visibility = proLifeBuy.visibility
+        proYearlyBuy.text = billing.proPrice?.let { activity.getString(R.string.pro_yearly_buy_price, it) }
+            ?: activity.getString(R.string.pro_yearly_buy)
+        proYearlyBuy.isEnabled = tier < Tier.PRO && ready && billing.proPrice != null
+        proYearlyBuy.alpha = if (proYearlyBuy.isEnabled) 1f else .45f
         proManage.visibility = if (billing.proActive) View.VISIBLE else View.GONE
         proNote.text = when {
             billing.proLifeOwned -> activity.getString(R.string.pro_life_owned)

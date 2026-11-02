@@ -1,8 +1,8 @@
 {
   "suite_repository": "justdataplease/android-apps",
-  "suite_commit": "ec8ae1a20dafa16da9eea56d634b14667a1932ac",
+  "suite_commit": "54dfb56549c0252b147070fc644198d08f12137d",
   "source_directory": "streetgymnastics",
   "original_import_commit": "5cf42985bd88e2f6905304cd8d9cbf007c8acb34",
-  "release_tag": "v2.11.1",
+  "release_tag": "v2.11.2",
   "distribution": "signed development APK"
 }
