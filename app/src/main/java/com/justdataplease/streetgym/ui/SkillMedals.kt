@@ -56,7 +56,7 @@ fun Context.medalHeight(size: Int): Int = dp(size) + dp((OVERHANG * size / MEDAL
 
 /** The size the rank shields are drawn for; smaller medals scale them down. */
 private const val MEDAL_SIZE = 78f
-private const val OVERHANG = 10f
+private const val OVERHANG = 4f
 private const val TILE_CORNER = 0.22f
 
 /** Elite: the night tile with the mint figure. Started: light tint. Not started: muted. */

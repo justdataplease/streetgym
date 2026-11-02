@@ -25,6 +25,8 @@ sealed interface Paywall {
     data class Saved(val limit: Int) : Paywall
     /** Own lists in My workouts: Plus, or more of them with Pro once Plus has made all of its [limit]. */
     data class Lists(val limit: Int) : Paywall
+    /** Today's Remove ads button: both plans end the ads. */
+    data object Ads : Paywall
 }
 
 /** The Plus and Pro offers: in Settings, or as the card that replaces a locked feature. */
@@ -44,7 +46,8 @@ class TiersPanel(
         Paywall.Ready -> R.string.paywall_ready
         is Paywall.Saved -> R.string.paywall_saved
         is Paywall.Lists -> if (paywall.limit == 0) R.string.paywall_lists else R.string.paywall_lists_full
-    }, (paywall as? Paywall.Level)?.number ?: (paywall as? Paywall.Saved)?.limit ?: (paywall as? Paywall.Lists)?.limit ?: 0), 20f)
+        Paywall.Ads -> R.string.paywall_ads
+    },(paywall as? Paywall.Level)?.number ?: (paywall as? Paywall.Saved)?.limit ?: (paywall as? Paywall.Lists)?.limit ?: 0), 20f)
     private val current = activity.bodyText("", 14f)
     private val plusBlock = block()
     private val plusPrice = priceText()
@@ -86,14 +89,15 @@ class TiersPanel(
         orientation = VERTICAL
         setPadding(activity.dp(16), activity.dp(16), activity.dp(16), activity.dp(16))
         background = roundedDrawable(AppColors.SURFACE, activity.dp(24).toFloat(), AppColors.DIVIDER, activity.dp(1))
-        // Past Plus, a paywall offers only Pro.
-        if (paywall != null) addWithMargins(activity.lockBadge(activity.getString(
+        // Past Plus, a paywall offers only Pro. Remove ads locks nothing, so it has no badge.
+        if (paywall != null && paywall != Paywall.Ads) addWithMargins(activity.lockBadge(activity.getString(
             if (proOnly || Entitlement.tier(activity) >= Tier.PLUS) R.string.tier_pro else R.string.tier_plus)),
             width = ViewGroup.LayoutParams.WRAP_CONTENT, bottomDp = 10)
         addView(heading)
         if (paywall is Paywall.Level) addWithMargins(activity.bodyText(activity.getString(
             if (proOnly) R.string.paywall_level_pro_body else R.string.paywall_level_body), 14f), topDp = 6)
         if (paywall == Paywall.Ready) addWithMargins(activity.bodyText(activity.getString(R.string.paywall_ready_body), 14f), topDp = 6)
+        if (paywall == Paywall.Ads) addWithMargins(activity.bodyText(activity.getString(R.string.paywall_ads_body), 14f), topDp = 6)
         addWithMargins(current, topDp = 6)
         plusBlock.addView(planHeader(R.string.plus_title, plusPrice, plusTerms))
         plusBlock.addWithMargins(features(R.array.plus_features), topDp = 10)

@@ -261,17 +261,18 @@ private fun Context.skillCell(status: SkillStatus, lock: Tier?, off: Boolean, on
     contentDescription = medalDescription(status, state)
     setOnClickListener { onClick() }
     addView(skillMedal(status, 78), LinearLayout.LayoutParams(dp(86), medalHeight(78)))
+    // The name sits right under the medal, and the rank right under the name (no blank line for a one-line name).
     addWithMargins(TextView(context).apply {
         text = status.skill.name
         textSize = 12f
         gravity = Gravity.CENTER_HORIZONTAL
         setTextColor(AppColors.TEXT)
+        includeFontPadding = false
         maxLines = 2
-        minLines = 2
         ellipsize = TextUtils.TruncateAt.END
-    }, topDp = 4)
+    }, topDp = 2)
     if (status.next != null && lock == null && !off) {
-        addWithMargins(horizontalProgress(status.progress), width = dp(70), height = dp(4), topDp = 4)
+        addWithMargins(horizontalProgress(status.progress), width = dp(70), height = dp(4), topDp = 3)
     }
     if (lock != null && !off) {
         addWithMargins(lockBadge(getString(if (lock == Tier.PRO) R.string.tier_pro else R.string.tier_plus)), width = LinearLayout.LayoutParams.WRAP_CONTENT, topDp = 4)

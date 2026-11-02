@@ -197,6 +197,8 @@ open class HomeActivity : Activity() {
     private lateinit var toolbarMark: ImageView
     private lateinit var toolbarTitle: TextView
     private lateinit var toolbarAction: ImageView
+    /** Free only, on Today: opens the plans that end the ads, as Just a Toolbox's Remove ads does. */
+    private lateinit var toolbarRemoveAds: TextView
     private lateinit var bodyContainer: FrameLayout
     private lateinit var bottomNavigation: LinearLayout
 
@@ -758,6 +760,23 @@ open class HomeActivity : Activity() {
             visibility = View.GONE
             setOnClickListener { switchWorkoutView() }
         }
+        toolbarRemoveAds = TextView(this).apply {
+            text = SpannableStringBuilder().append("♥", ForegroundColorSpan(AppColors.HEART), 0)
+                .append("  ").append(getString(R.string.remove_ads))
+            textSize = 12f
+            typeface = AppType.label
+            isAllCaps = true
+            letterSpacing = 0.06f
+            setTextColor(AppColors.TEXT)
+            gravity = Gravity.CENTER
+            setPadding(dp(14), 0, dp(14), 0)
+            background = roundedDrawable(AppColors.SURFACE, dp(20).toFloat(), AppColors.BORDER, dp(2))
+            foreground = selectableForeground()
+            isClickable = true
+            isFocusable = true
+            visibility = View.GONE
+            setOnClickListener { showPaywall(Paywall.Ads) }
+        }
         toolbar = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
@@ -766,6 +785,7 @@ open class HomeActivity : Activity() {
             addView(toolbarMark, LinearLayout.LayoutParams(dp(56), dp(56)))
             addView(toolbarBack, LinearLayout.LayoutParams(dp(56), dp(56)))
             addView(toolbarTitle, LinearLayout.LayoutParams(0, dp(56), 1f))
+            addView(toolbarRemoveAds, LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, dp(40)))
             addView(toolbarAction, LinearLayout.LayoutParams(dp(56), dp(56)))
             addView(View(context), LinearLayout.LayoutParams(dp(16), dp(56)))
         }
@@ -949,6 +969,7 @@ open class HomeActivity : Activity() {
         toolbarBack.visibility = if (isNested(screen)) View.VISIBLE else View.GONE
         toolbarMark.visibility = if (isNested(screen)) View.GONE else View.VISIBLE
         toolbarTitle.text = screenTitle(screen)
+        toolbarRemoveAds.visibility = if (screen == Screen.Dashboard && !Entitlement.adFree(this)) View.VISIBLE else View.GONE
         bindWorkoutViewAction(screen)
         rebuildBottomNavigation(screen)
 
