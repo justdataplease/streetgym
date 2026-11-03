@@ -16,7 +16,6 @@
     <string name="complete_level_no_points">Marks the whole level done without training. It earns no points or ranks.</string>
     <string name="skills_points_kicker">Points</string>
     <string name="skills_ranks">Ranks</string>
-    <string name="skills_rank_line">%1$s, %2$s</string>
     <string name="skills_ranks_description">Ranks: %1$s. Double-tap for how they work.</string>
     <string name="skills_points_description">%1$s points. Double-tap for how points and ranks work.</string>
     <string name="skills_help">How do points and ranks work?</string>

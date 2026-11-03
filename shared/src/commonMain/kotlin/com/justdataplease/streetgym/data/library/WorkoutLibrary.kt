@@ -1,11 +1,14 @@
+@file:OptIn(kotlin.uuid.ExperimentalUuidApi::class)
+
 package com.justdataplease.streetgym.data.library
 
+import kotlin.uuid.Uuid
 import com.justdataplease.streetgym.data.model.LocalizedText
 import com.justdataplease.streetgym.data.model.TrainingExercise
 import com.justdataplease.streetgym.data.model.TrainingProgram
 import com.justdataplease.streetgym.data.model.TrainingSet
-import org.json.JSONArray
-import org.json.JSONObject
+import com.justdataplease.streetgym.json.JSONArray
+import com.justdataplease.streetgym.json.JSONObject
 import kotlin.math.ceil
 
 /** One set of a custom exercise: repetitions or seconds, then rest. */
@@ -94,7 +97,7 @@ data class LibraryState(
 object WorkoutLists {
     const val PREFIX = "list:"
     const val MAX_NAME_LENGTH = 30
-    fun newId(): String = PREFIX + java.util.UUID.randomUUID()
+    fun newId(): String = PREFIX + Uuid.random()
 
     enum class NameProblem { Blank, TooLong, Taken }
 
@@ -128,7 +131,7 @@ object CustomDays {
      * intensity with every skill on, and is credited like any workout.
      */
     fun offProgram(programId: String): Boolean = isCustom(programId) || ReadyWorkouts.isReady(programId)
-    fun newId(): String = PREFIX + java.util.UUID.randomUUID()
+    fun newId(): String = PREFIX + Uuid.random()
 
     /** Work and rest, rounded up to whole minutes: about 3 s a repetition. */
     fun estimatedMinutes(day: CustomDay): Int = day.exercises.sumOf { exercise ->

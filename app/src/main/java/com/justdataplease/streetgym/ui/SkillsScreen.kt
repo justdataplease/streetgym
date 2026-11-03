@@ -3,7 +3,9 @@ package com.justdataplease.streetgym.ui
 import android.app.AlertDialog
 import android.content.Context
 import android.content.res.ColorStateList
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.Typeface
 import android.graphics.drawable.RippleDrawable
 import android.text.TextUtils
@@ -84,7 +86,8 @@ fun Context.skillsContent(
         addWithMargins(titleText(pointsText(points), 38f).apply { setTextColor(Color.WHITE) }, topDp = 4)
     }, topDp = 4)
 
-    // Every shield a skill can earn, with its sets, so anyone sees what's ahead (the owner, 2.11.0: "i liked the chevrons").
+    // Every shield a skill can earn, so anyone sees what's ahead (the owner, 2.11.0: "i liked the chevrons"); since
+    // 2.11.5 only their names, the sets they take are a tap away.
     addWithMargins(sectionLabel(getString(R.string.skills_ranks)), topDp = 14)
     addWithMargins(rankLegend(), topDp = 6)
 
@@ -92,16 +95,20 @@ fun Context.skillsContent(
     fun placeAd() { if (ad != null) addWithMargins(ad, topDp = if (tier.adFree) 0 else 14) }
     progress.families.forEachIndexed { index, (family, statuses) ->
         if (index == adAt) placeAd()
-        addWithMargins(titleText(family.spec.name, 16f), topDp = 14, bottomDp = 8)
+        addWithMargins(titleText(family.spec.name, 16f), topDp = 14)
         addView(HorizontalScrollView(context).apply {
             isHorizontalScrollBarEnabled = false
             clipToPadding = false
             addView(LinearLayout(context).apply {
                 orientation = LinearLayout.HORIZONTAL
+                // The tags on the medals' corners reach past their cells: room above for Plus / Pro, wider gaps beside.
+                clipChildren = false
+                clipToPadding = false
+                setPadding(0, dp(10), 0, 0)
                 statuses.forEach { status ->
                     val off = switches.isRungOff(family.spec.id, status.skill.rung)
                     addWithMargins(skillCell(status, lockFor(status, tier), off) { onOpen(status, family, statuses) },
-                        width = dp(86), rightDp = 8)
+                        width = dp(86), rightDp = 14)
                 }
             })
         })
@@ -125,13 +132,17 @@ fun Context.showSkillSheet(status: SkillStatus, family: SkillFamily, statuses: L
         addWithMargins(LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
-            addView(skillMedal(status, 56), LinearLayout.LayoutParams(dp(60), medalHeight(56)))
+            // The shield hangs past the medal's corner, so the medal gets the room for it.
+            addView(FrameLayout(context).apply {
+                clipChildren = false
+                addView(skillMedal(status, 56), FrameLayout.LayoutParams(dp(56), medalHeight(56)))
+            }, LinearLayout.LayoutParams(dp(56) + shieldOverhang(56), medalHeight(56) + dp(8)))
             addView(LinearLayout(context).apply {
                 orientation = LinearLayout.VERTICAL
                 addView(titleText(skill.name, 20f))
                 addView(bodyText(getString(R.string.skills_ladder_rung, family.spec.name, skill.rung + 1, statuses.size), 13f))
                 lock?.let { addWithMargins(lockBadge(partOf(it)), width = LinearLayout.LayoutParams.WRAP_CONTENT, topDp = 4) }
-            }, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply { marginStart = dp(12) })
+            }, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply { marginStart = dp(4) })
         }, topDp = 10)
         if (off) addWithMargins(bodyText(getString(R.string.skills_switched_off_note), 13f).apply { setTextColor(AppColors.ACTION) }, topDp = 8)
         addWithMargins(detailRow(getString(R.string.skills_difficulty), difficultyName(skill.difficulty)), topDp = 10)
@@ -184,7 +195,7 @@ private fun Context.targetText(standard: SkillStandard, amount: Int): String = w
 
 private fun Context.sets(count: Int): String = resources.getQuantityString(R.plurals.skills_sets, count, count)
 
-/** The five ranks a skill can earn, each as its shield with its name and the sets it takes; tapping explains them. */
+/** The five ranks a skill can earn, each as its shield with its name; tapping explains them and the sets they take. */
 private fun Context.rankLegend(): View = LinearLayout(this).apply {
     orientation = LinearLayout.HORIZONTAL
     gravity = Gravity.BOTTOM
@@ -193,8 +204,7 @@ private fun Context.rankLegend(): View = LinearLayout(this).apply {
     isClickable = true
     isFocusable = true
     val levels = SkillLevel.entries.filter { it > SkillLevel.NONE }
-    contentDescription = getString(R.string.skills_ranks_description,
-        levels.joinToString { getString(R.string.skills_rank_line, levelName(it), sets(it.sets)) })
+    contentDescription = getString(R.string.skills_ranks_description, levels.joinToString { levelName(it) })
     setOnClickListener { showSkillsHelp() }
     levels.forEach { level ->
         addView(LinearLayout(context).apply {
@@ -207,7 +217,6 @@ private fun Context.rankLegend(): View = LinearLayout(this).apply {
                 textSize = 11f
                 gravity = Gravity.CENTER_HORIZONTAL
             }, topDp = 4)
-            addView(bodyText(sets(level.sets), 11f).apply { gravity = Gravity.CENTER_HORIZONTAL })
         }, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
     }
 }
@@ -261,22 +270,36 @@ private fun Context.skillCell(status: SkillStatus, lock: Tier?, off: Boolean, on
     }
     contentDescription = medalDescription(status, state)
     setOnClickListener { onClick() }
-    // Everything sits on the medal (the owner, 2.11.4): the rank shield on its corner, Plus or Pro on its top corner and
-    // the bar to the next rank right under it, so only the name is below and every row of the ladder lines up.
+    // Everything sits on the medal (the owner, 2.11.4), and since 2.11.5 the rank shield and Plus or Pro are tags half
+    // outside its corners: the shield at the bottom right, Plus or Pro across the top edge. The bar to the next rank runs
+    // beside the shield, so only the name is below and every row of the ladder lines up. The tags draw past the cell.
+    clipChildren = false
     addView(FrameLayout(context).apply {
-        addView(skillMedal(status, 78), FrameLayout.LayoutParams(dp(86), medalHeight(78)))
+        clipChildren = false
+        addView(skillMedal(status, 78), FrameLayout.LayoutParams(dp(78), medalHeight(78), Gravity.TOP or Gravity.CENTER_HORIZONTAL))
         if (lock != null && !off) {
             addView(lockBadge(getString(if (lock == Tier.PRO) R.string.tier_pro else R.string.tier_plus)).apply {
                 textSize = 10f
                 setPadding(dp(6), dp(3), dp(6), dp(3))
+                // A rim in the page colour cuts the tag out of the medal's outline.
+                background = roundedDrawable(AppColors.TEXT_SECONDARY, dp(12).toFloat(), AppColors.BACKGROUND, dp(2))
+                translationX = dp(8).toFloat()
+                translationY = -dp(10).toFloat()
             }, FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT,
                 Gravity.TOP or Gravity.END))
         }
     }, LinearLayout.LayoutParams(dp(86), medalHeight(78)))
-    // The bar keeps its place when there is nothing to show (a top rank, a lock), so the names start level.
-    addWithMargins(horizontalProgress(status.progress).apply {
+    // The bar keeps its place when there is nothing to show (a top rank, a lock), so the names start level. It starts
+    // under the medal's left edge and stops short of the shield.
+    // In five blocks, not one line (the owner, 2.11.5: "make it distinct, not continuous"): each a fifth of the sets
+    // the next rank takes, filled only once whole.
+    addView(SegmentBar(context, SEGMENTS, status.progress * SEGMENTS / 100).apply {
         visibility = if (status.next != null && lock == null && !off) View.VISIBLE else View.INVISIBLE
-    }, width = dp(70), height = dp(4), topDp = 4)
+    }, LinearLayout.LayoutParams(dp(54), dp(5)).apply {
+        gravity = Gravity.START
+        marginStart = dp(8)
+        topMargin = dp(4)
+    })
     addWithMargins(TextView(context).apply {
         text = status.skill.name
         textSize = 12f
@@ -316,6 +339,27 @@ private fun Context.detailRow(label: String, value: String): LinearLayout = Line
     setPadding(0, dp(7), 0, dp(7))
     addView(bodyText(label, 13f), LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
     addView(bodyText(value, 13f).apply { setTextColor(AppColors.TEXT); gravity = Gravity.END })
+}
+
+private const val SEGMENTS = 5
+
+/** A progress bar as [segments] separate blocks, the first [filled] of them in the primary colour. */
+private class SegmentBar(context: Context, private val segments: Int, private val filled: Int) : View(context) {
+    private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val gap = context.dp(2).toFloat()
+
+    init {
+        importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO
+    }
+
+    override fun onDraw(canvas: Canvas) {
+        val block = (width - gap * (segments - 1)) / segments
+        for (i in 0 until segments) {
+            paint.color = if (i < filled) AppColors.PRIMARY else AppColors.DIVIDER
+            val left = i * (block + gap)
+            canvas.drawRect(left, 0f, left + block, height.toFloat(), paint)
+        }
+    }
 }
 
 private fun Context.tappable(color: Int, radius: Float) =

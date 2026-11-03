@@ -24,10 +24,10 @@ enum class Intensity(val factor: Double) {
         exercise.copy(sets = exercise.sets.map { it.copy(repetitions = it.repetitions?.let(::reps), durationSeconds = it.durationSeconds?.let(::seconds)) })
 
     /** Whole reps, at least one. */
-    internal fun reps(written: Int): Int = (written * factor).roundToInt().coerceAtLeast(1)
+    fun reps(written: Int): Int = (written * factor).roundToInt().coerceAtLeast(1)
 
     /** Whole seconds, to the nearest 5 from 20 s up. */
-    internal fun seconds(written: Int): Int {
+    fun seconds(written: Int): Int {
         val scaled = written * factor
         return (if (written >= 20) (scaled / 5).roundToInt() * 5 else scaled.roundToInt()).coerceAtLeast(1)
     }

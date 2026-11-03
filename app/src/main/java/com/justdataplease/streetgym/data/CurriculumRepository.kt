@@ -2,8 +2,8 @@ package com.justdataplease.streetgym.data
 
 import android.content.Context
 import com.justdataplease.streetgym.data.model.CurriculumCatalog
-import org.json.JSONArray
-import org.json.JSONObject
+import com.justdataplease.streetgym.json.JSONArray
+import com.justdataplease.streetgym.json.JSONObject
 
 interface CurriculumRepository {
     fun load(): Result<CurriculumCatalog>

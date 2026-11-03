@@ -13,7 +13,7 @@
         <item>Levels 4 to 6</item>
         <item>No ads</item>
         <item>Leaderboard</item>
-        <item>30 saved days, 3 lists</item>
+        <item>30 saved workouts, 3 lists</item>
         <item>Parks near you</item>
         <item>Rename levels</item>
     </string-array>
@@ -26,8 +26,8 @@
         <item>Everything in Plus</item>
         <item>Levels 7 to 10</item>
         <item>Ready workouts</item>
-        <item>Cloud saves on all your phones</item>
-        <item>300 saved days, 10 lists</item>
+        <item>Cloud backups and restore</item>
+        <item>300 saved workouts, 10 lists</item>
     </string-array>
     <string name="pro_life_buy">Get Pro for life</string>
     <string name="pro_yearly_buy">Or pay yearly</string>

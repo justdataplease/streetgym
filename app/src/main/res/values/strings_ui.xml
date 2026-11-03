@@ -72,8 +72,6 @@
     <string name="abandon_message">Checked sets from this active session will be cleared.</string>
     <string name="abandon">End session</string>
     <string name="progress_title">Your progress</string>
-    <string name="level_breakdown">Level breakdown</string>
-    <string name="level_history_all">All classes ›</string>
     <string name="completed_on">Completed %1$s • %2$d min</string>
     <string name="settings_title">Settings</string>
     <string name="keep_screen_awake">Keep screen awake</string>

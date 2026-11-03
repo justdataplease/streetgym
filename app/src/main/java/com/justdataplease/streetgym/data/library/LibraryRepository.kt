@@ -1,7 +1,7 @@
 package com.justdataplease.streetgym.data.library
 
 import android.content.Context
-import org.json.JSONObject
+import com.justdataplease.streetgym.json.JSONObject
 
 /** My workouts on this device. Nothing is removed when a tier ends; the limit only stops new additions. */
 class LibraryRepository(context: Context) {

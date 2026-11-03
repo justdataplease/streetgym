@@ -1,6 +1,5 @@
 package com.justdataplease.streetgym.data.model
 
-import java.util.Locale
 
 data class CurriculumCatalog(
     val schemaVersion: String,
@@ -84,9 +83,8 @@ data class TrainingSet(
 data class LocalizedText(
     val en: String? = null,
 ) {
-    @Suppress("UNUSED_PARAMETER")
-    fun resolve(locale: Locale = Locale.ENGLISH): String =
-        en?.takeIf(String::isNotBlank).orEmpty()
+    /** The text to show; only English exists so far (the Android app's resolve(Locale) comes here too). */
+    fun resolve(): String = en?.takeIf(String::isNotBlank).orEmpty()
 
     companion object {
         val EMPTY = LocalizedText()

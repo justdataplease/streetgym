@@ -15,7 +15,9 @@
     <string name="calendar_legend_custom">Your workout</string>
     <string name="calendar_legend_marked">Marked complete</string>
     <string name="calendar_empty">Finish a workout and its day is marked here.</string>
-    <string name="calendar_pick_day">Tap a day to see its workouts.</string>
+    <string name="calendar_month_empty">No workouts this month.</string>
+    <!-- Under the calendar when a day is picked: lists the whole month again. -->
+    <string name="calendar_whole_month">All of %1$s ›</string>
     <string name="calendar_day_empty">No workouts on this day.</string>
     <plurals name="calendar_marked_days">
         <item quantity="one">%d day marked complete</item>

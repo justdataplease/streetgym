@@ -34,8 +34,8 @@ android {
         applicationId = "com.justdataplease.streetgym"
         minSdk = 24
         targetSdk = 36
-        versionCode = 44
-        versionName = "2.11.4"
+        versionCode = 45
+        versionName = "2.11.5"
         testInstrumentationRunner = "com.justdataplease.streetgym.TrainingInstrumentation"
 
         vectorDrawables.useSupportLibrary = false
@@ -104,6 +104,8 @@ android {
 }
 
 dependencies {
+    // The shared engine: ":streetgymnastics-shared" in the suite, ":shared" in the standalone repository.
+    implementation(project(if (findProject(":streetgymnastics-shared") != null) ":streetgymnastics-shared" else ":shared"))
     implementation("com.android.billingclient:billing:8.3.0")
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.json:json:20240303")

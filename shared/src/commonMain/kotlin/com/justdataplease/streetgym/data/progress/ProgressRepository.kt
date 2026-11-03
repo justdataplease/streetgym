@@ -1,5 +1,7 @@
 package com.justdataplease.streetgym.data.progress
 
+import com.justdataplease.streetgym.data.epochMillisNow
+
 /**
  * One finished class. [credits] holds the sets ticked per movement in its practice and main work, with an easier
  * option credited to the easier movement; null for a class saved before ticks were kept. [doses]: each of a skill's
@@ -50,7 +52,7 @@ interface ProgressRepository {
     /** A [repeat] trains a completed day again without moving the program on; only completed days can be repeated. */
     fun startWorkout(
         programId: String,
-        startedAtEpochMillis: Long = System.currentTimeMillis(),
+        startedAtEpochMillis: Long = epochMillisNow(),
         repeat: Boolean = false,
         intensity: Intensity = Intensity.NORMAL,
     )
@@ -62,7 +64,7 @@ interface ProgressRepository {
     /** What the athlete did in a set of the active workout, in reps or seconds; null goes back to the plan. */
     fun setDone(setId: String, amount: Int?) {}
     fun finishWorkout(
-        completedAtEpochMillis: Long = System.currentTimeMillis(),
+        completedAtEpochMillis: Long = epochMillisNow(),
         effortRating: Int? = null,
         credits: Map<String, Int>? = null,
         doses: Map<String, List<Int>>? = null,

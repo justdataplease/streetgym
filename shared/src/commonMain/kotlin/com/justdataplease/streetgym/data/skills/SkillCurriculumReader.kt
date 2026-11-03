@@ -1,7 +1,7 @@
 package com.justdataplease.streetgym.data.skills
 
-import org.json.JSONArray
-import org.json.JSONObject
+import com.justdataplease.streetgym.json.JSONArray
+import com.justdataplease.streetgym.json.JSONObject
 
 /**
  * Reads what skills need straight from curriculum.json: the movement library (category, patterns,
@@ -68,14 +68,14 @@ object SkillCurriculumReader {
     private const val READINESS_CHECK = "readiness_check"
 
     /** A set's reps or seconds as the curriculum writes them: 8, "5/side", "12-16" or "3-4-5" read as their first number. */
-    internal fun dose(value: Any?): Int? = when (value) {
+    fun dose(value: Any?): Int? = when (value) {
         is Number -> value.toInt().takeIf { it > 0 }
         is String -> Regex("^\\d+").find(value.trim())?.value?.toIntOrNull()?.takeIf { it > 0 }
         else -> null
     }
 
     /** Variants named in an authentic exercise's description come before its plain name. */
-    internal fun authenticMovement(name: String, description: String): String? =
+    fun authenticMovement(name: String, description: String): String? =
         AUTHENTIC_VARIANTS.firstOrNull { (variantName, phrase, _) -> name == variantName && description.contains(phrase, ignoreCase = true) }
             ?.third ?: AUTHENTIC_NAMES[name]
 

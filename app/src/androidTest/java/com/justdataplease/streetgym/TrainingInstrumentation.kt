@@ -187,18 +187,20 @@ class TrainingInstrumentation : Instrumentation() {
             val firstName = programs.first().name.resolve()
             val monthCount = targetContext.resources.getQuantityString(R.plurals.calendar_month_count_current, 1, 1)
             nav(R.string.nav_progress); clickText(R.string.progress_tab_history)
-            // History (2.11.4): the month, then the levels, the one in progress open on its newest classes.
+            // History (2.11.5): the month, and its classes listed under it; a picked day lists only its own.
             check(shown(monthCount) && shown(firstName))
             val todayParts = setOf(targetContext.getString(R.string.calendar_today_description),
                 targetContext.resources.getQuantityString(R.plurals.calendar_workouts_description, 1, 1))
             val todayCell = checkNotNull(find { it.contentDescription?.split(", ")?.containsAll(todayParts) == true }) { "Today is not marked" }
             runOnMainSync { todayCell.performClick() }; settle()
             check(todayCell.isSelected && shown(firstName))
+            runOnMainSync { todayCell.performClick() }; settle()
+            check(!todayCell.isSelected && shown(firstName))
             clickLabel(firstName)
             check(shown(R.string.workout_overview) && shown(R.string.repeat_day))
             nav(R.string.nav_progress)
             check(shown(monthCount) && shown(firstName))
-            report("History's month marks today's workout and lists it under the day and under its open level, and opens its overview")
+            report("History's month marks today's workout, lists it under the month and under the picked day, and opens its overview")
 
             val skillBook = targetContext.assets.open("curriculum.json").bufferedReader().use { SkillCurriculumReader.read(it.readText()) }
             fun skills() = skillBook.progress(Scores.credits(repository.sessionHistory()))
@@ -235,7 +237,8 @@ class TrainingInstrumentation : Instrumentation() {
             nav(R.string.nav_today)
             check(shown(programs[1].name.resolve()) && shown(R.string.start_today) && !shown(R.string.repeat_note))
             nav(R.string.nav_progress); clickText(R.string.progress_tab_history)
-            check(shown(targetContext.getString(R.string.workouts_completed_format, 1, programs.size)))
+            // The month counts the repeat as a workout and lists it with the class.
+            check(shown(targetContext.resources.getQuantityString(R.plurals.calendar_month_count_current, 2, 2)))
             check(find { it is TextView && it.text.startsWith(targetContext.getString(R.string.history_repeat, "")) } != null)
             report("Repeating a completed day asks before replacing a workout, logs a set done bigger than planned that counts toward skills, and leaves progress and Today unchanged")
 

@@ -42,8 +42,8 @@ class HistoryCalendarState {
 }
 
 /**
- * Progress's History section: the month ([HistoryCalendarView]), whose days list their classes as [row]s. Since 2.11.4
- * there is no List | Calendar switch: the classes are listed by level under it (the owner).
+ * Progress's History section: the month ([HistoryCalendarView]) with its classes listed under it as [row]s (the owner,
+ * 2.11.5: no List | Calendar switch and no breakdown by level).
  */
 fun Context.historySection(
     settings: AppSettings,
@@ -54,9 +54,10 @@ fun Context.historySection(
 
 /**
  * History as a month. Trained days are filled in the accent, a repeat adds a ring under the day and one of the athlete's
- * own workouts a diamond, a day only marked complete (Complete day, Complete level, the placement) is pale, and today
- * is outlined. The arrows, or a sideways swipe, step between the month of the oldest entry and this one; tapping a day
- * lists its classes under the grid as [row]s.
+ * own workouts a diamond, a day only marked complete (Complete day, Complete level, the placement) is pale, today is
+ * ringed and the picked day sits on a halo, all round the same centre. The arrows, or a sideways swipe, step between the
+ * month of the oldest entry and this one. Under the grid the month's classes are listed as [row]s, newest first; tapping
+ * a day lists only its classes, and tapping it again, or All of the month, brings the month back.
  *
  * Days are local dates in the phone's time zone ([HistoryCalendar]). A month's marks are worked out once when it is
  * shown; the cells only draw them, with shared paints.
@@ -169,36 +170,61 @@ class HistoryCalendarView(
         bindPanel()
     }
 
+    /** Picks a day, or puts the whole month back when it is the day already picked. */
     private fun pick(key: Int) {
         if (key == 0) return
-        state.day = key
-        cells.forEach { it.isSelected = it.key == key }
+        state.day = if (key == state.day) 0 else key
+        cells.forEach { it.isSelected = it.key == state.day }
         bindPanel()
     }
 
-    /** The picked day's classes in the list's rows; a placement marks whole levels on one day, so many marks are one line. */
+    /**
+     * The picked day's classes, or else the whole month's, newest day first, in the list's rows. A placement marks whole
+     * levels on one day, so a day with many marks shows them as one line.
+     */
     private fun bindPanel() {
         panel.removeAllViews()
         val key = state.day.takeIf { it != 0 && HistoryCalendar.monthOf(it) == month }
-        if (key == null) {
-            panel.addView(context.bodyText(context.getString(if (byDay.isEmpty()) R.string.calendar_empty else R.string.calendar_pick_day), 14f))
-            return
-        }
-        panel.addWithMargins(TextView(context).apply {
-            text = panelFormat.on(key / 10_000, key / 100 % 100, key % 100)
-            textSize = 15f
-            typeface = Typeface.DEFAULT_BOLD
-            setTextColor(AppColors.TEXT)
+        val year = HistoryCalendar.year(month)
+        val number = HistoryCalendar.monthNumber(month)
+        val monthName = monthFormat.on(year, number, 1)
+        panel.addWithMargins(LinearLayout(context).apply {
+            orientation = HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            addView(context.sectionLabel(if (key != null) panelFormat.on(year, number, key % 100) else monthName),
+                LayoutParams(0, WRAP, 1f))
+            if (key != null) addView(TextView(context).apply {
+                text = context.getString(R.string.calendar_whole_month, monthName)
+                textSize = 13f
+                typeface = Typeface.DEFAULT_BOLD
+                setTextColor(AppColors.TEXT)
+                gravity = Gravity.CENTER_VERTICAL
+                minHeight = dp(40)
+                setPadding(dp(8), 0, 0, 0)
+                isClickable = true
+                isFocusable = true
+                background = RippleDrawable(ColorStateList.valueOf(paints.ripple), null, null)
+                setOnClickListener { pick(key) }
+            })
         }, bottomDp = 8)
-        val sessions = byDay[key].orEmpty()
-        val (marked, trained) = sessions.partition(WorkoutSession::manuallyCompleted)
-        trained.forEach { panel.addWithMargins(row(it), bottomDp = 8) }
-        if (marked.size <= 3) {
-            marked.forEach { panel.addWithMargins(row(it), bottomDp = 8) }
-        } else {
-            panel.addView(context.bodyText(resources.getQuantityString(R.plurals.calendar_marked_days, marked.size, marked.size), 14f))
+        val days = if (key != null) listOf(key) else byDay.keys.filter { HistoryCalendar.monthOf(it) == month }.sortedDescending()
+        var listed = false
+        days.forEach { day ->
+            val sessions = byDay[day].orEmpty().sortedByDescending(WorkoutSession::completedAtEpochMillis)
+            val (marked, trained) = sessions.partition(WorkoutSession::manuallyCompleted)
+            trained.forEach { panel.addWithMargins(row(it), bottomDp = 8) }
+            if (marked.size <= 3) {
+                marked.forEach { panel.addWithMargins(row(it), bottomDp = 8) }
+            } else {
+                panel.addWithMargins(context.bodyText(resources.getQuantityString(R.plurals.calendar_marked_days, marked.size, marked.size), 14f), bottomDp = 8)
+            }
+            listed = listed || sessions.isNotEmpty()
         }
-        if (sessions.isEmpty()) panel.addView(context.bodyText(context.getString(R.string.calendar_day_empty), 14f))
+        if (!listed) panel.addView(context.bodyText(context.getString(when {
+            key != null -> R.string.calendar_day_empty
+            byDay.isEmpty() -> R.string.calendar_empty
+            else -> R.string.calendar_month_empty
+        }), 14f))
     }
 
     /** "October 25, today, 2 workouts, 1 repeat": what the cell shows, for TalkBack. */
@@ -279,7 +305,7 @@ private class CalendarPaints(context: Context) {
     val disc = Paint(Paint.ANTI_ALIAS_FLAG)
     val line = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
-        strokeWidth = 1.5f * density
+        strokeWidth = 2f * density
     }
     val text = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         textAlign = Paint.Align.CENTER
@@ -290,9 +316,11 @@ private class CalendarPaints(context: Context) {
     val textOffset = -(text.descent() + text.ascent()) / 2f
     val area = RectF()
     val discRadius = 15f * density
-    val discY = 21f * density
+    val discY = 22f * density
     val todayGap = 3f * density
-    val markerY = 45f * density
+    /** The picked day's halo, round the disc's centre like today's ring (the owner, 2.11.5: no square around a circle). */
+    val haloRadius = 21f * density
+    val markerY = 47f * density
     val markerSize = 3.2f * density
     val markerGap = 5.5f * density
     val corner = 14f * density
@@ -305,7 +333,7 @@ private class CalendarPaints(context: Context) {
     val repeat = AppColors.PRIMARY
     val custom = AppColors.TEXT
     val today = AppColors.TEXT
-    val selected = AppColors.INFO_SURFACE
+    val halo = blendColor(AppColors.ACCENT, AppColors.SURFACE, 0.3f)
     val number = AppColors.TEXT
     val faint = AppColors.TEXT_SECONDARY
     val future = blendColor(AppColors.TEXT_SECONDARY, AppColors.SURFACE, 0.55f)
@@ -355,11 +383,9 @@ private class DayCell(context: Context, private val paints: CalendarPaints) : Vi
         val y = p.discY
         val radius = min(p.discRadius, x - p.todayGap - p.line.strokeWidth)
         if (isSelected) {
-            p.area.set(p.inset, p.inset / 2f, width - p.inset, height - p.inset / 2f)
-            p.disc.color = p.selected
-            canvas.drawRoundRect(p.area, p.corner, p.corner, p.disc)
-            p.line.color = p.trained
-            canvas.drawRoundRect(p.area, p.corner, p.corner, p.line)
+            val halo = min(p.haloRadius, x - p.inset)
+            p.disc.color = p.halo
+            canvas.drawCircle(x, y, halo, p.disc)
         }
         val marks = marks
         val trained = marks != null && marks.trained > 0

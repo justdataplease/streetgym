@@ -4,7 +4,6 @@ import com.justdataplease.streetgym.billing.LevelAccess
 import com.justdataplease.streetgym.billing.Tier
 import com.justdataplease.streetgym.data.model.TrainingProgram
 import com.justdataplease.streetgym.data.model.TrainingSet
-import java.util.Locale
 
 /**
  * First-launch placement, taken like an exam: one set each of strict pull-ups, push-ups and squats, as many as the
@@ -144,7 +143,7 @@ object Placement {
         val seen = mutableSetOf<String>()
         return program.exercises.asSequence()
             .flatMap { exercise -> exercise.sets.groupBy { it.name.resolve().ifBlank { exercise.name.resolve() } }.entries }
-            .filter { (name, _) -> name.isNotBlank() && seen.add(name.lowercase(Locale.ENGLISH)) }
+            .filter { (name, _) -> name.isNotBlank() && seen.add(name.lowercase()) }
             .take(limit)
             .map { (name, sets) -> listOf(inSentence(name), dose(sets)).filter(String::isNotBlank).joinToString(" ") }
             .toList()
@@ -164,6 +163,6 @@ object Placement {
 
     /** "Strict Pull-Up" reads "strict pull-up" mid-sentence; a short capital such as the L of "L-Sit" stays. */
     private fun inSentence(name: String): String = name.split(' ').joinToString(" ") { word ->
-        if (word.length > 1 && word[1].isLowerCase()) word.lowercase(Locale.ENGLISH) else word
+        if (word.length > 1 && word[1].isLowerCase()) word.lowercase() else word
     }
 }

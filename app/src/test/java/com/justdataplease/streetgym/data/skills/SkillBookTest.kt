@@ -268,8 +268,8 @@ class SkillBookTest {
         // The authoritative movement library, as the next curriculum carries it: the shrimp squat's steps share the
         // pistol's single-leg-squat pattern and regress from the split squat, a pistol foundation, so only their being
         // foundations keeps them off the pistol ladder. Every ladder is exactly as specified.
-        val library = org.json.JSONObject(File("../curriculum/movement_library.json").readText()).getJSONArray("movements")
-        val book = SkillCurriculumReader.read(org.json.JSONObject().put("movement_library", library))
+        val library = com.justdataplease.streetgym.json.JSONObject(File("../curriculum/movement_library.json").readText()).getJSONArray("movements")
+        val book = SkillCurriculumReader.read(com.justdataplease.streetgym.json.JSONObject().put("movement_library", library))
         book.families.forEach { assertEquals(it.spec.id, it.spec.ladder.filter { id -> book.skill(id) != null }, it.skills.map { s -> s.id }) }
         assertEquals(SkillBook.DEFAULT_FAMILIES.map { it.id }, book.families.map { it.spec.id })
         assertEquals(SkillStandards.ALL.keys, book.families.flatMap { f -> f.skills.map { it.id } }.toSet())
@@ -295,7 +295,7 @@ class SkillBookTest {
         real.families.forEach { assertEquals(it.spec.id, it.spec.ladder, it.skills.map { skill -> skill.id }) }
         assertNotNull(real.skill("pullup")?.expected)
         // Every skill-level movement in the library is a rung or a family's foundation.
-        val library = org.json.JSONObject(file.readText()).getJSONArray("movement_library")
+        val library = com.justdataplease.streetgym.json.JSONObject(file.readText()).getJSONArray("movement_library")
         val skillCategories = setOf("skill", "skill_strength", "advanced_skill", "mastery_skill", "advanced_strength", "advanced_fundamental")
         val foundations = SkillBook.DEFAULT_FAMILIES.flatMap { it.foundations }.toSet()
         val missing = (0 until library.length()).map(library::getJSONObject)
@@ -322,7 +322,7 @@ class SkillBookTest {
             assertFalse("$top is trained, not only checked", skill.beyondProgram)
         }
         // The program's prescribed doses count for days saved without them: reps for pull-ups, seconds for holds.
-        val programDays = org.json.JSONObject(file.readText()).getJSONArray("levels").let { levels ->
+        val programDays = com.justdataplease.streetgym.json.JSONObject(file.readText()).getJSONArray("levels").let { levels ->
             (0 until levels.length()).map(levels::getJSONObject).flatMap { level ->
                 level.getJSONArray("programs").let { p -> (0 until p.length()).map { p.getJSONObject(it).getString("id") } }
             }

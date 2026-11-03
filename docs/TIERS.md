@@ -2,20 +2,20 @@
 
 Street Gym has three tiers (the owner, 2026-10-30, for 2.8.0). Plus is one Google Play payment. Pro includes everything in Plus and is either a yearly subscription, which pays for the servers and database behind cloud progress, or one larger payment, "Pro for life".
 
-| | Free | Plus · 14.99 once | Pro · 29.99 a year or 89.99 once |
+| | Free | Plus · 14.99 once | Pro · 29.99 a year or 69.99 once |
 |---|---|---|---|
 | Levels | 1–3 | 1–6 | all (7 to 10 are Pro only) |
 | Ads | yes | no | no |
 | Profile: a unique username, Google optional | yes | yes | yes |
 | Leaderboard (points, all time and this month; appear on it) | – | yes | yes |
 | Ready workouts (Training › Library, 200) | see them | see them | yes |
-| Cloud progress (save and restore My workouts and progress) | – | – | yes |
+| Cloud backups and restore (My workouts and progress) | – | – | yes |
 | Saved and custom days (My workouts) | 3 | 30 | 300 |
 | Own lists in My workouts (beside Favorites) | – | 3 of 10 days | 10 of 30 days |
 | Rename levels | – | yes | yes |
 | Parks near me (73,303 OpenStreetMap parks) | – | yes | yes |
 
-The prices are the owner's Play prices (decided 2026-10-30, before the first upload; earlier drafts said 9.99 and 19.99; Pro for life was added the same evening). In 2.7.0 Plus was Levels 1–5 and only Pro signed in. The app only ever shows the formatted price Google Play returns. Play adds VAT and rounds per country, so enter each VAT country's price where a clean consumer price matters.
+The prices are the owner's Play prices (decided 2026-10-30, before the first upload; earlier drafts said 9.99 and 19.99; Pro for life was added the same evening at 89.99, lowered to 69.99 on 2026-11-03). In 2.7.0 Plus was Levels 1–5 and only Pro signed in. The app only ever shows the formatted price Google Play returns. Play adds VAT and rounds per country, so enter each VAT country's price where a clean consumer price matters.
 
 ## Play Console products (owner)
 
@@ -23,7 +23,7 @@ The prices are the owner's Play prices (decided 2026-10-30, before the first upl
 |---|---|---|---|
 | Plus | One-time product, non-consumable | `plus` | Purchase option `buy`, 14.99 EUR |
 | Pro | Subscription | `pro` | Base plan `yearly`, auto-renewing, 29.99 EUR a year |
-| Pro for life | One-time product, non-consumable | `pro_life` | Purchase option `buy`, 89.99 EUR |
+| Pro for life | One-time product, non-consumable | `pro_life` | Purchase option `buy`, 69.99 EUR (89.99 until 2026-11-03) |
 
 Earlier IDs `full_program` and `remove_ads` were never activated and are no longer recognized; don't activate them. Play product IDs can't be reused once created.
 

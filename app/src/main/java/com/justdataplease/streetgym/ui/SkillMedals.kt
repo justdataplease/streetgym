@@ -28,11 +28,13 @@ fun difficultyColor(grade: Int): Int = when (grade.coerceIn(1, 5)) {
 
 /**
  * A skill as a medal: its figure on a rounded square [size] dp wide whose outline shows how hard the skill is
- * ([difficultyColor]), with the athlete's rank shield ([RankBadgeView]) pinned to its bottom-right corner and hanging
- * a little below it. The medal is [medalHeight] tall.
+ * ([difficultyColor]), with the athlete's rank shield ([RankBadgeView]) worn like a tag on its bottom-right corner,
+ * about half of it outside the square (the owner, 2.11.5). The medal is [size] wide and [medalHeight] tall; the shield
+ * draws past both, so its parent must not clip children and must leave it the room.
  */
 fun Context.skillMedal(status: SkillStatus, size: Int): FrameLayout = FrameLayout(this).apply {
     val ring = (size / 16).coerceAtLeast(3)
+    val scale = size / MEDAL_SIZE
     addView(FrameLayout(context).apply {
         background = GradientDrawable().apply {
             shape = GradientDrawable.RECTANGLE
@@ -45,18 +47,29 @@ fun Context.skillMedal(status: SkillStatus, size: Int): FrameLayout = FrameLayou
             FrameLayout.LayoutParams.MATCH_PARENT).apply { setMargins(dp(ring), dp(ring), dp(ring), dp(ring)) })
     }, FrameLayout.LayoutParams(dp(size), dp(size), Gravity.TOP or Gravity.CENTER_HORIZONTAL))
     if (status.level > SkillLevel.NONE) {
-        addView(RankBadgeView(context, status.level, size / MEDAL_SIZE),
-            FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT,
-                Gravity.BOTTOM or Gravity.END))
+        val density = resources.displayMetrics.density
+        addView(RankBadgeView(context, status.level, scale).apply {
+            // Elite's wings spread either side of its shield, so it sits further out to keep the shield on the corner.
+            translationX = (if (status.level == SkillLevel.ELITE) SHIELD_OUT_WINGED else SHIELD_OUT) * scale * density
+            translationY = (SHIELD_DROP - OVERHANG) * scale * density
+        }, FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT,
+            Gravity.BOTTOM or Gravity.END))
     }
 }
 
-/** The height a medal of [size] takes: the square and the part of the rank shield below it. */
+/** The height a medal of [size] takes in its layout: the square and a little room under it. */
 fun Context.medalHeight(size: Int): Int = dp(size) + dp((OVERHANG * size / MEDAL_SIZE).toInt())
+
+/** How far a rank shield of a medal [size] dp wide reaches past the square's right edge, for its parent's room. */
+fun Context.shieldOverhang(size: Int): Int = dp((SHIELD_OUT_WINGED * size / MEDAL_SIZE).toInt() + 1)
 
 /** The size the rank shields are drawn for; smaller medals scale them down. */
 private const val MEDAL_SIZE = 78f
 private const val OVERHANG = 4f
+/** How far a shield's right edge passes the square's, and how far its foot hangs below it, at a full-size medal. */
+private const val SHIELD_OUT = 12f
+private const val SHIELD_OUT_WINGED = 16f
+private const val SHIELD_DROP = 14f
 private const val TILE_CORNER = 0.22f
 
 /** Elite: the night tile with the mint figure. Started: light tint. Not started: muted. */

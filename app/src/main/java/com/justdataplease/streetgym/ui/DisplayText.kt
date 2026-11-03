@@ -6,6 +6,7 @@ import com.justdataplease.streetgym.data.model.TrainingExercise
 import com.justdataplease.streetgym.data.model.TrainingLevel
 import com.justdataplease.streetgym.data.model.TrainingProgram
 import com.justdataplease.streetgym.data.model.TrainingSet
+import com.justdataplease.streetgym.data.model.resolve
 import java.util.Locale
 
 fun Context.displayName(level: TrainingLevel, locale: Locale): String {

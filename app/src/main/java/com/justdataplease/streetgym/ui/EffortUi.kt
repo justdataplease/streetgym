@@ -9,6 +9,7 @@ import com.justdataplease.streetgym.data.effort.Effort
 import com.justdataplease.streetgym.data.effort.WorkoutEffort
 import com.justdataplease.streetgym.data.model.TrainingExercise
 import com.justdataplease.streetgym.data.model.TrainingProgram
+import com.justdataplease.streetgym.data.model.resolve
 import java.util.Locale
 
 /** Easy green, Moderate orange, Hard red: the skills' difficulty colours (Easy, Very hard and Extreme). */

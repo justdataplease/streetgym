@@ -1,81 +1,39 @@
 package com.justdataplease.streetgym.ui
 
-import com.justdataplease.streetgym.BuildConfig
-import com.justdataplease.monetization.NativeAds
-
 import android.Manifest
-import android.content.Intent
-import android.net.Uri
-import android.os.Handler
-import android.os.Looper
-import android.provider.Settings
-import android.text.TextUtils
-import com.justdataplease.streetgym.timer.TimingAlerts
-import com.justdataplease.streetgym.ads.WorkoutAdBreak
-import com.justdataplease.streetgym.ads.ManagedNativePlacement
-import com.justdataplease.streetgym.ads.AdRowAdapter
-import com.justdataplease.streetgym.billing.Entitlement
-import com.justdataplease.streetgym.billing.LevelAccess
-import com.justdataplease.streetgym.billing.SavedLimit
-import com.justdataplease.streetgym.billing.Tier
-import com.justdataplease.streetgym.billing.TierBilling
-import com.justdataplease.streetgym.data.library.CustomDay
-import com.justdataplease.streetgym.data.library.CustomDays
-import com.justdataplease.streetgym.data.library.CustomExercise
-import com.justdataplease.streetgym.data.library.CustomSet
-import com.justdataplease.streetgym.data.library.ExerciseLibrary
-import com.justdataplease.streetgym.data.library.LibraryCodec
-import com.justdataplease.streetgym.data.library.LibraryMovement
-import com.justdataplease.streetgym.data.library.LibraryRepository
-import com.justdataplease.streetgym.data.library.ReadyWorkouts
-import com.justdataplease.streetgym.account.AccountStore
-import com.justdataplease.streetgym.account.Cloud
-import com.justdataplease.streetgym.account.CloudSync
-import com.justdataplease.streetgym.analytics.Analytics
-import com.justdataplease.streetgym.analytics.AnalyticsPayload
-import com.justdataplease.streetgym.analytics.InstallSnapshot
-import com.justdataplease.streetgym.analytics.PlacementRecord
-import com.justdataplease.streetgym.leaderboard.Board
-import com.justdataplease.streetgym.leaderboard.Boards
-import com.justdataplease.streetgym.leaderboard.Countries
-import com.justdataplease.streetgym.leaderboard.LeaderboardRepository
-import com.justdataplease.streetgym.leaderboard.Score
-import com.justdataplease.streetgym.leaderboard.Scores
-import com.justdataplease.streetgym.leaderboard.Standing
-import com.justdataplease.streetgym.data.parks.NearbyPark
-import com.justdataplease.streetgym.data.parks.Park
-import com.justdataplease.streetgym.data.parks.Parks
-import com.justdataplease.streetgym.data.parks.ParksUpdater
 import android.annotation.SuppressLint
-import android.content.pm.PackageManager
-import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
-import android.text.Editable
-import android.text.InputFilter
-import android.text.InputType
-import android.text.SpannableStringBuilder
-import android.text.Spanned
-import android.text.TextWatcher
-import android.text.style.ForegroundColorSpan
-import android.text.style.StyleSpan
-import android.widget.BaseAdapter
-import android.widget.EditText
-import org.json.JSONObject
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.media.AudioManager
 import android.media.ToneGenerator
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.Handler
+import android.os.Looper
+import android.provider.Settings
+import android.text.Editable
+import android.text.InputFilter
+import android.text.InputType
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.TextUtils
+import android.text.TextWatcher
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
@@ -86,7 +44,9 @@ import android.view.WindowManager
 import android.view.animation.OvershootInterpolator
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.BaseAdapter
 import android.widget.CheckBox
+import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -97,35 +57,74 @@ import android.widget.TextView
 import android.widget.Toast
 import android.window.OnBackInvokedCallback
 import android.window.OnBackInvokedDispatcher
+import com.justdataplease.monetization.NativeAds
+import com.justdataplease.streetgym.BuildConfig
 import com.justdataplease.streetgym.R
+import com.justdataplease.streetgym.account.AccountStore
+import com.justdataplease.streetgym.account.Cloud
+import com.justdataplease.streetgym.account.CloudSync
+import com.justdataplease.streetgym.ads.AdRowAdapter
+import com.justdataplease.streetgym.ads.ManagedNativePlacement
+import com.justdataplease.streetgym.ads.WorkoutAdBreak
+import com.justdataplease.streetgym.analytics.Analytics
+import com.justdataplease.streetgym.analytics.AnalyticsPayload
+import com.justdataplease.streetgym.analytics.InstallSnapshot
+import com.justdataplease.streetgym.analytics.PlacementRecord
+import com.justdataplease.streetgym.billing.Entitlement
+import com.justdataplease.streetgym.billing.LevelAccess
+import com.justdataplease.streetgym.billing.SavedLimit
+import com.justdataplease.streetgym.billing.Tier
+import com.justdataplease.streetgym.billing.TierBilling
 import com.justdataplease.streetgym.data.AssetCurriculumRepository
+import com.justdataplease.streetgym.data.effort.Effort
+import com.justdataplease.streetgym.data.effort.WorkoutEffort
+import com.justdataplease.streetgym.data.library.CustomDay
+import com.justdataplease.streetgym.data.library.CustomDays
+import com.justdataplease.streetgym.data.library.CustomExercise
+import com.justdataplease.streetgym.data.library.CustomSet
+import com.justdataplease.streetgym.data.library.ExerciseLibrary
+import com.justdataplease.streetgym.data.library.LibraryCodec
+import com.justdataplease.streetgym.data.library.LibraryMovement
+import com.justdataplease.streetgym.data.library.LibraryRepository
+import com.justdataplease.streetgym.data.library.ReadyWorkouts
 import com.justdataplease.streetgym.data.model.CurriculumCatalog
 import com.justdataplease.streetgym.data.model.TrainingExercise
 import com.justdataplease.streetgym.data.model.TrainingLevel
 import com.justdataplease.streetgym.data.model.TrainingProgram
+import com.justdataplease.streetgym.data.model.resolve
+import com.justdataplease.streetgym.data.parks.NearbyPark
+import com.justdataplease.streetgym.data.parks.Park
+import com.justdataplease.streetgym.data.parks.Parks
+import com.justdataplease.streetgym.data.parks.ParksUpdater
+import com.justdataplease.streetgym.data.points.Points
+import com.justdataplease.streetgym.data.points.PointsTotal
 import com.justdataplease.streetgym.data.progress.ActiveWorkout
 import com.justdataplease.streetgym.data.progress.DayAssignment
 import com.justdataplease.streetgym.data.progress.ExamResult
-import com.justdataplease.streetgym.data.effort.Effort
-import com.justdataplease.streetgym.data.effort.WorkoutEffort
 import com.justdataplease.streetgym.data.progress.Intensity
 import com.justdataplease.streetgym.data.progress.LevelReplay
 import com.justdataplease.streetgym.data.progress.NextClass
 import com.justdataplease.streetgym.data.progress.Placement
 import com.justdataplease.streetgym.data.progress.SharedPreferencesProgressRepository
-import com.justdataplease.streetgym.data.points.Points
-import com.justdataplease.streetgym.data.points.PointsTotal
 import com.justdataplease.streetgym.data.progress.WorkoutSession
 import com.justdataplease.streetgym.data.skills.SkillBook
 import com.justdataplease.streetgym.data.skills.SkillCurriculumReader
-import com.justdataplease.streetgym.data.skills.SkillProgress
 import com.justdataplease.streetgym.data.skills.SkillFamilySpec
+import com.justdataplease.streetgym.data.skills.SkillProgress
 import com.justdataplease.streetgym.data.skills.SkillSwitches
 import com.justdataplease.streetgym.data.skills.switchedOff
+import com.justdataplease.streetgym.json.JSONObject
+import com.justdataplease.streetgym.leaderboard.Board
+import com.justdataplease.streetgym.leaderboard.Boards
+import com.justdataplease.streetgym.leaderboard.Countries
+import com.justdataplease.streetgym.leaderboard.LeaderboardRepository
+import com.justdataplease.streetgym.leaderboard.Score
+import com.justdataplease.streetgym.leaderboard.Scores
+import com.justdataplease.streetgym.leaderboard.Standing
+import com.justdataplease.streetgym.timer.TimingAlerts
 import com.justdataplease.streetgym.widget.NextClassWidget
 import java.text.DateFormat
 import java.text.NumberFormat
-import java.text.SimpleDateFormat
 import java.util.ArrayDeque
 import java.util.Date
 import java.util.Locale
@@ -745,6 +744,8 @@ open class HomeActivity : Activity() {
             setTextColor(AppColors.TEXT)
             typeface = Typeface.DEFAULT_BOLD
             maxLines = 1
+            // Remove ads sits beside the title on every screen (2.11.5), so a long title ends in an ellipsis.
+            ellipsize = TextUtils.TruncateAt.END
             styleToolbarTitle()
         }
         toolbarMark = ImageView(this).apply {
@@ -970,7 +971,8 @@ open class HomeActivity : Activity() {
         toolbarBack.visibility = if (isNested(screen)) View.VISIBLE else View.GONE
         toolbarMark.visibility = if (isNested(screen)) View.GONE else View.VISIBLE
         toolbarTitle.text = screenTitle(screen)
-        toolbarRemoveAds.visibility = if (screen == Screen.Dashboard && !Entitlement.adFree(this)) View.VISIBLE else View.GONE
+        // On every screen but a workout in progress (the owner, 2.11.5: "keep remove ads in every screen top").
+        toolbarRemoveAds.visibility = if (screen !is Screen.Active && !Entitlement.adFree(this)) View.VISIBLE else View.GONE
         bindWorkoutViewAction(screen)
         rebuildBottomNavigation(screen)
 
@@ -2763,11 +2765,8 @@ open class HomeActivity : Activity() {
     }
 
     private fun renderProgress() {
-        val catalog = catalog ?: return
+        if (catalog == null) return
         val locale = uiLocale()
-        val all = orderedPrograms
-        val completedIds = progressRepository.completedProgramIds()
-        val complete = all.count { it.id in completedIds }
         val page = verticalPage()
         val skills = skillBook
         if (skills != null) {
@@ -2811,119 +2810,12 @@ open class HomeActivity : Activity() {
             }
         }
 
-        // History (the owner, 2.11.4): the month first, its days listing their classes, then the classes by level with
-        // the level in progress open.
+        // History (the owner, 2.11.5): the month, and its classes listed under it.
         val sessions = progressRepository.sessionHistory()
         val formatter = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, locale)
         page.addWithMargins(historySection(settings, sessions, historyCalendar) { historyRow(it, formatter, locale) }, topDp = 14)
-        // Free: one ad card between the month and the levels.
-        page.addWithMargins(ManagedNativePlacement(this), topDp = 16, bottomDp = if (Entitlement.adFree(this)) 0 else 16)
-
-        page.addWithMargins(LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER_VERTICAL
-            addView(sectionLabel(getString(R.string.level_breakdown)), LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
-            addView(bodyText(getString(R.string.workouts_completed_format, complete, all.size), 13f))
-        }, topDp = 4)
-        val newestFirst = sessions.sortedByDescending { it.completedAtEpochMillis }
-        val levels = catalog.levels.sortedBy { it.number }
-        val inProgress = levels.firstOrNull { level -> level.programs.any { it.id !in completedIds } }?.number
-        val access = Entitlement.tier(this)
-        levels.forEach { level ->
-            val ids = level.programs.mapTo(HashSet()) { it.id }
-            page.addWithMargins(levelHistoryCard(level, level.programs.count { it.id in completedIds },
-                newestFirst.filter { it.programId in ids }, LevelAccess.tierFor(level.number).takeIf { it > access },
-                level.number == inProgress, locale), bottomDp = 8)
-        }
         endAd(page)
         setBody(scroll(page))
-    }
-
-    /**
-     * A level in History: its number, name and classes done, with a tick once all are done, or Plus / Pro when it is
-     * locked (a tap then opens the level and its offer). Otherwise a tap opens it to its three newest classes, each
-     * opening its overview, and All classes opens the level; the level in progress starts open.
-     */
-    private fun levelHistoryCard(
-        level: TrainingLevel,
-        done: Int,
-        sessions: List<WorkoutSession>,
-        lock: Tier?,
-        open: Boolean,
-        locale: Locale,
-    ): View = card(clickable = true).apply {
-        setPadding(dp(12), dp(10), dp(12), dp(10))
-        val total = level.programs.size
-        val finished = done == total
-        val classes = LinearLayout(context).apply {
-            orientation = LinearLayout.VERTICAL
-            visibility = if (open && lock == null) View.VISIBLE else View.GONE
-        }
-        val arrow = bodyText("›", 22f).apply {
-            setTextColor(AppColors.TEXT)
-            rotation = if (classes.visibility == View.VISIBLE) 90f else 0f
-        }
-        addView(LinearLayout(context).apply {
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER_VERTICAL
-            val fill = when {
-                finished -> AppColors.TEXT
-                open && lock == null -> AppColors.ACCENT
-                else -> AppColors.DIVIDER
-            }
-            addView(titleText(level.number.toString(), 18f).apply {
-                gravity = Gravity.CENTER
-                setTextColor(AppColors.contentOn(fill))
-                background = roundedDrawable(fill, dp(6).toFloat())
-            }, LinearLayout.LayoutParams(dp(34), dp(34)))
-            addView(LinearLayout(context).apply {
-                orientation = LinearLayout.VERTICAL
-                addView(oneLineText(displayName(level, locale), bold = true).apply { textSize = 15f })
-                addWithMargins(bodyText(getString(R.string.level_progress_format, done, total), 12f), topDp = 2)
-                if (lock == null) addWithMargins(horizontalProgress(percentage(done, total)), height = dp(4), topDp = 6)
-            }, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f).apply { setMargins(dp(12), 0, dp(10), 0) })
-            when {
-                lock != null -> addView(lockBadge(getString(if (lock == Tier.PRO) R.string.tier_pro else R.string.tier_plus)))
-                finished -> addView(bodyText("✓", 18f).apply { setTextColor(AppColors.TEXT); typeface = Typeface.DEFAULT_BOLD })
-                else -> addView(arrow, LinearLayout.LayoutParams(dp(20), ViewGroup.LayoutParams.WRAP_CONTENT))
-            }
-        })
-        val day = SimpleDateFormat(android.text.format.DateFormat.getBestDateTimePattern(locale, "EEEdMMM"), locale)
-        sessions.take(3).forEach { session ->
-            val program = programById(session.programId) ?: return@forEach
-            val date = day.format(Date(session.completedAtEpochMillis))
-            classes.addView(LinearLayout(context).apply {
-                orientation = LinearLayout.HORIZONTAL
-                gravity = Gravity.CENTER_VERTICAL
-                setPadding(0, dp(10), 0, dp(10))
-                foreground = selectableForeground()
-                addView(bodyText(program.number.toString(), 13f).apply { setTextColor(AppColors.TEXT); typeface = Typeface.DEFAULT_BOLD },
-                    LinearLayout.LayoutParams(dp(30), ViewGroup.LayoutParams.WRAP_CONTENT))
-                addView(oneLineText(displayName(program, locale)).apply { textSize = 13f },
-                    LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
-                addView(bodyText(when {
-                    session.placed -> getString(R.string.history_placed, date)
-                    session.repeat -> getString(R.string.history_repeat, date)
-                    else -> date
-                }, 12f), LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { marginStart = dp(8) })
-                setOnClickListener { navigate(Screen.Overview(program.id)) }
-            })
-        }
-        classes.addView(oneLineText(getString(R.string.level_history_all), bold = true).apply {
-            textSize = 12f
-            letterSpacing = 0.1f
-            isAllCaps = true
-            setPadding(0, dp(12), 0, dp(4))
-            isClickable = true
-            setOnClickListener { navigate(Screen.Workouts(level.number)) }
-        })
-        addWithMargins(classes, topDp = 4)
-        setOnClickListener {
-            if (lock != null) { navigate(Screen.Workouts(level.number)); return@setOnClickListener }
-            val show = classes.visibility != View.VISIBLE
-            classes.visibility = if (show) View.VISIBLE else View.GONE
-            arrow.animate().rotation(if (show) 90f else 0f).setDuration(150).start()
-        }
     }
 
     /** One history entry: the day and when it was finished. Tapping it opens that day's overview. */

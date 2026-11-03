@@ -8,8 +8,8 @@ import com.justdataplease.streetgym.data.model.TrainingLevel
 import com.justdataplease.streetgym.data.model.TrainingProgram
 import com.justdataplease.streetgym.data.model.TrainingSet
 import com.justdataplease.streetgym.data.skills.SkillCurriculumReader
-import org.json.JSONArray
-import org.json.JSONObject
+import com.justdataplease.streetgym.json.JSONArray
+import com.justdataplease.streetgym.json.JSONObject
 
 /**
  * Normalizes both the technical source export and the app's compact static catalog.

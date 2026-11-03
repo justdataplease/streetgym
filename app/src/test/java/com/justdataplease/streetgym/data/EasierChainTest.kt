@@ -1,7 +1,7 @@
 package com.justdataplease.streetgym.data
 
-import org.json.JSONArray
-import org.json.JSONObject
+import com.justdataplease.streetgym.json.JSONArray
+import com.justdataplease.streetgym.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

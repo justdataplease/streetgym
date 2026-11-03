@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="account_intro">Connect Google to keep your username, progress and My workouts on a new phone.</string>
-    <string name="account_intro_plus">Connect Google to keep your username on a new phone. Cloud saves of your progress are part of Pro.</string>
-    <string name="account_plus_note">Your progress stays on this phone. Cloud saves are part of Pro.</string>
+    <string name="account_intro_plus">Connect Google to keep your username on a new phone. Cloud backups and restore are part of Pro.</string>
+    <string name="account_plus_note">Your progress stays on this phone. Cloud backups and restore are part of Pro.</string>
     <string name="account_sign_in">Connect Google</string>
     <string name="account_working">Connecting…</string>
     <string name="account_sign_in_failed">Couldn’t connect. Check your connection and try again.</string>

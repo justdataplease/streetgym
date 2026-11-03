@@ -3,7 +3,7 @@ package com.justdataplease.streetgym.data.library
 import com.justdataplease.streetgym.data.CurriculumJsonParser
 import com.justdataplease.streetgym.data.effort.Effort
 import com.justdataplease.streetgym.data.effort.WorkoutEffort
-import org.json.JSONObject
+import com.justdataplease.streetgym.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue

@@ -2,7 +2,6 @@ package com.justdataplease.streetgym.data.library
 
 import com.justdataplease.streetgym.data.model.CurriculumCatalog
 import com.justdataplease.streetgym.data.model.TrainingExercise
-import java.util.Locale
 
 /** One movement the athlete can add to a custom day, with the dose the program first gives it. */
 data class LibraryMovement(
@@ -20,19 +19,19 @@ data class LibraryMovement(
 /** Every distinct exercise of the program, searchable by name, category and equipment. */
 class ExerciseLibrary(val movements: List<LibraryMovement>) {
     fun search(query: String): List<LibraryMovement> {
-        val words = query.lowercase(Locale.ROOT).split(' ').filter(String::isNotBlank)
+        val words = query.lowercase().split(' ').filter(String::isNotBlank)
         if (words.isEmpty()) return movements
         return movements.filter { movement ->
             val text = listOfNotNull(movement.name, movement.category, *movement.equipment.toTypedArray())
-                .joinToString(" ").replace('_', ' ').lowercase(Locale.ROOT)
+                .joinToString(" ").replace('_', ' ').lowercase()
             words.all(text::contains)
-        }.sortedWith(compareBy<LibraryMovement> { !it.name.lowercase(Locale.ROOT).startsWith(words.first()) }
+        }.sortedWith(compareBy<LibraryMovement> { !it.name.lowercase().startsWith(words.first()) }
             .thenByDescending { it.uses })
     }
 
     companion object {
         fun key(exercise: TrainingExercise): String =
-            exercise.movementId ?: exercise.name.resolve().trim().lowercase(Locale.ROOT)
+            exercise.movementId ?: exercise.name.resolve().trim().lowercase()
 
         fun from(catalog: CurriculumCatalog): ExerciseLibrary {
             val first = linkedMapOf<String, TrainingExercise>()

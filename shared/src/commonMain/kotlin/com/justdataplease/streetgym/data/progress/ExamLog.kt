@@ -1,7 +1,7 @@
 package com.justdataplease.streetgym.data.progress
 
-import org.json.JSONArray
-import org.json.JSONObject
+import com.justdataplease.streetgym.json.JSONArray
+import com.justdataplease.streetgym.json.JSONObject
 
 /**
  * One exam taken: when, and which of its targets ([reached] and [missed] hold the tested movements) the athlete

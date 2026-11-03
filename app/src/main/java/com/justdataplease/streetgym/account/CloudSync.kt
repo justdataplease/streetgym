@@ -11,7 +11,7 @@ import com.justdataplease.streetgym.data.library.LibraryCodec
 import com.justdataplease.streetgym.data.library.LibraryRepository
 import com.justdataplease.streetgym.data.progress.ExamLog
 import com.justdataplease.streetgym.data.progress.SharedPreferencesProgressRepository
-import org.json.JSONObject
+import com.justdataplease.streetgym.json.JSONObject
 
 /**
  * Pro's cloud progress: users/{uid}/data/progress (completed days, history with each set's reps, exam results) and users/{uid}/data/library

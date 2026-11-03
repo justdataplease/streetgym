@@ -12,6 +12,7 @@ import com.justdataplease.streetgym.R
 import com.justdataplease.streetgym.data.effort.Effort
 import com.justdataplease.streetgym.data.model.TrainingExercise
 import com.justdataplease.streetgym.data.model.TrainingProgram
+import com.justdataplease.streetgym.data.model.resolve
 import com.justdataplease.streetgym.data.progress.ExamLog
 import java.util.Locale
 

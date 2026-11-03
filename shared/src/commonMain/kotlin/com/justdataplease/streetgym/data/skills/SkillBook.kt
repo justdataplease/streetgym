@@ -137,7 +137,7 @@ class SkillBook private constructor(
     private val skills: Map<String, Skill> = families.flatMap { it.skills }.associateBy { it.id }
 
     /** The last result: Skills redraws on every tab and filter tap with the same input. */
-    @Volatile private var last: Pair<List<SkillCredit>, SkillProgress>? = null
+    @kotlin.concurrent.Volatile private var last: Pair<List<SkillCredit>, SkillProgress>? = null
 
     /** The movement a workout exercise credits: its own id when skills know it, else the source workout's name. */
     fun movementOf(movementId: String?, name: String, description: String): String? =

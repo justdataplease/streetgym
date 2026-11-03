@@ -24,6 +24,7 @@ import android.widget.Space
 import android.widget.TextView
 import com.justdataplease.streetgym.R
 import com.justdataplease.streetgym.data.model.TrainingProgram
+import com.justdataplease.streetgym.data.model.resolve
 import com.justdataplease.streetgym.timer.clockText
 import java.util.Locale
 
