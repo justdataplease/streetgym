@@ -276,8 +276,7 @@ private fun Context.skillCell(status: SkillStatus, lock: Tier?, off: Boolean, on
     clipChildren = false
     addView(FrameLayout(context).apply {
         clipChildren = false
-        addView(skillMedal(status, 78, emptyShield = lock == null && !off),
-            FrameLayout.LayoutParams(dp(78), medalHeight(78), Gravity.TOP or Gravity.CENTER_HORIZONTAL))
+        addView(skillMedal(status, 78), FrameLayout.LayoutParams(dp(78), medalHeight(78), Gravity.TOP or Gravity.CENTER_HORIZONTAL))
         if (lock != null && !off) {
             addView(lockBadge(getString(if (lock == Tier.PRO) R.string.tier_pro else R.string.tier_plus)).apply {
                 textSize = 10f
@@ -290,15 +289,20 @@ private fun Context.skillCell(status: SkillStatus, lock: Tier?, off: Boolean, on
                 Gravity.TOP or Gravity.END))
         }
     }, LinearLayout.LayoutParams(dp(86), medalHeight(78)))
-    // The bar keeps its place when there is nothing to show (a top rank, a lock), so the names start level. It starts
-    // under the medal's left edge and stops short of the shield.
+    // The bar keeps its place when there is nothing to show (a top rank, a lock), so the names start level. Beside a
+    // shield it starts under the medal's left edge and stops short of it.
     // In five blocks, not one line (the owner, 2.11.5: "make it distinct, not continuous"): each a fifth of the sets
     // the next rank takes, filled only once whole.
     addView(SegmentBar(context, SEGMENTS, status.progress * SEGMENTS / 100).apply {
         visibility = if (status.next != null && lock == null && !off) View.VISIBLE else View.INVISIBLE
     }, LinearLayout.LayoutParams(dp(54), dp(5)).apply {
-        gravity = Gravity.START
-        marginStart = dp(8)
+        // Beside the shield when there is one; centred under the medal before the first rank (the owner, 2.11.6).
+        if (status.level > SkillLevel.NONE) {
+            gravity = Gravity.START
+            marginStart = dp(8)
+        } else {
+            gravity = Gravity.CENTER_HORIZONTAL
+        }
         topMargin = dp(4)
     })
     addWithMargins(TextView(context).apply {
