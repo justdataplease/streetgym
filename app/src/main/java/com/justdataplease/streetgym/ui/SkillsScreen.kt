@@ -276,7 +276,8 @@ private fun Context.skillCell(status: SkillStatus, lock: Tier?, off: Boolean, on
     clipChildren = false
     addView(FrameLayout(context).apply {
         clipChildren = false
-        addView(skillMedal(status, 78), FrameLayout.LayoutParams(dp(78), medalHeight(78), Gravity.TOP or Gravity.CENTER_HORIZONTAL))
+        addView(skillMedal(status, 78, emptyShield = lock == null && !off),
+            FrameLayout.LayoutParams(dp(78), medalHeight(78), Gravity.TOP or Gravity.CENTER_HORIZONTAL))
         if (lock != null && !off) {
             addView(lockBadge(getString(if (lock == Tier.PRO) R.string.tier_pro else R.string.tier_plus)).apply {
                 textSize = 10f

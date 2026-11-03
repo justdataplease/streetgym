@@ -29,10 +29,11 @@ fun difficultyColor(grade: Int): Int = when (grade.coerceIn(1, 5)) {
 /**
  * A skill as a medal: its figure on a rounded square [size] dp wide whose outline shows how hard the skill is
  * ([difficultyColor]), with the athlete's rank shield ([RankBadgeView]) worn like a tag on its bottom-right corner,
- * about half of it outside the square (the owner, 2.11.5). The medal is [size] wide and [medalHeight] tall; the shield
- * draws past both, so its parent must not clip children and must leave it the room.
+ * about half of it outside the square (the owner, 2.11.5). With [emptyShield], a skill without a rank yet wears an empty
+ * shield there, the first rank to earn (2.11.6), so every medal of a ladder looks alike. The medal is [size] wide and
+ * [medalHeight] tall; the shield draws past both, so its parent must not clip children and must leave it the room.
  */
-fun Context.skillMedal(status: SkillStatus, size: Int): FrameLayout = FrameLayout(this).apply {
+fun Context.skillMedal(status: SkillStatus, size: Int, emptyShield: Boolean = false): FrameLayout = FrameLayout(this).apply {
     val ring = (size / 16).coerceAtLeast(3)
     val scale = size / MEDAL_SIZE
     addView(FrameLayout(context).apply {
@@ -46,7 +47,7 @@ fun Context.skillMedal(status: SkillStatus, size: Int): FrameLayout = FrameLayou
         addView(skillFigure(status), FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
             FrameLayout.LayoutParams.MATCH_PARENT).apply { setMargins(dp(ring), dp(ring), dp(ring), dp(ring)) })
     }, FrameLayout.LayoutParams(dp(size), dp(size), Gravity.TOP or Gravity.CENTER_HORIZONTAL))
-    if (status.level > SkillLevel.NONE) {
+    if (status.level > SkillLevel.NONE || emptyShield) {
         val density = resources.displayMetrics.density
         addView(RankBadgeView(context, status.level, scale).apply {
             // Elite's wings spread either side of its shield, so it sits further out to keep the shield on the corner.
@@ -95,7 +96,8 @@ private fun Context.skillFigure(status: SkillStatus): ExerciseAnimationView {
 /**
  * A rank as a shield, like a soldier's insignia in a game: a peaked gold rim, a glossy graphite face and gold marks.
  * One chevron band for Beginner, two for Intermediate, three stars for Advanced, a big star for Master, and for Elite
- * the big star with wings. The big-star ranks wear a stacked crest. [scale] sizes it to its medal.
+ * the big star with wings. The big-star ranks wear a stacked crest. [scale] sizes it to its medal. No rank yet draws the
+ * shield empty: its outline and the first band in a muted line, on the page colour.
  */
 class RankBadgeView(context: Context, private val level: SkillLevel, private val scale: Float = 1f) : View(context) {
     /** How far the crest rises above the shield; the shield itself is 32 by 38 units. */
@@ -123,6 +125,14 @@ class RankBadgeView(context: Context, private val level: SkillLevel, private val
         strokeWidth = 0.7f
         strokeJoin = Paint.Join.ROUND
     }
+    /** The empty shield of a skill without a rank: the page colour, a muted outline. */
+    private val emptyFace = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = AppColors.BACKGROUND }
+    private val emptyLine = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        color = AppColors.DIVIDER
+        strokeWidth = 2f
+        strokeJoin = Paint.Join.ROUND
+    }
     /** The bevel where the rim meets the face. */
     private val bevel = Paint(line).apply {
         color = GOLD_BEVEL
@@ -142,6 +152,11 @@ class RankBadgeView(context: Context, private val level: SkillLevel, private val
         val unit = min(width / box.first, height / box.second)
         canvas.save()
         canvas.scale(unit, unit)
+        if (level == SkillLevel.NONE) {
+            drawEmpty(canvas)
+            canvas.restore()
+            return
+        }
         canvas.translate(0f, crest)
         if (level == SkillLevel.ELITE) drawGold(canvas, wings())
         canvas.translate(shieldLeft, 0f)
@@ -166,6 +181,13 @@ class RankBadgeView(context: Context, private val level: SkillLevel, private val
         canvas.restore()
         canvas.drawPath(inner, bevel)
         canvas.restore()
+    }
+
+    private fun drawEmpty(canvas: Canvas) {
+        val outline = polygon(OUTER)
+        canvas.drawPath(outline, emptyFace)
+        canvas.drawPath(outline, emptyLine)
+        canvas.drawPath(bands(19f), emptyLine)
     }
 
     private fun drawGold(canvas: Canvas, path: Path) {
