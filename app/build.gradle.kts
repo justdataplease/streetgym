@@ -34,8 +34,8 @@ android {
         applicationId = "com.justdataplease.streetgym"
         minSdk = 24
         targetSdk = 36
-        versionCode = 50
-        versionName = "2.13.2"
+        versionCode = 51
+        versionName = "2.13.3"
         testInstrumentationRunner = "com.justdataplease.streetgym.TrainingInstrumentation"
 
         vectorDrawables.useSupportLibrary = false

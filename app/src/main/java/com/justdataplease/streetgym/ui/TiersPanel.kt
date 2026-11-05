@@ -29,6 +29,8 @@ sealed interface Paywall {
     /** The ready workouts in Training › Library (Pro). */
     data object Ready : Paywall
     data class Saved(val limit: Int) : Paywall
+    /** Creating own workouts in My workouts: Plus (2.13.3). */
+    data object Custom : Paywall
     /** Own lists in My workouts: Plus, or more of them with Pro once Plus has made all of its [limit]. */
     data class Lists(val limit: Int) : Paywall
     /** Today's Remove ads button: both plans end the ads. */
@@ -54,6 +56,7 @@ class TiersPanel(
         Paywall.Leaderboard -> R.string.paywall_leaderboard
         Paywall.Ready -> R.string.paywall_ready
         is Paywall.Saved -> R.string.paywall_saved
+        Paywall.Custom -> R.string.paywall_custom
         is Paywall.Lists -> if (paywall.limit == 0) R.string.paywall_lists else R.string.paywall_lists_full
         Paywall.Ads -> R.string.paywall_ads
     },(paywall as? Paywall.Level)?.number ?: (paywall as? Paywall.Saved)?.limit ?: (paywall as? Paywall.Lists)?.limit ?: 0), 20f)

@@ -406,8 +406,16 @@ open class HomeActivity : Activity() {
         val tier = Entitlement.tier(this)
         page.addWithMargins(bodyText(getString(R.string.leaderboard_intro), 14f), topDp = 12)
         if (!tier.leaderboard) {
-            // A board's shape, nobody on it, under the layer whose Unlock opens the offer (the owner, 2026-11-05).
-            page.addWithMargins(lockedLayer(leaderboardSample(), Paywall.Leaderboard, Tier.PLUS), topDp = 12)
+            // A board's shape, nobody on it, under the layer whose Unlock opens the offer (the owner, 2026-11-05). The layer
+            // takes what's left of the screen and cuts the rows off there, so Unlock sits in the middle of what is seen on
+            // any phone ("keep it centred").
+            val layer = lockedLayer(leaderboardSample(), Paywall.Leaderboard, Tier.PLUS)
+            page.addWithMargins(layer, topDp = 12)
+            layer.post {
+                val viewport = (page.parent as? View)?.height ?: return@post
+                val fill = viewport - layer.top - page.paddingBottom
+                if (fill > dp(200) && layer.layoutParams.height != fill) layer.layoutParams = layer.layoutParams.apply { height = fill }
+            }
             return
         }
         if (!Cloud.available(this)) {
@@ -1278,7 +1286,9 @@ open class HomeActivity : Activity() {
             days.forEach { page.addWithMargins(libraryCard(it, locale), bottomDp = 10) }
             return
         }
-        page.addWithMargins(primaryButton(getString(R.string.library_create)) { requestNewDay() }, topDp = 14, bottomDp = 18)
+        // Free: Create wears the Plus sticker and opens the offer (the owner, 2026-11-05); days made before stay below.
+        page.addWithMargins(if (tier.customDays) primaryButton(getString(R.string.library_create)) { requestNewDay() }
+            else tierButton(getString(R.string.library_create), Paywall.Custom, getString(R.string.tier_plus)), topDp = 14, bottomDp = 18)
         page.addView(sectionLabel(getString(R.string.library_custom)))
         if (state.customDays.isEmpty()) page.addWithMargins(bodyText(getString(R.string.library_empty), 14f), bottomDp = 12)
         state.customDays.forEach { page.addWithMargins(libraryCard(CustomDays.toProgram(it), locale), bottomDp = 10) }
@@ -1685,11 +1695,15 @@ open class HomeActivity : Activity() {
      * (the owner, 2026-11-05: "have Unlock only word", "put the Plus on the corner", and of three tries, the sticker).
      * Opens the offer for [paywall]. [fill]: as wide as its row.
      */
-    private fun unlockButton(paywall: Paywall, tierName: String, fill: Boolean = true): View {
+    private fun unlockButton(paywall: Paywall, tierName: String, fill: Boolean = true): View =
+        tierButton(getString(R.string.unlock), paywall, tierName, fill)
+
+    /** [text] on the primary button with the tier's badge stuck on its corner, like Unlock; opens the offer for [paywall]. */
+    private fun tierButton(text: String, paywall: Paywall, tierName: String, fill: Boolean = true): View {
         val shadow = dp(AppColors.theme.shape.shadowDp)
         val wrap = ViewGroup.LayoutParams.WRAP_CONTENT
-        val button = primaryButton(getString(R.string.unlock)) { showPaywall(paywall) }.apply {
-            contentDescription = "${getString(R.string.unlock)} $tierName"
+        val button = primaryButton(text) { showPaywall(paywall) }.apply {
+            contentDescription = "$text $tierName"
             if (!fill) setPadding(dp(28), paddingTop, dp(28) + shadow, paddingBottom)
         }
         val badge = lockBadge(tierName).apply {
@@ -1730,10 +1744,13 @@ open class HomeActivity : Activity() {
                 FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER))
         }
 
-    /** Free's leaderboard behind its layer: six places with grey bars where the names and points would be. */
+    /**
+     * Free's leaderboard behind its layer: twenty places with grey bars where the names and points would be, more than a
+     * screen holds; the layer cuts them where the screen ends (the owner, 2026-11-05: "have 10, 20, to have full screen").
+     */
     private fun leaderboardSample(): LinearLayout = LinearLayout(this).apply {
         orientation = LinearLayout.VERTICAL
-        listOf(0.62f, 0.5f, 0.56f, 0.42f, 0.5f, 0.38f).forEachIndexed { index, share ->
+        listOf(0.62f, 0.5f, 0.56f, 0.42f, 0.5f, 0.38f, 0.58f, 0.46f, 0.52f, 0.4f, 0.55f, 0.44f, 0.6f, 0.48f, 0.36f, 0.54f, 0.43f, 0.57f, 0.41f, 0.5f).forEachIndexed { index, share ->
             addView(LinearLayout(context).apply {
                 orientation = LinearLayout.HORIZONTAL
                 gravity = Gravity.CENTER_VERTICAL
@@ -1770,6 +1787,7 @@ open class HomeActivity : Activity() {
     }
 
     private fun requestNewDay() {
+        if (!Entitlement.tier(this).customDays) { showPaywall(Paywall.Custom); return }
         if (!roomForAnother()) return
         val day = CustomDay(CustomDays.newId(), "", emptyList(), System.currentTimeMillis())
         draft = day

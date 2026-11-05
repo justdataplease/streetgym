@@ -71,8 +71,8 @@ class EntitlementTest {
     }
     @Test fun tiersUnlockInOrder() {
         assertEquals(listOf(3, 30, 300), Tier.entries.map { it.savedDays })
-        assertFalse(Tier.FREE.adFree || Tier.FREE.parks || Tier.FREE.renameLevels)
-        assertTrue(Tier.PLUS.adFree && Tier.PLUS.parks && Tier.PLUS.renameLevels)
+        assertFalse(Tier.FREE.adFree || Tier.FREE.parks || Tier.FREE.renameLevels || Tier.FREE.customDays)
+        assertTrue(Tier.PLUS.adFree && Tier.PLUS.parks && Tier.PLUS.renameLevels && Tier.PLUS.customDays && Tier.PRO.customDays)
         // Plus signs in for the leaderboard; only Pro saves to the cloud and opens the ready workouts.
         assertFalse(Tier.FREE.account || Tier.FREE.leaderboard)
         assertTrue(Tier.PLUS.account && Tier.PLUS.leaderboard && Tier.PRO.account)

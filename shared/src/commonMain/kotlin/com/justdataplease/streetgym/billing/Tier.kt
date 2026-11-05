@@ -11,6 +11,8 @@ enum class Tier(val savedDays: Int, val workoutLists: Int, val daysPerList: Int)
 
     val adFree: Boolean get() = this >= PLUS
     val renameLevels: Boolean get() = this >= PLUS
+    /** Creating own workouts in My workouts (the owner, 2026-11-05: "don't let Free create custom workouts"); days made before stay usable. */
+    val customDays: Boolean get() = this >= PLUS
     val parks: Boolean get() = this >= PLUS
     /** Own lists in My workouts; Free keeps everything in Favorites. */
     val lists: Boolean get() = workoutLists > 0
