@@ -23,6 +23,7 @@ Module `:shared` in the standalone repo, `:streetgymnastics-shared` in the suite
 | `data` | `CurriculumJsonParser.kt` | Reads `curriculum.json` and `workouts.json` into the catalog |
 | `data` | `Clock.kt` | `epochMillisNow()`, for the default times |
 | `data.skills` | `SkillBook.kt`, `SkillCurriculumReader.kt`, `SkillStandards.kt`, `SkillSwitches.kt` | The 40 skills, ranks 1–5, targets and credits, skill switches |
+| `data.equipment` | `Equipment.kt` | The equipment switches: the library's equipment tags read as seven pieces (pull-up bar, low bar, parallel bars, box, wall, pole, band), and what a spot without them leaves out |
 | `data.progress` | `ProgressRepository.kt` | The progress interface, `WorkoutSession` and `ActiveWorkout` |
 | `data.progress` | `Placement.kt`, `NextClass.kt`, `LevelReplay.kt`, `Intensity.kt`, `ExamLog.kt`, `ProgressMerge.kt` | The strength test, next class, repeats, easier/harder, exams, cloud merges |
 | `data.points` | `Points.kt` | Points per set and rank, all-time and month totals (UTC months without a platform calendar) |

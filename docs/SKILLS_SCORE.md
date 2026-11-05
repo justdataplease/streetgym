@@ -68,19 +68,19 @@ Every target is in `SkillStandards.kt` and `docs/CURRICULUM_PLAN.md`. The sets a
 
 ## Following the program as written
 
-Results for someone who does every class of the ten levels as written, every set as planned on Normal, and trains nothing extra (ranks counted by `tools/build_curriculum.py` from the classes; points with the 2.10.0 rules, rounded per class as the app saves them, from the points simulation of 31 October 2026):
+Results for someone who does every class of the ten levels as written, every set as planned on Normal, and trains nothing extra. They cover the hand-written program (Round X, 2.12.0). Ranks are counted with the app's rules (the belt counter in `tools/build_curriculum.py`) from the classes. Points use the 2.10.0 rules, rounded per class as the app saves them, from the points simulation of 5 November 2026, which reproduces the 2.11.6 table exactly.
 
 | End of level | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
 |---|---|---|---|---|---|---|---|---|---|---|
-| Points | 15,454 | 33,774 | 54,984 | 77,402 | 104,097 | 133,131 | 166,247 | 204,083 | 245,956 | 294,422 |
-| Ranks reached (of 200) | 11 | 20 | 29 | 45 | 61 | 73 | 87 | 113 | 140 | 181 |
-| Skills at Rank 1 or more (of 40) | 7 | 10 | 13 | 21 | 23 | 27 | 31 | 36 | 40 | 40 |
+| Points | 11,556 | 28,042 | 47,614 | 70,018 | 95,704 | 126,275 | 156,539 | 191,411 | 228,429 | 273,077 |
+| Ranks reached (of 200) | 7 | 17 | 26 | 42 | 59 | 74 | 90 | 113 | 141 | 186 |
+| Skills at Rank 1 or more (of 40) | 5 | 10 | 13 | 19 | 23 | 26 | 32 | 36 | 40 | 40 |
 
-- The first rank comes at class 11 (hollow body, Rank 1); the push-up and squat follow at class 13.
-- Every level brings new ranks, and every skill reaches Rank 1 inside the plan, the last being the one-arm handstand at L9:090.
-- Every skill reaches its Rank 5 target by the end of Level 10 (the owner: "at least the max should be achievable, it's ok if not the sets"). 34 reach it in a set of their own, the strict muscle-up, dead hang, shrimp squat, one-arm handstand and Hefesto in Level 10 record sets, and the hanging leg raise holds Rank 5 through toes-to-bar.
+- The first rank comes at class 26 (hollow body, Rank 1); the dead hang follows at 46, the squat at 48 and the push-up at 64. Level 1 is gentler than in 2.11 (the first rank was at class 11), and its classes are shorter: the minutes now match the app's own timing.
+- Every level brings new ranks, and every skill reaches Rank 1 inside the plan, the last being the one-arm handstand at L9:095.
+- Every skill reaches its Rank 5 target at least once inside the plan, and gets at least 21 of the 30 Rank 5 sets there (review 11, the owner's 70% rule; `validate_progressions.py`).
 - A progression peaks while it is still trained, before the next rung takes over. No record set sits beside a harder rung of its ladder (`validate_progressions.py`).
-- Rank 5 takes 30 sets at the target, so the plan alone reaches it on 11 skills: the push-up, squat, hollow body, dip, the pseudo-planche push-up, the freestanding handstand, the pistol, toes-to-bar and the dragon flag, plus the wall handstand and hanging leg raise through the harder rung of their ladders. High-rep pull-ups run one heavy set a class (review 6), so the pull-up's Rank 5 comes from own training. The rest comes from repeating blocks and the athlete's own workouts, by design. The skills help says so.
+- Rank 5 takes 30 sets at the target, so the plan alone reaches it on 26 skills, the dead hang and the pseudo-planche push-up through a harder rung of their ladders. The rest comes from repeating blocks and the athlete's own workouts, by design. The skills help says so.
 
 ## Points (`Points`, `WorkoutFlow.points`)
 

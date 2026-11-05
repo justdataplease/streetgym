@@ -52,6 +52,16 @@ function Get-PropertyValue($Value, [string]$Name) {
     return $Value.PSObject.Properties[$Name].Value
 }
 
+# Round 12: a section's steps as a list of 7-value tuples. PowerShell unrolls a one-step section on return, so a lone
+# tuple comes back as its seven values; this wraps it again.
+function Get-SectionSteps($Program, [string]$Name) {
+    $value = Get-PropertyValue $Program $Name
+    if ($null -eq $value) { return ,@() }
+    $items = @($value)
+    if ($items.Count -gt 0 -and -not ($items[0] -is [System.Array])) { return ,@(,$items) }
+    return ,$items
+}
+
 function Test-DormantVideoMetadataKey([string]$Name) {
     $normalized = [regex]::Replace($Name, '[_\-\s]', '').ToLowerInvariant()
     return $normalized -in @(
@@ -462,7 +472,8 @@ function Test-RecoveryLike([string]$DayType) {
 function Get-ProgramTokenText($Programs, $MovementById) {
     $tokens = New-Object System.Collections.ArrayList
     foreach ($program in @($Programs)) {
-        foreach ($step in @((Get-PropertyValue $program "main"))) {
+        # Round 12: the skill holds sit in the practice part.
+        foreach ($step in (Get-SectionSteps $program "practice") + (Get-SectionSteps $program "main")) {
             $values = @($step)
             if ($values.Count -lt 1) { continue }
             $movementId = [string]$values[0]
@@ -542,7 +553,7 @@ foreach ($movementId in $movementById.Keys) {
     }
 }
 
-# Validate all 1,000 authored source records (tools/build_curriculum.py writes curriculum/program.json).
+# Validate all 1,000 authored source records (curriculum/program.json, from the hand-written curriculum/handwritten).
 $authoredSourceProgramIds = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::Ordinal)
 $authoredSourceTitles = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
 $authoredSourceDescriptions = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
@@ -584,8 +595,9 @@ foreach ($authoredSourcePath in $AuthoredSourcePaths) {
         if (Contains-PropertyName $sourceProgram "routing") {
             Add-Error "$sourceLocation contains a forbidden routing field"
         }
-        foreach ($sectionName in @("warmup", "main", "cooldown")) {
-            $sourceSteps = @((Get-PropertyValue $sourceProgram $sectionName))
+        foreach ($sectionName in @("warmup", "practice", "main", "cooldown")) {
+            $sourceSteps = (Get-SectionSteps $sourceProgram $sectionName)
+            if ($sectionName -eq "practice" -and $sourceSteps.Count -lt 1) { continue }  # round 12: a class may have no skill part
             if ($sourceSteps.Count -lt 1) {
                 Add-Error "$sourceLocation has no $sectionName steps"
                 continue
@@ -746,7 +758,8 @@ foreach ($level in $levels) {
         $main = @($program.main)
         $cooldown = @($program.cooldown)
         if ($warmup.Count -lt 3) { Add-Error "$location has fewer than 3 warm-up steps" }
-        if ($main.Count -lt 4) { Add-Error "$location has fewer than 4 main steps" }
+        $practiceSteps = (Get-SectionSteps $program "practice")
+        if ($main.Count -lt 1 -or ($main.Count + $practiceSteps.Count) -lt 4) { Add-Error "$location has fewer than 4 practice and main steps" }
         if ($cooldown.Count -lt 3) { Add-Error "$location has fewer than 3 cooldown steps" }
         $cooldownStretchCount = @($cooldown | Where-Object {
             $stepValues = @($_)
@@ -757,8 +770,8 @@ foreach ($level in $levels) {
         if ($cooldownStretchCount -lt 2) {
             Add-Error "$location has fewer than 2 explicit cooldown stretches"
         }
-        foreach ($sectionName in @("warmup", "main", "cooldown")) {
-            $steps = @((Get-PropertyValue $program $sectionName))
+        foreach ($sectionName in @("warmup", "practice", "main", "cooldown")) {
+            $steps = (Get-SectionSteps $program $sectionName)
             for ($stepIndex = 0; $stepIndex -lt $steps.Count; $stepIndex++) {
                 Validate-Step $steps[$stepIndex] "$location $sectionName $($stepIndex + 1)" $movementById
             }
@@ -777,8 +790,8 @@ foreach ($level in $levels) {
                 [void]$semanticParts.Add((ConvertTo-CanonicalJson $semanticObject))
             }
         }
-        foreach ($sectionName in @("warmup", "main", "cooldown")) {
-            foreach ($step in @((Get-PropertyValue $program $sectionName))) {
+        foreach ($sectionName in @("warmup", "practice", "main", "cooldown")) {
+            foreach ($step in (Get-SectionSteps $program $sectionName)) {
                 $values = @($step)
                 if ($values.Count -eq 7 -and (Has-Text $values[5])) {
                     [void]$semanticParts.Add([string]$values[5])
@@ -850,8 +863,8 @@ foreach ($level in $levels) {
 
         $automaticRestSeconds = [long]0
         $exactWorkSeconds = [long]0
-        foreach ($sectionName in @("warmup", "main", "cooldown")) {
-            foreach ($step in @((Get-PropertyValue $program $sectionName))) {
+        foreach ($sectionName in @("warmup", "practice", "main", "cooldown")) {
+            foreach ($step in (Get-SectionSteps $program $sectionName)) {
                 $values = @($step)
                 if ($values.Count -ne 7) { continue }
                 $stepSets = [long]0
@@ -1059,8 +1072,8 @@ $rehearsalRequiredCategories = @(
 )
 foreach ($orderedLevel in @($levels | Sort-Object { [int]$_.number })) {
     foreach ($orderedProgram in @($orderedLevel.programs | Sort-Object { [int]$_.number })) {
-        foreach ($sectionName in @("warmup", "main")) {
-            $orderedSteps = @((Get-PropertyValue $orderedProgram $sectionName))
+        foreach ($sectionName in @("warmup", "practice", "main")) {
+            $orderedSteps = (Get-SectionSteps $orderedProgram $sectionName)
             for ($orderedStepIndex = 0; $orderedStepIndex -lt $orderedSteps.Count; $orderedStepIndex++) {
                 $orderedValues = @($orderedSteps[$orderedStepIndex])
                 if ($orderedValues.Count -ne 7) { continue }

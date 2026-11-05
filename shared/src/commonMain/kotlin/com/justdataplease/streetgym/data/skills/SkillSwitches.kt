@@ -1,5 +1,6 @@
 package com.justdataplease.streetgym.data.skills
 
+import com.justdataplease.streetgym.data.equipment.EquipmentSwitches
 import com.justdataplease.streetgym.data.model.TrainingProgram
 
 /**
@@ -111,11 +112,12 @@ data class SkillSwitches(val offFrom: Map<String, Int> = emptyMap()) {
 }
 
 /**
- * A class with nothing left to train: every exercise of its practice and main work is switched off. It counts as passed
- * (the sequence moves on) and earns nothing; warm-up and cool-down don't keep it.
+ * A class with nothing left to train: every exercise of its practice and main work is switched off, as a skill or for
+ * equipment the athlete doesn't have ([equipment]). It counts as passed (the sequence moves on) and earns nothing;
+ * warm-up and cool-down don't keep it.
  */
-fun TrainingProgram.switchedOff(switches: SkillSwitches): Boolean {
-    if (!switches.any) return false
+fun TrainingProgram.switchedOff(switches: SkillSwitches, equipment: EquipmentSwitches = EquipmentSwitches()): Boolean {
+    if (!switches.any && !equipment.any) return false
     val work = (practice + exercises).filterNot { it.readinessCheck }
-    return work.isNotEmpty() && work.all { exercise -> exercise.movementId?.let(switches::isOff) == true }
+    return work.isNotEmpty() && work.all { exercise -> exercise.movementId?.let(switches::isOff) == true || equipment.isOff(exercise) }
 }

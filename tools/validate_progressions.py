@@ -12,13 +12,13 @@ ROOT = Path(__file__).resolve().parents[1]
 catalog = json.loads((ROOT / "generated/curriculum_v2.json").read_text(encoding="utf-8"))
 movements = {m["id"]: m for m in catalog["movement_library"]}
 limits = {p["level"]: p for p in json.loads((ROOT / "curriculum/class_progression.json").read_text(encoding="utf-8"))["levels"]}
-kotlin = (ROOT / "app/src/main/java/com/justdataplease/streetgym/data/skills/SkillStandards.kt").read_text(encoding="utf-8")
+kotlin = (ROOT / "shared/src/commonMain/kotlin/com/justdataplease/streetgym/data/skills/SkillStandards.kt").read_text(encoding="utf-8")
 TARGETS = {sid: [int(x) for x in nums.split(",")[1:]]
            for sid, nums in re.findall(r'"(\w+)" to (?:reps|repsSide|hold|holdSide|attempts)\(([\d, ]+)\)', kotlin)}
 TARGETS = {k: [int(x) for x in v] for k, v in TARGETS.items()}
 assert len(TARGETS) == 40, len(TARGETS)
 # The app's belt ladders (SkillBook.DEFAULT_FAMILIES), easiest rung first: a level on a harder rung holds on the easier.
-book = (ROOT / "app/src/main/java/com/justdataplease/streetgym/data/skills/SkillBook.kt").read_text(encoding="utf-8")
+book = (ROOT / "shared/src/commonMain/kotlin/com/justdataplease/streetgym/data/skills/SkillBook.kt").read_text(encoding="utf-8")
 BELT_LADDERS = [re.findall(r'"(\w+)"', rungs) for rungs in re.findall(r'SkillFamilySpec\("\w+", "[^"]+", SkillGroup\.\w+,\s*listOf\(([^)]*)\)', book)]
 assert sorted(r for rungs in BELT_LADDERS for r in rungs) == sorted(TARGETS), BELT_LADDERS
 BELT_SETS = [10, 15, 20, 25, 30]
@@ -98,11 +98,12 @@ for p in classes:
         if role in {r for rs in ROLES.values() for r in rs}:
             assert role in ROLES[p["schedule"]["day"]], f"{where(p)} is a {role} class at rotation position {p['schedule']['day']}"
 
-# 3. Easy classes are easy: RPE 4 or lower, no practice part, no assessment and no more than two sets of anything.
+# 3. Easy classes are easy: RPE 4 or lower, no assessment and no more than two sets of anything (round 12: their skill
+#    holds sit in the skill part, as in every class).
 for p in classes:
     if EASY_TYPES.match(p["schedule"]["day_type"]):
-        assert p["schedule"]["rpe"] <= 4 and not p["practice"], where(p)
-        assert all(st[5] != "assessment" and st[1] <= 2 for st in p["main"]), where(p)
+        assert p["schedule"]["rpe"] <= 4, where(p)
+        assert all(st[5] != "assessment" and st[1] <= 2 for st in work(p)), where(p)
 
 # 4. The lighter exam week: each lighter class keeps at most 70% of the sets of the same day a week earlier.
 by = {(p["level"], p["number"]): p for p in classes}
@@ -112,13 +113,13 @@ for p in classes:
         if before and not before["schedule"]["day_type"].startswith(("deload_", "exam", "reentry", "primer", "light_")):
             assert sum(st[1] for st in p["main"]) <= 0.7 * sum(st[1] for st in before["main"]) + 1, where(p)
 
-# 5. Exams: assessments in the main part only, a check of the skills and rest (2.9.0, the three coaches): 4 to 9 tests (a
+# 5. Exams: assessments in the skill and strength parts (round 12: the skill tests sit in the skill part), a check of the skills and rest (2.9.0, the three coaches): 4 to 9 tests (a
 #    level's first exam, which follows the level test, 3 to 4; a level test from Level 7, every full shape, up to 11), with at most 5 elbow-load sets, the German hang included
 #    (checked with the elbow caps below). Every exam is a skills test (2.6.8).
 for p in classes:
     if p["schedule"]["day_type"].startswith("exam"):
-        tests = [st for st in p["main"] if st[5] == "assessment"]
-        assert not p["practice"] and tests, where(p)
+        tests = [st for st in work(p) if st[5] == "assessment"]
+        assert tests, where(p)
         assert len(tests) <= 11, f"{where(p)} has {len(tests)} tests"
         assert len(tests) >= 3, f"{where(p)} tests only {len(tests)} skills"
         assert len({st[0] for st in tests}) == len(tests), f"{where(p)} tests a movement twice"
@@ -213,8 +214,8 @@ for p in classes:
             for sid in [st[0]] + EASIER[st[0]]:
                 at_target[sid] = [c + h for c, h in zip(at_target[sid], hit)]
     if not p["schedule"]["day_type"].startswith("exam"):
-        ids = {st[0] for st in p["main"]}
-        for st in p["main"]:
+        ids = {st[0] for st in work(p)}  # round 12: a record set may sit in the skill part
+        for st in work(p):
             for rungs in LADDERS.values():
                 if st[5] == "assessment" and st[0] in rungs:
                     harder = ids & set(rungs[rungs.index(st[0]) + 1:])
@@ -231,10 +232,10 @@ for rungs in BELT_LADDERS:
 for sid, t in TARGETS.items():
     assert sid in first, f"{sid} is never trained"
     assert reach[sid] >= t[4] or sid in elite_in_plan, f"{sid} never reaches its Elite target {t[4]} (best {reach[sid]})"
-l9 = {st[0] for st in by[(9, 100)]["main"] if st[5] == "assessment"}
+l9 = {st[0] for st in work(by[(9, 100)]) if st[5] == "assessment"}
 assert set(FULL_SHAPES) <= l9, set(FULL_SHAPES) - l9
-assert all(TARGETS[s][0] <= value(st) for st in by[(9, 100)]["main"] for s in FULL_SHAPES if st[0] == s)
-records = [st for p in classes if p["level"] == 10 for st in p["main"] if st[5] == "assessment" and st[0] in TARGETS and value(st) == TARGETS[st[0]][4]]
+assert all(TARGETS[s][0] <= value(st) for st in work(by[(9, 100)]) for s in FULL_SHAPES if st[0] == s)
+records = [st for p in classes if p["level"] == 10 for st in work(p) if st[5] == "assessment" and st[0] in TARGETS and value(st) == TARGETS[st[0]][4]]
 assert records, "Level 10 has no record sets"
 
 
@@ -340,7 +341,7 @@ for i, p in enumerate(classes):
             for st in work(q):
                 if st[5] != "assessment":
                     trained[st[0]] = max(trained[st[0]], value(st))
-    tests = [st for st in p["main"] if st[5] == "assessment"]
+    tests = [st for st in work(p) if st[5] == "assessment"]
     first = p["number"] == min(q["number"] for q in classes if q["level"] == p["level"] and q["schedule"]["day_type"].startswith("exam"))
     most = 4 if first and p["level"] >= 2 else 11 if p["number"] == 100 and p["level"] >= 7 else 9
     assert len(tests) <= most, f"{where(p)} holds {len(tests)} tests"

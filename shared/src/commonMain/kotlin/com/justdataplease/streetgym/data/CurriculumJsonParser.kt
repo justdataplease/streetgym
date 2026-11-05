@@ -38,6 +38,7 @@ object CurriculumJsonParser {
             levels = root.optJSONArray("levels").mapObjects { parseLevel(it, movementLibrary) },
             workouts = workouts.mapObjects { parseProgram(it, 0, movementLibrary) },
             movementGrades = movementLibrary.mapNotNull { (id, movement) -> movement.optIntOrNull("grade")?.let { id to it } }.toMap(),
+            movementEquipment = movementLibrary.mapValues { (_, movement) -> movement.optJSONArray("equipment").mapStrings() },
         )
     }
 

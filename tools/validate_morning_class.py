@@ -1,6 +1,6 @@
 """Checks for the delivered classes' practice part, cool-downs and the motion contacts of the animations they use.
 
-Round 9 (tools/build_curriculum.py) writes each class's practice itself; this checks what the athlete sees: the practice
+The hand-written classes (curriculum/handwritten) carry each class's practice themselves; this checks what the athlete sees: the practice
 part holds short, easy handstand and balance work inside the level's set budget, every movement has its animation, and
 the motion templates keep their contacts.
 """
@@ -19,6 +19,12 @@ assert list(limits_by_level) == list(range(1, 11))
 budgets = [p["main_sets_including_practice"] for p in progression["levels"]]
 assert budgets == sorted(budgets) and budgets[0] < budgets[-1]
 
+# Round 12 (the owner and six reviewers): Skill practice holds the skills you balance or hold, the handstand line, the
+# levers, the planche, the flag and the L-sit, before the strength part; reps stay in the strength part. A movement keeps
+# its section in every class, exams and easy classes included (the owner: the section names stay the same in every class).
+SKILL_PATTERNS = {"handstand", "planche", "front_lever", "back_lever", "human_flag", "l_sit"}
+HANDSTAND_DRILLS = {"handstand_exit", "wall_kickup"}  # the handstand line's technique reps
+section = {}
 practice_classes = 0
 for level in catalog["levels"]:
     limits = limits_by_level[level["number"]]
@@ -27,20 +33,24 @@ for level in catalog["levels"]:
         assert p["readiness"]["en"] and p["safety"]["en"], p["id"]
         assert "training_main" not in p and "training_content" not in p and "morning_recovery" not in p, p["id"]
         practice = p["practice"]
-        # Easy classes and exam days carry no practice part: an exam tests the handstand in its main work.
-        if p["schedule"]["rpe"] <= 4 or p["schedule"]["day_type"].startswith("exam"):
-            assert practice == [], p["id"]
+        for step in practice:
+            assert section.setdefault(step[0], "practice") == "practice", (p["id"], step[0], "in both sections")
+        for step in p["main"]:
+            assert section.setdefault(step[0], "main") == "main", (p["id"], step[0], "in both sections")
         practice_classes += bool(practice)
         # The Full Battle (L10:090) runs the basics five rounds, outside the class budget.
         assert p["schedule"]["day_type"] == "full_battle" or sum(s[1] for s in practice + p["main"]) <= limits["main_sets_including_practice"], p["id"]
-        assert sum(s[1] for s in practice) <= 4, p["id"]
         for step in practice + p["main"] + p["warmup"]:
             assert step[0] in movements and step[0] in asset["movements"], (p["id"], step[0])
         for step in practice:
             mid, sets, reps, seconds, rest, tempo, regression = step
-            # The practice part is the handstand line: timed, easy holds with short rests.
-            assert "handstand" in movements[mid]["patterns"] and tempo == "easy technique", (p["id"], step)
-            assert reps is None and 0 < int(str(seconds).split("/")[0]) <= 90 and 1 <= sets <= 3 and rest <= 60, (p["id"], step)
+            # The practice part is the skill holds and the handstand line's technique.
+            assert set(movements[mid]["patterns"]) & SKILL_PATTERNS, (p["id"], step)
+            assert reps is None or mid in HANDSTAND_DRILLS, (p["id"], step)
+            assert 1 <= sets <= limits["sets_per_exercise"], (p["id"], step)
+        for step in practice:
+            if "human_flag" in movements[step[0]]["patterns"] and step[3] is not None:
+                assert str(step[3]).endswith("/side"), (p["id"], step)
         for step in p["main"]:
             if "human_flag" in movements[step[0]]["patterns"] and step[3] is not None:
                 assert str(step[3]).endswith("/side"), (p["id"], step)

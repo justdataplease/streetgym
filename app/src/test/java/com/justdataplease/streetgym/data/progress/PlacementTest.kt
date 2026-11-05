@@ -142,7 +142,7 @@ class PlacementTest {
         // Each skills-step start assumes the level test it came from, which checks the level's skills (seven tests or more).
         Placement.SKILL_TESTS.forEach { passed ->
             assertEquals(Start(passed, 100), assumed(Placement.skillStart(passed)))
-            assertTrue(programs.first { it.levelNumber == passed && it.number == 100 }.exercises.count { it.assessment } >= 7)
+            assertTrue(programs.first { it.levelNumber == passed && it.number == 100 }.tests.size >= 7)
         }
     }
 

@@ -4093,7 +4093,7 @@
    "group": "skills",
    "grade": 1,
    "focus": ["skills", "back_lever"],
-   "schedule": {"minutes": 25, "rpe": 5},
+   "schedule": {"minutes": 20, "rpe": 5},
    "warmup": [
     ["march", 1, null, 30, 0, "brisk", null],
     ["arm_swings", 1, 10, null, 10, "controlled", null],
@@ -4103,9 +4103,9 @@
     ["inverted_row", 1, 5, null, 45, "ramp-up", null]
    ],
    "main": [
-    ["skin_cat_partial", 3, 3, null, 60, "slow", null],
+    ["skin_cat_partial", 2, 3, null, 60, "slow", null],
     ["arch_hold", 2, null, 15, 50, "isometric", null],
-    ["tuck_back_entry", 3, 2, null, 90, "slow", null]
+    ["tuck_back_entry", 2, 2, null, 90, "slow", null]
    ],
    "cooldown": [
     ["lat_stretch", 1, null, 30, 10, "easy", null],
@@ -4152,7 +4152,7 @@
    "group": "skills",
    "grade": 1,
    "focus": ["skills", "planche"],
-   "schedule": {"minutes": 25, "rpe": 5},
+   "schedule": {"minutes": 20, "rpe": 5},
    "warmup": [
     ["march", 1, null, 30, 0, "brisk", null],
     ["wrist_circles", 1, 10, null, 10, "controlled", null],
@@ -4163,8 +4163,8 @@
     ["scapular_pushup", 1, 8, null, 20, "2111", null]
    ],
    "main": [
-    ["elevated_plank", 3, null, 20, 50, "isometric", null],
-    ["planche_lean", 3, null, 8, 75, "isometric", null],
+    ["elevated_plank", 2, null, 20, 50, "isometric", null],
+    ["planche_lean", 2, null, 8, 75, "isometric", null],
     ["frog_stand", 2, null, 10, 75, "isometric", null]
    ],
    "cooldown": [

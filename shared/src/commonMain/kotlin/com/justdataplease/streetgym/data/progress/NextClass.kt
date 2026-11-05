@@ -1,5 +1,6 @@
 package com.justdataplease.streetgym.data.progress
 
+import com.justdataplease.streetgym.data.equipment.EquipmentSwitches
 import com.justdataplease.streetgym.data.model.CurriculumCatalog
 import com.justdataplease.streetgym.data.model.TrainingProgram
 import com.justdataplease.streetgym.data.skills.SkillSwitches
@@ -15,11 +16,13 @@ object NextClass {
         catalog.levels.sortedBy { it.number }.flatMap { level -> level.programs.sortedBy { it.number } }
 
     /**
-     * The classes that count as passed: those completed, and those the athlete's skill switches leave with nothing to
-     * train ([switchedOff]), which the sequence steps over.
+     * The classes that count as passed: those completed, and those the athlete's skill and equipment switches leave with
+     * nothing to train ([switchedOff]), which the sequence steps over.
      */
-    fun passed(ordered: List<TrainingProgram>, completed: Set<String>, switches: SkillSwitches): Set<String> =
-        if (!switches.any) completed else completed + ordered.filter { it.switchedOff(switches) }.map(TrainingProgram::id)
+    fun passed(ordered: List<TrainingProgram>, completed: Set<String>, switches: SkillSwitches,
+               equipment: EquipmentSwitches = EquipmentSwitches()): Set<String> =
+        if (!switches.any && !equipment.any) completed
+        else completed + ordered.filter { it.switchedOff(switches, equipment) }.map(TrainingProgram::id)
 
     /** The next class in [ordered], or null once every class is complete. */
     fun of(ordered: List<TrainingProgram>, completed: Set<String>, replay: LevelReplay?): TrainingProgram? =

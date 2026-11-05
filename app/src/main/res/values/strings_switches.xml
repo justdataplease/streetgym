@@ -18,11 +18,11 @@
     <string name="switch_off_title">%1$s is switched off</string>
     <string name="switch_off_message">You\'ve switched off the %1$s skill, so this isn\'t part of your workouts or skill progress. Continue anyway?</string>
     <string name="switch_off_continue">Continue</string>
-    <string name="switch_off_class">Every exercise here belongs to a skill you switched off, so this class counts as passed. You can still do it.</string>
+    <string name="switch_off_class">Everything here is switched off in Settings, as a skill or for equipment you don\'t have, so this class counts as passed. You can still do it.</string>
     <string name="switch_off_day">Switched off</string>
     <plurals name="focus_switched_off">
-        <item quantity="one">%d set of a switched-off skill left out</item>
-        <item quantity="other">%d sets of switched-off skills left out</item>
+        <item quantity="one">%d set left out: switched off in Settings</item>
+        <item quantity="other">%d sets left out: switched off in Settings</item>
     </plurals>
     <string name="focus_do_switched_off">Do them anyway</string>
 

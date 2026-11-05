@@ -1,4 +1,9 @@
-"""Round 11: writes all 1,000 classes of the Street Gymnastics program from one plan (curriculum/program.json).
+"""DISABLED since 2026-11-05 (the owner: "keep the generator disabled"). The classes are written by hand in
+curriculum/handwritten/L01.md ... L10.md and converted by tools/handwritten_program.py. This file stays for its library
+(the belt counter, class timing and movement data that other tools import); running it writes nothing unless forced
+with --force-generator, which would overwrite the hand-written program.
+
+Round 11: writes all 1,000 classes of the Street Gymnastics program from one plan (curriculum/program.json).
 
 The plan is docs/CURRICULUM_PLAN.md: named circuit blocks in Level 1, the skill week from Level 2 with the elbow-heavy
 days between arm-light ones, lean blocks between today's frozen exams, the full shapes in Levels 8-9 and records in
@@ -13,6 +18,7 @@ Day ids are frozen (DayIdsTest): a class is identified by its level and number, 
 import itertools
 import json
 import math
+import re
 import statistics
 import sys
 from collections import defaultdict
@@ -44,35 +50,44 @@ def flat(v, frm):
     return {L: v for L in range(frm, 11)}
 
 
-skill('pushup', [6, 12, 20, 30, 40], 'r', (1, 1), 6, {1: 15, 2: 20, 3: 22, 4: 25, 5: 30, 6: 32, 7: 35, 8: 40, 9: 45, 10: 50})
-skill('squat', [15, 20, 30, 40, 50], 'r', (1, 1), 15, {1: 20, 2: 25, 3: 30, 4: 35, 5: 40, 6: 40, 7: 45, 8: 45, 9: 50, 10: 50})
-skill('hollow_body_hold', [20, 30, 40, 50, 60], 's', (1, 1), 20, {1: 30, 2: 45, 3: 50, **flat(60, 4)})
-skill('dead_hang', [30, 45, 60, 75, 90], 's', (1, 1), 30, {1: 45, 2: 60, 3: 75, **flat(90, 4)})
-skill('pullup', [3, 6, 10, 15, 20], 'r', (1, 61), 1, None)
-skill('parallel_dip', [4, 10, 15, 20, 25], 'r', (1, 61), 3, {1: 6, 2: 10, 3: 12, 4: 14, 5: 16, 6: 18, 7: 20, 8: 23, 9: 26, 10: 28})
-skill('pike_pushup', [6, 8, 10, 12, 15], 'r', (1, 41), 5, {1: 8, 2: 10, 3: 12, **flat(15, 4)})
-skill('wall_handstand', [20, 30, 45, 60, 75], 's', (1, 21), 20, {1: 30, 2: 45, 3: 60, 4: 60, **flat(75, 5)})
+# Round 12 (the owner, 2026-11-05: a gentle start, basics steady): incline push-ups to L1:021, the floor push-up from L1:022
+# at 3 reps. The level ends follow the beginner statistics (stats-research): about 10 at class 100, 15 at 200, 19 at 300.
+skill('pushup', [6, 12, 20, 30, 40], 'r', (1, 22), 3, {1: 9, 2: 15, 3: 19, 4: 23, 5: 27, 6: 30, 7: 33, 8: 36, 9: 38, 10: 40})
+skill('squat', [15, 20, 30, 40, 50], 'r', (1, 1), 10, {1: 20, 2: 25, 3: 30, 4: 35, 5: 40, 6: 40, 7: 45, 8: 45, 9: 50, 10: 50})
+skill('hollow_body_hold', [20, 30, 40, 50, 60], 's', (1, 1), 15, {1: 30, 2: 45, 3: 50, **flat(60, 4)})
+skill('dead_hang', [30, 45, 60, 75, 90], 's', (1, 1), 20, {1: 45, 2: 60, 3: 75, **flat(90, 4)})
+# Round 12: first strict singles on the bar day from L1:067 (the owner: about 60 days); the circuits keep assisted pull-ups to L1:081.
+skill('pullup', [3, 6, 10, 15, 20], 'r', (1, 67), 1, None)
+# Round 12 (the physio): full bar dips from L2:010; Level 1 keeps foot-assisted dips and, once a week, dip negatives.
+skill('parallel_dip', [4, 10, 15, 20, 25], 'r', (2, 10), 3, {2: 8, 3: 11, 4: 14, 5: 16, 6: 18, 7: 20, 8: 23, 9: 26, 10: 28})
+skill('pike_pushup', [6, 8, 10, 12, 15], 'r', (1, 65), 5, {1: 8, 2: 10, 3: 12, **flat(15, 4)})
+# Round 12 (all six reviewers): the chest-to-wall handstand from L1:044, not L1:022.
+skill('wall_handstand', [20, 30, 45, 60, 75], 's', (1, 44), 10, {1: 30, 2: 45, 3: 60, 4: 60, **flat(75, 5)})
 skill('hanging_leg_raise', [5, 8, 10, 12, 15], 'r', (2, 22), 5, {2: 8, 3: 10, 4: 12, **flat(15, 5)})
-skill('tuck_front_hold', [5, 8, 12, 16, 20], 's', (2, 21), 5, {2: 8, 3: 14, **flat(20, 4)})
+skill('tuck_front_hold', [5, 8, 12, 16, 20], 's', (2, 43), 5, {2: 8, 3: 14, **flat(20, 4)})
 skill('pseudo_planche_pushup', [5, 8, 10, 12, 15], 'r', (3, 2), 5, {3: 7, 4: 9, 5: 10, 6: 12, 7: 13, **flat(15, 8)})
-skill('tuck_back_hold', [5, 8, 12, 16, 20], 's', (3, 11), 5, {**flat(20, 3)})
+# Round 12 (the statics coach): the tuck back lever after the skin-the-cat, not at L3:011.
+skill('tuck_back_hold', [5, 8, 12, 16, 20], 's', (3, 68), 5, {3: 8, 4: 20})
 skill('lsit', [5, 10, 15, 20, 30], 's', (3, 23), 5, {3: 8, 4: 12, 5: 15, 6: 18, 7: 20, **flat(30, 8)})
-skill('tuck_planche', [5, 8, 10, 12, 15], 's', (4, 2), 5, {4: 8, 5: 10, 6: 13, **flat(15, 7)})
+# Round 12: Level 4's three new skills spread over the level (tuck planche 038, advanced tuck front lever 043, freestanding
+# handstand 057) instead of arriving in its first week.
+skill('tuck_planche', [5, 8, 10, 12, 15], 's', (4, 38), 5, {4: 8, 5: 10, 6: 13, **flat(15, 7)})
 skill('pistol_squat', [2, 4, 6, 8, 10], 'r', (4, 3), 1, {4: 3, 5: 5, 6: 6, 7: 8, 8: 9, 9: 10, 10: 10}, side=True)
-skill('freestanding_handstand', [5, 15, 30, 45, 60], 's', (4, 5), 5, {4: 10, 5: 25, 6: 35, 7: 45, **flat(60, 8)})
-skill('advanced_tuck_front', [5, 8, 10, 12, 15], 's', (4, 8), 5, {4: 6, 5: 10, **flat(15, 6)})
+skill('freestanding_handstand', [5, 15, 30, 45, 60], 's', (4, 57), 5, {4: 10, 5: 25, 6: 35, 7: 45, **flat(60, 8)})
+skill('advanced_tuck_front', [5, 8, 10, 12, 15], 's', (4, 43), 5, {4: 6, 5: 10, **flat(15, 6)})
 skill('toes_to_bar', [3, 6, 8, 12, 15], 'r', (4, 15), 2, {4: 3, 5: 5, 6: 7, 7: 9, 8: 12, 9: 15, 10: 15})
-skill('strict_muscleup', [1, 2, 4, 6, 7], 'r', (4, 39), 1, {4: 1, 5: 2, 6: 3, 7: 4, 8: 5, 9: 6, 10: 7})
-skill('advanced_tuck_back', [5, 8, 10, 15, 20], 's', (4, 60), 5, {4: 10, **flat(20, 5)})
+# Round 12 (statistics: 12-24 months, after about 10 pull-ups): the strict muscle-up from L5:008.
+skill('strict_muscleup', [1, 2, 4, 6, 7], 'r', (5, 8), 1, {5: 2, 6: 3, 7: 4, 8: 5, 9: 6, 10: 7})
+skill('advanced_tuck_back', [5, 8, 10, 15, 20], 's', (4, 89), 5, {4: 5, 5: 20})
 skill('wall_hspu', [2, 4, 6, 8, 10], 'r', (4, 61), 1, {4: 2, 5: 4, 6: 5, 7: 7, 8: 8, 9: 10, 10: 10})
 skill('tuck_flag', [5, 8, 10, 12, 15], 's', (5, 5), 5, {5: 8, 6: 15, **flat(15, 7)}, side=True)
 skill('archer_pullup', [2, 3, 4, 6, 8], 'r', (5, 8), 1, {5: 2, 6: 3, 7: 4, 8: 6, 9: 8, 10: 8}, side=True)
-skill('straddle_back', [3, 5, 8, 10, 12], 's', (5, 81), 3, {5: 4, 6: 7, 7: 10, **flat(12, 8)})
+skill('straddle_back', [3, 5, 8, 10, 12], 's', (5, 81), 3, {5: 3, 6: 8, 7: 10, **flat(12, 8)})
 skill('advanced_tuck_planche', [5, 6, 8, 10, 12], 's', (6, 2), 3, {6: 6, 7: 9, **flat(12, 8)})
 skill('dragon_flag', [1, 3, 5, 6, 8], 'r', (6, 17), 1, {6: 2, 7: 4, 8: 6, 9: 8, 10: 8})
 skill('straddle_flag', [3, 4, 6, 8, 10], 's', (6, 81), 3, {6: 3, 7: 5, 8: 6, 9: 8, 10: 10}, side=True)
 skill('one_arm_pushup', [1, 2, 3, 4, 5], 'r', (7, 2), 1, {7: 2, 8: 4, 9: 6, 10: 10}, side=True)
-skill('full_back', [3, 5, 8, 12, 14], 's', (6, 46), 3, {6: 4, 7: 8, 8: 10, 9: 12, 10: 15})
+skill('full_back', [3, 5, 8, 12, 14], 's', (7, 5), 3, {7: 5, 8: 10, 9: 12, 10: 14})
 skill('straddle_front', [3, 5, 7, 10, 12], 's', (7, 15), 3, {7: 5, 8: 8, 9: 10, 10: 12})
 skill('v_sit', [3, 4, 5, 6, 7], 's', (8, 9), 3, {8: 4, 9: 6, 10: 8})
 skill('deficit_wall_hspu', [2, 3, 5, 6, 7], 'r', (8, 5), 1, {8: 3, 9: 5, 10: 8})
@@ -92,7 +107,7 @@ assert len(SKILLS) == 40, len(SKILLS)
 # hollow body), the core ladder (the owner: leg raise, toes-to-bar, L-sit and V-sit, the V-sit's Elite dose early enough to
 # finish) and the easier rungs, whose Elite comes through the harder rung's sets, finish inside the program.
 ELITE_FROM = {
-    'one_arm_pullup': (9, 83), 'strict_muscleup': (10, 28), 'full_front': (10, 38), 'full_back': (10, 15),
+    'one_arm_pullup': (9, 76), 'strict_muscleup': (10, 28), 'full_front': (10, 38), 'full_back': (10, 15),
     'one_arm_pushup': (8, 69), 'deficit_wall_hspu': (10, 44), 'full_planche': (10, 56), 'one_arm_handstand': (10, 58),
     'pistol_squat': (10, 9), 'v_sit': (9, 54), 'dragon_flag': (10, 32), 'full_flag': (9, 68),
     'shrimp_squat': (10, 15), 'hefesto': (9, 88),
@@ -108,35 +123,35 @@ def prog(mid, unit, start, d0, ends, side=False):
     PROG[mid] = dict(unit=unit, start=start, d0=d0, ends=ends, side=side)
 
 
-prog('incline_pushup', 'r', (1, 1), 6, {1: 10})
-prog('inverted_row', 'r', (1, 1), 8, {1: 12, **flat(12, 2)})
-prog('eccentric_pullup', 'r', (1, 22), 2, {1: 3, 2: 4})
-prog('assisted_pullup', 'r', (1, 41), 5, {1: 6})
-prog('support_hold', 's', (1, 1), 20, {1: 30, 2: 30})
-prog('assisted_dip', 'r', (1, 22), 5, {1: 8})
-prog('eccentric_dip', 'r', (1, 41), 3, {1: 4})
-prog('glute_bridge', 'r', (1, 1), 12, {1: 15, **flat(15, 2)})
+prog('incline_pushup', 'r', (1, 1), 5, {1: 10})
+prog('inverted_row', 'r', (1, 1), 6, {1: 12, **flat(12, 2)})
+prog('eccentric_pullup', 'r', (1, 32), 2, {1: 3, 2: 4})
+prog('assisted_pullup', 'r', (1, 43), 4, {1: 6})
+prog('support_hold', 's', (1, 1), 10, {1: 30, 2: 30})
+prog('assisted_dip', 'r', (1, 29), 4, {1: 8})
+prog('eccentric_dip', 'r', (1, 62), 2, {1: 3})
+prog('glute_bridge', 'r', (1, 1), 10, {1: 15, **flat(15, 2)})
 prog('single_leg_bridge', 'r', (2, 1), 8, {2: 10, **flat(12, 3)}, side=True)
 prog('single_leg_rdl', 'r', (3, 1), 6, {3: 8, 4: 10, 5: 10, **flat(12, 6)}, side=True)
 prog('split_squat', 'r', (1, 1), 6, {1: 10, 2: 10, 3: 10}, side=True)
 prog('reverse_lunge', 'r', (1, 21), 8, {1: 10}, side=True)
 prog('bulgarian_split_squat', 'r', (2, 1), 8, {2: 10, **flat(10, 3)}, side=True)
 prog('assisted_pistol_squat', 'r', (2, 66), 3, {2: 4, 3: 6}, side=True)
-prog('side_plank', 's', (1, 1), 20, {1: 30, 2: 45}, side=True)
+prog('side_plank', 's', (1, 1), 15, {1: 30, 2: 45}, side=True)
 prog('straight_side_plank', 's', (3, 1), 20, {3: 30, 4: 40, **flat(45, 5)}, side=True)
-prog('knee_raise', 'r', (1, 1), 6, {1: 8, 2: 10})
-prog('plank', 's', (1, 1), 30, {1: 45, 2: 45})
-prog('pike_handstand_hold', 's', (1, 1), 20, {1: 30, 2: 30})
-prog('arch_hold', 's', (1, 1), 15, {1: 20, **flat(30, 2)})
+prog('knee_raise', 'r', (1, 24), 5, {1: 8, 2: 10})
+prog('plank', 's', (1, 1), 20, {1: 45, 2: 45})
+prog('pike_handstand_hold', 's', (1, 1), 15, {1: 30, 2: 30})
+prog('arch_hold', 's', (1, 1), 10, {1: 20, **flat(30, 2)})
 prog('tuck_lsit', 's', (1, 61), 10, {1: 10, 2: 15})
 prog('one_leg_lsit', 's', (2, 81), 5, {2: 6, 3: 8}, side=True)
 prog('tuck_front_row', 'r', (2, 1), 5, {2: 8})
 # Review 9 (the 5- and 20-year coaches): the safe way down first, from L1:023, before any kick-up.
-prog('handstand_exit', 'r', (1, 22), 2, {1: 2, 2: 3}, side=True)  # both directions, as its text says
+prog('handstand_exit', 'r', (1, 51), 2, {1: 2, 2: 3}, side=True)  # both directions, as its text says
 prog('handstand_toe_pull', 's', (2, 50), 15, {2: 20, 3: 20})
 prog('handstand_balance', 's', (3, 26), 8, {3: 12, 4: 15})
 prog('planche_lean', 's', (2, 50), 10, {2: 15, 3: 20, **flat(25, 4)})
-prog('frog_stand', 's', (1, 41), 10, {1: 15, 2: 20, **flat(30, 3)})
+prog('frog_stand', 's', (1, 58), 5, {1: 15, 2: 20, **flat(30, 3)})
 prog('elevated_plank', 's', (1, 1), 20, {1: 30, 2: 30, 3: 30})
 prog('skin_cat_partial', 'r', (2, 60), 2, {2: 3, **flat(3, 3)})
 # The full skin-the-cat (batch 2): through the German hang and back, the handstand-press day's shoulder extension.
@@ -270,10 +285,17 @@ def snap(v, pal):
     return min(pal, key=lambda x: (abs(x - v), x))
 
 
+# Round 13 (the second panel, all six coaches): the basics climb one rep at a time, never in 5-rep stairs with flat
+# stretches between them (the push-up sat at 25 for 130 classes and at 35 for 185).
+ONE_REP = {'pushup', 'pullup', 'parallel_dip', 'chinup'}
+
+
 def tidy(mid, v, L):
     """Round a dose the way a coach writes it, and never under the minimum hold."""
     u = unit_of(mid)
-    if L <= 2:
+    if mid in ONE_REP:
+        pass
+    elif L <= 2:
         v = snap(v, R_PAL if u == 'r' else S_PAL)
     elif v > 20:
         v = 5 * int(v / 5 + 0.5)
@@ -284,7 +306,11 @@ def tidy(mid, v, L):
 
 def step_up(mid, d, L):
     """Week B: one rep (+2 over 12, +5 over 20), or one second to 10 s, two to 30 s, five above; Levels 1-2 move one
-    palette step."""
+    palette step. Round 13: the basics one rep; the Level 1-2 pull-up keeps its table (singles, then 3x2, 3x3, 3x4)."""
+    if mid == 'pullup' and L <= 2:
+        return d
+    if mid in ONE_REP:
+        return d + 1
     if L <= 2:
         pal = R_PAL if unit_of(mid) == 'r' else S_PAL
         bigger = [x for x in pal if x > d]
@@ -298,8 +324,11 @@ def base_dose(mid, L, n):
     s = DOSED[mid]
     b = block_of(L, n)
     if mid == 'pullup':
+        # Round 13 (the beginner statistics, five coaches): singles through Level 1, then 3x2 → 3x3 → 3x4 in Level 2.
         if L == 1:
-            return 1 if b <= 4 else 2
+            return 1
+        if L == 2:
+            return (2, 2, 3, 3, 4)[b - 1]
         return max(1, 2 * L - 1 + (b - 1) // 2)
     ends = s['ends']
     sL, sn = s['start']
@@ -428,27 +457,24 @@ def finish(steps, rehearse=True):
 
 
 # ----- warm-ups and cool-downs: one per kind of day (the teacher's templates); a ramp-up set closes the warm-up -----
+# Round 12 (the ex-gymnast and the five other reviewers): a warm-up of about six items and six minutes. Three or four
+# general items, the wrists when the hands carry weight, then one easy first set. Nothing in it repeats the day's work:
+# the scapular sets are one set, the arch and the active hang left the pull day (the class holds both).
 WARM = {
     'push': [['march', 1, None, 60, 0, 'brisk', None], ['arm_swings', 1, 10, None, 10, 'controlled', 'shoulder_cars'],
-             ['wrist_circles', 1, 10, None, 10, 'controlled', None], ['wrist_rocks', 1, 10, None, 10, 'controlled', None],
-             ['wrist_pushup', 1, 10, None, 20, 'slow', 'wrist_rocks'], ['scapular_pushup', 2, 8, None, 25, '2111', None]],
+             ['scapular_pushup', 1, 8, None, 20, '2111', None]],
     'pull': [['march', 1, None, 60, 0, 'brisk', None], ['shoulder_cars', 1, '5/side', None, 10, 'controlled', None],
-             ['scapular_pull', 2, 6, None, 30, '2111', None], ['active_hang', 1, None, 15, 30, 'controlled', None],
-             ['prone_ytw', 1, 6, None, 20, 'slow', 'wall_slide'], ['arch_hold', 1, None, 15, 20, 'isometric', None]],
+             ['scapular_pull', 1, 6, None, 20, '2111', None], ['prone_ytw', 1, 6, None, 20, 'slow', 'wall_slide']],
     'legs': [['march', 1, None, 60, 0, 'brisk', None], ['hip_circles', 1, 8, None, 10, 'controlled', None],
-             ['leg_swings', 1, '8/side', None, 10, 'controlled', 'hip_circles'], ['ankle_rocks', 1, '10/side', None, 10, 'controlled', None],
-             ['glute_bridge', 1, 10, None, 20, '2111', None], ['deep_squat_hold', 1, None, 30, 20, 'easy', None]],
+             ['leg_swings', 1, '8/side', None, 10, 'controlled', 'hip_circles'], ['deep_squat_hold', 1, None, 30, 20, 'easy', None]],
     'full': [['march', 1, None, 60, 0, 'brisk', None], ['arm_swings', 1, 10, None, 10, 'controlled', 'shoulder_cars'],
-             ['hip_circles', 1, 8, None, 10, 'controlled', None], ['cat_cow', 1, 6, None, 10, 'slow', None],
-             ['scapular_pull', 1, 6, None, 20, '2111', None], ['scapular_pushup', 1, 8, None, 20, '2111', None]],
+             ['hip_circles', 1, 8, None, 10, 'controlled', None], ['cat_cow', 1, 6, None, 10, 'slow', None]],
     'easy': [['march', 1, None, 90, 0, 'easy', None], ['cat_cow', 1, 6, None, 10, 'slow', None],
              ['hip_circles', 1, 8, None, 10, 'controlled', None]],
-    # An exam's warm-up (the S&C review 6): general, wrists, the shoulder blades and an active hang, then the ramp sets.
+    # An exam's warm-up (the S&C review 6): general, wrists and the shoulder blades, then the ramp sets.
     'exam': [['march', 1, None, 60, 0, 'brisk', None], ['arm_swings', 1, 10, None, 10, 'controlled', 'shoulder_cars'],
-             ['hip_circles', 1, 8, None, 10, 'controlled', None], ['wrist_circles', 1, 10, None, 10, 'controlled', None],
-             ['wrist_rocks', 1, 10, None, 10, 'controlled', None], ['wrist_pushup', 1, 10, None, 20, 'slow', 'wrist_rocks'],
-             ['scapular_pull', 1, 6, None, 20, '2111', None], ['scapular_pushup', 1, 8, None, 20, '2111', None],
-             ['active_hang', 1, None, 15, 30, 'controlled', None]],
+             ['wrist_circles', 1, 10, None, 10, 'controlled', None], ['wrist_rocks', 1, 10, None, 10, 'controlled', None],
+             ['scapular_pull', 1, 6, None, 20, '2111', None]],
 }
 # Wrist prep (review 6, the teacher and the S&C coach): any class that puts weight on the hands in a handstand, planche,
 # press or one-arm push-up warms the wrists first, and the march shortens to make room. The L-sit on the bars is a
@@ -470,8 +496,44 @@ def with_wrists(warm, steps, main=()):
     if warm[0][0] == 'march':
         warm[0][3] = 30
     at = next((i + 1 for i, w in enumerate(warm) if w[0] in ('arm_swings', 'shoulder_cars', 'hip_circles')), 1)
-    drills = WRISTS if any(s[0] in HANDS for s in main) else WRISTS[:2]
-    return warm[:at] + [list(w) for w in drills] + warm[at:]
+    # Round 12: the wrist push-up only before the heavy hand work (planche, presses), not before an easy handstand hold.
+    drills = WRISTS if any(s[0] in WRIST_HEAVY for s in main) else WRISTS[:2]
+    warm = warm[:at] + [list(w) for w in drills] + warm[at:]
+    # Round 12: about six items. With the wrists in, the cat-cow and the hip circles give way on an upper-body day.
+    for spare in ('cat_cow', 'hip_circles'):
+        if len(warm) > 5 and spare in [w[0] for w in warm]:
+            warm = [w for w in warm if w[0] != spare]
+    return warm
+
+
+WRIST_HEAVY = (set(LADDERS['planche']) | {'planche_lean', 'pseudo_planche_pushup', 'tuck_planche_pushup', 'frog_stand', 'wall_hspu',
+                                          'deficit_wall_hspu', 'freestanding_hspu', 'freestanding_hspu_negative', 'wall_hspu_negative',
+                                          'elevated_pike_pushup', 'one_arm_pushup'})
+
+# Round 13 (the second panel, all six coaches): a warm-up of at most five items: the march, one or two joint or wrist
+# items, a prep, and one easy first set last (two on an exam: a skill and a strength one). A skill drill is never a
+# warm-up item: the exit, the frog stand, the kick-up and the negatives belong to the class itself. No ramp-up on a
+# primer (the next exam's tests at half) or a recovery day.
+WARM_DRILLS = {'handstand_exit', 'frog_stand', 'wall_kickup', 'handstand_toe_pull', 'wall_hspu_negative', 'freestanding_hspu_negative',
+               'eccentric_pullup', 'eccentric_dip', 'negative_muscleup'}
+# What stays first when a warm-up is over five items: the march, an exam's German hang (before a back lever or Hefesto
+# test), the wrists, the shoulder blades; the general swings and circles give way first.
+WARM_KEEP = ['march', 'easy_walk', 'german_hang', 'wrist_pushup', 'wrist_rocks', 'scapular_pull', 'scapular_pushup', 'prone_ytw',
+             'deep_squat_hold', 'leg_swings', 'ankle_rocks', 'hip_circles', 'cat_cow', 'wrist_circles', 'shoulder_cars', 'arm_swings',
+             'assisted_behind_bar_support']
+WARM_MAX = 5
+
+
+def cap_warm(warm, exam=False, ramps=True):
+    warm = [w for w in warm if w[0] not in WARM_DRILLS]
+    ramp = [w for w in warm if w[5] == 'ramp-up'][:(2 if exam else 1) if ramps else 0]
+    rest = [w for w in warm if w[5] != 'ramp-up']
+    room = WARM_MAX - len(ramp)
+    if len(rest) > room:
+        rank = {id(w): (WARM_KEEP.index(w[0]) if w[0] in WARM_KEEP else len(WARM_KEEP), i) for i, w in enumerate(rest)}
+        keep = {id(w) for w in sorted(rest, key=lambda w: rank[id(w)])[:room]}
+        rest = [w for w in rest if id(w) in keep]
+    return rest + ramp
 
 
 COOL = {
@@ -496,8 +558,19 @@ def ramp_of(M, L, n, exam_day=False, P=(), record=False):
     """The ramp-up set (the teacher's review 6): the day's lead at about half of today's set. A rung under two weeks old
     ramps on the rung below; a straddle or full shape two rungs down. No ramp when the practice part already opens the
     same line. On an exam day the first test leads. Warm-up, so it earns nothing."""
-    skip = ('slow',) if exam_day else ('assessment', 'slow')
-    lead = next((s for s in M if s[0] in DOSED and s[5] not in skip), None)
+    # Round 12 (the reviewers): an easy-technique handstand hold is its own warm-up; a 10 s box-pike before 3 x 20 s of
+    # the same read as a repeat. The class's first strength movement gets the easy first set instead.
+    skip = ('slow',) if exam_day else ('assessment', 'slow', 'easy technique')
+
+    def rampable(s):
+        # Round 12: the easy first set comes before strength reps and the skill holds, not before an easy hold or an
+        # accessory (a 7 s hollow hold before 2 x 15 s read as a repeat).
+        if exam_day:
+            return True
+        if unit_of(s[0]) == 's':
+            return LIB[s[0]]['category'] in ('skill', 'advanced_skill', 'mastery_skill')
+        return s[0] not in ACCESSORY
+    lead = next((s for s in M if s[0] in DOSED and s[5] not in skip and rampable(s)), None)
     if lead is None:
         return None
     if P and P[0][0] in HAND_LINE and lead[0] in HAND_LINE:
@@ -586,14 +659,14 @@ def role_of(L, n):
 
 
 BLOCK_NAMES = {
-    1: ['First Positions', 'Wall & Negatives', 'First Pull', 'Strong Basics', 'Foundations Finale'],
+    1: ['First Weeks', 'Floor Push-Ups', 'Wall & Negatives', 'First Pull-Up', 'Foundations Finale'],  # round 12
     2: ['Bar Basics', 'Pull-Up Strength', 'First Lever', 'Lean & Press', 'Bar Strength Finale'],
 }
 # The skill each named exam of Levels 1-2 is about: missing it offers the block repeat.
-EXAM_HEADLINE = {(1, 20): 'pushup', (1, 40): 'wall_handstand', (1, 60): 'eccentric_pullup', (1, 81): 'pullup', (1, 100): 'pullup',
+EXAM_HEADLINE = {(1, 20): 'squat', (1, 40): 'pushup', (1, 60): 'wall_handstand', (1, 81): 'pullup', (1, 100): 'pullup',
                  (2, 20): 'pullup', (2, 40): 'pullup', (2, 62): 'tuck_front_hold', (2, 84): 'planche_lean', (2, 100): 'pullup'}
 EXAM_NAMES = {
-    (1, 20): 'The Basics', (1, 40): 'Wall & Negatives', (1, 60): 'First Pull', (1, 81): 'First Pull-Up', (1, 100): 'Level 1 Test: Foundations',
+    (1, 20): 'The Basics', (1, 40): 'Floor Push-Ups', (1, 60): 'Wall & Negatives', (1, 81): 'First Pull-Up', (1, 100): 'Level 1 Test: Foundations',
     (2, 20): 'Bar Basics', (2, 40): 'Pull-Up Strength', (2, 62): 'First Lever', (2, 84): 'Lean & Press', (2, 100): 'Level 2 Test: Bar Strength',
 }
 LEVEL_NAMES = ['Foundations', 'Bar Strength', 'First Skills', 'Skill Control', 'Balance & Levers', 'Confident Calisthenics', 'Full Shapes',
@@ -606,12 +679,30 @@ def block_name(L, n):
 
 
 # Recovery classes rotate four themes, each after an easy walk.
+# Round 13 (the second panel, five of six coaches): a recovery day keeps the four sections: the joint prep in the warm-up,
+# the walk and two or three light control items in the strength part, the stretches and the breathing in the cool-down.
+# Each theme is (name, warm-up, strength, cool-down).
 RECOVERY_THEMES = [
-    ('Hips & Ankles', [('ankle_rocks', 1, '10/side'), ('ninety_ninety_hip_switch', 1, 8), ('deep_squat_hold', 2, 30), ('hip_flexor_stretch', 1, '30/side')]),
-    ('Shoulders & Upper Back', [('wall_slide', 1, 10), ('thoracic_rotation', 1, '8/side'), ('wall_shoulder_flexion', 1, 30), ('child_pose', 1, 45)]),
-    ('Spine & Breath', [('cat_cow', 1, 8), ('bird_dog', 1, '8/side'), ('dead_bug', 1, '8/side'), ('supine_twist', 2, 30), ('slow_breathing', 1, 120)]),
-    ('Wrists & Legs', [('wrist_circles', 1, 10), ('wrist_rocks', 1, 10), ('calf_raise', 1, 15), ('glute_bridge', 1, 12), ('quad_stretch', 1, 30)]),
+    ('Hips & Ankles', [('march', 1, 90), ('ankle_rocks', 1, '10/side'), ('deep_squat_hold', 1, 30)],
+     [('ninety_ninety_hip_switch', 1, 8), ('glute_bridge', 1, 12), ('calf_raise', 1, 15)],
+     [('hip_flexor_stretch', 1, '30/side'), ('ninety_ninety_hip_stretch', 1, 30), ('slow_breathing', 1, 120)]),
+    ('Upper Back', [('march', 1, 90), ('cat_cow', 1, 6), ('shoulder_cars', 1, '5/side')],
+     [('wall_slide', 1, 10), ('thoracic_rotation', 1, '8/side'), ('prone_ytw', 1, 6)],
+     [('lat_stretch', 1, 30), ('child_pose', 1, 45), ('slow_breathing', 1, 120)]),
+    ('Spine & Breath', [('march', 1, 90), ('cat_cow', 1, 8), ('hip_circles', 1, 8)],
+     [('bird_dog', 1, '8/side'), ('dead_bug', 1, '8/side'), ('glute_bridge', 1, 12)],
+     [('supine_twist', 2, 30), ('child_pose', 1, 45), ('slow_breathing', 1, 120)]),
+    ('Wrists & Legs', [('march', 1, 90), ('wrist_circles', 1, 10), ('wrist_rocks', 1, 10)],
+     [('calf_raise', 1, 15), ('glute_bridge', 1, 12), ('bird_dog', 1, '8/side')],
+     [('quad_stretch', 1, 30), ('forearm_stretch', 1, 30), ('slow_breathing', 1, 120)]),
 ]
+# The recovery templates (warm-up and cool-down per theme): a timed item is (id, sets, None, seconds), a counted one
+# (id, sets, reps, None).
+TIMED = SECONDS | {'march', 'lat_stretch', 'forearm_stretch', 'ninety_ninety_hip_stretch'}
+for _k, (_name, _wu, _str, _cd) in enumerate(RECOVERY_THEMES):
+    WARM[f'rec{_k}'] = [[m, sets, None if m in TIMED else v, v if m in TIMED else None, 0 if i == 0 else 10,
+                         'easy' if i == 0 else 'controlled', None] for i, (m, sets, v) in enumerate(_wu)]
+    COOL[f'rec{_k}'] = [[m, sets, None, v, 10 if i < len(_cd) - 1 else 0, 'easy', None] for i, (m, sets, v) in enumerate(_cd)]
 
 
 # ----- class builders: each returns (practice, main) as lists of (step, priority); 0 keeps its sets longest -----
@@ -652,7 +743,8 @@ def one_arm_attempts(L, n):
     top = rung('oah', L, n)[0]
     if top is None:
         return []
-    return [(st(top, 1, ctx=(L, n), rest=60, tempo='easy technique'), 1)]
+    # Round 13: the lever pull day no longer carries them, so Level 10's attempts are two sets (the Master's volume).
+    return [(st(top, 2 if L == 10 else 1, ctx=(L, n), rest=60, tempo='easy technique'), 0 if L == 10 else 1)]
 
 
 def first_started(L, n, *mids):
@@ -663,11 +755,23 @@ def first_started(L, n, *mids):
 
 
 def pull_basic(L, n):
-    return first_started(L, n, 'pullup', 'assisted_pullup', 'inverted_row') if L == 1 else first_started(L, n, 'pullup', 'eccentric_pullup', 'inverted_row')
+    if L == 1:
+        # Round 12: the circuits keep rows, then foot-assisted pull-ups; strict pull-ups join them from the last block, after
+        # the bar day's first singles (L1:067).
+        return 'pullup' if n >= 82 else first_started(L, n, 'assisted_pullup', 'inverted_row')
+    return first_started(L, n, 'pullup', 'eccentric_pullup', 'inverted_row')
 
 
 def dip_basic(L, n):
-    return first_started(L, n, 'parallel_dip', 'eccentric_dip', 'assisted_dip', 'support_hold')
+    if L == 1:
+        # Round 12 (the physio): no dip negatives in the circuits; Level 1 dips with the feet helping.
+        return first_started(L, n, 'assisted_dip', 'support_hold')
+    return first_started(L, n, 'parallel_dip', 'assisted_dip', 'support_hold')
+
+
+def push_basic(L, n):
+    """Round 12 (all six reviewers): incline push-ups first, the floor push-up from L1:022."""
+    return 'pushup' if started('pushup', L, n) else 'incline_pushup'
 
 
 def leg_basic(L, n):
@@ -743,6 +847,20 @@ def bent_hefesto(line, L, n):
 
 
 def line_steps(line, L, n, lead, step, three):
+    """One line of the bar day; round 13 (the statics coach): behind the straddle back lever the advanced tuck keeps one
+    back-off set at its own dose, so the easier rung's long holds come after the harder rung, not instead of it."""
+    out = _line_steps(line, L, n, lead, step, three)
+    if line == 'back' and rung('back', L, n)[0] == 'straddle_back' and settled('back', L, n) == 'straddle_back':
+        if 0 < pos(*DOSED['full_back']['start']) - pos(L, n) <= 21:
+            # The three weeks before the full back lever: the straddle gets its third set instead (the rung below builds
+            # its volume before the jump; the full shape's gate is 3 x 6 s of it).
+            out = [([s[0], max(s[1], 3)] + s[2:], 0) if s[0] == 'straddle_back' else (s, p) for s, p in out]
+        elif 'advanced_tuck_back' not in {s[0] for s, _ in out}:
+            out.append((st('advanced_tuck_back', 1, ctx=(L, n), rest=120), 1))
+    return out
+
+
+def _line_steps(line, L, n, lead, step, three):
     """One line of the bar day. The lead runs 3 sets (and a back-off when two lines share the day); the others keep 2
     working sets of their rung, so no rung drops to one set before its jump. A new rung enters beside the rung below."""
     c = (L, n)
@@ -787,6 +905,10 @@ def second_exposures(L, n):
             rungs = LADDERS[line]
             if r == rungs[-1] and r == rung(line, L, n)[0]:
                 out.append((st(rungs[-2], 1, ctx=(L, n), rest=120, frac=1.0 if L == 10 else 0.7), 1))
+            elif r == 'straddle_back' and 0 < pos(*DOSED['full_back']['start']) - pos(L, n) <= 21:
+                # Round 13: the three weeks before the full back lever, day 6 holds three straddle sets: the rung below
+                # builds its volume before the jump (the full shape's gate, 3 x 6 s), under the bar day's elbow cap.
+                out.append((st(r, 3, ctx=(L, n), rest=120, frac=0.75), 0))
             else:
                 out.append((st(r, 1, ctx=(L, n), rest=120, frac=0.7), 1))
     return out
@@ -848,54 +970,69 @@ def build_role(role, L, n, step):
     P, M = [], []
     if role == 'recovery':
         k = pos(L, n) // 7
-        theme, items = RECOVERY_THEMES[k % 4]
+        theme, _, items, _ = RECOVERY_THEMES[k % 4]
         M = [(st('easy_walk', 1, value=480 if k % 2 else 600, rest=0, tempo='easy'), 0)]
         M += [(st(mid, sets, value=v, rest=20, tempo='slow'), 0) for mid, sets, v in items]
-        return P, M, 'easy', 'easy', 30, 2
+        return P, M, f'rec{k % 4}', f'rec{k % 4}', 30, 2
     # ----- Level 1: circuits and short practice classes -----
     if role in ('circuit_a', 'circuit_b', 'circuit_c'):
-        # Whole rounds of the same stations (the teacher's review), then a short finisher.
-        rounds = 2 if n <= 7 else 3
+        # Whole rounds of the same stations (the teacher's review), then a short finisher. Round 12 (the owner and the six
+        # reviewers): the first week is one round, a welcome; two rounds to L1:028, three from L1:029. The handstand line
+        # stays on the two practice days, so a circuit has no skill part.
+        rounds = 1 if n <= 7 else 2 if n < 29 else 3
         row = 'feet_elevated_row' if started('feet_elevated_row', L, n) else 'inverted_row'
         if role == 'circuit_a':
-            stations = [pull_basic(L, n), 'pushup', dip_basic(L, n), 'hollow_body_hold']
+            stations = [pull_basic(L, n), push_basic(L, n), dip_basic(L, n), 'hollow_body_hold']
             finisher = [(st('dead_hang', 1, ctx=c, rest=60, step=step), 1)]
         elif role == 'circuit_b':
-            # Block 3 swaps the lunge for the Cossack squat (review 7).
-            lunge = 'cossack_squat' if 41 <= n < 61 else first_started(L, n, 'reverse_lunge', 'split_squat') if n < 61 else 'split_squat'
+            # Block 3 swaps the lunge for the Cossack squat (review 7); round 12 moves it to block 4, one new thing at a time.
+            lunge = 'cossack_squat' if 61 <= n < 82 else first_started(L, n, 'reverse_lunge', 'split_squat') if n < 61 else 'split_squat'
             stations = ['pause_squat' if n >= 82 else 'squat', lunge, 'glute_bridge']  # review 8: a pause at depth
-            finisher = [(st('side_plank', 2, ctx=c, rest=45, step=step), 1), (st('knee_raise', 2, ctx=c, rest=60, step=step), 1)]
+            # Round 12 (the ex-gymnast): the hanging knee raise from L1:024; the dead bug before it, the side plank from week 2.
+            core = 'knee_raise' if started('knee_raise', L, n) else 'dead_bug'
+            finisher = ([(st('side_plank', 2 if n > 7 else 1, ctx=c, rest=45, step=step), 1)] if n > 7 else []) + \
+                       [(st(core, 2 if n > 7 else 1, ctx=c, rest=60, step=step, tempo='slow' if core == 'dead_bug' else None), 1)]
         else:
             # The engine keeps the rows all level: the main pulling volume on the way to the first pull-up.
-            stations = ['pushup', 'squat', row, dip_basic(L, n)]
+            stations = [push_basic(L, n), 'squat', row, dip_basic(L, n)]
             # From block 3 the support walk along the bars closes the engine (review 7).
             finisher = [(st('parallel_bar_walk', 1, rest=60, tempo='controlled'), 1) if n >= 41 else (st('plank', 1, ctx=c, rest=45, step=step), 1)]
         M = circuit(stations, rounds, L, n, rest=45, round_rest=90, step=step) + finisher
-        P = handstand_practice(L, n, 1, step)
-        rpe = 5 if n <= 14 else 6
+        rpe = 4 if n <= 7 else 5 if n <= 21 else 6
         return P, M, ('legs' if role == 'circuit_b' else 'full'), ('legs' if role == 'circuit_b' else 'full'), 45, rpe
     if role == 'practice_hand':
         # An easy class: the handstand line is its main work, so no separate practice part.
-        M = handstand_practice(L, n, 3, step)
-        # Review 9 (the 5- and 20-year coaches): the cartwheel exit from block 2, right after the wall holds; the kick-up
-        # from L1:072, once the holds reach 30 s, always after an exit rehearsal.
+        M = handstand_practice(L, n, 2 if n <= 7 else 3, step)
+        # Review 9 (the 5- and 20-year coaches): the safe way down before any kick-up. Round 12 (all six reviewers): the
+        # wall from L1:044, the cartwheel exit a week later (L1:051), the kick-up in the last block (L1:086), once the wall
+        # holds reach 30 s.
         out = started('handstand_exit', L, n)
-        kick = n >= 72
+        kick = n >= 86
         if out:
             M.append((st('handstand_exit', 1 if kick else 2, ctx=c, rest=60, tempo='controlled'), 0))
         if kick:
             M.append((st('wall_kickup', 1, rest=60, tempo='controlled'), 0))
+        # One new loaded movement at a time (the physio): the frog stand from L1:058, the pike push-up from L1:065, the dip
+        # negative from L1:062, once a week.
         if started('frog_stand', L, n):
-            M += [(st('frog_stand', 2, ctx=c, rest=60, step=step), 0), (st('pike_pushup', 2, ctx=c, rest=90, step=step), 0),
-                  (st('support_hold', 2, ctx=c, rest=60, step=step), 1)]
-        else:
-            M += [(st('support_hold', 2, ctx=c, rest=60, step=step), 0)]
-            if not out:
-                M.append((st('plank', 2, ctx=c, rest=45, step=step), 0))
+            M.append((st('frog_stand', 2, ctx=c, rest=60, step=step), 0))
+        if started('pike_pushup', L, n):
+            M.append((st('pike_pushup', 2, ctx=c, rest=90, step=step), 0))
+        M.append((st('support_hold', 2, ctx=c, rest=60, step=step), 1 if started('frog_stand', L, n) else 0))
+        if started('eccentric_dip', L, n):
+            M.append((st('eccentric_dip', 2, ctx=c, rest=90, tempo='5010'), 1))
+        if not out:
+            M.append((st('plank', 2, ctx=c, rest=45, step=step), 0))
+        if not started('pike_pushup', L, n):
             M.append((st('incline_pushup', 2, ctx=c, rest=60, step=step), 1))
-        return P, M, 'push', 'push', 30, 4
+        return P, M, 'push', 'push', 30, 3 if n <= 7 else 4
     if role == 'practice_bar':
-        M = [(st('dead_hang', 3, ctx=c, rest=60, step=step), 0)]
+        M = [(st('dead_hang', 2 if n <= 7 else 3, ctx=c, rest=60, step=step), 0)]
+        if started('pullup', L, n):
+            # Round 12 (the owner: about 60 days to the first pull-up): one strict single a week from L1:067, fresh, the
+            # negatives' first set. The statistics put a typical beginner's first rep at 100-150 classes: the easier option
+            # (the negative) is the honest fallback until then.
+            M.append((st('pullup', 1, ctx=c, rest=120), 0))
         if n >= 88:
             # The owner's "go fix" (the teacher's review 8): after the first pull-up, chin-ups for the negatives, the grip that
             # gives a novice an extra rep or two, lowered in 3 s. Same sets, no extra elbow load.
@@ -909,16 +1046,20 @@ def build_role(role, L, n, step):
               (st('hollow_body_hold', 1, ctx=c, rest=45), 1)]
         return P, M, 'pull', 'pull', 30, 4
     if role == 'core_balance':
-        M = handstand_practice(L, n, 2, step) + [(st('hollow_body_hold', 3, ctx=c, rest=45, step=step), 0), (st('arch_hold', 2, ctx=c, rest=45, step=step), 0)]
+        M = handstand_practice(L, n, 2, step) + [(st('hollow_body_hold', 2 if n <= 7 else 3, ctx=c, rest=45, step=step), 0), (st('arch_hold', 2, ctx=c, rest=45, step=step), 0)]
         M.append((st('tuck_lsit', 3, ctx=c, rest=60), 0) if started('tuck_lsit', L, n) else (st('dead_bug', 2, ctx=c, rest=30, tempo='slow'), 1))
         # From block 2 the bear crawl takes the calf raise's place (review 7).
-        M.append((st('bear_crawl', 2, rest=45, tempo='controlled'), 2) if n >= 26 else (st('calf_raise', 2, ctx=c, rest=45), 2))
-        return P, M, 'full', 'easy', 30, 4
+        if n > 7:  # round 12: the welcome week leaves the calf raise out
+            M.append((st('bear_crawl', 2, rest=45, tempo='controlled'), 2) if n >= 26 else (st('calf_raise', 2, ctx=c, rest=45), 2))
+        return P, M, 'full', 'easy', 30, 3 if n <= 7 else 4
     # ----- Levels 2-10: the skill week -----
     if role in ('front_pull', 'front_onearm'):
         M = ladder('front', L, n, 4 if L >= 4 else 3, step) or [(st('tuck_front_row', 3, ctx=c, rest=90), 0)]
-        flag = settled('flag', L, n)
-        if started('strict_muscleup', L, n) and pos(L, n) < pos(4, 77):
+        # Round 13 (R5): the flag keeps its own day (the bar day); the lever pull day holds the lever line alone, except in
+        # the seven weeks before a new flag rung, when the rung below needs its second weekly set (two a week before a jump).
+        nxt = [pos(*DOSED[r]['start']) - pos(L, n) for r in LADDERS['flag'] if r in DOSED and pos(*DOSED[r]['start']) > pos(L, n)]
+        flag = settled('flag', L, n) if nxt and min(nxt) <= 49 else None
+        if started('strict_muscleup', L, n) and pos(L, n) < pos(*DOSED['strict_muscleup']['start']) + 38:
             # Review 9 (the 10-year coach): the first strict blocks keep the negative beside the new rung.
             M.append((st('strict_muscleup', 2, ctx=c, rest=180, tempo='controlled', step=step), 0))
             M.append((st('negative_muscleup', 1, ctx=c, rest=150, tempo='5010'), 1))
@@ -960,7 +1101,10 @@ def build_role(role, L, n, step):
         M.append((st(hang_core(L, n), 2, ctx=c, rest=75), 1))
         if L == 2:
             M.append((st('inverted_row', 2, ctx=c, rest=90), 2))
-        P = handstand_practice(L, n, 2) + one_arm_attempts(L, n)
+        # Round 13 (the second panel, R5): from L2:008 the lever pull day is wrist-free: the lever leads, fresh, and the
+        # handstand line trains on the legs, press and basics days instead (the one-arm attempts on day 6 and the press
+        # day's ladder).
+        P = handstand_practice(L, n, 2) if pos(L, n) < pos(2, 8) else []
         return P, M, 'pull', 'pull', 55, 7
     if role == 'legs_core':
         both = started('pistol_squat', L, n) and rung('shrimp', L, n)[0]
@@ -1008,6 +1152,10 @@ def build_role(role, L, n, step):
             M.insert(0, (st('squat_jump', 2, rest=90, tempo='controlled'), 0))
         else:
             M.append((st('straight_side_plank' if L >= 3 else 'side_plank', 1, ctx=c, rest=45), 2))
+        if L >= 3:
+            # Round 13 (R5): the handstand's second weekly day moves here from the lever pull day; the legs leave the wrists
+            # free. (Level 2 keeps it on the press, basics and bar days; its legs day holds the L-sit's build-up.)
+            P = handstand_practice(L, n, 2 if started('handstand_balance', L, n) else 3) + P
         return P, M, 'legs', 'legs', 50, 6
     if role == 'planche_push':
         M = ladder('planche', L, n, 4, step, backoff=1 if started('pseudo_planche_pushup', L, n) else 2)
@@ -1028,16 +1176,22 @@ def build_role(role, L, n, step):
             M.append((st('pike_pushup', 2, ctx=c, rest=90), 1))
         M.append((st(dip_basic(L, n), 3, ctx=c, rest=120, step=step), 0))
         M.append((st('pushup', 2, ctx=c, rest=90, step=step if L == 2 else 0), 1 if L >= 3 else 0))
-        return handstand_practice(L, n, 2), M, 'push', 'push', 55, 7
+        # Round 13 (R5, the statics coach): from the lean (L2:052) the planche day's skill part is the planche line alone.
+        return (handstand_practice(L, n, 2) if pos(L, n) < pos(2, 52) else []), M, 'push', 'push', 55, 7
     if role == 'handstand_press':
         P = handstand_practice(L, n, 3)
+        if pos(1, 86) <= pos(L, n) <= pos(3, 25):
+            # Round 13 (R9, the statics and gymnastics coaches): the kick-up bridges the wall to the balance attempts
+            # (L3:027) on every handstand day, first, fresh.
+            P = [(st('wall_kickup', 1 if L <= 2 else 2, rest=60, tempo='controlled'), 1)] + P
         if started('freestanding_handstand', L, n) and L <= 5:
             # The wall hold stays as the handstand's endurance back-off until it reaches its own top.
             P.append((st('wall_handstand', 1, ctx=c, rest=60, tempo='easy technique'), 1))
         if L == 2:
             M = []
             if started('handstand_exit', L, n):
-                M.append((st('handstand_exit', 2, ctx=c, rest=60, tempo='controlled'), 0))
+                # Round 13 (R9): beside the kick-up the exit keeps one set, so the wall hold keeps its three.
+                M.append((st('handstand_exit', 1 if pos(L, n) <= pos(3, 25) else 2, ctx=c, rest=60, tempo='controlled'), 0))
             if started('handstand_toe_pull', L, n):
                 M.append((st('handstand_toe_pull', 2, ctx=c, rest=60), 1))
             M += [(st('pike_pushup', 3, ctx=c, rest=120, step=step), 0), (st('german_hang' if started('german_hang', L, n) else 'arch_hold', 2, ctx=c, rest=75, tempo='slow'), 1),
@@ -1099,6 +1253,12 @@ def build_role(role, L, n, step):
         # bent-arm work tires the biceps the back lever then stretches (the statics review 6). The lead keeps its sets.
         for line in sorted(lines, key=lambda k: (bent_hefesto(k, L, n), k != lead)):
             M += line_steps(line, L, n, line == lead, step, len(lines) == 3)
+        if 0 < pos(*DOSED['full_back']['start']) - pos(L, n) <= 21 and rung('back', L, n)[0] == 'straddle_back':
+            # Round 13: the three weeks before the full back lever, the flag's back-off set (the rung below the new
+            # straddle flag) gives its elbow set to the straddle back lever's third: the full shape's gate is 3 x 6 s.
+            below = LADDERS['flag'][LADDERS['flag'].index(rung('flag', L, n)[0]) - 1] if rung('flag', L, n)[0] in LADDERS['flag'][1:] else None
+            M = [(s, p) for s, p in M if s[0] != below]
+            M = [([s[0], max(s[1], 3)] + s[2:], 0) if s[0] == 'straddle_back' else (s, p) for s, p in M]
         if L == 2 or not lines:
             M = [(st('straight_bar_support', 2, ctx=c, rest=75), 0)] + M
             if started('low_bar_transition', L, n):
@@ -1201,7 +1361,7 @@ def reentry(L, n):
     c = (L, n)
     M = [easy_handstand(L, n, 2),
          (st('hollow_body_hold', 2, ctx=c, rest=45, frac=0.6), 0), (st('dead_hang', 1, ctx=c, rest=60, frac=0.6), 0),
-         (st('pushup', 2, ctx=c, rest=60, frac=0.5), 0), (st(leg_basic(L, n), 2, ctx=c, rest=60, frac=0.5), 0),
+         (st(push_basic(L, n), 2, ctx=c, rest=60, frac=0.5), 0), (st(leg_basic(L, n), 2, ctx=c, rest=60, frac=0.5), 0),
          (st('glute_bridge', 1, ctx=c, rest=30, frac=0.6), 1)]  # the week's hinge when the exam week has no legs day
     M += line_drills(L, n)
     return [], M, 'easy', 'easy', 35, 4
@@ -1209,7 +1369,7 @@ def reentry(L, n):
 
 def primer(L, n):
     c = (L, n)
-    M = [(st('pushup', 1, ctx=c, rest=60, frac=0.5), 0), (st(pull_basic(L, n), 1, ctx=c, rest=90, frac=0.5), 0),
+    M = [(st(push_basic(L, n), 1, ctx=c, rest=60, frac=0.5), 0), (st(pull_basic(L, n), 1, ctx=c, rest=90, frac=0.5), 0),
          (st(dip_basic(L, n), 1, ctx=c, rest=60, frac=0.5), 0), (st(leg_basic(L, n), 1, ctx=c, rest=60, frac=0.5), 0),
          (st('hollow_body_hold', 1, ctx=c, rest=45, frac=0.5), 0), (st('glute_bridge', 1, ctx=c, rest=30, frac=0.5), 1)]
     if started('pike_pushup', L, n):
@@ -1219,14 +1379,17 @@ def primer(L, n):
         # The day before a level test stays at 8 sets (the S&C review 6): the line drills go first, then the bridge.
         while len(M) > 8:
             # In Level 3 the candlestick stays: the dragon line's only set in the test's week (the S&C review 8).
-            M.remove(next(x for x in reversed(M) if x[1] > 0 and (L > 3 or x[0][0] != 'candlestick')))
+            # Round 12: before the tuck back lever (L3:068) the German hang stays too, the back lever's only set of the week,
+            # and the pike push-up, the week's press; the glute bridge goes (the legs day keeps the week's hinge).
+            keep = ('candlestick', 'german_hang', 'pike_pushup') if L == 3 and not started('tuck_back_hold', L, n) else ('candlestick',)
+            M.remove(next(x for x in reversed(M) if x[1] > 0 and (L > 3 or x[0][0] not in keep)))
     return [], M, 'full', 'easy', 40, 4
 
 
 def easy_class(L, n):
     c = (L, n)
     M = [easy_handstand(L, n, 2),
-         (st('pushup', 2, ctx=c, rest=60, frac=0.5), 0), (st('squat', 2, ctx=c, rest=60, frac=0.5), 0),
+         (st(push_basic(L, n), 2, ctx=c, rest=60, frac=0.5), 0), (st('squat', 2, ctx=c, rest=60, frac=0.5), 0),
          (st('hollow_body_hold', 2, ctx=c, rest=45, frac=0.6), 0), (st('dead_hang', 1, ctx=c, rest=60, frac=0.6), 1)]
     if L >= 8 and started('one_arm_pushup', L, n):
         # The level test tests the one-arm push-up (2.6.8); day 6, its class, is the Full Battle in Level 10.
@@ -1299,7 +1462,9 @@ def exam_caps(L, n):
     if L <= 2:
         return dict(total=8 if n == 100 else 7, A=4, B=2, LC=2, H=1)
     if n == 100 and L >= 7:
-        return dict(total=11, A=8, B=2, LC=1, H=1)  # a level test from Level 7 tests every full shape (the statics coach)
+        # A level test from Level 7 tests every full shape (the statics coach). Round 13 (the second panel, R8): at most 8
+        # tests and about 45 minutes; the basics the block exams already tested wait.
+        return dict(total=8, A=6, B=1, LC=1, H=1)
     return dict(total=8 if n == 100 else 7, A=5 if n == 100 else 4, B=2, LC=2, H=1)
 
 
@@ -1910,7 +2075,7 @@ GOALS = {'muscle_up': r'muscle.?up', 'front_lever': r'front_lever', 'back_lever'
 
 def tokens(prog):
     out = []
-    for s in prog['main']:
+    for s in prog['practice'] + prog['main']:  # round 12: the skill holds sit in the skill part
         out.append(s[0])
         out += LIB[s[0]]['patterns']
     return ' '.join(out).lower()
@@ -1924,7 +2089,78 @@ def build():
     reach = best_sets(programs)
     # Review 11: a skill already holding Elite (the hanging leg raise, through the toes-to-bar sets) needs no record.
     programs, records, best = build_once({sid for sid in SKILLS if landed[sid][4] or via[sid][4] or reach[sid] >= SKILLS[sid]['t'][4]})
-    return honest_rpe(top_up_belts(hold_elite_share(programs))), records, best
+    return short_titles(split_sections(honest_rpe(top_up_belts(hold_elite_share(programs))))), records, best
+
+
+# Round 12 (the owner: "what is the difference between Skill practice and Calisthenics?"; all six reviewers): one rule for
+# the two sections. Skill practice holds the skills you balance or hold: the handstand line, the levers, the planche, the
+# flag and the L-sit, done first while fresh. The rest, everything counted in reps or built for strength, is the strength
+# part. A movement sits in the same section in every class. The owner (same day): "I want the names of each section of
+# each class fixed": exams and easy classes split the same way, so every class shows Warm-up, Skill practice, Strength and
+# Flexibility & cooldown, an exam's skill tests in its skill part.
+SKILL_SECTION = (set(LADDERS['front']) | set(LADDERS['back']) | set(LADDERS['planche']) | set(LADDERS['flag']) | set(LADDERS['oah'])
+                 | HAND_LINE | {'pike_handstand_hold', 'wall_handstand', 'handstand_balance', 'freestanding_handstand', 'handstand_exit',
+                                'wall_kickup', 'handstand_toe_pull', 'supported_handstand_shift', 'one_arm_handstand_hover', 'frog_stand',
+                                'planche_lean', 'tuck_lsit', 'one_leg_lsit', 'lsit', 'v_sit', 'flag_ground_support', 'assisted_tuck_flag',
+                                'vertical_flag'})
+
+
+# Round 13 (the app coach, the owner's compact style): a title is 2-4 words, "<prefix> · <one thing>". A long name gets its
+# short form, a second thing waits for the description, "Block N Exam" reads "Exam", the lighter bar and press days
+# read "Light", and a level test keeps its number only.
+SHORT_NAMES = [('Foot-Assisted Tuck Front-Lever Row', 'Lever Row'), ('Tuck Front-Lever Rows', 'Lever Rows'), ('Tuck Front-Lever Hold', 'Tuck Front Lever'),
+               ('Foot-Assisted Tuck Human Flag', 'Tuck Flag'), ('Handstand Cartwheel Exit', 'Cartwheel Exit'), ('Full Human Flag', 'Full Flag'),
+               ('Tuck Human Flag', 'Tuck Flag'), ('Straddle Human Flag', 'Straddle Flag'), ('Foot-Assisted Hefesto', 'Hefesto'),
+               ('One-Leg Front Lever', 'One-Leg Lever'), ('Wall Handstand Push-Up Negative', 'Handstand Push-Up Negative'),
+               ('Wall Handstand Push-Up', 'Handstand Push-Up'), ('Freestanding Handstand Weight Shift', 'Handstand Weight Shift'),
+               ('Supported Handstand Weight Shift', 'Handstand Weight Shift'), ('Wall Handstand Balance Practice', 'Wall Balance'),
+               ('Fingertip-Assisted One-Arm Handstand', 'Fingertip One-Arm Handstand'), ('Foot-Assisted Supinated German Hang', 'Supinated German Hang'),
+               ('Assisted Partial Shrimp Squat', 'Assisted Shrimp Squat'), ('Floating-Leg Shrimp Squat', 'Shrimp Squat'),
+               ('Assisted Foot-Held Shrimp Squat', 'Foot-Held Shrimp Squat'), ('Freestanding Handstand Push-Up Negative', 'Freestanding Negative')]
+TITLE_WORDS = 4
+
+
+def title_words(t):
+    return len(t.replace('·', ' ').replace('&', ' ').split())
+
+
+def short_title(t):
+    if title_words(t) <= TITLE_WORDS:
+        return t
+    t = re.sub(r'^Block \d+ Exam · ', 'Exam · ', t)
+    t = re.sub(r'(Level \d+ Test): .*$', r'', t)
+    for long, short in SHORT_NAMES:
+        if title_words(t) > TITLE_WORDS:
+            t = t.replace(long, short)
+    if title_words(t) > TITLE_WORDS and ' & ' in t:
+        t = t.split(' & ')[0]
+    if title_words(t) > TITLE_WORDS:
+        t = re.sub(r'^(Light Bar|Light Press) · ', 'Light · ', t)
+    if title_words(t) > TITLE_WORDS:
+        t = re.sub(r'^Exam Prep · ', 'Prep · ', t)
+    return t
+
+
+def short_titles(programs):
+    for p in programs:
+        p['title']['en'] = short_title(p['title']['en'])
+    return programs
+
+
+def split_sections(programs):
+    """Move every skill hold into the class's skill part, in class order, after the handstand practice. On a training day
+    a record set (Level 10) goes first, fresh (review 9); an exam keeps its order, each ramp-up before its test."""
+    for p in programs:
+        moved = [s for s in p['main'] if s[0] in SKILL_SECTION]
+        if not moved:
+            continue
+        if p['schedule']['day_type'].startswith('exam'):
+            p['practice'] = p['practice'] + moved
+        else:
+            records = [s for s in moved if s[5] == 'assessment']
+            p['practice'] = records + p['practice'] + [s for s in moved if s[5] != 'assessment']
+        p['main'] = [s for s in p['main'] if s[0] not in SKILL_SECTION]
+    return programs
 
 
 # A movement's load in a set (the app's Easy / Moderate / Hard mark, WorkoutEffort.kt, uses the same numbers): its grade's
@@ -1973,7 +2209,40 @@ def honest_rpe(programs):
                     break
                 i = max(adv, key=lambda i: (p['main'][i][1], -value_of(p['main'][i])))
                 p['main'][i] = [p['main'][i][0], p['main'][i][1] - 1] + list(p['main'][i][2:])
+    # Round 13: the panel's lighter pull days left some levels with no class over a quarter above the typical one, and
+    # the heaviest days, the legs and press days that took the handstand, were labelled RPE 6. From Level 2 the six
+    # heaviest training classes, each at least 10% over the level's typical class, are labelled RPE 8, so every level
+    # keeps its hard days (the app's Easy / Moderate / Hard mix, 2.9.0), counted the way the app counts them.
+    app = [app_load(p) for p in programs]
+    at = {id(p): i for i, p in enumerate(programs)}
+
+    def run_with(i):
+        """The run of RPE 7+ classes class i would sit in at RPE 8 (never four in a row, the S&C rule)."""
+        lo, hi = i, i
+        while lo > 0 and programs[lo - 1]['schedule']['rpe'] >= 7:
+            lo -= 1
+        while hi < len(programs) - 1 and programs[hi + 1]['schedule']['rpe'] >= 7:
+            hi += 1
+        return hi - lo + 1
+    for L in range(2, 11):
+        level = [(a, p) for a, p in zip(app, programs) if p['level'] == L]
+        typ = statistics.median(a for a, p in level if training(p))
+        hard = sum(1 for a, p in level if a > 1.25 * typ or p['schedule']['rpe'] >= 8 and not p['schedule']['day_type'].startswith('exam'))
+        for a, p in sorted(((a, p) for a, p in level if training(p) and p['schedule']['rpe'] < 8 and 1.1 * typ <= a <= 1.25 * typ),
+                           key=lambda x: -x[0]):
+            if hard >= 6:
+                break
+            if run_with(at[id(p)]) >= 4:
+                continue
+            p['schedule']['rpe'] = 8
+            hard += 1
     return programs
+
+
+def app_load(p):
+    """A class's load as the app's WorkoutEffort counts it for an athlete with no logged bests."""
+    return sum(s[1] * (LIGHT_WEIGHT if LIB[s[0]]['category'] in LIGHT_CATEGORIES else GRADE_WEIGHT[min(5, max(1, LIB[s[0]].get('grade', 1)))])
+               * (1.25 if (s[4] if s[4] is not None else 60) <= 45 else 1.0) for s in p['practice'] + p['main'])
 
 
 TOP_UP_TYPES = ('legs_core', 'planche_push', 'front_onearm', 'handstand_press', 'back_flag', 'statics_chain', 'battle')
@@ -2281,8 +2550,10 @@ def build_once(skip):
                 rec = r['kind'] != 'exam' and r['M'][0][0][5] == 'assessment'
                 if r['kind'] != 'exam' and pos(3, 27) <= pos(L, n) <= pos(4, 15) and \
                         {s[0] for s, _ in r['P'] + r['M']} & {'handstand_balance', 'freestanding_handstand'}:
-                    # Review 9 (the 5-year coach): the exit rehearsed before the first balance attempts.
-                    warm.append(['handstand_exit', 1, '2/side', None, 30, 'controlled', None])
+                    # Review 9 (the 5-year coach): the exit rehearsed before the first balance attempts. Round 13 (the
+                    # second panel): a drill of the class, so it opens the skill part instead of the warm-up.
+                    if 'handstand_exit' not in {s[0] for s, _ in r['P']}:
+                        r['P'] = [(['handstand_exit', 1, '2/side', None, 30, 'controlled', None], 0)] + list(r['P'])
                 if r['role'] == 'back_flag' and r['kind'] != 'exam' and pos(7, 19) <= pos(L, n) <= pos(9, 40):
                     # Review 9 (the 20-year coach): the Korean dip's starting position, taught before and beside it.
                     warm.append(['assisted_behind_bar_support', 1, None, 10, 30, 'isometric', None])
@@ -2312,6 +2583,7 @@ def build_once(skip):
                 if r['kind'] == 'exam':
                     # The exam's prep sets close the warm-up, in test order; a line already ramped keeps one set.
                     warm += [list(x) for x in r['prep'] if x[0] not in {w[0] for w in warm}]
+            warm = cap_warm(warm, exam=r['kind'] == 'exam', ramps=r['kind'] not in ('primer', 'recovery') and r['role'] != 'recovery')
             # The bar day with three lines (back lever, flag, Hefesto) may hold one elbow set more; day 6 follows the bar
             # day, so it stays under the heavy mark, as does the exam week's light bar class.
             if r['kind'] == 'barlight':
@@ -2468,8 +2740,10 @@ def check(programs):
             errors.append(f'{where} has {allsets} sets, budget {lim["main_sets_including_practice"]}')
         if any(s[1] > lim['sets_per_exercise'] for s in p['practice'] + p['main']):
             errors.append(f'{where} has a step above {lim["sets_per_exercise"]} sets')
-        if len(p['main']) < 4 or len(p['warmup']) < 3 or len(p['cooldown']) < 3:
+        if not p['main'] or len(p['practice']) + len(p['main']) < 4 or len(p['warmup']) < 3 or len(p['cooldown']) < 3:
             errors.append(f'{where} has too few steps')
+        if any(s[0] in SKILL_SECTION for s in p['main']):
+            errors.append(f'{where} keeps a skill hold in the strength part')
         sec = class_seconds([p['warmup'], p['practice'], p['main'], p['cooldown']])
         if sec > p['schedule']['minutes'] * 60:
             errors.append(f'{where} needs {sec / 60:.1f} min > {p["schedule"]["minutes"]}')
@@ -2585,6 +2859,11 @@ def belts(programs):
 
 
 def main():
+    if '--force-generator' not in sys.argv:
+        print('The generator is disabled: the program is hand-written in curriculum/handwritten (2026-11-05).')
+        print('Edit those files and run: python tools/handwritten_program.py')
+        return 2
+    sys.argv.remove('--force-generator')
     programs, records, best = build()
     errors = check(programs)
     landed, count, via = belts(programs)

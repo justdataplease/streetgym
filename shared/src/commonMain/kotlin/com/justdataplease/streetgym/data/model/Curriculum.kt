@@ -8,6 +8,8 @@ data class CurriculumCatalog(
     val workouts: List<TrainingProgram> = emptyList(),
     /** Each movement's grade, 1 easy to 5 extreme (the movement library): what WorkoutEffort weighs a set by. */
     val movementGrades: Map<String, Int> = emptyMap(),
+    /** Each movement's equipment tags (the movement library), for the equipment switches on skills not in a class. */
+    val movementEquipment: Map<String, List<String>> = emptyMap(),
 )
 
 data class TrainingLevel(
@@ -46,6 +48,9 @@ data class TrainingProgram(
 ) {
     /** An exam day (about every 20 classes): its [TrainingExercise.assessment] sets are the targets to reach. */
     val isExam: Boolean get() = dayType?.startsWith("exam") == true
+
+    /** The class's [TrainingExercise.assessment] steps in class order: an exam's skill tests sit in [practice], the rest in [exercises]. */
+    val tests: List<TrainingExercise> get() = (practice + exercises).filter { it.assessment }
 }
 
 /**

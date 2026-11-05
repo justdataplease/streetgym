@@ -109,7 +109,6 @@ import com.justdataplease.streetgym.data.progress.SharedPreferencesProgressRepos
 import com.justdataplease.streetgym.data.progress.WorkoutSession
 import com.justdataplease.streetgym.data.skills.SkillBook
 import com.justdataplease.streetgym.data.skills.SkillCurriculumReader
-import com.justdataplease.streetgym.data.skills.SkillFamilySpec
 import com.justdataplease.streetgym.data.skills.SkillProgress
 import com.justdataplease.streetgym.data.skills.SkillSwitches
 import com.justdataplease.streetgym.data.skills.switchedOff
@@ -624,7 +623,7 @@ open class HomeActivity : Activity() {
             if (latest.passed) getString(R.string.exam_card_passed, date) + " " +
                 getString(R.string.exam_card_result, date, latest.reached.size, total)
             else {
-                val names = exam.exercises.filter { (it.movementId ?: it.id) in latest.missed }.map { displayName(it, locale) }
+                val names = (exam.practice + exam.exercises).filter { (it.movementId ?: it.id) in latest.missed }.map { displayName(it, locale) }
                 getString(R.string.exam_card_result, date, latest.reached.size, total) + " " +
                     getString(R.string.exam_card_missed, names.joinToString(", "))
             }
@@ -1815,7 +1814,7 @@ open class HomeActivity : Activity() {
             this.movement = movement
             thumb.bind(movement.movementId, movement.name, movement.category, movement.equipment)
             name.text = movement.name
-            details.text = listOfNotNull(movement.category?.let(::humanize), movement.equipment.joinToString(", ", transform = ::humanize).ifBlank { null })
+            details.text = listOfNotNull(movement.category?.let(::humanize), equipmentText(movement.equipment) ?: getString(R.string.equipment_none))
                 .joinToString(" · ")
             details.visibility = if (details.text.isBlank()) View.GONE else View.VISIBLE
         }
@@ -2130,7 +2129,7 @@ open class HomeActivity : Activity() {
         page.addWithMargins(hero, bottomDp = 14)
         if (program.isExam) page.addWithMargins(examCard(program, locale), bottomDp = 14)
 
-        if (!CustomDays.offProgram(program.id) && program.switchedOff(settings.skillSwitches) && program.id !in progressRepository.completedProgramIds()) {
+        if (!CustomDays.offProgram(program.id) && program.switchedOff(settings.skillSwitches, settings.equipment) && program.id !in progressRepository.completedProgramIds()) {
             page.addWithMargins(card().apply {
                 background = roundedDrawable(AppColors.INFO_SURFACE, dp(24).toFloat())
                 addView(bodyText(getString(R.string.switch_off_class), 14f))
@@ -2246,6 +2245,9 @@ open class HomeActivity : Activity() {
             )
             exerciseNotes(exercise, locale).takeIf(String::isNotBlank)?.let {
                 exerciseCard.addWithMargins(bodyText(it, 14f), topDp = 10)
+            }
+            equipmentNeeds(exercise.equipment)?.let {
+                exerciseCard.addWithMargins(bodyText(it, 13f).apply { setTextColor(AppColors.TEXT_SECONDARY) }, topDp = 4)
             }
             exercise.sets.forEach { set ->
                 val row = LinearLayout(this).apply {
@@ -2432,7 +2434,7 @@ open class HomeActivity : Activity() {
                         exerciseCard.addWithMargins(it, width = ViewGroup.LayoutParams.WRAP_CONTENT, topDp = 6)
                     }
                 }
-                fun doAnyway(then: () -> Unit) = askSwitchedOff(listOfNotNull(offFamily?.name)) {
+                fun doAnyway(then: () -> Unit) = askSwitchedOff(listOfNotNull(offFamily)) {
                     offAllowed.getOrPut(program.id, ::mutableSetOf) += exerciseKey
                     leftOut -= flow.steps.filter { it.exerciseKey == exerciseKey }.map { it.key }.toSet()
                     off = false
@@ -2452,6 +2454,9 @@ open class HomeActivity : Activity() {
                 )
                 exerciseNotes(exercise, locale).takeIf(String::isNotBlank)?.let {
                     exerciseCard.addWithMargins(bodyText(it, 13f), topDp = 4)
+                }
+                equipmentNeeds(exercise.equipment)?.let {
+                    exerciseCard.addWithMargins(bodyText(it, 13f).apply { setTextColor(AppColors.TEXT_SECONDARY) }, topDp = 4)
                 }
                 // The sets' logged numbers, redrawn when the easier option changes what they log.
                 val doneLabels = mutableListOf<() -> Unit>()
@@ -2607,7 +2612,7 @@ open class HomeActivity : Activity() {
             override fun leftOut() = leftOut.size
             override fun includeLeftOut() {
                 val steps = flow.steps.filter { it.key in leftOut }
-                askSwitchedOff(steps.mapNotNull { leftOutBy(program, it.section, it.exercise, it.exerciseIndex)?.name }) {
+                askSwitchedOff(steps.mapNotNull { leftOutBy(program, it.section, it.exercise, it.exerciseIndex) }) {
                     offAllowed.getOrPut(program.id, ::mutableSetOf) += steps.map { it.exerciseKey }
                     renderFocus(programId)
                 }
@@ -2698,7 +2703,8 @@ open class HomeActivity : Activity() {
                     pushCurrent = false,
                 )
                 if (session != null && program.isExam) askExam(program, flow.examTests(ticked, easier, active?.done.orEmpty())
-                    .filterNot { (exercise, _) -> exercise.movementId?.let(settings.skillSwitches::isOff) == true }, offerRepeat = !session.repeat)
+                    .filterNot { (exercise, _) -> exercise.movementId?.let(settings.skillSwitches::isOff) == true || settings.equipment.isOff(exercise) },
+                    offerRepeat = !session.repeat)
             }
             .show()
     }
@@ -2796,9 +2802,11 @@ open class HomeActivity : Activity() {
                         progress,
                         pointsTotal(skills, history).all,
                         onOpen = { status, family, statuses ->
-                            showSkillSheet(status, family, statuses, off = settings.skillSwitches.isRungOff(family.spec.id, status.skill.rung))
+                            showSkillSheet(status, family, statuses, off = settings.skillSwitches.isRungOff(family.spec.id, status.skill.rung) ||
+                                lacksEquipment(status.skill.id))
                         },
                         switches = settings.skillSwitches,
+                        lacks = ::lacksEquipment,
                         // Free: one ad card partway down the ladders.
                         ad = ManagedNativePlacement(this),
                     ),
@@ -2893,6 +2901,8 @@ open class HomeActivity : Activity() {
             page.addView(sectionLabel(getString(R.string.switches_section)))
             page.addWithMargins(skillSwitchesCard(book, settings), bottomDp = 16)
         }
+        page.addView(sectionLabel(getString(R.string.equipment_section)))
+        page.addWithMargins(equipmentCard(settings, catalog?.movementEquipment.orEmpty()), bottomDp = 16)
         page.addView(sectionLabel(getString(R.string.share_section)))
         page.addWithMargins(shareProgressNote(settings, inSettings = true) { on -> if (on) syncAnalytics(force = true) }, bottomDp = 16)
         page.addWithMargins(card().apply {
@@ -2958,12 +2968,11 @@ open class HomeActivity : Activity() {
             setOnCheckedChangeListener { _, value -> onChanged(value) }
         }
 
+    /** Every class shows the same four sections (the owner, round 12); an exam's skill tests sit in Skill practice. */
     private fun sections(program: TrainingProgram): List<ExerciseSection> = listOf(
         ExerciseSection("warmup", R.string.warm_up, program.warmup),
         ExerciseSection("practice", R.string.skill_practice, program.practice),
-        ExerciseSection("main",
-            R.string.main_training,
-            program.exercises),
+        ExerciseSection("main", R.string.main_training, program.exercises),
         ExerciseSection("cooldown", R.string.cool_down, program.cooldown),
     )
 
@@ -3114,30 +3123,45 @@ open class HomeActivity : Activity() {
         return NextClass.of(orderedPrograms, passedIds(), levelReplay())
     }
 
-    /** Classes completed, or left with nothing to train by the skill switches: the sequence steps over both. */
+    /** Classes completed, or left with nothing to train by the skill or equipment switches: the sequence steps over both. */
     private fun passedIds(): Set<String> =
-        NextClass.passed(orderedPrograms, progressRepository.completedProgramIds(), settings.skillSwitches)
+        NextClass.passed(orderedPrograms, progressRepository.completedProgramIds(), settings.skillSwitches, settings.equipment)
 
     /** The athlete's skill switches for [program]; an own day runs as they built it, and a ready workout as written. */
     private fun switchesFor(program: TrainingProgram): SkillSwitches =
         if (CustomDays.offProgram(program.id)) SkillSwitches() else settings.skillSwitches
 
-    /** The skill that leaves [exercise] out of this workout, or null when it is in (on, or chosen anyway). */
-    private fun leftOutBy(program: TrainingProgram, section: String, exercise: TrainingExercise, index: Int): SkillFamilySpec? {
-        val family = exercise.movementId?.let(switchesFor(program)::offFamily) ?: return null
+    /** Whether a movement needs equipment the athlete switched off in Settings. */
+    private fun lacksEquipment(movementId: String): Boolean =
+        settings.equipment.missing(catalog?.movementEquipment?.get(movementId).orEmpty()) != null
+
+    /** Why an exercise is left out of a workout: a skill switched off, or equipment switched off ([equipment]). */
+    private data class LeftOut(val name: String, val equipment: Boolean)
+
+    /**
+     * The skill, or the equipment the athlete lacks, that leaves [exercise] out of this workout; null when it is in (on,
+     * or chosen anyway). An own day runs as they built it, and a ready workout as written.
+     */
+    private fun leftOutBy(program: TrainingProgram, section: String, exercise: TrainingExercise, index: Int): LeftOut? {
+        if (CustomDays.offProgram(program.id)) return null
+        val family = exercise.movementId?.let(switchesFor(program)::offFamily)
+            ?.let { id -> SkillBook.DEFAULT_FAMILIES.firstOrNull { it.id == id } }
+        val lacks = if (family == null) settings.equipment.missing(exercise.equipment) else null
+        if (family == null && lacks == null) return null
         if (WorkoutFlow.exerciseKey(section, exercise, index) in offAllowed[program.id].orEmpty()) return null
-        return SkillBook.DEFAULT_FAMILIES.firstOrNull { it.id == family }
+        return family?.let { LeftOut(it.name, equipment = false) } ?: lacks?.let { LeftOut(equipmentName(it), equipment = true) }
     }
 
     /** The set keys of [flow] that the skill switches leave out. */
     private fun leftOutKeys(program: TrainingProgram, flow: WorkoutFlow): MutableSet<String> =
         flow.steps.filter { leftOutBy(program, it.section, it.exercise, it.exerciseIndex) != null }.mapTo(mutableSetOf()) { it.key }
 
-    /** Asks before a switched-off skill's exercise (the owner's words); [onYes] does it in this workout anyway. */
-    private fun askSwitchedOff(families: List<String>, onYes: () -> Unit) {
-        val names = families.distinct().joinToString(" & ")
+    /** Asks before a switched-off skill's or equipment's exercise (the owner's words); [onYes] does it in this workout anyway. */
+    private fun askSwitchedOff(reasons: List<LeftOut>, onYes: () -> Unit) {
+        val names = reasons.map { it.name }.distinct().joinToString(" & ")
+        val skills = reasons.filterNot { it.equipment }.map { it.name }.distinct().joinToString(" & ")
         AlertDialog.Builder(this).setTitle(getString(R.string.switch_off_title, names))
-            .setMessage(getString(R.string.switch_off_message, names))
+            .setMessage(if (skills.isEmpty()) getString(R.string.equipment_off_message) else getString(R.string.switch_off_message, skills))
             .setNegativeButton(R.string.cancel, null)
             .setPositiveButton(R.string.switch_off_continue) { _, _ -> onYes() }
             .show()

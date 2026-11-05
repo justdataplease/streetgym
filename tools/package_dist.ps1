@@ -8,8 +8,9 @@ $projectRoot = Split-Path -Parent $PSScriptRoot
 Push-Location $projectRoot
 
 try {
-    & python "tools\build_curriculum.py"
-    if ($LASTEXITCODE -ne 0) { throw "Curriculum generation failed" }
+    # The classes are hand-written (curriculum/handwritten); the generator is disabled since 2026-11-05.
+    & python "tools\handwritten_program.py"
+    if ($LASTEXITCODE -ne 0) { throw "Hand-written program conversion failed" }
 
     & python "tools\build_achievements_page.py"
     if ($LASTEXITCODE -ne 0) { throw "Achievements page generation failed" }

@@ -65,7 +65,7 @@ data class NextClassCard(
                     Kind.RECOVERY -> named.ifEmpty { leadName }
                     else -> leadName.ifEmpty { named }
                 },
-                targets = if (kind == Kind.EXAM) program.exercises.count { it.assessment } else 0,
+                targets = if (kind == Kind.EXAM) program.tests.size else 0,
                 minutes = program.estimatedMinutes,
                 movementId = lead?.movementId,
                 movementName = leadName,

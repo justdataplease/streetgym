@@ -2,6 +2,7 @@ package com.justdataplease.streetgym.ui
 
 import android.content.Context
 import com.justdataplease.streetgym.data.progress.Intensity
+import com.justdataplease.streetgym.data.equipment.EquipmentSwitches
 import com.justdataplease.streetgym.data.skills.SkillSwitches
 import java.util.Locale
 import java.util.TimeZone
@@ -66,12 +67,18 @@ class AppSettings(context: Context) {
         get() = SkillSwitches.parse(preferences.getString(KEY_SKILL_SWITCHES, null))
         set(value) = preferences.edit().putString(KEY_SKILL_SWITCHES, SkillSwitches.format(value).ifEmpty { null }).apply()
 
+    /** The equipment the athlete's spot lacks, switched off in Settings ([EquipmentSwitches]); all on by default. */
+    var equipment: EquipmentSwitches
+        get() = EquipmentSwitches.parse(preferences.getString(KEY_EQUIPMENT_OFF, null))
+        set(value) = preferences.edit().putString(KEY_EQUIPMENT_OFF, EquipmentSwitches.format(value).ifEmpty { null }).apply()
+
     fun selectedLocale(): Locale = Locale.ENGLISH
 
     companion object {
         private const val KEY_DEVELOPER_UNLOCKED = "developer_unlocked"
         private const val KEY_INSPECT_ALL_DAYS = "inspect_all_days"
         private const val KEY_SKILL_SWITCHES = "skill_switches"
+        private const val KEY_EQUIPMENT_OFF = "equipment_off"
         private const val PREFERENCES_NAME = "streetgym_settings"
         private const val KEY_THEME = "theme"
         private const val KEY_LEGACY_DARK_MODE = "dark_mode"

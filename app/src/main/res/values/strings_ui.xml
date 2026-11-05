@@ -30,7 +30,8 @@
     <string name="animation_variation">Preview %1$d/%2$d: %3$s - tap to change</string>
     <string name="skill_practice">Skill practice</string>
     <string name="warm_up">Warm-up</string>
-    <string name="main_training">Calisthenics</string>
+    <!-- Round 12: the same four names in every class; Skill practice holds the balances and holds, Strength the reps. -->
+    <string name="main_training">Strength</string>
     <string name="cool_down">Flexibility &amp; cooldown</string>
     <string name="exercise_number">Exercise %1$d</string>
     <plurals name="sets_count">
@@ -66,7 +67,6 @@
     <string name="finish">Finish</string>
     <string name="effort_title">How hard did that feel?</string>
     <string name="effort_item">RPE %1$d</string>
-    <string name="workout_saved">Workout completed</string>
     <string name="workout_points">Workout completed · +%1$s points</string>
     <string name="abandon_title">End this session?</string>
     <string name="abandon_message">Checked sets from this active session will be cleared.</string>

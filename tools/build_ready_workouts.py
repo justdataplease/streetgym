@@ -773,7 +773,7 @@ WORKOUTS = [
      [hold('handstand_toe_pull', 2, 10, 60), hold('handstand_balance', 4, 10, 60)], 'upper'),
     ('back_lever_first_steps', 'Back Lever First Steps', 'skills', 1, 5,
      'Partial skin-the-cats and tuck entries, feet able to touch down.', 'bar',
-     [reps('skin_cat_partial', 3, 3, 60, 'slow'), hold('arch_hold', 2, 15, 50), reps('tuck_back_entry', 3, 2, 90, 'slow')], 'upper'),
+     [reps('skin_cat_partial', 2, 3, 60, 'slow'), hold('arch_hold', 2, 15, 50), reps('tuck_back_entry', 2, 2, 90, 'slow')], 'upper'),  # round 12: easy beside the lighter Level 1
     ('front_lever_first_steps', 'Front Lever First Steps', 'skills', 1, 5,
      'Active hangs, tuck rows and hollow holds before any lever.', 'bar',
      [hold('active_hang', 2, 15, 60), reps('tuck_front_row', 3, 5, 75), hold('hollow_hold', 2, 20, 50), reps('scapular_pull', 2, 8, 30)], 'upper'),
@@ -782,7 +782,7 @@ WORKOUTS = [
      [hold('kneeling_side_plank', 2, '20/side', 50), hold('flag_ground_support', 3, '10/side', 60), hold('assisted_tuck_flag', 3, '5/side', 90)], 'core'),
     ('planche_first_steps', 'Planche First Steps', 'skills', 1, 5,
      'Leaning planks and frog stands: wrists and shoulders first.', 'hands',
-     [hold('elevated_plank', 3, 20, 50), hold('planche_lean', 3, 8, 75), hold('frog_stand', 2, 10, 75)], 'upper'),
+     [hold('elevated_plank', 2, 20, 50), hold('planche_lean', 2, 8, 75), hold('frog_stand', 2, 10, 75)], 'upper'),  # round 12: easy beside the lighter Level 1
     ('muscleup_first_steps', 'Muscle-Up First Steps', 'skills', 2, 5,
      'Straight-bar support and low-bar turnovers, no jumping or kipping.', 'bar',
      [hold('straight_bar_support', 3, 20, 60), reps('low_bar_transition', 3, 3, 75, 'controlled'), reps('inverted_row', 2, 8, 60)], 'upper'),

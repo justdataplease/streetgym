@@ -4,7 +4,8 @@ param(
     [string]$OutputPath = "generated/curriculum_v2.json"
 )
 
-# Joins the classes that tools/build_curriculum.py writes (curriculum/program.json) with the movement library and the
+# Joins the classes (curriculum/program.json, converted from the hand-written curriculum/handwritten by
+# tools/handwritten_program.py) with the movement library and the
 # level definitions into the app's catalog. Every class is authored for Street Gymnastics; nothing is read from, or
 # shipped about, any other app.
 

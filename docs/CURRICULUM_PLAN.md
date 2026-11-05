@@ -1,6 +1,6 @@
-# The Street Gymnastics program (round 11, review 9, 30 October 2026)
+# The Street Gym program (Round X, 2.12.0, 5 November 2026)
 
-One fixed solo program: 10 levels × 100 classes, no choices, no freestyle, no group classes. The athlete decides when to train: two classes a week, eight, or two in a day. The app keeps the place and the order; nothing in the program depends on a weekday or a date. Every class is written by `tools/build_curriculum.py` from the plan below, and the numbers in this document are counted from those classes.
+One fixed solo program: 10 levels × 100 classes, no choices, no freestyle, no group classes. The athlete decides when to train: two classes a week, eight, or two in a day. The app keeps the place and the order; nothing in the program depends on a weekday or a date. Since 2.12.0 every class is written by hand in `curriculum/handwritten/L01.md` … `L10.md` (Round X, below; the method is in [CURRICULUM_METHOD.md](CURRICULUM_METHOD.md)). The generator `tools/build_curriculum.py` wrote rounds 9 to 13 and is switched off. The belt table and the numbers in this document are counted from the hand-written classes; the round notes record how the plan got here.
 
 Round 11 builds on round 10 (2.5.1):
 - **Skills.** 40 belted skills in 16 families, up from 37 in 14. The one-arm handstand tops the handstand ladder; the shrimp squat and the Hefesto are new families, each with its own line of steps.
@@ -49,6 +49,10 @@ Round 11 builds on round 10 (2.5.1):
   - **The lines:** each family's line is curated in `SkillProgressions.LINES` (`data/skills/SkillSwitches.kt`), in first-use order, each step with the rung it leads to. Shared work belongs to no line. A step two lines share (the German hang) goes off only when both lines are off, and the freestanding HSPU needs the freestanding handstand.
   - **In the classes:** switched-off exercises stay visible, greyed, and out of the set count. A tap asks before doing one anyway. A class with nothing left to train counts as passed (`NextClass.passed`) and earns nothing; one family off never empties a class.
   - **Exams and skills:** an exam doesn't test a switched-off skill. The skill score is out of the skills trained; the leaderboard keeps the full scale.
+- **Equipment switches (the owner, 2026-11-05: "for each exercise the equipment needed, and switch off what I don't have, the same way as the skills"):**
+  - **Settings → Equipment you have:** a switch for each of seven pieces: pull-up bar (or rings), low bar, parallel bars, box/bench/chair, wall, pole or stall bars (the flag), and resistance band. All are on by default. Each row says what it is for and how many exercises need it.
+  - **What needs what:** `EquipmentNeeds.TAGS` (`data/equipment/Equipment.kt`) reads the movement library's equipment tags as those seven. A tag with options is off only when every option is: incline push-ups go on a box, a low bar or the parallel bars. Anything else a tag names (a mat, the floor, something to hold, a towel, a spotter) any spot has. `EquipmentTest` fails on a library tag with no decision.
+  - **In the classes:** the same rules as a switched-off skill. The exercise is greyed with "Switched off · Pull-up bar", a tap asks before doing it anyway, exams skip it, and a class with nothing left counts as passed. On the Skills tab, a skill whose movement needs switched-off equipment greys. Every exercise card says what it needs ("Needs: pull-up bar"), and so do the Library rows.
 - **2.6.6, first screen and shorter texts (the owner):**
   - **First screen (design B of three):** the placement test asks "How strong are you today?" under a dark header, with three big counters. The start shows on yellow tape as soon as all three counts are in. One card below says what the start opens with, what it assumes (one target per line) and what a few more reps would change. The skills step is folded under one line below the start button.
   - **Sharing progress:** a note and switch close the first screen and sit in Settings › Your data, on by default (`AppSettings.shareProgress`). Nothing is uploaded yet: the upload, anonymous sign-in and database rules wait for the owner's go-ahead.
@@ -76,6 +80,32 @@ Round 11 builds on round 10 (2.5.1):
   - **Levels 8-10 (`ease_late`):** after the skill work at most 2 sets and 40 dips, 2 and 60 push-ups, 2 and 30 pull-ups; single sets at most 25 dips and 40 push-ups; every other week a one-arm pull-up day leaves the archer pull-ups out; a top rung's 3-4 sets at its Elite target keep two there and drop the rest a belt; the hollow hold, arch hold, elevated pike push-up and feet-elevated row leave a class that trains a harder move of their kind. The Full Battle is four rounds of 8 pull-ups, 15 dips, 25 push-ups and 30 squats, RPE 8 (was five of 10/20/30/40, RPE 7).
   - **Honest RPE (`honest_rpe`):** a class's load is scored like the app's Easy / Moderate / Hard mark (`set_load`: grade weight 1-4, closeness to the best set, short rests); a training class labelled 7 whose load is 40% over its level's typical class is RPE 8, with at most 10 advanced sets (the front lever and muscle-up days, the one-arm handstand days). Exams are RPE 7.
   - **Movement grades:** every movement in `curriculum/movement_library.json` has a grade, 1 easy to 5 extreme: the skills' own, a regression a step under its skill (at least 3 for an advanced movement), the rest by category. The app's workout marks and icons read them.
+
+- **Round 12, a beginner-first start (the owner, 2026-11-05; branch sg-curve, not released):** the owner found the start too hard and asked for a smooth path for someone who starts calisthenics and commits 3–4 years. Six AI personas (a statics competitor, an ex-gymnast, a beginner-intake coach, a physio and S&C coach, a periodization scientist, an ex-pro athlete who designs app training) reviewed the program and each wrote a 1,000-class alternative by hand. The owner set the curve: one J over all 1,000 classes, in line with the skills; the J sets the skills and the difficulty, while the basics follow beginner statistics (a first strict pull-up about 60 classes in for the quickest, 100–150 for most). Merged into the generator:
+  - **Level 1:** a welcome week of one circuit round (about 20 minutes); two rounds to L1:028, three from L1:029; incline push-ups to L1:021, floor push-ups from L1:022; foot-assisted dips from L1:029, dip negatives once a week from L1:062, bar dips from L2:010; pull-up negatives from L1:032, one strict single a week from L1:067, strict pull-ups in the circuits from L1:082; the box-pike on the two practice days only; the wall from L1:044, the cartwheel exit at 051, the kick-up at 086; the frog stand at 058, the pike push-up at 065; lower first doses (hollow 15 s, hang 20 s, squat 10, support 10 s).
+  - **Skills on the J:** tuck front lever L2:043, tuck back lever L3:068, tuck planche L4:038, advanced-tuck front lever L4:043, freestanding handstand L4:057, advanced-tuck back lever L4:089, strict muscle-up L5:008. Levels 6–10 unchanged.
+  - **Warm-ups:** three or four general items, two wrist drills when the hands carry weight (the wrist push-up only before planche and press work), then the easy first set, only before strength reps or a skill hold.
+  - **Sections:** Skill practice holds the balances and holds (the handstand line, levers, planche, flag, L-sit); the strength part holds the reps; a movement keeps its section in every class (`split_sections`, checked by the generator and `validate_morning_class.py`). The section names are fixed (the owner: "I want the names of each section of each class fixed"): every class shows Warm-up, Skill practice, Strength and Flexibility & cooldown. Exams and easy days split the same way, an exam's skill tests in Skill practice in their order and its strength tests in Strength; the app reads an exam's targets from both parts (`TrainingProgram.tests`).
+  - **Result:** 181 of 200 belts, as before; the belt curve follows the J (7 by class 100, 26 by 300, 87 by 700). The first belt comes at L1:026 (was 011). All generator checks, the five validators and the app's unit tests pass. Two ready workouts lost a set each so a Level 1 athlete still finds an easy one in every focus.
+
+- **Round 13, the second panel (the owner, 2026-11-05; branch sg-curve, not released):** six AI personas (on Opus) edited all 1,000 Round 12 classes by hand; nobody asked for a new program (scores 7–8.5 of 10, up from 6–7.5). What they agreed on went into the generator; the same advice written by hand, class by class, is "Round X" (its first pass: 56 classes over their set budget, 191 stated lengths off). Merged:
+  - **Warm-ups** at most 5 items: one easy first set (two on an exam), never a skill drill (exit, frog stand, kick-up, negatives); none on primers and recovery days (`cap_warm`). The exit rehearsal before the first balance work opens the skill part.
+  - **Recovery days** keep their four sections: joint prep in the warm-up, the walk and two or three light control items in the strength part, stretches and breathing in the cool-down (`RECOVERY_THEMES`).
+  - **Basics one rep at a time** (`ONE_REP`: push-up, pull-up, dip, chin-up; no 5-rep rounding). Pull-ups: singles through Level 1, 3x2 → 3x3 → 3x4 in Level 2; the push-up ends Level 1 at 9–10.
+  - **Lever pull days wrist-free** from L2:008 (no handstand; the flag only in the seven weeks before a new flag rung); planche days hold the planche line alone from L2:052; the handstand moves to the legs day from Level 3.
+  - **Back lever paced:** tuck 5 → 20 s over L3:068–L4, advanced tuck 5 s at L4:089 → 20 s by L5's end, straddle 3 → 8 s in L6 with 3-set weeks before the full back lever at L7:005 (was L6:046); first holds shorter (wall 10 s, frog stand 5 s).
+  - **Level tests from Level 7:** 8 tests (was 11), 37–39 min. Kick-ups on handstand days L1:086–L3:025. Titles 2–4 words (`short_titles`). The heaviest classes, at least 10% over their level's typical one, carry RPE 8, six a level.
+  - Result: 181 belts, every Master inside the classes; all checks pass. Not yet in the generator (Round X has them): Skill practice at most 3 items and Strength at most 6, one line per movement in a section, one new movement per class.
+
+- **Round X, the hand-written program (the owner, 2026-11-05; shipped in 2.12.0):** the owner compared Round 12, Round 13 and Round X side by side and chose Round X for production, with the generator switched off ("not generator, via normal LLM"). Five writers (AI, on Opus), two levels each, wrote every class by hand from Round 12, the six coaches' versions and the panel's rules, then went through every class again against all of the app's checks. The program keeps the frame: frozen day ids and exam days, the rotation, the four fixed sections, the load rules below.
+  - **Class shape:** warm-ups of 3–5 items with at most one easy first set; Skill practice at most 3 items and Strength at most 5 (6 on legs and battle days); a movement once per section (a back-off set uses the neighbouring variation, e.g. a chin-up set after pull-ups); one new movement per class after week 1, everything else holding its dose that day.
+  - **Every class has 4 or more Skill and Strength items.** Recovery days are an easy walk plus three light drills, and the stretches sit in the cool-down.
+  - **Minutes match the app's own timing** (work, rests, 25 s to change exercise), so Level 1 reads about 23 min a class and Level 10 about 40.
+  - **A description line written for each class** (what is new or harder today), shown as "<block>. <line>".
+  - **Dates:** tuck back lever L3:068, climbing about 1 s a class to 15 s by L4:082; tuck planche L4:038; advanced tuck front L4:043; freestanding handstand L4:058; advanced tuck back L4:089; strict muscle-up L5:008; full back lever L7:026 (after three 8 s straddle holds, in a week with no other new rung); full front lever L8:015; full planche L9:059; one-arm pull-up, Hefesto and one-arm handstand singles in Level 9, the first doubles alone at L10:005/008.
+  - **Elite:** every skill gets at least 21 of its 30 Elite sets inside the classes (review 11's rule): the front lever trains 10 s working sets from L10:057.
+  - **Level tests from Level 3 to 9 each hold a pull-up test and 7 or more tests,** so the placement's skills step can check the counts against them (`PlacementTest`).
+  - **Result:** 186 of 200 belts (Round 13: 181), every Master; the five validators, the app's 286 tests and lint pass. The rounds page compares Round 13 with Round X's passes (pass 1: 956 failed checks; pass 2: 9; final: 0).
 
 ## The frame
 
@@ -179,48 +209,48 @@ Counted from the classes, if every set is done as written on the Normal toggle, 
 
 | Family | Skill | Targets | First set | Beginner | Intermediate | Advanced | Master | Elite |
 |---|---|---|---|---|---|---|---|---|
-| Pull-up | dead_hang | 30/45/60/75/90 s | L1:001 | L1:018 | L1:100 | L5:055* | L8:055* | L10:043* |
-| Pull-up | pullup | 3/6/10/15/20 | L1:064 | L2:013 | L3:048 | L5:055 | L8:055 | L10:043 |
-| Pull-up | archer_pullup | 2/3/4/6/8 a side | L5:008 | L5:055 | L7:029 | L8:050 | L9:057 | L10:064 |
-| Pull-up | one_arm_pullup | 1/1/1/1/2 a side | L9:015 | L9:050 | L9:071 | L9:100 | L10:022 | 77% |
-| Muscle-up | strict_muscleup | 1/2/4/6/7 | L4:043 | L4:071 | L5:050 | L7:071 | L9:092 | 87% |
-| Front lever | tuck_front_hold | 5/8/12/16/20 s | L2:022 | L2:040 | L2:078 | L4:008 | L6:055 | L10:071 |
-| Front lever | advanced_tuck_front | 5/8/10/12/15 s | L4:008 | L4:029 | L5:043 | L6:078 | L10:015 | L10:078 |
-| Front lever | straddle_front | 3/5/7/10/12 s | L7:015 | L7:036 | L8:008 | L9:036 | L10:036 | L10:092 |
-| Front lever | full_front | 3/4/5/7/10 s | L8:015 | L8:036 | L8:071 | L9:055 | L10:057 | 87% |
-| Back lever | tuck_back_hold | 5/8/12/16/20 s | L3:012 | L3:034 | L3:064 | L3:097 | L4:047 | L5:076 |
-| Back lever | advanced_tuck_back | 5/8/10/15/20 s | L4:061 | L4:089 | L5:033 | L5:047 | L9:082 | L10:076 |
-| Back lever | straddle_back | 3/5/8/10/12 s | L5:082 | L6:006 | L7:019 | L8:055 | L10:047 | 93% |
-| Back lever | full_back | 3/5/8/12/14 s | L6:047 | L6:082 | L7:068 | L8:061 | L10:061 | 80% |
-| Dip | parallel_dip | 4/10/15/20/25 | L1:062 | L1:078 | L2:094 | L5:052 | L8:052 | L10:034 |
-| Push-up | pushup | 6/12/20/30/40 | L1:001 | L1:013 | L1:064 | L2:062 | L5:080 | L9:013 |
-| Push-up | one_arm_pushup | 1/3/4/4/5 a side | L7:006 | L7:048 | L9:027 | L10:027 | L10:083 | 83% |
-| Handstand push-up | pike_pushup | 6/8/10/12/15 | L1:044 | L1:079 | L2:004 | L2:081 | L9:004 | L10:076 |
-| Handstand push-up | wall_hspu | 2/4/6/8/10 | L4:067 | L4:088 | L5:081 | L7:067 | L10:032 | L10:081 |
-| Handstand push-up | deficit_wall_hspu | 2/3/5/6/7 | L8:018 | L8:039 | L8:100 | L10:018 | L10:081 | 83% |
-| Planche | pseudo_planche_pushup | 5/8/10/12/15 | L3:003 | L3:031 | L4:087* | L5:080* | L8:024 | L10:073 |
-| Planche | tuck_planche | 5/8/10/12/15 s | L4:003 | L4:017 | L4:087 | L5:080 | L8:087 | L10:080 |
-| Planche | advanced_tuck_planche | 5/6/8/10/12 s | L6:003 | L6:066 | L6:087 | L7:055 | L9:038 | L10:080 |
-| Planche | straddle_planche | 3/4/5/6/8 s | L8:003 | L8:024 | L8:052 | L8:100 | L9:066 | L10:100 |
-| Planche | full_planche | 3/3/4/5/6 s | L9:059 | L9:080 | L9:087 | L10:024 | L10:066 | 83% |
-| Handstand | wall_handstand | 20/30/45/60/75 s | L1:022 | L1:030 | L1:082 | L3:004 | L5:046 | L9:008 |
-| Handstand | freestanding_handstand | 5/15/30/45/60 s | L4:006 | L4:015 | L5:046 | L6:031 | L8:004 | L9:011 |
-| Handstand | one_arm_handstand | 3/4/5/6/7 s a side | L9:069 | L9:090 | L10:039 | L10:067 | L10:092 | 80% |
-| Pistol squat | squat | 15/20/25/30/40 | L1:003 | L1:013 | L1:045 | L3:009 | L7:044 | L10:090 |
-| Pistol squat | pistol_squat | 2/4/6/8/10 a side | L4:009 | L4:037 | L5:051 | L7:002 | L8:009 | 87% |
-| Toes to bar | hanging_leg_raise | 5/8/10/12/15 | L2:022 | L2:036 | L3:020 | L3:100 | L9:026 | L10:043 |
-| Toes to bar | toes_to_bar | 3/6/8/12/15 | L4:015 | L4:068 | L6:036 | L7:047 | L9:026 | L10:043 |
-| L-sit | lsit | 5/10/15/20/30 s | L3:023 | L3:051 | L4:051 | L6:009 | L8:051 | L10:037 |
-| L-sit | v_sit | 3/4/5/6/7 s | L8:009 | L8:030 | L8:051 | L9:072 | L10:016 | L10:044 |
-| Dragon flag | hollow_body_hold | 20/30/40/50/60 s | L1:001 | L1:011 | L1:064 | L3:002 | L4:065 | L5:086 |
-| Dragon flag | dragon_flag | 1/3/5/6/8 | L6:023 | L6:037 | L7:051 | L8:065 | L9:009 | 87% |
-| Human flag | tuck_flag | 5/8/10/12/15 s a side | L5:005 | L5:026 | L6:034 | L6:089 | L9:100 | L10:068 |
-| Human flag | straddle_flag | 3/4/6/8/10 s a side | L6:082 | L7:008 | L7:089 | L9:089 | L10:055 | 97% |
-| Human flag | full_flag | 3/4/5/5/6 s a side | L7:061 | L8:005 | L9:034 | L10:055 | L10:068 | 90% |
-| Shrimp squat | shrimp_squat | 2/3/5/7/8 a side | L7:058 | L7:079 | L8:030 | L9:030 | L10:051 | 77% |
-| Hefesto | hefesto | 1/1/2/2/3 | L9:040 | L9:076 | L9:096 | L10:034 | L10:055 | 87% |
+| Pull-up | dead_hang | 30/45/60/75/90 s | L1:001 | L1:046 | L2:047 | L5:048* | L8:071* | L10:062* |
+| Pull-up | pullup | 3/6/10/15/20 | L1:067 | L2:050 | L3:062 | L5:048 | L8:071 | L10:062 |
+| Pull-up | archer_pullup | 2/3/4/6/8 a side | L5:015 | L5:071 | L7:008 | L8:064 | L9:078 | L10:092 |
+| Pull-up | one_arm_pullup | 1/1/1/1/2 a side | L9:015 | L9:050 | L9:071 | L9:085 | L10:008 | 70% |
+| Muscle-up | strict_muscleup | 1/2/4/6/7 | L5:008 | L5:029 | L5:078 | L7:071 | L10:015 | 73% |
+| Front lever | tuck_front_hold | 5/8/12/16/20 s | L2:043 | L2:062 | L3:029 | L4:008 | L4:085 | L10:071 |
+| Front lever | advanced_tuck_front | 5/8/10/12/15 s | L4:043 | L4:064 | L5:071 | L6:050 | L9:085 | L10:083 |
+| Front lever | straddle_front | 3/5/7/10/12 s | L7:015 | L7:034 | L7:085 | L9:036 | L10:027 | L10:085 |
+| Front lever | full_front | 3/4/5/7/10 s | L8:015 | L8:034 | L8:078 | L9:057 | L10:043 | 73% |
+| Back lever | tuck_back_hold | 5/8/12/16/20 s | L3:068 | L3:096 | L4:055 | L5:068 | L9:089 | 97% |
+| Back lever | advanced_tuck_back | 5/8/10/15/20 s | L4:089 | L5:012 | L5:075 | L6:054 | L9:089 | 93% |
+| Back lever | straddle_back | 3/5/8/10/12 s | L5:082 | L6:005 | L6:054 | L8:082 | L10:061 | 77% |
+| Back lever | full_back | 3/5/8/12/14 s | L7:026 | L7:061 | L8:040 | L9:026 | L10:061 | 73% |
+| Dip | parallel_dip | 4/10/15/20/25 | L2:010 | L2:031 | L3:066 | L5:052 | L8:048 | L10:066 |
+| Push-up | pushup | 6/12/20/30/40 | L1:022 | L1:064 | L2:055 | L4:066 | L7:010 | L10:048 |
+| Push-up | one_arm_pushup | 1/2/3/4/5 a side | L7:006 | L7:048 | L7:090 | L8:090 | L9:090 | L10:062 |
+| Handstand push-up | pike_pushup | 6/8/10/12/15 | L1:065 | L2:011 | L2:053 | L2:095 | L9:046 | L10:067 |
+| Handstand push-up | wall_hspu | 2/4/6/8/10 | L4:067 | L4:095 | L5:088 | L7:074 | L10:032 | L10:081 |
+| Handstand push-up | deficit_wall_hspu | 2/3/5/6/7 | L8:018 | L8:039 | L9:004 | L10:018 | L10:088 | 83% |
+| Planche | pseudo_planche_pushup | 5/8/10/12/15 | L3:003 | L3:038 | L4:094 | L5:066* | L6:080* | L10:066* |
+| Planche | tuck_planche | 5/8/10/12/15 s | L4:038 | L4:055 | L5:010 | L5:066 | L6:080 | L10:066 |
+| Planche | advanced_tuck_planche | 5/6/8/10/12 s | L6:003 | L6:045 | L6:087 | L7:066 | L9:024 | L10:073 |
+| Planche | straddle_planche | 3/4/5/6/8 s | L8:003 | L8:024 | L8:059 | L9:003 | L9:066 | L10:087 |
+| Planche | full_planche | 2/3/4/5/6 s | L9:059 | L9:080 | L9:094 | L10:031 | L10:073 | 83% |
+| Handstand | wall_handstand | 20/30/45/60/75 s | L1:044 | L1:082 | L2:010 | L3:012 | L4:060 | L9:088 |
+| Handstand | freestanding_handstand | 5/15/30/45/60 s | L4:058 | L4:067 | L5:047 | L6:058 | L8:018 | L10:004 |
+| Handstand | one_arm_handstand | 3/4/5/6/7 s a side | L9:069 | L9:095 | L10:039 | L10:067 | L10:088 | 77% |
+| Pistol squat | squat | 15/20/30/40/50 | L1:003 | L1:048 | L1:083 | L4:002 | L8:030 | L10:037 |
+| Pistol squat | pistol_squat | 2/4/6/8/10 a side | L4:009 | L4:051 | L5:058 | L6:093 | L8:030 | L10:037 |
+| Toes to bar | hanging_leg_raise | 5/8/10/12/15 | L2:026 | L2:047 | L3:022 | L4:033 | L9:036 | L10:036 |
+| Toes to bar | toes_to_bar | 3/6/8/12/15 | L4:029 | L4:071 | L6:040 | L7:082 | L9:036 | L10:036 |
+| L-sit | lsit | 5/10/15/20/30 s | L3:023 | L3:051 | L4:044 | L6:016 | L7:093 | L10:030 |
+| L-sit | v_sit | 3/4/5/6/7 s | L8:009 | L8:030 | L8:051 | L8:093 | L10:009 | L10:037 |
+| Dragon flag | hollow_body_hold | 20/30/40/50/60 s | L1:001 | L1:026 | L1:071 | L3:051 | L4:079 | L6:045 |
+| Dragon flag | dragon_flag | 1/3/5/6/8 | L6:023 | L6:044 | L7:058 | L8:065 | L9:009 | L10:037 |
+| Human flag | tuck_flag | 5/8/10/12/15 s a side | L5:005 | L5:040 | L6:026 | L8:061 | L10:040 | L10:089 |
+| Human flag | straddle_flag | 3/4/6/8/10 s a side | L6:082 | L7:013 | L8:005 | L9:026 | L10:047 | 97% |
+| Human flag | full_flag | 2/3/4/5/6 s a side | L7:061 | L7:096 | L8:019 | L9:026 | L10:061 | 93% |
+| Shrimp squat | shrimp_squat | 2/3/5/7/8 a side | L7:058 | L7:081 | L8:023 | L9:023 | L10:051 | 87% |
+| Hefesto | hefesto | 1/1/1/1/2 | L9:040 | L9:082 | L9:089 | L10:019 | L10:034 | 77% |
 
-**185 of 200 belts land in classes:** every Master, and Elite for 25 skills; the other 15 Elites stand at 77–97%. By level, Levels 1–10 land 12, 8, 11, 14, 18, 12, 15, 24, 28 and 43. The first belt comes at class 11 (hollow body Beginner), and the push-up and squat follow at class 13. Every level brings new ones; the last first belt is the one-arm handstand's Beginner at L9:090.
+**186 of 200 belts land in classes:** every Master, and Elite for 26 skills; the other 14 Elites stand at 70–97%. By level, Levels 1–10 land 7, 10, 9, 16, 17, 15, 16, 23, 28 and 45. The first belt comes at class 26 (hollow body hold Beginner). Counted from the hand-written program (Round X, 2.12.0).
 
 ## The realism check
 

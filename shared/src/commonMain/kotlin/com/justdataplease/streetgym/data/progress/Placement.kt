@@ -104,7 +104,7 @@ object Placement {
      * Whether the counts already pass [exam]'s pull-up and push-up targets (the teacher's review 7): the skills step
      * offers a level test only then, so a start can't claim skills the counts deny.
      */
-    fun meets(exam: TrainingProgram, pullUps: Int, pushUps: Int): Boolean = exam.exercises.filter { it.assessment }.all { test ->
+    fun meets(exam: TrainingProgram, pullUps: Int, pushUps: Int): Boolean = exam.tests.all { test ->
         val reps = test.sets.firstOrNull()?.repetitions
         when {
             reps == null -> true

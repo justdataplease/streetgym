@@ -29,7 +29,7 @@ class ExamLogTest {
         val exams = catalog.levels.flatMap { it.programs }.filter { it.isExam }
         assertEquals(50, exams.size)
         exams.forEach { exam ->
-            val tests = exam.exercises.filter { it.assessment }.map { it.movementId }
+            val tests = exam.tests.map { it.movementId }
             assertTrue(exam.id, exam.headline != null && exam.headline in tests)
             // A check of the skills, then rest (2.9.0, the three coaches): 3 to 9 tests, a level test from Level 7 up to 11.
             assertTrue("${exam.id}: ${tests.size}", tests.size in 3..(if (exam.number == 100 && exam.levelNumber >= 7) 11 else 9))

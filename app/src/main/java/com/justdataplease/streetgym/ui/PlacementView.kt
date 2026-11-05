@@ -108,7 +108,7 @@ fun Context.placementCard(
             part(R.string.placement_opens_label, movements.joinToString(" · ") { it.replaceFirstChar(Char::uppercase) })
         }
         Placement.assumed(programs, start, TrainingProgram::levelNumber, TrainingProgram::number, TrainingProgram::isExam)?.let { exam ->
-            part(R.string.placement_assumes_label, exam.exercises.filter { it.assessment }.joinToString("\n") { examTarget(it, locale) })
+            part(R.string.placement_assumes_label, exam.tests.joinToString("\n") { examTarget(it, locale) })
         }
         // What a few more reps would change, so a count entered too low shows.
         if (skill[0] == 0) Placement.better(pullUps, pushUps, squats, starts)?.let { better ->
@@ -217,7 +217,7 @@ private fun Placement.Test.more(): Int = when (this) {
 
 /** An exam's targets in one line: "Strict Pull-Up · 15 reps, Parallel Bar Dip · 20 reps, …". */
 private fun Context.targets(exam: TrainingProgram, locale: Locale): String =
-    exam.exercises.filter { it.assessment }.joinToString(", ") { examTarget(it, locale) }
+    exam.tests.joinToString(", ") { examTarget(it, locale) }
 
 private fun tierName(tier: Tier): Int = when (tier) {
     Tier.FREE -> R.string.tier_free

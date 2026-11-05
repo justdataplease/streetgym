@@ -71,7 +71,7 @@ internal object NextClassState {
         val ordered = NextClass.ordered(catalog)
         val progress = SharedPreferencesProgressRepository(context)
         val completed = progress.completedProgramIds()
-        val passed = NextClass.passed(ordered, completed, AppSettings(context).skillSwitches)
+        val passed = AppSettings(context).let { NextClass.passed(ordered, completed, it.skillSwitches, it.equipment) }
         // The flip-book plays a step that moves: a hold's drawings would all be the same pose.
         val moves = { exercise: TrainingExercise ->
             MotionClip.moves(context, exercise.movementId, exercise.name.resolve(), exercise.category, exercise.equipment)

@@ -65,6 +65,8 @@ fun Context.skillsContent(
     points: Int,
     onOpen: (SkillStatus, SkillFamily, List<SkillStatus>) -> Unit,
     switches: SkillSwitches = SkillSwitches(),
+    /** Whether a skill's movement needs equipment the athlete switched off: its medal greys like a switched-off rung. */
+    lacks: (String) -> Boolean = { false },
     /** An ad card ([com.justdataplease.streetgym.ads.ManagedNativePlacement]) after the fourth ladder, or the last. */
     ad: View? = null,
 ): LinearLayout = LinearLayout(this).apply {
@@ -106,7 +108,7 @@ fun Context.skillsContent(
                 clipToPadding = false
                 setPadding(0, dp(10), 0, 0)
                 statuses.forEach { status ->
-                    val off = switches.isRungOff(family.spec.id, status.skill.rung)
+                    val off = switches.isRungOff(family.spec.id, status.skill.rung) || lacks(status.skill.id)
                     addWithMargins(skillCell(status, lockFor(status, tier), off) { onOpen(status, family, statuses) },
                         width = dp(86), rightDp = 14)
                 }

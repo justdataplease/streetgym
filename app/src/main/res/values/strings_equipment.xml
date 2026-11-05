@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Settings: the equipment switches (the owner, 2026-11-05: "switch off what I don't have, like the skills"). -->
+    <string name="equipment_section">Equipment you have</string>
+    <string name="equipment_intro">No pull-up bar or wall where you train? Switch it off. Exercises that need it stay greyed out in your classes, like a switched-off skill.</string>
+    <string name="equipment_pullup_bar">Pull-up bar</string>
+    <string name="equipment_low_bar">Low bar</string>
+    <string name="equipment_parallel_bars">Parallel bars</string>
+    <string name="equipment_box">Box, bench or chair</string>
+    <string name="equipment_wall">Wall</string>
+    <string name="equipment_pole">Pole or stall bars</string>
+    <string name="equipment_band">Resistance band</string>
+    <string name="equipment_pullup_bar_hint">Or rings. Pull-ups, hangs and levers</string>
+    <string name="equipment_low_bar_hint">Waist high, or low rings. Rows and the first muscle-up steps</string>
+    <string name="equipment_parallel_bars_hint">Dips and support holds</string>
+    <string name="equipment_box_hint">Box pike, step-ups and incline push-ups</string>
+    <string name="equipment_wall_hint">Wall handstands and kick-ups</string>
+    <string name="equipment_pole_hint">The human flag</string>
+    <string name="equipment_band_hint">Band muscle-ups</string>
+    <plurals name="equipment_count">
+        <item quantity="one">%d exercise</item>
+        <item quantity="other">%d exercises</item>
+    </plurals>
+    <string name="equipment_switched_off">Switched off: classes leave these out</string>
+    <!-- Inline names, for "Needs: pull-up bar + box" under an exercise and in the Library. -->
+    <string name="equipment_pullup_bar_short">pull-up bar</string>
+    <string name="equipment_low_bar_short">low bar</string>
+    <string name="equipment_parallel_bars_short">parallel bars</string>
+    <string name="equipment_box_short">box</string>
+    <string name="equipment_wall_short">wall</string>
+    <string name="equipment_pole_short">pole</string>
+    <string name="equipment_band_short">band</string>
+    <string name="equipment_or">%1$s or %2$s</string>
+    <string name="equipment_needs">Needs: %1$s</string>
+    <string name="equipment_none">No equipment</string>
+    <string name="equipment_off_message">This needs equipment you switched off in Settings, so it isn\'t part of your workouts or skill progress. Continue anyway?</string>
+</resources>

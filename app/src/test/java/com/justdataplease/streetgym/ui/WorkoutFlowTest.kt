@@ -234,17 +234,20 @@ class WorkoutFlowTest {
         val easierOption = EasierOption("assisted_pullup", LocalizedText("Assisted Pull-Up"))
         val pullup = exercise("pullup", 2).copy(assessment = true, easier = easierOption)
         val dip = exercise("dip", 1).copy(assessment = true)
-        val flow = WorkoutFlow.of("exam", listOf("practice" to practice, "main" to listOf(pullup, dip, main[0])))
+        val handstand = exercise("freestanding_handstand", 1).copy(assessment = true)
+        val flow = WorkoutFlow.of("exam", listOf("warmup" to warmup, "practice" to practice + handstand,
+            "main" to listOf(pullup, dip, main[0]), "cooldown" to cooldown))
         val all = flow.keys.toSet()
         fun reached(completed: Set<String> = all, easier: Set<String> = emptySet(), done: Map<String, Int> = emptyMap()) =
             flow.examTests(completed, easier, done).map { (exercise, reached) -> exercise.id to reached }
-        // Only the assessment sets of the main work are targets.
-        assertEquals(listOf("pullup" to true, "dip" to true), reached())
+        // The assessment sets of the skill practice and the strength work are the targets, in class order.
+        assertEquals(listOf("freestanding_handstand" to true, "pullup" to true, "dip" to true), reached())
         val pullups = flow.steps.filter { it.exercise === pullup }
-        assertEquals(listOf("pullup" to false, "dip" to true), reached(completed = all - pullups[1].key))
-        assertEquals(listOf("pullup" to false, "dip" to true), reached(easier = setOf(pullups[0].exerciseKey)))
+        assertEquals(listOf("freestanding_handstand" to true, "pullup" to false, "dip" to true), reached(completed = all - pullups[1].key))
+        assertEquals(listOf("freestanding_handstand" to true, "pullup" to false, "dip" to true), reached(easier = setOf(pullups[0].exerciseKey)))
         // A logged set short of the 8 planned misses it; meeting or beating it doesn't.
-        assertEquals(listOf("pullup" to false, "dip" to true), reached(done = mapOf(pullups[0].key to 7)))
-        assertEquals(listOf("pullup" to true, "dip" to true), reached(done = mapOf(pullups[0].key to 8, pullups[1].key to 11)))
+        assertEquals(listOf("freestanding_handstand" to true, "pullup" to false, "dip" to true), reached(done = mapOf(pullups[0].key to 7)))
+        assertEquals(listOf("freestanding_handstand" to true, "pullup" to true, "dip" to true),
+            reached(done = mapOf(pullups[0].key to 8, pullups[1].key to 11)))
     }
 }

@@ -1,6 +1,6 @@
 """Writes docs/ACHIEVEMENTS.html: what the program gives, skill by skill and belt by belt, counted from the classes.
 
-Reads curriculum/program.json (from tools/build_curriculum.py) and counts each belt the way the app does: sets at the
+Reads curriculum/program.json (from tools/handwritten_program.py) and counts each belt the way the app does: sets at the
 target or more, the belt below already held, every set done as written on the Normal toggle, and a belt held on a harder
 rung of a ladder held on its easier rungs too. Run it after the generator.
 

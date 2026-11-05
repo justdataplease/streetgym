@@ -153,11 +153,11 @@ class WorkoutFlow(val steps: List<WorkoutStep>) {
         .mapNotNull { step -> movement(step, easier, movementOf)?.let { step to it } }
 
     /**
-     * An exam class's targets (its assessment sets in the main work), each with whether it looks reached: every set
-     * ticked, none done as the easier option ([easier]) and no logged number ([done]) short of the plan.
+     * An exam class's targets (its assessment sets in the skill practice and the strength work), each with whether it
+     * looks reached: every set ticked, none done as the easier option ([easier]) and no logged number ([done]) short of the plan.
      */
     fun examTests(completed: Set<String>, easier: Set<String>, done: Map<String, Int>): List<Pair<TrainingExercise, Boolean>> = steps
-        .filter { it.section == "main" && it.exercise.assessment }
+        .filter { it.section in CREDITED_SECTIONS && it.exercise.assessment }
         .groupBy(WorkoutStep::exercise)
         .map { (exercise, sets) ->
             exercise to sets.all { step ->
