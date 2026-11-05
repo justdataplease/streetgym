@@ -187,6 +187,10 @@ open class HomeActivity : Activity() {
     private var parksGeoJson: Pair<List<Park>, String>? = null
     private var parksGeoJsonBuilding: List<Park>? = null
     private var parksLocateTried = false
+    /** Free's example ([renderParksExample]): a few parks of one city from the bundled copy, and whether the map is its still one. */
+    private var parksExample: Pair<List<Park>, String>? = null
+    private var parksExampleLoading = false
+    private var parksMapExample = false
     private var activityResumed = false
     /** Parks ranking and the map's GeoJSON: off the main thread, and not queued behind the parks download. */
     private val parksWorker = Executors.newSingleThreadExecutor()
@@ -1291,6 +1295,9 @@ open class HomeActivity : Activity() {
         val text = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
             addView(titleText(displayName(program, locale), 18f))
+            // Below Pro, the few ready workouts every tier opens say so.
+            if (program.free && ReadyWorkouts.isReady(program.id) && !Entitlement.tier(this@HomeActivity).readyWorkouts)
+                addWithMargins(badge(getString(R.string.ready_free), AppColors.ACTION), width = ViewGroup.LayoutParams.WRAP_CONTENT, topDp = 4)
             addWithMargins(bodyText(meta, 13f), topDp = 4)
             if (ReadyWorkouts.isReady(program.id)) program.description.resolve(locale).takeIf(String::isNotBlank)
                 ?.let { addWithMargins(bodyText(it, 13f), topDp = 4) }
@@ -1309,8 +1316,9 @@ open class HomeActivity : Activity() {
         }
     }
 
-    /** A ready workout on a tier without them, which shows only its name and the Pro offer. */
-    private fun readyLocked(id: String): Boolean = ReadyWorkouts.isReady(id) && !Entitlement.tier(this).readyWorkouts
+    /** A ready workout on a tier without them, which shows only its name and the Pro offer; the free ones open on every tier. */
+    private fun readyLocked(id: String): Boolean =
+        ReadyWorkouts.isReady(id) && !Entitlement.tier(this).readyWorkouts && readyIndex[id]?.free != true
 
     /**
      * Training › Library: Pro's ready workouts by group, for days off the program. Other tiers see the list too, with
@@ -1321,7 +1329,10 @@ open class HomeActivity : Activity() {
     private fun renderReadyWorkouts(page: LinearLayout, locale: Locale) {
         val ready = catalog?.workouts.orEmpty()
         page.addView(bodyText(getString(R.string.ready_intro)))
-        if (!Entitlement.tier(this).readyWorkouts) page.addWithMargins(TiersPanel(this, billing, Paywall.Ready), topDp = 14)
+        if (!Entitlement.tier(this).readyWorkouts) {
+            if (ready.any { it.free }) page.addWithMargins(bodyText(getString(R.string.ready_free_note), 14f), topDp = 8)
+            page.addWithMargins(TiersPanel(this, billing, Paywall.Ready), topDp = 14)
+        }
         val efforts = listOf(null) + Effort.entries
         page.addWithMargins(filterChips(efforts.map { it?.let(::effortText) ?: getString(R.string.ready_any_effort) },
             efforts.indexOf(readyEffort), efforts.map { it?.let(::effortColor) }) { readyEffort = efforts[it]; renderLevels() }, topDp = 14)
@@ -1347,6 +1358,8 @@ open class HomeActivity : Activity() {
         if (shown.isEmpty()) page.addWithMargins(bodyText(getString(R.string.ready_none), 14f), topDp = 8)
         shown.groupBy { it.group }.forEach { (group, workouts) ->
             page.addWithMargins(sectionLabel(readyGroupName(group)), topDp = 14)
+            // Aches & posture: gentle sessions, not a treatment; when to see someone first (the research brief).
+            if (group == "problems") page.addWithMargins(bodyText(getString(R.string.ready_problems_note), 13f), bottomDp = 10)
             workouts.forEach { page.addWithMargins(libraryCard(it, locale), bottomDp = 10) }
         }
     }
@@ -1386,6 +1399,7 @@ open class HomeActivity : Activity() {
         "core" -> R.string.ready_group_core
         "skills" -> R.string.ready_group_skills
         "short" -> R.string.ready_group_short
+        "problems" -> R.string.ready_group_problems
         else -> R.string.ready_group_mobility
     })
 
@@ -1418,10 +1432,11 @@ open class HomeActivity : Activity() {
      */
     private fun renderParks(page: LinearLayout): Boolean {
         if (!Entitlement.tier(this).parks) {
-            page.addWithMargins(bodyText(getString(R.string.parks_teaser)), bottomDp = 12)
-            page.addView(TiersPanel(this, billing, Paywall.Parks))
+            renderParksExample(page)
             return false
         }
+        // A map left from Free's example is a still one: the real map starts fresh.
+        if (parksMapExample) { parksMap?.destroy(); parksMap = null; parksMapHidden = false; parksMapExample = false }
         val all = parks
         if (all == null) {
             page.addView(bodyText(getString(R.string.parks_loading)))
@@ -1492,6 +1507,52 @@ open class HomeActivity : Activity() {
         }
         page.addWithMargins(bodyText(getString(R.string.parks_credit), 12f), topDp = 16)
         return false
+    }
+
+    /**
+     * Free's Parks (the owner, 2026-11-05: "for free show an example, stale data"): a still map of a few parks in one
+     * city, from the copy that ships with the app and is never updated on Free, then the Plus offer. Tapping a park
+     * offers Plus too. Where the map can't start, the parks show as a short list.
+     */
+    private fun renderParksExample(page: LinearLayout) {
+        page.addWithMargins(bodyText(getString(R.string.parks_teaser)), bottomDp = 10)
+        val sample = parksExample
+        if (sample == null) {
+            page.addView(bodyText(getString(R.string.parks_loading)))
+            if (!parksExampleLoading) {
+                parksExampleLoading = true
+                parksWorker.execute {
+                    val all = runCatching { assets.open(Parks.ASSET).reader(Charsets.UTF_8).use(Parks::read) }.getOrDefault(emptyList())
+                    val near = Parks.nearest(all, EXAMPLE_LAT, EXAMPLE_LNG, EXAMPLE_PARKS).map { it.park }
+                    val json = Parks.geoJson(near)
+                    runOnUiThread {
+                        parksExample = near to json
+                        parksExampleLoading = false
+                        if (currentScreen == Screen.Levels && trainingTab == 3) renderLevels()
+                    }
+                }
+            }
+        } else {
+            page.addView(sectionLabel(getString(R.string.parks_example)))
+            if (parksMap != null && !parksMapExample) { parksMap?.destroy(); parksMap = null; parksMapHidden = false }
+            val map = if (parksMapFailed) null else parksMap ?: runCatching {
+                ParksMap(this, { showPaywall(Paywall.Parks) }, { showPaywall(Paywall.Parks) }, null, interactive = false)
+                    .also { if (activityResumed) it.resume() }
+            }.onFailure {
+                Log.w("ParksMap", "The example map can't start here; showing the list", it)
+                parksMapFailed = true
+            }.getOrNull()?.also { parksMap = it; parksMapExample = true }
+            if (map != null) {
+                (map.view.parent as? ViewGroup)?.removeView(map.view)
+                page.addWithMargins(map.view, height = dp(260), topDp = 6)
+                map.showParks(sample.first, sample.second)
+                map.focus(sample.first)
+            } else sample.first.take(5).forEach { park ->
+                page.addWithMargins(card().apply { addView(titleText(park.name, 16f)) }, bottomDp = 8)
+            }
+            page.addWithMargins(bodyText(getString(R.string.parks_example_note), 13f), topDp = 6)
+        }
+        page.addWithMargins(TiersPanel(this, billing, Paywall.Parks), topDp = 12)
     }
 
     /** A new map, or null (and the list from then on) where MapLibre can't start, such as a phone without its native library. */
@@ -3103,7 +3164,7 @@ open class HomeActivity : Activity() {
     /** Today's assigned day, one of the athlete's own custom days, or on Pro a ready workout: those start any time. */
     private fun canStart(id: String): Boolean =
         (assignedProgram()?.id == id || CustomDays.isCustom(id) && library.customDay(id) != null ||
-            ReadyWorkouts.isReady(id) && id in readyIndex && Entitlement.tier(this).readyWorkouts) &&
+            ReadyWorkouts.isReady(id) && id in readyIndex && !readyLocked(id)) &&
             programById(id)?.levelNumber?.let(::levelLocked) != true
 
     /** Any completed day can be trained again, in a level the athlete can open; days not reached yet cannot. */
@@ -3282,11 +3343,15 @@ open class HomeActivity : Activity() {
         /** A library card's icon: its hardest exercise on a ringed tile, in dp. */
         private const val TILE_DP = 56
         /** The Library's focus chips, in order: its groups, then the skill families (tools/build_ready_workouts.py). */
-        private val READY_FOCUS = listOf("full", "pull", "push", "legs", "core", "skills", "short", "mobility",
+        private val READY_FOCUS = listOf("problems", "full", "pull", "push", "legs", "core", "skills", "short", "mobility",
             "handstand", "front_lever", "back_lever", "planche", "flag", "muscleup", "lsit", "one_arm")
         private const val REQUEST_LOCATION = 720
         /** In ParksUpdater's preferences: the list instead of the map, and whether the map asked for location yet. */
         private const val KEY_PARKS_LIST = "show_list"
+        /** Free's example parks: the ones nearest the centre of Athens. */
+        private const val EXAMPLE_LAT = 37.9838
+        private const val EXAMPLE_LNG = 23.7275
+        private const val EXAMPLE_PARKS = 12
         private const val KEY_LOCATION_ASKED = "location_asked"
         /** How many of the nearest parks the map frames around the athlete. */
         private const val NEARBY_ON_MAP = 5

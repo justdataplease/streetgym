@@ -511,30 +511,36 @@ class TrainingInstrumentation : Instrumentation() {
             report("Plus opens Levels 4 to 6; Levels 7 to 10 offer Pro only")
 
             // Training > Library: every tier sees the ready workouts; below Pro a tap shows the Pro offer, not the workout (2.11.0).
-            val ready = catalog.workouts.first()
+            // The three free Aches & posture workouts open on every tier (2.13.0).
+            val ready = catalog.workouts.first { !it.free }
+            val free = catalog.workouts.first { it.free }
             nav(R.string.nav_levels); clickText(R.string.training_tab_ready)
-            check(shown(R.string.paywall_ready) && shown(ready.name.resolve()))
+            check(shown(R.string.paywall_ready) && shown(free.name.resolve()) && shown(targetContext.getString(R.string.ready_free).uppercase()))
+            clickLabel(free.name.resolve())
+            check(shown(R.string.start_workout) && !shown(R.string.paywall_ready))
+            nav(R.string.nav_levels); clickText(R.string.training_tab_ready)
+            check(shown(ready.name.resolve()))
             clickLabel(ready.name.resolve())
             clickDialog(R.string.cancel)
             check(shown(R.string.ready_intro) && !shown(R.string.start_workout) && !shown(ready.exercises.first().name.resolve()))
             Entitlement.setSimulatedTier(targetContext, null)
             await { Entitlement.tier(targetContext) == Tier.PRO }
             nav(R.string.nav_levels); clickText(R.string.training_tab_ready)
-            check(!shown(R.string.paywall_ready) && catalog.workouts.size == 200)
+            check(!shown(R.string.paywall_ready) && catalog.workouts.size == 216)
             // Each card: its hardest exercise ringed in how hard it is for the athlete, and the word (2.9.0).
             val forYou = targetContext.getString(R.string.effort_for_you, "")
             check(findAll { it is TextView && it.isShown && it.text.contains(forYou) }.isNotEmpty())
             screenshot("library.png")
-            // The filters (2.9.1): Easy for you leaves only easy cards, Clear filters brings back all 200.
+            // The filters (2.9.1): Easy for you leaves only easy cards, Clear filters brings back all 216.
             val easy = targetContext.getString(R.string.effort_for_you, targetContext.getString(R.string.effort_easy))
             clickLabel(easy)
-            check(shown(R.string.ready_clear) && !shown(targetContext.resources.getQuantityString(R.plurals.ready_count, 200, 200)))
+            check(shown(R.string.ready_clear) && !shown(targetContext.resources.getQuantityString(R.plurals.ready_count, 216, 216)))
             // The cards' lines ("Beginner · 4 exercises · About 15 min · Easy for you"), not the chips.
             val cardLines = findAll { it is TextView && it.isShown && it.text.contains(" · ") && it.text.contains(forYou) }
             check(cardLines.isNotEmpty() && cardLines.all { (it as TextView).text.contains(easy) })
             screenshot("library_easy.png")
             clickText(R.string.ready_clear)
-            check(shown(targetContext.resources.getQuantityString(R.plurals.ready_count, 200, 200)))
+            check(shown(targetContext.resources.getQuantityString(R.plurals.ready_count, 216, 216)))
             clickLabel(ready.name.resolve())
             check(shown(R.string.start_workout) && !shown(R.string.paywall_ready) && !shown("Complete day"))
             check(find { it is TextView && it.isShown && it.text.toString().endsWith(forYou, ignoreCase = true) } != null)
@@ -552,7 +558,7 @@ class TrainingInstrumentation : Instrumentation() {
             await(::tilesPlay)
             screenshot("level_marks.png")
             nav(R.string.nav_levels); clickText(R.string.training_tab_levels)
-            report("Library: 200 ready workouts with filters; Plus sees them with the Pro offer, Pro can start one; every card and class says how hard it is for you; the level list's tiles play after a scroll")
+            report("Library: 216 ready workouts with filters; Plus opens the three free ones and sees the rest with the Pro offer, Pro can start one; every card and class says how hard it is for you; the level list's tiles play after a scroll")
 
             nav(R.string.nav_timer); clickLabel("30 sec"); clickLabel("Start")
             val timing = TimingStore(targetContext)

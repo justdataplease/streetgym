@@ -138,6 +138,7 @@ object CurriculumJsonParser {
             headline = schedule?.optValueAsString("headline"),
             group = json.optValueAsString("group"),
             grade = json.optIntOrNull("grade"),
+            free = json.optBoolean("free", false),
         )
     }
 

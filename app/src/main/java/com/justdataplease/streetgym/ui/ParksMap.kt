@@ -53,12 +53,14 @@ import org.maplibre.geojson.Point
  * Parks near me as a map: OpenFreeMap tiles through MapLibre (as in JustMaps: no API key, no per-view cost),
  * the parks as clustered pins, the athlete's approximate location as a blue dot, and a card with directions for the
  * tapped park. One instance lives while the Parks map is on screen; the activity forwards its lifecycle.
+ * [interactive] false: Free's example, a still map (no pan, zoom or location button) that sits in a scrolling page.
  */
 class ParksMap(
     private val context: Context,
     private val onLocate: () -> Unit,
     private val onDirections: (Park) -> Unit,
     me: Pair<Double, Double>?,
+    private val interactive: Boolean = true,
 ) {
     private var parks: List<Park> = emptyList()
     private var parksJson: String? = null
@@ -85,6 +87,7 @@ class ParksMap(
         mapView.onCreate(null)
         mapView.getMapAsync { ready ->
             map = ready
+            if (!interactive) ready.uiSettings.setAllGesturesEnabled(false)
             pendingCamera?.invoke(ready)
             pendingCamera = null
             ready.setStyle(Style.Builder().fromUri(if (AppColors.darkMode) STYLE_DARK else STYLE_LIGHT)) { loaded ->
@@ -109,6 +112,7 @@ class ParksMap(
             isClickable = true
             isFocusable = true
             setOnClickListener { onLocate() }
+            if (!interactive) visibility = View.GONE
         }
         tintLocate()
         val overlay = LinearLayout(context).apply {

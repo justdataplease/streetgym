@@ -41,7 +41,7 @@
     <string name="paywall_level_pro">Level %1$d is part of Pro</string>
     <string name="paywall_level_pro_body">Levels 7 to 10 build up to the full front lever, planche, human flag, Hefesto, one-arm pull-up and one-arm handstand.</string>
     <string name="paywall_ready">Ready workouts are part of Pro</string>
-    <string name="paywall_ready_body">Workouts for days off the program: pull, push, legs, core, skills, short days and mobility.</string>
+    <string name="paywall_ready_body">Workouts for days off the program: pull, push, legs, core, skills, short days, mobility, and aches and posture.</string>
     <string name="remove_ads">Remove ads</string>
     <string name="paywall_ads">Remove ads</string>
     <string name="paywall_ads_body">Plus ends the ads with one payment. Pro does too, and adds Levels 7 to 10.</string>
@@ -54,6 +54,15 @@
     <string name="saved_limit_pro">You’ve reached the 300 saved and custom days of Pro. Remove one to add another.</string>
     <string name="restore_purchase">Restore purchases</string>
     <string name="purchase_checking">Checking purchases…</string>
+    <!-- Google Play promo codes (the owner, 2026-11-05). -->
+    <string name="promo_redeem">Redeem a promo code</string>
+    <string name="promo_title">Promo code</string>
+    <string name="promo_body">Google Play opens to redeem it on your account. Then come back here: your plan unlocks by itself.</string>
+    <string name="promo_hint">Your code</string>
+    <string name="promo_open">Redeem on Google Play</string>
+    <string name="promo_empty">Type the code first.</string>
+    <string name="promo_after">Redeemed? Your plan unlocks when you\'re back in the app.</string>
+    <string name="promo_no_store">Google Play isn\'t on this phone, so the code can\'t be redeemed here.</string>
     <string name="purchase_restored_pro">Pro restored. Everything is unlocked.</string>
     <string name="purchase_restored_plus">Plus restored. Levels 4 to 6 and the leaderboard are open, and ads are off.</string>
     <string name="purchase_not_found">No purchase found for this Google account.</string>

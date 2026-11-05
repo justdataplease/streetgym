@@ -33,8 +33,13 @@ ROOT = Path(__file__).resolve().parents[1]
 LIB = {m['id']: m for m in json.loads((ROOT / 'curriculum/movement_library.json').read_text(encoding='utf-8'))['movements']}
 OUT = ROOT / 'app/src/main/assets/workouts.json'
 
-GROUPS = ['full', 'pull', 'push', 'legs', 'core', 'skills', 'short', 'mobility']
+GROUPS = ['problems', 'full', 'pull', 'push', 'legs', 'core', 'skills', 'short', 'mobility']
 SAFETY = 'Stop a set when your form breaks, and take the easier option whenever you need it.'
+# Aches & posture (the owner, 2026-11-05: "a new category for specific problems"): gentle sessions, not a treatment.
+PROBLEM_SAFETY = ('Move gently and stay pain-free. Stop for sharp pain, numbness or tingling, and see a doctor or physio '
+                  'if the pain lasts, keeps coming back or follows an injury.')
+# The ready workouts every tier opens are FREE, set with the Aches & posture workouts below (three, for the neck and
+# the back from desk work).
 
 
 def reps(movement, sets, count, rest, tempo='2111', easier=None):
@@ -926,6 +931,125 @@ WORKOUTS = [
 ]
 
 
+# ---------- Aches & posture (the owner, 2026-11-05: "a new category for specific problems") ----------
+# Written by hand from a research brief of the guidelines and reviews (JOSPT neck, heel and patellofemoral guidelines,
+# WHO and NICE on low back pain, Cochrane, BJSM): little and often, gentle loading, nothing that promises a cure.
+# Each problem has a free or easier session and a stronger one; three are free on every tier (FREE).
+WARMUP.update({
+    'neck': [reps('shoulder_cars', 1, '5/side', 10, 'controlled'), reps('arm_swings', 1, 10, 10, 'controlled')],
+    'neck_floor': [hold('march', 1, 60, 0, 'easy'), reps('shoulder_cars', 1, '5/side', 10, 'controlled'), reps('cat_cow', 1, 6, 10, 'slow')],
+    'upper_back': [reps('arm_swings', 1, 10, 10, 'controlled'), reps('shoulder_cars', 1, '5/side', 10, 'controlled'),
+                   reps('cat_cow', 1, 6, 10, 'slow')],
+    'upper_back_bar': [reps('arm_swings', 1, 10, 10, 'controlled'), reps('shoulder_cars', 1, '5/side', 10, 'controlled'),
+                       reps('scapular_pull', 1, 6, 20)],
+    'low_back': [hold('march', 1, 60, 0, 'easy'), reps('cat_cow', 1, 8, 10, 'slow'), reps('hip_circles', 1, 8, 10, 'controlled')],
+    'knees': [hold('march', 1, 60, 0, 'easy'), reps('ankle_rocks', 1, '10/side', 10, 'controlled')],
+    'knee_tendon': [hold('march', 1, 60, 0, 'easy'), reps('ankle_rocks', 1, '10/side', 10, 'controlled'),
+                    hold('wall_sit', 1, 30, 30)],
+    'shoulders': [reps('arm_swings', 1, 10, 10, 'controlled'), reps('shoulder_cars', 1, '5/side', 10, 'controlled'),
+                  reps('thoracic_rotation', 1, '6/side', 10, 'controlled')],
+    'shoulders_strength': [reps('arm_swings', 1, 10, 10, 'controlled'), reps('shoulder_cars', 1, '5/side', 10, 'controlled'),
+                           reps('scapular_pushup', 1, 8, 20)],
+    'hips': [hold('march', 1, 60, 0, 'easy'), reps('hip_circles', 1, 8, 10, 'controlled'), reps('leg_swings', 1, '8/side', 10, 'controlled')],
+    'wrists': [reps('wrist_circles', 1, 10, 10, 'controlled'), reps('arm_swings', 1, 10, 10, 'controlled')],
+})
+COOLDOWN.update({
+    'neck': [stretch('neck_stretch', 20, 2), stretch('chest_stretch', 30, 2), hold('slow_breathing', 1, 60, 0, 'easy')],
+    'neck_floor': [stretch('neck_stretch', 20, 2), stretch('chest_stretch', 30, 2), hold('child_pose', 1, 45, 0, 'easy')],
+    'upper_back': [stretch('chest_stretch', 30, 2), stretch('lat_stretch'), hold('child_pose', 1, 45, 0, 'easy')],
+    'upper_back_bar': [stretch('chest_stretch', 30, 2), stretch('lat_stretch', 30, 2)],
+    'low_back': [stretch('hip_flexor_stretch', 30, 2), stretch('supine_twist', 30, 2), hold('child_pose', 1, 45, 0, 'easy')],
+    'low_back_strength': [stretch('hamstring_stretch', 30, 2), stretch('hip_flexor_stretch', 30, 2), hold('child_pose', 1, 45, 0, 'easy')],
+    'knees': [stretch('quad_stretch', 30, 2), stretch('hamstring_stretch', 30, 2)],
+    'knees_strength': [stretch('quad_stretch', 30, 2), stretch('hip_flexor_stretch', 30, 2)],
+    'knee_tendon': [stretch('quad_stretch', 30, 2), stretch('calf_stretch', 30, 2)],
+    'shoulders': [stretch('chest_stretch', 30, 2), stretch('lat_stretch'), hold('child_pose', 1, 45, 0, 'easy')],
+    'heels': [stretch('calf_stretch', 30, 3)],
+    'achilles': [stretch('calf_stretch', 30, 2)],
+    'hips': [stretch('ninety_ninety_hip_stretch', 30, 2), stretch('supine_twist', 30, 2)],
+    'wrists': [stretch('forearm_stretch', 30, 2), hold('slow_breathing', 1, 60, 0, 'easy')],
+})
+FREE = {'neck_at_the_desk', 'upper_back_reset', 'low_back_basics'}
+# Each problem's own safety line (the research brief), in place of PROBLEM_SAFETY.
+SAFETY_BY_SLUG = {}
+for _slugs, _line in (
+    (('neck_at_the_desk', 'neck_strength'), 'Keep every move small and slow. Stop on dizziness, a headache or tingling in the arms. See a professional if neck pain lasts or follows an injury.'),
+    (('upper_back_reset', 'upper_back_rows'), 'Move in a comfortable range with the shoulders down. Stop on sharp pain or tingling. See a professional if the pain lasts.'),
+    (('low_back_basics', 'low_back_strength'), 'Keep moving, gently. Stop if pain spreads down a leg or you feel numbness. Get urgent help for numbness around the groin or bladder changes.'),
+    (('gentle_knees', 'stronger_knees'), 'Mild discomfort is okay if it settles by the next morning. Stop on sharp pain, locking or giving way. See a professional after a knee injury.'),
+    (('knee_tendon_holds', 'knee_tendon_strength'), 'Pain up to 3 out of 10 that settles by the next morning is okay. Stop on sharp pain. See a professional if it keeps getting worse.'),
+    (('gentle_shoulders', 'shoulder_strength'), 'Work below the painful range first. Stop on sharp or catching pain. See a professional if you can\'t lift the arm or after an injury.'),
+    (('sore_heels', 'slow_heel_raises'), 'Mild discomfort is okay if it has settled by the next morning. Stop on sharp pain. See a professional if the foot goes numb or after a sudden snap.'),
+    (('hips_after_sitting',), 'Stretch only to a mild pull. Ease off if the front of the hip pinches. See a professional if you limp or have groin pain.'),
+    (('easy_wrists',), 'Warm up first and keep it light. Stop on sharp pain or numb fingers. See a professional after a fall on the hand.'),
+):
+    for _slug in _slugs:
+        SAFETY_BY_SLUG[_slug] = _line
+WORKOUTS += [
+    ('neck_at_the_desk', 'Neck at the Desk', 'problems', 1, 3,
+     'Chin tucks, shoulder-blade work and easy stretches for a stiff neck.', 'neck',
+     [reps('chin_tuck', 2, 8, 20, 'controlled'), reps('elevated_scapular_pushup', 2, 10, 30),
+      reps('wall_slide', 2, 8, 20, 'slow')], 'neck'),
+    ('neck_strength', 'Neck Strength', 'problems', 1, 4,
+     'Lying chin nods and upper-back work for a neck that copes with screen days.', 'neck_floor',
+     [hold('lying_chin_nod', 8, 10, 10), reps('chin_tuck', 2, 10, 20, 'controlled'), reps('prone_ytw', 2, 6, 30),
+      reps('scapular_pushup', 2, 10, 30), reps('thoracic_rotation', 2, '6/side', 20, 'controlled')], 'neck_floor'),
+    ('upper_back_reset', 'Upper Back Reset', 'problems', 1, 3,
+     'Open the chest and upper back, then wake up the muscles between the blades.', 'upper_back',
+     [reps('thoracic_rotation', 2, '6/side', 20, 'controlled'), reps('prone_ytw', 3, 6, 30), reps('wall_slide', 2, 10, 20, 'slow'),
+      reps('scapular_pushup', 2, 10, 30), hold('wall_shoulder_flexion', 2, 30, 20, 'easy')], 'upper_back'),
+    ('upper_back_rows', 'Upper Back Rows', 'problems', 2, 5,
+     'Body rows and shoulder-blade pulls for a stronger upper back after desk days.', 'upper_back_bar',
+     [reps('high_inverted_row', 3, 8, 60), reps('prone_ytw', 2, 8, 30), reps('scapular_pull', 2, 6, 45),
+      reps('wall_slide', 2, 10, 20, 'slow')], 'upper_back_bar'),
+    ('low_back_basics', 'Low Back Basics', 'problems', 1, 3,
+     'Gentle spine movement, bridges and trunk control for a back sore from sitting.', 'low_back',
+     [reps('glute_bridge', 2, 10, 30), reps('bird_dog', 2, '6/side', 20, 'slow'), reps('dead_bug', 2, '6/side', 20, 'slow'),
+      hold('kneeling_side_plank', 2, '15/side', 20), reps('box_squat', 2, 8, 30)], 'low_back'),
+    ('low_back_strength', 'Low Back Strength', 'problems', 2, 5,
+     'Hinges, bridges, bird dogs and side planks for a back that copes with long days.', 'low_back',
+     [reps('single_leg_rdl', 2, '6/side', 45), reps('glute_bridge', 3, 12, 30), reps('bird_dog', 2, '8/side', 20, 'slow'),
+      hold('side_plank', 2, '20/side', 30)], 'low_back_strength'),
+    ('gentle_knees', 'Gentle Knees', 'problems', 1, 4,
+     'Hip and thigh work that keeps sore knees gently loaded.', 'knees',
+     [hold('kneeling_side_plank', 2, '20/side', 30), reps('glute_bridge', 2, 12, 30), hold('wall_sit', 3, 30, 45),
+      reps('box_squat', 2, 8, 45)], 'knees'),
+    ('stronger_knees', 'Stronger Knees', 'problems', 2, 5,
+     'One-leg bridges, step-ups and wall sits for legs that carry the knees well.', 'knees',
+     [reps('single_leg_bridge', 2, '8/side', 30), hold('side_plank', 2, '20/side', 30), reps('step_up', 2, '8/side', 45),
+      hold('wall_sit', 2, 45, 60)], 'knees_strength'),
+    ('knee_tendon_holds', 'Knee Tendon Holds', 'problems', 1, 4,
+     'Long wall-sit holds and bridges to load a sore knee tendon gently.', 'knees',
+     [hold('wall_sit', 5, 45, 60), reps('glute_bridge', 2, 12, 30)], 'knee_tendon'),
+    ('knee_tendon_strength', 'Knee Tendon Strength', 'problems', 2, 5,
+     'Slow squats and split squats, three seconds down and up, for the next step.', 'knee_tendon',
+     [reps('tempo_squat', 3, 8, 60, '3030'), reps('split_squat', 2, '6/side', 60, '3030'), reps('single_leg_bridge', 2, '8/side', 30)],
+     'knees_strength'),
+    ('gentle_shoulders', 'Gentle Shoulders', 'problems', 1, 3,
+     'Shoulder-blade work, wall slides and wall push-ups for shoulders that ache.', 'shoulders',
+     [reps('elevated_scapular_pushup', 2, 10, 30), reps('wall_slide', 2, 10, 20, 'slow'), reps('prone_ytw', 2, 6, 30),
+      reps('wall_pushup', 3, 10, 45)], 'shoulders'),
+    ('shoulder_strength', 'Shoulder Strength', 'problems', 2, 5,
+     'Slow incline push-ups and body rows for shoulders ready for push and pull.', 'shoulders_strength',
+     [reps('incline_pushup', 3, 8, 45, '3111'), reps('high_inverted_row', 3, 8, 45, '3111'), reps('prone_ytw', 2, 8, 30),
+      reps('wall_slide', 2, 10, 20, 'slow')], 'upper_back_bar'),
+    ('sore_heels', 'Sore Heels', 'problems', 1, 3,
+     'Slow heel raises and calf stretches for heels that hurt in the morning.', 'knees',
+     [reps('calf_raise', 3, 10, 60, '3032'), reps('single_leg_rdl', 2, '6/side', 30)], 'heels'),
+    ('slow_heel_raises', 'Slow Heel Raises', 'problems', 1, 4,
+     'Slow heel raises and step-ups to load a sore Achilles a little at a time.', 'knees',
+     [reps('calf_raise', 4, 12, 60, '3111'), reps('step_up', 2, '8/side', 45)], 'achilles'),
+    ('hips_after_sitting', 'Hips After Sitting', 'problems', 1, 3,
+     'Hip switches, bridges and long stretches for hips tight after a day sitting.', 'hips',
+     [reps('ninety_ninety_hip_switch', 2, 8, 20, 'slow'), reps('glute_bridge', 2, 12, 30),
+      stretch('hip_flexor_stretch', 45, 2), reps('cossack_squat', 2, '4/side', 30), hold('deep_squat_hold', 2, 30, 20, 'easy')], 'hips'),
+    ('easy_wrists', 'Easy Wrists', 'problems', 1, 3,
+     'Wrist circles, rocks and light loading for wrists sore from typing or push-ups.', 'wrists',
+     [reps('wrist_rocks', 2, 10, 10, 'controlled'), reps('wrist_pushup', 2, 8, 30), reps('wall_pushup', 2, 10, 30),
+      hold('elevated_plank', 2, 20, 30)], 'wrists'),
+]
+
+
 def seconds(step):
     _, sets, count, held, rest, _, _ = step
     rep_values, rep_side = dose(count)
@@ -1004,9 +1128,11 @@ def build():
             'group': group, 'grade': grade, 'focus': focus(group, main),
             'schedule': {'minutes': minutes, 'rpe': rpe},
             'warmup': WARMUP[warmup], 'main': main, 'cooldown': COOLDOWN[cooldown],
-            'safety': {'en': SAFETY},
+            'safety': {'en': SAFETY_BY_SLUG.get(slug, PROBLEM_SAFETY) if group == 'problems' else SAFETY},
+            **({'free': True} if slug in FREE else {}),
         })
-    out.sort(key=lambda w: (GROUPS.index(w['group']), w['grade']))
+    assert FREE <= seen, FREE - seen
+    out.sort(key=lambda w: (GROUPS.index(w['group']), not w.get('free', False), w['grade']))
     return out
 
 

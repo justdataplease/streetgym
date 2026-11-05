@@ -2,6 +2,402 @@
  "schema_version": 1,
  "workouts": [
   {
+   "id": "ready:neck_at_the_desk",
+   "title": {"en": "Neck at the Desk"},
+   "description": {"en": "Chin tucks, shoulder-blade work and easy stretches for a stiff neck."},
+   "group": "problems",
+   "grade": 1,
+   "focus": ["problems"],
+   "schedule": {"minutes": 15, "rpe": 3},
+   "warmup": [
+    ["shoulder_cars", 1, "5/side", null, 10, "controlled", null],
+    ["arm_swings", 1, 10, null, 10, "controlled", null]
+   ],
+   "main": [
+    ["chin_tuck", 2, 8, null, 20, "controlled", null],
+    ["elevated_scapular_pushup", 2, 10, null, 30, "2111", null],
+    ["wall_slide", 2, 8, null, 20, "slow", null]
+   ],
+   "cooldown": [
+    ["neck_stretch", 2, null, 20, 10, "easy", null],
+    ["chest_stretch", 2, null, 30, 10, "easy", null],
+    ["slow_breathing", 1, null, 60, 0, "easy", null]
+   ],
+   "safety": {"en": "Keep every move small and slow. Stop on dizziness, a headache or tingling in the arms. See a professional if neck pain lasts or follows an injury."},
+   "free": true
+  },
+  {
+   "id": "ready:upper_back_reset",
+   "title": {"en": "Upper Back Reset"},
+   "description": {"en": "Open the chest and upper back, then wake up the muscles between the blades."},
+   "group": "problems",
+   "grade": 1,
+   "focus": ["problems"],
+   "schedule": {"minutes": 20, "rpe": 3},
+   "warmup": [
+    ["arm_swings", 1, 10, null, 10, "controlled", null],
+    ["shoulder_cars", 1, "5/side", null, 10, "controlled", null],
+    ["cat_cow", 1, 6, null, 10, "slow", null]
+   ],
+   "main": [
+    ["thoracic_rotation", 2, "6/side", null, 20, "controlled", null],
+    ["prone_ytw", 3, 6, null, 30, "2111", null],
+    ["wall_slide", 2, 10, null, 20, "slow", null],
+    ["scapular_pushup", 2, 10, null, 30, "2111", null],
+    ["wall_shoulder_flexion", 2, null, 30, 20, "easy", null]
+   ],
+   "cooldown": [
+    ["chest_stretch", 2, null, 30, 10, "easy", null],
+    ["lat_stretch", 1, null, 30, 10, "easy", null],
+    ["child_pose", 1, null, 45, 0, "easy", null]
+   ],
+   "safety": {"en": "Move in a comfortable range with the shoulders down. Stop on sharp pain or tingling. See a professional if the pain lasts."},
+   "free": true
+  },
+  {
+   "id": "ready:low_back_basics",
+   "title": {"en": "Low Back Basics"},
+   "description": {"en": "Gentle spine movement, bridges and trunk control for a back sore from sitting."},
+   "group": "problems",
+   "grade": 1,
+   "focus": ["problems"],
+   "schedule": {"minutes": 20, "rpe": 3},
+   "warmup": [
+    ["march", 1, null, 60, 0, "easy", null],
+    ["cat_cow", 1, 8, null, 10, "slow", null],
+    ["hip_circles", 1, 8, null, 10, "controlled", null]
+   ],
+   "main": [
+    ["glute_bridge", 2, 10, null, 30, "2111", null],
+    ["bird_dog", 2, "6/side", null, 20, "slow", null],
+    ["dead_bug", 2, "6/side", null, 20, "slow", null],
+    ["kneeling_side_plank", 2, null, "15/side", 20, "isometric", null],
+    ["box_squat", 2, 8, null, 30, "2111", null]
+   ],
+   "cooldown": [
+    ["hip_flexor_stretch", 2, null, 30, 10, "easy", null],
+    ["supine_twist", 2, null, 30, 10, "easy", null],
+    ["child_pose", 1, null, 45, 0, "easy", null]
+   ],
+   "safety": {"en": "Keep moving, gently. Stop if pain spreads down a leg or you feel numbness. Get urgent help for numbness around the groin or bladder changes."},
+   "free": true
+  },
+  {
+   "id": "ready:neck_strength",
+   "title": {"en": "Neck Strength"},
+   "description": {"en": "Lying chin nods and upper-back work for a neck that copes with screen days."},
+   "group": "problems",
+   "grade": 1,
+   "focus": ["problems"],
+   "schedule": {"minutes": 20, "rpe": 4},
+   "warmup": [
+    ["march", 1, null, 60, 0, "easy", null],
+    ["shoulder_cars", 1, "5/side", null, 10, "controlled", null],
+    ["cat_cow", 1, 6, null, 10, "slow", null]
+   ],
+   "main": [
+    ["lying_chin_nod", 8, null, 10, 10, "isometric", null],
+    ["chin_tuck", 2, 10, null, 20, "controlled", null],
+    ["prone_ytw", 2, 6, null, 30, "2111", null],
+    ["scapular_pushup", 2, 10, null, 30, "2111", null],
+    ["thoracic_rotation", 2, "6/side", null, 20, "controlled", null]
+   ],
+   "cooldown": [
+    ["neck_stretch", 2, null, 20, 10, "easy", null],
+    ["chest_stretch", 2, null, 30, 10, "easy", null],
+    ["child_pose", 1, null, 45, 0, "easy", null]
+   ],
+   "safety": {"en": "Keep every move small and slow. Stop on dizziness, a headache or tingling in the arms. See a professional if neck pain lasts or follows an injury."}
+  },
+  {
+   "id": "ready:gentle_knees",
+   "title": {"en": "Gentle Knees"},
+   "description": {"en": "Hip and thigh work that keeps sore knees gently loaded."},
+   "group": "problems",
+   "grade": 1,
+   "focus": ["problems"],
+   "schedule": {"minutes": 20, "rpe": 4},
+   "warmup": [
+    ["march", 1, null, 60, 0, "easy", null],
+    ["ankle_rocks", 1, "10/side", null, 10, "controlled", null]
+   ],
+   "main": [
+    ["kneeling_side_plank", 2, null, "20/side", 30, "isometric", null],
+    ["glute_bridge", 2, 12, null, 30, "2111", null],
+    ["wall_sit", 3, null, 30, 45, "isometric", null],
+    ["box_squat", 2, 8, null, 45, "2111", null]
+   ],
+   "cooldown": [
+    ["quad_stretch", 2, null, 30, 10, "easy", null],
+    ["hamstring_stretch", 2, null, 30, 10, "easy", null]
+   ],
+   "safety": {"en": "Mild discomfort is okay if it settles by the next morning. Stop on sharp pain, locking or giving way. See a professional after a knee injury."}
+  },
+  {
+   "id": "ready:knee_tendon_holds",
+   "title": {"en": "Knee Tendon Holds"},
+   "description": {"en": "Long wall-sit holds and bridges to load a sore knee tendon gently."},
+   "group": "problems",
+   "grade": 1,
+   "focus": ["problems"],
+   "schedule": {"minutes": 20, "rpe": 4},
+   "warmup": [
+    ["march", 1, null, 60, 0, "easy", null],
+    ["ankle_rocks", 1, "10/side", null, 10, "controlled", null]
+   ],
+   "main": [
+    ["wall_sit", 5, null, 45, 60, "isometric", null],
+    ["glute_bridge", 2, 12, null, 30, "2111", null]
+   ],
+   "cooldown": [
+    ["quad_stretch", 2, null, 30, 10, "easy", null],
+    ["calf_stretch", 2, null, 30, 10, "easy", null]
+   ],
+   "safety": {"en": "Pain up to 3 out of 10 that settles by the next morning is okay. Stop on sharp pain. See a professional if it keeps getting worse."}
+  },
+  {
+   "id": "ready:gentle_shoulders",
+   "title": {"en": "Gentle Shoulders"},
+   "description": {"en": "Shoulder-blade work, wall slides and wall push-ups for shoulders that ache."},
+   "group": "problems",
+   "grade": 1,
+   "focus": ["problems", "push"],
+   "schedule": {"minutes": 20, "rpe": 3},
+   "warmup": [
+    ["arm_swings", 1, 10, null, 10, "controlled", null],
+    ["shoulder_cars", 1, "5/side", null, 10, "controlled", null],
+    ["thoracic_rotation", 1, "6/side", null, 10, "controlled", null]
+   ],
+   "main": [
+    ["elevated_scapular_pushup", 2, 10, null, 30, "2111", null],
+    ["wall_slide", 2, 10, null, 20, "slow", null],
+    ["prone_ytw", 2, 6, null, 30, "2111", null],
+    ["wall_pushup", 3, 10, null, 45, "2111", null]
+   ],
+   "cooldown": [
+    ["chest_stretch", 2, null, 30, 10, "easy", null],
+    ["lat_stretch", 1, null, 30, 10, "easy", null],
+    ["child_pose", 1, null, 45, 0, "easy", null]
+   ],
+   "safety": {"en": "Work below the painful range first. Stop on sharp or catching pain. See a professional if you can't lift the arm or after an injury."}
+  },
+  {
+   "id": "ready:sore_heels",
+   "title": {"en": "Sore Heels"},
+   "description": {"en": "Slow heel raises and calf stretches for heels that hurt in the morning."},
+   "group": "problems",
+   "grade": 1,
+   "focus": ["problems"],
+   "schedule": {"minutes": 15, "rpe": 3},
+   "warmup": [
+    ["march", 1, null, 60, 0, "easy", null],
+    ["ankle_rocks", 1, "10/side", null, 10, "controlled", null]
+   ],
+   "main": [
+    ["calf_raise", 3, 10, null, 60, "3032", null],
+    ["single_leg_rdl", 2, "6/side", null, 30, "2111", null]
+   ],
+   "cooldown": [
+    ["calf_stretch", 3, null, 30, 10, "easy", null]
+   ],
+   "safety": {"en": "Mild discomfort is okay if it has settled by the next morning. Stop on sharp pain. See a professional if the foot goes numb or after a sudden snap."}
+  },
+  {
+   "id": "ready:slow_heel_raises",
+   "title": {"en": "Slow Heel Raises"},
+   "description": {"en": "Slow heel raises and step-ups to load a sore Achilles a little at a time."},
+   "group": "problems",
+   "grade": 1,
+   "focus": ["problems"],
+   "schedule": {"minutes": 15, "rpe": 4},
+   "warmup": [
+    ["march", 1, null, 60, 0, "easy", null],
+    ["ankle_rocks", 1, "10/side", null, 10, "controlled", null]
+   ],
+   "main": [
+    ["calf_raise", 4, 12, null, 60, "3111", null],
+    ["step_up", 2, "8/side", null, 45, "2111", null]
+   ],
+   "cooldown": [
+    ["calf_stretch", 2, null, 30, 10, "easy", null]
+   ],
+   "safety": {"en": "Mild discomfort is okay if it has settled by the next morning. Stop on sharp pain. See a professional if the foot goes numb or after a sudden snap."}
+  },
+  {
+   "id": "ready:hips_after_sitting",
+   "title": {"en": "Hips After Sitting"},
+   "description": {"en": "Hip switches, bridges and long stretches for hips tight after a day sitting."},
+   "group": "problems",
+   "grade": 1,
+   "focus": ["problems"],
+   "schedule": {"minutes": 20, "rpe": 3},
+   "warmup": [
+    ["march", 1, null, 60, 0, "easy", null],
+    ["hip_circles", 1, 8, null, 10, "controlled", null],
+    ["leg_swings", 1, "8/side", null, 10, "controlled", null]
+   ],
+   "main": [
+    ["ninety_ninety_hip_switch", 2, 8, null, 20, "slow", null],
+    ["glute_bridge", 2, 12, null, 30, "2111", null],
+    ["hip_flexor_stretch", 2, null, 45, 10, "easy", null],
+    ["cossack_squat", 2, "4/side", null, 30, "2111", null],
+    ["deep_squat_hold", 2, null, 30, 20, "easy", null]
+   ],
+   "cooldown": [
+    ["ninety_ninety_hip_stretch", 2, null, 30, 10, "easy", null],
+    ["supine_twist", 2, null, 30, 10, "easy", null]
+   ],
+   "safety": {"en": "Stretch only to a mild pull. Ease off if the front of the hip pinches. See a professional if you limp or have groin pain."}
+  },
+  {
+   "id": "ready:easy_wrists",
+   "title": {"en": "Easy Wrists"},
+   "description": {"en": "Wrist circles, rocks and light loading for wrists sore from typing or push-ups."},
+   "group": "problems",
+   "grade": 1,
+   "focus": ["problems"],
+   "schedule": {"minutes": 15, "rpe": 3},
+   "warmup": [
+    ["wrist_circles", 1, 10, null, 10, "controlled", null],
+    ["arm_swings", 1, 10, null, 10, "controlled", null]
+   ],
+   "main": [
+    ["wrist_rocks", 2, 10, null, 10, "controlled", null],
+    ["wrist_pushup", 2, 8, null, 30, "2111", null],
+    ["wall_pushup", 2, 10, null, 30, "2111", null],
+    ["elevated_plank", 2, null, 20, 30, "isometric", null]
+   ],
+   "cooldown": [
+    ["forearm_stretch", 2, null, 30, 10, "easy", null],
+    ["slow_breathing", 1, null, 60, 0, "easy", null]
+   ],
+   "safety": {"en": "Warm up first and keep it light. Stop on sharp pain or numb fingers. See a professional after a fall on the hand."}
+  },
+  {
+   "id": "ready:upper_back_rows",
+   "title": {"en": "Upper Back Rows"},
+   "description": {"en": "Body rows and shoulder-blade pulls for a stronger upper back after desk days."},
+   "group": "problems",
+   "grade": 2,
+   "focus": ["problems", "pull"],
+   "schedule": {"minutes": 20, "rpe": 5},
+   "warmup": [
+    ["arm_swings", 1, 10, null, 10, "controlled", null],
+    ["shoulder_cars", 1, "5/side", null, 10, "controlled", null],
+    ["scapular_pull", 1, 6, null, 20, "2111", null]
+   ],
+   "main": [
+    ["high_inverted_row", 3, 8, null, 60, "2111", null],
+    ["prone_ytw", 2, 8, null, 30, "2111", null],
+    ["scapular_pull", 2, 6, null, 45, "2111", null],
+    ["wall_slide", 2, 10, null, 20, "slow", null]
+   ],
+   "cooldown": [
+    ["chest_stretch", 2, null, 30, 10, "easy", null],
+    ["lat_stretch", 2, null, 30, 10, "easy", null]
+   ],
+   "safety": {"en": "Move in a comfortable range with the shoulders down. Stop on sharp pain or tingling. See a professional if the pain lasts."}
+  },
+  {
+   "id": "ready:low_back_strength",
+   "title": {"en": "Low Back Strength"},
+   "description": {"en": "Hinges, bridges, bird dogs and side planks for a back that copes with long days."},
+   "group": "problems",
+   "grade": 2,
+   "focus": ["problems"],
+   "schedule": {"minutes": 20, "rpe": 5},
+   "warmup": [
+    ["march", 1, null, 60, 0, "easy", null],
+    ["cat_cow", 1, 8, null, 10, "slow", null],
+    ["hip_circles", 1, 8, null, 10, "controlled", null]
+   ],
+   "main": [
+    ["single_leg_rdl", 2, "6/side", null, 45, "2111", null],
+    ["glute_bridge", 3, 12, null, 30, "2111", null],
+    ["bird_dog", 2, "8/side", null, 20, "slow", null],
+    ["side_plank", 2, null, "20/side", 30, "isometric", null]
+   ],
+   "cooldown": [
+    ["hamstring_stretch", 2, null, 30, 10, "easy", null],
+    ["hip_flexor_stretch", 2, null, 30, 10, "easy", null],
+    ["child_pose", 1, null, 45, 0, "easy", null]
+   ],
+   "safety": {"en": "Keep moving, gently. Stop if pain spreads down a leg or you feel numbness. Get urgent help for numbness around the groin or bladder changes."}
+  },
+  {
+   "id": "ready:stronger_knees",
+   "title": {"en": "Stronger Knees"},
+   "description": {"en": "One-leg bridges, step-ups and wall sits for legs that carry the knees well."},
+   "group": "problems",
+   "grade": 2,
+   "focus": ["problems"],
+   "schedule": {"minutes": 20, "rpe": 5},
+   "warmup": [
+    ["march", 1, null, 60, 0, "easy", null],
+    ["ankle_rocks", 1, "10/side", null, 10, "controlled", null]
+   ],
+   "main": [
+    ["single_leg_bridge", 2, "8/side", null, 30, "2111", null],
+    ["side_plank", 2, null, "20/side", 30, "isometric", null],
+    ["step_up", 2, "8/side", null, 45, "2111", null],
+    ["wall_sit", 2, null, 45, 60, "isometric", null]
+   ],
+   "cooldown": [
+    ["quad_stretch", 2, null, 30, 10, "easy", null],
+    ["hip_flexor_stretch", 2, null, 30, 10, "easy", null]
+   ],
+   "safety": {"en": "Mild discomfort is okay if it settles by the next morning. Stop on sharp pain, locking or giving way. See a professional after a knee injury."}
+  },
+  {
+   "id": "ready:knee_tendon_strength",
+   "title": {"en": "Knee Tendon Strength"},
+   "description": {"en": "Slow squats and split squats, three seconds down and up, for the next step."},
+   "group": "problems",
+   "grade": 2,
+   "focus": ["problems"],
+   "schedule": {"minutes": 20, "rpe": 5},
+   "warmup": [
+    ["march", 1, null, 60, 0, "easy", null],
+    ["ankle_rocks", 1, "10/side", null, 10, "controlled", null],
+    ["wall_sit", 1, null, 30, 30, "isometric", null]
+   ],
+   "main": [
+    ["tempo_squat", 3, 8, null, 60, "3030", null],
+    ["split_squat", 2, "6/side", null, 60, "3030", null],
+    ["single_leg_bridge", 2, "8/side", null, 30, "2111", null]
+   ],
+   "cooldown": [
+    ["quad_stretch", 2, null, 30, 10, "easy", null],
+    ["hip_flexor_stretch", 2, null, 30, 10, "easy", null]
+   ],
+   "safety": {"en": "Pain up to 3 out of 10 that settles by the next morning is okay. Stop on sharp pain. See a professional if it keeps getting worse."}
+  },
+  {
+   "id": "ready:shoulder_strength",
+   "title": {"en": "Shoulder Strength"},
+   "description": {"en": "Slow incline push-ups and body rows for shoulders ready for push and pull."},
+   "group": "problems",
+   "grade": 2,
+   "focus": ["problems", "pull", "push"],
+   "schedule": {"minutes": 20, "rpe": 5},
+   "warmup": [
+    ["arm_swings", 1, 10, null, 10, "controlled", null],
+    ["shoulder_cars", 1, "5/side", null, 10, "controlled", null],
+    ["scapular_pushup", 1, 8, null, 20, "2111", null]
+   ],
+   "main": [
+    ["incline_pushup", 3, 8, null, 45, "3111", null],
+    ["high_inverted_row", 3, 8, null, 45, "3111", null],
+    ["prone_ytw", 2, 8, null, 30, "2111", null],
+    ["wall_slide", 2, 10, null, 20, "slow", null]
+   ],
+   "cooldown": [
+    ["chest_stretch", 2, null, 30, 10, "easy", null],
+    ["lat_stretch", 2, null, 30, 10, "easy", null]
+   ],
+   "safety": {"en": "Work below the painful range first. Stop on sharp or catching pain. See a professional if you can't lift the arm or after an injury."}
+  },
+  {
    "id": "ready:first_park_session",
    "title": {"en": "First Park Session"},
    "description": {"en": "Row, push, squat and hold: the basics, three sets each."},

@@ -45,6 +45,8 @@ data class TrainingProgram(
     /** A ready workout's group in the Library (pull, push, legs…) and its grade: 1 beginner, 2 intermediate, 3 advanced. */
     val group: String? = null,
     val grade: Int? = null,
+    /** A ready workout every tier can open (the owner, 2026-11-05: three problem-area workouts free); the rest are Pro. */
+    val free: Boolean = false,
 ) {
     /** An exam day (about every 20 classes): its [TrainingExercise.assessment] sets are the targets to reach. */
     val isExam: Boolean get() = dayType?.startsWith("exam") == true

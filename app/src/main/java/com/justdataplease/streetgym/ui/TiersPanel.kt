@@ -1,7 +1,13 @@
 package com.justdataplease.streetgym.ui
 
 import android.app.Activity
+import android.app.AlertDialog
+import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.text.InputFilter
+import android.text.InputType
+import android.widget.EditText
+import android.widget.Toast
 import android.net.Uri
 import android.view.Gravity
 import android.view.View
@@ -30,6 +36,9 @@ sealed interface Paywall {
 }
 
 /** The Plus and Pro offers: in Settings, or as the card that replaces a locked feature. */
+private const val PROMO_MAX = 30
+private const val PLAY_STORE = "com.android.vending"
+
 class TiersPanel(
     private val activity: Activity,
     private val billing: TierBilling,
@@ -83,6 +92,11 @@ class TiersPanel(
             TierBilling.Restore.Unavailable -> R.string.purchase_unreachable
         })) }
     }
+    /**
+     * A Google Play promo code (the owner, 2026-11-05): Play's own redeem page opens with the code, and the purchase
+     * arrives when the athlete comes back (the activity checks purchases on resume, this panel when it shows again).
+     */
+    private val promo = activity.secondaryButton(activity.getString(R.string.promo_redeem)) { askPromoCode() }
     private val changed: () -> Unit = { render() }
 
     init {
@@ -113,6 +127,7 @@ class TiersPanel(
         proBlock.addWithMargins(proManage, topDp = 8)
         addWithMargins(proBlock, topDp = 12)
         addWithMargins(restore, topDp = 12)
+        addWithMargins(promo, topDp = 8)
         addWithMargins(message, topDp = 8)
         render()
     }
@@ -162,6 +177,38 @@ class TiersPanel(
                     LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
             }, topDp = if (index == 0) 0 else 4)
         }
+    }
+
+    private fun askPromoCode() {
+        val field = EditText(activity).apply {
+            hint = activity.getString(R.string.promo_hint)
+            isSingleLine = true
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+            filters = arrayOf(InputFilter.LengthFilter(PROMO_MAX))
+            setTextColor(AppColors.TEXT)
+            setHintTextColor(AppColors.TEXT_SECONDARY)
+        }
+        val content = LinearLayout(activity).apply {
+            orientation = VERTICAL
+            setPadding(activity.dp(24), activity.dp(8), activity.dp(24), 0)
+            addView(activity.bodyText(activity.getString(R.string.promo_body), 14f))
+            addWithMargins(field, topDp = 8)
+        }
+        AlertDialog.Builder(activity).setTitle(R.string.promo_title).setView(content)
+            .setNegativeButton(R.string.cancel, null)
+            .setPositiveButton(R.string.promo_open) { _, _ ->
+                val code = TierBilling.promoCode(field.text.toString())
+                if (code == null) Toast.makeText(activity, R.string.promo_empty, Toast.LENGTH_SHORT).show()
+                else {
+                    // The Play Store app redeems it in place; a phone without it gets Play's web page.
+                    val page = Intent(Intent.ACTION_VIEW, Uri.parse(TierBilling.redeemUrl(code)))
+                    val opened = listOf(Intent(page).setPackage(PLAY_STORE), page).any { intent ->
+                        try { activity.startActivity(intent); true } catch (_: ActivityNotFoundException) { false }
+                    }
+                    showMessage(activity.getString(if (opened) R.string.promo_after else R.string.promo_no_store))
+                }
+            }
+            .show()
     }
 
     private fun showMessage(value: String) {

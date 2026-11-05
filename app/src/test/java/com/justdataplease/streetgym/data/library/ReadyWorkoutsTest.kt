@@ -19,7 +19,7 @@ class ReadyWorkoutsTest {
 
     @Test
     fun everyReadyWorkoutIsAWholeClassOfTheProgramsMovements() {
-        assertEquals(200, catalog.workouts.size)
+        assertEquals(216, catalog.workouts.size)
         assertEquals(catalog.workouts.size, catalog.workouts.map { it.id }.toSet().size)
         assertEquals(catalog.workouts.size, catalog.workouts.map { it.name.resolve() }.toSet().size)
         catalog.workouts.forEach { workout ->
@@ -66,6 +66,17 @@ class ReadyWorkoutsTest {
     }
 
     @Test
+    fun threeAchesAndPostureWorkoutsAreFree() {
+        // The owner (2026-11-05): three free on every tier, for the neck and the back from desk work; the rest stay Pro.
+        val free = catalog.workouts.filter { it.free }
+        assertEquals(setOf("ready:neck_at_the_desk", "ready:upper_back_reset", "ready:low_back_basics"), free.map { it.id }.toSet())
+        assertTrue(free.all { it.group == "problems" && it.grade == 1 })
+        // The category opens the Library, its free workouts first; each says when to stop and see someone.
+        assertEquals(free.map { it.id }, catalog.workouts.take(3).map { it.id })
+        catalog.workouts.filter { it.group == "problems" }.forEach { it.safety.resolve().let { s -> assertTrue(it.id, "professional" in s || "urgent help" in s) } }
+    }
+
+    @Test
     fun theyStayOutOfTheTenLevels() {
         val classes = CurriculumJsonParser.parse(root)
         assertTrue(classes.workouts.isEmpty())
@@ -88,7 +99,7 @@ class ReadyWorkoutsTest {
 
     private companion object {
         /** The groups HomeActivity.readyGroupName names. */
-        val GROUPS = setOf("full", "pull", "push", "legs", "core", "skills", "short", "mobility")
+        val GROUPS = setOf("problems", "full", "pull", "push", "legs", "core", "skills", "short", "mobility")
         /** HomeActivity.READY_FOCUS: the groups, then the skill families. */
         val FOCUS = GROUPS + setOf("handstand", "front_lever", "back_lever", "planche", "flag", "muscleup", "lsit", "one_arm")
     }

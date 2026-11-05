@@ -203,6 +203,12 @@ class TierBilling(context: Context) : PurchasesUpdatedListener {
         private val PRODUCTS = setOf(PLUS, PRO, PRO_LIFE)
 
         /** Play's own page for cancelling or changing the Pro subscription. */
+        /** A promo code as Play takes it: letters and digits only, upper case; null when nothing is left. */
+        fun promoCode(text: String): String? = text.uppercase().filter { it in 'A'..'Z' || it in '0'..'9' }.takeIf { it.isNotEmpty() }
+
+        /** Google Play's redeem page for [code] (from [promoCode]): Play redeems it on the athlete's account. */
+        fun redeemUrl(code: String): String = "https://play.google.com/redeem?code=$code"
+
         fun manageProUrl(packageName: String) =
             "https://play.google.com/store/account/subscriptions?sku=$PRO&package=$packageName"
     }

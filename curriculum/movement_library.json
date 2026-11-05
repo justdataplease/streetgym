@@ -4205,6 +4205,90 @@
       "counts": {
         "en": "Feet off the floor, elbows straight and a still, pain-free hang. The time ends when an elbow bends or the feet touch down."
       }
+    },
+    {
+      "category": "activation",
+      "description": {
+        "en": "Sit or stand tall, eyes level. Slide your chin straight back, as if making a double chin, without tipping your head down. Hold about 5 s, then relax."
+      },
+      "equipment": [],
+      "grade": 1,
+      "id": "chin_tuck",
+      "name": {
+        "en": "Chin Tuck"
+      },
+      "patterns": [
+        "neck",
+        "posture"
+      ],
+      "regression_id": null,
+      "safety": {
+        "en": "Keep it small and slow. Stop if you feel dizzy or get tingling in the arms."
+      }
+    },
+    {
+      "category": "static_stretch",
+      "description": {
+        "en": "Sit or stand tall. Lower your chin toward your chest until you feel a mild stretch down the back of the neck. Let the shoulders drop and breathe."
+      },
+      "equipment": [],
+      "grade": 1,
+      "id": "neck_stretch",
+      "name": {
+        "en": "Forward Neck Stretch"
+      },
+      "patterns": [
+        "neck",
+        "mobility"
+      ],
+      "regression_id": null,
+      "safety": {
+        "en": "A mild stretch only. Never pull on your head, and lift it slowly to finish."
+      }
+    },
+    {
+      "category": "activation",
+      "description": {
+        "en": "Lie on your back, knees bent, head on a thin towel. Nod gently, as if saying yes, so the back of the neck lengthens. Keep the head down and hold."
+      },
+      "equipment": [
+        "mat"
+      ],
+      "grade": 1,
+      "id": "lying_chin_nod",
+      "name": {
+        "en": "Lying Chin Nod"
+      },
+      "patterns": [
+        "neck",
+        "posture"
+      ],
+      "regression_id": "chin_tuck",
+      "safety": {
+        "en": "A gentle nod, not a push. Stop on dizziness, a headache or tingling."
+      }
+    },
+    {
+      "category": "fundamental",
+      "description": {
+        "en": "Back flat on a wall, feet a step in front of you, hip-width apart. Slide down until the knees are a little bent, or as low as chair height, and hold."
+      },
+      "equipment": [
+        "wall"
+      ],
+      "grade": 1,
+      "id": "wall_sit",
+      "name": {
+        "en": "Wall Sit"
+      },
+      "patterns": [
+        "squat",
+        "legs"
+      ],
+      "regression_id": "box_squat",
+      "safety": {
+        "en": "Go only as low as the knees feel fine. Keep them over the middle toes. Mild discomfort is okay, sharp pain is not."
+      }
     }
   ]
 }

@@ -4,6 +4,8 @@
     <string name="parks_teaser">More than 70,000 outdoor workout parks worldwide, nearest first, with directions.</string>
     <string name="parks_intro">%1$s workout parks worldwide. Find the nearest, or search by city or park.</string>
     <string name="parks_loading">Loading parks…</string>
+    <string name="parks_example">Example: parks in Athens</string>
+    <string name="parks_example_note">An example from an older copy of the data. Plus shows the parks near you, kept up to date, with search and directions.</string>
     <string name="parks_near_me">Parks near me</string>
     <string name="parks_search_hint">City or park name</string>
     <string name="parks_search">Search</string>

@@ -172,6 +172,8 @@ MOVEMENTS["wall_kickup"] = "wall_kickup"
 # Review 7: the full freestanding handstand push-up after its negatives (group_f.py).
 MOVEMENTS["freestanding_hspu"] = "freestanding_hspu"
 MOVEMENTS["tuck_front_lever_row"] = "tuck_front_lever_row"  # review 9: dynamic lever strength
+# Aches & posture (2026-11-05): the neck work and the wall sit (group_i.py).
+MOVEMENTS.update({name: name for name in ["chin_tuck", "neck_stretch", "lying_chin_nod", "wall_sit"]})
 MOVEMENTS["tuck_planche_pushup"] = "tuck_planche_pushup"  # review 9: dynamic planche strength
 
 # Joint-prep movements from round 5 of the pro reviews (form_review.py).
