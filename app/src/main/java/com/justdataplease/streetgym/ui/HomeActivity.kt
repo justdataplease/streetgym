@@ -1300,10 +1300,10 @@ open class HomeActivity : Activity() {
         val text = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
             addView(titleText(displayName(program, locale), 18f))
-            // Below Pro a ready workout says whether it opens: Free, or Pro with the lock (the owner, 2026-11-05).
-            if (ReadyWorkouts.isReady(program.id) && !Entitlement.tier(this@HomeActivity).readyWorkouts)
-                addWithMargins(if (program.free) badge(getString(R.string.ready_free), AppColors.ACTION) else lockBadge(getString(R.string.tier_pro)),
-                    width = ViewGroup.LayoutParams.WRAP_CONTENT, topDp = 4)
+            // Below Pro a locked ready workout wears the Pro badge; one that opens on every tier wears nothing (the owner,
+            // 2026-11-05: "if it's not Pro or Plus it needs no tag").
+            if (readyLocked(program.id))
+                addWithMargins(lockBadge(getString(R.string.tier_pro)), width = ViewGroup.LayoutParams.WRAP_CONTENT, topDp = 4)
             addWithMargins(bodyText(meta, 13f), topDp = 4)
             if (ReadyWorkouts.isReady(program.id)) program.description.resolve(locale).takeIf(String::isNotBlank)
                 ?.let { addWithMargins(bodyText(it, 13f), topDp = 4) }
@@ -1708,13 +1708,20 @@ open class HomeActivity : Activity() {
 
     /**
      * A feature of a tier the athlete doesn't have, under a layer (the owner, 2026-11-05: "a layer with unlock, not the
-     * screen of pricing"): [behind] dimmed, Unlock with the tier's badge on top. A tap anywhere on it opens the offer.
+     * screen of pricing"): [behind] dimmed, Unlock with the tier's badge centred on it (the owner, 2026-11-05: "center on
+     * the map the unlock"). A tap anywhere on it opens the offer.
      */
     private fun lockedLayer(behind: View, paywall: Paywall, tier: Tier, height: Int = ViewGroup.LayoutParams.WRAP_CONTENT) =
         FrameLayout(this).apply {
             behind.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
             addView(behind, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height))
-            addView(View(context).apply {
+            // The dimming takes the size of what it covers: a plain View would take every pixel offered in a scrolling
+            // page, stretching the layer (and moving Unlock off the middle) down to the screen's bottom.
+            addView(object : View(context) {
+                override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) = setMeasuredDimension(
+                    if (MeasureSpec.getMode(widthMeasureSpec) == MeasureSpec.EXACTLY) MeasureSpec.getSize(widthMeasureSpec) else 0,
+                    if (MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.EXACTLY) MeasureSpec.getSize(heightMeasureSpec) else 0)
+            }.apply {
                 background = roundedDrawable((AppColors.BACKGROUND and 0x00FFFFFF) or (0xB8 shl 24), dp(18).toFloat())
                 setOnClickListener { showPaywall(paywall) }
                 importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO

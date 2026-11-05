@@ -196,7 +196,12 @@ class TimingPanel(private val host: Activity, private val askNotifications: () -
             panel.orientation = LinearLayout.HORIZONTAL; panel.gravity = Gravity.CENTER_VERTICAL
             panel.addView(readout, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
         } else panel.addView(readout)
-        primary = host.primaryButton("Start") { primaryAction() }
+        // At its fixed 54 dp the usual padding left less room than a line of the display face, so the label hung from the
+        // top and sat low (the owner, 2026-11-05: "start, resume is not centred"): no top padding, only the shadow's below,
+        // centres it on the face.
+        primary = host.primaryButton("Start") { primaryAction() }.apply {
+            setPadding(paddingLeft, 0, paddingRight, host.dp(AppColors.theme.shape.shadowDp))
+        }
         secondary = host.secondaryButton("Reset") {
             if (shownTab == 0) {
                 TimingAlerts.stop(host)

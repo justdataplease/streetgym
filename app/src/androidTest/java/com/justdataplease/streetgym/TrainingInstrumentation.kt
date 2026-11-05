@@ -528,8 +528,8 @@ class TrainingInstrumentation : Instrumentation() {
             val ready = catalog.workouts.first { !it.free }
             val free = catalog.workouts.first { it.free }
             nav(R.string.nav_levels); clickText(R.string.training_tab_ready)
-            // 2.13.1: no offer heads the list; each card says Free, or Pro with the lock.
-            check(!shown(R.string.paywall_ready) && shown(free.name.resolve()) && shown(targetContext.getString(R.string.ready_free).uppercase()) &&
+            // 2.13.1: no offer heads the list; a locked card wears Pro with the lock, a free one no tag at all (2.13.2).
+            check(!shown(R.string.paywall_ready) && shown(free.name.resolve()) && !shown("FREE") &&
                 shown(targetContext.getString(R.string.tier_pro).uppercase()))
             clickLabel(free.name.resolve())
             check(shown(R.string.start_workout) && !shown(R.string.paywall_ready))
