@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.AdapterView
+import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ListView
@@ -465,9 +466,14 @@ class TrainingInstrumentation : Instrumentation() {
             report("Debug builds get Pro by default and Simulate tier drops them to Free")
 
             nav(R.string.nav_today)
-            await { shown(paywall) }
-            check(shown(paywall) && shown(R.string.restore_purchase))
+            // 2.13.1: no offer on the page. Unlock, with the Plus badge in it, opens the offer in a dialog.
+            await { unlockShown() }
+            check(unlockShown() && !shown(paywall) &&
+                unlockButton()?.contentDescription == "${targetContext.getString(R.string.unlock)} ${targetContext.getString(R.string.tier_plus)}")
             check(!shown(R.string.start_today) && !shown(R.string.resume_workout) && !shown("Complete day"))
+            clickUnlock()
+            check(dialogShows(paywall) && dialogShows(targetContext.getString(R.string.restore_purchase)))
+            clickDialog(R.string.cancel)
             check(find { it is NativeAdSlot } != null)
             check(repository.activeWorkout() == lockedActive)
             // 2.11.0: every page closes with an ad card on Free, also those that had none (Timer, Settings).
@@ -477,11 +483,16 @@ class TrainingInstrumentation : Instrumentation() {
             fun badges(tier: Int) = findAll { it is TextView && it.text.toString() == targetContext.getString(tier).uppercase() }.size
             check(badges(R.string.tier_plus) == 3 && badges(R.string.tier_pro) == catalog.levels.size - 6)
             clickLabel(catalog.levels[3].name.resolve())
-            check(shown(paywall) && !shown("Complete level"))
+            // The level and each class not done wear the Plus badge; a class opens the offer, not the class.
+            check(!shown(paywall) && !shown("Complete level") && badges(R.string.tier_plus) > 1)
+            clickLabel(levelFour.name.resolve())
+            check(dialogShows(paywall)); clickDialog(R.string.cancel)
+            check(!shown(R.string.start_workout))
             nav(R.string.nav_today); clickLabel(levelFour.name.resolve())
-            check(shown(paywall) && !shown(R.string.start_workout) && !shown(R.string.resume_workout))
+            check(dialogShows(paywall)); clickDialog(R.string.cancel)
+            check(!shown(R.string.start_workout) && !shown(R.string.resume_workout))
             check(repository.activeWorkout() == lockedActive)
-            report("Free tier: Today, Training and Overview show the paywall, Complete level is hidden and ads show, Timer and Settings included")
+            report("Free tier: Today and Training wear the Plus badge and open the offer on a tap, Complete level is hidden and ads show, Timer and Settings included")
 
             check(billing.edit().putBoolean(Entitlement.PLUS_OWNED, true).commit())
             await { Entitlement.tier(targetContext) == Tier.PLUS }
@@ -490,14 +501,14 @@ class TrainingInstrumentation : Instrumentation() {
             val completedBefore = repository.completedProgramIds()
             val historyBefore = repository.sessionHistory()
             check(billing.edit().putBoolean(Entitlement.PLUS_OWNED, false).commit())
-            await { shown(paywall) }
-            check(shown(paywall) && !shown(R.string.finish_workout))
+            await { unlockShown() }
+            check(unlockShown() && !shown(R.string.finish_workout))
             check(repository.activeWorkout() == lockedActive)
             check(repository.completedProgramIds() == completedBefore && repository.sessionHistory() == historyBefore)
             check(billing.edit().clear().putBoolean(Entitlement.PLUS_OWNED, true).commit())
-            await { !shown(paywall) }
-            check(!shown(paywall) && find { it is NativeAdSlot } == null)
-            report("A refunded cache returns an active Level 4 class to Today's paywall and keeps its sets and history")
+            await { !unlockShown() }
+            check(!unlockShown() && find { it is NativeAdSlot } == null)
+            report("A refunded cache returns an active Level 4 class to Today's Unlock and keeps its sets and history")
 
             // The clear above also dropped the simulated tier, so this debug build is Pro again: simulate Plus.
             Entitlement.setSimulatedTier(targetContext, Tier.PLUS)
@@ -505,9 +516,11 @@ class TrainingInstrumentation : Instrumentation() {
             nav(R.string.nav_levels)
             check(badges(R.string.tier_plus) == 0 && badges(R.string.tier_pro) == catalog.levels.size - 6)
             clickLabel(catalog.levels[6].name.resolve())
-            // The Plus block is built but hidden.
-            val plusOffer = find { it is TextView && it.text.toString() == targetContext.getString(R.string.plus_title) && it.isShown }
-            check(shown(targetContext.getString(R.string.paywall_level_pro, 7)) && plusOffer == null && !shown("Complete level"))
+            check(!shown("Complete level") && badges(R.string.tier_pro) > 1)
+            // A class there offers Pro only: the Plus block is built but hidden.
+            clickLabel(catalog.levels[6].programs.minBy { it.number }.name.resolve())
+            check(dialogShows(targetContext.getString(R.string.paywall_level_pro, 7)) && !dialogShows(targetContext.getString(R.string.plus_title)))
+            clickDialog(R.string.cancel)
             report("Plus opens Levels 4 to 6; Levels 7 to 10 offer Pro only")
 
             // Training > Library: every tier sees the ready workouts; below Pro a tap shows the Pro offer, not the workout (2.11.0).
@@ -515,12 +528,15 @@ class TrainingInstrumentation : Instrumentation() {
             val ready = catalog.workouts.first { !it.free }
             val free = catalog.workouts.first { it.free }
             nav(R.string.nav_levels); clickText(R.string.training_tab_ready)
-            check(shown(R.string.paywall_ready) && shown(free.name.resolve()) && shown(targetContext.getString(R.string.ready_free).uppercase()))
+            // 2.13.1: no offer heads the list; each card says Free, or Pro with the lock.
+            check(!shown(R.string.paywall_ready) && shown(free.name.resolve()) && shown(targetContext.getString(R.string.ready_free).uppercase()) &&
+                shown(targetContext.getString(R.string.tier_pro).uppercase()))
             clickLabel(free.name.resolve())
             check(shown(R.string.start_workout) && !shown(R.string.paywall_ready))
             nav(R.string.nav_levels); clickText(R.string.training_tab_ready)
             check(shown(ready.name.resolve()))
             clickLabel(ready.name.resolve())
+            check(dialogShows(targetContext.getString(R.string.paywall_ready)))
             clickDialog(R.string.cancel)
             check(shown(R.string.ready_intro) && !shown(R.string.start_workout) && !shown(ready.exercises.first().name.resolve()))
             Entitlement.setSimulatedTier(targetContext, null)
@@ -848,6 +864,19 @@ class TrainingInstrumentation : Instrumentation() {
         check(view.isClickable);val target=view;runOnMainSync { target.performClick() };settle()
     }
     private fun clickDialog(resource:Int) = clickDialogLabel(targetContext.getString(resource))
+    /** The Unlock button on a locked card (2.13.1): its text carries the lock, so it is found by its description. */
+    private fun unlockButton() = find { it is Button && it.isShown && it.contentDescription?.startsWith(targetContext.getString(R.string.unlock)) == true }
+    private fun unlockShown() = unlockButton() != null
+    private fun clickUnlock() { val view = checkNotNull(unlockButton()) { "Missing: Unlock" }; runOnMainSync { view.performClick() }; settle() }
+    /** [label] in the window in front, such as the offer's dialog, which the activity's views don't hold; headings read in capitals there. */
+    private fun dialogShows(label: String): Boolean {
+        repeat(40) {
+            val nodes = uiAutomation.rootInActiveWindow?.findAccessibilityNodeInfosByText(label).orEmpty()
+            if (nodes.any { it.text?.toString().equals(label, ignoreCase = true) }) return true
+            SystemClock.sleep(100)
+        }
+        return false
+    }
     private fun clickDialogLabel(label: String) {
         repeat(40) {
             val button=uiAutomation.rootInActiveWindow?.findAccessibilityNodeInfosByText(label)?.firstOrNull { it.text?.toString()?.equals(label,true)==true && it.isClickable }

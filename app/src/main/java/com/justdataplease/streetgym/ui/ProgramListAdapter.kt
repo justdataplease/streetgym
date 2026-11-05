@@ -29,6 +29,8 @@ class ProgramListAdapter(
     private val effortOf: (TrainingProgram) -> Effort? = { null },
     /** Each class's hardest exercise, playing on its tile (2.9.1: it replaced the number in a dark circle). */
     private val hardestOf: (TrainingProgram) -> TrainingExercise? = { null },
+    /** "Plus" or "Pro" when the tier doesn't open the level: its classes not done wear that badge, with the lock. */
+    private val lockedTier: String? = null,
 ) : BaseAdapter() {
     override fun getCount(): Int = programs.size
 
@@ -64,6 +66,7 @@ class ProgramListAdapter(
         }
         private val next = context.badge(context.getString(R.string.assigned_next), AppColors.ACTION)
         private val later = context.badge(context.getString(R.string.locked_later), AppColors.TEXT_SECONDARY)
+        private val locked = context.lockBadge(lockedTier.orEmpty())
         private val row = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
@@ -88,6 +91,7 @@ class ProgramListAdapter(
             addView(done, LinearLayout.LayoutParams(context.dp(36), context.dp(44)))
             addView(next)
             addView(later)
+            addView(locked)
         }
         val root = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
@@ -122,14 +126,16 @@ class ProgramListAdapter(
                 null -> context.getString(R.string.exam_badge)
             }
             done.visibility = if (completed) View.VISIBLE else View.GONE
-            next.visibility = if (!completed && assigned) View.VISIBLE else View.GONE
-            later.visibility = if (!unlocked || off) View.VISIBLE else View.GONE
+            val behindLock = lockedTier != null && !completed
+            next.visibility = if (!completed && assigned && !behindLock) View.VISIBLE else View.GONE
+            later.visibility = if ((!unlocked || off) && !behindLock) View.VISIBLE else View.GONE
+            locked.visibility = if (behindLock) View.VISIBLE else View.GONE
             later.text = context.getString(if (off) R.string.switch_off_day else R.string.locked_later).uppercase()
             row.alpha = if (off) 0.5f else 1f
             row.contentDescription = buildString {
                 append(context.getString(R.string.workout_number, program.number)).append(", ").append(name)
                 if (unlocked && programMeta.isNotBlank()) append(", ").append(programMeta)
-                append(", ").append(context.getString(when {
+                append(", ").append(if (behindLock) lockedTier else context.getString(when {
                     completed -> R.string.completed
                     off -> R.string.switch_off_day
                     assigned -> R.string.assigned_next

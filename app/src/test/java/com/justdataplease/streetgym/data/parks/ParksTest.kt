@@ -69,6 +69,9 @@ class ParksTest {
         assertTrue("${bundled.size} parks", bundled.size > 50_000)
         assertTrue(bundled.all { it.name.isNotBlank() && it.lat in -90.0..90.0 && it.lng in -180.0..180.0 })
         assertTrue(Parks.search(bundled, "athens greece").size >= 10)
+        // Free's example (2.13.1) is written into the app, not read from the file: the same parks, a dozen in Athens.
+        assertEquals(12, Parks.EXAMPLE.size)
+        assertTrue(Parks.EXAMPLE.all { it in bundled && Parks.distance(37.9838, 23.7275, it.lat, it.lng) < 10 })
     }
 
     @Test fun searchFromALocationSortsByDistance() {

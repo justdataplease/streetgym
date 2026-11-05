@@ -45,6 +45,7 @@ import android.view.animation.OvershootInterpolator
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.BaseAdapter
+import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.FrameLayout
@@ -187,9 +188,7 @@ open class HomeActivity : Activity() {
     private var parksGeoJson: Pair<List<Park>, String>? = null
     private var parksGeoJsonBuilding: List<Park>? = null
     private var parksLocateTried = false
-    /** Free's example ([renderParksExample]): a few parks of one city from the bundled copy, and whether the map is its still one. */
-    private var parksExample: Pair<List<Park>, String>? = null
-    private var parksExampleLoading = false
+    /** The map is Free's still example ([renderParksExample]). */
     private var parksMapExample = false
     private var activityResumed = false
     /** Parks ranking and the map's GeoJSON: off the main thread, and not queued behind the parks download. */
@@ -407,7 +406,8 @@ open class HomeActivity : Activity() {
         val tier = Entitlement.tier(this)
         page.addWithMargins(bodyText(getString(R.string.leaderboard_intro), 14f), topDp = 12)
         if (!tier.leaderboard) {
-            page.addWithMargins(TiersPanel(this, billing, Paywall.Leaderboard), topDp = 12)
+            // A board's shape, nobody on it, under the layer whose Unlock opens the offer (the owner, 2026-11-05).
+            page.addWithMargins(lockedLayer(leaderboardSample(), Paywall.Leaderboard, Tier.PLUS), topDp = 12)
             return
         }
         if (!Cloud.available(this)) {
@@ -1114,15 +1114,20 @@ open class HomeActivity : Activity() {
                     today.addWithMargins(secondaryButton("Complete day") { requestCompleteDay(next) }, topDp = 8)
                     today.addWithMargins(noPointsNote(R.string.complete_day_no_points), topDp = 6)
                 }
+            } else {
+                // A class of a level the tier doesn't open: the tier's badge and Unlock, which opens the offer (the owner,
+                // 2026-11-05: no offer on the page, the offer when tapped).
+                today.addWithMargins(unlockButton(Paywall.Level(paywallLevel), levelTierName(paywallLevel)), topDp = 16)
             }
-            today.setOnClickListener { navigate(Screen.Overview(next.id)) }
+            today.setOnClickListener {
+                if (paywallLevel != null) showPaywall(Paywall.Level(paywallLevel)) else navigate(Screen.Overview(next.id))
+            }
         } else {
             today.addView(titleText(getString(R.string.all_complete_title), 22f))
             today.addWithMargins(bodyText(getString(R.string.all_complete_body)), topDp = 8)
         }
         page.addWithMargins(if (placing) placementCard(orderedPrograms, catalog?.levels.orEmpty(),
             uiLocale(), placementAnswers, placementSkill, placementShown, Entitlement.tier(this), settings, ::startPlacement) else today, bottomDp = 16)
-        if (paywallLevel != null) page.addWithMargins(TiersPanel(this, billing, Paywall.Level(paywallLevel)), bottomDp = 16)
         val done = all.count { it.id in completed }
         // Nothing done yet while placing: the placement screen ends with its sharing note.
         if (!placing) page.addWithMargins(card(clickable = true).apply {
@@ -1295,9 +1300,10 @@ open class HomeActivity : Activity() {
         val text = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
             addView(titleText(displayName(program, locale), 18f))
-            // Below Pro, the few ready workouts every tier opens say so.
-            if (program.free && ReadyWorkouts.isReady(program.id) && !Entitlement.tier(this@HomeActivity).readyWorkouts)
-                addWithMargins(badge(getString(R.string.ready_free), AppColors.ACTION), width = ViewGroup.LayoutParams.WRAP_CONTENT, topDp = 4)
+            // Below Pro a ready workout says whether it opens: Free, or Pro with the lock (the owner, 2026-11-05).
+            if (ReadyWorkouts.isReady(program.id) && !Entitlement.tier(this@HomeActivity).readyWorkouts)
+                addWithMargins(if (program.free) badge(getString(R.string.ready_free), AppColors.ACTION) else lockBadge(getString(R.string.tier_pro)),
+                    width = ViewGroup.LayoutParams.WRAP_CONTENT, topDp = 4)
             addWithMargins(bodyText(meta, 13f), topDp = 4)
             if (ReadyWorkouts.isReady(program.id)) program.description.resolve(locale).takeIf(String::isNotBlank)
                 ?.let { addWithMargins(bodyText(it, 13f), topDp = 4) }
@@ -1321,18 +1327,15 @@ open class HomeActivity : Activity() {
         ReadyWorkouts.isReady(id) && !Entitlement.tier(this).readyWorkouts && readyIndex[id]?.free != true
 
     /**
-     * Training › Library: Pro's ready workouts by group, for days off the program. Other tiers see the list too, with
-     * the Pro offer on top; a tap there shows the offer instead of the workout (2.11.0). Three rows of chips filter them
+     * Training › Library: Pro's ready workouts by group, for days off the program. Other tiers see the list too, each card
+     * tagged Free or Pro; a tap on a Pro one shows the offer instead of the workout (2.11.0; the offer no longer heads the
+     * list since 2.13.1, the owner: "show the workouts … the Pro tag, and when I click get me to that screen"). Three rows of chips filter them
      * (2.9.1, the owner: "add some filters at the top … for skills and difficulty"): how hard for this athlete, the grade
      * and the focus (a group or a skill family, the workout's focus tags).
      */
     private fun renderReadyWorkouts(page: LinearLayout, locale: Locale) {
         val ready = catalog?.workouts.orEmpty()
         page.addView(bodyText(getString(R.string.ready_intro)))
-        if (!Entitlement.tier(this).readyWorkouts) {
-            if (ready.any { it.free }) page.addWithMargins(bodyText(getString(R.string.ready_free_note), 14f), topDp = 8)
-            page.addWithMargins(TiersPanel(this, billing, Paywall.Ready), topDp = 14)
-        }
         val efforts = listOf(null) + Effort.entries
         page.addWithMargins(filterChips(efforts.map { it?.let(::effortText) ?: getString(R.string.ready_any_effort) },
             efforts.indexOf(readyEffort), efforts.map { it?.let(::effortColor) }) { readyEffort = efforts[it]; renderLevels() }, topDp = 14)
@@ -1510,49 +1513,32 @@ open class HomeActivity : Activity() {
     }
 
     /**
-     * Free's Parks (the owner, 2026-11-05: "for free show an example, stale data"): a still map of a few parks in one
-     * city, from the copy that ships with the app and is never updated on Free, then the Plus offer. Tapping a park
-     * offers Plus too. Where the map can't start, the parks show as a short list.
+     * Free's Parks (the owner, 2026-11-05: "for free show an example", then "a layer with unlock, not the screen of
+     * pricing … behind have a sample, not the database"): a still map of [Parks.EXAMPLE], a dozen parks in Athens written
+     * into the app, under a layer with the Plus badge and Unlock. Where the map can't start, a few of them as a list.
      */
     private fun renderParksExample(page: LinearLayout) {
         page.addWithMargins(bodyText(getString(R.string.parks_teaser)), bottomDp = 10)
-        val sample = parksExample
-        if (sample == null) {
-            page.addView(bodyText(getString(R.string.parks_loading)))
-            if (!parksExampleLoading) {
-                parksExampleLoading = true
-                parksWorker.execute {
-                    val all = runCatching { assets.open(Parks.ASSET).reader(Charsets.UTF_8).use(Parks::read) }.getOrDefault(emptyList())
-                    val near = Parks.nearest(all, EXAMPLE_LAT, EXAMPLE_LNG, EXAMPLE_PARKS).map { it.park }
-                    val json = Parks.geoJson(near)
-                    runOnUiThread {
-                        parksExample = near to json
-                        parksExampleLoading = false
-                        if (currentScreen == Screen.Levels && trainingTab == 3) renderLevels()
-                    }
-                }
-            }
-        } else {
-            page.addView(sectionLabel(getString(R.string.parks_example)))
-            if (parksMap != null && !parksMapExample) { parksMap?.destroy(); parksMap = null; parksMapHidden = false }
-            val map = if (parksMapFailed) null else parksMap ?: runCatching {
-                ParksMap(this, { showPaywall(Paywall.Parks) }, { showPaywall(Paywall.Parks) }, null, interactive = false)
-                    .also { if (activityResumed) it.resume() }
-            }.onFailure {
-                Log.w("ParksMap", "The example map can't start here; showing the list", it)
-                parksMapFailed = true
-            }.getOrNull()?.also { parksMap = it; parksMapExample = true }
-            if (map != null) {
-                (map.view.parent as? ViewGroup)?.removeView(map.view)
-                page.addWithMargins(map.view, height = dp(260), topDp = 6)
-                map.showParks(sample.first, sample.second)
-                map.focus(sample.first)
-            } else sample.first.take(5).forEach { park ->
-                page.addWithMargins(card().apply { addView(titleText(park.name, 16f)) }, bottomDp = 8)
-            }
-            page.addWithMargins(bodyText(getString(R.string.parks_example_note), 13f), topDp = 6)
+        page.addView(sectionLabel(getString(R.string.parks_example)))
+        if (parksMap != null && !parksMapExample) { parksMap?.destroy(); parksMap = null; parksMapHidden = false }
+        val map = if (parksMapFailed) null else parksMap ?: runCatching {
+            ParksMap(this, { showPaywall(Paywall.Parks) }, { showPaywall(Paywall.Parks) }, null, interactive = false)
+                .also { if (activityResumed) it.resume() }
+        }.onFailure {
+            Log.w("ParksMap", "The example map can't start here; showing the list", it)
+            parksMapFailed = true
+        }.getOrNull()?.also { parksMap = it; parksMapExample = true }
+        val behind: View = if (map != null) {
+            (map.view.parent as? ViewGroup)?.removeView(map.view)
+            map.showParks(Parks.EXAMPLE, Parks.geoJson(Parks.EXAMPLE))
+            map.focus(Parks.EXAMPLE)
+            map.view
+        } else LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            Parks.EXAMPLE.take(5).forEach { park -> addWithMargins(card().apply { addView(titleText(park.name, 16f)) }, bottomDp = 8) }
         }
-        page.addWithMargins(TiersPanel(this, billing, Paywall.Parks), topDp = 12)
+        page.addWithMargins(lockedLayer(behind, Paywall.Parks, Tier.PLUS,
+            if (map != null) dp(EXAMPLE_MAP_DP) else ViewGroup.LayoutParams.WRAP_CONTENT), topDp = 6)
     }
 
     /** A new map, or null (and the list from then on) where MapLibre can't start, such as a phone without its native library. */
@@ -1692,6 +1678,68 @@ open class HomeActivity : Activity() {
             setPadding(dp(12), dp(12), dp(12), dp(4))
             addView(TiersPanel(this@HomeActivity, billing, paywall))
         })).setNegativeButton(R.string.cancel, null).show()
+    }
+
+    /**
+     * "Unlock" with the tier's badge stuck on its top-right corner, tilted like a sticker; the badge's lock is the only one
+     * (the owner, 2026-11-05: "have Unlock only word", "put the Plus on the corner", and of three tries, the sticker).
+     * Opens the offer for [paywall]. [fill]: as wide as its row.
+     */
+    private fun unlockButton(paywall: Paywall, tierName: String, fill: Boolean = true): View {
+        val shadow = dp(AppColors.theme.shape.shadowDp)
+        val wrap = ViewGroup.LayoutParams.WRAP_CONTENT
+        val button = primaryButton(getString(R.string.unlock)) { showPaywall(paywall) }.apply {
+            contentDescription = "${getString(R.string.unlock)} $tierName"
+            if (!fill) setPadding(dp(28), paddingTop, dp(28) + shadow, paddingBottom)
+        }
+        val badge = lockBadge(tierName).apply {
+            importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+            outlineProvider = null
+            translationZ = dp(2).toFloat()
+            rotation = 6f
+            setOnClickListener { showPaywall(paywall) }
+        }
+        return FrameLayout(this).apply {
+            addView(button, FrameLayout.LayoutParams(if (fill) ViewGroup.LayoutParams.MATCH_PARENT else wrap, wrap)
+                .apply { setMargins(0, dp(12), dp(14), 0) })
+            addView(badge, FrameLayout.LayoutParams(wrap, wrap, Gravity.TOP or Gravity.END))
+        }
+    }
+
+    /**
+     * A feature of a tier the athlete doesn't have, under a layer (the owner, 2026-11-05: "a layer with unlock, not the
+     * screen of pricing"): [behind] dimmed, Unlock with the tier's badge on top. A tap anywhere on it opens the offer.
+     */
+    private fun lockedLayer(behind: View, paywall: Paywall, tier: Tier, height: Int = ViewGroup.LayoutParams.WRAP_CONTENT) =
+        FrameLayout(this).apply {
+            behind.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
+            addView(behind, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height))
+            addView(View(context).apply {
+                background = roundedDrawable((AppColors.BACKGROUND and 0x00FFFFFF) or (0xB8 shl 24), dp(18).toFloat())
+                setOnClickListener { showPaywall(paywall) }
+                importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+            }, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
+            addView(unlockButton(paywall, getString(if (tier == Tier.PRO) R.string.tier_pro else R.string.tier_plus), fill = false),
+                FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER))
+        }
+
+    /** Free's leaderboard behind its layer: six places with grey bars where the names and points would be. */
+    private fun leaderboardSample(): LinearLayout = LinearLayout(this).apply {
+        orientation = LinearLayout.VERTICAL
+        listOf(0.62f, 0.5f, 0.56f, 0.42f, 0.5f, 0.38f).forEachIndexed { index, share ->
+            addView(LinearLayout(context).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER_VERTICAL
+                setPadding(dp(14), dp(12), dp(14), dp(12))
+                background = roundedDrawable(AppColors.SURFACE, dp(14).toFloat())
+                addView(bodyText(getString(R.string.leaderboard_rank, index + 1), 14f), LinearLayout.LayoutParams(dp(48), ViewGroup.LayoutParams.WRAP_CONTENT))
+                addView(View(context).apply { background = roundedDrawable(AppColors.DIVIDER, dp(6).toFloat()) },
+                    LinearLayout.LayoutParams(0, dp(12), share))
+                addView(View(context), LinearLayout.LayoutParams(0, 1, 1f - share))
+                addView(View(context).apply { background = roundedDrawable(AppColors.DIVIDER, dp(6).toFloat()) },
+                    LinearLayout.LayoutParams(dp(44), dp(12)))
+            }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { bottomMargin = dp(4) })
+        }
     }
 
     /**
@@ -1961,7 +2009,7 @@ open class HomeActivity : Activity() {
         }
         header.addView(text, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
         val locked = levelLocked(level.number)
-        val tier = getString(if (LevelAccess.tierFor(level.number) == Tier.PRO) R.string.tier_pro else R.string.tier_plus)
+        val tier = levelTierName(level.number)
         if (locked) header.addView(lockBadge(tier))
         addView(header)
         val complete = level.programs.count { it.id in completedIds }
@@ -2033,8 +2081,12 @@ open class HomeActivity : Activity() {
         }
         val locked = levelLocked(level.number)
         val assigned = assignedProgram()
-        // A locked level offers the purchase instead of "Complete level", so the lock can't be skipped.
-        if (locked) summary.addWithMargins(TiersPanel(this, billing, Paywall.Level(level.number)), topDp = 14)
+        // A locked level wears its tier's badge instead of "Complete level", so the lock can't be skipped; the badge and
+        // each class open the offer (the owner, 2026-11-05: "don't show it on top, have the Pro or Plus and when clicked
+        // redirect").
+        if (locked) summary.addWithMargins(lockBadge(levelTierName(level.number)).apply {
+            setOnClickListener { showPaywall(Paywall.Level(level.number)) }
+        }, width = ViewGroup.LayoutParams.WRAP_CONTENT, topDp = 12)
         if (assigned?.levelNumber == level.number && !locked) {
             // Level 1 is a gentle on-ramp: someone who already trains can move on in one step (not while replaying it).
             if (level.number == 1 && levelReplay() == null) {
@@ -2062,7 +2114,8 @@ open class HomeActivity : Activity() {
         val programs = level.programs.sortedBy { it.number }
         val effort = workoutEffort()
         val rows = ProgramListAdapter(this, programs, completed, assigned?.id, locale, progressRepository.examLog(), switchedOff,
-            effortOf = { effort?.rate(it) }, hardestOf = { tileExercise(effort, it, locale) })
+            effortOf = { effort?.rate(it) }, hardestOf = { tileExercise(effort, it, locale) },
+            lockedTier = levelTierName(level.number).takeIf { locked })
         // Free: one ad card after the first three classes (a tier change draws this screen again).
         val withAd = if (Entitlement.adFree(this)) null else AdRowAdapter(rows, LinearLayout(this).apply {
             setPadding(dp(12), dp(4), dp(12), dp(4))
@@ -2084,7 +2137,10 @@ open class HomeActivity : Activity() {
             setPadding(0, dp(4), 0, dp(16))
             setOnItemClickListener { _, _, position, _ ->
                 val row = (position - headerViewsCount).let { if (withAd != null) withAd.baseIndex(it) else it }
-                row?.let(programs::getOrNull)?.let { navigate(Screen.Overview(it.id)) }
+                row?.let(programs::getOrNull)?.let {
+                    if (locked && it.id !in completed && !settings.inspectAllDays) showPaywall(Paywall.Level(level.number))
+                    else navigate(Screen.Overview(it.id))
+                }
             }
         }
         container.addView(list, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
@@ -2103,21 +2159,21 @@ open class HomeActivity : Activity() {
                 addView(titleText(displayName(program, locale), 25f))
                 addWithMargins(bodyText(listOf(getString(R.string.level_number, program.levelNumber), programMeta(program))
                     .filter(String::isNotBlank).joinToString(" • "), 14f), topDp = 4)
+                addWithMargins(unlockButton(Paywall.Level(program.levelNumber), levelTierName(program.levelNumber)), topDp = 16)
             }, bottomDp = 14)
-            page.addView(TiersPanel(this, billing, Paywall.Level(program.levelNumber)))
             endAd(page)
             setBody(scroll(page))
             return
         }
         val ready = ReadyWorkouts.isReady(program.id)
-        // Below Pro a ready workout stays closed: its name and the Pro offer, none of its exercises (the owner, 2.11.0).
+        // Below Pro a ready workout stays closed: its name, the Pro badge and Unlock, none of its exercises (the owner, 2.11.0).
         val readyLocked = readyLocked(program.id)
         if (!inspecting && readyLocked) {
             page.addWithMargins(card().apply {
                 addView(titleText(displayName(program, locale), 25f))
                 addWithMargins(bodyText(readyMeta(program), 14f), topDp = 4)
+                addWithMargins(unlockButton(Paywall.Ready, getString(R.string.tier_pro)), topDp = 16)
             }, bottomDp = 14)
-            page.addView(TiersPanel(this, billing, Paywall.Ready))
             endAd(page)
             setBody(scroll(page))
             return
@@ -3176,6 +3232,10 @@ open class HomeActivity : Activity() {
 
     private fun levelLocked(levelNumber: Int): Boolean = LevelAccess.locked(levelNumber, Entitlement.tier(this))
 
+    /** "Plus" or "Pro": the tier that opens a level. */
+    private fun levelTierName(levelNumber: Int): String =
+        getString(if (LevelAccess.tierFor(levelNumber) == Tier.PRO) R.string.tier_pro else R.string.tier_plus)
+
     private fun allPrograms(catalog: CurriculumCatalog): List<TrainingProgram> = NextClass.ordered(catalog)
 
     /** The next class in the sequence; the home-screen widget shows the same one ([NextClass]). */
@@ -3348,10 +3408,8 @@ open class HomeActivity : Activity() {
         private const val REQUEST_LOCATION = 720
         /** In ParksUpdater's preferences: the list instead of the map, and whether the map asked for location yet. */
         private const val KEY_PARKS_LIST = "show_list"
-        /** Free's example parks: the ones nearest the centre of Athens. */
-        private const val EXAMPLE_LAT = 37.9838
-        private const val EXAMPLE_LNG = 23.7275
-        private const val EXAMPLE_PARKS = 12
+        /** The height of Free's example map. */
+        private const val EXAMPLE_MAP_DP = 340
         private const val KEY_LOCATION_ASKED = "location_asked"
         /** How many of the nearest parks the map frames around the athlete. */
         private const val NEARBY_ON_MAP = 5

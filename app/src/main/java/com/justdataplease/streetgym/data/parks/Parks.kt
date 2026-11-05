@@ -19,6 +19,25 @@ data class NearbyPark(val park: Park, val kilometres: Double)
 object Parks {
     const val ASSET = "spots.tsv"
 
+    /**
+     * Free's example map (the owner, 2026-11-05: "behind have a sample, not the database"): the 12 parks nearest the
+     * centre of Athens in the bundled copy, written out here so Free never reads [ASSET].
+     */
+    val EXAMPLE: List<Park> = listOf(
+        Park("Athens - Workout park - Gkazi - Greece", 37.97851, 23.71266),
+        Park("Athens - Workout park - Pangrati - Greece", 37.96825, 23.74212),
+        Park("Athens - Workout park - Alsos Pagkratiou - Pangrati - Greece", 37.96811, 23.74611),
+        Park("Athens - Workout park - Περιβολάκι Εθνικής Αντίστασης - Koukaki - Greece", 37.96186, 23.72234),
+        Park("Athens - Workout park - Πλατεία Ολυμπιονίκου Σκαρλάτου - Iλίσια - Greece", 37.97971, 23.75967),
+        Park("Athens - Workout park - Λόφος Σικελίας - Greece", 37.95916, 23.71502),
+        Park("Athens - Workout park - Zografou - Greece", 37.97942, 23.76242),
+        Park("Athens - Workout park - Zografou - Greece", 37.97851, 23.76606),
+        Park("Athens - Workout park - Kaisariani - Greece", 37.97082, 23.76419),
+        Park("Athens - Υπαίθριο γυμναστήριο - Greece", 37.95962, 23.69867),
+        Park("Athens - Workout park - Peristeri - Greece", 38.00962, 23.69825),
+        Park("Athens - Workout park - Άλσος Νεας Σμύρνης - Nea Smyrni - Greece", 37.94961, 23.71779),
+    )
+
     /** One park per line: name, latitude and longitude separated by tabs. Other lines (the notice first) are skipped. */
     fun read(reader: Reader): List<Park> = reader.buffered().lineSequence().mapNotNull { line ->
         val parts = line.split('\t')
