@@ -53,7 +53,8 @@ class ProgramListAdapter(
             setTextColor(AppColors.TEXT_SECONDARY)
             importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
         }
-        private val title = context.oneLineText("", bold = true)
+        // Two lines: beside a tier tag, longer class names ended in "…" on one (2026-11-06).
+        private val title = context.oneLineText("", bold = true).apply { maxLines = 2 }
         private val meta = context.bodyText("", 13f).apply { maxLines = 2 }
         private val exam = context.bodyText("", 13f).apply { setTextColor(AppColors.ACTION) }
         private val done = TextView(context).apply {

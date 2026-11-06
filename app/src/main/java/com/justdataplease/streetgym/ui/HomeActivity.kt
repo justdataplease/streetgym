@@ -1713,10 +1713,17 @@ open class HomeActivity : Activity() {
             rotation = 6f
             setOnClickListener { showPaywall(paywall) }
         }
+        // The tilt lifts the badge's left corner about 4 dp above its box and pushes its right edge out a little: room
+        // inside the frame keeps the sticker whole (the owner, 2026-11-06: the Plus tag on Unlock was cut at the top).
         return FrameLayout(this).apply {
+            clipChildren = false
             addView(button, FrameLayout.LayoutParams(if (fill) ViewGroup.LayoutParams.MATCH_PARENT else wrap, wrap)
-                .apply { setMargins(0, dp(12), dp(14), 0) })
-            addView(badge, FrameLayout.LayoutParams(wrap, wrap, Gravity.TOP or Gravity.END))
+                .apply {
+                    // A free-standing Unlock keeps the same room on its left, so the button itself sits centred.
+                    setMargins(if (fill) 0 else dp(14 + STICKER_SIDE), dp(STICKER_ROOM + 12), dp(14 + STICKER_SIDE), 0)
+                })
+            addView(badge, FrameLayout.LayoutParams(wrap, wrap, Gravity.TOP or Gravity.END)
+                .apply { setMargins(0, dp(STICKER_ROOM), dp(STICKER_SIDE), 0) })
         }
     }
 
@@ -1876,7 +1883,9 @@ open class HomeActivity : Activity() {
     private fun prescription(exercise: CustomExercise): String {
         val set = exercise.sets.firstOrNull() ?: return ""
         return if (set.durationSeconds != null) getString(R.string.builder_seconds, exercise.sets.size, set.durationSeconds, set.breakSeconds)
-        else getString(R.string.builder_reps, exercise.sets.size, set.repetitions ?: 0, set.breakSeconds)
+        else (set.repetitions ?: 0).let { reps ->
+            getString(R.string.builder_reps, exercise.sets.size, resources.getQuantityString(R.plurals.repetitions_format, reps, reps), set.breakSeconds)
+        }
     }
 
     /** Search every exercise of the program and pick one. */
@@ -2001,21 +2010,28 @@ open class HomeActivity : Activity() {
             numberCircle(level.number.toString(), getString(R.string.level_number, level.number)),
             LinearLayout.LayoutParams(dp(44), dp(44)),
         )
+        val locked = levelLocked(level.number)
+        val tier = levelTierName(level.number)
         val text = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dp(14), 0, 0, 0)
-            addView(titleText(displayName(level, locale), 19f))
-            val description = level.description.resolve(locale)
-            // The level's own page shows it in full.
-            if (description.isNotBlank()) addView(bodyText(description, 13f).apply {
-                maxLines = 3
-                ellipsize = TextUtils.TruncateAt.END
+            // The tier's tag rides beside the title, so the description keeps the card's width: beside it, three
+            // levels' descriptions were cut mid-word (2026-11-06).
+            addView(LinearLayout(context).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER_VERTICAL
+                addView(titleText(displayName(level, locale), 19f), LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+                if (locked) addView(lockBadge(tier), LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT).apply { marginStart = dp(8) })
             })
+            // The list shows the first sentence, the level's own page all of it: cut by lines, Levels 6 to 10 ended
+            // mid-word (2026-11-06).
+            val description = level.description.resolve(locale).let { full ->
+                if (". " in full) full.substringBefore(". ") + "." else full
+            }
+            if (description.isNotBlank()) addView(bodyText(description, 13f))
         }
         header.addView(text, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
-        val locked = levelLocked(level.number)
-        val tier = levelTierName(level.number)
-        if (locked) header.addView(lockBadge(tier))
         addView(header)
         val complete = level.programs.count { it.id in completedIds }
         val percent = percentage(complete, level.programs.size)
@@ -3422,6 +3438,9 @@ open class HomeActivity : Activity() {
         private const val STATE_WORKOUT_LIST = "workout_list"
         private const val STATE_PLACEMENT = "placement_answers"
         private const val STATE_PLACEMENT_SHOWN = "placement_shown"
+        /** Room around the tilted tier sticker on Unlock: above it and to its right. */
+        private const val STICKER_ROOM = 6
+        private const val STICKER_SIDE = 3
         private const val STATE_SCREEN = "screen"
         private const val STATE_LEVEL = "level"
         private const val STATE_PROGRAM = "program"

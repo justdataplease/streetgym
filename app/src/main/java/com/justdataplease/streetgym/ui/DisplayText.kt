@@ -37,7 +37,7 @@ fun Context.displayName(exercise: TrainingExercise, locale: Locale): String =
 fun Context.examTarget(exercise: TrainingExercise, locale: Locale): String {
     val set = exercise.sets.firstOrNull()
     val dose = when {
-        set?.repetitions != null -> getString(R.string.repetitions_format, set.repetitions)
+        set?.repetitions != null -> set.repetitions!!.let { resources.getQuantityString(R.plurals.repetitions_format, it, it) }
         set?.durationSeconds != null -> getString(R.string.focus_seconds, set.durationSeconds)
         else -> null
     }
@@ -59,7 +59,7 @@ fun Context.setPrescription(set: TrainingSet, locale: Locale): String = buildLis
     set.name.resolve(locale).takeIf(String::isNotBlank)?.let(::add)
     when {
         set.repetitionsMax -> add(getString(R.string.maximum_repetitions))
-        set.repetitions != null -> add(getString(R.string.repetitions_format, set.repetitions))
+        set.repetitions != null -> add(set.repetitions!!.let { resources.getQuantityString(R.plurals.repetitions_format, it, it) })
         set.durationSeconds != null -> add(getString(R.string.seconds_format, set.durationSeconds))
     }
     set.description.resolve(locale).takeIf(String::isNotBlank)?.let(::add)

@@ -98,7 +98,7 @@
     <string name="builder_down">Down</string>
     <string name="builder_edit">Sets</string>
     <string name="builder_remove">Remove</string>
-    <string name="builder_reps">%1$d × %2$d reps · rest %3$d s</string>
+    <string name="builder_reps">%1$d × %2$s · rest %3$d s</string>
     <string name="builder_seconds">%1$d × %2$d s · rest %3$d s</string>
     <string name="picker_title">Add an exercise</string>
     <string name="picker_hint">Search: pull-up, core, rings…</string>

@@ -581,7 +581,7 @@ class FocusWorkoutView(
         val set = step.set
         val dose = when {
             set.repetitionsMax -> context.getString(R.string.maximum_repetitions)
-            set.repetitions != null -> context.getString(R.string.repetitions_format, set.repetitions)
+            set.repetitions != null -> set.repetitions!!.let { context.resources.getQuantityString(R.plurals.repetitions_format, it, it) }
             set.durationSeconds != null -> context.getString(R.string.focus_seconds, set.durationSeconds)
             cues.isNotEmpty() -> cues.removeAt(0)
             else -> context.getString(R.string.set_number, step.setNumber)

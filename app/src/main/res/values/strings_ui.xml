@@ -38,7 +38,11 @@
         <item quantity="one">%1$d set</item>
         <item quantity="other">%1$d sets</item>
     </plurals>
-    <string name="repetitions_format">%1$d reps</string>
+    <!-- "1 rep": single-rep sets exist (one-rep basics, skill singles). -->
+    <plurals name="repetitions_format">
+        <item quantity="one">%1$d rep</item>
+        <item quantity="other">%1$d reps</item>
+    </plurals>
     <string name="maximum_repetitions">Maximum quality reps</string>
     <string name="seconds_format">%1$d sec</string>
     <string name="rest_format">Rest %1$d sec</string>
