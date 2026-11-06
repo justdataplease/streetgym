@@ -38,8 +38,8 @@ SAFETY = 'Stop a set when your form breaks, and take the easier option whenever 
 # Aches & posture (the owner, 2026-11-05: "a new category for specific problems"): gentle sessions, not a treatment.
 PROBLEM_SAFETY = ('Move gently and stay pain-free. Stop for sharp pain, numbness or tingling, and see a doctor or physio '
                   'if the pain lasts, keeps coming back or follows an injury.')
-# The ready workouts every tier opens are FREE, set with the Aches & posture workouts below (three, for the neck and
-# the back from desk work).
+# The ready workouts every tier opens are FREE, set with the Aches & posture workouts below (four: the neck, the back
+# from desk work and the chest).
 
 
 def reps(movement, sets, count, rest, tempo='2111', easier=None):
@@ -934,7 +934,7 @@ WORKOUTS = [
 # ---------- Aches & posture (the owner, 2026-11-05: "a new category for specific problems") ----------
 # Written by hand from a research brief of the guidelines and reviews (JOSPT neck, heel and patellofemoral guidelines,
 # WHO and NICE on low back pain, Cochrane, BJSM): little and often, gentle loading, nothing that promises a cure.
-# Each problem has a free or easier session and a stronger one; three are free on every tier (FREE).
+# Each problem has a free or easier session and a stronger one; four are free on every tier (FREE).
 WARMUP.update({
     'neck': [reps('shoulder_cars', 1, '5/side', 10, 'controlled'), reps('arm_swings', 1, 10, 10, 'controlled')],
     'neck_floor': [hold('march', 1, 60, 0, 'easy'), reps('shoulder_cars', 1, '5/side', 10, 'controlled'), reps('cat_cow', 1, 6, 10, 'slow')],
@@ -952,6 +952,8 @@ WARMUP.update({
                            reps('scapular_pushup', 1, 8, 20)],
     'hips': [hold('march', 1, 60, 0, 'easy'), reps('hip_circles', 1, 8, 10, 'controlled'), reps('leg_swings', 1, '8/side', 10, 'controlled')],
     'wrists': [reps('wrist_circles', 1, 10, 10, 'controlled'), reps('arm_swings', 1, 10, 10, 'controlled')],
+    'chest': [reps('arm_swings', 1, 10, 10, 'controlled'), reps('shoulder_cars', 1, '5/side', 10, 'controlled'),
+              reps('cat_cow', 1, 6, 10, 'slow')],
 })
 COOLDOWN.update({
     'neck': [stretch('neck_stretch', 20, 2), stretch('chest_stretch', 30, 2), hold('slow_breathing', 1, 60, 0, 'easy')],
@@ -968,8 +970,10 @@ COOLDOWN.update({
     'achilles': [stretch('calf_stretch', 30, 2)],
     'hips': [stretch('ninety_ninety_hip_stretch', 30, 2), stretch('supine_twist', 30, 2)],
     'wrists': [stretch('forearm_stretch', 30, 2), hold('slow_breathing', 1, 60, 0, 'easy')],
+    'chest': [hold('child_pose', 1, 45, 0, 'easy'), hold('slow_breathing', 1, 60, 0, 'easy')],
 })
-FREE = {'neck_at_the_desk', 'upper_back_reset', 'low_back_basics'}
+# Chest Opener joined them on 2026-11-06 (the owner: "include chest opener ... for free workouts").
+FREE = {'neck_at_the_desk', 'upper_back_reset', 'chest_opener', 'low_back_basics'}
 # Each problem's own safety line (the research brief), in place of PROBLEM_SAFETY.
 SAFETY_BY_SLUG = {}
 for _slugs, _line in (
@@ -980,6 +984,7 @@ for _slugs, _line in (
     (('knee_tendon_holds', 'knee_tendon_strength'), 'Pain up to 3 out of 10 that settles by the next morning is okay. Stop on sharp pain. See a professional if it keeps getting worse.'),
     (('gentle_shoulders', 'shoulder_strength'), 'Work below the painful range first. Stop on sharp or catching pain. See a professional if you can\'t lift the arm or after an injury.'),
     (('sore_heels', 'slow_heel_raises'), 'Mild discomfort is okay if it has settled by the next morning. Stop on sharp pain. See a professional if the foot goes numb or after a sudden snap.'),
+    (('chest_opener',), 'Stretch to a medium pull, never a strong one. Stop on tingling in the arms. See a professional if chest or shoulder pain lasts.'),
     (('hips_after_sitting',), 'Stretch only to a mild pull. Ease off if the front of the hip pinches. See a professional if you limp or have groin pain.'),
     (('easy_wrists',), 'Warm up first and keep it light. Stop on sharp pain or numb fingers. See a professional after a fall on the hand.'),
 ):
@@ -1002,6 +1007,15 @@ WORKOUTS += [
      'Body rows and shoulder-blade pulls for a stronger upper back after desk days.', 'upper_back_bar',
      [reps('high_inverted_row', 3, 8, 60), reps('prone_ytw', 2, 8, 30), reps('scapular_pull', 2, 6, 45),
       reps('wall_slide', 2, 10, 20, 'slow')], 'upper_back_bar'),
+    # Chest Opener (the owner, 2026-11-06, from a yoga chest-opening routine the owner shared): long breathing stretches for the
+    # chest and the front of the shoulders, with arm lifts and a hands-off cobra that work the upper back, for the
+    # rounded shoulders of desk, phone and driving days.
+    ('chest_opener', 'Chest Opener', 'problems', 1, 3,
+     'Yoga-style stretches for a tight chest, and holds that build the upper back.', 'chest',
+     [hold('bench_prayer_stretch', 2, 40, 15, 'breathe out to sink'), hold('prone_chest_stretch', 2, '30/side', 15, 'breathe out to go deeper'),
+      reps('child_pose_arm_lift', 2, '5/side', 20, '5 pulses, 10 s hold'), reps('hover_cobra', 2, 5, 30, '5 s hold'),
+      hold('lunge_arm_reach', 2, '30/side', 15, 'breathe out, arms back'), hold('behind_back_chest_opener', 2, 30, 15, 'breathe out, lift')],
+     'chest'),
     ('low_back_basics', 'Low Back Basics', 'problems', 1, 3,
      'Gentle spine movement, bridges and trunk control for a back sore from sitting.', 'low_back',
      [reps('glute_bridge', 2, 10, 30), reps('bird_dog', 2, '6/side', 20, 'slow'), reps('dead_bug', 2, '6/side', 20, 'slow'),

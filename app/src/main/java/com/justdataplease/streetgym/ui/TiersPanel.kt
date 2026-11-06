@@ -24,7 +24,6 @@ import com.justdataplease.streetgym.billing.TierBilling
 sealed interface Paywall {
     data class Level(val number: Int) : Paywall
     data object Parks : Paywall
-    data object Rename : Paywall
     data object Leaderboard : Paywall
     /** The ready workouts in Training › Library (Pro). */
     data object Ready : Paywall
@@ -52,7 +51,6 @@ class TiersPanel(
         null -> R.string.tiers_title
         is Paywall.Level -> if (proOnly) R.string.paywall_level_pro else R.string.paywall_level
         Paywall.Parks -> R.string.paywall_parks
-        Paywall.Rename -> R.string.paywall_rename
         Paywall.Leaderboard -> R.string.paywall_leaderboard
         Paywall.Ready -> R.string.paywall_ready
         is Paywall.Saved -> R.string.paywall_saved

@@ -174,6 +174,9 @@ MOVEMENTS["freestanding_hspu"] = "freestanding_hspu"
 MOVEMENTS["tuck_front_lever_row"] = "tuck_front_lever_row"  # review 9: dynamic lever strength
 # Aches & posture (2026-11-05): the neck work and the wall sit (group_i.py).
 MOVEMENTS.update({name: name for name in ["chin_tuck", "neck_stretch", "lying_chin_nod", "wall_sit"]})
+# Chest Opener (2026-11-06): yoga-style chest and upper-back openers (group_j.py).
+MOVEMENTS.update({name: name for name in ["bench_prayer_stretch", "prone_chest_stretch", "child_pose_arm_lift", "hover_cobra",
+                                         "lunge_arm_reach", "behind_back_chest_opener"]})
 MOVEMENTS["tuck_planche_pushup"] = "tuck_planche_pushup"  # review 9: dynamic planche strength
 
 # Joint-prep movements from round 5 of the pro reviews (form_review.py).

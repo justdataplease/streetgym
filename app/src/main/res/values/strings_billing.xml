@@ -16,7 +16,6 @@
         <item>Your own workouts</item>
         <item>30 saved workouts, 3 lists</item>
         <item>Parks near you</item>
-        <item>Rename levels</item>
     </string-array>
     <string name="plus_buy">Get Plus</string>
     <string name="plus_owned">Plus is yours.</string>
@@ -48,7 +47,6 @@
     <string name="paywall_ads_body">Plus ends the ads with one payment. Pro does too, and adds Levels 7 to 10.</string>
     <string name="unlock">Unlock</string>
     <string name="paywall_parks">Parks near you are part of Plus</string>
-    <string name="paywall_rename">Renaming levels is part of Plus</string>
     <string name="paywall_custom">Your own workouts are part of Plus</string>
     <string name="paywall_saved">You’ve used all %1$d saved and custom days</string>
     <string name="paywall_lists">Your own lists are part of Plus</string>

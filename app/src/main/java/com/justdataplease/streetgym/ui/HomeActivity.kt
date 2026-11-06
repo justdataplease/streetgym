@@ -1988,26 +1988,6 @@ open class HomeActivity : Activity() {
             }.show()
     }
 
-    private fun renameLevel(level: TrainingLevel) {
-        if (!Entitlement.tier(this).renameLevels) { showPaywall(Paywall.Rename); return }
-        val names = LevelNames(this)
-        val field = EditText(this).apply {
-            setText(displayName(level, uiLocale()))
-            isSingleLine = true
-            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_WORDS
-            filters = arrayOf(InputFilter.LengthFilter(MAX_NAME_LENGTH))
-            setTextColor(AppColors.TEXT)
-        }
-        AlertDialog.Builder(this).setTitle(getString(R.string.rename_level_title, getString(R.string.level_number, level.number)))
-            .setView(LinearLayout(this).apply { setPadding(dp(20), dp(8), dp(20), 0); addView(field, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)) })
-            .setNegativeButton(R.string.cancel, null)
-            .setNeutralButton(R.string.rename_reset) { _, _ -> names.set(level.number, null); showScreen(currentScreen ?: Screen.Levels, pushCurrent = false) }
-            .setPositiveButton(R.string.rename_save) { _, _ ->
-                names.set(level.number, field.text.toString().trim().ifBlank { null })
-                showScreen(currentScreen ?: Screen.Levels, pushCurrent = false)
-            }.show()
-    }
-
     private fun levelCard(
         level: TrainingLevel,
         locale: Locale,
@@ -2135,7 +2115,6 @@ open class HomeActivity : Activity() {
         if (level.number < furthestLevel && assigned?.levelNumber != level.number && !locked) {
             summary.addWithMargins(secondaryButton(getString(R.string.replay_go_back)) { requestLevelReplay(level) }, topDp = 10)
         }
-        summary.addWithMargins(secondaryButton(getString(R.string.rename_level)) { renameLevel(level) }, topDp = 10)
         val programs = level.programs.sortedBy { it.number }
         val effort = workoutEffort()
         val rows = ProgramListAdapter(this, programs, completed, assigned?.id, locale, progressRepository.examLog(), switchedOff,

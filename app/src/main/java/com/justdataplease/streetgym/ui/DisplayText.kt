@@ -10,7 +10,6 @@ import com.justdataplease.streetgym.data.model.resolve
 import java.util.Locale
 
 fun Context.displayName(level: TrainingLevel, locale: Locale): String {
-    LevelNames(this).name(level.number)?.let { return it }
     val value = level.name.resolve(locale)
     return if (value.isBlank() || value == "Level ${level.number}") {
         getString(R.string.level_number, level.number)

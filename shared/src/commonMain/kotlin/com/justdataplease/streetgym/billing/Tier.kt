@@ -10,7 +10,6 @@ enum class Tier(val savedDays: Int, val workoutLists: Int, val daysPerList: Int)
     FREE(3, 0, 0), PLUS(30, 3, 10), PRO(300, 10, 30);
 
     val adFree: Boolean get() = this >= PLUS
-    val renameLevels: Boolean get() = this >= PLUS
     /** Creating own workouts in My workouts (the owner, 2026-11-05: "don't let Free create custom workouts"); days made before stay usable. */
     val customDays: Boolean get() = this >= PLUS
     val parks: Boolean get() = this >= PLUS

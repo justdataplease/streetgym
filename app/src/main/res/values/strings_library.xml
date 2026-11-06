@@ -115,8 +115,5 @@
     <string name="custom_delete_title">Delete this workout?</string>
     <string name="custom_delete_message">%1$s is removed from My workouts. Its history stays.</string>
     <string name="delete">Delete</string>
-    <string name="rename_level">Rename level</string>
-    <string name="rename_level_title">Rename %1$s</string>
-    <string name="rename_reset">Original name</string>
     <string name="rename_save">Save</string>
 </resources>

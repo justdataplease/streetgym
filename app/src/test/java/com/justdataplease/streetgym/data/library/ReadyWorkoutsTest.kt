@@ -19,7 +19,7 @@ class ReadyWorkoutsTest {
 
     @Test
     fun everyReadyWorkoutIsAWholeClassOfTheProgramsMovements() {
-        assertEquals(216, catalog.workouts.size)
+        assertEquals(217, catalog.workouts.size)
         assertEquals(catalog.workouts.size, catalog.workouts.map { it.id }.toSet().size)
         assertEquals(catalog.workouts.size, catalog.workouts.map { it.name.resolve() }.toSet().size)
         catalog.workouts.forEach { workout ->
@@ -66,13 +66,14 @@ class ReadyWorkoutsTest {
     }
 
     @Test
-    fun threeAchesAndPostureWorkoutsAreFree() {
+    fun fourAchesAndPostureWorkoutsAreFree() {
         // The owner (2026-11-05): three free on every tier, for the neck and the back from desk work; the rest stay Pro.
+        // Chest Opener joined them on 2026-11-06.
         val free = catalog.workouts.filter { it.free }
-        assertEquals(setOf("ready:neck_at_the_desk", "ready:upper_back_reset", "ready:low_back_basics"), free.map { it.id }.toSet())
+        assertEquals(setOf("ready:neck_at_the_desk", "ready:upper_back_reset", "ready:chest_opener", "ready:low_back_basics"), free.map { it.id }.toSet())
         assertTrue(free.all { it.group == "problems" && it.grade == 1 })
         // The category opens the Library, its free workouts first; each says when to stop and see someone.
-        assertEquals(free.map { it.id }, catalog.workouts.take(3).map { it.id })
+        assertEquals(free.map { it.id }, catalog.workouts.take(4).map { it.id })
         catalog.workouts.filter { it.group == "problems" }.forEach { it.safety.resolve().let { s -> assertTrue(it.id, "professional" in s || "urgent help" in s) } }
     }
 

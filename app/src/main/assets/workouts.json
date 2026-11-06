@@ -55,6 +55,34 @@
    "free": true
   },
   {
+   "id": "ready:chest_opener",
+   "title": {"en": "Chest Opener"},
+   "description": {"en": "Yoga-style stretches for a tight chest, and holds that build the upper back."},
+   "group": "problems",
+   "grade": 1,
+   "focus": ["problems"],
+   "schedule": {"minutes": 20, "rpe": 3},
+   "warmup": [
+    ["arm_swings", 1, 10, null, 10, "controlled", null],
+    ["shoulder_cars", 1, "5/side", null, 10, "controlled", null],
+    ["cat_cow", 1, 6, null, 10, "slow", null]
+   ],
+   "main": [
+    ["bench_prayer_stretch", 2, null, 40, 15, "breathe out to sink", null],
+    ["prone_chest_stretch", 2, null, "30/side", 15, "breathe out to go deeper", null],
+    ["child_pose_arm_lift", 2, "5/side", null, 20, "5 pulses, 10 s hold", null],
+    ["hover_cobra", 2, 5, null, 30, "5 s hold", null],
+    ["lunge_arm_reach", 2, null, "30/side", 15, "breathe out, arms back", null],
+    ["behind_back_chest_opener", 2, null, 30, 15, "breathe out, lift", null]
+   ],
+   "cooldown": [
+    ["child_pose", 1, null, 45, 0, "easy", null],
+    ["slow_breathing", 1, null, 60, 0, "easy", null]
+   ],
+   "safety": {"en": "Stretch to a medium pull, never a strong one. Stop on tingling in the arms. See a professional if chest or shoulder pain lasts."},
+   "free": true
+  },
+  {
    "id": "ready:low_back_basics",
    "title": {"en": "Low Back Basics"},
    "description": {"en": "Gentle spine movement, bridges and trunk control for a back sore from sitting."},

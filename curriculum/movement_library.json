@@ -4289,6 +4289,140 @@
       "safety": {
         "en": "Go only as low as the knees feel fine. Keep them over the middle toes. Mild discomfort is okay, sharp pain is not."
       }
+    },
+    {
+      "category": "static_stretch",
+      "description": {
+        "en": "Kneel facing a bench, chair or sofa and put your hands on it. Push the hips back, arms straight, back flat. Breathe out and let the chest sink toward the floor."
+      },
+      "equipment": [
+        "support"
+      ],
+      "grade": 1,
+      "id": "bench_prayer_stretch",
+      "name": {
+        "en": "Bench Prayer Stretch"
+      },
+      "patterns": [
+        "chest",
+        "shoulder",
+        "lat"
+      ],
+      "regression_id": "child_pose",
+      "safety": {
+        "en": "Keep the back flat, not arched. Ease off if the shoulders pinch."
+      }
+    },
+    {
+      "category": "static_stretch",
+      "description": {
+        "en": "Lie face down, one arm out at shoulder height, elbow bent 90 degrees. Press the other hand down and roll away from the arm until the chest stretches. Hold each side."
+      },
+      "equipment": [
+        "mat"
+      ],
+      "grade": 1,
+      "id": "prone_chest_stretch",
+      "name": {
+        "en": "Lying Chest Stretch"
+      },
+      "patterns": [
+        "chest",
+        "shoulder"
+      ],
+      "regression_id": "chest_stretch",
+      "safety": {
+        "en": "Aim for a medium stretch, never strong. Ease off on tingling in the arm or hand."
+      }
+    },
+    {
+      "category": "activation",
+      "description": {
+        "en": "Sit back in a wide-knee child's pose, arms long on the floor. Lift one straight arm, thumb up: 5 small pulses, then hold it up 10 s. Then the other arm."
+      },
+      "equipment": [
+        "mat"
+      ],
+      "grade": 1,
+      "id": "child_pose_arm_lift",
+      "name": {
+        "en": "Child's Pose Arm Lift"
+      },
+      "patterns": [
+        "shoulder",
+        "scapula"
+      ],
+      "regression_id": "child_pose",
+      "safety": {
+        "en": "The lift can be tiny. Keep the forehead down and the neck relaxed."
+      }
+    },
+    {
+      "category": "activation",
+      "description": {
+        "en": "Lie face down, legs long. Lift the chest with the hands just off the floor, elbows pulled back toward the hips, chin tucked. Hold 5 s, then lower."
+      },
+      "equipment": [
+        "mat"
+      ],
+      "grade": 1,
+      "id": "hover_cobra",
+      "name": {
+        "en": "Hands-Off Cobra"
+      },
+      "patterns": [
+        "posterior_chain",
+        "scapula"
+      ],
+      "regression_id": "prone_ytw",
+      "safety": {
+        "en": "Lift from the upper back and keep the hips down. Stop if the low back pinches."
+      }
+    },
+    {
+      "category": "static_stretch",
+      "description": {
+        "en": "Low lunge, back knee down. Hold a towel or belt overhead and pull it apart. Press the arms back and lift the chest, ribs down. Hold each side."
+      },
+      "equipment": [
+        "towel_or_band"
+      ],
+      "grade": 1,
+      "id": "lunge_arm_reach",
+      "name": {
+        "en": "Lunge Overhead Reach"
+      },
+      "patterns": [
+        "chest",
+        "shoulder",
+        "hip"
+      ],
+      "regression_id": "hip_flexor_stretch",
+      "safety": {
+        "en": "Bend from the upper back, not the low back. Pad the knee."
+      }
+    },
+    {
+      "category": "static_stretch",
+      "description": {
+        "en": "Stand tall and hold a towel or belt behind you, hands shoulder-width. Squeeze the shoulder blades and lift the arms away from your back. Bend the elbows if that is easier."
+      },
+      "equipment": [
+        "towel_or_band"
+      ],
+      "grade": 1,
+      "id": "behind_back_chest_opener",
+      "name": {
+        "en": "Behind-Back Chest Opener"
+      },
+      "patterns": [
+        "chest",
+        "shoulder"
+      ],
+      "regression_id": "chest_stretch",
+      "safety": {
+        "en": "Lift only as far as the shoulders stay back and comfortable."
+      }
     }
   ]
 }
