@@ -177,6 +177,9 @@ MOVEMENTS.update({name: name for name in ["chin_tuck", "neck_stretch", "lying_ch
 # Chest Opener (2026-11-06): yoga-style chest and upper-back openers (group_j.py).
 MOVEMENTS.update({name: name for name in ["bench_prayer_stretch", "prone_chest_stretch", "child_pose_arm_lift", "hover_cobra",
                                          "lunge_arm_reach", "behind_back_chest_opener"]})
+# The march and the walk leave the classes (2026-11-12): a jumping jack opens the warm-up, a squat to stand replaces
+# the recovery walk (group_k.py). march and easy_walk keep their clips for workouts people saved with them.
+MOVEMENTS.update({name: name for name in ["jumping_jack", "squat_to_stand"]})
 MOVEMENTS["tuck_planche_pushup"] = "tuck_planche_pushup"  # review 9: dynamic planche strength
 
 # Joint-prep movements from round 5 of the pro reviews (form_review.py).

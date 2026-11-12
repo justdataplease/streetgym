@@ -33629,6 +33629,147 @@
     222.0
    ]
   },
+  "jj_air": {
+   "base": "stand",
+   "arms": [
+    90.0,
+    90.0
+   ],
+   "arm_far": [
+    94.0,
+    94.0
+   ],
+   "legs": [
+    180.0,
+    180.0
+   ],
+   "leg_far": [
+    183.0,
+    177.0
+   ],
+   "feet": 150,
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     100,
+     97.0
+    ]
+   }
+  },
+  "jj_land": {
+   "base": "stand",
+   "arm_near": [
+    8.0,
+    5.0
+   ],
+   "arm_far": [
+    12.0,
+    8.0
+   ],
+   "leg_near": [
+    188.0,
+    172.0
+   ],
+   "leg_far": [
+    172.0,
+    188.0
+   ]
+  },
+  "sts_tall": {
+   "base": "stand",
+   "arm_near": [
+    4.0,
+    4.0
+   ],
+   "arm_far": [
+    8.0,
+    8.0
+   ]
+  },
+  "sts_reach": {
+   "facing": 1,
+   "torso": 55,
+   "head": 55,
+   "arms": [
+    112.0,
+    112.0
+   ],
+   "arm_far": [
+    116.0,
+    116.0
+   ],
+   "leg_near": [
+    166.0,
+    183.3
+   ],
+   "leg_far": [
+    167.0,
+    186.2
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     100,
+     104.0
+    ]
+   }
+  },
+  "sts_fold": {
+   "facing": 1,
+   "torso": 148,
+   "head": 160,
+   "leg_near": [
+    160.3,
+    185.3
+   ],
+   "leg_far": [
+    161.3,
+    188.2
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     100,
+     104.0
+    ]
+   },
+   "arm_near": [
+    124.6,
+    249.5
+   ],
+   "arm_far": [
+    124.6,
+    249.5
+   ]
+  },
+  "sts_squat": {
+   "facing": 1,
+   "torso": 32,
+   "head": 12,
+   "leg_near": [
+    85.5,
+    226.9
+   ],
+   "leg_far": [
+    90.0,
+    233.1
+   ],
+   "pin": {
+    "joint": "foot_near",
+    "at": [
+     100,
+     104.0
+    ]
+   },
+   "arm_near": [
+    163.4,
+    196.0
+   ],
+   "arm_far": [
+    163.4,
+    196.0
+   ]
+  },
   "oah_two_together": {
    "facing": 1,
    "torso": 180,
@@ -50858,6 +50999,72 @@
     }
    ]
   },
+  "jumping_jack": {
+   "duration_ms": 1100,
+   "mode": "ping_pong",
+   "easing": "smooth",
+   "reduced_motion_frame": 0.5,
+   "apparatus": [
+    "floor"
+   ],
+   "keyframes": [
+    {
+     "at": 0,
+     "pose": "stand"
+    },
+    {
+     "at": 0.5,
+     "pose": "jj_air"
+    },
+    {
+     "at": 1,
+     "pose": "jj_land"
+    }
+   ]
+  },
+  "squat_to_stand": {
+   "duration_ms": 6000,
+   "mode": "loop",
+   "easing": "smooth",
+   "reduced_motion_frame": 0.5,
+   "apparatus": [
+    "floor"
+   ],
+   "keyframes": [
+    {
+     "at": 0,
+     "pose": "sts_tall"
+    },
+    {
+     "at": 0.12,
+     "pose": "sts_reach"
+    },
+    {
+     "at": 0.24,
+     "pose": "sts_fold"
+    },
+    {
+     "at": 0.42,
+     "pose": "sts_squat"
+    },
+    {
+     "at": 0.56,
+     "pose": "sts_squat"
+    },
+    {
+     "at": 0.74,
+     "pose": "sts_fold"
+    },
+    {
+     "at": 0.87,
+     "pose": "sts_reach"
+    },
+    {
+     "at": 1,
+     "pose": "sts_tall"
+    }
+   ]
+  },
   "straddle_handstand": {
    "duration_ms": 3200,
    "mode": "ping_pong",
@@ -52558,6 +52765,8 @@
   "hover_cobra": "hover_cobra",
   "lunge_arm_reach": "lunge_arm_reach",
   "behind_back_chest_opener": "behind_back_chest_opener",
+  "jumping_jack": "jumping_jack",
+  "squat_to_stand": "squat_to_stand",
   "tuck_planche_pushup": "tuck_planche_pushup",
   "wrist_pushup": "wrist_pushup",
   "wall_shoulder_flexion": "wall_shoulder_flexion",

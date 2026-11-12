@@ -28,8 +28,8 @@ class FrontViewTest {
     fun barWorkAndSidewaysMovementsAreDrawnFromTheFront() {
         listOf("dead_hang", "active_hang", "scapular_pull", "foot_assisted_hang", "jump_to_hang", "pullup", "chinup",
             "chest_to_bar", "eccentric_pullup", "archer_pullup", "typewriter_pullup", "assisted_one_arm_pullup",
-            "one_arm_pullup_negative", "low_jack", "arm_swings", "hip_circles", "cossack_squat", "adductor_stretch",
-            "wall_slide", "archer_pushup")
+            "one_arm_pullup_negative", "low_jack", "jumping_jack", "arm_swings", "hip_circles", "cossack_squat",
+            "adductor_stretch", "wall_slide", "archer_pushup")
             .forEach { assertNotNull(it, FrontView.variant(it, "")) }
         // Levers, muscle-ups, leg raises, the low-bar assisted pull-up and plain push-ups show their movement side-on.
         listOf("assisted_pullup", "full_front", "strict_muscleup", "hanging_leg_raise", "parallel_dip", "pushup", "squat")
@@ -156,6 +156,20 @@ class FrontViewTest {
     }
 
     @Test
+    fun aJumpingJackJumpsBothFeetOutWithTheArmsOverhead() {
+        pose("jumping_jack", 0f)
+        val narrow = frame.rightFootX - frame.leftFootX
+        val floor = frame.leftFootY
+        pose("jumping_jack", 0.5f)
+        assertTrue("off the floor halfway", frame.leftFootY < floor - 4f && frame.rightFootY < floor - 4f)
+        pose("jumping_jack", 1f)
+        assertTrue("both feet out", FrontView.CENTER - frame.leftFootX > 12f && frame.rightFootX - FrontView.CENTER > 12f)
+        assertTrue("stance widens", frame.rightFootX - frame.leftFootX > narrow + 18f)
+        assertEquals("lands on the floor", floor, frame.leftFootY, 0.01f)
+        assertTrue("hands overhead", frame.leftY < frame.neckY - 20f && frame.rightY < frame.neckY - 20f)
+    }
+
+    @Test
     fun aCossackSinksOverOneFootWhileTheOtherLegStaysLong() {
         pose("cossack_squat", 0f)
         val high = frame.pelvisY
@@ -197,7 +211,7 @@ class FrontViewTest {
     fun noLimbIsLongerThanItsBones() {
         val ids = listOf("dead_hang", "active_hang", "scapular_pull", "foot_assisted_hang", "jump_to_hang", "pullup",
             "chinup", "chest_to_bar", "eccentric_pullup", "archer_pullup", "typewriter_pullup", "assisted_one_arm_pullup",
-            "one_arm_pullup_negative", "low_jack", "hip_circles", "cossack_squat", "adductor_stretch", "wall_slide",
+            "one_arm_pullup_negative", "low_jack", "jumping_jack", "hip_circles", "cossack_squat", "adductor_stretch", "wall_slide",
             "archer_pushup")
         for (id in ids) for (step in 0..40) for (mirror in listOf(false, true)) {
             val t = step / 40f

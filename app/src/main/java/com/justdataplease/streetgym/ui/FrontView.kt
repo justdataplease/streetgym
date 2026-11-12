@@ -24,7 +24,8 @@ internal object FrontView {
         HANG(true, true), ACTIVE_HANG(true, true), SCAPULAR(true, true), FOOT_ASSISTED_HANG(true, true),
         JUMP_TO_HANG(true, false), PULL(true, true), CHEST_TO_BAR(true, true), NEGATIVE(true, true), ARCHER(true, true),
         TYPEWRITER(true, true), TOWEL_ONE_ARM(true, true), ONE_ARM_NEGATIVE(true, true),
-        JACK(false, false), ARM_SWINGS(false, false), HIP_CIRCLES(false, false), COSSACK(false, false),
+        JACK(false, false), JUMPING_JACK(false, false), ARM_SWINGS(false, false), HIP_CIRCLES(false, false),
+        COSSACK(false, false),
         COSSACK_HOLD(false, false), WALL_SLIDE(false, false), ARCHER_PUSH(false, true), TWIST(false, false),
     }
 
@@ -58,6 +59,7 @@ internal object FrontView {
         "assisted_one_arm_pullup" to Variant(Motion.TOWEL_ONE_ARM),
         "one_arm_pullup_negative" to Variant(Motion.ONE_ARM_NEGATIVE, marker = "assisted_one_arm_pullup"),
         "low_jack" to Variant(Motion.JACK, mirrors = true),
+        "jumping_jack" to Variant(Motion.JUMPING_JACK),
         "arm_swings" to Variant(Motion.ARM_SWINGS, mirrors = true),
         "hip_circles" to Variant(Motion.HIP_CIRCLES),
         "cossack_squat" to Variant(Motion.COSSACK, sideClip = "cossack_side", mirrors = true),
@@ -77,6 +79,7 @@ internal object FrontView {
         "chest_to_bar" to "chest_to_bar", "eccentric_pullup" to "eccentric_pullup", "archer_pullup" to "archer_pullup",
         "typewriter_pullup" to "typewriter_pullup", "assisted_one_arm_pullup" to "assisted_one_arm_pullup",
         "one_arm_pullup_negative" to "one_arm_pullup_negative", "jack" to "low_jack", "arm_swings" to "arm_swings",
+        "jumping_jack" to "jumping_jack",
         "hip_circles" to "hip_circles", "cossack" to "cossack_squat", "cossack_hold" to "adductor_stretch",
         "wall_slide" to "wall_slide", "archer_pushup" to "archer_pushup", "supine_twist" to "supine_twist",
     )
@@ -350,6 +353,20 @@ internal object FrontView {
                 // One foot steps out as both arms arc overhead, the hips shifting over the wider stance.
                 f.rightFootX = lerp(CENTER + 3f, CENTER + 16f, e)
                 settle(f, lerp(CENTER, CENTER + 6.5f, e))
+                arc(f, -1f, 180f + 165f * e)
+                arc(f, 1f, 180f - 165f * e)
+            }
+            Motion.JUMPING_JACK -> {
+                // Both feet jump out wide as both arms sweep overhead; halfway the body is off the floor, as the side
+                // clip's hop shows, and it lands with soft knees.
+                f.leftFootX = lerp(CENTER - 3f, CENTER - 13f, e)
+                f.rightFootX = lerp(CENTER + 3f, CENTER + 13f, e)
+                settle(f, CENTER, lerp(0.995f, 0.975f, e))
+                val lift = 7f * sin(PI.toFloat() * e)
+                f.neckY -= lift
+                f.pelvisY -= lift
+                f.leftFootY -= lift
+                f.rightFootY -= lift
                 arc(f, -1f, 180f + 165f * e)
                 arc(f, 1f, 180f - 165f * e)
             }

@@ -8,7 +8,7 @@ import kotlin.math.roundToInt
  * What the home-screen widget shows: the next class in the sequence, never a date. A class title reads
  * "Role · Lead" ("Basics & Endurance · Strict Pull-Up"); the widget puts the role in the headline and takes the lead
  * from the main part's first step, which is what the title names. A recovery day names its theme after the dot and
- * leads with an easy walk; an exam leads with its first test and lists how many targets it holds.
+ * leads with its squat to stand; an exam leads with its first test and lists how many targets it holds.
  * A hold keeps one pose, so a flip-book of it stands still: the lead is the main part's first step that moves, and the
  * line names it (2.9.3: 441 of the 1,000 classes open with a hold, and the widget stood still on those days).
  */

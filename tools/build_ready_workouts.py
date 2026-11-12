@@ -87,39 +87,51 @@ def circuit(rounds, *stations):
     return [list(step) for _ in range(rounds) for step in stations]
 
 
+# The warm-up opener (the owner, 2026-11-12: no marching): build() swaps OPENER for 30 s of jumping jacks, or of the
+# low-impact jack in grade 1 workouts and before legs work, as the coach panel chose for the classes.
+OPENER = ['opener', 1, None, 30, 0, 'brisk', None]
+LOW_OPENER = ('legs', 'short_legs')
+
+
+def opened(steps, grade, warmup):
+    low = grade == 1 or warmup in LOW_OPENER
+    return [(hold('low_jack', 1, 30, 0, 'brisk') if low else hold('jumping_jack', 1, 30, 0, 'brisk', 'low_jack'))
+            if step is OPENER else step for step in steps]
+
+
 WARMUP = {
-    'bar': [hold('march', 1, 30, 0, 'brisk'), reps('arm_swings', 1, 10, 10, 'controlled'),
+    'bar': [OPENER, reps('arm_swings', 1, 10, 10, 'controlled'),
             reps('wrist_circles', 1, 10, 10, 'controlled'), reps('scapular_pull', 1, 6, 20),
             reps('scapular_pushup', 1, 8, 20), reps('inverted_row', 1, 5, 45, 'ramp-up')],
-    'floor': [hold('march', 1, 30, 0, 'brisk'), reps('arm_swings', 1, 10, 10, 'controlled'),
+    'floor': [OPENER, reps('arm_swings', 1, 10, 10, 'controlled'),
               reps('wrist_circles', 1, 10, 10, 'controlled'), reps('hip_circles', 1, 8, 10, 'controlled'),
               reps('cat_cow', 1, 6, 10, 'slow'), reps('scapular_pushup', 1, 8, 20)],
-    'legs': [hold('march', 1, 30, 0, 'brisk'), reps('hip_circles', 1, 8, 10, 'controlled'),
+    'legs': [OPENER, reps('hip_circles', 1, 8, 10, 'controlled'),
              reps('ankle_rocks', 1, '10/side', 10, 'controlled'), reps('leg_swings', 1, '8/side', 10, 'controlled'),
              reps('glute_bridge', 1, 10, 20), reps('squat', 1, 6, 45, 'ramp-up')],
-    'hands': [hold('march', 1, 30, 0, 'brisk'), reps('wrist_circles', 1, 10, 10, 'controlled'),
+    'hands': [OPENER, reps('wrist_circles', 1, 10, 10, 'controlled'),
               reps('wrist_rocks', 1, 10, 10, 'controlled'), reps('wrist_pushup', 1, 10, 20),
               reps('arm_swings', 1, 10, 10, 'controlled'), reps('wall_slide', 1, 8, 20, 'slow'),
               reps('scapular_pushup', 1, 8, 20)],
-    'core': [hold('march', 1, 30, 0, 'brisk'), reps('cat_cow', 1, 6, 10, 'slow'),
+    'core': [OPENER, reps('cat_cow', 1, 6, 10, 'slow'),
              reps('hip_circles', 1, 8, 10, 'controlled'), reps('dead_bug', 1, '6/side', 20, 'slow'),
              hold('arch_hold', 1, 15, 20)],
-    'short': [hold('march', 1, 30, 0, 'brisk'), reps('arm_swings', 1, 10, 10, 'controlled'),
+    'short': [OPENER, reps('arm_swings', 1, 10, 10, 'controlled'),
               reps('wrist_circles', 1, 10, 10, 'controlled'), reps('hip_circles', 1, 8, 10, 'controlled')],
-    'easy': [hold('march', 1, 60, 0, 'easy')],
-    'planche': [hold('march', 1, 30, 0, 'brisk'), reps('wrist_circles', 1, 10, 10, 'controlled'),
+    'easy': [hold('low_jack', 1, 60, 0, 'easy')],
+    'planche': [OPENER, reps('wrist_circles', 1, 10, 10, 'controlled'),
                 reps('wrist_rocks', 1, 10, 10, 'controlled'), reps('wrist_pushup', 1, 10, 20),
                 reps('arm_swings', 1, 10, 10, 'controlled'), reps('scapular_pushup', 1, 8, 20),
                 hold('planche_lean', 1, 10, 45, 'ramp-up')],
-    'statics': [hold('march', 1, 30, 0, 'brisk'), reps('arm_swings', 1, 10, 10, 'controlled'),
+    'statics': [OPENER, reps('arm_swings', 1, 10, 10, 'controlled'),
                 reps('wrist_circles', 1, 10, 10, 'controlled'), reps('wrist_rocks', 1, 10, 10, 'controlled'),
                 reps('scapular_pull', 1, 6, 20), reps('scapular_pushup', 1, 8, 20),
                 hold('planche_lean', 1, 10, 45, 'ramp-up'), hold('tuck_front_hold', 1, 6, 45, 'ramp-up')],
-    'short_bar': [hold('march', 1, 30, 0, 'brisk'), reps('arm_swings', 1, 10, 10, 'controlled'),
+    'short_bar': [OPENER, reps('arm_swings', 1, 10, 10, 'controlled'),
                   reps('scapular_pull', 1, 6, 20), reps('scapular_pushup', 1, 8, 20)],
-    'short_hands': [hold('march', 1, 30, 0, 'brisk'), reps('wrist_circles', 1, 10, 10, 'controlled'),
+    'short_hands': [OPENER, reps('wrist_circles', 1, 10, 10, 'controlled'),
                     reps('wrist_rocks', 1, 10, 10, 'controlled'), reps('arm_swings', 1, 10, 10, 'controlled')],
-    'short_legs': [hold('march', 1, 30, 0, 'brisk'), reps('hip_circles', 1, 8, 10, 'controlled'),
+    'short_legs': [OPENER, reps('hip_circles', 1, 8, 10, 'controlled'),
                    reps('ankle_rocks', 1, '10/side', 10, 'controlled'), reps('squat', 1, 6, 30, 'ramp-up')],
 }
 COOLDOWN = {
@@ -937,20 +949,20 @@ WORKOUTS = [
 # Each problem has a free or easier session and a stronger one; four are free on every tier (FREE).
 WARMUP.update({
     'neck': [reps('shoulder_cars', 1, '5/side', 10, 'controlled'), reps('arm_swings', 1, 10, 10, 'controlled')],
-    'neck_floor': [hold('march', 1, 60, 0, 'easy'), reps('shoulder_cars', 1, '5/side', 10, 'controlled'), reps('cat_cow', 1, 6, 10, 'slow')],
+    'neck_floor': [hold('low_jack', 1, 60, 0, 'easy'), reps('shoulder_cars', 1, '5/side', 10, 'controlled'), reps('cat_cow', 1, 6, 10, 'slow')],
     'upper_back': [reps('arm_swings', 1, 10, 10, 'controlled'), reps('shoulder_cars', 1, '5/side', 10, 'controlled'),
                    reps('cat_cow', 1, 6, 10, 'slow')],
     'upper_back_bar': [reps('arm_swings', 1, 10, 10, 'controlled'), reps('shoulder_cars', 1, '5/side', 10, 'controlled'),
                        reps('scapular_pull', 1, 6, 20)],
-    'low_back': [hold('march', 1, 60, 0, 'easy'), reps('cat_cow', 1, 8, 10, 'slow'), reps('hip_circles', 1, 8, 10, 'controlled')],
-    'knees': [hold('march', 1, 60, 0, 'easy'), reps('ankle_rocks', 1, '10/side', 10, 'controlled')],
-    'knee_tendon': [hold('march', 1, 60, 0, 'easy'), reps('ankle_rocks', 1, '10/side', 10, 'controlled'),
+    'low_back': [hold('low_jack', 1, 60, 0, 'easy'), reps('cat_cow', 1, 8, 10, 'slow'), reps('hip_circles', 1, 8, 10, 'controlled')],
+    'knees': [hold('low_jack', 1, 60, 0, 'easy'), reps('ankle_rocks', 1, '10/side', 10, 'controlled')],
+    'knee_tendon': [hold('low_jack', 1, 60, 0, 'easy'), reps('ankle_rocks', 1, '10/side', 10, 'controlled'),
                     hold('wall_sit', 1, 30, 30)],
     'shoulders': [reps('arm_swings', 1, 10, 10, 'controlled'), reps('shoulder_cars', 1, '5/side', 10, 'controlled'),
                   reps('thoracic_rotation', 1, '6/side', 10, 'controlled')],
     'shoulders_strength': [reps('arm_swings', 1, 10, 10, 'controlled'), reps('shoulder_cars', 1, '5/side', 10, 'controlled'),
                            reps('scapular_pushup', 1, 8, 20)],
-    'hips': [hold('march', 1, 60, 0, 'easy'), reps('hip_circles', 1, 8, 10, 'controlled'), reps('leg_swings', 1, '8/side', 10, 'controlled')],
+    'hips': [hold('low_jack', 1, 60, 0, 'easy'), reps('hip_circles', 1, 8, 10, 'controlled'), reps('leg_swings', 1, '8/side', 10, 'controlled')],
     'wrists': [reps('wrist_circles', 1, 10, 10, 'controlled'), reps('arm_swings', 1, 10, 10, 'controlled')],
     'chest': [reps('arm_swings', 1, 10, 10, 'controlled'), reps('shoulder_cars', 1, '5/side', 10, 'controlled'),
               reps('cat_cow', 1, 6, 10, 'slow')],
@@ -1132,7 +1144,8 @@ def build():
         assert slug not in seen and slug.replace('_', '').isalnum() and slug == slug.lower(), slug
         seen.add(slug)
         assert group in GROUPS and grade in (1, 2, 3, 4, 5) and len(name) <= 24 and len(description) <= 80, slug
-        steps = WARMUP[warmup] + main + COOLDOWN[cooldown]
+        warm = opened(WARMUP[warmup], grade, warmup)
+        steps = warm + main + COOLDOWN[cooldown]
         for step in steps:
             check(step, slug)
         minutes = max(5, math.ceil(sum(map(seconds, steps)) / 60 / 5) * 5)
@@ -1141,7 +1154,7 @@ def build():
             'id': f'ready:{slug}', 'title': {'en': name}, 'description': {'en': description},
             'group': group, 'grade': grade, 'focus': focus(group, main),
             'schedule': {'minutes': minutes, 'rpe': rpe},
-            'warmup': WARMUP[warmup], 'main': main, 'cooldown': COOLDOWN[cooldown],
+            'warmup': warm, 'main': main, 'cooldown': COOLDOWN[cooldown],
             'safety': {'en': SAFETY_BY_SLUG.get(slug, PROBLEM_SAFETY) if group == 'problems' else SAFETY},
             **({'free': True} if slug in FREE else {}),
         })

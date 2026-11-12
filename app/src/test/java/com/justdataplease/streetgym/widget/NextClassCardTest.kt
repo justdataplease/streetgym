@@ -69,13 +69,13 @@ class NextClassCardTest {
     }
 
     @Test
-    fun aRecoveryDayNamesItsThemeAndWalks() {
+    fun aRecoveryDayNamesItsThemeAndLeadsWithItsSquat() {
         val card = NextClassCard.of(program("Recovery · Shoulders & Upper Back",
-            listOf(step("easy_walk", "Easy Walk"), step("wall_slide", "Wall Slide")), "recovery"), locked = false)
+            listOf(step("squat_to_stand", "Squat to Stand"), step("wall_slide", "Wall Slide")), "recovery"), locked = false)
         assertEquals(NextClassCard.Kind.RECOVERY, card.kind)
         assertEquals("Recovery", card.role)
         assertEquals("Shoulders & Upper Back", card.detail)
-        assertEquals("easy_walk", card.movementId)
+        assertEquals("squat_to_stand", card.movementId)
     }
 
     @Test

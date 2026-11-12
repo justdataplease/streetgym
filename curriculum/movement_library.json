@@ -67,9 +67,50 @@
         "shoulder"
       ],
       "equipment": [],
-      "regression_id": "march",
+      "regression_id": null,
       "safety": {
         "en": "Stay low impact and keep knees tracking over toes."
+      }
+    },
+    {
+      "id": "jumping_jack",
+      "name": {
+        "en": "Jumping Jack"
+      },
+      "description": {
+        "en": "Jump the feet out wide as straight arms sweep overhead, then jump them back together as the arms come down. Small, quick, quiet hops."
+      },
+      "category": "dynamic_warmup",
+      "grade": 1,
+      "patterns": [
+        "locomotion",
+        "shoulder"
+      ],
+      "equipment": [],
+      "regression_id": "low_jack",
+      "safety": {
+        "en": "Land softly on the balls of the feet with soft knees. Step the feet out instead if knees, shins or heels complain."
+      }
+    },
+    {
+      "id": "squat_to_stand",
+      "name": {
+        "en": "Squat to Stand"
+      },
+      "description": {
+        "en": "Fold forward and hold your toes, sink into a deep squat with the chest up, lift the hips to straighten the legs, then roll up tall, arms overhead."
+      },
+      "category": "mobility",
+      "grade": 1,
+      "patterns": [
+        "squat",
+        "hinge",
+        "hip_mobility"
+      ],
+      "equipment": [],
+      "regression_id": "deep_squat_hold",
+      "safety": {
+        "en": "Bend the knees as much as you need and keep the heels down. Stand up slowly if you feel light-headed."
       }
     },
     {
