@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     The "Next class" widget, design A "Compact card": a 96 dp card with a 2 dp outline and a hard 4 dp offset shadow,
-    the lead movement playing in a 76 dp tile, three lines of text and a 44 dp start square. NextClassWidget colours it
-    in the athlete's theme and fills the tile, the tape and the headline (drawn in the theme's display face).
+    the lead movement playing in a 76 dp tile, three lines of text and the streak's flame (a 44 dp lock square instead
+    when the class is beyond the tier). NextClassWidget colours it in the athlete's theme and fills the tile, the tape,
+    the headline (drawn in the theme's display face) and the flame.
     The root is the widget's background view with clipToOutline set: launchers that round every widget's corners
     (Launcher3 on Android 12+) leave a widget that does this alone, so the card keeps its square corners and outline.
     widget_next_class_compact.xml is the same card for a cell under 100 dp tall.
@@ -131,8 +132,18 @@
                         android:background="#FFFFD60A"
                         android:importantForAccessibility="no"
                         android:scaleType="center"
-                        android:src="@drawable/widget_play" />
+                        android:src="@drawable/ic_lock" />
                 </FrameLayout>
+
+                <!-- The streak's flame, in the square's place unless the class is locked. -->
+                <ImageView
+                    android:id="@+id/widget_flame"
+                    android:layout_width="wrap_content"
+                    android:layout_height="58dp"
+                    android:adjustViewBounds="true"
+                    android:importantForAccessibility="no"
+                    android:scaleType="fitCenter"
+                    android:visibility="gone" />
             </LinearLayout>
         </FrameLayout>
     </FrameLayout>

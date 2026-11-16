@@ -26,6 +26,7 @@ Module `:shared` in the standalone repo, `:streetgymnastics-shared` in the suite
 | `data.equipment` | `Equipment.kt` | The equipment switches: the library's equipment tags read as seven pieces (pull-up bar, low bar, parallel bars, box, wall, pole, band), and what a spot without them leaves out |
 | `data.progress` | `ProgressRepository.kt` | The progress interface, `WorkoutSession` and `ActiveWorkout` |
 | `data.progress` | `Placement.kt`, `NextClass.kt`, `LevelReplay.kt`, `Intensity.kt`, `ExamLog.kt`, `ProgressMerge.kt` | The strength test, next class, repeats, easier/harder, exams, cloud merges |
+| `data.progress` | `Streak.kt` | The streak (days in a row with a workout finished, the best one, lit today or not) and the week row, over local days counted from 1970 |
 | `data.points` | `Points.kt` | Points per set and rank, all-time and month totals (UTC months without a platform calendar) |
 | `data.effort` | `WorkoutEffort.kt` | Easy/Moderate/Hard "for you" |
 | `data.library` | `WorkoutLibrary.kt`, `ExerciseLibrary.kt` | Saved days, custom days, lists, ready workouts and their JSON codec |
@@ -36,13 +37,14 @@ Module `:shared` in the standalone repo, `:streetgymnastics-shared` in the suite
 - `commonMain` uses no Java or Android API. `./gradlew :streetgymnastics-shared:compileCommonMainKotlinMetadata` (suite) or `:shared:compileCommonMainKotlinMetadata` (standalone) checks it on Windows. The Android compile alone would let `java.*` through.
 - JSON goes through `com.justdataplease.streetgym.json`, never `org.json`. `SharedEngineTest` pins it to org.json both ways, so data stored before 2.11.5 reads back unchanged.
 - Times are epoch milliseconds; UTC dates come from `UtcDate` in `Points.kt`.
-- The 282 unit tests stay in the Android app (`app/src/test`) and test the shared classes from there. `DayIdsTest` must pass untouched.
+- The 303 unit tests stay in the Android app (`app/src/test`) and test the shared classes from there. `DayIdsTest` must pass untouched.
 
 **Still Android-only, to port or rewrite with the iPhone app:**
 
 | Where | Why it stayed |
 |---|---|
 | `data/progress/HistoryCalendar.kt` | The month grid uses `java.util.Calendar` in the phone's time zone; port to kotlinx-datetime |
+| `data/progress/StreakDays.kt` | Turns the history's times into local days for `Streak` with `java.util.TimeZone`, and finds the next local midnight; port with the calendar |
 | `timer/TimingState.kt` | Same, for the timer's day boundaries |
 | `ui/ParkStory.kt` | Pure logic for the park scene, but uses `TimeZone`; move with the park scene |
 | `ui/ExerciseAnimationView.kt`, `ui/FrontView.kt` | The line man: pose reading and projection maths are mixed with Canvas drawing; split them, move the maths, redraw in Compose `DrawScope` |
@@ -59,7 +61,7 @@ Module `:shared` in the standalone repo, `:streetgymnastics-shared` in the suite
 | Line-man animations, park scene | Cloud backups and restore, progress sharing |
 | Skills and medals, skill switches | Leaderboard and usernames |
 | Strength test (placement) | Next-class widget (WidgetKit) |
-| History (calendar and the month's classes) | Parks map (MapLibre iOS) |
+| History (calendar and the month's classes), the streak on Today | Parks map (MapLibre iOS) |
 | Ready workouts with filters, Timer tab | Progress analytics upload |
 | Themes, Settings, safety text | Android Pro unlocking on iPhone |
 | Free / Plus / Pro through StoreKit | |

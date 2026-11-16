@@ -21,6 +21,7 @@ import android.widget.TextView
 import com.justdataplease.streetgym.R
 import com.justdataplease.streetgym.data.progress.HistoryCalendar
 import com.justdataplease.streetgym.data.progress.HistoryCalendar.DayMarks
+import com.justdataplease.streetgym.data.progress.StreakDays
 import com.justdataplease.streetgym.data.progress.WorkoutSession
 import java.text.DateFormatSymbols
 import java.text.SimpleDateFormat
@@ -89,6 +90,8 @@ class HistoryCalendarView(
         accessibilityLiveRegion = ACCESSIBILITY_LIVE_REGION_POLITE
     }
     private val count = context.bodyText("", 14f).apply { gravity = Gravity.CENTER }
+    /** The streak now and the best one, under this month's count; no line before the first workout. */
+    private val streak: View? = context.streakLine(StreakDays.snapshot(history, zone = zone), locale)
     private val previous = arrow("‹", R.string.calendar_previous_month, -1)
     private val next = arrow("›", R.string.calendar_next_month, 1)
     private val weeks = List(6) { LinearLayout(context) }
@@ -107,7 +110,13 @@ class HistoryCalendarView(
                 addView(title, LayoutParams(0, WRAP, 1f))
                 addView(next, LayoutParams(dp(48), dp(48)))
             })
-            addWithMargins(count, bottomDp = 10)
+            addWithMargins(count, bottomDp = if (streak == null) 10 else 2)
+            streak?.let {
+                addView(it, LayoutParams(WRAP, WRAP).apply {
+                    gravity = Gravity.CENTER_HORIZONTAL
+                    bottomMargin = dp(6)
+                })
+            }
             addView(LinearLayout(context).apply {
                 orientation = HORIZONTAL
                 val names = DateFormatSymbols.getInstance(locale).shortWeekdays
@@ -153,6 +162,8 @@ class HistoryCalendarView(
         } else {
             resources.getQuantityString(R.plurals.calendar_month_count, trained, trained, monthFormat.on(year, number, 1))
         }
+        // The streak is about now: it shows with this month only.
+        streak?.visibility = if (month == current) VISIBLE else GONE
         previous.enable(month > first)
         next.enable(month < current)
         weeks.forEachIndexed { index, week -> week.visibility = if (index < grid.rows) VISIBLE else GONE }

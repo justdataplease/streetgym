@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The streak: days in a row with a workout finished. "1 day streak", "12 day streak". -->
+    <string name="streak_days">%d day streak</string>
+    <string name="streak_none_title">No streak yet</string>
+    <!-- After a missed day. -->
+    <string name="streak_ended_title">Streak ended</string>
+    <plurals name="streak_best">
+        <item quantity="one">Best: %d day</item>
+        <item quantity="other">Best: %d days</item>
+    </plurals>
+    <!-- History's line, beside the streak. -->
+    <string name="streak_best_short">Best %d</string>
+    <!-- History's line when there is no streak now. -->
+    <plurals name="streak_best_only">
+        <item quantity="one">Best streak: %d day</item>
+        <item quantity="other">Best streak: %d days</item>
+    </plurals>
+    <string name="streak_lit">Done for today.</string>
+    <string name="streak_unlit">Train today to keep it.</string>
+    <string name="streak_none">Finish a workout to start one.</string>
+    <string name="streak_ended">Finish a workout to start again.</string>
+    <string name="streak_rules">A day counts when you finish a workout. Complete day doesn\'t count. Miss a day and the streak starts again at 1.</string>
+    <string name="streak_see_history">See history</string>
+</resources>

@@ -17,8 +17,10 @@ import android.view.View
 import android.widget.RemoteViews
 import com.justdataplease.streetgym.MainActivity
 import com.justdataplease.streetgym.R
+import com.justdataplease.streetgym.data.progress.Streak
 import com.justdataplease.streetgym.ui.AppColors
 import com.justdataplease.streetgym.ui.ExerciseAnimationView
+import com.justdataplease.streetgym.ui.StreakFlame
 import com.justdataplease.streetgym.ui.StreetTheme
 import com.justdataplease.streetgym.ui.blendColor
 import java.util.Locale
@@ -32,7 +34,8 @@ import kotlin.math.roundToInt
  * guides' animator, so the tile is a flip-book: [WidgetFrames.COUNT] drawings of the lead movement made with the app's
  * own [ExerciseAnimationView] (the exercise picker's moving badge, held at even steps through one loop), played by a
  * ViewFlipper. The tape and the headline are drawn in the theme's display face, which RemoteViews can't set; the two
- * small lines stay text in the system sans.
+ * small lines stay text in the system sans. The streak's flame ([StreakFlame]) closes the card, lit once today's
+ * workout is done.
  */
 internal object WidgetRenderer {
     /** One flip-book, shared by every placed widget. [bytes] is what its drawings hold. */
@@ -80,12 +83,16 @@ internal object WidgetRenderer {
      * launcher hasn't said). From Android 12 the launcher picks the 96 dp card or the compact one for each orientation;
      * before that the portrait height decides. Both layouts share the same drawings, which the host holds once.
      */
-    fun views(context: Context, card: NextClassCard, theme: StreetTheme, frames: Frames, widthDp: Int, heightDp: Int,
-              display: Typeface, layout: Layout = Layout.AUTO): Built {
+    fun views(context: Context, card: NextClassCard, streak: Streak, theme: StreetTheme, frames: Frames, widthDp: Int,
+              heightDp: Int, display: Typeface, layout: Layout = Layout.AUTO): Built {
         val metrics = context.resources.displayMetrics
         val density = metrics.density
-        val text = WidgetText.of(context, card)
+        val text = WidgetText.of(context, card, streak)
         val tape = tape(text.tape, theme, display, density)
+        // The streak's flame stands where the start square stood (the whole card opens the class anyway); a class
+        // beyond the tier keeps its lock square.
+        val flame = if (card.locked) null
+            else StreakFlame.bitmap(theme, streak, display, density, WidgetLayout.FLAME_DP, WidgetLayout.FLAME_SHADOW_DP)
         val column = WidgetLayout.titleWidthDp(widthDp) * density
         val title = title(text.headline, theme, display, density, column)
         // "LEVEL 10 · CLASS 100" keeps its numbers: the tape steps aside first, then the line gets smaller.
@@ -106,8 +113,10 @@ internal object WidgetRenderer {
             setInt(R.id.widget_figure, "setBackgroundColor", palette.infoSurface)
             setInt(R.id.widget_action_outline, "setBackgroundColor", palette.border)
             setInt(R.id.widget_action, "setBackgroundColor", palette.action)
-            setImageViewResource(R.id.widget_action, if (card.locked) R.drawable.ic_lock else R.drawable.widget_play)
             setInt(R.id.widget_action, "setColorFilter", AppColors.contentOn(palette.action))
+            setViewVisibility(R.id.widget_action_outline, if (flame == null) View.VISIBLE else View.GONE)
+            setViewVisibility(R.id.widget_flame, if (flame == null) View.GONE else View.VISIBLE)
+            flame?.let { setImageViewBitmap(R.id.widget_flame, it) }
 
             removeAllViews(R.id.widget_figure)
             for (bitmap in frames.bitmaps) {
@@ -145,7 +154,7 @@ internal object WidgetRenderer {
             WidgetLayout.compact(heightDp) -> compact()
             else -> full()
         }
-        return Built(views, frames.bytes + tape.allocationByteCount + title.allocationByteCount)
+        return Built(views, frames.bytes + tape.allocationByteCount + title.allocationByteCount + (flame?.allocationByteCount ?: 0))
     }
 
     /** The tap: straight to the class (Today's card opens the same overview), or the app's home. */
@@ -208,13 +217,15 @@ internal object WidgetRenderer {
 /** The card's words, from the string resources; English is the only language the app ships. */
 internal class WidgetText(val tape: String, val meta: String, val headline: String, val detail: String, val spoken: String) {
     companion object {
-        fun of(context: Context, card: NextClassCard): WidgetText {
+        fun of(context: Context, card: NextClassCard, streak: Streak): WidgetText {
             val minutes = card.minutes?.let { context.getString(R.string.widget_minutes, it) }
+            // The flame's number, spoken: "12 day streak".
+            val days = context.getString(R.string.streak_days, streak.days).takeIf { streak.days > 0 }
             if (card.kind == NextClassCard.Kind.ALL_DONE) {
                 val headline = context.getString(R.string.all_complete_title)
                 val detail = context.getString(R.string.widget_all_done_detail)
                 return WidgetText(context.getString(R.string.widget_done), "", headline, detail,
-                    context.getString(R.string.widget_open_app, "$headline, $detail"))
+                    context.getString(R.string.widget_open_app, listOfNotNull(headline, detail, days).joinToString(", ")))
             }
             val meta = context.getString(R.string.widget_level_class, card.levelNumber, card.classNumber)
             val first = when (card.kind) {
@@ -227,7 +238,7 @@ internal class WidgetText(val tape: String, val meta: String, val headline: Stri
             val headline = card.role.ifBlank { card.movementName }.ifBlank { context.getString(R.string.app_name) }
             // Spoken with commas, not the dots TalkBack would read out.
             val summary = (listOf(context.getString(R.string.widget_level_class_spoken, card.levelNumber, card.classNumber), headline) +
-                parts + listOfNotNull(context.getString(R.string.widget_locked).takeIf { card.locked })).joinToString(", ")
+                parts + listOfNotNull(context.getString(R.string.widget_locked).takeIf { card.locked }, days)).joinToString(", ")
             val spoken = if (card.programId != null) context.getString(R.string.widget_open_class, summary)
                 else context.getString(R.string.widget_open_app, summary)
             return WidgetText(context.getString(R.string.widget_next), meta.uppercase(Locale.ENGLISH), headline, detail, spoken)

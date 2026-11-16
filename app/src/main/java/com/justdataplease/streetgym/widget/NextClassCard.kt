@@ -99,8 +99,11 @@ object WidgetLayout {
     /** Concrete's headline size; the other faces follow their theme's title scale against Concrete's [TITLE_SCALE_BASE]. */
     const val TITLE_DP = 19f
     const val TITLE_SCALE_BASE = 1.15f
-    /** Everything across the card but the text column: shadow 4, outline 2 + 2, padding 10 + 12, tile 76, gaps 12 + 12, start 44. */
-    const val FIXED_DP = 174
+    /** The streak's flame: 46 dp wide (so 55 tall), with a 3 dp printed shadow in the poster themes. */
+    const val FLAME_DP = 46f
+    const val FLAME_SHADOW_DP = 3f
+    /** Everything across the card but the text column: shadow 4, outline 2 + 2, padding 10 + 12, tile 76, gaps 12 + 12, flame 49. */
+    const val FIXED_DP = 179
     /** A four-cell widget on a typical phone, for a launcher that hasn't said how wide it made the widget. */
     const val DEFAULT_WIDTH_DP = 320
     const val MIN_TITLE_DP = 60

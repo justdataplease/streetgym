@@ -16,4 +16,8 @@
     <instrumentation
         android:name="com.justdataplease.streetgym.ParkBubbleShots"
         android:targetPackage="com.justdataplease.streetgym.debug" />
+    <!-- Another: the streak on Today, its sheet and History's line (see StreakShots). -->
+    <instrumentation
+        android:name="com.justdataplease.streetgym.StreakShots"
+        android:targetPackage="com.justdataplease.streetgym.debug" />
 </manifest>

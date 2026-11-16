@@ -2,7 +2,7 @@
 <resources>
     <!-- The home-screen widget. It names the next class in the sequence and never a day or a date. -->
     <string name="widget_label">Next class</string>
-    <string name="widget_description">Your next class and its lead movement. Tap to open it.</string>
+    <string name="widget_description">Your next class, its lead movement and your streak. Tap to open it.</string>
     <string name="widget_next">Next</string>
     <string name="widget_done">Done</string>
     <string name="widget_level_class">Level %1$d · Class %2$d</string>

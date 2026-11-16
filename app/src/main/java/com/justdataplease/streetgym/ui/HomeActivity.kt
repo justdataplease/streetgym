@@ -107,6 +107,7 @@ import com.justdataplease.streetgym.data.progress.LevelReplay
 import com.justdataplease.streetgym.data.progress.NextClass
 import com.justdataplease.streetgym.data.progress.Placement
 import com.justdataplease.streetgym.data.progress.SharedPreferencesProgressRepository
+import com.justdataplease.streetgym.data.progress.StreakDays
 import com.justdataplease.streetgym.data.progress.WorkoutSession
 import com.justdataplease.streetgym.data.skills.SkillBook
 import com.justdataplease.streetgym.data.skills.SkillCurriculumReader
@@ -128,6 +129,7 @@ import java.text.NumberFormat
 import java.util.ArrayDeque
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 import java.util.concurrent.Executors
 import kotlin.random.Random
 
@@ -226,6 +228,8 @@ open class HomeActivity : Activity() {
     /** Progress's tabs: 0 Skills, 1 History, 2 Leaderboard. */
     private var progressTab = 0
     private val historyCalendar = HistoryCalendarState()
+    /** The local day Today's streak was drawn for (StreakDays.epochDay); a later day redraws it on coming back. */
+    private var streakDrawnOn = 0L
     private lateinit var accountStore: AccountStore
     private lateinit var cloudSync: CloudSync
     private lateinit var analytics: Analytics
@@ -336,6 +340,9 @@ open class HomeActivity : Activity() {
         timingHandler.post(timingTick)
         activityResumed = true
         parksMap?.takeUnless { parksMapHidden }?.resume()
+        // Back on Today after midnight: the flame is for the new day (unlit, or out).
+        if (currentScreen == Screen.Dashboard && streakDrawnOn != 0L &&
+            streakDrawnOn != StreakDays.epochDay(System.currentTimeMillis(), TimeZone.getDefault())) renderDashboard()
     }
 
     override fun onPause() {
@@ -1097,7 +1104,7 @@ open class HomeActivity : Activity() {
         // it's answered or skipped.
         val placing = askPlacement(completed, active)
         if (!compact && !placing) page.addWithMargins(hero, bottomDp = 20)
-        if (!compact && !placing) page.addView(sectionLabel(getString(R.string.today_section)))
+        if (!compact && !placing) page.addWithMargins(todayLine(), bottomDp = 6)
         val today = card(clickable = next != null)
         val paywallLevel = next?.levelNumber?.takeIf(::levelLocked)
         if (next != null) {
@@ -1147,6 +1154,27 @@ open class HomeActivity : Activity() {
         page.addView(ManagedNativePlacement(this),
             LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
         setBody(scroll(page))
+    }
+
+    /**
+     * Today's line: the section's name, and the streak as a flame with this week's days. A tap opens the streak's
+     * sheet, and from there History's calendar.
+     */
+    private fun todayLine(): View = LinearLayout(this).apply {
+        orientation = LinearLayout.HORIZONTAL
+        gravity = Gravity.CENTER_VERTICAL
+        val locale = uiLocale()
+        val snapshot = StreakDays.snapshot(progressRepository.sessionHistory())
+        streakDrawnOn = StreakDays.epochDay(System.currentTimeMillis(), TimeZone.getDefault())
+        val screen = resources.configuration
+        addView(sectionLabel(getString(R.string.today_section)).apply { maxLines = 1 },
+            LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+        addView(streakStrip(snapshot, locale, roomy = screen.screenWidthDp >= 360 && screen.fontScale <= 1.15f) {
+            showStreakSheet(snapshot, locale) {
+                progressTab = PROGRESS_TAB_HISTORY
+                openRoot(Screen.Progress)
+            }
+        })
     }
 
     /** True for a new athlete ([Placement.shouldAsk]). Any progress, even from before placement existed, settles it for good. */
@@ -2825,6 +2853,7 @@ open class HomeActivity : Activity() {
                 val grades = catalog?.movementGrades.orEmpty()
                 val points = flow.points(counted, easier, active?.done.orEmpty(), ::skillMovement, { id -> book?.skill(id)?.standard },
                     { id -> id?.let(grades::get) ?: 1 })
+                val litBefore = StreakDays.snapshot(progressRepository.sessionHistory()).streak.litToday
                 // A repeat's rating is kept on its own history entry only; see WorkoutSession.
                 val session = progressRepository.finishWorkout(effortRating = values[selected], credits = credits, doses = doses,
                     points = points)
@@ -2832,8 +2861,11 @@ open class HomeActivity : Activity() {
                 if (session != null) analytics.classFinished(AnalyticsPayload.sessionId(session),
                     AnalyticsPayload.session(session, program, flow, active, leftOutKeys(program, flow), ::analyticsMovement), ::analyticsSnapshot)
                 clearRest()
-                Toast.makeText(this, getString(if (session?.repeat == true) R.string.repeat_points else R.string.workout_points,
-                    pointsText(points)), Toast.LENGTH_SHORT).show()
+                // The day's first workout lights the flame: the streak joins the points.
+                val streak = StreakDays.snapshot(progressRepository.sessionHistory()).streak.takeIf { session != null && !litBefore && it.litToday }
+                val saved = getString(if (session?.repeat == true) R.string.repeat_points else R.string.workout_points, pointsText(points))
+                Toast.makeText(this, if (streak == null) saved else "$saved · ${getString(R.string.streak_days, streak.days)}",
+                    Toast.LENGTH_SHORT).show()
                 backStack.clear()
                 showScreen(
                     Screen.Progress,
@@ -3446,6 +3478,8 @@ open class HomeActivity : Activity() {
         private const val STATE_PROGRAM = "program"
         private const val STATE_REST_END = "rest_end_epoch_millis"
         private const val STATE_REST_PROGRAM = "rest_program"
+        /** Progress's tabs are Skills, History and Leaderboard, in that order. */
+        private const val PROGRESS_TAB_HISTORY = 1
         /** Switched-off exercises the athlete chose to do anyway, by class: kept for the workout across recreation. */
         private val offAllowed = HashMap<String, MutableSet<String>>()
     }

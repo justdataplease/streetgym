@@ -1,5 +1,7 @@
 package com.justdataplease.streetgym.widget
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.BroadcastReceiver
@@ -20,19 +22,34 @@ import com.justdataplease.streetgym.data.model.TrainingExercise
 import com.justdataplease.streetgym.data.progress.NextClass
 import com.justdataplease.streetgym.data.progress.Placement
 import com.justdataplease.streetgym.data.progress.SharedPreferencesProgressRepository
+import com.justdataplease.streetgym.data.progress.Streak
+import com.justdataplease.streetgym.data.progress.StreakDays
 import com.justdataplease.streetgym.ui.AppSettings
 import com.justdataplease.streetgym.ui.AppType
 import com.justdataplease.streetgym.ui.HomeActivity
 import com.justdataplease.streetgym.ui.MotionClip
 import com.justdataplease.streetgym.ui.systemAnimationsEnabled
+import java.util.TimeZone
 import java.util.concurrent.Executors
 
 /**
  * The "Next class" home-screen widget: the next class in the sequence (never a day or a date), its lead movement
- * playing, and a tap that opens the class. The app keeps it in step through [watch]: finishing or skipping a class,
- * a reset, a level replay, a purchase or a new theme redraws it. The daily update from the provider info only tidies up.
+ * playing, the streak's flame, and a tap that opens the class. The app keeps it in step through [watch]: finishing or
+ * skipping a class, a reset, a level replay, a purchase or a new theme redraws it. The flame is for today, so the
+ * widget is also redrawn as a new day starts ([ACTION_NEW_DAY], an alarm that never wakes the phone) and when the
+ * clock or the time zone is changed. The daily update from the provider info only tidies up.
  */
 class NextClassWidget : AppWidgetProvider() {
+    override fun onReceive(context: Context, intent: Intent) {
+        when (intent.action) {
+            ACTION_NEW_DAY, Intent.ACTION_TIME_CHANGED, Intent.ACTION_TIMEZONE_CHANGED -> {
+                watch(context)
+                WidgetUpdates.run(context, null, force = true, pending = goAsync())
+            }
+            else -> super.onReceive(context, intent)
+        }
+    }
+
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         watch(context)
         WidgetUpdates.run(context, appWidgetIds, force = true, pending = goAsync())
@@ -42,8 +59,12 @@ class NextClassWidget : AppWidgetProvider() {
         WidgetUpdates.run(context, intArrayOf(appWidgetId), force = true, pending = goAsync())
     }
 
+    /** The last widget is gone: nothing to redraw at midnight. */
+    override fun onDisabled(context: Context) = WidgetUpdates.cancelNewDay(context)
+
     companion object {
         const val ACTION_OPEN = "com.justdataplease.streetgym.action.OPEN_NEXT_CLASS"
+        const val ACTION_NEW_DAY = "com.justdataplease.streetgym.action.WIDGET_NEW_DAY"
         const val EXTRA_PROGRAM = "next_class_program"
 
         /** True for a tap on the widget (not a relaunch from Recents, which replays the old intent). */
@@ -82,6 +103,9 @@ internal object NextClassState {
         val placement = Placement.shouldAsk(AppSettings(context).placementDone, completed.size, progress.activeWorkout() != null)
         return NextClassCard.of(next, locked, opens = !placement, moves = moves)
     }
+
+    /** The streak today, as Today's line shows it. */
+    fun streak(context: Context): Streak = StreakDays.snapshot(SharedPreferencesProgressRepository(context).sessionHistory()).streak
 }
 
 /** Builds and pushes the widget off the main thread; preference changes come in bursts and are batched. */
@@ -117,6 +141,7 @@ private object WidgetUpdates {
         val every = manager.getAppWidgetIds(ComponentName(appContext, NextClassWidget::class.java))
         val targets = ids ?: every
         if (targets.isEmpty()) { pending?.finish(); return }
+        if (every.isNotEmpty()) scheduleNewDay(appContext)
         // The theme's faces load here, on the main thread, as the app's screens load them.
         val theme = AppSettings(appContext).theme
         AppType.init(appContext)
@@ -124,13 +149,14 @@ private object WidgetUpdates {
         worker.execute {
             try {
                 val card = NextClassState.card(appContext) ?: return@execute
+                val streak = NextClassState.streak(appContext)
                 val animate = appContext.systemAnimationsEnabled()
-                val state = "${theme.key}|$animate|$card"
+                val state = "${theme.key}|$animate|$card|$streak"
                 if (!force && state == shown) return@execute
                 val frames = WidgetRenderer.frames(appContext, card, theme, animate)
                 for (id in targets) {
                     val options = manager.getAppWidgetOptions(id)
-                    val built = WidgetRenderer.views(appContext, card, theme, frames, widthDp(options),
+                    val built = WidgetRenderer.views(appContext, card, streak, theme, frames, widthDp(options),
                         options?.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT, 0) ?: 0, display)
                     manager.updateAppWidget(id, built.views)
                 }
@@ -142,6 +168,30 @@ private object WidgetUpdates {
             }
         }
     }
+
+    /**
+     * Asks for one redraw as the next local day starts, when a lit flame goes unlit and a missed day puts it out. Every
+     * redraw asks again, so the chain goes on while a widget is placed. Not an exact alarm (no permission): any time
+     * in the day's first minutes, and not while the phone sleeps, since nobody is looking at the home screen then.
+     */
+    private fun scheduleNewDay(context: Context) {
+        val alarms = context.getSystemService(AlarmManager::class.java) ?: return
+        val midnight = StreakDays.nextMidnight(System.currentTimeMillis(), TimeZone.getDefault())
+        runCatching { alarms.setWindow(AlarmManager.RTC, midnight, NEW_DAY_WINDOW_MS, newDay(context)) }
+            .onFailure { Log.w(TAG, "No new-day redraw", it) }
+    }
+
+    fun cancelNewDay(context: Context) {
+        context.getSystemService(AlarmManager::class.java)?.cancel(newDay(context.applicationContext))
+    }
+
+    private fun newDay(context: Context): PendingIntent = PendingIntent.getBroadcast(context, REQUEST_NEW_DAY,
+        Intent(context, NextClassWidget::class.java).setAction(NextClassWidget.ACTION_NEW_DAY),
+        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+
+    /** The shortest window Android 12+ allows. */
+    private const val NEW_DAY_WINDOW_MS = 10 * 60 * 1000L
+    private const val REQUEST_NEW_DAY = 731
 
     /**
      * The narrowest width the launcher shows this widget at (portrait on a phone), in dp; 0 when it hasn't said. The

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     The "Next class" card for a cell under 100 dp tall (a landscape home screen): the same card at 54 dp, with a 46 dp
-    tile and a 34 dp start square, and without the third line. Same ids as widget_next_class.xml; NextClassWidget fills
-    both alike.
+    tile, a 42 dp flame (or a 34 dp lock square), and without the third line. Same ids as widget_next_class.xml;
+    NextClassWidget fills both alike.
 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@android:id/background"
@@ -122,8 +122,17 @@
                         android:background="#FFFFD60A"
                         android:importantForAccessibility="no"
                         android:scaleType="center"
-                        android:src="@drawable/widget_play" />
+                        android:src="@drawable/ic_lock" />
                 </FrameLayout>
+
+                <ImageView
+                    android:id="@+id/widget_flame"
+                    android:layout_width="wrap_content"
+                    android:layout_height="42dp"
+                    android:adjustViewBounds="true"
+                    android:importantForAccessibility="no"
+                    android:scaleType="fitCenter"
+                    android:visibility="gone" />
             </LinearLayout>
         </FrameLayout>
     </FrameLayout>

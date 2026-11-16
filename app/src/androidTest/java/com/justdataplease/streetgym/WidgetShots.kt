@@ -27,6 +27,7 @@ import com.justdataplease.streetgym.data.AssetCurriculumRepository
 import com.justdataplease.streetgym.data.model.TrainingExercise
 import com.justdataplease.streetgym.data.progress.NextClass
 import com.justdataplease.streetgym.data.progress.SharedPreferencesProgressRepository
+import com.justdataplease.streetgym.data.progress.Streak
 import com.justdataplease.streetgym.ui.AppSettings
 import com.justdataplease.streetgym.ui.AppType
 import com.justdataplease.streetgym.ui.MotionClip
@@ -96,11 +97,17 @@ class WidgetShots : Instrumentation() {
             val frames = WidgetRenderer.frames(app, card, theme, animate = true)
             // A flip-book whose drawings are all alike stands still on the home screen (2.9.3).
             log.append("${theme.key}: drawings 0 and 8 ${if (frames.bitmaps[0].sameAs(frames.bitmaps[8])) "THE SAME" else "differ"}\n")
-            val built = WidgetRenderer.views(app, card, theme, frames, widthDp, heightDp, AppType.display(theme), WidgetRenderer.Layout.FULL)
+            val built = WidgetRenderer.views(app, card, LIT, theme, frames, widthDp, heightDp, AppType.display(theme), WidgetRenderer.Layout.FULL)
             log.append("${theme.key}: ${frames.bitmaps.size} drawings of ${frames.bitmaps[0].width}x${frames.bitmaps[0].height} " +
                 "${frames.bitmaps[0].config}, flip every ${frames.intervalMs} ms; drawings ${frames.bytes} B, " +
                 "whole card ${built.bitmapBytes} B\n")
             val root = applied(built)
+            // The flame before today's workout (yesterday's number, unlit) and with no streak.
+            for ((name, streak) in listOf("unlit" to UNLIT, "none" to Streak.NONE)) {
+                val other = applied(WidgetRenderer.views(app, card, streak, theme, frames, widthDp, heightDp, AppType.display(theme),
+                    WidgetRenderer.Layout.FULL))
+                save(other, px(widthDp), px(heightDp), WALL, File(out, "card_${theme.key}_$name.png"))
+            }
             val flipper = root.findViewById<ViewFlipper>(R.id.widget_figure)
             save(root, px(widthDp), px(heightDp), WALL, File(out, "card_${theme.key}.png"))
             for (frame in listOf(0, 8)) {
@@ -116,12 +123,12 @@ class WidgetShots : Instrumentation() {
                 save(root, px(widthDp), px(100), Color.TRANSPARENT, File(out, "widget_preview.png"))
             }
             // A landscape home screen's 62 dp cell: the compact card.
-            val compact = applied(WidgetRenderer.views(app, card, theme, frames, 624, 62, AppType.display(theme),
+            val compact = applied(WidgetRenderer.views(app, card, LIT, theme, frames, 624, 62, AppType.display(theme),
                 WidgetRenderer.Layout.COMPACT))
             save(compact, px(624), px(62), WALL, File(out, "compact_${theme.key}.png"))
         }
-        // The other kinds of card: an exam, a level beyond the tier, the end of the sequence, the longest line in a
-        // three-cell widget.
+        // The other kinds of card: an exam, a level beyond the tier (its lock stays, no flame), the end of the sequence,
+        // the longest line in a three-cell widget with a three-digit streak.
         val ordered = NextClass.ordered(catalog)
         val exam = ordered.first { it.levelNumber == 4 && it.isExam }
         val others = listOf(
@@ -133,7 +140,8 @@ class WidgetShots : Instrumentation() {
         for ((name, other, width) in others) runOnMainSync {
             val theme = if (name == "locked") StreetTheme.NIGHT_PARK else StreetTheme.CONCRETE
             val frames = WidgetRenderer.frames(app, other, theme, animate = true)
-            val built = WidgetRenderer.views(app, other, theme, frames, width, heightDp, AppType.display(theme),
+            val streak = if (name == "narrow") Streak(128, 128, true) else LIT
+            val built = WidgetRenderer.views(app, other, streak, theme, frames, width, heightDp, AppType.display(theme),
                 WidgetRenderer.Layout.FULL)
             val root = applied(built)
             save(root, px(width), px(heightDp), WALL, File(out, "other_${name}_${theme.key}.png"))
@@ -408,5 +416,8 @@ class WidgetShots : Instrumentation() {
         /** A dark home-screen wallpaper, as in the design's mock-up. */
         val WALL = Color.rgb(0x2B, 0x2E, 0x31)
         val PREFS = listOf("streetgym_progress", "streetgym_settings")
+        /** The design's streak: 12 days with today's workout done, and the same streak before today's workout. */
+        val LIT = Streak(12, 21, true)
+        val UNLIT = Streak(11, 21, false)
     }
 }
