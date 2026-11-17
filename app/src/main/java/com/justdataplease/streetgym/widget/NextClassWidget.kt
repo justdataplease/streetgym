@@ -170,7 +170,7 @@ private object WidgetUpdates {
     }
 
     /**
-     * Asks for one redraw as the next local day starts, when a lit flame goes unlit and a missed day puts it out. Every
+     * Asks for one redraw as the next local day starts, when a lit flame goes unlit and a second missed day puts it out. Every
      * redraw asks again, so the chain goes on while a widget is placed. Not an exact alarm (no permission): any time
      * in the day's first minutes, and not while the phone sleeps, since nobody is looking at the home screen then.
      */

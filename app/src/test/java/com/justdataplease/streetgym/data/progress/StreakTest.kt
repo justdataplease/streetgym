@@ -41,20 +41,37 @@ class StreakTest {
     }
 
     @Test
-    fun theNumberIsKeptUntilTheDayIsOver() {
-        // Trained up to yesterday: unlit, yesterday's number.
-        assertEquals(Streak(1, 1, false), Streak.of(days(1), today))
-        assertEquals(Streak(11, 11, false), Streak.of(run(11, 1), today))
-        // The same history a day later, still not trained: the streak is gone, the best one stays.
-        assertEquals(Streak(0, 11, false), Streak.of(run(11, 1), today + 1))
+    fun theNumberIsKeptWhileTheStreakIsAlive() {
+        // Trained up to yesterday: unlit, yesterday's number, and today may be the rest day.
+        assertEquals(Streak(1, 1, false, restToday = true), Streak.of(days(1), today))
+        assertEquals(Streak(11, 11, false, restToday = true), Streak.of(run(11, 1), today))
+        // The same history a day later: yesterday was the rest day, so today's workout is due.
+        assertEquals(Streak(11, 11, false), Streak.of(run(11, 1), today + 1))
+        // A third day without a workout: the streak is gone, the best one stays.
+        assertEquals(Streak(0, 11, false), Streak.of(run(11, 1), today + 2))
     }
 
     @Test
-    fun aMissedDayStartsAgainAtOne() {
+    fun oneRestDayKeepsTheStreak() {
+        // Train, rest, train, rest, train.
+        assertEquals(Streak(3, 3, true), Streak.of(days(4, 2, 0), today))
         // Three days, a day off, then today.
-        assertEquals(Streak(1, 3, true), Streak.of(days(4, 3, 2, 0), today))
-        // The last workout was two days ago.
-        assertEquals(Streak(0, 1, false), Streak.of(days(2), today))
+        assertEquals(Streak(4, 4, true), Streak.of(days(4, 3, 2, 0), today))
+        // Every other day for three weeks: only the days trained are counted.
+        assertEquals(Streak(11, 11, true), Streak.of((0..20 step 2).map { today - it }, today))
+        // A rest day adds nothing: the number is the same on the day off and on the day the workout is due.
+        assertEquals(Streak(3, 3, false, restToday = true), Streak.of(days(5, 3, 1), today))
+        assertEquals(Streak(3, 3, false), Streak.of(days(6, 4, 2), today))
+    }
+
+    @Test
+    fun twoMissedDaysStartAgainAtOne() {
+        // Three days, two days off, then today.
+        assertEquals(Streak(1, 3, true), Streak.of(days(5, 4, 3, 0), today))
+        // The last workout was three days ago.
+        assertEquals(Streak(0, 1, false), Streak.of(days(3), today))
+        // Two days off in the middle split the runs; one day off does not.
+        assertEquals(Streak(3, 3, true), Streak.of(days(9, 7, 4, 2, 0), today))
     }
 
     @Test
@@ -64,6 +81,8 @@ class StreakTest {
         // The current run becomes the best once it is the longest.
         assertEquals(Streak(22, 22, true), Streak.of(run(60, 40) + run(21, 0), today))
         assertEquals(Streak(41, 41, true), Streak.of(run(40, 0), today))
+        // The best run may have rest days in it too.
+        assertEquals(Streak(1, 4, true), Streak.of(days(30, 28, 27, 25, 0), today))
     }
 
     @Test
@@ -107,6 +126,24 @@ class StreakTest {
     }
 
     @Test
+    fun theWeekRowMarksTheRestDaysTheStreakCarriedOver() {
+        // Thursday. Monday trained, Tuesday off, Wednesday trained.
+        val kept = Streak.week(days(3, 1), today, firstWeekday = 1)
+        assertEquals(listOf(false, true, false, false, false, false, false), kept.map { it.rest })
+        // Tuesday trained, Wednesday off, today not trained yet: yesterday is the rest day while today is open.
+        val due = Streak.week(days(2), today, firstWeekday = 1)
+        assertEquals(listOf(false, false, true, false, false, false, false), due.map { it.rest })
+        // Today is never marked, and no day after it.
+        assertTrue(Streak.week(days(1), today, firstWeekday = 1).none { it.rest })
+        // Monday trained, then two days off: the run ended, nothing is marked.
+        assertTrue(Streak.week(days(3), today, firstWeekday = 1).none { it.rest })
+        // A rest day on the week's first day looks back into last week: Sunday trained, Monday off, Tuesday trained.
+        assertTrue(Streak.week(days(4, 2), today, firstWeekday = 1).first().rest)
+        // A trained day is never a rest day.
+        assertTrue(Streak.week(run(6, 0), today, firstWeekday = 1).none { it.rest })
+    }
+
+    @Test
     fun aDayAfterTodayIsNotFilledInTheWeekRow() {
         val week = Streak.week(days(0, -1), today, firstWeekday = 1)
         assertTrue(week[3].trained)
@@ -124,8 +161,9 @@ class StreakTest {
             session(noon - 4 * DAY),
         )
         assertEquals(setOf(today - 1, today - 2, today - 4), StreakDays.trained(sessions, athens))
-        // Complete day today does not light the flame; the repeat and the athlete's own workout hold the run.
-        assertEquals(Streak(2, 2, false), StreakDays.snapshot(sessions, noon, athens, Calendar.MONDAY).streak)
+        // Complete day today does not light the flame. The repeat and the athlete's own workout count, and the day only
+        // marked complete before them is the one rest day, so the class four days ago is in the run too.
+        assertEquals(Streak(3, 3, false, restToday = true), StreakDays.snapshot(sessions, noon, athens, Calendar.MONDAY).streak)
         assertFalse(Streak.counts(WorkoutSession("sg:l01:p0001", 0L, 0L, 0L)))
     }
 

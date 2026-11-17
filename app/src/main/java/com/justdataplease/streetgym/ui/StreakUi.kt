@@ -23,16 +23,17 @@ import kotlin.math.roundToInt
 
 private const val WRAP = LinearLayout.LayoutParams.WRAP_CONTENT
 
-/** "12 day streak"; with none, "Streak ended" after a missed day or "No streak yet" before the first workout. */
+/** "12 day streak"; with none, "Streak ended" after two missed days or "No streak yet" before the first workout. */
 fun Context.streakTitle(streak: Streak): String = when {
     streak.days > 0 -> getString(R.string.streak_days, streak.days)
     streak.best > 0 -> getString(R.string.streak_ended_title)
     else -> getString(R.string.streak_none_title)
 }
 
-/** What today still asks: done, train to keep it, or finish a workout to start one. */
+/** What today still asks: done, a rest day if wanted, train to keep it, or finish a workout to start one. */
 private fun Context.streakStatus(streak: Streak): String = getString(when {
     streak.litToday -> R.string.streak_lit
+    streak.restToday -> R.string.streak_rest
     streak.days > 0 -> R.string.streak_unlit
     streak.best > 0 -> R.string.streak_ended
     else -> R.string.streak_none
@@ -135,8 +136,9 @@ fun Context.streakLine(snapshot: StreakDays.Snapshot, locale: Locale): View? {
 private fun rippleColor(): Int = if (AppColors.darkMode) 0x22FFFFFF else 0x22000000
 
 /**
- * This week as seven boxes with the weekday's letter: a trained day filled in the accent, today outlined and
- * underlined, the rest faint. The days are spoken by whatever holds the row.
+ * This week as seven boxes with the weekday's letter: a trained day filled in the accent, a rest day the streak
+ * carried on over in a pale accent, today outlined and underlined, the others faint. The days are spoken by whatever
+ * holds the row.
  */
 @SuppressLint("ViewConstructor")
 class StreakWeekView(
@@ -169,6 +171,7 @@ class StreakWeekView(
     private val textOffset = -(text.descent() + text.ascent()) / 2f
     private val outlined = AppColors.theme.shape.borderDp > 0
     private val faint = blendColor(AppColors.TEXT_SECONDARY, AppColors.BACKGROUND, 0.45f)
+    private val pale = blendColor(AppColors.ACCENT, AppColors.BACKGROUND, 0.62f)
     private val onAccent = AppColors.contentOn(AppColors.ACCENT)
 
     init {
@@ -194,6 +197,13 @@ class StreakWeekView(
                         canvas.drawRect(left + inset, inset, right - inset, box - inset, line)
                     }
                     text.color = onAccent
+                }
+                day.rest -> {
+                    fill.color = pale
+                    canvas.drawRect(left, 0f, right, box, fill)
+                    line.color = faint
+                    canvas.drawRect(left + inset, inset, right - inset, box - inset, line)
+                    text.color = AppColors.TEXT_SECONDARY
                 }
                 day.today -> {
                     fill.color = AppColors.SURFACE

@@ -26,7 +26,7 @@ Module `:shared` in the standalone repo, `:streetgymnastics-shared` in the suite
 | `data.equipment` | `Equipment.kt` | The equipment switches: the library's equipment tags read as seven pieces (pull-up bar, low bar, parallel bars, box, wall, pole, band), and what a spot without them leaves out |
 | `data.progress` | `ProgressRepository.kt` | The progress interface, `WorkoutSession` and `ActiveWorkout` |
 | `data.progress` | `Placement.kt`, `NextClass.kt`, `LevelReplay.kt`, `Intensity.kt`, `ExamLog.kt`, `ProgressMerge.kt` | The strength test, next class, repeats, easier/harder, exams, cloud merges |
-| `data.progress` | `Streak.kt` | The streak (days in a row with a workout finished, the best one, lit today or not) and the week row, over local days counted from 1970 |
+| `data.progress` | `Streak.kt` | The streak (workout days strung together with at most one rest day between two of them, the best one, lit today or not, whether today may be the rest day) and the week row with its rest days, over local days counted from 1970 |
 | `data.points` | `Points.kt` | Points per set and rank, all-time and month totals (UTC months without a platform calendar) |
 | `data.effort` | `WorkoutEffort.kt` | Easy/Moderate/Hard "for you" |
 | `data.library` | `WorkoutLibrary.kt`, `ExerciseLibrary.kt` | Saved days, custom days, lists, ready workouts and their JSON codec |
@@ -37,7 +37,7 @@ Module `:shared` in the standalone repo, `:streetgymnastics-shared` in the suite
 - `commonMain` uses no Java or Android API. `./gradlew :streetgymnastics-shared:compileCommonMainKotlinMetadata` (suite) or `:shared:compileCommonMainKotlinMetadata` (standalone) checks it on Windows. The Android compile alone would let `java.*` through.
 - JSON goes through `com.justdataplease.streetgym.json`, never `org.json`. `SharedEngineTest` pins it to org.json both ways, so data stored before 2.11.5 reads back unchanged.
 - Times are epoch milliseconds; UTC dates come from `UtcDate` in `Points.kt`.
-- The 303 unit tests stay in the Android app (`app/src/test`) and test the shared classes from there. `DayIdsTest` must pass untouched.
+- The 305 unit tests stay in the Android app (`app/src/test`) and test the shared classes from there. `DayIdsTest` must pass untouched.
 
 **Still Android-only, to port or rewrite with the iPhone app:**
 

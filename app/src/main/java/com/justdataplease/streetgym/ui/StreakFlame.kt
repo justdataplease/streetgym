@@ -18,8 +18,8 @@ import kotlin.math.min
 import kotlin.math.roundToInt
 
 /**
- * The streak's flame, with the number of days in its belly. Lit once today's workout is done; unlit, with yesterday's
- * number kept, while today is still open; a dashed outline with 0 when there is no streak. Drawn here for the app's
+ * The streak's flame, with the number of days in its belly. Lit once today's workout is done; unlit, with the number
+ * kept, on a day not trained yet while the streak is alive; a dashed outline with 0 when there is no streak. Drawn here for the app's
  * screens ([StreakFlameView]) and for the home-screen widget ([bitmap]), in each theme's colours.
  */
 object StreakFlame {

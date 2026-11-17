@@ -102,7 +102,7 @@ class WidgetShots : Instrumentation() {
                 "${frames.bitmaps[0].config}, flip every ${frames.intervalMs} ms; drawings ${frames.bytes} B, " +
                 "whole card ${built.bitmapBytes} B\n")
             val root = applied(built)
-            // The flame before today's workout (yesterday's number, unlit) and with no streak.
+            // The flame on a day not trained yet (the streak's number, unlit) and with no streak.
             for ((name, streak) in listOf("unlit" to UNLIT, "none" to Streak.NONE)) {
                 val other = applied(WidgetRenderer.views(app, card, streak, theme, frames, widthDp, heightDp, AppType.display(theme),
                     WidgetRenderer.Layout.FULL))

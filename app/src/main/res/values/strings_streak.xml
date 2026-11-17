@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- The streak: days in a row with a workout finished. "1 day streak", "12 day streak". -->
+    <!-- The streak: workout days strung together, with at most one rest day between two of them. Rest days are not
+         counted. "1 day streak", "12 day streak". -->
     <string name="streak_days">%d day streak</string>
     <string name="streak_none_title">No streak yet</string>
-    <!-- After a missed day. -->
+    <!-- After two missed days in a row. -->
     <string name="streak_ended_title">Streak ended</string>
     <plurals name="streak_best">
         <item quantity="one">Best: %d day</item>
@@ -17,9 +18,12 @@
         <item quantity="other">Best streak: %d days</item>
     </plurals>
     <string name="streak_lit">Done for today.</string>
+    <!-- Not trained today, trained yesterday: today may be the rest day. -->
+    <string name="streak_rest">Today can be a rest day. Train tomorrow to keep it.</string>
+    <!-- Not trained today, and yesterday was the rest day. -->
     <string name="streak_unlit">Train today to keep it.</string>
     <string name="streak_none">Finish a workout to start one.</string>
     <string name="streak_ended">Finish a workout to start again.</string>
-    <string name="streak_rules">A day counts when you finish a workout. Complete day doesn\'t count. Miss a day and the streak starts again at 1.</string>
+    <string name="streak_rules">A day counts when you finish a workout. Complete day doesn\'t count. One rest day between workouts is fine. Miss two days in a row and the streak starts again at 1.</string>
     <string name="streak_see_history">See history</string>
 </resources>

@@ -22,8 +22,9 @@ import java.util.TimeZone
 /**
  * A review aid, not part of the suite: the streak on Today, its sheet and History's line.
  *   am instrument -w com.justdataplease.streetgym.debug.test/com.justdataplease.streetgym.StreakShots
- * Seeds a history of finished classes (a best run of 21 days, then 12 days up to today, or up to yesterday, or a run
- * that ended days ago, or nothing), opens the app and grabs the screen: Today in each theme, then the sheet a tap on the
+ * Seeds a history of finished classes (a best run of 21 days, then 12 workout days with rest days between some of them:
+ * up to today, up to yesterday so today may be the rest day, up to two days ago so today's workout is due, a run that
+ * ended days ago, or nothing), opens the app and grabs the screen: Today in each theme, then the sheet a tap on the
  * flame opens and History behind its button. PNGs land in the app's external files under streak/. Restores the
  * preferences it touches. (The widget's flame is drawn by WidgetShots.)
  */
@@ -45,15 +46,26 @@ class StreakShots : Instrumentation() {
             out = File(app.getExternalFilesDir(null), "streak").apply { deleteRecursively(); mkdirs() }
             classes = NextClass.ordered(AssetCurriculumRepository(app).load().getOrThrow()).map { it.id }
             // Days ago, newest last: the best run of 21, then the run each state needs.
-            val best = (40 downTo 20).toList()
+            val best = (60 downTo 40).toList()
+            // Twelve workout days, the last ones every other day: a rest day sits between them in this week's row.
+            val run = listOf(16, 15, 14, 12, 11, 10, 8, 7, 6, 4, 2, 0)
             for (theme in StreetTheme.entries) {
-                seed(theme, best + (11 downTo 0))
+                seed(theme, best + run)
                 today("lit_${theme.key}", sheet = true, history = theme == StreetTheme.CONCRETE)
             }
-            seed(StreetTheme.CONCRETE, best + (11 downTo 1))
-            today("unlit_concrete", sheet = true, history = false)
-            seed(StreetTheme.NIGHT_PARK, best + (11 downTo 1))
-            today("unlit_night_park", sheet = false, history = false)
+            // Trained yesterday: today may be the rest day.
+            seed(StreetTheme.CONCRETE, best + run.map { it + 1 })
+            today("rest_concrete", sheet = true, history = false)
+            seed(StreetTheme.WHEATPASTE, best + run.map { it + 1 })
+            today("rest_wheatpaste", sheet = false, history = false)
+            // Trained two days ago, rested yesterday: today's workout is due.
+            seed(StreetTheme.CONCRETE, best + run.map { it + 2 })
+            today("due_concrete", sheet = true, history = false)
+            seed(StreetTheme.NIGHT_PARK, best + run.map { it + 2 })
+            today("due_night_park", sheet = true, history = false)
+            // Trained three days ago: two days missed, the streak ended.
+            seed(StreetTheme.CONCRETE, best + run.map { it + 3 })
+            today("ended_concrete", sheet = true, history = false)
             seed(StreetTheme.CONCRETE, best + (9 downTo 5))
             today("missed_concrete", sheet = true, history = true)
             seed(StreetTheme.CONCRETE, emptyList())
