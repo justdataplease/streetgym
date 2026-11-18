@@ -23,14 +23,22 @@ final class StreetGymTour: XCTestCase {
         }
 
         // Today, with the park on its brand card.
-        let start = app.buttons.matching(NSPredicate(format: "label CONTAINS[c] %@", "start workout")).firstMatch
-        let loaded = start.waitForExistence(timeout: 60)
+        // The park takes the top of the screen, so Start workout is further down: Today is there when its brand card
+        // is (the Mac run of 18 Nov 2026 failed here looking for the button without scrolling).
+        let today = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] %@", "we choose the workout")).firstMatch
+        let loaded = today.waitForExistence(timeout: 60)
         snap("02-today")
-        XCTAssertTrue(loaded, "Today did not show its Start workout button")
+        XCTAssertTrue(loaded, "Today did not show its brand card")
         guard loaded else { return }
 
         // Start workout opens the class the sequence offers on its first set, with its moving line man.
-        if !start.isHittable { app.swipeUp() }
+        let start = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] %@", "start workout")).firstMatch
+        var swipes = 0
+        while !(start.exists && start.isHittable) && swipes < 4 {
+            app.swipeUp()
+            swipes += 1
+        }
+        guard start.exists, start.isHittable else { return }
         start.tap()
         _ = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH[c] %@", "set 1 of")).firstMatch.waitForExistence(timeout: 10)
         snap("03-workout")
