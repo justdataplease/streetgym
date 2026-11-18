@@ -105,19 +105,11 @@ final class StreetGymTour: XCTestCase {
         snap("13-settings-plans")
         dump("13-settings-plans", app)
         // A fresh install is Free: Remove ads beside the title opens its offer, which Cancel closes.
-        if tapHittable(app, label: "Remove ads") {
+        // (The button says "Remove ads, ♥  REMOVE ADS": its name, then what it shows.)
+        if tapHittable(app, label: "Remove ads", starts: true) {
             _ = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] %@", "Plus ends the ads")).firstMatch.waitForExistence(timeout: 10)
             snap("14-offer-remove-ads")
             _ = tapHittable(app, label: "Cancel")
-        }
-
-        // Round 11: Google's test ad closing Today, once it has loaded (the Simulator skips Apple's tracking question).
-        if tapHittable(app, label: "Today") {
-            for _ in 0..<4 {
-                app.swipeUp()
-            }
-            snap("15-today-ad")
-            dump("15-today-ad", app)
         }
 
         // Rounds 12 and 13: Settings › Your data and its sharing switch. A build without Firebase (CI has no
@@ -138,12 +130,35 @@ final class StreetGymTour: XCTestCase {
             _ = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] %@", "points from your training")).firstMatch.waitForExistence(timeout: 10)
             snap("17-leaderboard")
         }
+
+        // Round 11, last because it starts the app again: without "-tour" Google's consent message comes first, as on
+        // a new install. Consent, and Free's test ad closes Today. (The Simulator skips Apple's tracking question.)
+        // Where Google asks for no consent there is no message, and the ad comes without it.
+        app.terminate()
+        app.launchArguments = []
+        app.launch()
+        let consent = app.descendants(matching: .any).matching(NSPredicate(format: "label ==[c] %@", "Consent")).firstMatch
+        if consent.waitForExistence(timeout: 30) {
+            snap("18-consent")
+            _ = tapHittable(app, label: "Consent")
+        }
+        if today.waitForExistence(timeout: 30) {
+            // The card is a native view at the end of the page: time for the test ad to arrive, then down to it.
+            Thread.sleep(forTimeInterval: 8)
+            for _ in 0..<3 {
+                app.swipeUp()
+            }
+            Thread.sleep(forTimeInterval: 4)
+            snap("19-today-ad")
+            dump("19-today-ad", app)
+        }
     }
 
     /// Taps the first element labelled [label] that can be tapped: a tab's label can also be a title or a word on screen.
-    private func tapHittable(_ app: XCUIApplication, label: String) -> Bool {
+    /// [starts]: the label only has to begin with it.
+    private func tapHittable(_ app: XCUIApplication, label: String, starts: Bool = false) -> Bool {
         // Whatever the case: the tab bar writes its words in capitals ("TRAINING").
-        let matches = app.descendants(matching: .any).matching(NSPredicate(format: "label ==[c] %@", label))
+        let matches = app.descendants(matching: .any).matching(NSPredicate(format: starts ? "label BEGINSWITH[c] %@" : "label ==[c] %@", label))
         guard matches.firstMatch.waitForExistence(timeout: 10) else { return false }
         for index in 0..<matches.count {
             let element = matches.element(boundBy: index)
