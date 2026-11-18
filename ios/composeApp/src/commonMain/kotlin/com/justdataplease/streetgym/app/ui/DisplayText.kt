@@ -64,6 +64,24 @@ fun setPrescription(set: TrainingSet): String = buildList {
     set.breakSeconds?.takeIf { it > 0 }?.let { add(stringResource(Res.string.rest_format, it)) }
 }.joinToString(" • ").ifBlank { stringResource(Res.string.set_number, set.number) }
 
+/**
+ * A countdown as "01:30", or "1:02:05" from an hour up; [roundUp] counts a started second as whole, so a countdown
+ * shows 00:01 until it ends (Android: timer/TimingState.clockText, without String.format).
+ */
+fun clockText(milliseconds: Long, roundUp: Boolean = false): String {
+    val seconds = (milliseconds.coerceAtLeast(0L) + if (roundUp) 999L else 0L) / 1_000L
+    fun two(value: Long) = value.toString().padStart(2, '0')
+    return if (seconds >= 3_600L) "${seconds / 3_600L}:${two(seconds / 60L % 60L)}:${two(seconds % 60L)}"
+    else "${two(seconds / 60L)}:${two(seconds % 60L)}"
+}
+
+/** Points with thousands grouped, "12,480" (Android: pointsText, which the app shows in English). */
+fun pointsText(points: Int): String {
+    val digits = kotlin.math.abs(points.toLong()).toString()
+    val grouped = digits.reversed().chunked(3).joinToString(",").reversed()
+    return if (points < 0) "-$grouped" else grouped
+}
+
 /** A movement's description, then its safety note and easier option on their own lines. */
 @Composable
 fun exerciseNotes(exercise: TrainingExercise): String {

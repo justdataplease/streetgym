@@ -34,6 +34,11 @@ val androidResources = tasks.register<Sync>("androidResources") {
         // Compose reads Android's vector format, but not references to Android's own colours.
         filter { line: String -> line.replace("@android:color/transparent", "#00000000") }
     }
+    // Start workout's play arrow: a picture only, at Android's xxhdpi, which is the iPhone's 3x; the screens size it.
+    from(androidMain.resolve("res/drawable-xxhdpi")) {
+        include("ic_play_arrow_white_24dp.png")
+        into("drawable")
+    }
     // What only this app has.
     from("src/commonMain/composeResources")
 }
@@ -71,6 +76,8 @@ kotlin {
         named("desktopTest") {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
+                // Drives the screens by taps in tests (runComposeUiTest).
+                implementation("org.jetbrains.compose.ui:ui-test:$composeVersion")
             }
         }
     }

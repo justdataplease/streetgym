@@ -60,6 +60,23 @@ class StoredProgressTest {
     }
 
     @Test
+    fun eachTickKeepsItsTimeAndUntickingForgetsIt() {
+        val progress = StoredProgress(MemoryStore())
+        progress.startWorkout("sg:l01:p0001", startedAtEpochMillis = noon)
+        progress.setCompleted(listOf("a", "b"), completed = true, at = noon + 60_000L)
+        // A set ticked again keeps its first time; one ticked without a time gets the phone's, as on Android.
+        progress.setCompleted(listOf("a"), completed = true, at = noon + 120_000L)
+        progress.setCompleted("c", completed = true)
+        progress.setCompleted(listOf("b"), completed = false, at = noon + 180_000L)
+
+        val active = progress.activeWorkout()!!
+        assertEquals(setOf("a", "c"), active.completedSetIds)
+        assertEquals(noon + 60_000L, active.tickedAt["a"])
+        assertTrue(active.tickedAt.getValue("c") > 0L)
+        assertFalse("b" in active.tickedAt)
+    }
+
+    @Test
     fun completeDayMovesOnButIsNotTraining() {
         val progress = StoredProgress(MemoryStore())
         progress.completePrograms(listOf("sg:l01:p0001"), at = noon)

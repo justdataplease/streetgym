@@ -17,8 +17,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -26,6 +30,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
@@ -35,9 +40,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import com.justdataplease.streetgym.app.data.AppModel
+import com.justdataplease.streetgym.app.data.Start
 import com.justdataplease.streetgym.app.resources.Res
+import com.justdataplease.streetgym.app.resources.active_workout
 import com.justdataplease.streetgym.app.resources.back
+import com.justdataplease.streetgym.app.resources.cancel
 import com.justdataplease.streetgym.app.resources.dashboard_title
+import com.justdataplease.streetgym.app.resources.repeat_active_title
+import com.justdataplease.streetgym.app.resources.repeat_points
+import com.justdataplease.streetgym.app.resources.replace
+import com.justdataplease.streetgym.app.resources.replace_workout_message
+import com.justdataplease.streetgym.app.resources.replace_workout_title
+import com.justdataplease.streetgym.app.resources.sequence_locked_note
+import com.justdataplease.streetgym.app.resources.streak_days
+import com.justdataplease.streetgym.app.resources.workout_points
 import com.justdataplease.streetgym.app.resources.ic_brand_mark
 import com.justdataplease.streetgym.app.resources.ic_nav_progress
 import com.justdataplease.streetgym.app.resources.ic_nav_settings
@@ -60,7 +76,7 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
-/** Where the app can be. The five tabs are roots; a class opens over Today or Training. */
+/** Where the app can be. The five tabs are roots; a class opens over Today or Training, and its workout over that. */
 sealed interface Screen {
     data object Today : Screen
     data object Training : Screen
@@ -68,8 +84,27 @@ sealed interface Screen {
     data object Timer : Screen
     data object Settings : Screen
     data class Class(val programId: String) : Screen
+    /** The class in progress, set by set. [askEffort] opens it on the effort question (for the screenshots). */
+    data class Workout(val programId: String, val askEffort: Boolean = false) : Screen
 
-    val nested: Boolean get() = this is Class
+    val nested: Boolean get() = this is Class || this is Workout
+}
+
+/** A short note after an action (Android: a Toast). */
+private sealed interface Notice {
+    /** A finished class: its points, and the streak's days when it lit today's flame. */
+    data class Saved(val repeat: Boolean, val points: Int, val streak: Int?) : Notice
+    /** A class that can't start now. */
+    data object Locked : Notice
+}
+
+@Composable
+private fun noticeText(notice: Notice): String = when (notice) {
+    is Notice.Saved -> {
+        val saved = stringResource(if (notice.repeat) Res.string.repeat_points else Res.string.workout_points, pointsText(notice.points))
+        notice.streak?.let { "$saved · ${stringResource(Res.string.streak_days, it)}" } ?: saved
+    }
+    Notice.Locked -> stringResource(Res.string.sequence_locked_note)
 }
 
 private class Tab(val screen: Screen, val label: StringResource, val icon: DrawableResource)
@@ -92,41 +127,87 @@ fun Shell(model: AppModel, safeArea: PaddingValues, startAt: Screen = Screen.Tod
     // The screens under the one showing; the first is always a tab.
     val stack = remember { mutableStateListOf(if (startAt.nested) Screen.Today else startAt).apply { if (startAt.nested) add(startAt) } }
     val screen = stack.last()
+    val overlay = remember { Overlay() }
+    var notice by remember { mutableStateOf<Notice?>(null) }
+    // A class asked to start while another is in progress: starting it ends the other, so the athlete is asked.
+    var replacing by remember { mutableStateOf<String?>(null) }
     fun openTab(tab: Screen) { stack.clear(); stack.add(tab) }
     fun open(next: Screen) { stack.add(next) }
     fun back() { if (stack.size > 1) stack.removeAt(stack.lastIndex) }
-
-    Column(Modifier.fillMaxSize().pageBackground(theme).padding(safeArea)) {
-        TitleBar(screen, onBack = ::back)
-        Box(Modifier.weight(1f).fillMaxWidth()) {
-            when (screen) {
-                Screen.Today -> TodayScreen(model, onOpenClass = { open(Screen.Class(it)) }, onOpenProgress = { openTab(Screen.Progress) })
-                is Screen.Class -> ClassScreen(model, screen.programId, onDone = ::back)
-                Screen.Training -> ToCome(stringResource(Res.string.levels_title))
-                Screen.Progress -> ToCome(stringResource(Res.string.progress_title))
-                Screen.Timer -> ToCome(stringResource(Res.string.nav_timer))
-                Screen.Settings -> ToCome(stringResource(Res.string.settings_title))
-            }
+    // Start workout and Resume (Android: requestStart).
+    fun start(id: String, replace: Boolean = false) {
+        when (model.start(id, replace = replace)) {
+            Start.STARTED -> open(Screen.Workout(id))
+            Start.ASK_REPLACE -> replacing = id
+            Start.LOCKED -> notice = Notice.Locked
         }
-        TabBar(selected = stack.first(), onSelect = ::openTab)
+    }
+
+    CompositionLocalProvider(LocalOverlay provides overlay, LocalSafeArea provides safeArea) {
+        Box(Modifier.fillMaxSize()) {
+            Column(
+                Modifier.fillMaxSize().pageBackground(theme).padding(safeArea)
+                    .then(if (overlay.shown) Modifier.clearAndSetSemantics {} else Modifier),
+            ) {
+                TitleBar(model, screen, onBack = ::back)
+                Box(Modifier.weight(1f).fillMaxWidth()) {
+                    when (screen) {
+                        Screen.Today -> TodayScreen(model, onOpenClass = { open(Screen.Class(it)) }, onStart = { start(it) },
+                            onOpenProgress = { openTab(Screen.Progress) })
+                        is Screen.Class -> ClassScreen(model, screen.programId, onStart = { start(it) }, onDone = ::back)
+                        // Android opens Progress after a class; until Progress is built here, Today shows the lit streak.
+                        is Screen.Workout -> FocusScreen(
+                            model, screen.askEffort,
+                            onFinished = { finished ->
+                                notice = Notice.Saved(finished.session.repeat, finished.points, finished.streak)
+                                openTab(Screen.Today)
+                            },
+                            onEnded = ::back,
+                            onGone = ::back,
+                        )
+                        Screen.Training -> ToCome(stringResource(Res.string.levels_title))
+                        Screen.Progress -> ToCome(stringResource(Res.string.progress_title))
+                        Screen.Timer -> ToCome(stringResource(Res.string.nav_timer))
+                        Screen.Settings -> ToCome(stringResource(Res.string.settings_title))
+                    }
+                }
+                // A workout in progress has the whole screen (Android hides its bottom navigation in the focus view).
+                if (screen !is Screen.Workout) TabBar(selected = stack.first(), onSelect = ::openTab)
+            }
+            replacing?.let { id ->
+                StreetDialog(
+                    title = stringResource(Res.string.replace_workout_title),
+                    message = stringResource(Res.string.replace_workout_message),
+                    onDismiss = { replacing = null },
+                    confirm = DialogAction(stringResource(Res.string.replace)) {
+                        replacing = null
+                        start(id, replace = true)
+                    },
+                    dismiss = DialogAction(stringResource(Res.string.cancel)) { replacing = null },
+                )
+            }
+            OverlayLayers(overlay)
+            notice?.let { shown -> Note(noticeText(shown)) { if (notice == shown) notice = null } }
+        }
     }
 }
 
 @Composable
-private fun screenTitle(screen: Screen): String = stringResource(when (screen) {
+private fun screenTitle(model: AppModel, screen: Screen): String = stringResource(when (screen) {
     Screen.Today -> Res.string.dashboard_title
     Screen.Training -> Res.string.levels_title
     is Screen.Class -> Res.string.workout_overview
+    is Screen.Workout -> if (model.training.active()?.repeat == true) Res.string.repeat_active_title else Res.string.active_workout
     Screen.Progress -> Res.string.progress_title
     Screen.Settings -> Res.string.settings_title
     Screen.Timer -> Res.string.nav_timer
 })
 
 @Composable
-private fun TitleBar(screen: Screen, onBack: () -> Unit) {
+private fun TitleBar(model: AppModel, screen: Screen, onBack: () -> Unit) {
     val theme = Street.theme
     val palette = theme.palette
-    val title = screenTitle(screen)
+    val title = screenTitle(model, screen)
     Row(Modifier.fillMaxWidth().height(56.dp).padding(end = 16.dp), verticalAlignment = Alignment.CenterVertically) {
         if (screen.nested) {
             val back = stringResource(Res.string.back)

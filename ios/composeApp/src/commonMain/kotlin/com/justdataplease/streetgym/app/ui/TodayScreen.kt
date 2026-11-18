@@ -41,10 +41,11 @@ internal const val COMPLETE_DAY = "Complete day"
 
 /**
  * Today (android-streetgym, HomeActivity.renderDashboard): the brand card, the streak, the class the sequence offers
- * next, and how far through the program the athlete is.
+ * next, and how far through the program the athlete is. The card opens the class's page ([onOpenClass]); Start
+ * workout, or Resume while it is in progress, opens its workout ([onStart]).
  */
 @Composable
-fun TodayScreen(model: AppModel, onOpenClass: (String) -> Unit, onOpenProgress: () -> Unit) {
+fun TodayScreen(model: AppModel, onOpenClass: (String) -> Unit, onStart: (String) -> Unit, onOpenProgress: () -> Unit) {
     val palette = Street.colors
     val today = model.today()
     val next = today.next
@@ -81,7 +82,7 @@ fun TodayScreen(model: AppModel, onOpenClass: (String) -> Unit, onOpenProgress: 
             PrimaryButton(
                 stringResource(if (today.resume) Res.string.resume_workout else Res.string.start_today),
                 Modifier.padding(top = 16.dp),
-            ) { onOpenClass(next.id) }
+            ) { onStart(next.id) }
             SecondaryButton(COMPLETE_DAY, Modifier.padding(top = 8.dp)) { model.completeDay(next.id) }
             BodyText(stringResource(Res.string.complete_day_no_points), 12f, Modifier.padding(top = 6.dp))
         }

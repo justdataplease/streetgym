@@ -1,5 +1,6 @@
 package com.justdataplease.streetgym.app.data
 
+import com.justdataplease.streetgym.data.epochMillisNow
 import com.justdataplease.streetgym.data.progress.ActiveWorkout
 import com.justdataplease.streetgym.data.progress.ExamLog
 import com.justdataplease.streetgym.data.progress.ExamResult
@@ -52,7 +53,8 @@ class StoredProgress(private val store: KeyValueStore) : ProgressRepository {
         save(ActiveWorkout(programId, startedAtEpochMillis, repeat = repeat, intensity = intensity))
     }
 
-    override fun setCompleted(setId: String, completed: Boolean) = setCompleted(listOf(setId), completed, at = null)
+    /** As on Android, a set ticked here keeps the phone's time; the app itself ticks through [Training], with its clock. */
+    override fun setCompleted(setId: String, completed: Boolean) = setCompleted(listOf(setId), completed, at = epochMillisNow())
 
     /** Ticks or unticks several sets in one save. Each newly ticked set keeps the time [at]; unticking forgets it. */
     fun setCompleted(setIds: Collection<String>, completed: Boolean, at: Long?) {

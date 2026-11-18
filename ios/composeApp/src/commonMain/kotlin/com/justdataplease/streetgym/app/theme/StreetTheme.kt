@@ -100,7 +100,8 @@ class ThemeShape(
 
 /**
  * A theme's font files. [displayTop] and [displayBottom]: the room Android leaves over and under a text in the display
- * face (its font padding, in em, from the font file), which the screens' spacing counts on.
+ * face (its font padding, in em, from the font file), which the screens' spacing counts on; the numeral face has the
+ * same in every theme. [timerTop] and [timerBottom]: the same for the countdown face.
  */
 class ThemeFonts(
     val body: FontResource,
@@ -111,6 +112,8 @@ class ThemeFonts(
     val timer: FontResource,
     val displayTop: Float,
     val displayBottom: Float,
+    val timerTop: Float = displayTop,
+    val timerBottom: Float = displayBottom,
 )
 
 /** The three looks picked in Settings, all free. Concrete & Tape is the default and Night Park the dark one. */
@@ -171,7 +174,7 @@ enum class StreetTheme(
             titleScale = 0.95f, labelSpacing = 0.06f, texture = Texture.PAPER),
         ThemeFonts(Res.font.albert_sans_regular, Res.font.albert_sans_bold, Res.font.archivo_black_regular,
             Res.font.archivo_black_regular, Res.font.space_mono_bold, Res.font.space_mono_bold,
-            displayTop = 0.079f, displayBottom = 0.057f),
+            displayTop = 0.079f, displayBottom = 0.057f, timerTop = 0f, timerBottom = 0f),
     );
 
     companion object {

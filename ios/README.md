@@ -2,7 +2,7 @@
 
 The iPhone app, started on 18 Nov 2026. The Android app is `android-streetgym/`; both run on the same engine (`android-streetgym/shared/`) and the same program, texts, fonts and icons, which this project reads from the Android app at build time.
 
-**Where it stands:** Today and the class page are built, in the three themes, with progress saved. They build, pass their tests and are drawn to pictures on Windows. Nothing has been compiled for iPhone yet; that needs a macOS runner (`ci/ios-ci.yml`, not run so far). The plan, what is done and what is next: [docs/iphone-development.md](docs/iphone-development.md).
+**Where it stands:** Today, the class page and training a class (the focus workout, set by set, with the rest timer, the effort question and finishing) are built, in the three themes, with progress saved. They build, pass their tests and are drawn to pictures on Windows. Nothing has been compiled for iPhone yet; that needs a macOS runner (`ci/ios-ci.yml`, not run so far). The plan, what is done and what is next: [docs/iphone-development.md](docs/iphone-development.md).
 
 | Folder | What it holds |
 |---|---|
@@ -23,6 +23,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File C:\MyDrive\jdp\android-apps\
 - `:composeApp:run` opens the screens in a window at iPhone size.
 - `:composeApp:screenshots` writes a PNG of every screen to `composeApp/build/screenshots` (an iPhone 17 Pro Max, 1320 × 2868).
 - `:composeApp:compileCommonMainKotlinMetadata` proves the shared code uses no Java or Android API. The desktop build alone lets Java calls through.
+- `:composeApp:compileIosMainKotlinMetadata` type-checks the iPhone-only Kotlin (`iosMain`) against Apple's APIs, on Windows.
 
 ## On a Mac (CI)
 

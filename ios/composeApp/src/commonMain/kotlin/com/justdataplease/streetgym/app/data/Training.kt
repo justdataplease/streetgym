@@ -1,0 +1,306 @@
+package com.justdataplease.streetgym.app.data
+
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import com.justdataplease.streetgym.data.model.TrainingExercise
+import com.justdataplease.streetgym.data.model.TrainingProgram
+import com.justdataplease.streetgym.data.progress.ActiveWorkout
+import com.justdataplease.streetgym.data.progress.Intensity
+import com.justdataplease.streetgym.data.progress.WorkoutSession
+import com.justdataplease.streetgym.data.skills.SkillBook
+import com.justdataplease.streetgym.ui.SetMeasure
+import com.justdataplease.streetgym.ui.WorkoutFlow
+import com.justdataplease.streetgym.ui.WorkoutStep
+import kotlinx.datetime.TimeZone
+
+/** What the focus workout shows: the set at [index] of the class, the rest before it, or the summary at the end. */
+sealed interface FocusPage {
+    data class Set(val index: Int) : FocusPage
+    data class Rest(val index: Int, val endsAt: Long) : FocusPage
+    data object Summary : FocusPage
+}
+
+/** A timed set's countdown, [round] 1 or 2 (a per-side hold runs two). [cued]: its end was signalled. */
+data class Hold(val key: String, val round: Int, val endsAt: Long, val cued: Boolean = false)
+
+/** The class in training as the focus screen draws it, at [now]. [skipped] and [hold] last while the app runs. */
+class FocusState(
+    val program: TrainingProgram,
+    val flow: WorkoutFlow,
+    val active: ActiveWorkout,
+    val page: FocusPage,
+    val skipped: Set<String>,
+    val hold: Hold?,
+    val now: Long,
+)
+
+/** What finishing a class saved. [streak]: the streak's days, when this class lit today's flame; else null. */
+class Finished(val session: WorkoutSession, val points: Int, val streak: Int?)
+
+/**
+ * What a workout asks of the phone itself: the screen kept on while it shows, and a cue when a rest or a timed set ends
+ * (Android: FLAG_KEEP_SCREEN_ON, the rest's beep and TimingAlerts.tone with a vibration).
+ */
+interface WorkoutDevice {
+    fun keepScreenOn(on: Boolean) {}
+    fun restOver() {}
+    fun holdOver() {}
+
+    /** Does nothing: previews, tests, and the desktop window. */
+    object None : WorkoutDevice
+}
+
+/** Counts the saves of the progress, so whatever read it is drawn again after one. */
+@Stable
+internal class Saves {
+    var count by mutableIntStateOf(0)
+        private set
+
+    fun bump() { count++ }
+}
+
+/** A value that belongs to the class started at [session] (its start time): a new class starts without it. */
+private data class Owned<T>(val session: Long, val value: T)
+
+/**
+ * Training a class (android-streetgym: HomeActivity's start, rest timer, finish and abandon, and FocusWorkoutView's
+ * position, skips and timed sets). The position is always the first set neither ticked nor skipped, so leaving the
+ * workout and coming back, or closing the app, lands on the same set.
+ *
+ * Ticks, logged amounts and easier options are saved at once ([StoredProgress], with the time of each tick). Skips, a
+ * timed set's countdown and the rest last while the app runs, as on Android. Every time comes from [now], so tests step
+ * it; [tick] is what the screen calls a few times a second.
+ */
+@Stable
+class Training internal constructor(
+    private val progress: StoredProgress,
+    private val skills: SkillBook?,
+    private val grades: Map<String, Int>,
+    private val now: () -> Long,
+    private val zone: TimeZone,
+    private val device: WorkoutDevice,
+    private val saves: Saves,
+    private val programAt: (String, Intensity) -> TrainingProgram?,
+) {
+    private var skips by mutableStateOf<Owned<Set<String>>?>(null)
+    private var held by mutableStateOf<Owned<Hold>?>(null)
+    private var rest by mutableStateOf<Owned<Long>?>(null)
+    /** The last class opened, by id and intensity: the program never changes while the app runs. */
+    private var opened: Triple<String, Intensity, Pair<TrainingProgram, WorkoutFlow>>? = null
+
+    /** The time [tick] last saw; reading it redraws a countdown as it runs. */
+    var clock by mutableLongStateOf(now())
+        private set
+
+    /** The class in progress, as saved. */
+    fun active(): ActiveWorkout? {
+        saves.count
+        return progress.activeWorkout()
+    }
+
+    /** The class in progress at the Easier, Normal or Harder it was started with. */
+    fun program(): TrainingProgram? = active()?.let { open(it)?.first }
+
+    /** What the focus screen shows now; null without a class in progress. */
+    fun state(): FocusState? {
+        clock
+        val active = active() ?: return null
+        val (program, flow) = open(active) ?: return null
+        val at = now()
+        val skipped = skipped(active)
+        val current = flow.firstIncomplete(active.completedSetIds, skipped)
+        val restEnd = restEnd(active)
+        val page = when {
+            current == null -> FocusPage.Summary
+            restEnd != null && restEnd > at -> FocusPage.Rest(current, restEnd)
+            else -> FocusPage.Set(current)
+        }
+        return FocusState(program, flow, active, page, skipped, hold(active), at)
+    }
+
+    /** Moves the clock on: a rest that ran out ends with its cue, and so does a timed set that ran out just now. */
+    fun tick() {
+        val at = now()
+        clock = at
+        val active = progress.activeWorkout() ?: return
+        restEnd(active)?.takeIf { it <= at }?.let {
+            rest = null
+            device.restOver()
+        }
+        val hold = hold(active) ?: return
+        if (hold.endsAt > at || hold.cued) return
+        held = Owned(active.startedAtEpochMillis, hold.copy(cued = true))
+        // Only a countdown seen ending sounds, not one that ended while the screen was away.
+        if (at - hold.endsAt < CUE_WINDOW_MILLIS) device.holdOver()
+    }
+
+    /** Starts round [round] of the timed set at [index], [seconds] long. */
+    fun startHold(index: Int, round: Int, seconds: Int) {
+        val (active, flow) = current() ?: return
+        val at = now()
+        held = Owned(active.startedAtEpochMillis, Hold(flow[index].key, round, at + seconds * 1_000L))
+        clock = at
+    }
+
+    /** "Done · Next": ticks the set at [index] and starts the rest after it; after the class's last set there is none. */
+    fun done(index: Int) {
+        val (active, flow) = current() ?: return
+        val step = flow[index]
+        val at = now()
+        val skipped = skipped(active) - step.key
+        held = null
+        skips = Owned(active.startedAtEpochMillis, skipped)
+        progress.setCompleted(listOf(step.key), completed = true, at = at)
+        val next = flow.firstIncomplete(active.completedSetIds + step.key, skipped)
+        val pause = step.set.breakSeconds?.takeIf { it > 0 }
+        if (next == null) rest = null
+        else if (pause != null) rest = Owned(active.startedAtEpochMillis, at + pause * 1_000L)
+        clock = at
+        saves.bump()
+    }
+
+    /** Leaves the set at [index] for later: the summary offers the skipped sets again. */
+    fun skip(index: Int) {
+        val (active, flow) = current() ?: return
+        held = null
+        skips = Owned(active.startedAtEpochMillis, skipped(active) + flow[index].key)
+        clock = now()
+    }
+
+    /** Reopens the set before [index] (from the summary, with null, the class's last set), unticking it. */
+    fun back(index: Int?) {
+        val (active, flow) = current() ?: return
+        val target = (if (index == null) flow.steps.indices.lastOrNull() else flow.previous(index)) ?: return
+        val key = flow[target].key
+        held = null
+        skips = Owned(active.startedAtEpochMillis, skipped(active) - key)
+        progress.setCompleted(listOf(key), completed = false, at = now())
+        clock = now()
+        saves.bump()
+    }
+
+    /** "Do skipped sets": back to the first set skipped. */
+    fun doSkipped() {
+        skips = null
+        clock = now()
+    }
+
+    /** "+15 s": more time on the rest that is running. */
+    fun addRest(seconds: Int) {
+        val running = rest ?: return
+        rest = running.copy(value = running.value + seconds * 1_000L)
+        clock = now()
+    }
+
+    fun skipRest() {
+        rest = null
+        clock = now()
+    }
+
+    /** What the athlete did in the set with [key], in its measure; null goes back to the plan. */
+    fun setDone(key: String, amount: Int?) {
+        progress.setDone(key, amount)
+        saves.bump()
+    }
+
+    /** Switches an exercise to or from its easier option; what was logged for its sets was the other movement. */
+    fun setEasier(exerciseKey: String, easier: Boolean) {
+        val (_, flow) = current() ?: return
+        progress.setEasier(exerciseKey, easier)
+        val done = progress.activeWorkout()?.done.orEmpty()
+        flow.steps.filter { it.exerciseKey == exerciseKey && it.key in done }.forEach { progress.setDone(it.key, null) }
+        saves.bump()
+    }
+
+    /** How [step] is logged now, done as planned or as its easier option. */
+    fun measure(step: WorkoutStep): SetMeasure {
+        val easier = active()?.easierExercises.orEmpty()
+        val id = WorkoutFlow.movement(step, easier, ::skillMovement)
+        return WorkoutFlow.measure(step, id?.let { skills?.skill(it)?.standard })
+    }
+
+    /**
+     * Finishes the class with the athlete's [effort] (RPE 1 to 10). Only the sets that ran their share of the time
+     * count ([WorkoutFlow.counted]); they credit skills, doses and points as the engine counts them. A first class
+     * finished today lights the streak.
+     */
+    fun finish(effort: Int): Finished? {
+        val (active, flow) = current() ?: return null
+        val at = now()
+        val easier = active.easierExercises
+        val counted = flow.counted(active.completedSetIds, active.tickedAt, active.startedAtEpochMillis)
+        val book = skills
+        val credits = if (book == null) emptyMap() else flow.credits(counted, easier, ::skillMovement)
+        val doses = if (book == null) emptyMap() else flow.doses(counted, easier, active.done, ::skillMovement) { book.skill(it)?.standard }
+        val points = flow.points(counted, easier, active.done, ::skillMovement, { id -> book?.skill(id)?.standard },
+            { id -> id?.let(grades::get) ?: 1 })
+        val litBefore = LocalDays.snapshot(progress.sessionHistory(), at, zone).streak.litToday
+        val session = progress.finishWorkout(at, effort, credits, doses, points) ?: return null
+        forget()
+        saves.bump()
+        val streak = LocalDays.snapshot(progress.sessionHistory(), at, zone).streak.takeIf { !litBefore && it.litToday }
+        return Finished(session, points, streak?.days)
+    }
+
+    /** "End session": the class in progress is dropped with its ticks; nothing is saved to the history. */
+    fun abandon() {
+        progress.abandonWorkout()
+        forget()
+        saves.bump()
+    }
+
+    /** The class in progress and its sets, for an action on them. */
+    private fun current(): Pair<ActiveWorkout, WorkoutFlow>? {
+        val active = progress.activeWorkout() ?: return null
+        return open(active)?.let { active to it.second }
+    }
+
+    private fun open(active: ActiveWorkout): Pair<TrainingProgram, WorkoutFlow>? {
+        opened?.takeIf { it.first == active.programId && it.second == active.intensity }?.let { return it.third }
+        val program = programAt(active.programId, active.intensity) ?: return null
+        return (program to flow(program)).also { opened = Triple(active.programId, active.intensity, it) }
+    }
+
+    private fun forget() {
+        rest = null
+        held = null
+        skips = null
+        clock = now()
+    }
+
+    private fun skipped(active: ActiveWorkout): Set<String> =
+        skips?.takeIf { it.session == active.startedAtEpochMillis }?.value.orEmpty()
+
+    private fun hold(active: ActiveWorkout): Hold? = held?.takeIf { it.session == active.startedAtEpochMillis }?.value
+
+    private fun restEnd(active: ActiveWorkout): Long? = rest?.takeIf { it.session == active.startedAtEpochMillis }?.value
+
+    /** The skill movement [exercise] trains, when the skills know it (Android: HomeActivity.skillMovement). */
+    private fun skillMovement(exercise: TrainingExercise): String? =
+        skills?.movementOf(exercise.movementId, exercise.name.resolve(), exercise.description.resolve())
+
+    companion object {
+        /** A timed set's end sounds only when it is seen within this long of it. */
+        private const val CUE_WINDOW_MILLIS = 2_000L
+
+        /** A class's sets in training order, with the keys Android saves. */
+        fun flow(program: TrainingProgram): WorkoutFlow = WorkoutFlow.of(program.id, sections(program))
+
+        /** Every class has the same four sections, in this order, under the keys both phones save. */
+        fun sections(program: TrainingProgram): List<Pair<String, List<TrainingExercise>>> = listOf(
+            WARM_UP to program.warmup,
+            PRACTICE to program.practice,
+            MAIN to program.exercises,
+            COOL_DOWN to program.cooldown,
+        )
+
+        const val WARM_UP = "warmup"
+        const val PRACTICE = "practice"
+        const val MAIN = "main"
+        const val COOL_DOWN = "cooldown"
+    }
+}

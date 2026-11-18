@@ -3,7 +3,7 @@
 Written 3 Nov 2026, updated 18 Nov 2026.
 
 - **Phase 1 is done** (2.11.5): the engine lives in the shared Kotlin Multiplatform module `android-streetgym/shared/`, and the Android app runs on it.
-- **Phase 2 has started** (18 Nov 2026): this folder, `ios-streetgym/`, is the iPhone project. Today and the class page are built on the engine, in the three themes. They build, pass their tests and are drawn to pictures on Windows. **Nothing has been compiled for iPhone yet**: that needs a macOS runner (the CI file is written, `ci/ios-ci.yml`, and has not run).
+- **Phase 2 has started** (18 Nov 2026): this folder, `ios-streetgym/`, is the iPhone project. Today, the class page and training a class (the focus workout, the rest timer, finishing) are built on the engine, in the three themes. They build, pass their tests and are drawn to pictures on Windows. **Nothing has been compiled for iPhone yet**: that needs a macOS runner (the CI file is written, `ci/ios-ci.yml`, and has not run).
 
 For background on every suite app, see the suite's `IOS-PORTING-REPORT.md`.
 
@@ -55,6 +55,8 @@ Module `:shared` in the standalone repo and in this project, `:streetgymnastics-
 | `ui/ParkStory.kt` | Pure logic for the park scene, but uses `TimeZone`; move with the park scene |
 | `ui/ExerciseAnimationView.kt`, `ui/FrontView.kt` | The line man: pose reading and projection maths are mixed with Canvas drawing; split them, move the maths, redraw in Compose `DrawScope` |
 | `data/progress/SharedPreferencesProgressRepository.kt`, `data/library/LibraryRepository.kt`, `data/CurriculumRepository.kt` | Storage and asset reading; the iPhone app writes its own (NSUserDefaults, the bundle) behind the same interfaces. Its progress store (`composeApp`, `data/StoredProgress.kt`) writes sessions, the class in progress and exams with the same JSON names as Android, pinned by a test. **Next engine step:** move that codec into `shared/` and have Android use it too, so one piece of code writes both; it needs an Android release with the stored data checked both ways |
+| `ui/HomeActivity.kt` (requestStart, askEffortAndFinish, switchEasier, measureOf, skillMovement, sections), `ui/FocusWorkoutView.kt` (position, skips, timed sets) | The rules of training a class, mixed with views. The iPhone has them once more in `composeApp`, `data/Training.kt`, calling the engine for every count. **Engine step:** move them into `shared/` (a class's four sections and their keys, what finishing saves, the focus position, the timed set's rounds), so both phones run one copy |
+| `timer/TimingState.kt` (`clockText`) | Pure, but uses `String.format`; the iPhone's copy is in `ui/DisplayText.kt`. Move with the timer's day boundaries |
 | `leaderboard/`, `analytics/`, `account/` | Firebase; they wait for the account (see below) |
 | `data/parks/` | Parks map; waits for MapLibre iOS |
 | `billing/Entitlement.kt`, `billing/TierBilling.kt` | Play Billing; StoreKit 2 on iPhone |
@@ -112,23 +114,32 @@ Done on 18 Nov 2026, checked on Windows:
 
 - `composeApp` shows **Today** from the engine (the brand card, the streak's flame and week, the class the sequence offers with its level header, Easier / Normal / Harder, Complete day, progress) and the **class page** (every exercise of the warm-up, skill practice, strength work and cool-down with its sets), in Concrete & Tape, Night Park and Wheatpaste. Sizes, colours, fonts and the per-theme shapes are ported from the Android views, including the room Android leaves round a headline (its font padding).
 - Progress is saved (UserDefaults on iPhone), so Complete day moves the sequence on and stays.
-- 10 tests: the progress store and the streak (common, so they also run on the Simulator), the Android texts as Compose reads them, Today and Complete day over the real program, Harder.
-- `iosApp` hosts it: the Swift entry point, the XcodeGen project, the privacy manifest, the 1024 px icon, and a Simulator tour that saves a picture of Today and of the class page.
+- **Training a class** (18 Nov 2026), ported from Android's focus view (`FocusWorkoutView`, `SetDone`, and HomeActivity's start, rest, finish and abandon): Start workout on Today and on the class page opens the class on its first open set; Resume after closing the app lands on the same set. One set per screen: the strip (section, Finish, the class's sets drawn per theme, "Set 7 of 27"), the exercise's panel, its name and Details, the dose, the tempo, "Did more or fewer?", the easier option, then Back, Done · Next or Start N s, Skip. A timed set counts down; per-side holds run two rounds. The rest after a set fills the screen with its countdown, +15 s and Skip rest. The summary offers Finish workout, Back, the skipped sets, and End session. Finishing asks first when sets are left, then "How hard did that feel?" (RPE 1–10), saves the class and returns to Today with "Workout completed · +N points · 1 day streak".
+- What finishing saves comes from the engine (`WorkoutFlow.counted`, `credits`, `doses`, `points`; `Streak`): only exercises that ran 30% of their time count. Ticks (with their times), logged numbers and easier options are saved at once; skips, a running countdown and the rest last while the app runs, as on Android.
+- The timer logic (`data/Training.kt`) runs on an injected clock. What a workout asks of the phone is `WorkoutDevice`: on iPhone the screen stays on (`idleTimerDisabled`); the sounds are left to do (below).
+- Dialogs, the Details sheet and the note after finishing are drawn over the whole screen by the shell (`ui/Overlay.kt`), in each theme's dialog style.
+- 25 tests: the progress store and the streak (common), the Android texts, Today and Complete day, Harder, and training over the real program (start, ticks with their times, the rest stepped by the clock, timed sets, finishing with the engine's points and streak, too-fast ticks earning nothing, End session, resuming after the store is read again, skips, the easier option, the countdown and points texts), plus two tests that train the first class by taps on the real screens.
+- `iosApp` hosts it: the Swift entry point, the XcodeGen project, the privacy manifest, the 1024 px icon, and a Simulator tour that saves a picture of Today and of the workout's first set.
 
 Still to do in this phase:
 
 - **The first macOS run.** Push `ios/` to the standalone repo and let `ios-ci.yml` run: it compiles `shared/` and `composeApp` for `iosSimulatorArm64` (never done so far; any call that is not there on iPhone shows up here), builds the app with Xcode and runs the tour. No Apple account is needed.
-- Not in the app yet: starting a class and training it (Start workout opens the class page for now), the park scene on the brand card, the strength test for a new athlete, the streak's sheet, and the other four tabs.
-- Weeks start on Monday until the phone's region is read; the Easier / Harder choice is forgotten when the app restarts.
+- Not in the app yet: the park scene on the brand card, the strength test for a new athlete, the streak's sheet, and the other four tabs (after a class Android opens Progress; the iPhone returns to Today until Progress exists).
+- Weeks start on Monday until the phone's region is read; Today's Easier / Harder pick is forgotten when the app restarts (a class in progress keeps its own).
 
 From here on, most checks happen on Windows and CI confirms on iPhone.
 
 ## Phase 3: screens
 
 **Rebuild in CMP**, from about 14,000 lines of Android Views:
-- Home and Today
-- Training (levels, workout lists), workout overview
-- Focus workout, rest timer, effort dialog
+- Home and Today (done in phase 2)
+- Training (levels, workout lists), workout overview (the class page is done)
+- Focus workout, rest timer, effort dialog (done on 18 Nov 2026, see phase 2); still to come for training:
+  - **the list view** (Android's other workout view, with its Focus · List switch on the class page and in the title bar). Android ends a session there; until it exists, End session sits at the end of the focus summary
+  - **the sounds**: `WorkoutDevice.restOver` and `holdOver` do nothing yet. Android beeps at the end of a rest and of a timed set, and vibrates for the timed set. On iPhone: AVAudio while the app is open, a scheduled local notification while it is in the background (TODO in `iosMain`, `MainViewController.kt`)
+  - **exams**: after an exam class Android asks which targets were reached and records them, and may offer to repeat the block (a level replay, which `StoredProgress` doesn't keep yet)
+  - skill and equipment switches (sets left out of a class), the ad breaks between sections, the spoken announcements of the rest and the timed sets, and a repeated class (no screen opens a completed class yet)
+  - the line man in the exercise's panel: the panel keeps its frame and size, empty, until the animations are ported
 - Skills medals (rank shield and Plus/Pro as tags on the corners, segmented bars), skill switches
 - History calendar and the month's list
 - Ready workouts and filters, Timer tab
@@ -140,7 +151,7 @@ From here on, most checks happen on Windows and CI confirms on iPhone.
 
 **Strings.** Done in phase 2: a Gradle task copies `app/src/main/res/values/strings*.xml` into `composeApp`'s resources at build time, so the texts have one source (`AppOnDesktopTest` checks an apostrophe, a bare `%d`, numbered places, `&amp;` and a plural). Still to handle when their screens come: `%1$.1f` in one string, `%%` in one, and the `<b>` in `share_body`.
 
-**iPhone details:** keep the screen awake with `isIdleTimerDisabled`; play the rest-end sound with AVAudio in the foreground and a scheduled local notification in the background; respect safe areas; support the back swipe.
+**iPhone details:** the screen is kept awake during a workout (`idleTimerDisabled`, done); play the rest-end sound with AVAudio in the foreground and a scheduled local notification in the background (to do); respect safe areas; support the back swipe (to do).
 
 ## Phase 4: purchases and ads (needs the Apple account)
 

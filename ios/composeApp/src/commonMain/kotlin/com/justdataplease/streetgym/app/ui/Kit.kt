@@ -1,15 +1,19 @@
 package com.justdataplease.streetgym.app.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -36,8 +40,11 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
@@ -179,10 +186,17 @@ fun StreetCard(
 @Composable
 fun Modifier.displayPadding(size: TextUnit): Modifier {
     val fonts = Street.theme.fonts
-    return with(LocalDensity.current) {
-        padding(top = (size * fonts.displayTop).toDp().coerceAtLeast(0.dp), bottom = (size * fonts.displayBottom).toDp().coerceAtLeast(0.dp))
-    }
+    return fontPadding(size, fonts.displayTop, fonts.displayBottom)
 }
+
+/** The room Android leaves over and under a text of [size] in a face whose padding is [top] and [bottom], in em. */
+@Composable
+fun Modifier.fontPadding(size: TextUnit, top: Float, bottom: Float): Modifier = with(LocalDensity.current) {
+    padding(top = (size * top).toDp().coerceAtLeast(0.dp), bottom = (size * bottom).toDp().coerceAtLeast(0.dp))
+}
+
+/** A headline's face: the display face, the numeral face (Night Park's stencil) or the countdown face. */
+enum class TitleFace { DISPLAY, NUMERAL, TIMER }
 
 /** A headline in the theme's display face; the poster themes that shout set it in capitals. */
 @Composable
@@ -192,13 +206,24 @@ fun TitleText(
     modifier: Modifier = Modifier,
     color: Color = Street.colors.text,
     maxLines: Int = Int.MAX_VALUE,
+    align: TextAlign = TextAlign.Unspecified,
+    face: TitleFace = TitleFace.DISPLAY,
 ) {
     val shape = Street.shape
+    val fonts = Street.theme.fonts
+    val type = Street.type
     val fontSize = (size * shape.titleScale).sp
+    val family = when (face) {
+        TitleFace.DISPLAY -> type.display
+        TitleFace.NUMERAL -> type.numeral
+        TitleFace.TIMER -> type.timer
+    }
+    val timer = face == TitleFace.TIMER
     BasicText(
         text = if (shape.upperTitles) text.uppercase() else text,
-        modifier = modifier.displayPadding(fontSize),
-        style = TextStyle(color = color, fontSize = fontSize, fontFamily = Street.type.display),
+        modifier = modifier.fontPadding(fontSize, if (timer) fonts.timerTop else fonts.displayTop,
+            if (timer) fonts.timerBottom else fonts.displayBottom),
+        style = TextStyle(color = color, fontSize = fontSize, fontFamily = family, textAlign = align),
         maxLines = maxLines,
         overflow = TextOverflow.Ellipsis,
     )
@@ -212,30 +237,35 @@ fun BodyText(
     modifier: Modifier = Modifier,
     color: Color = Street.colors.textSecondary,
     bold: Boolean = false,
+    maxLines: Int = Int.MAX_VALUE,
+    align: TextAlign = TextAlign.Unspecified,
 ) {
     BasicText(
         text = text,
         modifier = modifier,
         style = TextStyle(color = color, fontSize = size.sp, lineHeight = BODY_LINE.em,
-            fontFamily = if (bold) Street.type.bold else Street.type.body),
+            fontFamily = if (bold) Street.type.bold else Street.type.body, textAlign = align),
+        maxLines = maxLines,
+        overflow = TextOverflow.Ellipsis,
     )
 }
 
 /** The body face's own line height (1.2 em) with Android's 1.12 line spacing on top. */
 private const val BODY_LINE = 1.344f
 
-/** A section's name over its content: small capitals in the label face. */
+/** A section's name over its content: small capitals in the label face. [padding] above and below it. */
 @Composable
-fun SectionLabel(text: String, modifier: Modifier = Modifier) {
+fun SectionLabel(text: String, modifier: Modifier = Modifier, padding: Dp = 8.dp, align: TextAlign = TextAlign.Unspecified) {
     val theme = Street.theme
     BasicText(
         text = text.uppercase(),
-        modifier = modifier.padding(vertical = 8.dp),
+        modifier = modifier.padding(vertical = padding),
         style = TextStyle(
             color = if (theme == StreetTheme.NIGHT_PARK) theme.palette.primary else theme.palette.text,
-            fontSize = 13.sp, fontFamily = Street.type.label, letterSpacing = theme.shape.labelSpacing.em,
+            fontSize = 13.sp, fontFamily = Street.type.label, letterSpacing = theme.shape.labelSpacing.em, textAlign = align,
         ),
         maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
     )
 }
 
@@ -263,7 +293,9 @@ fun NumberBox(number: String, box: Dp, textSize: Float, modifier: Modifier = Mod
 
 /**
  * The main action: the display face in capitals on the action colour. Concrete outlines the button in ink, and both
- * poster themes print a hard shadow down and right of it.
+ * poster themes print a hard shadow down and right of it. [thumb]: the focus workout's (Android: FocusWorkoutView.thumb),
+ * 16 sp on one line, at least 64 dp tall, the label centred on the whole button with its shadow. [icon] sits at the
+ * start, as Android's compound drawable does, with the label centred in the rest.
  */
 @Composable
 fun PrimaryButton(
@@ -271,14 +303,19 @@ fun PrimaryButton(
     modifier: Modifier = Modifier,
     color: Color = Street.colors.action,
     enabled: Boolean = true,
+    thumb: Boolean = false,
+    icon: Painter? = null,
+    description: String? = null,
     onClick: () -> Unit,
 ) {
     val theme = Street.theme
     val palette = theme.palette
     val offset = theme.shape.shadowDp.dp
     val shadow = if (theme == StreetTheme.WHEATPASTE) palette.spot else palette.border
-    Box(
-        modifier.fillMaxWidth().heightIn(min = 52.dp)
+    val padding = if (thumb) PaddingValues(horizontal = 12.dp)
+        else PaddingValues(start = 18.dp, top = 12.dp, end = 18.dp + offset, bottom = 12.dp + offset)
+    Row(
+        modifier.fillMaxWidth().heightIn(min = if (thumb) 64.dp else 52.dp)
             .drawBehind {
                 val o = offset.toPx()
                 val face = Size(size.width - o, size.height - o)
@@ -287,13 +324,23 @@ fun PrimaryButton(
                 else streetShape(theme, color, 16.dp.toPx(), size = face)
             }
             .clickable(enabled = enabled, role = Role.Button, onClick = onClick)
-            .padding(start = 18.dp, top = 12.dp, end = 18.dp + offset, bottom = 12.dp + offset),
-        contentAlignment = Alignment.Center,
+            .then(if (description != null) Modifier.semantics { contentDescription = description } else Modifier)
+            .padding(padding),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-        val fontSize = when (theme) { StreetTheme.CONCRETE -> 19.sp; StreetTheme.NIGHT_PARK -> 20.sp; StreetTheme.WHEATPASTE -> 15.sp }
+        if (icon != null) {
+            Image(icon, contentDescription = null, modifier = Modifier.size(24.dp))
+            Spacer(Modifier.width(8.dp))
+        }
+        val fontSize = when {
+            thumb -> 16.sp
+            theme == StreetTheme.CONCRETE -> 19.sp
+            theme == StreetTheme.NIGHT_PARK -> 20.sp
+            else -> 15.sp
+        }
         BasicText(
             text = text.uppercase(),
-            modifier = Modifier.displayPadding(fontSize),
+            modifier = Modifier.weight(1f).displayPadding(fontSize),
             style = TextStyle(
                 color = palette.contentOn(color),
                 fontSize = fontSize,
@@ -301,13 +348,25 @@ fun PrimaryButton(
                 letterSpacing = if (theme == StreetTheme.WHEATPASTE) 0.02.em else 0.05.em,
                 textAlign = TextAlign.Center,
             ),
+            maxLines = if (thumb) 1 else Int.MAX_VALUE,
+            overflow = TextOverflow.Ellipsis,
         )
     }
 }
 
-/** A second choice beside the main action: the label face in capitals, outlined, dashed in Wheatpaste. */
+/**
+ * A second choice beside the main action: the label face in capitals, outlined, dashed in Wheatpaste. [side]: the
+ * focus workout's Back, Skip and +15 s (Android: FocusWorkoutView.sideButton), as wide as the label, 56 dp tall.
+ */
 @Composable
-fun SecondaryButton(text: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
+fun SecondaryButton(
+    text: String,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    side: Boolean = false,
+    description: String? = null,
+    onClick: () -> Unit,
+) {
     val theme = Street.theme
     val palette = theme.palette
     val face = when (theme) {
@@ -316,17 +375,61 @@ fun SecondaryButton(text: String, modifier: Modifier = Modifier, onClick: () -> 
         StreetTheme.NIGHT_PARK -> Modifier.streetBackground(theme, palette.infoSurface, 16.dp)
     }
     Box(
-        modifier.fillMaxWidth().heightIn(min = 52.dp).then(face)
-            .clickable(role = Role.Button, onClick = onClick)
-            .padding(horizontal = 18.dp, vertical = 12.dp),
+        modifier.then(if (side) Modifier else Modifier.fillMaxWidth()).heightIn(min = if (side) 56.dp else 52.dp).then(face)
+            .clickable(enabled = enabled, role = Role.Button, onClick = onClick)
+            .then(if (description != null) Modifier.semantics { contentDescription = description } else Modifier)
+            .padding(horizontal = if (side) 14.dp else 18.dp, vertical = if (side) 0.dp else 12.dp),
         contentAlignment = Alignment.Center,
     ) {
         BasicText(
             text = text.uppercase(),
             style = TextStyle(color = palette.text, fontSize = 13.sp, fontFamily = Street.type.label,
                 letterSpacing = if (theme == StreetTheme.WHEATPASTE) 0.04.em else 0.1.em, textAlign = TextAlign.Center),
+            maxLines = if (side) 1 else Int.MAX_VALUE,
         )
     }
+}
+
+/** A plain action in words: bold, in the theme's primary colour, at least 40 dp tall (Android: FocusWorkoutView.textAction). */
+@Composable
+fun TextAction(text: String, modifier: Modifier = Modifier, description: String? = null, onClick: () -> Unit) {
+    Box(
+        modifier.heightIn(min = 40.dp)
+            .clickable(role = Role.Button, onClick = onClick)
+            .then(if (description != null) Modifier.semantics { contentDescription = description } else Modifier)
+            .padding(horizontal = 12.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        BasicText(text, style = TextStyle(color = Street.colors.primary, fontSize = 14.sp, fontFamily = Street.type.bold,
+            textAlign = TextAlign.Center), maxLines = 1)
+    }
+}
+
+/**
+ * A small filled choice: the easier option of an exercise (Android: easierChip and easierToggle). [on] fills it in the
+ * primary colour.
+ */
+@Composable
+fun Chip(
+    text: String,
+    modifier: Modifier = Modifier,
+    on: Boolean = false,
+    maxLines: Int = 1,
+    description: String? = null,
+    onClick: () -> Unit,
+) {
+    val theme = Street.theme
+    val palette = theme.palette
+    BasicText(
+        text = text,
+        modifier = modifier.streetBackground(theme, if (on) palette.primary else palette.infoSurface, 16.dp)
+            .clickable(role = Role.Button, onClick = onClick)
+            .then(if (description != null) Modifier.semantics { contentDescription = description } else Modifier)
+            .padding(horizontal = 12.dp, vertical = 6.dp),
+        style = TextStyle(color = if (on) palette.onAccent else palette.primary, fontSize = 13.sp, fontFamily = Street.type.bold),
+        maxLines = maxLines,
+        overflow = TextOverflow.Ellipsis,
+    )
 }
 
 /** How much of something is done, as a bar. */

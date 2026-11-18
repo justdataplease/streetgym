@@ -12,7 +12,10 @@ import com.justdataplease.streetgym.app.resources.Res
 import com.justdataplease.streetgym.app.resources.complete_day_no_points
 import com.justdataplease.streetgym.app.resources.cool_down
 import com.justdataplease.streetgym.app.resources.empty_description
+import com.justdataplease.streetgym.app.resources.ic_play_arrow_white_24dp
 import com.justdataplease.streetgym.app.resources.level_number
+import com.justdataplease.streetgym.app.resources.resume_workout
+import com.justdataplease.streetgym.app.resources.start_workout
 import com.justdataplease.streetgym.app.resources.main_training
 import com.justdataplease.streetgym.app.resources.no_exercises
 import com.justdataplease.streetgym.app.resources.safety_line
@@ -24,15 +27,17 @@ import com.justdataplease.streetgym.app.resources.warm_up
 import com.justdataplease.streetgym.app.theme.Street
 import com.justdataplease.streetgym.data.model.TrainingExercise
 import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
 /**
  * One class, read before training it (android-streetgym, HomeActivity.renderOverview): what it is for, then every
- * exercise of the warm-up, skill practice, strength work and cool-down with its sets.
+ * exercise of the warm-up, skill practice, strength work and cool-down with its sets. Today's class ends with Start
+ * workout, or Resume while it is in progress ([onStart]).
  */
 @Composable
-fun ClassScreen(model: AppModel, programId: String, onDone: () -> Unit) {
+fun ClassScreen(model: AppModel, programId: String, onStart: (String) -> Unit, onDone: () -> Unit) {
     val program = model.program(programId) ?: return
     val isToday = model.isToday(program.id)
     Page {
@@ -62,7 +67,13 @@ fun ClassScreen(model: AppModel, programId: String, onDone: () -> Unit) {
 
         when {
             isToday -> {
+                val resume = model.training.active()?.let { it.programId == program.id && !it.repeat } == true
                 IntensityRow(model, Modifier.padding(top = 8.dp))
+                PrimaryButton(
+                    stringResource(if (resume) Res.string.resume_workout else Res.string.start_workout),
+                    Modifier.padding(top = 8.dp),
+                    icon = painterResource(Res.drawable.ic_play_arrow_white_24dp),
+                ) { onStart(program.id) }
                 SecondaryButton(COMPLETE_DAY, Modifier.padding(top = 8.dp)) {
                     model.completeDay(program.id)
                     onDone()

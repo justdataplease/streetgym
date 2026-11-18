@@ -18,10 +18,10 @@ final class StreetGymTour: XCTestCase {
         XCTAssertTrue(loaded, "Today did not show its Start workout button")
         guard loaded else { return }
 
-        // The class the sequence offers.
+        // Start workout opens the class the sequence offers on its first set.
         start.tap()
-        _ = app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", "warm-up")).firstMatch.waitForExistence(timeout: 10)
-        snap("02-class")
+        _ = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH[c] %@", "set 1 of")).firstMatch.waitForExistence(timeout: 10)
+        snap("02-workout")
     }
 
     private func snap(_ name: String) {

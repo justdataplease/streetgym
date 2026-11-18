@@ -20,7 +20,8 @@ import androidx.compose.ui.unit.dp
 import com.justdataplease.streetgym.app.data.AppModel
 import com.justdataplease.streetgym.app.data.KeyValueStore
 import com.justdataplease.streetgym.app.data.StoredProgress
-import com.justdataplease.streetgym.app.data.loadCatalog
+import com.justdataplease.streetgym.app.data.WorkoutDevice
+import com.justdataplease.streetgym.app.data.loadProgram
 import com.justdataplease.streetgym.app.theme.LocalStreetTheme
 import com.justdataplease.streetgym.app.theme.LocalStreetType
 import com.justdataplease.streetgym.app.theme.StreetTheme
@@ -30,14 +31,17 @@ import com.justdataplease.streetgym.app.ui.Screen
 import com.justdataplease.streetgym.app.ui.Shell
 import com.justdataplease.streetgym.app.ui.pageBackground
 
-/** The app from a cold start: reads the program from its files, then shows Today. [store] keeps the athlete's progress. */
+/**
+ * The app from a cold start: reads the program from its files, then shows Today. [store] keeps the athlete's progress;
+ * [device] keeps the screen on during a workout and cues the end of a rest.
+ */
 @Composable
-fun App(store: KeyValueStore) {
+fun App(store: KeyValueStore, device: WorkoutDevice = WorkoutDevice.None) {
     var model by remember { mutableStateOf<AppModel?>(null) }
     var failed by remember { mutableStateOf(false) }
     LaunchedEffect(store) {
-        runCatching { loadCatalog() }
-            .onSuccess { model = AppModel(it, StoredProgress(store)) }
+        runCatching { loadProgram() }
+            .onSuccess { model = AppModel(it, StoredProgress(store), device = device) }
             .onFailure { failed = true }
     }
     val loaded = model
