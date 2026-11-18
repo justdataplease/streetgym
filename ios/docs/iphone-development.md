@@ -123,7 +123,7 @@ Done on 18 Nov 2026, checked on Windows:
 
 Still to do in this phase:
 
-- **The first macOS run.** Push `ios/` to the standalone repo and let `ios-ci.yml` run: it compiles `shared/` and `composeApp` for `iosSimulatorArm64` (never done so far; any call that is not there on iPhone shows up here), builds the app with Xcode and runs the tour. No Apple account is needed.
+- ~~The first macOS run.~~ Done 18 Nov 2026: `ios/` is in the standalone repo and `ios-ci.yml` runs on every push there. `shared/` and `composeApp` compile for `iosSimulatorArm64`, the common tests run on the Simulator, XcodeGen and Xcode build the app, and the tour opens Today and starts the workout on an iPhone 17 Pro Max. Both runs so far were green without a code change. The pictures come back as the run's `simulator-…` files.
 - Not in the app yet: the park scene on the brand card, the strength test for a new athlete, the streak's sheet, and the other four tabs (after a class Android opens Progress; the iPhone returns to Today until Progress exists).
 - Weeks start on Monday until the phone's region is read; Today's Easier / Harder pick is forgotten when the app restarts (a class in progress keeps its own).
 
@@ -237,7 +237,7 @@ Claude does the rest, using Claude in Chrome for the web consoles as with Play: 
 | Phase | Work |
 |---|---|
 | 1 Shared engine | done, 2.11.5 |
-| 2 Shell and simulator CI | built 18 Nov 2026; the first macOS run is left |
+| 2 Shell and simulator CI | done 18 Nov 2026; green on GitHub's Mac |
 | 3 Screens | 2–3 weeks |
 | 4 Purchases and ads | about 1 week |
 | 5 TestFlight, listing, review | a few days plus Apple's review |
