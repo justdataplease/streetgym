@@ -1,13 +1,18 @@
 package com.justdataplease.streetgym.app.ui
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,8 +36,16 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
+import androidx.compose.ui.unit.sp
 import com.justdataplease.streetgym.app.data.StreakSnapshot
 import com.justdataplease.streetgym.app.resources.Res
+import com.justdataplease.streetgym.app.resources.skills_close
+import com.justdataplease.streetgym.app.resources.streak_best
+import com.justdataplease.streetgym.app.resources.streak_best_only
+import com.justdataplease.streetgym.app.resources.streak_best_short
+import com.justdataplease.streetgym.app.resources.streak_rules
+import com.justdataplease.streetgym.app.resources.streak_see_history
 import com.justdataplease.streetgym.app.resources.streak_days
 import com.justdataplease.streetgym.app.resources.streak_ended
 import com.justdataplease.streetgym.app.resources.streak_ended_title
@@ -45,6 +58,7 @@ import com.justdataplease.streetgym.app.theme.Street
 import com.justdataplease.streetgym.app.theme.StreetTheme
 import com.justdataplease.streetgym.app.theme.blendColor
 import com.justdataplease.streetgym.data.progress.Streak
+import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.min
 
@@ -279,3 +293,73 @@ fun StreakStrip(snapshot: StreakSnapshot, roomy: Boolean, modifier: Modifier = M
         StreakWeek(snapshot.week, box = if (roomy) 24.dp else 20.dp, gap = if (roomy) 4.dp else 3.dp)
     }
 }
+
+/**
+ * What a tap on the flame opens (Android: StreakUi.showStreakSheet): the big flame, "12 day streak", the best one, what
+ * today asks, this week's days and the rule. [onHistory] adds See history, which opens History's calendar; History's own
+ * line leaves it out.
+ */
+@Composable
+fun StreakSheet(snapshot: StreakSnapshot, onHistory: (() -> Unit)?, onClose: () -> Unit) {
+    val streak = snapshot.streak
+    val close = DialogAction(stringResource(Res.string.skills_close), onClose)
+    StreetDialog(
+        title = null,
+        onDismiss = onClose,
+        confirm = onHistory?.let { DialogAction(stringResource(Res.string.streak_see_history), it) } ?: close,
+        dismiss = close.takeIf { onHistory != null },
+    ) {
+        Column(Modifier.fillMaxWidth().padding(start = 12.dp, top = 12.dp, end = 12.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                StreakFlame(streak, width = 76.dp, shadow = 4.dp)
+                Column(Modifier.weight(1f).padding(start = 16.dp)) {
+                    TitleText(streakTitle(streak), 24f)
+                    if (streak.best > 0) BodyText(pluralStringResource(Res.plurals.streak_best, streak.best, streak.best), 14f,
+                        Modifier.padding(top = 4.dp))
+                    BodyText(streakStatus(streak), 14f, Modifier.padding(top = 4.dp), color = Street.colors.text)
+                }
+            }
+            Row(Modifier.fillMaxWidth().padding(top = 22.dp), horizontalArrangement = Arrangement.Center) {
+                StreakWeek(snapshot.week, box = 30.dp, gap = 6.dp)
+            }
+            BodyText(stringResource(Res.string.streak_rules), 14f, Modifier.padding(top = 18.dp))
+        }
+    }
+}
+
+/**
+ * History's line over the month (Android: StreakUi.streakLine): the plain flame, "12 DAY STREAK" on tape and "Best 20";
+ * with no streak now, only "Best streak: N days". Nothing before the first workout. A tap opens the sheet.
+ */
+@Composable
+fun StreakLine(streak: com.justdataplease.streetgym.data.progress.Streak, modifier: Modifier = Modifier, onClick: () -> Unit) {
+    if (streak.best <= 0) return
+    val theme = Street.theme
+    val palette = theme.palette
+    val best = pluralStringResource(Res.plurals.streak_best, streak.best, streak.best)
+    val title = streakTitle(streak)
+    val spoken = if (streak.days > 0) "$title. $best" else bestOnly(streak.best)
+    Row(
+        modifier.heightIn(min = 40.dp).clickable(onClick = onClick)
+            .clearAndSetSemantics { contentDescription = spoken },
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
+    ) {
+        if (streak.days > 0) {
+            StreakFlame(streak, width = 18.dp, shadow = 2.dp, numbered = false)
+            BasicText(
+                title.uppercase(),
+                Modifier.padding(start = 8.dp).background(palette.accent).padding(horizontal = 8.dp, vertical = 3.dp),
+                style = TextStyle(color = palette.contentOn(palette.accent), fontSize = 13.sp, fontFamily = Street.type.display,
+                    letterSpacing = theme.shape.labelSpacing.em),
+                maxLines = 1,
+            )
+            BodyText(stringResource(Res.string.streak_best_short, streak.best), 13f, Modifier.padding(start = 8.dp), bold = true)
+        } else {
+            BodyText(bestOnly(streak.best), 13f)
+        }
+    }
+}
+
+@Composable
+private fun bestOnly(best: Int): String = pluralStringResource(Res.plurals.streak_best_only, best, best)

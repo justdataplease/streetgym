@@ -179,6 +179,7 @@ fun StreetCard(
     modifier: Modifier = Modifier,
     fill: Color = Street.colors.surface,
     outlined: Boolean = true,
+    padding: PaddingValues = PaddingValues(16.dp),
     onClick: (() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
@@ -188,7 +189,7 @@ fun StreetCard(
             .clip(streetOutline(theme, 24.dp))
             .streetBackground(theme, fill, 24.dp, theme.palette.border, if (outlined) theme.shape.borderDp.dp else 0.dp)
             .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
-            .padding(16.dp),
+            .padding(padding),
         content = content,
     )
 }
@@ -324,14 +325,17 @@ fun LockBadge(
     modifier: Modifier = Modifier,
     fill: Color = Street.colors.textSecondary,
     color: Color = Street.colors.onAccent,
+    textSize: Float = 11f,
+    padding: PaddingValues = PaddingValues(horizontal = 9.dp, vertical = 4.dp),
+    rim: Color? = null,
     onClick: (() -> Unit)? = null,
 ) {
     val theme = Street.theme
     Row(
-        modifier.streetBackground(theme, fill, 12.dp)
+        modifier.streetBackground(theme, fill, 12.dp, rim, if (rim != null) 2.dp else 0.dp)
             .then(if (onClick != null) Modifier.clickable(role = Role.Button, onClick = onClick) else Modifier)
             .semantics(mergeDescendants = true) { contentDescription = text }
-            .padding(horizontal = 9.dp, vertical = 4.dp),
+            .padding(padding),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Image(painterResource(Res.drawable.ic_lock), contentDescription = null, colorFilter = ColorFilter.tint(color),
@@ -339,7 +343,7 @@ fun LockBadge(
         BasicText(
             text = text.uppercase(),
             modifier = Modifier.padding(start = 4.dp),
-            style = TextStyle(color = color, fontSize = 11.sp, fontFamily = Street.type.label, letterSpacing = 0.06.em,
+            style = TextStyle(color = color, fontSize = textSize.sp, fontFamily = Street.type.label, letterSpacing = 0.06.em,
                 textAlign = TextAlign.Center),
             maxLines = 1,
         )
@@ -389,24 +393,42 @@ fun SettingSwitch(label: String, checked: Boolean, modifier: Modifier = Modifier
         verticalAlignment = Alignment.CenterVertically,
     ) {
         BasicText(label, Modifier.weight(1f), style = TextStyle(color = palette.text, fontSize = 15.sp, fontFamily = Street.type.body))
-        // Material's switch: a 34 x 14 dp track, half see-through, and a 20 dp thumb in the accent when on, pale when off.
-        val accent = palette.primary
-        val track = if (checked) accent.copy(alpha = 0.5f) else (if (theme.dark) Color.White else Color.Black).copy(alpha = 0.3f)
-        val thumb = if (checked) accent else if (theme.dark) Color(0xFFBDBDBD) else Color(0xFFF1F1F1)
-        Canvas(Modifier.padding(start = 12.dp).size(48.dp, 40.dp)) {
-            val trackWidth = 34.dp.toPx()
-            val trackHeight = 14.dp.toPx()
-            val left = (size.width - trackWidth) / 2f
-            val middle = size.height / 2f
-            drawRoundRect(track, Offset(left, middle - trackHeight / 2f), Size(trackWidth, trackHeight),
-                androidx.compose.ui.geometry.CornerRadius(trackHeight / 2f))
-            val radius = 10.dp.toPx()
-            val centre = Offset(if (checked) left + trackWidth - radius + 3.dp.toPx() else left + radius - 3.dp.toPx(), middle)
-            // The thumb's soft shadow, as Material lifts it.
-            drawCircle(Color.Black.copy(alpha = 0.18f), radius + 0.8.dp.toPx(), centre + Offset(0f, 1.dp.toPx()))
-            drawCircle(thumb, radius, centre)
-        }
+        SwitchMark(checked, Modifier.padding(start = 12.dp))
     }
+}
+
+/**
+ * Material's switch as Android draws it in the theme's accent: a 34 x 14 dp track, half see-through, and a 20 dp thumb
+ * in the accent when on, pale when off, in a 48 x 40 dp box. It only draws; whatever holds it takes the tap.
+ */
+@Composable
+fun SwitchMark(checked: Boolean, modifier: Modifier = Modifier) {
+    val theme = Street.theme
+    val accent = theme.palette.primary
+    val track = if (checked) accent.copy(alpha = 0.5f) else (if (theme.dark) Color.White else Color.Black).copy(alpha = 0.3f)
+    val thumb = if (checked) accent else if (theme.dark) Color(0xFFBDBDBD) else Color(0xFFF1F1F1)
+    Canvas(modifier.size(48.dp, 40.dp)) {
+        val trackWidth = 34.dp.toPx()
+        val trackHeight = 14.dp.toPx()
+        val left = (size.width - trackWidth) / 2f
+        val middle = size.height / 2f
+        drawRoundRect(track, Offset(left, middle - trackHeight / 2f), Size(trackWidth, trackHeight),
+            androidx.compose.ui.geometry.CornerRadius(trackHeight / 2f))
+        val radius = 10.dp.toPx()
+        val centre = Offset(if (checked) left + trackWidth - radius + 3.dp.toPx() else left + radius - 3.dp.toPx(), middle)
+        // The thumb's soft shadow, as Material lifts it.
+        drawCircle(Color.Black.copy(alpha = 0.18f), radius + 0.8.dp.toPx(), centre + Offset(0f, 1.dp.toPx()))
+        drawCircle(thumb, radius, centre)
+    }
+}
+
+/** A switch on its own, at the end of a row whose other part does something else (Android: a Switch beside a tappable row). */
+@Composable
+fun SwitchToggle(checked: Boolean, description: String, modifier: Modifier = Modifier, onChange: (Boolean) -> Unit) {
+    SwitchMark(
+        checked,
+        modifier.toggleable(checked, role = Role.Switch, onValueChange = onChange).semantics { contentDescription = description },
+    )
 }
 
 /**

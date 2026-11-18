@@ -21,7 +21,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.justdataplease.streetgym.app.data.AppModel
 import com.justdataplease.streetgym.app.data.FocusState
+import com.justdataplease.streetgym.ui.WorkoutStep
+import androidx.compose.ui.draw.alpha
 import com.justdataplease.streetgym.app.data.Training
 import com.justdataplease.streetgym.app.resources.Res
 import com.justdataplease.streetgym.app.resources.abandon_workout
@@ -51,7 +54,7 @@ import org.jetbrains.compose.resources.stringResource
  * starts the set's rest, which the focus view shows too ([Training.tick]); a "max" set asks what was done.
  */
 @Composable
-internal fun WorkoutList(state: FocusState, training: Training, onAsk: (Ask) -> Unit, onFinish: () -> Unit) {
+internal fun WorkoutList(model: AppModel, state: FocusState, training: Training, onAsk: (Ask) -> Unit, onFinish: () -> Unit) {
     val theme = Street.theme
     val palette = theme.palette
     val program = state.program
@@ -60,6 +63,8 @@ internal fun WorkoutList(state: FocusState, training: Training, onAsk: (Ask) -> 
     val completed = active.completedSetIds
     val done = flow.completedCount(completed)
     val total = flow.size
+    // Every set by its key, and where the sets the athlete trains are in the class (switched-off ones are not).
+    val steps = state.all.steps.associateBy { it.key }
     val index = flow.steps.withIndex().associate { (position, step) -> step.key to position }
     Page {
         StreetCard(Modifier.padding(bottom = 6.dp), fill = palette.infoSurface, outlined = false) {
@@ -94,6 +99,7 @@ internal fun WorkoutList(state: FocusState, training: Training, onAsk: (Ask) -> 
             val description = stringResource(Res.string.section_check_description, name)
             Row(
                 Modifier.fillMaxWidth().heightIn(min = 52.dp)
+                    // Ticks only the sets the athlete trains; switched-off ones wait until done anyway.
                     .toggleable(all, enabled = keys.isNotEmpty(), role = Role.Checkbox) { training.tickSection(section, it) }
                     .semantics {
                         contentDescription = description
@@ -106,7 +112,7 @@ internal fun WorkoutList(state: FocusState, training: Training, onAsk: (Ask) -> 
                 CheckMark(all, palette.primary)
             }
             exercises.forEachIndexed { exerciseIndex, exercise ->
-                ExerciseCard(state, training, section, exercise, exerciseIndex, index, onAsk)
+                ExerciseCard(model, state, training, section, exercise, exerciseIndex, steps, index, onAsk)
             }
         }
 
@@ -115,22 +121,41 @@ internal fun WorkoutList(state: FocusState, training: Training, onAsk: (Ask) -> 
     }
 }
 
-/** One exercise in the list: its name, line man, notes, what it needs, its easier option and a ticked row per set. */
+/**
+ * One exercise in the list: its name, line man, notes, what it needs, its easier option and a ticked row per set. One
+ * left out by the switches is greyed with "Switched off · Handstand", and any tap on it asks before doing it anyway
+ * (Android: renderActive's offFamily and doAnyway).
+ */
 @Composable
 private fun ExerciseCard(
+    model: AppModel,
     state: FocusState,
     training: Training,
     section: String,
     exercise: TrainingExercise,
     exerciseIndex: Int,
+    steps: Map<String, WorkoutStep>,
     index: Map<String, Int>,
     onAsk: (Ask) -> Unit,
 ) {
     val palette = Street.colors
     val name = displayName(exercise)
     val active = state.active
-    StreetCard(Modifier.padding(bottom = 10.dp)) {
+    val off = model.leftOutBy(state.program, section, exercise, exerciseIndex)
+    val exerciseKey = WorkoutFlow.exerciseKey(section, exercise, exerciseIndex)
+    fun anyway(then: () -> Unit) = onAsk(Ask.SwitchedOff(listOfNotNull(off), setOf(exerciseKey), then))
+    // Ticks a set; a "max" set, a practice window or an easier option measured the other way has no number to count
+    // until the athlete gives it.
+    fun tick(key: String, step: WorkoutStep, now: Boolean) {
+        training.tick(key, now)
+        val position = training.state()?.flow?.keys?.indexOf(key)?.takeIf { it >= 0 } ?: return
+        if (now && step.credited && training.measure(step).planned == null && key !in active.done) {
+            onAsk(Ask.Log(position, thenDone = false, thenTick = true))
+        }
+    }
+    StreetCard(Modifier.padding(bottom = 10.dp).alpha(if (off != null) 0.45f else 1f), onClick = if (off != null) ({ anyway {} }) else null) {
         TitleText(name, 18f)
+        off?.let { SwitchedOffBadge(it, Modifier.padding(top = 6.dp)) }
         ExerciseAnimation(exercise, name, Modifier.padding(top = 8.dp))
         exerciseNotes(exercise).takeIf(String::isNotBlank)?.let { BodyText(it, 13f, Modifier.padding(top = 4.dp)) }
         equipmentNeeds(exercise.equipment)?.let { BodyText(it, 13f, Modifier.padding(top = 4.dp)) }
@@ -146,20 +171,15 @@ private fun ExerciseCard(
         }
         exercise.sets.forEachIndexed { setIndex, set ->
             val key = WorkoutFlow.setKey(state.program.id, section, exercise, exerciseIndex, set, setIndex)
-            val position = index[key] ?: return@forEachIndexed
-            val step = state.flow[position]
+            val step = steps[key] ?: return@forEachIndexed
+            val position = index[key]
             val checked = key in active.completedSetIds
             val number = set.number.takeIf { it > 0 } ?: (setIndex + 1)
             val description = stringResource(Res.string.set_complete_description, number, name)
             Row(
                 Modifier.fillMaxWidth().heightIn(min = 52.dp)
                     .toggleable(checked, role = Role.Checkbox) { now ->
-                        training.tick(key, now)
-                        // A "max" set, a practice window or an easier option measured the other way has no number to
-                        // count until the athlete gives it.
-                        if (now && step.credited && training.measure(step).planned == null && key !in active.done) {
-                            onAsk(Ask.Log(position, thenDone = false, thenTick = true))
-                        }
+                        if (off != null) anyway { tick(key, step, true) } else tick(key, step, now)
                     }
                     .semantics { contentDescription = description }
                     .padding(vertical = 4.dp),
@@ -173,7 +193,10 @@ private fun ExerciseCard(
                     // What the athlete did, where it differs from the plan: skill ranks count sets at a target.
                     if (step.credited) BasicText(
                         setDoneLabel(training.measure(step), active.done[key]),
-                        Modifier.clickable(role = Role.Button) { onAsk(Ask.Log(position, thenDone = false, thenTick = true)) }
+                        Modifier.clickable(role = Role.Button) {
+                            if (position != null) onAsk(Ask.Log(position, thenDone = false, thenTick = true))
+                            else anyway { tick(key, step, true) }
+                        }
                             .padding(vertical = 4.dp),
                         style = TextStyle(color = palette.primary, fontSize = 13.sp, fontFamily = Street.type.bold),
                     )

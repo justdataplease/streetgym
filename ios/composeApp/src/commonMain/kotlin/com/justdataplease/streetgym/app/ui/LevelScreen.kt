@@ -90,7 +90,8 @@ fun LevelScreen(
         }
         items(page.rows, key = { it.program.id }) { row ->
             ClassRowView(model, row, tier.takeIf { page.locked }) {
-                if (page.locked && !row.completed) onOffer(number) else onOpenClass(row.program.id)
+                // Developer inspection opens a locked class too, read-only (Android: renderWorkouts).
+                if (page.locked && !row.completed && !model.inspectAllDays) onOffer(number) else onOpenClass(row.program.id)
             }
         }
     }

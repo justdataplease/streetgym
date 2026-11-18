@@ -43,6 +43,35 @@ final class StreetGymTour: XCTestCase {
         level.tap()
         _ = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] %@", "level 1 workouts")).firstMatch.waitForExistence(timeout: 10)
         snap("05-level")
+
+        // Progress opens on Skills: the points and the ladders of medals.
+        guard tapHittable(app, label: "Progress") else { return }
+        _ = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] %@", "points. Double-tap")).firstMatch.waitForExistence(timeout: 10)
+        snap("06-skills")
+
+        // History: this month's calendar.
+        guard tapHittable(app, label: "History") else { return }
+        _ = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] %@", "this month")).firstMatch.waitForExistence(timeout: 10)
+        snap("07-history")
+
+        // Settings: the themes, the workout's choices, the skill and equipment switches.
+        guard tapHittable(app, label: "Settings") else { return }
+        _ = app.descendants(matching: .any).matching(NSPredicate(format: "label BEGINSWITH[c] %@", "Concrete & Tape")).firstMatch.waitForExistence(timeout: 10)
+        snap("08-settings")
+    }
+
+    /// Taps the first element labelled [label] that can be tapped: a tab's label can also be a title or a word on screen.
+    private func tapHittable(_ app: XCUIApplication, label: String) -> Bool {
+        let matches = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", label))
+        guard matches.firstMatch.waitForExistence(timeout: 10) else { return false }
+        for index in 0..<matches.count {
+            let element = matches.element(boundBy: index)
+            if element.isHittable {
+                element.tap()
+                return true
+            }
+        }
+        return false
     }
 
     private func snap(_ name: String) {

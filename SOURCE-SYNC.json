@@ -1,6 +1,6 @@
 {
   "suite_repository": "justdataplease/android-apps",
-  "suite_commit": "4bf4e4705701bce50f7145df0f783ce32e05f522",
+  "suite_commit": "401c05a5dc1512ad2b3f1431dc145265e7e859bd",
   "source_directory": "android-streetgym",
   "original_import_commit": "5cf42985bd88e2f6905304cd8d9cbf007c8acb34",
   "release_tag": "v2.14.1",

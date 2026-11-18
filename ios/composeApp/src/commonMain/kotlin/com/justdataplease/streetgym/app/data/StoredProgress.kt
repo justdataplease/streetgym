@@ -171,6 +171,20 @@ class StoredProgress(private val store: KeyValueStore) : ProgressRepository {
         store.set(KEY_REPLAY_REPEATED, encodeIds(replay.repeatedIds + programIds))
     }
 
+    /**
+     * Starts over (Android: reset): completed days, the history, exam results, any level replay and the class in
+     * progress go. [at] is kept as "reset_at" (its number as text), so a cloud copy from before it can't bring anything
+     * back once backups come.
+     */
+    fun reset(at: Long) {
+        listOf(KEY_COMPLETED, KEY_HISTORY, KEY_ACTIVE, KEY_EXAMS, KEY_REPLAY_LEVEL, KEY_REPLAY_REPEATED, KEY_REPLAY_FROM)
+            .forEach { store.set(it, null) }
+        store.set(KEY_RESET_AT, at.toString())
+    }
+
+    /** When progress was last reset, or 0. */
+    fun resetAt(): Long = store.get(KEY_RESET_AT)?.toLongOrNull() ?: 0L
+
     override fun examLog(): ExamLog = ExamLog.decode(store.get(KEY_EXAMS))
 
     override fun recordExam(result: ExamResult) = store.set(KEY_EXAMS, examLog().record(result).encode())
@@ -192,6 +206,7 @@ class StoredProgress(private val store: KeyValueStore) : ProgressRepository {
         private const val KEY_REPLAY_LEVEL = "streetgym_progress.replay_level"
         private const val KEY_REPLAY_REPEATED = "streetgym_progress.replay_repeated_ids"
         private const val KEY_REPLAY_FROM = "streetgym_progress.replay_from_program_id"
+        private const val KEY_RESET_AT = "streetgym_progress.reset_at"
 
         private fun encodeIds(ids: Set<String>): String = JSONArray(ids.sorted()).toString()
 

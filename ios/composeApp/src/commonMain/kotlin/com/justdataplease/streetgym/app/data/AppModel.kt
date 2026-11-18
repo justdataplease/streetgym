@@ -10,6 +10,17 @@ import com.justdataplease.streetgym.app.resources.Res
 import com.justdataplease.streetgym.app.theme.StreetTheme
 import com.justdataplease.streetgym.billing.LevelAccess
 import com.justdataplease.streetgym.billing.Tier
+import com.justdataplease.streetgym.data.equipment.Equipment
+import com.justdataplease.streetgym.data.equipment.EquipmentSwitches
+import com.justdataplease.streetgym.data.library.CustomDays
+import com.justdataplease.streetgym.data.points.Points
+import com.justdataplease.streetgym.data.skills.SkillFamily
+import com.justdataplease.streetgym.data.skills.SkillLevel
+import com.justdataplease.streetgym.data.skills.SkillProgress
+import com.justdataplease.streetgym.data.skills.SkillStatus
+import com.justdataplease.streetgym.data.skills.SkillSwitches
+import com.justdataplease.streetgym.data.skills.switchedOff
+import com.justdataplease.streetgym.ui.WorkoutFlow
 import com.justdataplease.streetgym.data.CurriculumJsonParser
 import com.justdataplease.streetgym.data.effort.Effort
 import com.justdataplease.streetgym.data.effort.WorkoutEffort
@@ -35,6 +46,9 @@ import kotlinx.coroutines.withContext
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.offsetAt
 import kotlin.time.Instant
+
+/** The version shown where the phone gives none (previews, tests). */
+const val DEFAULT_VERSION = "1.0"
 
 /** The program, the ready workouts, the skills and the line man's movements, read once from the app's files. */
 class Program(val catalog: CurriculumCatalog, val skills: SkillBook?, val motions: AnimationLibrary? = null)
@@ -141,6 +155,15 @@ enum class Start {
 /** Where a level stands for the athlete (Android: ThemeDecor.LevelState). */
 enum class LevelState { DONE, CURRENT, UPCOMING }
 
+/**
+ * Why an exercise is left out of the athlete's classes (Android: HomeActivity.LeftOut): its skill switched off, named
+ * by the family ([Skill]), or equipment their spot lacks ([Gear]).
+ */
+sealed interface LeftOut {
+    data class Skill(val name: String) : LeftOut
+    data class Gear(val equipment: Equipment) : LeftOut
+}
+
 /** A level's card on Training › Levels: [complete] of its classes passed; [locked] behind a tier. */
 class LevelCard(val level: TrainingLevel, val state: LevelState, val complete: Int, val locked: Boolean)
 
@@ -192,7 +215,7 @@ class AppModel(
     val device: WorkoutDevice = WorkoutDevice.None,
     val motions: AnimationLibrary? = null,
     private val settings: AppSettings = AppSettings(MemoryStore()),
-    private val firstWeekday: Int = Streak.MONDAY,
+    val firstWeekday: Int = Streak.MONDAY,
 ) {
     constructor(
         program: Program,
@@ -212,17 +235,72 @@ class AppModel(
 
     private var screenAwake by mutableStateOf(settings.keepScreenAwake)
     private var sounds by mutableStateOf(settings.soundCues)
+    private var skillsOff by mutableStateOf(settings.skillSwitches)
+    private var equipmentOff by mutableStateOf(settings.equipment)
+    private var look by mutableStateOf(settings.theme)
+    private var inspecting by mutableStateOf(settings.inspectAllDays)
+    private var developer by mutableStateOf(settings.developerUnlocked)
+    /**
+     * Per class, the exercises the athlete chose to do anyway though switched off ("Continue"), by exercise key, while
+     * the app runs; starting another class forgets them (Android: offAllowed).
+     */
+    private var allowed by mutableStateOf<Map<String, Set<String>>>(emptyMap())
 
     /** The class in training: its sets, the rest timer and finishing it. */
     val training = Training(
         progress, skills, catalog.movementGrades, now, zone, device, saves,
         sound = { sounds },
-        leftOutOfExam = { exercise ->
-            exercise.movementId?.let(settings.skillSwitches::isOff) == true || settings.equipment.isOff(exercise)
-        },
+        leftOutOfExam = { exercise -> exercise.movementId?.let(skillSwitches::isOff) == true || equipment.isOff(exercise) },
+        leftOut = { program, flow -> leftOutKeys(program, flow) },
     ) { id, intensity -> byId[id]?.let(intensity::scale) }
 
-    var theme by mutableStateOf(StreetTheme.DEFAULT)
+    /** The look picked in Settings, kept on the phone (Android: AppSettings.theme); every screen follows at once. */
+    /** The app's version, as Settings › About shows it ("Version 1.0"). */
+    var version: String = DEFAULT_VERSION
+
+    /** The taps on the version line toward the developer settings, while the app runs. */
+    val versionTaps = com.justdataplease.streetgym.app.ui.VersionTaps()
+
+    var theme: StreetTheme
+        get() = look
+        set(value) {
+            look = value
+            settings.theme = value
+        }
+
+    /** Settings › Skills in your classes: what is switched off, kept under Android's key; the screens follow at once. */
+    var skillSwitches: SkillSwitches
+        get() = skillsOff
+        set(value) {
+            skillsOff = value
+            settings.skillSwitches = value
+            saves.bump()
+        }
+
+    /** Settings › Equipment you have: what the athlete's spot lacks. */
+    var equipment: EquipmentSwitches
+        get() = equipmentOff
+        set(value) {
+            equipmentOff = value
+            settings.equipment = value
+            saves.bump()
+        }
+
+    /** Developer settings › Inspect all days: classes not reached open read-only. */
+    var inspectAllDays: Boolean
+        get() = inspecting
+        set(value) {
+            inspecting = value
+            settings.inspectAllDays = value
+        }
+
+    /** The developer settings were opened by ten taps on the version; one tap opens them again. */
+    var developerUnlocked: Boolean
+        get() = developer
+        set(value) {
+            developer = value
+            settings.developerUnlocked = value
+        }
 
     /**
      * The local day the screens were drawn for; [refreshDay] moves it on after midnight, which redraws Today's flame
@@ -343,7 +421,7 @@ class AppModel(
      * (Android: passedIds).
      */
     private fun passed(completed: Set<String> = progress.completedProgramIds()): Set<String> =
-        NextClass.passed(written, completed, settings.skillSwitches, settings.equipment)
+        NextClass.passed(written, completed, skillSwitches, equipment)
 
     /**
      * The level replay in effect, or null; one that has caught up with the furthest class ends here (Android:
@@ -379,6 +457,7 @@ class AppModel(
     fun start(id: String, repeat: Boolean = false, replace: Boolean = false): Start {
         if (!(if (repeat) canRepeat(id) else canStart(id))) return Start.LOCKED
         val current = progress.activeWorkout()
+        if (current?.programId != id) allowed = allowed - id
         if (current != null && current.programId == id && current.repeat == repeat) return Start.STARTED
         if (current != null) {
             if (!replace) return Start.ASK_REPLACE
@@ -529,4 +608,102 @@ class AppModel(
     }
 
     private val tiles: AnimationLibrary by lazy { motions ?: AnimationLibrary.fallbackLibrary() }
+
+    /**
+     * The skill, or the equipment the athlete lacks, that leaves [exercise] (the [index]th of [section]) out of
+     * [program]; null when it is in: on, or chosen anyway in this workout (Android: leftOutBy). An own day or a ready
+     * workout runs as written.
+     */
+    fun leftOutBy(program: TrainingProgram, section: String, exercise: TrainingExercise, index: Int): LeftOut? {
+        if (CustomDays.offProgram(program.id)) return null
+        val family = exercise.movementId?.let(skillSwitches::offFamily)?.let { id -> SkillBook.DEFAULT_FAMILIES.firstOrNull { it.id == id } }
+        val lacks = if (family == null) equipment.missing(exercise.equipment) else null
+        if (family == null && lacks == null) return null
+        if (WorkoutFlow.exerciseKey(section, exercise, index) in allowed[program.id].orEmpty()) return null
+        return family?.let { LeftOut.Skill(it.name) } ?: lacks?.let(LeftOut::Gear)
+    }
+
+    /** The set keys of [flow] that the switches leave out (Android: leftOutKeys). */
+    fun leftOutKeys(program: TrainingProgram, flow: WorkoutFlow): Set<String> =
+        if (!skillSwitches.any && !equipment.any) emptySet()
+        else flow.steps.filter { leftOutBy(program, it.section, it.exercise, it.exerciseIndex) != null }.mapTo(HashSet()) { it.key }
+
+    /** "Continue" on "Handstand is switched off": the exercises with [exerciseKeys] count in this workout of [programId]. */
+    fun allowAnyway(programId: String, exerciseKeys: Collection<String>) {
+        allowed = allowed + (programId to (allowed[programId].orEmpty() + exerciseKeys))
+    }
+
+    /** A class the switches leave with nothing to train counts as passed, and its page says so (Android: renderOverview). */
+    fun switchedOff(program: TrainingProgram): Boolean {
+        saves.count
+        return !CustomDays.offProgram(program.id) && program.switchedOff(skillSwitches, equipment) && !progress.isProgramCompleted(program.id)
+    }
+
+    /** Whether a movement needs equipment the athlete switched off (Android: lacksEquipment). */
+    fun lacksEquipment(movementId: String): Boolean = equipment.missing(catalog.movementEquipment[movementId].orEmpty()) != null
+
+    /** Every movement's equipment tags, to count the exercises each switch leaves out. */
+    val movementEquipment: Map<String, List<String>> get() = catalog.movementEquipment
+
+    /** Developer inspection opens a class not reached yet, or behind a tier, read-only (Android: renderOverview's inspecting). */
+    fun inspects(id: String): Boolean {
+        val program = byId[id] ?: return false
+        return inspectAllDays && !isCompleted(id) && (levelLocked(program.levelNumber) || !canStart(id))
+    }
+
+    /** Every finished class and marked day, newest first. */
+    fun history(): List<WorkoutSession> {
+        saves.count
+        return progress.sessionHistory()
+    }
+
+    /** The streak now, with this week's days (Android: StreakDays.snapshot). */
+    fun streak(): StreakSnapshot {
+        saves.count
+        day
+        return LocalDays.snapshot(progress.sessionHistory(), now(), zone, firstWeekday)
+    }
+
+    /** Today in the phone's time zone, as History's calendar keys its days (yyyymmdd). */
+    fun todayKey(): Int {
+        day
+        return HistoryCalendar.dayKey(now(), zone)
+    }
+
+    /** A class of the program by its id, as written (History's rows). */
+    fun programById(id: String): TrainingProgram? = byId[id]
+
+    /** The athlete's skills: every ladder with each skill's rank, from trained classes only (Android: skillProgress). */
+    fun skillProgress(): SkillProgress? {
+        saves.count
+        return skills?.progress(Scores.credits(progress.sessionHistory()))
+    }
+
+    /** Points on Skills: every class's, plus the ranks' (Android: pointsTotal.all). */
+    fun points(): Int {
+        val history = history()
+        return Points.classes(history) + (skillProgress()?.let { Points.chevrons(it.statuses) } ?: 0)
+    }
+
+    /**
+     * The tier a skill waits for: one the program first teaches in a level the tier doesn't open stays locked until it
+     * has a rank (Android: SkillsScreen.lockFor). Null when it is open.
+     */
+    fun lockFor(status: SkillStatus): Tier? =
+        status.skill.expected?.level?.takeIf { status.level == SkillLevel.NONE && levelLocked(it) }?.let(LevelAccess::tierFor)
+
+    /** A skill switched off from its rung, or whose movement needs equipment switched off: its medal greys. */
+    fun skillOff(family: SkillFamily, status: SkillStatus): Boolean =
+        skillSwitches.isRungOff(family.spec.id, status.skill.rung) || lacksEquipment(status.skill.id)
+
+    /**
+     * Settings' Start over (Android: confirmReset): every finished class, the history, points, ranks and exam results
+     * go, with the class in progress; the strength test is asked again. My workouts, the theme and the purchases stay.
+     */
+    fun reset() {
+        training.reset()
+        progress.reset(now())
+        settings.placementDone = false
+        saves.bump()
+    }
 }

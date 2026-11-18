@@ -25,7 +25,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import com.justdataplease.streetgym.app.data.AppModel
+import com.justdataplease.streetgym.app.data.LeftOut
+import com.justdataplease.streetgym.app.data.Training
 import com.justdataplease.streetgym.app.data.WorkoutView
+import com.justdataplease.streetgym.app.resources.inspect_only
+import com.justdataplease.streetgym.app.resources.inspect_only_note
+import com.justdataplease.streetgym.app.resources.switch_off_badge
+import com.justdataplease.streetgym.app.resources.switch_off_class
+import androidx.compose.ui.draw.alpha
 import com.justdataplease.streetgym.app.figure.ExerciseFigure
 import com.justdataplease.streetgym.app.figure.effortColor
 import com.justdataplease.streetgym.app.resources.Res
@@ -89,7 +96,9 @@ fun ClassScreen(
 ) {
     val program = model.program(programId) ?: return
     val completed = model.isCompleted(program.id)
-    if (model.levelLocked(program.levelNumber) && !completed) {
+    // Developer inspection opens a class not reached yet, or behind a tier, read-only: nothing to start or complete.
+    val inspecting = model.inspects(program.id)
+    if (!inspecting && model.levelLocked(program.levelNumber) && !completed) {
         // A class of a level the tier doesn't open: its name, meta and Unlock, none of its exercises.
         Page {
             StreetCard(Modifier.padding(bottom = 14.dp)) {
@@ -101,7 +110,7 @@ fun ClassScreen(
         }
         return
     }
-    if (!model.canStart(program.id) && !completed) {
+    if (!inspecting && !model.canStart(program.id) && !completed) {
         // Not reached yet: only its name, and that it comes later.
         Page {
             StreetCard {
@@ -121,6 +130,7 @@ fun ClassScreen(
     var completing by remember { mutableStateOf(false) }
     Page {
         StreetCard(Modifier.padding(bottom = 14.dp)) {
+            if (inspecting) Badge(stringResource(Res.string.inspect_only), Modifier.padding(bottom = 8.dp))
             TitleText(displayName(program), 25f)
             val intensity = model.intensity.takeIf { it != Intensity.NORMAL && !program.isExam && program.exercises.any(Intensity::scales) }
             BodyText(
@@ -143,20 +153,24 @@ fun ClassScreen(
             }
         }
         if (program.isExam) ExamCard(model, program, Modifier.padding(bottom = 14.dp))
+        // Everything left out by the switches: the class counts as passed, and can still be done.
+        if (model.switchedOff(program)) StreetCard(Modifier.padding(bottom = 14.dp), fill = Street.colors.infoSurface, outlined = false) {
+            BodyText(stringResource(Res.string.switch_off_class), 14f)
+        }
 
-        val sections = listOf(
-            Res.string.warm_up to program.warmup,
-            Res.string.skill_practice to program.practice,
-            Res.string.main_training to program.exercises,
-            Res.string.cool_down to program.cooldown,
-        ).filter { it.second.isNotEmpty() }
+        val sections = Training.sections(program).filter { it.second.isNotEmpty() }
         if (sections.isEmpty()) {
             StreetCard(Modifier.padding(bottom = 14.dp)) { BodyText(stringResource(Res.string.no_exercises)) }
             return@Page
         }
-        sections.forEach { (title, exercises) -> ExerciseSection(title, exercises) }
+        sections.forEach { (section, exercises) -> ExerciseSection(model, program, section, exercises) }
 
         when {
+            inspecting -> {
+                BodyText(stringResource(Res.string.inspect_only_note), 14f, Modifier.padding(top = 8.dp))
+                PrimaryButton(stringResource(Res.string.inspect_only), Modifier.padding(top = 8.dp), color = Street.colors.textSecondary,
+                    enabled = false) {}
+            }
             isToday -> {
                 val resume = active?.let { it.programId == program.id && !it.repeat } == true
                 WorkoutViewRow(model, Modifier.padding(top = 4.dp))
@@ -192,13 +206,18 @@ fun ClassScreen(
     }
 }
 
+/**
+ * A section of the class page: each exercise with its number, sets, line man, notes and needs. One left out by the
+ * switches is greyed with "Switched off · Handstand" (Android: addExerciseSection).
+ */
 @Composable
-private fun ExerciseSection(title: StringResource, exercises: List<TrainingExercise>) {
-    SectionLabel(stringResource(title))
+private fun ExerciseSection(model: AppModel, program: TrainingProgram, section: String, exercises: List<TrainingExercise>) {
+    SectionLabel(sectionTitle(section))
     exercises.forEachIndexed { index, exercise ->
         val number = exercise.number.takeIf { it > 0 } ?: (index + 1)
         val name = displayName(exercise)
-        StreetCard(Modifier.padding(bottom = 10.dp)) {
+        val off = model.leftOutBy(program, section, exercise, index)
+        StreetCard(Modifier.padding(bottom = 10.dp).alpha(if (off != null) 0.45f else 1f)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 NumberBox(number.toString(), 40.dp, 20f)
                 Column(Modifier.padding(start = 12.dp)) {
@@ -206,6 +225,7 @@ private fun ExerciseSection(title: StringResource, exercises: List<TrainingExerc
                     BodyText(pluralStringResource(Res.plurals.sets_count, exercise.sets.size, exercise.sets.size), 13f)
                 }
             }
+            off?.let { SwitchedOffBadge(it, Modifier.padding(top = 8.dp)) }
             ExerciseAnimation(exercise, name, Modifier.padding(top = 10.dp))
             exerciseNotes(exercise).takeIf(String::isNotBlank)?.let { BodyText(it, 14f, Modifier.padding(top = 10.dp)) }
             equipmentNeeds(exercise.equipment)?.let { BodyText(it, 13f, Modifier.padding(top = 4.dp)) }
@@ -239,6 +259,19 @@ fun ExerciseAnimation(exercise: TrainingExercise, name: String, modifier: Modifi
             }
         }
     }
+}
+
+/** "Switched off · Handstand" or "Switched off · Pull-up bar" on a left-out exercise (Android: switch_off_badge). */
+@Composable
+fun SwitchedOffBadge(reason: LeftOut, modifier: Modifier = Modifier) {
+    Badge(stringResource(Res.string.switch_off_badge, leftOutName(reason)), modifier, color = Street.colors.textSecondary)
+}
+
+/** The skill's family or the equipment that leaves an exercise out, by name. */
+@Composable
+fun leftOutName(reason: LeftOut): String = when (reason) {
+    is LeftOut.Skill -> reason.name
+    is LeftOut.Gear -> stringResource(equipmentName(reason.equipment))
 }
 
 /** "Workout view: Focus · List" above Start on a class page (Android: workoutViewSetting), at least 56 dp tall. */

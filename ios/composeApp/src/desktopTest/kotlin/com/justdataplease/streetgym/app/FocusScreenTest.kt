@@ -73,7 +73,7 @@ class FocusScreenTest {
         onNodeWithText("RPE 8").performClick()
         onNodeWithText("FINISH").performClick()
 
-        // Back on Today, with the note; the class is done and the flame lit.
+        // Progress opens, as on Android, with the note; the class is done and the flame lit.
         onNodeWithText("Workout completed", substring = true).assertExists()
         onNodeWithText("1 day streak", substring = true).assertExists()
         assertNull(model.training.active())

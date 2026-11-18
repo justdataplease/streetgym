@@ -28,8 +28,11 @@ sealed interface FocusPage {
 data class Hold(val key: String, val round: Int, val endsAt: Long, val cued: Boolean = false)
 
 /**
- * The class in training as the focus screen and the list draw it, at [now]. [skipped] and [hold] last while the app
- * runs. [restEndsAt]: when the rest that is running ends, null when none is (the list's rest line shows it).
+ * The class in training as the focus screen and the list draw it, at [now]. [flow]: its sets the athlete trains, those
+ * of switched-off skills and equipment left out ([leftOut]) until done anyway (Android: flow.without(leftOut)); the
+ * focus view walks it and both views count it. [all]: every set of the class, as the list shows them. [skipped] and
+ * [hold] last while the app runs. [restEndsAt]: when the rest that is running ends, null when none is (the list's rest
+ * line shows it).
  */
 class FocusState(
     val program: TrainingProgram,
@@ -40,6 +43,8 @@ class FocusState(
     val hold: Hold?,
     val now: Long,
     val restEndsAt: Long? = null,
+    val all: WorkoutFlow = flow,
+    val leftOut: Set<String> = emptySet(),
 )
 
 /**
@@ -84,6 +89,12 @@ interface WorkoutDevice {
      */
     fun askAlerts() {}
 
+    /**
+     * The status bar's colour follows the theme: light words on a [dark] theme (Night Park), dark ones on the light
+     * themes (Android: configureWindow's light status bar).
+     */
+    fun statusBar(dark: Boolean) {}
+
     /** Does nothing: previews, tests, and the desktop window. */
     object None : WorkoutDevice
 }
@@ -122,7 +133,8 @@ private data class Owned<T>(val session: Long, val value: T)
  * Ticks, logged amounts and easier options are saved at once ([StoredProgress], with the time of each tick). Skips, a
  * timed set's countdown and the rest last while the app runs, as on Android. Every time comes from [now], so tests step
  * it; [tick] is what the screen calls a few times a second. [sound] is the rest timer sound switch; [leftOutOfExam]
- * tells the exam targets of switched-off skills or equipment.
+ * tells the exam targets of switched-off skills or equipment; [leftOut] the set keys of a class that the skill and
+ * equipment switches leave out (Android: leftOutKeys), which the position, the ticks and the rest skip.
  */
 @Stable
 class Training internal constructor(
@@ -135,6 +147,7 @@ class Training internal constructor(
     private val saves: Saves,
     private val sound: () -> Boolean = { true },
     private val leftOutOfExam: (TrainingExercise) -> Boolean = { false },
+    private val leftOut: (TrainingProgram, WorkoutFlow) -> Set<String> = { _, _ -> emptySet() },
     private val programAt: (String, Intensity) -> TrainingProgram?,
 ) {
     private var skips by mutableStateOf<Owned<Set<String>>?>(null)
@@ -167,7 +180,9 @@ class Training internal constructor(
     fun state(): FocusState? {
         clock
         val active = active() ?: return null
-        val (program, flow) = open(active) ?: return null
+        val (program, all) = open(active) ?: return null
+        val out = leftOut(program, all)
+        val flow = all.without(out)
         val at = now()
         val skipped = skipped(active)
         val current = flow.firstIncomplete(active.completedSetIds, skipped)
@@ -177,7 +192,7 @@ class Training internal constructor(
             restEnd != null && restEnd > at -> FocusPage.Rest(current, restEnd)
             else -> FocusPage.Set(current)
         }
-        return FocusState(program, flow, active, page, skipped, hold(active), at, restEnd?.takeIf { it > at })
+        return FocusState(program, flow, active, page, skipped, hold(active), at, restEnd?.takeIf { it > at }, all, out)
     }
 
     /**
@@ -199,7 +214,7 @@ class Training internal constructor(
             } else {
                 rest = null
                 if (at - end < CUE_WINDOW_MILLIS && sound()) device.restOver()
-                open(active)?.second?.let { flow ->
+                live(active)?.let { flow ->
                     flow.firstIncomplete(active.completedSetIds, skipped(active))?.let { cues?.invoke(Cue.RestOver(flow[it])) }
                 }
             }
@@ -326,7 +341,7 @@ class Training internal constructor(
 
     /** Switches an exercise to or from its easier option; what was logged for its sets was the other movement. */
     fun setEasier(exerciseKey: String, easier: Boolean) {
-        val (_, flow) = current() ?: return
+        val flow = progress.activeWorkout()?.let(::open)?.second ?: return
         progress.setEasier(exerciseKey, easier)
         val done = progress.activeWorkout()?.done.orEmpty()
         flow.steps.filter { it.exerciseKey == exerciseKey && it.key in done }.forEach { progress.setDone(it.key, null) }
@@ -376,11 +391,17 @@ class Training internal constructor(
         saves.bump()
     }
 
-    /** The class in progress and its sets, for an action on them. */
+    /** The class in progress and the sets the athlete trains, for an action on them. */
     private fun current(): Pair<ActiveWorkout, WorkoutFlow>? {
         val active = progress.activeWorkout() ?: return null
-        return open(active)?.let { active to it.second }
+        return live(active)?.let { active to it }
     }
+
+    /** The class's sets less those the switches leave out. */
+    private fun live(active: ActiveWorkout): WorkoutFlow? = open(active)?.let { (program, all) -> all.without(leftOut(program, all)) }
+
+    /** Start over: the rest, the timed set and the skips go with the progress. */
+    fun reset() = forget()
 
     private fun open(active: ActiveWorkout): Pair<TrainingProgram, WorkoutFlow>? {
         opened?.takeIf { it.first == active.programId && it.second == active.intensity }?.let { return it.third }

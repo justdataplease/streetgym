@@ -34,6 +34,15 @@ import com.justdataplease.streetgym.app.data.AppModel
 import com.justdataplease.streetgym.app.data.ExamQuestion
 import com.justdataplease.streetgym.app.data.WorkoutView
 import com.justdataplease.streetgym.app.ui.Shown
+import com.justdataplease.streetgym.app.ui.PROGRESS_HISTORY
+import com.justdataplease.streetgym.app.ui.PROGRESS_LEADERBOARD
+import com.justdataplease.streetgym.data.equipment.Equipment
+import com.justdataplease.streetgym.data.equipment.EquipmentSwitches
+import com.justdataplease.streetgym.data.progress.WorkoutSession
+import com.justdataplease.streetgym.data.skills.SkillLevel
+import com.justdataplease.streetgym.data.skills.SkillProgressions
+import com.justdataplease.streetgym.data.skills.SkillSwitches
+import com.justdataplease.streetgym.data.skills.switchedOff
 import com.justdataplease.streetgym.billing.Tier
 import com.justdataplease.streetgym.data.progress.ExamResult
 import com.justdataplease.streetgym.app.data.FocusPage
@@ -95,6 +104,8 @@ fun main(args: Array<String>) {
     for (theme in StreetTheme.entries) workoutShots(program, theme, out)
     for (theme in StreetTheme.entries) loopShots(program, theme, out)
     for (theme in StreetTheme.entries) levelShots(program, theme, out)
+    for (theme in StreetTheme.entries) progressShots(program, theme, out)
+    for (theme in StreetTheme.entries) settingsShots(program, theme, out)
     shot(File(out, "start-buttons.png"), height = 1560) { StartButtons() }
     val names = movementNames()
     for (theme in StreetTheme.entries) FIGURE_SHEETS.forEachIndexed { index, ids ->
@@ -322,6 +333,164 @@ private fun levelShots(program: Program, theme: StreetTheme, out: File) {
     shot(File(out, "today-large-text-$name.png")) {
         CompositionLocalProvider(LocalDensity provides Density(DENSITY, fontScale = 1.3f)) { StreetGymApp(athlete, SAFE_AREA) }
     }
+}
+
+/**
+ * Round 4, Progress, in [theme]: Skills with ranks from Rank 1 to Rank 5 and the tags of a lower tier, a skill's sheet,
+ * the help; History with its month, a picked day, the month before, a new athlete's empty month; the streak's sheet
+ * over Today.
+ */
+private fun progressShots(program: Program, theme: StreetTheme, out: File) {
+    val name = theme.key
+    val ranked = ranked(program).apply { this.theme = theme }
+    shot(File(out, "skills-$name.png")) { StreetGymApp(ranked, SAFE_AREA, startAt = Screen.Progress) }
+    shot(File(out, "skills-long-$name.png"), height = 9_000) { StreetGymApp(ranked, SAFE_AREA, startAt = Screen.Progress) }
+    shot(File(out, "skill-sheet-$name.png")) { StreetGymApp(ranked, SAFE_AREA, startAt = Screen.Progress, showing = Shown.Skill("archer_pullup")) }
+    shot(File(out, "skill-sheet-elite-$name.png")) { StreetGymApp(ranked, SAFE_AREA, startAt = Screen.Progress, showing = Shown.Skill("dead_hang")) }
+    shot(File(out, "skills-help-$name.png")) { StreetGymApp(ranked, SAFE_AREA, startAt = Screen.Progress, showing = Shown.SkillsHelp) }
+    // Free: the skills of the levels it doesn't open wear Plus or Pro; switched-off ones are greyed.
+    val free = ranked(program, Tier.FREE).apply {
+        this.theme = theme
+        skillSwitches = SkillSwitches().with("planche", 2)
+    }
+    shot(File(out, "skills-free-long-$name.png"), height = 9_000) { StreetGymApp(free, SAFE_AREA, startAt = Screen.Progress) }
+
+    val history = historyAthlete(program).apply { this.theme = theme }
+    shot(File(out, "history-$name.png")) { StreetGymApp(history, SAFE_AREA, startAt = Screen.Progress, progressTab = PROGRESS_HISTORY) }
+    shot(File(out, "history-long-$name.png"), height = 6_000) {
+        StreetGymApp(history, SAFE_AREA, startAt = Screen.Progress, progressTab = PROGRESS_HISTORY)
+    }
+    shot(File(out, "history-day-$name.png")) {
+        StreetGymApp(history, SAFE_AREA, startAt = Screen.Progress, progressTab = PROGRESS_HISTORY, historyDay = 20_261_118)
+    }
+    shot(File(out, "history-day-marked-$name.png")) {
+        StreetGymApp(history, SAFE_AREA, startAt = Screen.Progress, progressTab = PROGRESS_HISTORY, historyDay = 20_261_104)
+    }
+    shot(File(out, "history-october-$name.png")) {
+        StreetGymApp(history, SAFE_AREA, startAt = Screen.Progress, progressTab = PROGRESS_HISTORY, historyDay = 20_261_004)
+    }
+    val new = model(program).apply { this.theme = theme }
+    shot(File(out, "history-empty-$name.png")) { StreetGymApp(new, SAFE_AREA, startAt = Screen.Progress, progressTab = PROGRESS_HISTORY) }
+    shot(File(out, "streak-sheet-$name.png")) { StreetGymApp(history, SAFE_AREA, showing = Shown.Streak(history = true)) }
+    shot(File(out, "streak-sheet-history-$name.png")) {
+        StreetGymApp(history, SAFE_AREA, startAt = Screen.Progress, progressTab = PROGRESS_HISTORY, showing = Shown.Streak(history = false))
+    }
+    shot(File(out, "progress-leaderboard-$name.png")) {
+        StreetGymApp(history, SAFE_AREA, startAt = Screen.Progress, progressTab = PROGRESS_LEADERBOARD)
+    }
+}
+
+/**
+ * Round 5, Settings and themes, in [theme]: the whole of Settings with a skill switched off and from a rung and the
+ * wall switched off, a skill's steps, Start over's question, the developer settings, a class with a switched-off
+ * exercise, the list and the focus summary leaving it out, a class with nothing left, and a class opened to inspect.
+ */
+private fun settingsShots(program: Program, theme: StreetTheme, out: File) {
+    val name = theme.key
+    val ordered = NextClass.ordered(program.catalog)
+    val handstand = SkillSwitches().with("handstand", 0)
+    val settings = athlete(program).apply {
+        this.theme = theme
+        skillSwitches = handstand.with("planche", 3).with("pullup", 2)
+        equipment = EquipmentSwitches(setOf(Equipment.WALL))
+    }
+    shot(File(out, "settings-long-$name.png"), height = 10_500) { StreetGymApp(settings, SAFE_AREA, startAt = Screen.Settings) }
+    shot(File(out, "switches-sheet-$name.png")) { StreetGymApp(settings, SAFE_AREA, startAt = Screen.Settings, showing = Shown.Switches("planche")) }
+    shot(File(out, "switches-sheet-pullup-$name.png")) { StreetGymApp(settings, SAFE_AREA, startAt = Screen.Settings, showing = Shown.Switches("pullup")) }
+    shot(File(out, "reset-$name.png")) { StreetGymApp(settings, SAFE_AREA, startAt = Screen.Settings, showing = Shown.Reset) }
+    shot(File(out, "developer-$name.png")) { StreetGymApp(settings, SAFE_AREA, startAt = Screen.Settings, showing = Shown.Developer) }
+
+    // A class with handstand work beside other work: greyed on its page, left out of the list's count and the focus view.
+    val partial = ordered.first { p ->
+        p.levelNumber <= 3 && !p.switchedOff(handstand) && (p.practice + p.exercises).any { it.movementId?.let(handstand::isOff) == true }
+    }
+    fun atPartial(): AppModel = model(program).apply {
+        this.theme = theme
+        skillSwitches = handstand
+        progress.completePrograms(ordered.takeWhile { it.id != partial.id }.map { it.id }, at = NOW - DAY)
+    }
+    val page = atPartial()
+    shot(File(out, "class-switched-off-long-$name.png"), height = LONG_HEIGHT) { StreetGymApp(page, SAFE_AREA, startAt = Screen.Class(partial.id)) }
+    val list = atPartial().apply {
+        workoutView = WorkoutView.LIST
+        start(partial.id)
+    }
+    shot(File(out, "workout-list-off-long-$name.png"), height = LONG_HEIGHT) { StreetGymApp(list, SAFE_AREA, startAt = Screen.Workout(partial.id)) }
+    val clock = ShotClock(NOW - 30 * MINUTE)
+    val focus = model(program, clock).apply {
+        this.theme = theme
+        skillSwitches = handstand
+        progress.completePrograms(ordered.takeWhile { it.id != partial.id }.map { it.id }, at = NOW - DAY)
+        start(partial.id)
+        while (true) {
+            val index = (training.state()!!.page as? FocusPage.Set)?.index ?: break
+            clock.time += 40_000L
+            training.done(index)
+            training.skipRest()
+        }
+        clock.time = NOW
+    }
+    shot(File(out, "workout-summary-off-$name.png")) { StreetGymApp(focus, SAFE_AREA, startAt = Screen.Workout(partial.id)) }
+
+    // A class with nothing left to train, opened to inspect it, and a class not reached opened the same way.
+    val all = program.skills!!.families.map { it.spec }.fold(SkillSwitches()) { switches, spec ->
+        if (SkillProgressions.LINES[spec.id].isNullOrEmpty()) switches else switches.with(spec.id, SkillProgressions.firstSwitchable(spec))
+    }
+    val passed = ordered.drop(1).first { it.switchedOff(all) }
+    val inspector = athlete(program).apply {
+        this.theme = theme
+        skillSwitches = all
+        inspectAllDays = true
+    }
+    shot(File(out, "class-passed-$name.png")) { StreetGymApp(inspector, SAFE_AREA, startAt = Screen.Class(passed.id)) }
+    inspector.skillSwitches = SkillSwitches()
+    shot(File(out, "class-inspect-long-$name.png"), height = LONG_HEIGHT) { StreetGymApp(inspector, SAFE_AREA, startAt = Screen.Class(ordered[60].id)) }
+}
+
+/**
+ * An athlete with every rank: a dead hang at Rank 5, pull-ups at Rank 4, archer pull-ups at Rank 3, push-ups at Rank 2,
+ * a tuck front lever at Rank 1 and a few wall handstands begun, from twelve own days of logged sets; on [tier].
+ */
+private fun ranked(program: Program, tier: Tier = Tier.PRO): AppModel {
+    val book = program.skills!!
+    fun sets(id: String, level: SkillLevel, count: Int): Pair<String, List<Int>> =
+        id to List(count) { book.skill(id)!!.standard.target(level)!! }
+    val logged = listOf(
+        sets("dead_hang", SkillLevel.ELITE, 30), sets("pullup", SkillLevel.MASTER, 25), sets("archer_pullup", SkillLevel.ADVANCED, 22),
+        sets("pushup", SkillLevel.INTERMEDIATE, 16), sets("tuck_front_hold", SkillLevel.BEGINNER, 12), sets("wall_handstand", SkillLevel.BEGINNER, 4),
+    )
+    val sessions = logged.mapIndexed { index, (id, doses) ->
+        val at = NOW - (logged.size - index) * DAY
+        WorkoutSession("custom:shots-$index", at - 40 * MINUTE, at, 2_400L, effortRating = 6, credits = mapOf(id to doses.size),
+            doses = mapOf(id to doses), points = 180)
+    }
+    val store = MemoryStore()
+    store.set("streetgym_progress.session_history", StoredProgress.encodeSessions(sessions))
+    return AppModel(program, StoredProgress(store), tier = tier, now = { NOW }, zone = TimeZone.UTC)
+}
+
+/**
+ * The athlete of the pictures with a fuller history: their twelve classes, the first repeated today, the tenth
+ * done Harder, and on 4 November five classes marked complete and one on the 6th; a month earlier, three classes.
+ */
+private fun historyAthlete(program: Program): AppModel {
+    val ordered = NextClass.ordered(program.catalog)
+    val store = MemoryStore()
+    val model = AppModel(program, StoredProgress(store), now = { NOW }, zone = TimeZone.UTC)
+    val october = listOf(45, 44, 42)
+    val daysAgo = listOf(17, 16, 14, 13, 11, 10, 8, 7, 4, 3, 2, 0)
+    (october + daysAgo).forEachIndexed { index, day ->
+        val finished = NOW - day * DAY - (if (day == 0) 8 * 60 * MINUTE else 0L)
+        val harder = index == 12
+        model.progress.startWorkout(ordered[index].id, startedAtEpochMillis = finished - 40 * MINUTE,
+            intensity = if (harder) com.justdataplease.streetgym.data.progress.Intensity.HARDER else com.justdataplease.streetgym.data.progress.Intensity.NORMAL)
+        model.progress.finishWorkout(completedAtEpochMillis = finished, effortRating = 6, points = 120)
+    }
+    model.progress.completePrograms(ordered.subList(15, 20).map { it.id }, at = NOW - 14 * DAY + 2 * 60 * MINUTE)
+    model.progress.completePrograms(listOf(ordered[20].id), at = NOW - 12 * DAY)
+    model.progress.startWorkout(ordered[0].id, NOW - 7 * 60 * MINUTE, repeat = true)
+    model.progress.finishWorkout(NOW - 6 * 60 * MINUTE - 25 * MINUTE, effortRating = 5, points = 90)
+    return model
 }
 
 /** A tall picture for a whole scrolling screen. */

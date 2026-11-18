@@ -2,39 +2,39 @@
 
 Every feature of the Android app (2.14.1, versionCode 58), one line each, in the order a user meets them: the iPhone app is done when every line is ticked.
 `[x]` is on iPhone now (in `ios-streetgym`, checked in its code), `[ ]` is to build. Pointers name the Android file under `android-streetgym/app/src/main/java/com/justdataplease/streetgym/` (→ the iPhone file where it is built); **engine**: the rule is already in `android-streetgym/shared/`; **iPhone API**: the Apple framework it needs; **owner**: it can't be finished without the owner.
-Written 18 Nov 2026; updated the same day after rounds 1 to 3.
+Written 18 Nov 2026; updated the same day after rounds 1 to 5.
 
 ## Count
 
 | Area | Features | On iPhone | To build | Waiting on the owner |
 |---|---:|---:|---:|---:|
-| 1. Opening the app | 8 | 5 | 3 | 0 |
+| 1. Opening the app | 8 | 6 | 2 | 0 |
 | 2. First launch: the strength test | 17 | 0 | 17 | 0 |
-| 3. Today | 23 | 18 | 5 | 1 |
+| 3. Today | 23 | 19 | 4 | 1 |
 | 4. The class page | 11 | 11 | 0 | 0 |
 | 5. Line-man animations | 12 | 12 | 0 | 0 |
 | 6. Training a class: focus view | 18 | 18 | 0 | 0 |
 | 7. Training a class: list view | 13 | 13 | 0 | 0 |
-| 8. Finishing, repeats and exams | 15 | 14 | 1 | 0 |
+| 8. Finishing, repeats and exams | 15 | 15 | 0 | 0 |
 | 9. Training › Levels | 19 | 19 | 0 | 0 |
 | 10. Training › My workouts | 22 | 0 | 22 | 0 |
 | 11. Training › Library | 11 | 0 | 11 | 0 |
-| 12. Progress › History and the streak | 14 | 0 | 14 | 0 |
-| 13. Progress › Skills | 11 | 0 | 11 | 0 |
+| 12. Progress › History and the streak | 14 | 14 | 0 | 0 |
+| 13. Progress › Skills | 11 | 11 | 0 | 0 |
 | 14. Timer | 8 | 0 | 8 | 0 |
 | 15. Training › Parks | 15 | 0 | 15 | 1 |
 | 16. Progress › Leaderboard | 14 | 0 | 14 | 9 |
-| 17. Settings | 22 | 3 | 19 | 0 |
-| 18. Themes | 5 | 2 | 3 | 0 |
+| 17. Settings | 22 | 21 | 1 | 0 |
+| 18. Themes | 5 | 5 | 0 | 0 |
 | 19. Plans and purchases | 22 | 0 | 22 | 8 |
 | 20. Ads and consent | 11 | 0 | 11 | 4 |
 | 21. Account, sign-in, cloud backups and restore | 17 | 0 | 17 | 17 |
 | 22. Notifications and sounds | 6 | 2 | 4 | 0 |
 | 23. Home-screen widget | 10 | 0 | 10 | 7 |
 | 24. Sharing and progress analytics | 6 | 0 | 6 | 5 |
-| 25. Accessibility and languages | 12 | 5 | 7 | 0 |
+| 25. Accessibility and languages | 12 | 8 | 4 | 0 |
 | 26. Anything else | 2 | 0 | 2 | 0 |
-| **All** | **344** | **122** | **222** | **52** |
+| **All** | **344** | **174** | **170** | **52** |
 
 "Waiting on the owner" counts lines still to build whose last step needs the owner; most can be built and tested first with a test double (a `.storekit` file, Google's demo ad units, a made-up profile).
 
@@ -45,7 +45,7 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 3.
 - [x] Five tabs, Today, Training, Progress, Timer, Settings, with their icons, in each theme's tab bar (HomeActivity.rebuildBottomNavigation, ui/ThemeDecor.kt → Shell.kt TabBar)
 - [x] Title bar: the brand mark on a tab, ‹ Back on a nested screen, the title in the theme's display face (HomeActivity.buildShell, screenTitle → Shell.kt TitleBar)
 - [x] Screens keep clear of the Dynamic Island and the home indicator (HomeActivity.applySystemBarInsets → App.kt)
-- [ ] Back swipe from the left edge on a nested screen (HomeActivity.navigateBack; **iPhone API**: UIKit edge-swipe gesture)
+- [x] Back swipe from the left edge on a nested screen (HomeActivity.navigateBack → BackSwipe.kt, in Compose: a drag from the left 24 dp, 64 dp to the right, goes back; off while a dialog shows)
 - [x] App name "Street Gym", the icon, the launch colour (res/values/strings.xml → iosApp/project.yml, Assets.xcassets)
 - [x] Progress kept on the phone, offline (data/progress/SharedPreferencesProgressRepository.kt → data/StoredProgress.kt in UserDefaults)
 
@@ -79,7 +79,7 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 3.
 - [x] Flame lit once today's workout is done, unlit with its number, a dashed 0 once ended; trained days filled, a carried rest day pale, today outlined and underlined (ui/StreakFlame.kt, StreakUi.StreakWeekView → StreakViews.kt; **engine** Streak)
 - [x] The week row starts on the region's first weekday (data/progress/StreakDays.kt snapshot → AppModel.kt LocalDays, NSCalendar.firstWeekday read in MainViewController)
 - [x] Large text also gives the smaller flame and boxes (todayLine: width ≥ 360 and font scale ≤ 1.15 → TodayScreen.roomyStreak: a 320 dp row and the font scale)
-- [ ] A tap on the streak opens the streak sheet (§12) (HomeActivity.todayLine, StreakUi.showStreakSheet)
+- [x] A tap on the streak opens the streak sheet (§12) (HomeActivity.todayLine, StreakUi.showStreakSheet → TodayScreen, StreakViews.StreakSheet)
 - [x] Day card head in each theme: Concrete's tape and big class number, Night Park's stencil and level chip, Wheatpaste's poster (ui/ThemeDecor.kt todayHeader → TodayHeader.kt)
 - [x] Label over the title: "Repeat: …" during a repeat, "Repeating from Level N" or "Repeating for the exam" during a replay (renderDashboard → TodayScreen, AppModel.Today.label)
 - [x] Class title and "Workout 12 of 100 • About 35 min • RPE 6" (renderDashboard, ui/DisplayText.kt programMeta → DisplayText.kt)
@@ -120,7 +120,7 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 3.
 - [x] On every exercise card of the class page and the list view (HomeActivity.exerciseAnimation → ClassScreen.ExerciseAnimation)
 - [x] "Preview 1/3: <variation> - tap to change" under an exercise with no movement id and several variations (HomeActivity.exerciseAnimation → ClassScreen.ExerciseAnimation)
 - [x] Moving tile: the clip in a small rounded tile, framed on the whole cycle, for the exercise picker, level rows and workout cards (ExerciseAnimationView.setBadgeStyle moving, EffortUi.WorkoutTile → ExerciseFigure.WorkoutTile, on the level rows; the picker and cards come with their screens)
-- [x] Still tile holding the end pose, for the skill medals (setBadgeStyle, ui/SkillMedals.kt skillFigure → ExerciseFigure with a badge; the medals come with Skills, round 4)
+- [x] Still tile holding the end pose, for the skill medals (setBadgeStyle, ui/SkillMedals.kt skillFigure → ExerciseFigure with a badge, on Skills' medals: SkillMedals.SkillMedal)
 - [x] A workout's tile plays its hardest exercise, a moving one before a hold of the same grade, ringed in its effort colour (EffortUi.tileExercise → AppModel.tileOf; **engine** WorkoutEffort.hardest)
 - [x] Reduced motion: a still pose; nothing runs off screen (ExerciseAnimationView, UiKit.systemAnimationsEnabled → LocalReduceMotion; **iPhone API**: UIAccessibilityIsReduceMotionEnabled, read at launch)
 
@@ -167,7 +167,7 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 3.
 - [x] "How hard did that feel?": RPE 1–10, the class's target picked first; Finish or Cancel (HomeActivity.askEffortAndFinish → EffortDialog)
 - [x] Saving: only exercises that ran 30% of their planned time count, for skill credits, doses and points (askEffortAndFinish → Training.finish; **engine** WorkoutFlow.counted, credits, doses, points)
 - [x] Note "Workout completed · +N points", with "· N day streak" when the class lit today's flame (askEffortAndFinish → Shell.kt)
-- [ ] After finishing, Progress opens (askEffortAndFinish; iPhone returns to Today until Progress is built, round 4)
+- [x] After finishing, Progress opens, on the tab last picked (askEffortAndFinish → Shell.kt)
 - [x] A done class offers "Repeat this day" near the top with the repeat note, and at the bottom after "You completed…", the intensity row and Focus · List (renderOverview, repeatButton → ClassScreen)
 - [x] A repeat in progress: title "Repeat workout", Resume on its button, no Complete day, "Repeat saved · +N points"; the place in the program stays (screenTitle, renderActive, askEffortAndFinish → Shell, TodayScreen, WorkoutList)
 - [x] Exam card on an exam class's page: what it asks, or "Last taken <date>: N of M targets reached.", "Not yet: …", "Passed on …" (HomeActivity.examCard → Exams.kt ExamCard; **engine** ExamLog)
@@ -251,34 +251,34 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 3.
 
 ## 12. Progress › History and the streak
 
-- [ ] Progress switch: Skills / History / Leaderboard (HomeActivity.renderProgress)
-- [ ] Month card: month and year, ‹ › and a sideways swipe, from the first month with history to this one (ui/HistoryCalendarView.kt; port data/progress/HistoryCalendar.kt to kotlinx-datetime)
-- [ ] "8 workouts this month" or "5 workouts in October" (HistoryCalendarView.showMonth)
-- [ ] This month's streak line: a small flame, "12 DAY STREAK" on tape and "Best 20", or "Best streak: N days"; a tap opens the sheet without See history (StreakUi.streakLine)
-- [ ] Weekday names starting on the region's first weekday (HistoryCalendarView)
-- [ ] Days: trained disc, pale disc for marked only, ring for today, halo for the picked day, a small ring for a repeat, a diamond for an own workout, faint future days that can't be tapped (HistoryCalendarView.DayCell)
-- [ ] Legend: Workout, Repeat, Your workout, Marked complete (HistoryCalendarView.legend)
-- [ ] A tap on a day lists only its classes under "Wednesday, November 5" with "All of November ›"; tapping it again brings the month back (HistoryCalendarView.pick, bindPanel)
-- [ ] The month's classes under the grid, newest day first; more than 3 marked on one day read "N days marked complete" (bindPanel)
-- [ ] Empty: "Finish a workout and its day is marked here.", "No workouts this month.", "No workouts on this day." (bindPanel)
-- [ ] Row: the class name, "Completed Nov 5, 2026, 7:30 PM • 42 min", "Repeat · …", "· Harder", "Placed by your test · …", "Marked complete · …"; a tap opens the class (HomeActivity.historyRow)
-- [ ] The month and picked day stay when coming back from a class (HistoryCalendarState)
-- [ ] Streak sheet: a big flame, "12 day streak", "Streak ended" or "No streak yet", "Best: N days", today's line ("Done for today." …), the week row, the rule, See history, Close (StreakUi.showStreakSheet; **engine** Streak)
-- [ ] See history opens Progress › History (HomeActivity.todayLine)
+- [x] Progress switch: Skills / History / Leaderboard, kept while the app runs (HomeActivity.renderProgress → ProgressScreen.kt; the Leaderboard tab waits for round 13)
+- [x] Month card: month and year, ‹ › and a sideways swipe, from the first month with history to this one (ui/HistoryCalendarView.kt → HistoryScreen.kt; data/progress/HistoryCalendar.kt → data/HistoryCalendar.kt on kotlinx-datetime, pinned to java.util.Calendar by HistoryCalendarTest)
+- [x] "8 workouts this month" or "5 workouts in October" (HistoryCalendarView.showMonth → HistoryScreen)
+- [x] This month's streak line: a small flame, "12 DAY STREAK" on tape and "Best 20", or "Best streak: N days"; a tap opens the sheet without See history (StreakUi.streakLine → StreakViews.StreakLine)
+- [x] Weekday names starting on the region's first weekday (HistoryCalendarView → HistoryScreen, NSCalendar.firstWeekday)
+- [x] Days: trained disc, pale disc for marked only, ring for today, halo for the picked day, a small ring for a repeat, a diamond for an own workout, faint future days that can't be tapped (HistoryCalendarView.DayCell → HistoryScreen.DayCell)
+- [x] Legend: Workout, Repeat, Your workout, Marked complete (HistoryCalendarView.legend → HistoryScreen.Legend)
+- [x] A tap on a day lists only its classes under "Wednesday, November 5" with "All of November ›"; tapping it again brings the month back (HistoryCalendarView.pick, bindPanel → HistoryScreen.HistoryList)
+- [x] The month's classes under the grid, newest day first; more than 3 marked on one day read "N days marked complete" (bindPanel → HistoryList)
+- [x] Empty: "Finish a workout and its day is marked here.", "No workouts this month.", "No workouts on this day." (bindPanel → HistoryList)
+- [x] Row: the class name, "Completed Nov 5, 2026, 7:30 PM • 42 min", "Repeat · …", "· Harder", "Placed by your test · …", "Marked complete · …"; a tap opens the class (HomeActivity.historyRow → HistoryScreen.HistoryRow, ProgressText.historyDate; "Deleted workout" for an own day that is gone)
+- [x] The month and picked day stay when coming back from a class (HistoryCalendarState → HistoryScreen.HistoryCalendarState, kept by Shell)
+- [x] Streak sheet: a big flame, "12 day streak", "Streak ended" or "No streak yet", "Best: N days", today's line ("Done for today." …), the week row, the rule, See history, Close (StreakUi.showStreakSheet → StreakViews.StreakSheet; **engine** Streak)
+- [x] See history opens Progress › History (HomeActivity.todayLine → Shell)
 
 ## 13. Progress › Skills
 
-- [ ] Points card: "POINTS" and the total; a tap explains points and ranks (ui/SkillsScreen.kt skillsContent; **engine** Points)
-- [ ] Ranks legend: the five shields named Rank 1 to Rank 5; a tap explains them (SkillsScreen.rankLegend, SkillMedals.RankBadgeView)
-- [ ] "How do points and ranks work?" with the rules, OK (SkillsScreen.showSkillsHelp)
-- [ ] A ladder per family: its name and its medals scrolling sideways (skillsContent; **engine** SkillBook, SkillProgress)
-- [ ] Medal: the figure on a tile outlined by difficulty, green to red; the rank shield on its bottom-right corner; Elite on a night tile (ui/SkillMedals.kt skillMedal, skillFigure)
-- [ ] Rank shields: one band, two bands, three stars, a big star, a winged star with a crest (SkillMedals.RankBadgeView)
-- [ ] Five blocks to the next rank under the medal, then the name (SkillsScreen.skillCell, SegmentBar)
-- [ ] Plus or Pro on the top edge of a skill first taught in a locked level, until it has a rank (skillCell, lockFor)
-- [ ] Skill sheet: the movement playing, the medal, the name, "<family> ladder · rung 3 of 6", Part of Plus/Pro, Difficulty, Rank, Held through, Sets ticked, Best set, Next with what it takes and a bar (SkillsScreen.showSkillSheet)
-- [ ] Skill sheet below: every rank with ✓ and "10 sets of 12+ reps", What counts, On schedule, Builds on, Next rung, Close (showSkillSheet)
-- [ ] Ranks and points count trained classes only, never placed or marked ones (HomeActivity.skillProgress, leaderboard/Leaderboard.kt Scores.credits)
+- [x] Points card: "POINTS" and the total; a tap explains points and ranks (ui/SkillsScreen.kt skillsContent → SkillsScreen.kt, AppModel.points; **engine** Points)
+- [x] Ranks legend: the five shields named Rank 1 to Rank 5; a tap explains them (SkillsScreen.rankLegend, SkillMedals.RankBadgeView → SkillsScreen.RankLegend, SkillMedals.RankBadge)
+- [x] "How do points and ranks work?" with the rules, OK (SkillsScreen.showSkillsHelp → SkillsHelpDialog; Android's \" read as a quote, a new rule of the string copy)
+- [x] A ladder per family: its name and its medals scrolling sideways (skillsContent → SkillsSection; **engine** SkillBook, SkillProgress)
+- [x] Medal: the figure on a tile outlined by difficulty, green to red; the rank shield on its bottom-right corner; Elite on a night tile (ui/SkillMedals.kt skillMedal, skillFigure → SkillMedals.SkillMedal)
+- [x] Rank shields: one band, two bands, three stars, a big star, a winged star with a crest (SkillMedals.RankBadgeView → SkillMedals.RankBadge)
+- [x] Five blocks to the next rank under the medal, then the name (SkillsScreen.skillCell, SegmentBar → SkillCell, SegmentBar)
+- [x] Plus or Pro on the top edge of a skill first taught in a locked level, until it has a rank (skillCell, lockFor → SkillCell, AppModel.lockFor)
+- [x] Skill sheet: the movement playing, the medal, the name, "<family> ladder · rung 3 of 6", Part of Plus/Pro, Difficulty, Rank, Held through, Sets ticked, Best set, Next with what it takes and a bar (SkillsScreen.showSkillSheet → SkillSheet)
+- [x] Skill sheet below: every rank with ✓ and "10 sets of 12+ reps", What counts, On schedule, Builds on, Next rung, Close (showSkillSheet → SkillSheet)
+- [x] Ranks and points count trained classes only, never placed or marked ones (HomeActivity.skillProgress, leaderboard/Leaderboard.kt Scores.credits → AppModel.skillProgress, Scores)
 
 ## 14. Timer
 
@@ -328,7 +328,7 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 3.
 
 ## 17. Settings
 
-- [ ] Order: Profile (§21), Theme (§18), Plus and Pro (§19), During your workout, Skills in your classes, Equipment you have, Your data (§24), Start over, Train safely, About (HomeActivity.renderSettings)
+- [x] Order: Profile (§21), Theme (§18), Plus and Pro (§19), During your workout, Skills in your classes, Equipment you have, Your data (§24), Start over, Train safely, About (HomeActivity.renderSettings → SettingsScreen.kt; Profile, Plus and Pro and Your data take their places with rounds 12, 10 and 13, Ad privacy with round 11)
 - [ ] Simulate tier, debug builds only: Default / Free / Plus / Pro (renderSettings; billing/Entitlement.kt setSimulatedTier)
 
 ### During your workout
@@ -339,37 +339,37 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 3.
 
 ### Skills in your classes
 
-- [ ] The intro, and a row per skill: its name, what is on (All steps on, Switched off, "Switched off · X stays", "Up to X") and a switch (ui/SkillSwitchesView.kt skillSwitchesCard; **engine** SkillSwitches, SkillProgressions.switchable)
-- [ ] A tap on the row: the skill's sheet with its top rung playing, the intro, every rung as "Step N" with a switch or "Always on: a basic" and "On the way: …"; off takes the harder rungs, on brings the easier back; Done (SkillSwitchesView.showFamilySwitches; **engine** SkillProgressions.LINES)
-- [ ] In the class page and list view, a switched-off exercise is greyed with "Switched off · Handstand" (HomeActivity.addExerciseSection, renderActive, leftOutBy)
-- [ ] Doing it anyway asks "Handstand is switched off" … Continue; it then counts in this workout (HomeActivity.askSwitchedOff)
-- [ ] The focus view leaves those sets out; its summary says "N sets left out: switched off in Settings" with "Do them anyway" (HomeActivity.renderFocus, FocusWorkoutView.summaryScreen; **engine** WorkoutFlow.without)
-- [ ] A class with nothing left, by skills or equipment, counts as passed: Today steps over it, its row reads SWITCHED OFF, its page says so (HomeActivity.passedIds, renderOverview; **engine** NextClass.passed)
-- [ ] Skills: the medal greyed and "Switched off"; its sheet says so (SkillsScreen.skillCell, showSkillSheet)
-- [ ] Own and ready workouts run as written, whatever is switched off (HomeActivity.switchesFor, leftOutBy)
+- [x] The intro, and a row per skill: its name, what is on (All steps on, Switched off, "Switched off · X stays", "Up to X") and a switch (ui/SkillSwitchesView.kt skillSwitchesCard → SettingsScreen.SkillSwitchRow; **engine** SkillSwitches, SkillProgressions.switchable)
+- [x] A tap on the row: the skill's sheet with its top rung playing, the intro, every rung as "Step N" with a switch or "Always on: a basic" and "On the way: …"; off takes the harder rungs, on brings the easier back; Done (SkillSwitchesView.showFamilySwitches → FamilySwitchesSheet; **engine** SkillProgressions.LINES)
+- [x] In the class page and list view, a switched-off exercise is greyed with "Switched off · Handstand" (HomeActivity.addExerciseSection, renderActive, leftOutBy → ClassScreen, WorkoutList, AppModel.leftOutBy)
+- [x] Doing it anyway asks "Handstand is switched off" … Continue; it then counts in this workout (HomeActivity.askSwitchedOff → FocusScreen.SwitchedOffDialog, AppModel.allowAnyway; forgotten when the class is started afresh, as Android's offAllowed)
+- [x] The focus view leaves those sets out; its summary says "N sets left out: switched off in Settings" with "Do them anyway" (HomeActivity.renderFocus, FocusWorkoutView.summaryScreen → Training.state, FocusScreen.SummaryPage; **engine** WorkoutFlow.without)
+- [x] A class with nothing left, by skills or equipment, counts as passed: Today steps over it, its row reads SWITCHED OFF, its page says so (HomeActivity.passedIds, renderOverview → AppModel.passed, switchedOff, ClassScreen; as on Android the page shows the note where it opens in full: in a replay or to inspect; **engine** NextClass.passed)
+- [x] Skills: the medal greyed and "Switched off"; its sheet says so (SkillsScreen.skillCell, showSkillSheet → SkillCell, SkillSheet, AppModel.skillOff)
+- [x] Own and ready workouts run as written, whatever is switched off (HomeActivity.switchesFor, leftOutBy → AppModel.leftOutBy; the workouts themselves come in rounds 7 and 8)
 
 ### Equipment you have
 
-- [ ] The intro and seven switches, Pull-up bar, Low bar, Parallel bars, Box, bench or chair, Wall, Pole or stall bars, Resistance band, each with its hint and exercise count, or "Switched off: classes leave these out"; a tap on the row flips it (ui/EquipmentView.kt equipmentCard; **engine** Equipment, EquipmentSwitches)
-- [ ] Exercises that need it are greyed with "Switched off · Pull-up bar"; doing one anyway asks first with the equipment message (HomeActivity.leftOutBy, askSwitchedOff)
-- [ ] Skills whose movement needs it grey out (HomeActivity.lacksEquipment)
+- [x] The intro and seven switches, Pull-up bar, Low bar, Parallel bars, Box, bench or chair, Wall, Pole or stall bars, Resistance band, each with its hint and exercise count, or "Switched off: classes leave these out"; a tap on the row flips it (ui/EquipmentView.kt equipmentCard → SettingsScreen.EquipmentRow; **engine** Equipment, EquipmentSwitches)
+- [x] Exercises that need it are greyed with "Switched off · Pull-up bar"; doing one anyway asks first with the equipment message (HomeActivity.leftOutBy, askSwitchedOff → AppModel.leftOutBy, SwitchedOffDialog)
+- [x] Skills whose movement needs it grey out (HomeActivity.lacksEquipment → AppModel.lacksEquipment)
 
 ### Start over, Train safely, About
 
-- [ ] Start over: its text (with an account: "Your leaderboard points and any cloud copy reset too."), Reset progress, "Reset all progress?", Reset (HomeActivity.confirmReset)
-- [ ] Reset erases classes, history, points, ranks and exams, keeps My workouts, the theme and purchases, says "Progress reset. Choose where to start." and brings the strength test back (confirmReset, SharedPreferencesProgressRepository.reset)
-- [ ] Train safely card (renderSettings)
-- [ ] About: "Street Gym: Daily Calisthenics", its text, "Version 1.0" (renderSettings)
-- [ ] Ten taps on the version: "N taps to developer settings", then Developer settings with Inspect all days, Hide developer settings, Done (ui/DeveloperMenu.kt)
-- [ ] Inspect all days: any class opens read-only with the "Inspect only" badge and note, nothing to start or complete (HomeActivity.renderOverview, renderWorkouts)
+- [x] Start over: its text (with an account: "Your leaderboard points and any cloud copy reset too."), Reset progress, "Reset all progress?", Reset (HomeActivity.confirmReset → SettingsScreen, ResetDialog; the account's words come with the account, round 12)
+- [x] Reset erases classes, history, points, ranks and exams, keeps My workouts, the theme and purchases, says "Progress reset. Choose where to start." and brings the strength test back (confirmReset, SharedPreferencesProgressRepository.reset → AppModel.reset, StoredProgress.reset with "reset_at"; placement_done is cleared under Android's key, and the test itself shows once round 6 builds it)
+- [x] Train safely card (renderSettings → SettingsScreen)
+- [x] About: "Street Gym: Daily Calisthenics", its text, "Version 1.0" (renderSettings → SettingsScreen; the version from the Info.plist's CFBundleShortVersionString)
+- [x] Ten taps on the version: "N taps to developer settings", then Developer settings with Inspect all days, Hide developer settings, Done (ui/DeveloperMenu.kt → SettingsScreen.VersionTaps, DeveloperDialog)
+- [x] Inspect all days: any class opens read-only with the "Inspect only" badge and note, nothing to start or complete (HomeActivity.renderOverview, renderWorkouts → ClassScreen, LevelScreen, AppModel.inspects)
 
 ## 18. Themes
 
 - [x] Concrete & Tape (the default), Night Park (dark) and Wheatpaste, with their colours, fonts, corners, outlines and page grain on the screens built so far (ui/StreetTheme.kt, ThemeDecor.kt, ThemeDrawables.kt → theme/StreetTheme.kt, Kit.kt)
 - [x] Dialogs, sheets and notes in each theme's style (Android AlertDialog themes → Overlay.kt)
-- [ ] Settings › Theme: three rows, each with a swatch, its name in its own face, a summary, and the one selected (ThemeDecor.themePicker)
-- [ ] The picked theme is saved and every screen follows at once (AppSettings.theme; iPhone keeps AppModel.theme in memory only)
-- [ ] Status bar dark on the light themes, light on Night Park (HomeActivity.configureWindow; **iPhone API**: UIStatusBarStyle)
+- [x] Settings › Theme: three rows, each with a swatch, its name in its own face, a summary, and the one selected (ThemeDecor.themePicker → SettingsScreen.ThemePicker)
+- [x] The picked theme is saved and every screen follows at once (AppSettings.theme → data/AppSettings.kt, "streetgym_settings.theme"; an old backup's dark switch opens on Night Park)
+- [x] Status bar dark on the light themes, light on Night Park (HomeActivity.configureWindow → WorkoutDevice.statusBar, MainViewController: the window's overrideUserInterfaceStyle; type-checked on Windows, seen only on the Mac)
 
 ## 19. Plans and purchases
 
@@ -469,12 +469,12 @@ Android has no share sheet; its one sharing feature is Share my progress.
 - [x] Spoken labels on the tabs, Today's head and streak, and the focus view's buttons (contentDescription → Shell.kt, TodayHeader.kt, StreakViews.kt, FocusScreen.kt)
 - [x] Focus view spoken cues: rest started with what's next, every 15 s of rest left, rest over, time's up, switch sides (FocusWorkoutView.update, done → Training's Cues, FocusScreen.cueText; **iPhone API**: UIAccessibilityPostNotification with UIAccessibilityAnnouncementNotification)
 - [x] Spoken labels in the list view: "Mark set 2 of Pull-Up complete", "Complete all Warm-up sets" with "3 of 8 sets" (renderActive → WorkoutList)
-- [ ] Spoken calendar days: "November 5, today, 2 workouts, 1 repeat"; the month title read when it changes; the arrows named (HistoryCalendarView.describe)
-- [ ] Spoken medals ("Strict Pull-Up, Moderate skill, Rank 2"), points and ranks with "Double-tap for how…" (SkillsScreen.medalDescription)
+- [x] Spoken calendar days: "November 5, today, 2 workouts, 1 repeat"; the month title read when it changes; the arrows named (HistoryCalendarView.describe → HistoryScreen.describe, a polite live region)
+- [x] Spoken medals ("Strict Pull-Up, Moderate skill, Rank 2"), points and ranks with "Double-tap for how…" (SkillsScreen.medalDescription → SkillCell, SkillsSection)
 - [ ] Spoken park scene with its three movements and a Replay action (ParkSceneView, park_scene_description)
 - [x] Spoken movement guide: "Line-figure movement guide for X…" (ExerciseAnimationView.bind → ExerciseFigure)
 - [ ] Spoken strength-test counters and their − and + ("One rep more, Strict pull-ups") (PlacementView.countTile)
-- [ ] Spoken theme rows with "selected", level cards with progress and tier, class rows with their state (ThemeDecor.themePicker, HomeActivity.levelCard, ProgramListAdapter; the level cards and class rows speak on iPhone, the theme rows come in round 5)
+- [x] Spoken theme rows with "selected", level cards with progress and tier, class rows with their state (ThemeDecor.themePicker, HomeActivity.levelCard, ProgramListAdapter → ThemePicker, TrainingScreen, LevelScreen)
 - [ ] Reduced motion also stills the park scene and the heart's pop (ParkSceneView, heartButton; **iPhone API**: UIAccessibility.isReduceMotionEnabled)
 - [ ] Large text keeps every control on screen: the focus view cuts its info first (FocusWorkoutView.screen)
 
@@ -490,8 +490,8 @@ Thirteen rounds of about 20 to 28 lines, each one sitting's build and test, in t
 1. **The line man and the list view** (27 lines): §5; §7; the list view's and the movement guide's spoken labels. Done 18 Nov 2026, with repeating a completed class and Complete day's question.
 2. **The workout loop** (23): §4 but the locked level's page; §8; During your workout (§17); the rest and timed-set sounds (§22); the focus view's spoken cues. Done 18 Nov 2026, but "After finishing, Progress opens", which waits for Progress (round 4). The locked level's page came with round 3's Unlock.
 3. **Today and Training › Levels** (25): §9; from §3 the label over the title, the pick kept for the day, Complete day's question, the midnight redraw, the region's week and large text. Done 18 Nov 2026. Tier tags and Unlock show; until round 10 they open the offer's heading and line in Android's words, with Cancel.
-4. **Progress: History, the streak and Skills** (28): §12; §13; the streak tap on Today; spoken calendar days and medals. Needs: round 1 (still tiles, the skill sheet's figure); HistoryCalendar and StreakDays on kotlinx-datetime; Scores.credits next to the engine.
-5. **Settings and themes** (23): §17 but During your workout and Simulate tier; §18; the back swipe (§1); spoken theme rows. Needs: rounds 2 to 4, where the switches act (both workout views, the class lists, Skills). The switches are already read from Android's keys (`data/AppSettings.kt`): the sequence steps over switched-off classes, their rows grey and exams leave their targets out.
+4. **Progress: History, the streak and Skills** (28): §12; §13; the streak tap on Today; spoken calendar days and medals. Done 18 Nov 2026, with "After finishing, Progress opens" from round 2. HistoryCalendar and StreakDays' local days are common Kotlin on kotlinx-datetime (`data/HistoryCalendar.kt`), checked against java.util.Calendar for eight zones over three years. The Leaderboard tab shows "Not on iPhone yet." until round 13.
+5. **Settings and themes** (23): §17 but During your workout and Simulate tier; §18; the back swipe (§1); spoken theme rows. Done 18 Nov 2026. The switches act where Android's do (the sequence, class rows and pages, both workout views, exams, Skills and so the points), kept under Android's keys; the theme, Start over, the developer settings and Inspect all days too. Settings leaves out what needs an account or a purchase (Profile, Plus and Pro, Your data, Ad privacy) until their rounds.
 6. **The strength test and the park scene** (24): §2; the park scene and its replay (§3); the loading screen and load error (§1); spoken park scene and counters; reduced motion for the park and the heart. Needs: round 1's figure rig; ParkStory off java TimeZone.
 7. **My workouts** (23): §10; a Library or own workout in progress taking Today's card. Needs: round 1 (picker tiles), round 2 (the class page); a library store on the phone (LibraryCodec is in the engine).
 8. **Library and Timer** (23): §11; §14; the timer and alarm alerts (§22). Needs: round 7 (the heart on a ready workout); UserNotifications, which the Simulator runs.

@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.justdataplease.streetgym.app.data.AppModel
 import com.justdataplease.streetgym.app.data.AppSettings
+import com.justdataplease.streetgym.app.data.DEFAULT_VERSION
 import com.justdataplease.streetgym.app.data.KeyValueStore
 import com.justdataplease.streetgym.app.data.StoredProgress
 import com.justdataplease.streetgym.app.data.WorkoutDevice
@@ -32,6 +33,7 @@ import com.justdataplease.streetgym.app.theme.LocalStreetType
 import com.justdataplease.streetgym.app.theme.StreetTheme
 import com.justdataplease.streetgym.app.theme.streetType
 import com.justdataplease.streetgym.app.ui.BodyText
+import com.justdataplease.streetgym.app.ui.PROGRESS_SKILLS
 import com.justdataplease.streetgym.app.ui.Screen
 import com.justdataplease.streetgym.app.ui.Shell
 import com.justdataplease.streetgym.app.ui.Shown
@@ -45,7 +47,7 @@ import kotlinx.coroutines.flow.emptyFlow
  * and choices; [device] keeps the screen on during a workout, sounds and speaks its cues; [reduceMotion] holds the
  * movement figures still, as the phone's Reduce Motion asks. [firstWeekday] (1 Monday to 7 Sunday) is where the
  * phone's region starts a week; [resumed] fires each time the app comes back to the screen, which redraws Today for a
- * new day (Android: onResume).
+ * new day (Android: onResume). [version] is the app's, shown in Settings › About.
  */
 @Composable
 fun App(
@@ -54,6 +56,7 @@ fun App(
     reduceMotion: Boolean = false,
     firstWeekday: Int = Streak.MONDAY,
     resumed: Flow<Unit> = emptyFlow(),
+    version: String = DEFAULT_VERSION,
 ) {
     var model by remember { mutableStateOf<AppModel?>(null) }
     var failed by remember { mutableStateOf(false) }
@@ -61,6 +64,7 @@ fun App(
         runCatching { loadProgram() }
             .onSuccess {
                 model = AppModel(it, StoredProgress(store), device = device, settings = AppSettings(store), firstWeekday = firstWeekday)
+                    .apply { this.version = version }
             }
             .onFailure { failed = true }
     }
@@ -77,7 +81,9 @@ fun App(
 
 /**
  * The app over a loaded [model]. [safeArea] is the room the phone needs around the screen (the Dynamic Island, the
- * home indicator); previews pass an iPhone's. [startAt] and [showing] open it on a screen and a question (previews).
+ * home indicator); previews pass an iPhone's. [startAt], [showing], [progressTab] and [historyDay] open it on a screen,
+ * a question, a tab of Progress and a day of History's calendar (previews). The phone's status bar follows the theme:
+ * light on Night Park, dark on the light themes (Android: configureWindow).
  */
 @Composable
 fun StreetGymApp(
@@ -85,9 +91,13 @@ fun StreetGymApp(
     safeArea: PaddingValues = WindowInsets.safeDrawing.asPaddingValues(),
     startAt: Screen = Screen.Today,
     showing: Shown? = null,
+    progressTab: Int = PROGRESS_SKILLS,
+    historyDay: Int = 0,
 ) {
+    val dark = model.theme.dark
+    LaunchedEffect(model, dark) { model.device.statusBar(dark) }
     CompositionLocalProvider(LocalMotionLibrary provides model.motions) {
-        StreetGymTheme(model.theme) { Shell(model, safeArea, startAt, showing) }
+        StreetGymTheme(model.theme) { Shell(model, safeArea, startAt, showing, progressTab, historyDay) }
     }
 }
 

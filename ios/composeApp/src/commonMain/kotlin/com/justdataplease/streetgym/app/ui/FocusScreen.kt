@@ -47,6 +47,13 @@ import com.justdataplease.streetgym.app.data.Cue
 import com.justdataplease.streetgym.app.data.Finished
 import com.justdataplease.streetgym.app.data.FocusPage
 import com.justdataplease.streetgym.app.data.FocusState
+import com.justdataplease.streetgym.app.data.LeftOut
+import com.justdataplease.streetgym.app.resources.equipment_off_message
+import com.justdataplease.streetgym.app.resources.focus_do_switched_off
+import com.justdataplease.streetgym.app.resources.focus_switched_off
+import com.justdataplease.streetgym.app.resources.switch_off_continue
+import com.justdataplease.streetgym.app.resources.switch_off_message
+import com.justdataplease.streetgym.app.resources.switch_off_title
 import com.justdataplease.streetgym.app.data.Training
 import com.justdataplease.streetgym.app.data.WorkoutView
 import com.justdataplease.streetgym.app.figure.ExerciseFigure
@@ -162,6 +169,11 @@ internal sealed interface Ask {
     data object End : Ask
     /** "Complete day" from the list: the class marked done without training. */
     data object CompleteDay : Ask
+    /**
+     * "Handstand is switched off": the [reasons] the exercises with [exerciseKeys] are left out; Continue does them in
+     * this workout anyway, then [then] (Android: askSwitchedOff).
+     */
+    data class SwitchedOff(val reasons: List<LeftOut>, val exerciseKeys: Set<String>, val then: () -> Unit = {}) : Ask
 }
 
 /**
@@ -224,12 +236,17 @@ fun WorkoutScreen(
 
     if (model.workoutView == WorkoutView.LIST) {
         // The list scrolls over the page's grain, as Android's does; the focus view paints its own flat background.
-        WorkoutList(state, training, onAsk = { ask = it }, onFinish = ::finish)
+        WorkoutList(model, state, training, onAsk = { ask = it }, onFinish = ::finish)
     } else Box(Modifier.fillMaxSize().background(Street.colors.background)) {
         when (val page = state.page) {
             is FocusPage.Set -> SetPage(state, page.index, training, onAsk = { ask = it }, onFinish = ::finish)
             is FocusPage.Rest -> RestPage(state, page, training, onFinish = ::finish)
-            FocusPage.Summary -> SummaryPage(state, training, onFinish = ::finish)
+            FocusPage.Summary -> SummaryPage(state, training, onFinish = ::finish) {
+                // "Do them anyway": every set left out, back in this workout once the athlete says so.
+                val steps = state.all.steps.filter { it.key in state.leftOut }
+                ask = Ask.SwitchedOff(steps.mapNotNull { model.leftOutBy(state.program, it.section, it.exercise, it.exerciseIndex) },
+                    steps.mapTo(HashSet()) { it.exerciseKey })
+            }
         }
     }
 
@@ -270,8 +287,30 @@ fun WorkoutScreen(
             model.completeDay(state.program.id)
             onCompleted()
         }
+        is Ask.SwitchedOff -> SwitchedOffDialog(open.reasons, onClose = ::close) {
+            close()
+            model.allowAnyway(state.program.id, open.exerciseKeys)
+            open.then()
+        }
         null -> Unit
     }
+}
+
+/**
+ * "Handstand is switched off": the skills or equipment that leave the exercises out, and whether to do them anyway
+ * (Android: askSwitchedOff, with its words for a skill and for equipment). [onContinue] does them in this workout.
+ */
+@Composable
+internal fun SwitchedOffDialog(reasons: List<LeftOut>, onClose: () -> Unit, onContinue: () -> Unit) {
+    val names = reasons.map { leftOutName(it) }.distinct().joinToString(" & ")
+    val skills = reasons.filterIsInstance<LeftOut.Skill>().map { it.name }.distinct().joinToString(" & ")
+    StreetDialog(
+        title = stringResource(Res.string.switch_off_title, names),
+        message = if (skills.isEmpty()) stringResource(Res.string.equipment_off_message) else stringResource(Res.string.switch_off_message, skills),
+        onDismiss = onClose,
+        confirm = DialogAction(stringResource(Res.string.switch_off_continue), onContinue),
+        dismiss = DialogAction(stringResource(Res.string.cancel), onClose),
+    )
 }
 
 /** What VoiceOver says for [cue], in Android's words (FocusWorkoutView: focus_rest_started, focus_rest_left…). */
@@ -426,7 +465,7 @@ private const val ADD_REST_SECONDS = 15
  * is ended from the list view (the title bar's list icon), not from here.
  */
 @Composable
-private fun SummaryPage(state: FocusState, training: Training, onFinish: () -> Unit) {
+private fun SummaryPage(state: FocusState, training: Training, onFinish: () -> Unit, onDoLeftOut: () -> Unit) {
     val completed = state.active.completedSetIds
     val done = state.flow.completedCount(completed)
     val missed = state.flow.keys.count { it in state.skipped && it !in completed }
@@ -441,6 +480,10 @@ private fun SummaryPage(state: FocusState, training: Training, onFinish: () -> U
                     align = TextAlign.Center)
                 if (missed > 0) BodyText(pluralStringResource(Res.plurals.focus_summary_skipped, missed, missed), 15f,
                     Modifier.fillMaxWidth(), align = TextAlign.Center)
+                // Sets of switched-off skills or equipment, left out of the class (Android: focus_switched_off).
+                val out = state.leftOut.size
+                if (out > 0) BodyText(pluralStringResource(Res.plurals.focus_switched_off, out, out), 15f,
+                    Modifier.fillMaxWidth(), align = TextAlign.Center)
             }
         },
         info = null,
@@ -454,6 +497,8 @@ private fun SummaryPage(state: FocusState, training: Training, onFinish: () -> U
                         training.doSkipped()
                     }
                 }
+                if (state.leftOut.isNotEmpty()) SecondaryButton(stringResource(Res.string.focus_do_switched_off), Modifier.padding(top = 8.dp),
+                    onClick = onDoLeftOut)
             }
         },
     )

@@ -60,7 +60,8 @@ fun roomyStreak(rowWidth: Dp, fontScale: Float): Boolean = rowWidth >= 320.dp &&
  * Today (android-streetgym, HomeActivity.renderDashboard): the brand card, the streak, the class the sequence offers
  * next, and how far through the program the athlete is. The card opens the class's page ([onOpenClass]); Start
  * workout, or Resume while it is in progress, opens its workout ([onStart]). A class in a level the tier doesn't open
- * shows Unlock, and the card and Unlock open the offer ([onOffer], with the level).
+ * shows Unlock, and the card and Unlock open the offer ([onOffer], with the level). A tap on the streak opens its sheet
+ * ([onStreak]).
  */
 @Composable
 fun TodayScreen(
@@ -69,6 +70,7 @@ fun TodayScreen(
     onStart: (String, Boolean) -> Unit,
     onOpenProgress: () -> Unit,
     onOffer: (Int) -> Unit = {},
+    onStreak: () -> Unit = {},
 ) {
     val palette = Street.colors
     // Back on Today after midnight, the flame is drawn for the new day (Android: onResume and streakDrawnOn).
@@ -96,7 +98,7 @@ fun TodayScreen(
             val roomy = roomyStreak(maxWidth, fontScale)
             Row(verticalAlignment = Alignment.CenterVertically) {
                 SectionLabel(stringResource(Res.string.today_section), Modifier.weight(1f))
-                StreakStrip(today.streak, roomy)
+                StreakStrip(today.streak, roomy, onClick = onStreak)
             }
         }
 

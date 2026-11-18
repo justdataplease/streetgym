@@ -2,6 +2,7 @@ package com.justdataplease.streetgym.app
 
 import androidx.compose.ui.window.ComposeUIViewController
 import com.justdataplease.streetgym.app.data.Beep
+import com.justdataplease.streetgym.app.data.DEFAULT_VERSION
 import com.justdataplease.streetgym.app.data.KeyValueStore
 import com.justdataplease.streetgym.app.data.LocalDays
 import com.justdataplease.streetgym.app.data.WorkoutDevice
@@ -21,6 +22,7 @@ import platform.AudioToolbox.SystemSoundIDVar
 import platform.AudioToolbox.kSystemSoundID_Vibrate
 import platform.Foundation.CFBridgingRelease
 import platform.Foundation.CFBridgingRetain
+import platform.Foundation.NSBundle
 import platform.Foundation.NSCalendar
 import platform.Foundation.NSData
 import platform.Foundation.NSFileManager
@@ -38,6 +40,7 @@ import platform.UIKit.UIAccessibilityIsReduceMotionEnabled
 import platform.UIKit.UIAccessibilityPostNotification
 import platform.UIKit.UIApplication
 import platform.UIKit.UIApplicationDidBecomeActiveNotification
+import platform.UIKit.UIUserInterfaceStyle
 import platform.UIKit.UIViewController
 import platform.UserNotifications.UNAuthorizationOptionAlert
 import platform.UserNotifications.UNAuthorizationOptionSound
@@ -51,19 +54,22 @@ import platform.UserNotifications.UNUserNotificationCenter
  * The whole app as one view controller; the Swift entry point (iosApp) puts it on screen. With Reduce Motion on, the
  * movement figures stand still (Android shows their still frame when the system's animations are off); the setting is
  * read when the app starts, and so is the first day of the week of the phone's region. Each return to the screen tells
- * the app, which redraws Today for a new day.
+ * the app, which redraws Today for a new day, and sets the status bar again. Settings › About shows the app's version
+ * from its Info.plist.
  */
 fun MainViewController(): UIViewController {
     val resumed = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
     NSNotificationCenter.defaultCenter.addObserverForName(UIApplicationDidBecomeActiveNotification, null, NSOperationQueue.mainQueue) {
         resumed.tryEmit(Unit)
+        PhoneDevice.applyStatusBar()
     }
     // NSCalendar numbers the weekdays 1 Sunday to 7 Saturday, as java.util.Calendar does.
     val firstWeekday = LocalDays.isoWeekday(NSCalendar.currentCalendar.firstWeekday.toInt())
+    val version = NSBundle.mainBundle.objectForInfoDictionaryKey("CFBundleShortVersionString") as? String ?: DEFAULT_VERSION
     return ComposeUIViewController {
         App(UserDefaultsStore(), PhoneDevice, reduceMotion = UIAccessibilityIsReduceMotionEnabled(), firstWeekday = firstWeekday,
-            resumed = resumed)
-    }
+            resumed = resumed, version = version)
+    }.also { PhoneDevice.screen = it }
 }
 
 /** The athlete's progress in the app's UserDefaults: it stays on the phone and is part of its backups. */
@@ -87,6 +93,12 @@ private object PhoneDevice : WorkoutDevice {
     private const val BEEP_FILE = "streetgym-beep.wav"
 
     private val center: UNUserNotificationCenter get() = UNUserNotificationCenter.currentNotificationCenter()
+
+    /** The app's view controller, whose window carries the theme's light or dark look. */
+    var screen: UIViewController? = null
+
+    /** The look the theme asks for: dark on Night Park, which gives the status bar light words. */
+    private var dark = false
 
     /** The beep, written once into Library/Sounds, where a notification finds it too, and made a system sound. */
     private val beep: UInt? by lazy { beepFile()?.let(::systemSound) }
@@ -118,6 +130,22 @@ private object PhoneDevice : WorkoutDevice {
         content.setSound(UNNotificationSound.soundNamed(BEEP_FILE))
         val trigger = UNTimeIntervalNotificationTrigger.triggerWithTimeInterval(seconds, repeats = false)
         center.addNotificationRequest(UNNotificationRequest.requestWithIdentifier(REST, content, trigger), withCompletionHandler = null)
+    }
+
+    /**
+     * The status bar's words follow the window's look: light on a dark one. The window takes the theme's (Android:
+     * configureWindow); it also gives Night Park the dark keyboard. Before the window exists, [applyStatusBar] runs
+     * again when the app becomes active.
+     */
+    override fun statusBar(dark: Boolean) {
+        this.dark = dark
+        applyStatusBar()
+    }
+
+    fun applyStatusBar() {
+        val window = screen?.view?.window ?: return
+        window.overrideUserInterfaceStyle = if (dark) UIUserInterfaceStyle.UIUserInterfaceStyleDark else UIUserInterfaceStyle.UIUserInterfaceStyleLight
+        window.rootViewController?.setNeedsStatusBarAppearanceUpdate()
     }
 
     override fun askAlerts() {

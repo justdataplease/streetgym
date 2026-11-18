@@ -1,5 +1,6 @@
 package com.justdataplease.streetgym.app.data
 
+import com.justdataplease.streetgym.app.theme.StreetTheme
 import com.justdataplease.streetgym.data.equipment.EquipmentSwitches
 import com.justdataplease.streetgym.data.progress.Intensity
 import com.justdataplease.streetgym.data.skills.SkillSwitches
@@ -39,6 +40,30 @@ class AppSettings(private val store: KeyValueStore) {
         get() = EquipmentSwitches.parse(store.get(KEY_EQUIPMENT_OFF))
         set(value) = store.set(KEY_EQUIPMENT_OFF, EquipmentSwitches.format(value).ifEmpty { null })
 
+    /** The look picked in Settings, by its key; before themes Android kept only a dark switch, and dark means Night Park. */
+    var theme: StreetTheme
+        get() = StreetTheme.fromKey(store.get(KEY_THEME))
+            ?: if (store.get(KEY_LEGACY_DARK_MODE)?.toBooleanStrictOrNull() == true) StreetTheme.NIGHT_PARK else StreetTheme.DEFAULT
+        set(value) {
+            store.set(KEY_THEME, value.key)
+            store.set(KEY_LEGACY_DARK_MODE, null)
+        }
+
+    /** The first-launch strength test was answered or skipped; Start over asks it again. */
+    var placementDone: Boolean
+        get() = flag(KEY_PLACEMENT_DONE, default = false)
+        set(value) = store.set(KEY_PLACEMENT_DONE, value.toString())
+
+    /** The tenth tap on the version opened the developer settings; one tap then opens them again. */
+    var developerUnlocked: Boolean
+        get() = flag(KEY_DEVELOPER_UNLOCKED, default = false)
+        set(value) = store.set(KEY_DEVELOPER_UNLOCKED, value.toString())
+
+    /** Developer setting: days not reached yet, paid levels included, open read-only to inspect them. */
+    var inspectAllDays: Boolean
+        get() = flag(KEY_INSPECT_ALL_DAYS, default = false)
+        set(value) = store.set(KEY_INSPECT_ALL_DAYS, value.toString())
+
     /** "How do you feel today?": the pick for today's classes, Normal again the next local day. */
     fun intensityToday(now: Long, zone: TimeZone): Intensity =
         if (store.get(KEY_INTENSITY_DAY)?.toLongOrNull() == LocalDays.epochDay(now, zone)) Intensity.fromName(store.get(KEY_INTENSITY))
@@ -59,5 +84,10 @@ class AppSettings(private val store: KeyValueStore) {
         const val KEY_EQUIPMENT_OFF = "streetgym_settings.equipment_off"
         const val KEY_INTENSITY = "streetgym_settings.intensity"
         const val KEY_INTENSITY_DAY = "streetgym_settings.intensity_day"
+        const val KEY_THEME = "streetgym_settings.theme"
+        const val KEY_LEGACY_DARK_MODE = "streetgym_settings.dark_mode"
+        const val KEY_PLACEMENT_DONE = "streetgym_settings.placement_done"
+        const val KEY_DEVELOPER_UNLOCKED = "streetgym_settings.developer_unlocked"
+        const val KEY_INSPECT_ALL_DAYS = "streetgym_settings.inspect_all_days"
     }
 }
