@@ -59,6 +59,12 @@ final class StreetGymTour: XCTestCase {
         guard level.waitForExistence(timeout: 10) else { return }
         snap("05-training")
         dump("05-training", app)
+
+        // Which screen stops the pictures? (18 Nov 2026: after Training the app went on but the screen stayed.)
+        // Settings draws no figure; a level's page draws a moving tile per class.
+        if tapHittable(app, label: "Settings") { snap("05b-settings-before-level") }
+        _ = tapHittable(app, label: "Training")
+        snap("05c-training-again")
         level.tap()
         _ = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] %@", "level 1 workouts")).firstMatch.waitForExistence(timeout: 10)
         snap("06-level")

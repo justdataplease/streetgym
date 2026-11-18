@@ -100,6 +100,17 @@ jobs:
       - name: Take the pictures out of the test result
         if: always()
         run: xcrun xcresulttool export attachments --path "$RUNNER_TEMP/tour.xcresult" --output-path "$RUNNER_TEMP/tour"
+      # What the app itself printed (Kotlin's uncaught errors, Compose's and Metal's complaints): the only place they show.
+      - name: Print what the app wrote while it ran
+        if: always()
+        run: |
+          xcrun xcresulttool export diagnostics --path "$RUNNER_TEMP/tour.xcresult" --output-path "$RUNNER_TEMP/diagnostics" || true
+          find "$RUNNER_TEMP/diagnostics" -type f -name 'StandardOutputAndStandardError*' 2>/dev/null | while read -r f; do
+            echo "APP-OUTPUT-BEGIN $f"; tail -n 250 "$f"; echo "APP-OUTPUT-END"
+          done
+          echo "APP-LOG-BEGIN"
+          xcrun simctl spawn booted log show --last 6m --style compact --predicate 'process CONTAINS "Street"' 2>/dev/null | grep -v -i "accessibility" | tail -n 200 || true
+          echo "APP-LOG-END"
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         if: always()
         # The pictures are a convenience: a full artifact store (private repos have a quota) must not fail the checks.
