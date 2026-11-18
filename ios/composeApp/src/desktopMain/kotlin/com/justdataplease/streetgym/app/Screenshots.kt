@@ -71,6 +71,8 @@ import com.justdataplease.streetgym.data.progress.NextClass
 import com.justdataplease.streetgym.ui.WorkoutFlow
 import com.justdataplease.streetgym.app.data.Alerts
 import com.justdataplease.streetgym.app.data.Paywall
+import com.justdataplease.streetgym.app.data.Plans
+import com.justdataplease.streetgym.app.data.Products
 import com.justdataplease.streetgym.app.data.PhoneLocation
 import com.justdataplease.streetgym.app.data.ReadyFilter
 import com.justdataplease.streetgym.app.data.Timing
@@ -115,6 +117,8 @@ fun main(args: Array<String>) {
             if ("timer" in only) timerShots(program, theme, out)
             if ("parks" in only) parksShots(program, theme, out)
             if ("workout" in only) workoutShots(program, theme, out)
+            if ("plans" in only) plansShots(program, theme, out)
+            if ("ads" in only) adsShots(program, theme, out)
         }
         println("Screenshots in ${out.absolutePath}")
         return
@@ -142,6 +146,8 @@ fun main(args: Array<String>) {
     for (theme in StreetTheme.entries) readyShots(program, theme, out)
     for (theme in StreetTheme.entries) timerShots(program, theme, out)
     for (theme in StreetTheme.entries) parksShots(program, theme, out)
+    for (theme in StreetTheme.entries) plansShots(program, theme, out)
+    for (theme in StreetTheme.entries) adsShots(program, theme, out)
     shot(File(out, "start-buttons.png"), height = 1560) { StartButtons() }
     val names = movementNames()
     for (theme in StreetTheme.entries) FIGURE_SHEETS.forEachIndexed { index, ids ->
@@ -553,8 +559,9 @@ private fun libraryShots(program: Program, theme: StreetTheme, out: File) {
     fun library(tier: Tier): AppModel {
         val store = MemoryStore()
         com.justdataplease.streetgym.app.data.AppSettings(store).placementDone = true
-        return AppModel(program, StoredProgress(store), tier = tier, now = { NOW }, zone = TimeZone.UTC,
-            settings = com.justdataplease.streetgym.app.data.AppSettings(store), library = LibraryStore(store)).apply { this.theme = theme }
+        return AppModel(program, StoredProgress(store), now = { NOW }, zone = TimeZone.UTC,
+            settings = com.justdataplease.streetgym.app.data.AppSettings(store), library = LibraryStore(store),
+            plans = shotPlans(store, tier), ads = FakeAds(), adStore = store).apply { this.theme = theme }
     }
     fun own(model: AppModel, title: String, vararg queries: String): String {
         val draft = model.newDraft()
@@ -738,8 +745,8 @@ private fun parksShots(program: Program, theme: StreetTheme, out: File) {
         val settings = com.justdataplease.streetgym.app.data.AppSettings(store)
         settings.placementDone = true
         settings.parksList = list
-        return AppModel(program, StoredProgress(store), tier = Tier.PLUS, now = { NOW }, zone = TimeZone.UTC, settings = settings,
-            location = PhoneLocation.Fixed(PhoneLocation.ATHENS.copy(time = NOW))).apply {
+        return AppModel(program, StoredProgress(store), now = { NOW }, zone = TimeZone.UTC, settings = settings,
+            location = PhoneLocation.Fixed(PhoneLocation.ATHENS.copy(time = NOW)), plans = shotPlans(store, Tier.PLUS)).apply {
             this.theme = theme
             runBlocking { parks.load() }
             setUp(this)
@@ -767,6 +774,93 @@ private fun parksShots(program: Program, theme: StreetTheme, out: File) {
     shot(File(out, "parks-search-$name.png")) { StreetGymApp(search, SAFE_AREA, startAt = Screen.Training, trainingTab = TRAINING_PARKS) }
     val nowhere = plus(list = true)
     shot(File(out, "parks-list-$name.png")) { StreetGymApp(nowhere, SAFE_AREA, startAt = Screen.Training, trainingTab = TRAINING_PARKS) }
+}
+
+/**
+ * Round 10, Plans and purchases, in [theme]: Settings' plans on Free, Plus, the yearly Pro and Pro for life, a payment
+ * waiting and the store still connecting; the offers of Level 4 and Level 7, after Plus is bought, Remove ads and the
+ * leaderboard; Free's leaderboard under its layer and Plus's; the developer settings with Simulate tier.
+ */
+private fun plansShots(program: Program, theme: StreetTheme, out: File) {
+    val name = theme.key
+    val ordered = NextClass.ordered(program.catalog)
+    fun plans(purchases: FakeStore = FakeStore(), setUp: (AppModel) -> Unit = {}): AppModel {
+        val store = MemoryStore()
+        com.justdataplease.streetgym.app.data.AppSettings(store).placementDone = true
+        return AppModel(program, StoredProgress(store), now = { NOW }, zone = TimeZone.UTC,
+            settings = com.justdataplease.streetgym.app.data.AppSettings(store), plans = shotPlans(store, Tier.FREE, purchases),
+            ads = FakeAds(), adStore = store).apply {
+            this.theme = theme
+            setUp(this)
+        }
+    }
+    val free = plans()
+    shot(File(out, "settings-plans-$name.png")) { StreetGymApp(free, SAFE_AREA, startAt = Screen.Settings) }
+    shot(File(out, "settings-plans-long-$name.png"), height = 12_000) { StreetGymApp(free, SAFE_AREA, startAt = Screen.Settings) }
+    val plus = plans { it.plans.buy(Products.PLUS) }
+    shot(File(out, "settings-plans-plus-long-$name.png"), height = 5_400) { StreetGymApp(plus, SAFE_AREA, startAt = Screen.Settings) }
+    val yearly = plans { it.plans.buy(Products.PRO) }
+    shot(File(out, "settings-plans-yearly-long-$name.png"), height = 5_400) { StreetGymApp(yearly, SAFE_AREA, startAt = Screen.Settings) }
+    val life = plans { it.plans.buy(Products.PRO_LIFE) }
+    shot(File(out, "settings-plans-life-long-$name.png"), height = 5_400) { StreetGymApp(life, SAFE_AREA, startAt = Screen.Settings) }
+    val pending = plans(FakeStore().apply { next = com.justdataplease.streetgym.app.data.Bought.PENDING }) { it.plans.buy(Products.PLUS) }
+    shot(File(out, "settings-plans-pending-long-$name.png"), height = 5_400) { StreetGymApp(pending, SAFE_AREA, startAt = Screen.Settings) }
+    val connecting = run {
+        val store = MemoryStore()
+        val waiting = object : com.justdataplease.streetgym.app.data.Store by com.justdataplease.streetgym.app.data.Store.None {
+            override val status = kotlinx.coroutines.flow.MutableStateFlow(com.justdataplease.streetgym.app.data.StoreStatus.LOADING)
+        }
+        AppModel(program, StoredProgress(store), now = { NOW }, zone = TimeZone.UTC, plans = Plans(store, waiting)).apply { this.theme = theme }
+    }
+    shot(File(out, "settings-plans-connecting-long-$name.png"), height = 5_400) { StreetGymApp(connecting, SAFE_AREA, startAt = Screen.Settings) }
+
+    // The offers: Level 4 on Free (Today's Unlock), Level 7, Level 7 once Plus is bought, Remove ads, the leaderboard.
+    val veteran = plans { it.progress.completePrograms(ordered.take(300).map { p -> p.id }, at = NOW - DAY) }
+    shot(File(out, "offer-plus-long-$name.png"), height = 5_000) { StreetGymApp(veteran, SAFE_AREA, showing = Shown.Offer(Paywall.Level(4))) }
+    shot(File(out, "offer-pro-$name.png")) { StreetGymApp(veteran, SAFE_AREA, startAt = Screen.Level(7), showing = Shown.Offer(Paywall.Level(7))) }
+    shot(File(out, "offer-ads-$name.png")) { StreetGymApp(veteran, SAFE_AREA, showing = Shown.Offer(Paywall.Ads)) }
+    val bought = plans { it.plans.buy(Products.PLUS) }
+    shot(File(out, "offer-after-plus-$name.png")) { StreetGymApp(bought, SAFE_AREA, startAt = Screen.Level(7), showing = Shown.Offer(Paywall.Level(7))) }
+    shot(File(out, "leaderboard-free-$name.png")) {
+        StreetGymApp(free, SAFE_AREA, startAt = Screen.Progress, progressTab = PROGRESS_LEADERBOARD)
+    }
+    shot(File(out, "offer-leaderboard-$name.png")) {
+        StreetGymApp(free, SAFE_AREA, startAt = Screen.Progress, progressTab = PROGRESS_LEADERBOARD, showing = Shown.Offer(Paywall.Leaderboard))
+    }
+    shot(File(out, "leaderboard-plus-$name.png")) {
+        StreetGymApp(plus, SAFE_AREA, startAt = Screen.Progress, progressTab = PROGRESS_LEADERBOARD)
+    }
+    shot(File(out, "developer-simulate-$name.png")) { StreetGymApp(free, SAFE_AREA, startAt = Screen.Settings, showing = Shown.Developer) }
+}
+
+/**
+ * Round 11's ads, in [theme], on Free: Today with Remove ads in the title bar and the card closing it; a level's classes
+ * with the card after the third; a class page with cards between its sections; the list workout; Skills with the card
+ * after the fourth ladder; and the Timer. The cards are the desktop's labelled stand-ins.
+ */
+private fun adsShots(program: Program, theme: StreetTheme, out: File) {
+    val name = theme.key
+    val free = athlete(program, tier = Tier.FREE).apply {
+        this.theme = theme
+        adConsent.gather()
+    }
+    val next = free.today().next!!.id
+    shot(File(out, "ads-today-long-$name.png"), height = 5_400) { StreetGymApp(free, SAFE_AREA) }
+    shot(File(out, "ads-level-$name.png")) { StreetGymApp(free, SAFE_AREA, startAt = Screen.Level(1)) }
+    shot(File(out, "ads-class-long-$name.png"), height = LONG_HEIGHT) { StreetGymApp(free, SAFE_AREA, startAt = Screen.Class(next)) }
+    shot(File(out, "ads-timer-$name.png")) { StreetGymApp(free, SAFE_AREA, startAt = Screen.Timer) }
+    val ranked = ranked(program, Tier.FREE).apply {
+        this.theme = theme
+        adConsent.gather()
+    }
+    shot(File(out, "ads-skills-long-$name.png"), height = 9_000) { StreetGymApp(ranked, SAFE_AREA, startAt = Screen.Progress) }
+    val list = athlete(program, tier = Tier.FREE).apply {
+        this.theme = theme
+        adConsent.gather()
+        workoutView = WorkoutView.LIST
+        start(next)
+    }
+    shot(File(out, "ads-workout-list-long-$name.png"), height = LONG_HEIGHT) { StreetGymApp(list, SAFE_AREA, startAt = Screen.Workout(next)) }
 }
 
 /** [screen] of [model] with [dialog] over it, drawn as the shell draws its layers. */
@@ -824,7 +918,8 @@ private fun ranked(program: Program, tier: Tier = Tier.PRO): AppModel {
     }
     val store = MemoryStore()
     store.set("streetgym_progress.session_history", StoredProgress.encodeSessions(sessions))
-    return AppModel(program, StoredProgress(store), tier = tier, now = { NOW }, zone = TimeZone.UTC)
+    return AppModel(program, StoredProgress(store), now = { NOW }, zone = TimeZone.UTC, plans = shotPlans(store, tier),
+        ads = FakeAds(), adStore = store)
 }
 
 /**
@@ -868,8 +963,18 @@ private fun StartButtons() {
     }
 }
 
-private fun model(program: Program, clock: ShotClock = ShotClock(), tier: Tier = Tier.PRO) =
-    AppModel(program, StoredProgress(MemoryStore()), tier = tier, now = { clock.time }, zone = TimeZone.UTC)
+private fun model(program: Program, clock: ShotClock = ShotClock(), tier: Tier = Tier.PRO): AppModel {
+    val store = MemoryStore()
+    return AppModel(program, StoredProgress(store), now = { clock.time }, zone = TimeZone.UTC, plans = shotPlans(store, tier),
+        ads = FakeAds(), adStore = store)
+}
+
+/**
+ * The plan of the pictures: [tier] whatever is bought, from a fake store at Android's prices that has answered, so
+ * the offers show their prices; Simulate tier offered, as in a debug build.
+ */
+private fun shotPlans(store: MemoryStore, tier: Tier, purchases: FakeStore = FakeStore()): Plans =
+    Plans(store, purchases.also { it.connect() }, canSimulate = true, floor = tier)
 
 /**
  * Twelve classes trained: one a day with a rest day here and there, the last four on Saturday, Sunday, Monday and

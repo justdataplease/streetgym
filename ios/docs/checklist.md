@@ -2,7 +2,7 @@
 
 Every feature of the Android app (2.14.1, versionCode 58), one line each, in the order a user meets them: the iPhone app is done when every line is ticked.
 `[x]` is on iPhone now (in `ios-streetgym`, checked in its code), `[ ]` is to build. Pointers name the Android file under `android-streetgym/app/src/main/java/com/justdataplease/streetgym/` (→ the iPhone file where it is built); **engine**: the rule is already in `android-streetgym/shared/`; **iPhone API**: the Apple framework it needs; **owner**: it can't be finished without the owner.
-Written 18 Nov 2026; updated the same day after rounds 1 to 9.
+Written 18 Nov 2026; updated the same day after rounds 1 to 10 and the ads half of round 11.
 
 ## Count
 
@@ -23,18 +23,18 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 9.
 | 13. Progress › Skills | 11 | 11 | 0 | 0 |
 | 14. Timer | 8 | 8 | 0 | 0 |
 | 15. Training › Parks | 15 | 14 | 1 | 1 |
-| 16. Progress › Leaderboard | 14 | 0 | 14 | 9 |
-| 17. Settings | 22 | 21 | 1 | 0 |
+| 16. Progress › Leaderboard | 14 | 3 | 11 | 9 |
+| 17. Settings | 22 | 22 | 0 | 0 |
 | 18. Themes | 5 | 5 | 0 | 0 |
-| 19. Plans and purchases | 22 | 0 | 22 | 8 |
-| 20. Ads and consent | 11 | 0 | 11 | 4 |
+| 19. Plans and purchases | 22 | 14 | 8 | 8 |
+| 20. Ads and consent | 11 | 7 | 4 | 4 |
 | 21. Account, sign-in, cloud backups and restore | 17 | 0 | 17 | 17 |
 | 22. Notifications and sounds | 6 | 6 | 0 | 0 |
 | 23. Home-screen widget | 10 | 0 | 10 | 7 |
 | 24. Sharing and progress analytics | 6 | 0 | 6 | 5 |
 | 25. Accessibility and languages | 12 | 12 | 0 | 0 |
 | 26. Anything else | 2 | 1 | 1 | 1 |
-| **All** | **344** | **260** | **84** | **53** |
+| **All** | **344** | **285** | **59** | **53** |
 
 "Waiting on the owner" counts lines still to build whose last step needs the owner; most can be built and tested first with a test double (a `.storekit` file, Google's demo ad units, a made-up profile).
 
@@ -90,7 +90,7 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 9.
 - [x] Complete day, with "Marks the day done without training. It earns no points or ranks." (renderDashboard → TodayScreen)
 - [x] Complete day asks first: "Complete this day?", the class name and the note, Cancel / Complete (HomeActivity.requestCompleteDay → ClassScreen.CompleteDayDialog, on Today, the class page and the list)
 - [x] A tap on the day card opens the class page (renderDashboard → TodayScreen)
-- [x] A class in a level the tier doesn't open: Unlock with the tier's sticker; the card and Unlock open the offer (renderDashboard unlockButton → Kit.UnlockButton; the offer is its heading and line with Cancel until the plans of round 10)
+- [x] A class in a level the tier doesn't open: Unlock with the tier's sticker; the card and Unlock open the offer (renderDashboard unlockButton → Kit.UnlockButton, Plans.OfferDialog)
 - [x] Every class done: "Sequence complete" and its line (renderDashboard → TodayScreen)
 - [x] Progress card: "12 / 1000 workouts" and a bar; a tap opens Progress (renderDashboard → TodayScreen)
 - [x] Back on Today after midnight, the flame is drawn for the new day (HomeActivity.onResume streakDrawnOn → AppModel.refreshDay, on each return to the app and every 30 s on Today)
@@ -107,7 +107,7 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 9.
 - [x] Today's class ends with the intensity row, Start workout or Resume with the play icon, Complete day and its note (renderOverview → ClassScreen)
 - [x] A class not reached yet shows only its name, "This daily plan is locked." and a greyed "Assigned later in the sequence" (renderOverview → ClassScreen)
 - [x] A done class that can't be repeated now: "You completed this workout…" and a greyed "Workout completed" (renderOverview → ClassScreen)
-- [x] A class in a locked level: name, meta and Unlock with the tier's sticker, no exercises (renderOverview → ClassScreen; Unlock opens the offer's heading and line until round 10)
+- [x] A class in a locked level: name, meta and Unlock with the tier's sticker, no exercises (renderOverview → ClassScreen; Unlock opens the offer, Plans.OfferDialog)
 
 ## 5. Line-man animations
 
@@ -193,7 +193,7 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 9.
 ### A level's classes
 
 - [x] Header: name, the whole description, "N of 100 complete" (switched-off classes count), a bar (HomeActivity.renderWorkouts → LevelScreen.LevelHeader)
-- [x] A locked level: its tier tag under the header, which opens the offer (renderWorkouts → LevelScreen; the offer's plans come in round 10)
+- [x] A locked level: its tier tag under the header, which opens the offer (renderWorkouts → LevelScreen, Plans.OfferDialog)
 - [x] Level 1 as the current level: "Already train? Complete Level 1 to start Level 2 now…" (renderWorkouts → LevelScreen)
 - [x] Complete level on the current level: "Complete this level?" (Mark all 100 days… and its note), then Training (renderWorkouts → LevelScreen, AppModel.completeLevel)
 - [x] "Go back to this level" on an earlier level: "Go back to Level N?", Go back; Today starts again at its first class (HomeActivity.requestLevelReplay → LevelScreen, AppModel.goBackTo; **engine** LevelReplay, DayAssignment)
@@ -209,7 +209,7 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 9.
 - [x] Intro, "N of M saved and custom days" (3, 30 or 300 by tier), and the over-limit note (HomeActivity.renderMyWorkouts → MyWorkouts.kt; **engine** Tier.savedDays, SavedLimit)
 - [x] List chips: Favorites, the athlete's lists, "+ New list" (with a lock on Free); the row scrolls sideways (ui/WorkoutListsUi.kt listChips → MyWorkouts.ListChips, FilterChip)
 - [x] New list: a name dialog refusing a blank, too long or taken name; the new list opens (WorkoutListsUi.listNameDialog → MyWorkouts.ListNameDialog, Overlay.EntryField; **engine** WorkoutLists.nameProblem)
-- [x] New list on Free opens the Plus offer, at Plus's 3 lists the Pro offer, at Pro's 10 "You've made the 10 lists of Pro…" (HomeActivity.roomForAnotherList → AppModel.listLimit, Shell; the offers show their heading until round 10; **engine** SavedLimit.canAddList)
+- [x] New list on Free opens the Plus offer, at Plus's 3 lists the Pro offer, at Pro's 10 "You've made the 10 lists of Pro…" (HomeActivity.roomForAnotherList → AppModel.listLimit, Shell, Plans.OfferDialog; **engine** SavedLimit.canAddList)
 - [x] An open list: Rename list, Delete list ("Only the list goes…"), its days, "No days in this list yet…" (renderMyWorkouts, listActions → MyWorkouts)
 - [x] On Free the lists are kept but hidden, and come back with Plus (renderMyWorkouts → AppModel.visibleLists; **engine** LibraryState)
 - [x] Create a workout opens the builder; on Free it wears the Plus sticker and opens the offer (renderMyWorkouts, tierButton → MyWorkouts, Kit.TierButton, Shell.create; **engine** Tier.customDays)
@@ -245,7 +245,7 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 9.
 - [x] Workouts under their group headings; Aches & posture opens with its doctor-first note (renderReadyWorkouts → ReadyLibrary.groups)
 - [x] Cards: tile, name, the Pro tag below Pro, "Intermediate · 6 exercises · About 30 min · Moderate for you", the description (libraryCard, readyMeta → MyWorkouts.LibraryCard)
 - [x] Neck at the Desk, Upper Back Reset, Chest Opener and Low Back Basics open on every tier, untagged (HomeActivity.readyLocked → AppModel.readyLocked; **engine** TrainingProgram.free)
-- [x] Below Pro, a Pro workout opens the Ready offer, and its page shows only the name, meta and Unlock (libraryCard, renderOverview → LibraryCard, ClassScreen; the offer shows its heading and line until round 10)
+- [x] Below Pro, a Pro workout opens the Ready offer, and its page shows only the name, meta and Unlock (libraryCard, renderOverview → LibraryCard, ClassScreen, Plans.OfferDialog)
 - [x] Ready workout page: meta, effort, description, safety line, exercises, heart, Start workout; no Complete day, no intensity row (renderOverview → ClassScreen)
 - [x] Runs as written, any time: Normal, every skill on; earns points and ranks; never completes a class (HomeActivity.canStart, switchesFor → AppModel.canStart, start, leftOutBy; **engine** ReadyWorkouts, CustomDays.offProgram)
 
@@ -311,9 +311,9 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 9.
 
 ## 16. Progress › Leaderboard
 
-- [ ] Intro: "Points from your training, all time and this month, worldwide and by country." (HomeActivity.renderLeaderboard)
-- [ ] Free: a board's shape (20 grey rows) under the layer with Plus and Unlock, filling the screen (HomeActivity.leaderboardSample, lockedLayer)
-- [ ] A build without Firebase: "The leaderboard isn't available in this build." (renderLeaderboard)
+- [x] Intro: "Points from your training, all time and this month, worldwide and by country." (HomeActivity.renderLeaderboard → ProgressScreen)
+- [x] Free: a board's shape (20 grey rows) under the layer with Plus and Unlock, filling the screen (HomeActivity.leaderboardSample, lockedLayer → ProgressScreen.LeaderboardSample, Kit.LockedLayer; round 10, as it opens the leaderboard's offer)
+- [x] A build without Firebase: "The leaderboard isn't available in this build." (renderLeaderboard → ProgressScreen: what Plus and Pro read on iPhone until the boards come with round 13)
 - [ ] All time / This month (renderLeaderboard; leaderboard/Leaderboard.kt Boards.id; **owner**: Firebase iPhone app, as for every board line)
 - [ ] World / 🇬🇷 Greece, when the profile or the phone's region gives a country (renderLeaderboard; **owner**: Firebase)
 - [ ] Own line: "You're #N · X points", "You're in the top N% · X points", "Train to earn points on this board." (renderLeaderboard, Boards.standing; **owner**: Firebase)
@@ -328,8 +328,8 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 9.
 
 ## 17. Settings
 
-- [x] Order: Profile (§21), Theme (§18), Plus and Pro (§19), During your workout, Skills in your classes, Equipment you have, Your data (§24), Start over, Train safely, About (HomeActivity.renderSettings → SettingsScreen.kt; Profile, Plus and Pro and Your data take their places with rounds 12, 10 and 13, Ad privacy with round 11)
-- [ ] Simulate tier, debug builds only: Default / Free / Plus / Pro (renderSettings; billing/Entitlement.kt setSimulatedTier)
+- [x] Order: Profile (§21), Theme (§18), Plus and Pro (§19), During your workout, Skills in your classes, Equipment you have, Your data (§24), Start over, Train safely, About (HomeActivity.renderSettings → SettingsScreen.kt; Plus and Pro since round 10 and About's Ad privacy since round 11; Profile and Your data take their places with rounds 12 and 13)
+- [x] Simulate tier, debug builds only: Default / Free / Plus / Pro (renderSettings; billing/Entitlement.kt setSimulatedTier → SettingsScreen.DeveloperDialog, Plans.SimulateTier, data/Plans.kt under Android's `simulated_tier`; on iPhone in the developer settings, offered by builds with Swift's DEBUG; as debug builds can buy from the StoreKit file, Default is what was bought, not Pro)
 
 ### During your workout
 
@@ -373,42 +373,42 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 9.
 
 ## 19. Plans and purchases
 
-- [ ] Settings panel "Plus and Pro" with the current plan ("You're on Free: Levels 1–3, with ads." …) (ui/TiersPanel.kt)
-- [ ] Plus: the store's price, "one payment, for life", the features, Get Plus, "Plus is yours." (TiersPanel; **iPhone API**: StoreKit 2; **owner**: product `plus` in App Store Connect; test first with a .storekit file)
-- [ ] Pro: the Pro for life price, the features, Get Pro for life, "Or €29.99 a year", the renewal note naming the App Store, "Pro is active." or "Pro is yours for life." (TiersPanel; StoreKit 2; **owner**: `pro_life` and the yearly subscription; Apple 3.1.2: price, period, Terms of Use and Privacy Policy links)
-- [ ] Manage subscription while Pro yearly runs (TiersPanel; **iPhone API**: StoreKit showManageSubscriptions; **owner**: sandbox check)
-- [ ] Buttons wait for the store's price; "Connecting to …", "purchases are unavailable" (TiersPanel.render; **owner**: real products for the last check)
-- [ ] Pending payment: "Payment pending. It unlocks when … confirms it." (TiersPanel; StoreKit pending, Ask to Buy; **owner**: sandbox check)
-- [ ] Restore purchases: "Pro restored…", "Plus restored…", "No purchase found…", "Couldn't reach…" (TiersPanel; Apple requires the button; **iPhone API**: AppStore.sync; **owner**: sandbox check)
-- [ ] Redeem a promo code (TiersPanel.askPromoCode; iPhone: App Store offer codes in StoreKit's redemption sheet; **owner** makes the codes)
-- [ ] Ownership cached for offline use; only a refund or a lapsed subscription takes it away; nothing is deleted when a plan ends (billing/Entitlement.kt reconcileEntitlement; **iPhone API**: Transaction.currentEntitlements; **owner**: sandbox refund and lapse)
-- [ ] A purchase, refund or restore redraws the open screen and removes the ad cards at once (HomeActivity.entitlementChanged, ads/ManagedNativePlacement.kt)
-- [ ] Gates: Levels 4–6 Plus, 7–10 Pro; Plus and Pro without ads; saved days, lists, own workouts and ready workouts by tier (**engine** LevelAccess, Tier, SavedLimit)
-- [ ] Offer dialog: the tier badge, the heading and body, only the plans that unlock it, Cancel (HomeActivity.showPaywall, TiersPanel paywall)
-- [ ] Offer "Level N is part of Plus" with the lever, planche, flag and handstand line (TiersPanel Paywall.Level)
-- [ ] Offer "Level N is part of Pro" with the Levels 7 to 10 line (TiersPanel Paywall.Level)
-- [ ] Offer "Ready workouts are part of Pro" with its line (TiersPanel Paywall.Ready)
-- [ ] Offers "Parks near you are part of Plus" and "The leaderboard is part of Plus" (TiersPanel Paywall.Parks, Leaderboard)
-- [ ] Offers "You've used all N saved and custom days" and "Your own workouts are part of Plus" (TiersPanel Paywall.Saved, Custom)
-- [ ] Offers "Your own lists are part of Plus" and "You've made all 3 lists of Plus" (TiersPanel Paywall.Lists)
-- [ ] Offer "Remove ads" with "Plus ends the ads with one payment…" (TiersPanel Paywall.Ads)
-- [ ] Unlock: the main button with the tier's tilted sticker on its corner (HomeActivity.unlockButton, tierButton)
-- [ ] Locked layer: the content dimmed, Unlock centred on it, a tap anywhere opens the offer (HomeActivity.lockedLayer)
-- [ ] Review code: hold the About title 2 s, type the code, Pro for 30 days (ui/ReviewCodeDialog.kt, billing/ReviewAccess.kt; Apple 2.3.1: leave it out on iPhone, reviewers buy in the sandbox)
+- [x] Settings panel "Plus and Pro" with the current plan ("You're on Free: Levels 1–3, with ads." …) (ui/TiersPanel.kt → ui/Plans.kt PlansPanel, in SettingsScreen under the themes)
+- [ ] Plus: the store's price, "one payment, for life", the features, Get Plus, "Plus is yours." (TiersPanel; **iPhone API**: StoreKit 2; **owner**: product `plus` in App Store Connect; test first with a .storekit file. Built: Plans.PlansPanel, data/Plans.kt, iosApp/StreetGym/StoreKitStore.swift, `iosApp/Products.storekit` at 14.99; waits for the product)
+- [ ] Pro: the Pro for life price, the features, Get Pro for life, "Or €29.99 a year", the renewal note naming the App Store, "Pro is active." or "Pro is yours for life." (TiersPanel; StoreKit 2; **owner**: `pro_life` and the yearly subscription `pro`; Apple 3.1.2: price, period, Terms of Use and Privacy Policy links. Built, with Apple's standard terms and the privacy page linked under the yearly plan; waits for the products)
+- [ ] Manage subscription while Pro yearly runs (TiersPanel; **iPhone API**: StoreKit showManageSubscriptions; **owner**: sandbox check. Built: AppStore.showManageSubscriptions(in:))
+- [ ] Buttons wait for the store's price; "Connecting to …", "purchases are unavailable" (TiersPanel.render; **owner**: real products for the last check. Built with the App Store's words: "Connecting to the App Store…", "App Store purchases are unavailable.")
+- [ ] Pending payment: "Payment pending. It unlocks when … confirms it." (TiersPanel; StoreKit pending, Ask to Buy; **owner**: sandbox check. Built: Product.PurchaseResult.pending, the approval through Transaction.updates)
+- [ ] Restore purchases: "Pro restored…", "Plus restored…", "No purchase found…", "Couldn't reach…" (TiersPanel; Apple requires the button; **iPhone API**: AppStore.sync; **owner**: sandbox check. Built: "No purchase found for this Apple Account.", "Couldn’t reach the App Store. Try again later.")
+- [ ] Redeem a promo code (TiersPanel.askPromoCode; iPhone: App Store offer codes in StoreKit's redemption sheet; **owner** makes the codes. Built: AppStore.presentOfferCodeRedeemSheet(in:); codes for one-time products work from iOS 16.3)
+- [ ] Ownership cached for offline use; only a refund or a lapsed subscription takes it away; nothing is deleted when a plan ends (billing/Entitlement.kt reconcileEntitlement; **iPhone API**: Transaction.currentEntitlements; **owner**: sandbox refund and lapse. Built: data/Store.kt reconcileEntitlement, data/Plans.kt under Android's `streetgym_billing` keys)
+- [x] A purchase, refund or restore redraws the open screen and removes the ad cards at once (HomeActivity.entitlementChanged, ads/ManagedNativePlacement.kt → Plans' Compose state, read by AppModel.tier; Ads.AdCard)
+- [x] Gates: Levels 4–6 Plus, 7–10 Pro; Plus and Pro without ads; saved days, lists, own workouts and ready workouts by tier (**engine** LevelAccess, Tier, SavedLimit; the tier from data/Plans.kt)
+- [x] Offer dialog: the tier badge, the heading and body, only the plans that unlock it, Cancel (HomeActivity.showPaywall, TiersPanel paywall → Plans.OfferDialog, data/AppModel.kt Offers)
+- [x] Offer "Level N is part of Plus" with the lever, planche, flag and handstand line (TiersPanel Paywall.Level → Plans.offerHeading, offerBody)
+- [x] Offer "Level N is part of Pro" with the Levels 7 to 10 line (TiersPanel Paywall.Level → Plans)
+- [x] Offer "Ready workouts are part of Pro" with its line (TiersPanel Paywall.Ready → Plans)
+- [x] Offers "Parks near you are part of Plus" and "The leaderboard is part of Plus" (TiersPanel Paywall.Parks, Leaderboard → Plans; the leaderboard's from Free's board, §16)
+- [x] Offers "You've used all N saved and custom days" and "Your own workouts are part of Plus" (TiersPanel Paywall.Saved, Custom → Plans)
+- [x] Offers "Your own lists are part of Plus" and "You've made all 3 lists of Plus" (TiersPanel Paywall.Lists → Plans)
+- [x] Offer "Remove ads" with "Plus ends the ads with one payment…" (TiersPanel Paywall.Ads → Plans, opened by the title bar's Remove ads, §20)
+- [x] Unlock: the main button with the tier's tilted sticker on its corner (HomeActivity.unlockButton, tierButton → Kit.UnlockButton, TierButton; opens the offer)
+- [x] Locked layer: the content dimmed, Unlock centred on it, a tap anywhere opens the offer (HomeActivity.lockedLayer → Kit.LockedLayer, on Parks' example and Free's leaderboard)
+- [x] Review code: hold the About title 2 s, type the code, Pro for 30 days (ui/ReviewCodeDialog.kt, billing/ReviewAccess.kt; Apple 2.3.1: leave it out on iPhone, reviewers buy in the sandbox → left out on purpose: nothing to build)
 
 ## 20. Ads and consent
 
-- [ ] Native ad card closing every page on Free: Today, Levels, My workouts, Library, the Parks list, a level's classes, a class page, the list workout, the builder, Skills, History, Leaderboard, Timer, Settings (HomeActivity.endAd; **iPhone API**: Google Mobile Ads SDK, GADNativeAdView in UIKitView; **owner**: AdMob iPhone app and units)
-- [ ] Cards inside pages: a level's classes after the third, Skills after the fourth ladder, a class page and the list workout between sections (renderWorkouts AdRowAdapter, skillsContent, addExerciseSection, renderActive)
-- [ ] No card on the Parks map or in the focus view (renderLevels, renderFocus)
-- [ ] The card: theme colours, round corners, "Ad", advertiser, icon, headline, body, media, the button and AdChoices (monetization/NativeAds.kt render)
-- [ ] Cards on workout pages wait for consent instead of raising the form (ads/ManagedNativePlacement.kt)
-- [ ] Full-screen ad on Free at most every 5 minutes of use, at the next change of screen or tab or a finished section (ads/WorkoutAdBreak.kt, AdBreakClock.kt; **owner**: interstitial unit)
-- [ ] Never in the first 10 s after opening, during a rest, while a timer, stopwatch or alarm runs, over an offer or consent form, or between a workout and its Timer; missed breaks don't add up (AdBreakPolicy, HomeActivity.adBreakNow, openRoot)
-- [ ] "♥ REMOVE ADS" in the title bar of every screen but a workout, on Free; it opens the Remove ads offer (HomeActivity.toolbarRemoveAds)
-- [ ] Consent form before the first ad request; ads follow the answer (monetization/NativeAds.kt updateConsent, advance; **iPhone API**: UMP SDK, then the ATT prompt (NSUserTrackingUsageDescription); ads still show without tracking; **owner**: iPhone consent message)
-- [ ] Settings › About › Ad privacy: Google's privacy choices, or "No ad privacy choices are available right now." (NativeAds.showPrivacy; **owner**: the consent message)
-- [ ] Google's demo units in debug builds (README, build.gradle.kts)
+- [ ] Native ad card closing every page on Free: Today, Levels, My workouts, Library, the Parks list, a level's classes, a class page, the list workout, the builder, Skills, History, Leaderboard, Timer, Settings (HomeActivity.endAd; **iPhone API**: Google Mobile Ads SDK, GADNativeAdView in UIKitView; **owner**: AdMob iPhone app and units. Built on Google's test units: ui/Ads.kt EndAd on each page, iosMain IosAds.kt, iosApp/StreetGym/GoogleAds.swift; the owner's units go in the build settings ADMOB_APP_ID, ADMOB_NATIVE_ID)
+- [x] Cards inside pages: a level's classes after the third, Skills after the fourth ladder, a class page and the list workout between sections (renderWorkouts AdRowAdapter, skillsContent, addExerciseSection, renderActive → LevelScreen, SkillsScreen, ClassScreen, WorkoutList; data/AdRules.kt AdRows)
+- [x] No card on the Parks map or in the focus view (renderLevels, renderFocus → ParksScreen, FocusScreen)
+- [x] The card: theme colours, round corners, "Ad", advertiser, icon, headline, body, media, the button and AdChoices (monetization/NativeAds.kt render → GoogleAds.swift GoogleAdCard, NativeAdView in Compose's UIKitView, sized by Swift; Swift, first compiled by the Mac CI; the desktop draws a labelled stand-in, Fakes.kt AdCardStandIn)
+- [x] Cards on workout pages wait for consent instead of raising the form (ads/ManagedNativePlacement.kt → Ads.AdCard's training, data/AdRules.kt AdConsent)
+- [ ] Full-screen ad on Free at most every 5 minutes of use, at the next change of screen or tab or a finished section (ads/WorkoutAdBreak.kt, AdBreakClock.kt; **owner**: interstitial unit. Built on Google's test unit: data/AdRules.kt AdBreaks, Shell, Training.takeSectionBreak, GoogleAds.swift's InterstitialAd; the owner's unit goes in ADMOB_INTERSTITIAL_ID)
+- [x] Never in the first 10 s after opening, during a rest, while a timer, stopwatch or alarm runs, over an offer or consent form, or between a workout and its Timer; missed breaks don't add up (AdBreakPolicy, HomeActivity.adBreakNow, openRoot → data/AdRules.kt AdBreakPolicy, AdBreaks, Shell.adBreak; the foreground time kept under Android's `streetgym_ad_breaks` `foreground_ms`)
+- [x] "♥ REMOVE ADS" in the title bar of every screen but a workout, on Free; it opens the Remove ads offer (HomeActivity.toolbarRemoveAds → Ads.RemoveAdsButton in Shell's TitleBar)
+- [ ] Consent form before the first ad request; ads follow the answer (monetization/NativeAds.kt updateConsent, advance; **iPhone API**: UMP SDK, then the ATT prompt (NSUserTrackingUsageDescription); ads still show without tracking; **owner**: iPhone consent message. Built: AdConsent (consent, then tracking, then the SDK), GoogleAds.swift; the Simulator skips the tracking question so its tour isn't stopped)
+- [ ] Settings › About › Ad privacy: Google's privacy choices, or "No ad privacy choices are available right now." (NativeAds.showPrivacy; **owner**: the consent message. Built: SettingsScreen's Ad privacy, AdConsent.showPrivacy, UMP's privacy options form)
+- [x] Google's demo units in debug builds (README, build.gradle.kts → iosApp/project.yml: Google's test app and units are the build settings' defaults, so every build uses them until the owner's are set there)
 
 ## 21. Account, sign-in, cloud backups and restore
 
@@ -489,15 +489,15 @@ Thirteen rounds of about 20 to 28 lines, each one sitting's build and test, in t
 
 1. **The line man and the list view** (27 lines): §5; §7; the list view's and the movement guide's spoken labels. Done 18 Nov 2026, with repeating a completed class and Complete day's question.
 2. **The workout loop** (23): §4 but the locked level's page; §8; During your workout (§17); the rest and timed-set sounds (§22); the focus view's spoken cues. Done 18 Nov 2026, but "After finishing, Progress opens", which waits for Progress (round 4). The locked level's page came with round 3's Unlock.
-3. **Today and Training › Levels** (25): §9; from §3 the label over the title, the pick kept for the day, Complete day's question, the midnight redraw, the region's week and large text. Done 18 Nov 2026. Tier tags and Unlock show; until round 10 they open the offer's heading and line in Android's words, with Cancel.
+3. **Today and Training › Levels** (25): §9; from §3 the label over the title, the pick kept for the day, Complete day's question, the midnight redraw, the region's week and large text. Done 18 Nov 2026. Tier tags and Unlock show; since round 10 they open the whole offer.
 4. **Progress: History, the streak and Skills** (28): §12; §13; the streak tap on Today; spoken calendar days and medals. Done 18 Nov 2026, with "After finishing, Progress opens" from round 2. HistoryCalendar and StreakDays' local days are common Kotlin on kotlinx-datetime (`data/HistoryCalendar.kt`), checked against java.util.Calendar for eight zones over three years. The Leaderboard tab shows "Not on iPhone yet." until round 13.
 5. **Settings and themes** (23): §17 but During your workout and Simulate tier; §18; the back swipe (§1); spoken theme rows. Done 18 Nov 2026. The switches act where Android's do (the sequence, class rows and pages, both workout views, exams, Skills and so the points), kept under Android's keys; the theme, Start over, the developer settings and Inspect all days too. Settings leaves out what needs an account or a purchase (Profile, Plus and Pro, Your data, Ad privacy) until their rounds.
 6. **The strength test and the park scene** (24): §2; the park scene and its replay (§3); the loading screen and load error (§1); spoken park scene and counters; reduced motion for the park and the heart. Done 18 Nov 2026 (the heart's pop with round 7). ParkStory is common Kotlin on kotlinx-datetime (`figure/ParkStory.kt`), checked frame by frame against 24 days Android's own code wrote (`desktopTest/resources/park-android.json`, every one of the 21 routines). The share switch is kept; its uploads come with round 13.
-7. **My workouts** (23): §10; a Library or own workout in progress taking Today's card. Done 18 Nov 2026: the library is kept by the engine's LibraryCodec under Android's key (`data/LibraryStore.kt`, `streetgym_library.state`). The offers it opens (Saved, Custom, Lists) show their heading with Cancel until round 10, as the level offers do.
+7. **My workouts** (23): §10; a Library or own workout in progress taking Today's card. Done 18 Nov 2026: the library is kept by the engine's LibraryCodec under Android's key (`data/LibraryStore.kt`, `streetgym_library.state`). The offers it opens (Saved, Custom, Lists) have their plans since round 10.
 8. **Library and Timer** (23): §11; §14; the timer and alarm alerts (§22). Done 18 Nov 2026. The Timer's clocks are kept under Android's key and JSON names (`data/Timing.kt`) on an elapsed clock that runs through sleep (CLOCK_MONOTONIC), the alarm's day on kotlinx-datetime, pinned to Android's java.util.Calendar code in ten zones. Its alerts go through UserNotifications (a "timing" category with Stop, a delegate set before launch ends); Enable alerts asks for them, which also lets the workout's background rest show.
 9. **Parks** (18): §15; large text (§25); coming back after the phone closed the app, and landscape (§26). Done 18 Nov 2026 but the weekly parks refresh (waits for the owner's Firebase setup; behind `ParksSource`) and landscape (the Timer's side-by-side layout is built; the focus view's and turning landscape on wait for the owner's decision). The map is MapLibre Native 6.31 in Swift (`iosApp/StreetGym/ParksMapLibre.swift`, unverified until the Mac build), shown through UIKitView; the desktop draws a stand-in with the parks as dots. Location through Core Location (`IosLocation.kt`), approximate. Coming back after the phone closed the app: SwiftUI's @SceneStorage holds `ui/Restore.kt`'s text.
-10. **Plans and purchases** (25): §19, with the plans in the offer that Unlock and the tier tags open (now its heading, line and Cancel); Simulate tier. Needs: StoreKit 2 in Swift behind a Kotlin `Store` interface, tested with a `.storekit` file; the owner's products for the sandbox check.
-11. **Widget and ads** (21): §23; §20. Needs: a WidgetKit extension and an App Group (owner); the Google Mobile Ads SDK and UMP with demo units, then the owner's AdMob app, units and consent message.
+10. **Plans and purchases** (25): §19, with the plans in the offer that Unlock and the tier tags open; Simulate tier. Done 18 Nov 2026 but the eight lines whose last step is the owner's (the products in App Store Connect and the sandbox checks). The offers and the plans panel are `ui/Plans.kt` (Android's TiersPanel and showPaywall); the plan is `data/Plans.kt`, cached under Android's `streetgym_billing` keys so the app opens in the right tier offline, and every screen reads the tier from it; StoreKit 2 is Swift (`iosApp/StreetGym/StoreKitStore.swift`) behind the Kotlin `Store` (`data/Store.kt`, iosMain `IosStore.kt`), with Android's product ids and prices in `iosApp/Products.storekit` for the Simulator's Run. Free's leaderboard (its board under the layer) came with it, as it opens the leaderboard's offer. Android's review code is left out (Apple 2.3.1).
+11. **Widget and ads** (21): §23; §20. Needs: a WidgetKit extension and an App Group (owner); the Google Mobile Ads SDK and UMP with demo units, then the owner's AdMob app, units and consent message. The ads half done 18 Nov 2026 on Google's test units but the four lines waiting for the owner's AdMob app, units and consent message: the rules are common Kotlin (`data/AdRules.kt`: Android's AdBreakClock, AdBreakPolicy and WorkoutAdBreak, the consent order, the cards' places), the SDKs Swift (`iosApp/StreetGym/GoogleAds.swift`, unverified until the Mac build) behind the Kotlin `Ads`; the desktop draws labelled stand-in cards. The widget half is still to build.
 12. **Account and cloud backups** (18): §21; the park's "Well done, <name>!". Needs: the owner's Firebase iPhone app; Firebase iOS SDK, GoogleSignIn and Sign in with Apple, bridged from Swift.
 13. **Leaderboard and progress analytics** (20): §16; §24. Needs: round 12; the owner's decision on filtering, reporting and blocking usernames (Apple 1.2).
 

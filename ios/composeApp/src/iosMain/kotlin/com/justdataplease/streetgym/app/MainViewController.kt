@@ -4,7 +4,9 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.text.input.PlatformImeOptions
 import androidx.compose.ui.window.ComposeUIViewController
 import platform.UIKit.UIKeyboardTypeNumbersAndPunctuation
+import com.justdataplease.streetgym.app.data.Ads
 import com.justdataplease.streetgym.app.data.Beep
+import com.justdataplease.streetgym.app.data.Store
 import com.justdataplease.streetgym.app.data.DEFAULT_VERSION
 import com.justdataplease.streetgym.app.data.KeyValueStore
 import com.justdataplease.streetgym.app.data.LocalDays
@@ -53,6 +55,7 @@ import platform.UIKit.UIAccessibilityIsReduceMotionEnabled
 import platform.UIKit.UIAccessibilityPostNotification
 import platform.UIKit.UIApplication
 import platform.UIKit.UIApplicationDidBecomeActiveNotification
+import platform.UIKit.UIApplicationWillResignActiveNotification
 import platform.UIKit.UIUserInterfaceStyle
 import platform.UIKit.UIViewController
 import platform.UserNotifications.UNAuthorizationOptionAlert
@@ -71,23 +74,39 @@ import platform.UserNotifications.UNUserNotificationCenter
  * on the Timer and sets the status bar again. Settings › About shows the app's version from its Info.plist. [maps] are
  * the Parks maps Swift makes (MapLibre); without them Parks shows its list. [restored] is where the app was when the
  * phone closed it in the background, which [saver] keeps with the window (SwiftUI's scene storage) on every change.
+ * [store] is Swift's StoreKit 2 store, [ads] Swift's Google ads (null: nothing to buy, no ads); [debug] is a debug
+ * build (Swift's DEBUG), whose developer settings offer Simulate tier.
  */
-fun MainViewController(maps: NativeParksMaps?, restored: String?, saver: SceneSaver?): UIViewController {
+fun MainViewController(
+    maps: NativeParksMaps?,
+    restored: String?,
+    saver: SceneSaver?,
+    store: NativeStore?,
+    ads: AdsBridge?,
+    debug: Boolean,
+): UIViewController {
     PhoneDevice.saver = saver
     val resumed = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
     NSNotificationCenter.defaultCenter.addObserverForName(UIApplicationDidBecomeActiveNotification, null, NSOperationQueue.mainQueue) {
         resumed.tryEmit(Unit)
         PhoneDevice.applyStatusBar()
     }
+    // Leaving the screen (a call, the app switcher, the home screen) stops the full-screen ad's clock (Android: onPause).
+    NSNotificationCenter.defaultCenter.addObserverForName(UIApplicationWillResignActiveNotification, null, NSOperationQueue.mainQueue) {
+        phoneEvents.trySend(PhoneEvent.Away)
+    }
     watchClock()
     // NSCalendar numbers the weekdays 1 Sunday to 7 Saturday, as java.util.Calendar does.
     val firstWeekday = LocalDays.isoWeekday(NSCalendar.currentCalendar.firstWeekday.toInt())
     val version = NSBundle.mainBundle.objectForInfoDictionaryKey("CFBundleShortVersionString") as? String ?: DEFAULT_VERSION
     val hosts = maps?.let(::IosParksMaps)
+    val purchases = store?.let(::IosStore) ?: Store.None
+    val adverts = ads?.let(::IosAds) ?: Ads.None
     return ComposeUIViewController {
         App(phoneStore, PhoneDevice, reduceMotion = UIAccessibilityIsReduceMotionEnabled(), firstWeekday = firstWeekday,
             resumed = resumed, version = version, countKeys = countKeys, timingClock = IosTimingClock, hour24 = hour24(),
-            events = phoneEvents.receiveAsFlow(), location = IosLocation, maps = hosts, restored = restored)
+            events = phoneEvents.receiveAsFlow(), location = IosLocation, maps = hosts, restored = restored,
+            purchases = purchases, ads = adverts, simulate = debug)
     }.also { PhoneDevice.screen = it }
 }
 

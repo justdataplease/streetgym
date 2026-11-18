@@ -29,12 +29,15 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.input.PlatformImeOptions
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.justdataplease.streetgym.app.data.Ads
 import com.justdataplease.streetgym.app.data.AppModel
 import com.justdataplease.streetgym.app.data.AppSettings
 import com.justdataplease.streetgym.app.data.DEFAULT_VERSION
 import com.justdataplease.streetgym.app.data.KeyValueStore
 import com.justdataplease.streetgym.app.data.LibraryStore
+import com.justdataplease.streetgym.app.data.Plans
 import com.justdataplease.streetgym.app.data.Program
+import com.justdataplease.streetgym.app.data.Store
 import com.justdataplease.streetgym.app.data.StoredProgress
 import com.justdataplease.streetgym.app.data.WorkoutDevice
 import com.justdataplease.streetgym.app.data.loadProgram
@@ -98,8 +101,13 @@ import kotlin.random.Random
  * phone's options for the strength test's number keyboard. [load] reads the program (tests make it fail).
  *
  * The Timer runs on [timingClock] (null: the wall clock) and shows times on a 24-hour clock with [hour24]; [events]
- * brings what the phone tells the app (a tap on a Timer alert, a change of the clock or time zone). Parks reads its
- * parks from [parks], the athlete's position from [location], and draws its map with [maps] (null: the list only).
+ * brings what the phone tells the app (a tap on a Timer alert, a change of the clock or time zone, the app leaving the
+ * screen). Parks reads its parks from [parks], the athlete's position from [location], and draws its map with [maps]
+ * (null: the list only).
+ *
+ * Plus and Pro are bought from [purchases] (StoreKit on iPhone), what was bought cached in [store] so the app opens in
+ * the right tier offline; [simulate]: a debug build, whose developer settings offer Simulate tier. Free's ads come
+ * from [ads] (Google's on iPhone), their full-screen breaks timed on the Timer's elapsed clock.
  */
 @Composable
 fun App(
@@ -118,6 +126,9 @@ fun App(
     maps: ParksMapHost? = StandInMaps,
     parks: ParksSource = BundledParks,
     restored: String? = null,
+    purchases: Store = Store.None,
+    ads: Ads = Ads.None,
+    simulate: Boolean = false,
 ) {
     var model by remember { mutableStateOf<AppModel?>(null) }
     // Where the app was when the phone closed it in the background, read once the program is.
@@ -131,10 +142,11 @@ fun App(
         failed = false
         runCatching { load() }
             .onSuccess {
-                val timing = Timing(TimingStore(store, timingClock ?: WallClock(::epochMillisNow)), device,
-                    { TimeZone.currentSystemDefault() }, hour24)
+                val clock = timingClock ?: WallClock(::epochMillisNow)
+                val timing = Timing(TimingStore(store, clock), device, { TimeZone.currentSystemDefault() }, hour24)
                 val app = AppModel(it, StoredProgress(store), device = device, settings = AppSettings(store), firstWeekday = firstWeekday,
-                    library = LibraryStore(store), timing = timing, parksSource = parks, location = location)
+                    library = LibraryStore(store), timing = timing, parksSource = parks, location = location,
+                    plans = Plans(store, purchases, canSimulate = simulate), ads = ads, adStore = store, elapsed = clock::elapsed)
                     .apply { this.version = version }
                 screens = Restore.decode(restored, app)
                 model = app
@@ -151,6 +163,7 @@ fun App(
                 when (event) {
                     PhoneEvent.OpenTimer -> app.timing.openRequested = true
                     PhoneEvent.TimeChanged -> app.timing.timeChanged()
+                    PhoneEvent.Away -> app.paused()
                 }
             }
         }
@@ -170,6 +183,8 @@ sealed interface PhoneEvent {
     data object OpenTimer : PhoneEvent
     /** The clock or the time zone changed: a set alarm keeps to the wall clock (Android: TimingReceiver). */
     data object TimeChanged : PhoneEvent
+    /** The app left the screen (Android: onPause): the full-screen ad's clock stops until it comes back. */
+    data object Away : PhoneEvent
 }
 
 /**
@@ -236,6 +251,13 @@ fun StreetGymApp(
 ) {
     val dark = model.theme.dark
     LaunchedEffect(model, dark) { model.device.statusBar(dark) }
+    // The app is on screen: the ad clock runs; the store is asked, and its answers followed while the app runs
+    // (Android: onResume's billing.connect and adBreak.resume, TierBilling's listener).
+    LaunchedEffect(model) {
+        model.adBreaks.resume()
+        model.plans.connect()
+        model.plans.follow()
+    }
     CompositionLocalProvider(LocalMotionLibrary provides model.motions, LocalParksMaps provides maps) {
         StreetGymTheme(model.theme) {
             Shell(model, safeArea, startAt, showing, progressTab, historyDay, trainingTab, workoutList, readyFilter, restored)

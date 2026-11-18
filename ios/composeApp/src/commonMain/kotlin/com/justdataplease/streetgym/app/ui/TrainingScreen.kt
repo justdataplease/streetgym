@@ -104,10 +104,12 @@ fun TrainingScreen(
         when (tab) {
             1 -> {
                 MyWorkouts(model, workoutList, onOpenList, onOpenDay, onCreate, onLimit, onPaywall)
+                EndAd(model)
                 return@Page
             }
             2 -> {
                 ReadyWorkouts(model, readyFilter, onReadyFilter, onOpenDay, onPaywall)
+                EndAd(model)
                 return@Page
             }
         }
@@ -122,6 +124,7 @@ fun TrainingScreen(
         levels.cards.forEachIndexed { index, card ->
             LevelCardView(card, index, first = index == 0, last = index == levels.cards.lastIndex) { onOpenLevel(card.level.number) }
         }
+        EndAd(model)
     }
 }
 

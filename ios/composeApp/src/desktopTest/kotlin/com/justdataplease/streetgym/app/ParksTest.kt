@@ -158,7 +158,7 @@ class ParksTest {
         assertEquals(Parks.EXAMPLE, example.parks)
         assertIs<DotsMap.Camera.Fit>(example.camera)
         onNodeWithContentDescription("Unlock Plus").performClick()
-        onNodeWithText("Parks near you are part of Plus").assertExists()
+        onNodeWithText("Parks near you are part of Plus", ignoreCase = true).assertExists()
         onNodeWithText("CANCEL").performClick()
         // Nothing of the real parks is read on Free.
         assertNull(model.parks.all)
@@ -172,7 +172,7 @@ class ParksTest {
         assertNull(model.parks.example)
         onNodeWithText("EXAMPLE: PARKS IN ATHENS").assertExists()
         onNodeWithContentDescription("Unlock Plus").performClick()
-        onNodeWithText("Parks near you are part of Plus").assertExists()
+        onNodeWithText("Parks near you are part of Plus", ignoreCase = true).assertExists()
     }
 
     @Test

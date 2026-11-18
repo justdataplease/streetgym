@@ -90,7 +90,8 @@ internal fun WorkoutList(model: AppModel, state: FocusState, training: Training,
         }
         SafetyLine(program, Modifier.padding(start = 4.dp, end = 4.dp, bottom = 10.dp))
 
-        for ((section, exercises) in Training.sections(program).filter { it.second.isNotEmpty() }) {
+        val sections = Training.sections(program).filter { it.second.isNotEmpty() }
+        for ((section, exercises) in sections) {
             val keys = flow.keys(section)
             val count = keys.count { it in completed }
             val all = keys.isNotEmpty() && count == keys.size
@@ -114,10 +115,13 @@ internal fun WorkoutList(model: AppModel, state: FocusState, training: Training,
             exercises.forEachIndexed { exerciseIndex, exercise ->
                 ExerciseCard(model, state, training, section, exercise, exerciseIndex, steps, index, onAsk)
             }
+            // Free: a card between sections, waiting for consent rather than asking mid-workout (Android: renderActive).
+            if (section != sections.last().first) AdCard(model, bottom = 14.dp, training = true)
         }
 
         PrimaryButton(stringResource(Res.string.finish_workout), Modifier.padding(top = 8.dp), onClick = onFinish)
         SecondaryButton(stringResource(Res.string.abandon_workout), Modifier.padding(top = 6.dp)) { onAsk(Ask.End) }
+        EndAd(model, training = true)
     }
 }
 

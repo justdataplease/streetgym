@@ -36,6 +36,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.justdataplease.streetgym.app.data.AdPrivacy
 import com.justdataplease.streetgym.app.data.AppModel
 import com.justdataplease.streetgym.app.figure.ExerciseFigure
 import com.justdataplease.streetgym.app.resources.Res
@@ -93,9 +94,9 @@ import kotlinx.coroutines.launch
 import kotlin.math.min
 
 /**
- * Settings (android-streetgym, HomeActivity.renderSettings) in Android's order, without what needs an account or a
- * purchase (Profile, Plus and Pro, Your data, Ad privacy): Theme, During your workout, Skills in your classes, Equipment
- * you have, Start over, Train safely and About. A skill's row opens its steps ([onSwitches], with the family's id);
+ * Settings (android-streetgym, HomeActivity.renderSettings) in Android's order, without what needs an account (Profile,
+ * Your data): Theme, Plus and Pro, During your workout, Skills in your classes, Equipment you have, Start over, Train
+ * safely and About with Ad privacy, and on Free the ad card closing the page. A skill's row opens its steps ([onSwitches], with the family's id);
  * Reset progress asks first ([onReset]); ten taps on the version open the developer settings ([onDeveloper]), counting
  * down in a note ([onNote]).
  */
@@ -112,6 +113,9 @@ fun SettingsScreen(
     Page {
         SectionLabel(stringResource(Res.string.theme_section))
         ThemePicker(model.theme, Modifier.padding(bottom = 18.dp)) { model.theme = it }
+
+        // Plus and Pro, on every tier: the current plan, both plans with what is owned, Restore purchases.
+        PlansPanel(model, paywall = null, modifier = Modifier.padding(bottom = 16.dp))
 
         SectionLabel(stringResource(Res.string.training_preferences))
         StreetCard(Modifier.padding(bottom = 16.dp)) {
@@ -168,9 +172,25 @@ fun SettingsScreen(
                     }
                 },
             )
+            // Android: About's Ad privacy, Google's privacy choices for the ads.
+            SecondaryButton(AD_PRIVACY, Modifier.padding(top = 12.dp)) {
+                model.adConsent.showPrivacy { result ->
+                    when (result) {
+                        AdPrivacy.SHOWN -> Unit
+                        AdPrivacy.NONE -> onNote(AD_PRIVACY_NONE)
+                        AdPrivacy.UNAVAILABLE -> onNote(AD_PRIVACY_UNAVAILABLE)
+                    }
+                }
+            }
         }
+        EndAd(model)
     }
 }
+
+/** About's button and its notes, written in Android's code rather than its string files (NativeAds.showPrivacy). */
+internal const val AD_PRIVACY = "Ad privacy"
+internal const val AD_PRIVACY_NONE = "No ad privacy choices are available right now."
+internal const val AD_PRIVACY_UNAVAILABLE = "Ad privacy is unavailable. Try again later."
 
 /**
  * The theme picker (Android: ThemeDecor.themePicker): a row per look with its swatch, its name in its own display face,
@@ -379,6 +399,8 @@ fun DeveloperDialog(model: AppModel, onClose: () -> Unit) {
         Column(Modifier.fillMaxWidth().padding(start = 24.dp, end = 24.dp)) {
             SettingSwitch(stringResource(Res.string.developer_inspect_all), model.inspectAllDays) { model.inspectAllDays = it }
             BodyText(stringResource(Res.string.developer_inspect_note), 13f)
+            // Debug builds only, as on Android (Settings' Simulate tier card there).
+            if (model.plans.canSimulate) SimulateTier(model, Modifier.padding(top = 16.dp))
         }
     }
 }

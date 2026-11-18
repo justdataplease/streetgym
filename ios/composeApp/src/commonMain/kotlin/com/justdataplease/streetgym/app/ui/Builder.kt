@@ -119,6 +119,7 @@ fun BuilderScreen(model: AppModel, dayId: String, onSaved: (String) -> Unit, onN
                 null -> onSaved(dayId)
             }
         }
+        EndAd(model)
     }
     if (picking) ExercisePickerDialog(model, onClose = { picking = false }) { movement ->
         picking = false

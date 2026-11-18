@@ -124,6 +124,7 @@ fun ClassScreen(
                     .filter(String::isNotBlank).joinToString(" • "), 14f, Modifier.padding(top = 4.dp))
                 UnlockButton(levelTierName(program.levelNumber), Modifier.padding(top = 16.dp)) { onOffer(program.levelNumber) }
             }
+            EndAd(model)
         }
         return
     }
@@ -135,6 +136,7 @@ fun ClassScreen(
                 BodyText(readyMeta(program), 14f, Modifier.padding(top = 4.dp))
                 UnlockButton(stringResource(Res.string.tier_pro), Modifier.padding(top = 16.dp)) { onPaywall(Paywall.Ready) }
             }
+            EndAd(model)
         }
         return
     }
@@ -147,6 +149,7 @@ fun ClassScreen(
                 PrimaryButton(stringResource(Res.string.assigned_later), Modifier.padding(top = 16.dp),
                     color = Street.colors.textSecondary, enabled = false) {}
             }
+            EndAd(model)
         }
         return
     }
@@ -203,9 +206,14 @@ fun ClassScreen(
         val sections = Training.sections(program).filter { it.second.isNotEmpty() }
         if (sections.isEmpty()) {
             StreetCard(Modifier.padding(bottom = 14.dp)) { BodyText(stringResource(Res.string.no_exercises)) }
+            EndAd(model, training = true)
             return@Page
         }
-        sections.forEach { (section, exercises) -> ExerciseSection(model, program, section, exercises) }
+        sections.forEachIndexed { index, (section, exercises) ->
+            ExerciseSection(model, program, section, exercises)
+            // Free: a card between sections, which waits for consent on a workout's page (Android: addExerciseSection's ad).
+            if (index != sections.lastIndex) AdCard(model, bottom = 14.dp, training = true)
+        }
 
         when {
             inspecting -> {
@@ -243,6 +251,7 @@ fun ClassScreen(
                     Modifier.padding(top = 8.dp), color = Street.colors.textSecondary, enabled = false) {}
             }
         }
+        EndAd(model, training = true)
     }
     if (completing) CompleteDayDialog(program, onClose = { completing = false }) {
         completing = false

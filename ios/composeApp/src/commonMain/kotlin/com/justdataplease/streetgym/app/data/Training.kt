@@ -278,6 +278,8 @@ class Training internal constructor(
         held = null
         skips = Owned(active.startedAtEpochMillis, skipped)
         progress.setCompleted(listOf(step.key), completed = true, at = at)
+        // The section's ad break waits for the rest after it, as Android's focus view does.
+        if (flow.isSectionComplete(step.section, active.completedSetIds + step.key)) sectionBreak = true
         val next = flow.firstIncomplete(active.completedSetIds + step.key, skipped)
         val pause = step.set.breakSeconds?.takeIf { it > 0 }
         if (next == null) rest = null
@@ -324,6 +326,8 @@ class Training internal constructor(
         progress.setCompleted(keys, completed, at = at)
         val ticked = if (completed) active.completedSetIds + keys else active.completedSetIds - keys.toSet()
         if (flow.completedCount(ticked) == flow.size) rest = null
+        // Android's list: a section ticked whole with no rest running is a break for the full-screen ad.
+        if (completed && !resting()) sectionBreak = true
         clock = at
         saves.bump()
     }
@@ -446,6 +450,7 @@ class Training internal constructor(
     }
 
     private fun forget() {
+        sectionBreak = false
         rest = null
         held = null
         skips = null
@@ -458,6 +463,25 @@ class Training internal constructor(
     private fun hold(active: ActiveWorkout): Hold? = held?.takeIf { it.session == active.startedAtEpochMillis }?.value
 
     private fun restEnd(active: ActiveWorkout): Long? = rest?.takeIf { it.session == active.startedAtEpochMillis }?.value
+
+    /** A rest runs now: no full-screen ad over it (Android: adBreakNow's restEndsAtEpochMillis). */
+    fun resting(): Boolean {
+        val active = progress.activeWorkout() ?: return false
+        return restEnd(active)?.let { it > now() } == true
+    }
+
+    /**
+     * A finished section waits for its ad break (Android: FocusWorkoutView.breakPending, and the list's section box):
+     * true once, when the section is done and no rest runs, which then lets the break go.
+     */
+    fun takeSectionBreak(): Boolean {
+        if (!sectionBreak || resting()) return false
+        sectionBreak = false
+        return true
+    }
+
+    /** A section was just finished, its break not yet taken. */
+    private var sectionBreak = false
 
     /** The rest running and its class, kept for when the phone closes the app (Android: STATE_REST_END, STATE_REST_PROGRAM). */
     fun runningRest(): Pair<String, Long>? {

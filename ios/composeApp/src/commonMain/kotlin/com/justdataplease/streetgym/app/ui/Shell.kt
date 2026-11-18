@@ -129,7 +129,7 @@ sealed interface Shown {
     data object ExamPassed : Shown
     /** "Not every target yet": the [missed] targets of [exam], and Repeat N classes. */
     data class RepeatBlock(val exam: TrainingProgram, val missed: List<TrainingExercise>) : Shown
-    /** The offer for what [paywall] locks, until purchases exist on iPhone. */
+    /** The offer for what [paywall] locks: the plans that unlock it (Android: showPaywall). */
     data class Offer(val paywall: Paywall) : Shown
     /** The streak's sheet; [history] adds See history (from Today). */
     data class Streak(val history: Boolean) : Shown
@@ -222,9 +222,25 @@ fun Shell(
     val calendar = remember { HistoryCalendarState(month = historyDay.takeIf { it != 0 }?.let(HistoryCalendar::monthOf), day = historyDay) }
     // A class asked to start while another is in progress: starting it ends the other, so the athlete is asked.
     var replacing by remember { mutableStateOf<Pair<String, Boolean>?>(null) }
-    fun openTab(tab: Screen) { stack.clear(); stack.add(tab) }
-    fun open(next: Screen) { stack.add(next) }
-    fun back() { if (stack.size > 1) stack.removeAt(stack.lastIndex) }
+    // A change of screen or tab is a break for the full-screen ad on Free (Android: adBreakNow): never over an offer,
+    // whether a dialog or Settings with its plans, and never between a workout and its Timer.
+    fun adBreak() { model.adBreaks.atBreak(covered = shown is Shown.Offer || stack.last() == Screen.Settings) }
+    fun openTab(tab: Screen) {
+        val midWorkout = stack.last() is Screen.Workout && tab == Screen.Timer
+        stack.clear()
+        stack.add(tab)
+        if (!midWorkout) adBreak()
+    }
+    fun open(next: Screen) {
+        stack.add(next)
+        adBreak()
+    }
+    fun back() {
+        if (stack.size > 1) {
+            stack.removeAt(stack.lastIndex)
+            adBreak()
+        }
+    }
     fun offer(level: Int) { shown = Shown.Offer(Paywall.Level(level)) }
     fun paywall(paywall: Paywall) { shown = Shown.Offer(paywall) }
     // A limit of My workouts: the offer of a higher tier, or on Pro that it is full (Android: roomForAnother, roomForAnotherList).
@@ -254,6 +270,10 @@ fun Shell(
     LaunchedEffect(timing) {
         while (true) {
             timing.checkDue()
+            // The full-screen ad is kept ready on Free (Android: timingTick's adBreak.tick), and a section finished in
+            // a workout is a break once its rest is over (Android: FocusWorkoutView's breakPending).
+            model.adBreaks.tick()
+            if (model.training.takeSectionBreak()) adBreak()
             delay(1_000L)
         }
     }
@@ -274,13 +294,13 @@ fun Shell(
                 Modifier.fillMaxSize().pageBackground(theme).padding(safeArea)
                     .then(if (overlay.shown) Modifier.clearAndSetSemantics {} else Modifier),
             ) {
-                TitleBar(model, screen, onBack = ::back)
+                TitleBar(model, screen, onBack = ::back, onRemoveAds = { paywall(Paywall.Ads) })
                 Box(Modifier.weight(1f).fillMaxWidth()) {
                     when (screen) {
                         Screen.Today -> TodayScreen(model, onOpenClass = { open(Screen.Class(it)) },
                             onStart = { id, repeat -> start(id, repeat) }, onOpenProgress = { openTab(Screen.Progress) }, onOffer = ::offer,
                             onStreak = { shown = Shown.Streak(history = true) })
-                        Screen.Training -> TrainingScreen(model, trainingTab, onTab = { trainingTab = it },
+                        Screen.Training -> TrainingScreen(model, trainingTab, onTab = { trainingTab = it; adBreak() },
                             onOpenLevel = { open(Screen.Level(it)) }, onReturned = { openTab(Screen.Training) },
                             workoutList = workoutList, onOpenList = { workoutList = it }, onOpenDay = { open(Screen.Class(it)) },
                             onCreate = ::create, onLimit = ::limit, onPaywall = ::paywall,
@@ -314,9 +334,10 @@ fun Shell(
                             onGone = ::back,
                         )
                         Screen.Progress -> ProgressScreen(
-                            model, progressShown, calendar, onTab = { progressShown = it },
+                            model, progressShown, calendar, onTab = { progressShown = it; adBreak() },
                             onSkill = { shown = Shown.Skill(it) }, onHelp = { shown = Shown.SkillsHelp },
                             onOpenClass = { open(Screen.Class(it)) }, onStreak = { shown = Shown.Streak(history = false) },
+                            onPaywall = ::paywall,
                         )
                         Screen.Timer -> TimerScreen(model) { notice = Notice.Plain(it) }
                         Screen.Settings -> SettingsScreen(
@@ -367,7 +388,7 @@ fun Shell(
                         openTab(Screen.Today)
                     }) { shown = null }
                 }
-                is Shown.Offer -> OfferDialog(open.paywall) { shown = null }
+                is Shown.Offer -> OfferDialog(model, open.paywall) { shown = null }
                 // Android: todayLine's sheet, whose See history opens Progress on History.
                 is Shown.Streak -> StreakSheet(model.streak(), onHistory = if (!open.history) null else ({
                     shown = null
@@ -419,9 +440,11 @@ private fun screenTitle(model: AppModel, screen: Screen): String = when (screen)
 fun BrandTitleBar(title: String) = TitleBarRow(title, nested = false, onBack = {}) {}
 
 @Composable
-private fun TitleBar(model: AppModel, screen: Screen, onBack: () -> Unit) {
+private fun TitleBar(model: AppModel, screen: Screen, onBack: () -> Unit, onRemoveAds: () -> Unit) {
     val palette = Street.colors
     TitleBarRow(screenTitle(model, screen), screen.nested, onBack) {
+        // On Free, on every screen but a workout (Android: toolbarRemoveAds, "keep remove ads in every screen top").
+        if (screen !is Screen.Workout && !model.plans.adFree) RemoveAdsButton(onRemoveAds)
         // During a workout, the other view: the list icon in Focus, the focus icon in the List (Android: toolbarAction).
         if (screen is Screen.Workout) {
             val focus = model.workoutView == WorkoutView.FOCUS

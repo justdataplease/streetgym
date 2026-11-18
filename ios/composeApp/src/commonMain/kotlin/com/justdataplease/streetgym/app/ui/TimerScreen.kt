@@ -147,6 +147,8 @@ fun TimerScreen(model: AppModel, onNote: (String) -> Unit) {
             BodyText(ALERTS_OFF, 13f, Modifier.padding(top = 8.dp).fillMaxWidth().heightIn(min = 48.dp)
                 .clickable(role = Role.Button) { timing.enableAlerts() }.padding(horizontal = 8.dp, vertical = 12.dp))
         }
+        // Android: TimingPanel's endAd.
+        EndAd(model)
     }
     if (picking) when (state.tab) {
         0 -> DurationDialog(state.countdown.total, onClose = { picking = false }) { millis ->

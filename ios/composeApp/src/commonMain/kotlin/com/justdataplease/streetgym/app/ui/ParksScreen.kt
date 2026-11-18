@@ -87,6 +87,7 @@ fun ParksScreen(model: AppModel, tabs: @Composable (Modifier) -> Unit, onPaywall
         Page {
             tabs(Modifier.padding(bottom = 14.dp))
             ParksExample(parks, host) { onPaywall(Paywall.Parks) }
+            EndAd(model)
         }
         return
     }
@@ -96,6 +97,7 @@ fun ParksScreen(model: AppModel, tabs: @Composable (Modifier) -> Unit, onPaywall
         Page {
             tabs(Modifier.padding(bottom = 14.dp))
             BodyText(stringResource(Res.string.parks_loading))
+            EndAd(model)
         }
         return
     }
@@ -121,6 +123,8 @@ fun ParksScreen(model: AppModel, tabs: @Composable (Modifier) -> Unit, onPaywall
         PrimaryButton(stringResource(Res.string.parks_near_me), Modifier.padding(top = 12.dp)) { parks.requestNearMe() }
         parks.results?.let { results -> ParksList(parks, results) }
         BodyText(stringResource(Res.string.parks_credit), 12f, Modifier.padding(top = 16.dp))
+        // Not on the map, which fills the screen (Android: renderLevels' endAd unless the map shows).
+        EndAd(model)
     }
 }
 

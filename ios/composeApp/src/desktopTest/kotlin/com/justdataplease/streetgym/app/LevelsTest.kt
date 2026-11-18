@@ -216,7 +216,7 @@ class LevelsTest {
         assertTrue(model.today().locked)
         onNodeWithText("START WORKOUT").assertDoesNotExist()
         onNodeWithContentDescription("Unlock Plus").performScrollTo().performClick()
-        onNodeWithText("Level 4 is part of Plus").assertExists()
+        onNodeWithText("Level 4 is part of Plus", ignoreCase = true).assertExists()
         onNodeWithText("CANCEL").performClick()
 
         // Levels: the tier's tag beside the name of every locked level.
@@ -231,12 +231,12 @@ class LevelsTest {
         onNodeWithText("COMPLETE LEVEL").assertDoesNotExist()
         onNodeWithText("GO BACK TO THIS LEVEL").assertDoesNotExist()
         onNodeWithContentDescription("Pro").performClick()
-        onNodeWithText("Level 7 is part of Pro").assertExists()
+        onNodeWithText("Level 7 is part of Pro", ignoreCase = true).assertExists()
         onNodeWithText("CANCEL").performClick()
         val locked = ordered.first { it.levelNumber == 7 }
         assertTrue(row(locked).spoken().endsWith(", Pro"))
         row(locked).performClick()
-        onNodeWithText("Level 7 is part of Pro").assertExists()
+        onNodeWithText("Level 7 is part of Pro", ignoreCase = true).assertExists()
         assertFalse(model.canStart(locked.id))
     }
 
@@ -249,7 +249,7 @@ class LevelsTest {
         onNodeWithText("START WORKOUT").assertDoesNotExist()
         onNodeWithText("WARM-UP").assertDoesNotExist()
         onNodeWithText("UNLOCK").performClick()
-        onNodeWithText("Level 5 is part of Plus").assertExists()
+        onNodeWithText("Level 5 is part of Plus", ignoreCase = true).assertExists()
     }
 
     @Test

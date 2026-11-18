@@ -187,6 +187,33 @@ sealed interface Paywall {
     data object Custom : Paywall
     /** Own lists: Plus, or more of them with Pro once Plus has made all of its [limit]. */
     data class Lists(val limit: Int) : Paywall
+    /** Progress › Leaderboard: Plus. */
+    data object Leaderboard : Paywall
+    /** The title bar's Remove ads: both plans end the ads, so it locks nothing. */
+    data object Ads : Paywall
+}
+
+/**
+ * Which plans an offer shows, and its tag (Android: TiersPanel's proOnly, its badge and render's visibility): an offer
+ * shows only the plans that unlock what was tried; Settings ([paywall] null) shows both with what is owned.
+ */
+object Offers {
+    /** Only Pro opens it: the ready workouts, and Levels 7 to 10. */
+    fun proOnly(paywall: Paywall?): Boolean =
+        paywall == Paywall.Ready || paywall is Paywall.Level && LevelAccess.tierFor(paywall.number) == Tier.PRO
+
+    /** The tag over an offer: Pro past Plus or for what only Pro opens, else Plus; none in Settings or on Remove ads. */
+    fun badge(paywall: Paywall?, tier: Tier): Tier? = when {
+        paywall == null || paywall == Paywall.Ads -> null
+        proOnly(paywall) || tier >= Tier.PLUS -> Tier.PRO
+        else -> Tier.PLUS
+    }
+
+    /** The Plus plan shows: always in Settings; in an offer, unless only Pro opens it or Plus is already owned. */
+    fun showsPlus(paywall: Paywall?, tier: Tier): Boolean = !(proOnly(paywall) || paywall != null && tier >= Tier.PLUS)
+
+    /** The Pro plan shows: always in Settings; in an offer, until Pro is owned. */
+    fun showsPro(paywall: Paywall?, tier: Tier): Boolean = !(paywall != null && tier == Tier.PRO)
 }
 
 /** A limit of My workouts reached: the [Offer] of a higher tier, or on Pro, nothing more to give. */
@@ -233,8 +260,10 @@ class LevelPage(
  * The app's state over the shared engine: the program, the athlete's saved progress and choices, and what each screen
  * reads from them. Screens call it while they draw, so a change here redraws them.
  *
- * [tier]: every level is open until purchases exist on iPhone (StoreKit), as in Android's development builds.
- * [skills] credits a finished class's sets to skills. [device] keeps the screen on and cues the end of a rest.
+ * [plans] is what the athlete bought, and the [tier] every screen reads from it; [tier] given alone is the lowest tier
+ * the model shows (previews and tests; Pro by default, as Android's development builds). [ads] is the phone's ad SDK,
+ * whose consent ([adConsent]) and full-screen breaks ([adBreaks]) follow Android's rules, keeping their time in
+ * [adStore] on [elapsed], a clock that only moves on. [skills] credits a finished class's sets to skills. [device] keeps the screen on and cues the end of a rest.
  * [motions] are the line man's movements; [settings] keeps the athlete's choices. [firstWeekday] (1 Monday to 7
  * Sunday) starts the streak's week where the phone's region starts it.
  */
@@ -243,7 +272,7 @@ class AppModel(
     private val catalog: CurriculumCatalog,
     val progress: StoredProgress,
     val skills: SkillBook? = null,
-    val tier: Tier = Tier.PRO,
+    tier: Tier = Tier.PRO,
     private val now: () -> Long = ::epochMillisNow,
     /** The phone's time zone: days, and the dates shown. */
     val zone: TimeZone = TimeZone.currentSystemDefault(),
@@ -258,6 +287,10 @@ class AppModel(
     /** Training › Parks: the parks, the athlete's location and the map. */
     parksSource: ParksSource = BundledParks,
     location: PhoneLocation = PhoneLocation.Fixed(),
+    val plans: Plans = Plans(floor = tier),
+    val ads: Ads = Ads.None,
+    adStore: KeyValueStore = MemoryStore(),
+    elapsed: () -> Long = now,
 ) {
     constructor(
         program: Program,
@@ -272,8 +305,21 @@ class AppModel(
         timing: Timing = Timing(TimingStore(MemoryStore(), WallClock(now)), device, { zone }),
         parksSource: ParksSource = BundledParks,
         location: PhoneLocation = PhoneLocation.Fixed(),
+        plans: Plans = Plans(floor = tier),
+        ads: Ads = Ads.None,
+        adStore: KeyValueStore = MemoryStore(),
+        elapsed: () -> Long = now,
     ) : this(program.catalog, progress, program.skills, tier, now, zone, device, program.motions, settings, firstWeekday, library,
-        timing, parksSource, location)
+        timing, parksSource, location, plans, ads, adStore, elapsed)
+
+    /**
+     * The tier every screen reads (Android: Entitlement.tier): from what was bought, so a purchase, a refund, a lapse or
+     * a restore redraws whatever shows.
+     */
+    val tier: Tier get() = plans.tier
+
+    /** Consent first: Google's form, Apple's tracking question, then the ad SDK (Android: NativeAdOwner). */
+    val adConsent = AdConsent(ads) { plans.adFree }
 
     /** Training › Parks (Android: renderParks, its search and location, ParksUpdater). */
     val parks = ParksState(parksSource, location, settings, now)
@@ -305,6 +351,10 @@ class AppModel(
         leftOutOfExam = { exercise -> exercise.movementId?.let(skillSwitches::isOff) == true || equipment.isOff(exercise) },
         leftOut = { program, flow -> leftOutKeys(program, flow) },
     ) { id, intensity -> programAt(id, intensity) }
+
+    /** The full-screen ad's breaks on Free (Android: WorkoutAdBreak and adBreakNow). */
+    val adBreaks = AdBreaks(ads, adConsent, adStore, elapsed, adFree = { plans.adFree }, timingBusy = { timing.state.busy },
+        resting = { training.resting() })
 
     /** The look picked in Settings, kept on the phone (Android: AppSettings.theme); every screen follows at once. */
     /** The app's version, as Settings › About shows it ("Version 1.0"). */
@@ -373,6 +423,13 @@ class AppModel(
         resumes++
         refreshDay()
         timing.resumed()
+        plans.connect()
+        adBreaks.resume()
+    }
+
+    /** The app left the screen (Android: onPause): the ad clock stops. */
+    fun paused() {
+        adBreaks.pause()
     }
 
     /** The strength test was answered or skipped (Android: AppSettings.placementDone); Start over asks it again. */

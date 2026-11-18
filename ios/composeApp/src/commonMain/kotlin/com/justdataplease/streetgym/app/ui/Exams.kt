@@ -9,7 +9,6 @@ import androidx.compose.ui.unit.dp
 import com.justdataplease.streetgym.app.data.AppModel
 import com.justdataplease.streetgym.app.data.ExamQuestion
 import com.justdataplease.streetgym.app.resources.Res
-import com.justdataplease.streetgym.app.resources.cancel
 import com.justdataplease.streetgym.app.resources.exam_badge
 import com.justdataplease.streetgym.app.resources.exam_card_missed
 import com.justdataplease.streetgym.app.resources.exam_card_passed
@@ -24,20 +23,6 @@ import com.justdataplease.streetgym.app.resources.exam_passed_title
 import com.justdataplease.streetgym.app.resources.exam_repeat_block
 import com.justdataplease.streetgym.app.resources.exam_results_title
 import com.justdataplease.streetgym.app.resources.exam_save
-import com.justdataplease.streetgym.app.resources.paywall_level
-import com.justdataplease.streetgym.app.resources.paywall_level_body
-import com.justdataplease.streetgym.app.resources.paywall_level_pro
-import com.justdataplease.streetgym.app.resources.paywall_level_pro_body
-import com.justdataplease.streetgym.app.resources.paywall_custom
-import com.justdataplease.streetgym.app.resources.paywall_lists
-import com.justdataplease.streetgym.app.resources.paywall_lists_full
-import com.justdataplease.streetgym.app.resources.paywall_parks
-import com.justdataplease.streetgym.app.resources.paywall_ready
-import com.justdataplease.streetgym.app.resources.paywall_ready_body
-import com.justdataplease.streetgym.app.resources.paywall_saved
-import com.justdataplease.streetgym.app.data.Paywall
-import com.justdataplease.streetgym.billing.LevelAccess
-import com.justdataplease.streetgym.billing.Tier
 import com.justdataplease.streetgym.data.model.TrainingExercise
 import com.justdataplease.streetgym.data.model.TrainingProgram
 import org.jetbrains.compose.resources.stringResource
@@ -110,35 +95,5 @@ fun RepeatBlockDialog(missed: List<TrainingExercise>, first: TrainingProgram, co
         onDismiss = onClose,
         confirm = DialogAction(stringResource(Res.string.exam_repeat_block, count), onRepeat),
         dismiss = DialogAction(stringResource(Res.string.exam_continue), onClose),
-    )
-}
-
-/**
- * The offer for what a higher tier gives, until the plans can be bought on iPhone (round 10): the offer's heading, its
- * line where Android has one ("Level 4 is part of Plus" and the lever line), and Cancel (Android: showPaywall with
- * TiersPanel's heading and body for [paywall]).
- */
-@Composable
-fun OfferDialog(paywall: Paywall, onClose: () -> Unit) {
-    val pro = paywall == Paywall.Ready || paywall is Paywall.Level && LevelAccess.tierFor(paywall.number) == Tier.PRO
-    val title = when (paywall) {
-        is Paywall.Level -> stringResource(if (pro) Res.string.paywall_level_pro else Res.string.paywall_level, paywall.number)
-        Paywall.Ready -> stringResource(Res.string.paywall_ready)
-        Paywall.Parks -> stringResource(Res.string.paywall_parks)
-        is Paywall.Saved -> stringResource(Res.string.paywall_saved, paywall.limit)
-        Paywall.Custom -> stringResource(Res.string.paywall_custom)
-        is Paywall.Lists -> if (paywall.limit == 0) stringResource(Res.string.paywall_lists)
-            else stringResource(Res.string.paywall_lists_full, paywall.limit)
-    }
-    val body = when (paywall) {
-        is Paywall.Level -> stringResource(if (pro) Res.string.paywall_level_pro_body else Res.string.paywall_level_body)
-        Paywall.Ready -> stringResource(Res.string.paywall_ready_body)
-        else -> null
-    }
-    StreetDialog(
-        title = title,
-        message = body,
-        onDismiss = onClose,
-        confirm = DialogAction(stringResource(Res.string.cancel), onClose),
     )
 }

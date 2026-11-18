@@ -72,11 +72,12 @@ class DuringWorkoutTest {
         assertTrue(model.soundCues)
         setContent { StreetGymApp(model, PaddingValues(), startAt = Screen.Settings) }
 
-        onNodeWithText("DURING YOUR WORKOUT").assertExists()
-        onNodeWithText("Keep screen awake").assertIsOn().performClick()
+        // Below Plus and Pro, as on Android.
+        onNodeWithText("DURING YOUR WORKOUT").performScrollTo().assertExists()
+        onNodeWithText("Keep screen awake").performScrollTo().assertIsOn().performClick()
         onNodeWithText("Keep screen awake").assertIsOff()
-        onNodeWithText("Rest timer sound").assertIsOn().performClick()
-        onNodeWithText("List").performClick()
+        onNodeWithText("Rest timer sound").performScrollTo().assertIsOn().performClick()
+        onNodeWithText("List").performScrollTo().performClick()
         assertEquals("false", store.get("streetgym_settings.keep_screen_awake"))
         assertEquals("false", store.get("streetgym_settings.sound_cues"))
         assertEquals("list", store.get("streetgym_settings.workout_view"))

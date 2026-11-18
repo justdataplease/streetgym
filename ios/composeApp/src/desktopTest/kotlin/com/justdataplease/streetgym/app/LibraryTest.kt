@@ -233,10 +233,10 @@ class LibraryTest {
         onNodeWithText("1 of 3 saved and custom days").assertExists()
         onNodeWithContentDescription("${first.name.resolve()}, Level 1 • Workout 1 of 100", substring = true).performScrollTo().assertExists()
         onNodeWithContentDescription("Create a workout Plus").performClick()
-        onNodeWithText("Your own workouts are part of Plus").assertExists()
+        onNodeWithText("Your own workouts are part of Plus", ignoreCase = true).assertExists()
         onNodeWithText("CANCEL").performClick()
         onNodeWithContentDescription("New list, Plus").performClick()
-        onNodeWithText("Your own lists are part of Plus").assertExists()
+        onNodeWithText("Your own lists are part of Plus", ignoreCase = true).assertExists()
         onNodeWithText("CANCEL").performClick()
         // The card opens the day.
         onNodeWithContentDescription("${first.name.resolve()}, Level 1 • Workout 1 of 100", substring = true).performClick()
@@ -251,7 +251,7 @@ class LibraryTest {
         model.completeDay(ordered[3].id)
         setContent { StreetGymApp(model, PaddingValues(), startAt = Screen.Class(ordered[3].id)) }
         onNodeWithContentDescription("Save to Favorites").performClick()
-        onNodeWithText("You’ve used all 3 saved and custom days").assertExists()
+        onNodeWithText("You’ve used all 3 saved and custom days", ignoreCase = true).assertExists()
         assertFalse(model.isSaved(ordered[3].id))
     }
 

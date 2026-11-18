@@ -1,0 +1,96 @@
+{
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
+  "identifier" : "5C7A1E01",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "14.99",
+      "familyShareable" : false,
+      "internalID" : "5C7A1E11",
+      "localizations" : [
+        {
+          "description" : "Levels 4 to 6, no ads, your own workouts, parks near you.",
+          "displayName" : "Plus",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "plus",
+      "referenceName" : "Plus",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "69.99",
+      "familyShareable" : false,
+      "internalID" : "5C7A1E12",
+      "localizations" : [
+        {
+          "description" : "Everything in Plus, Levels 7 to 10 and the ready workouts, for life.",
+          "displayName" : "Pro for life",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "pro_life",
+      "referenceName" : "Pro for life",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_failTransactionsEnabled" : false,
+    "_locale" : "en_US",
+    "_storefront" : "GRC",
+    "_storeKitErrors" : [
+
+    ]
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "5C7A1E21",
+      "localizations" : [
+
+      ],
+      "name" : "Pro",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "29.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "5C7A1E31",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Everything in Plus, Levels 7 to 10 and the ready workouts, by the year.",
+              "displayName" : "Pro yearly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "pro",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Pro yearly",
+          "subscriptionGroupID" : "5C7A1E21",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

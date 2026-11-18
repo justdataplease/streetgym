@@ -94,7 +94,10 @@ fun TodayScreen(
     // the day's class and the progress card (Android: askPlacement). Answered, Today opens again at the top.
     val placing = model.placementAsked()
     if (placing) {
-        key(true) { Page { PlacementCard(model, onPlaced = {}) } }
+        key(true) { Page {
+            PlacementCard(model, onPlaced = {})
+            AdCard(model)
+        } }
         return
     }
     key(false) { Page {
@@ -154,6 +157,8 @@ fun TodayScreen(
             Spacer(Modifier.height(14.dp))
             ProgressBar(percentage(today.done, today.total))
         }
+        // Free: the card closing Today, with no room of its own around it (Android: renderDashboard's placement).
+        AdCard(model)
     } }
 }
 

@@ -156,7 +156,7 @@ class ReadyLibraryTest {
         // A Pro workout wears the tag and opens the offer.
         val pro = model.readyWorkouts.first { !it.free }
         card(pro.name.resolve()).performScrollTo().performClick()
-        onNodeWithText("Ready workouts are part of Pro").assertExists()
+        onNodeWithText("Ready workouts are part of Pro", ignoreCase = true).assertExists()
         onNodeWithText("CANCEL").performClick()
         // A free one opens as any other, and starts.
         card(free[0].name.resolve()).performScrollTo().performClick()
@@ -170,7 +170,7 @@ class ReadyLibraryTest {
         val pro = model.readyWorkouts.first { !it.free }
         setContent { StreetGymApp(model, PaddingValues(), startAt = Screen.Class(pro.id)) }
         onNodeWithContentDescription("Unlock Pro").performClick()
-        onNodeWithText("Ready workouts are part of Pro").assertExists()
+        onNodeWithText("Ready workouts are part of Pro", ignoreCase = true).assertExists()
         onNodeWithText("START WORKOUT").assertDoesNotExist()
         assertEquals(Start.LOCKED, model.start(pro.id))
     }

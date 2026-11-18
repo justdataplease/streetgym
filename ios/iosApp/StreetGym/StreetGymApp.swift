@@ -2,14 +2,19 @@ import SwiftUI
 import StreetGymApp
 
 /// The iPhone app's entry point. Every screen is drawn by the Kotlin framework (composeApp); Swift holds only what
-/// Apple requires to be native: this entry point, the Parks map (MapLibre, ParksMapLibre.swift), and later purchases
-/// (StoreKit) and ads.
+/// Apple requires to be native: this entry point, the Parks map (MapLibre, ParksMapLibre.swift), Plus and Pro
+/// (StoreKit 2, StoreKitStore.swift) and Free's ads (Google's, GoogleAds.swift).
 @main
 struct StreetGymIosApp: App {
+    /// One store and one set of ads for the app's life: the store hears the App Store's transactions from its start.
+    static let store = StoreKitStore()
+    static let ads = GoogleAds()
+
     init() {
         // The Timer's alerts and their Stop, ready before the app has finished starting: a tap on an alert that opens
         // the app is heard too.
-        MainViewControllerKt.startAlerts()
+        // (A Kotlin function outside a class is named after its file: IosTiming.kt gives IosTimingKt.)
+        IosTimingKt.startAlerts()
     }
 
     var body: some Scene {
@@ -34,10 +39,18 @@ private struct ComposeScreen: UIViewControllerRepresentable {
     @Binding var screens: String
 
     func makeUIViewController(context: Context) -> UIViewController {
-        MainViewControllerKt.MainViewController(maps: MapLibreParks(), restored: screens, saver: BindingSaver(binding: $screens))
+        MainViewControllerKt.MainViewController(maps: MapLibreParks(), restored: screens, saver: BindingSaver(binding: $screens),
+                                                store: StreetGymIosApp.store, ads: StreetGymIosApp.ads, debug: ComposeScreen.debug)
     }
 
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
+
+    /// A debug build: its developer settings offer Simulate tier (Android: BuildConfig.DEBUG).
+    #if DEBUG
+    static let debug = true
+    #else
+    static let debug = false
+    #endif
 }
 
 /// Hands Kotlin's text for where the app is to the scene storage.

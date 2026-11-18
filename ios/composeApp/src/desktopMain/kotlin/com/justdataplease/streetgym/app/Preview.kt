@@ -18,6 +18,8 @@ fun main() = application {
         state = rememberWindowState(width = 440.dp, height = 956.dp),
     ) {
         // Weeks start where this computer's region starts them, as the iPhone reads its own.
-        App(MemoryStore(), firstWeekday = LocalDays.isoWeekday(java.util.Calendar.getInstance().firstDayOfWeek))
+        // Plus and Pro from a fake store at Android's prices, Free's ads as labelled stand-ins, Simulate tier offered.
+        App(MemoryStore(), firstWeekday = LocalDays.isoWeekday(java.util.Calendar.getInstance().firstDayOfWeek),
+            purchases = FakeStore(), ads = FakeAds(), simulate = true)
     }
 }

@@ -29,6 +29,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.justdataplease.streetgym.app.data.AdRows
 import com.justdataplease.streetgym.app.data.AppModel
 import com.justdataplease.streetgym.app.data.ClassRow
 import com.justdataplease.streetgym.app.data.LevelPage
@@ -88,11 +89,20 @@ fun LevelScreen(
         item(key = "header") {
             LevelHeader(page, tier, onOffer = { onOffer(number) }, onComplete = { completing = true }, onGoBack = { goingBack = true })
         }
-        items(page.rows, key = { it.program.id }) { row ->
+        // Free: one ad card after the first three classes, and one closing the list unless the first is already last
+        // (Android: AdRowAdapter after 3, and the list's footer).
+        val adAt = AdRows.position(page.rows.size, AdRows.LEVEL_AFTER)
+        val row: @Composable (ClassRow) -> Unit = { row ->
             ClassRowView(model, row, tier.takeIf { page.locked }) {
                 // Developer inspection opens a locked class too, read-only (Android: renderWorkouts).
                 if (page.locked && !row.completed && !model.inspectAllDays) onOffer(number) else onOpenClass(row.program.id)
             }
+        }
+        items(page.rows.subList(0, adAt), key = { it.program.id }) { row(it) }
+        item(key = "ad") { AdCard(model, Modifier.padding(horizontal = 12.dp, vertical = 4.dp)) }
+        items(page.rows.subList(adAt, page.rows.size), key = { it.program.id }) { row(it) }
+        if (page.rows.size > AdRows.LEVEL_AFTER) item(key = "ad-end") {
+            AdCard(model, Modifier.padding(start = 12.dp, top = 12.dp, end = 12.dp, bottom = 4.dp))
         }
     }
     val name = displayName(page.level)

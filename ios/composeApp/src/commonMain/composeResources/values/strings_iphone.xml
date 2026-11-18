@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Texts only the iPhone app has: where Android's names Google Play, or Apple asks for something Android doesn't show.
+  Everything else comes from the Android app's own string files, copied in at build time (composeApp/build.gradle.kts).
+-->
+<resources>
+    <!-- Android: pro_yearly_note, purchase_*; the same words with the App Store in Google Play's place. -->
+    <string name="store_yearly_note">Yearly renews until you cancel it in the App Store.</string>
+    <string name="store_not_found">No purchase found for this Apple Account.</string>
+    <string name="store_unreachable">Couldn’t reach the App Store. Try again later.</string>
+    <string name="store_unavailable">App Store purchases are unavailable.</string>
+    <string name="store_unavailable_retry">App Store purchases are unavailable. Try again later.</string>
+    <string name="store_connecting">Connecting to the App Store…</string>
+    <string name="store_pending">Payment pending. It unlocks when the App Store confirms it.</string>
+    <!-- Apple 3.1.2: a subscription's offer links its terms and the privacy policy. -->
+    <string name="terms_of_use">Terms of Use</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <!-- Developer settings › Simulate tier (Android: simulate_tier_note, whose debug builds can't buy). -->
+    <string name="simulate_tier_note_ios">Debug builds only. Default is what this phone bought. Pick a tier to test its limits and ads.</string>
+</resources>

@@ -33,6 +33,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
+import com.justdataplease.streetgym.app.data.AdRows
 import com.justdataplease.streetgym.app.data.AppModel
 import com.justdataplease.streetgym.app.figure.ExerciseFigure
 import com.justdataplease.streetgym.app.resources.Res
@@ -101,7 +102,10 @@ fun SkillsSection(model: AppModel, onOpen: (String) -> Unit, onHelp: () -> Unit,
         }
         SectionLabel(stringResource(Res.string.skills_ranks), Modifier.padding(top = 14.dp))
         RankLegend(Modifier.padding(top = 6.dp), onHelp)
-        progress.families.forEach { (family, statuses) ->
+        // Free: one ad card partway down the ladders, after the fourth (Android: skillsContent's adAt).
+        val adAt = AdRows.position(progress.families.size, AdRows.SKILLS_AFTER)
+        progress.families.forEachIndexed { index, (family, statuses) ->
+            if (index == adAt) AdCard(model, top = 14.dp)
             TitleText(family.spec.name, 16f, Modifier.padding(top = 14.dp))
             // The tags on the medals' corners reach past their cells: room above for Plus or Pro, wider gaps beside.
             Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(top = 10.dp)) {
@@ -112,6 +116,7 @@ fun SkillsSection(model: AppModel, onOpen: (String) -> Unit, onHelp: () -> Unit,
                 }
             }
         }
+        if (adAt == progress.families.size) AdCard(model, top = 14.dp)
     }
 }
 

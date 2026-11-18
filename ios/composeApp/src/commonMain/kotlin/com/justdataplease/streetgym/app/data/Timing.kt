@@ -57,6 +57,9 @@ data class TimingState(
     val tab: Int = 0,
 ) {
     val ringing: Boolean get() = timerRinging || alarmRinging
+
+    /** A timer or stopwatch runs, or something rings: no full-screen ad then (Android: WorkoutAdBreak's timingBusy). */
+    val busy: Boolean get() = countdown.running || stopwatch.running || ringing
 }
 
 /**
