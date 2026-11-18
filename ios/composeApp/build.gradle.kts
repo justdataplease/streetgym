@@ -15,7 +15,7 @@ val androidMain: File = listOf("../../android-streetgym/app", "../../app").map {
 val androidResources = tasks.register<Sync>("androidResources") {
     into(layout.buildDirectory.dir("androidResources"))
     // Gradle can't see a change to the rewriting rules below; raise this when one changes, so the copy runs again.
-    inputs.property("rules", 5)
+    inputs.property("rules", 6)
     from(androidMain.resolve("assets")) {
         include("curriculum.json", "workouts.json", "exercise_animations.json")
         into("files")
@@ -26,10 +26,15 @@ val androidResources = tasks.register<Sync>("androidResources") {
         into("values")
         // Compose fills only numbered places (%1$d), and Android's texts with a single number write a bare %d.
         // Android also writes an apostrophe as \' and a quote as \" in its string files; Compose would show the backslash.
-        filter { line: String -> line.replace("%d", "%1${'$'}d").replace("\\'", "'").replace("\\\"", "\"") }
+        // Its bold <b>…</b> is kept as written (escaped here, so Compose reads it as text), for ui/Kit.kt boldMarkup.
+        filter { line: String ->
+            line.replace("%d", "%1${'$'}d").replace("\\'", "'").replace("\\\"", "\"")
+                .replace("<b>", "&lt;b&gt;").replace("</b>", "&lt;/b&gt;")
+        }
     }
     from(androidMain.resolve("res/drawable")) {
-        include("ic_nav_*.xml", "ic_brand_mark.xml", "ic_lock.xml", "ic_view_list.xml", "ic_view_focus.xml")
+        include("ic_nav_*.xml", "ic_brand_mark.xml", "ic_lock.xml", "ic_view_list.xml", "ic_view_focus.xml",
+            "ic_heart.xml", "ic_heart_outline.xml", "logo.xml")
         into("drawable")
         // Compose reads Android's vector format, but not references to Android's own colours.
         filter { line: String -> line.replace("@android:color/transparent", "#00000000") }

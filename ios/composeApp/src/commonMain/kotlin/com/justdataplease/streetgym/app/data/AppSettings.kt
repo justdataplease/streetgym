@@ -54,6 +54,14 @@ class AppSettings(private val store: KeyValueStore) {
         get() = flag(KEY_PLACEMENT_DONE, default = false)
         set(value) = store.set(KEY_PLACEMENT_DONE, value.toString())
 
+    /**
+     * Share my progress (Android: AppSettings.shareProgress): on until switched off, at the end of the strength test. The
+     * uploads it allows come with the account (round 13); the choice is kept now, under Android's key.
+     */
+    var shareProgress: Boolean
+        get() = flag(KEY_SHARE_PROGRESS, default = true)
+        set(value) = store.set(KEY_SHARE_PROGRESS, value.toString())
+
     /** The tenth tap on the version opened the developer settings; one tap then opens them again. */
     var developerUnlocked: Boolean
         get() = flag(KEY_DEVELOPER_UNLOCKED, default = false)
@@ -87,6 +95,7 @@ class AppSettings(private val store: KeyValueStore) {
         const val KEY_THEME = "streetgym_settings.theme"
         const val KEY_LEGACY_DARK_MODE = "streetgym_settings.dark_mode"
         const val KEY_PLACEMENT_DONE = "streetgym_settings.placement_done"
+        const val KEY_SHARE_PROGRESS = "streetgym_settings.share_progress"
         const val KEY_DEVELOPER_UNLOCKED = "streetgym_settings.developer_unlocked"
         const val KEY_INSPECT_ALL_DAYS = "streetgym_settings.inspect_all_days"
     }

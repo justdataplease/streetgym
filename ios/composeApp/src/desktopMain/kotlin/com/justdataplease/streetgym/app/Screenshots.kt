@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -21,6 +23,9 @@ import com.justdataplease.streetgym.app.figure.ExerciseFigure
 import com.justdataplease.streetgym.app.figure.FigureHold
 import com.justdataplease.streetgym.app.figure.LocalFigureHold
 import com.justdataplease.streetgym.app.figure.LocalMotionLibrary
+import com.justdataplease.streetgym.app.figure.LocalParkTime
+import com.justdataplease.streetgym.app.figure.ParkRoutine
+import com.justdataplease.streetgym.app.figure.ParkScene
 import com.justdataplease.streetgym.app.figure.WorkoutTile
 import com.justdataplease.streetgym.data.effort.Effort
 import com.justdataplease.streetgym.data.model.LocalizedText
@@ -46,7 +51,11 @@ import com.justdataplease.streetgym.data.skills.switchedOff
 import com.justdataplease.streetgym.billing.Tier
 import com.justdataplease.streetgym.data.progress.ExamResult
 import com.justdataplease.streetgym.app.data.FocusPage
+import com.justdataplease.streetgym.app.data.LibraryStore
 import com.justdataplease.streetgym.app.data.MemoryStore
+import com.justdataplease.streetgym.app.ui.ListPickerDialog
+import com.justdataplease.streetgym.data.library.CustomExercise
+import androidx.compose.runtime.remember
 import com.justdataplease.streetgym.app.data.Program
 import com.justdataplease.streetgym.app.data.StoredProgress
 import com.justdataplease.streetgym.app.data.loadProgram
@@ -106,6 +115,8 @@ fun main(args: Array<String>) {
     for (theme in StreetTheme.entries) levelShots(program, theme, out)
     for (theme in StreetTheme.entries) progressShots(program, theme, out)
     for (theme in StreetTheme.entries) settingsShots(program, theme, out)
+    for (theme in StreetTheme.entries) placementShots(program, theme, out)
+    for (theme in StreetTheme.entries) libraryShots(program, theme, out)
     shot(File(out, "start-buttons.png"), height = 1560) { StartButtons() }
     val names = movementNames()
     for (theme in StreetTheme.entries) FIGURE_SHEETS.forEachIndexed { index, ids ->
@@ -295,7 +306,7 @@ private fun loopShots(program: Program, theme: StreetTheme, out: File) {
     }
     shot(File(out, "class-locked-$name.png")) { StreetGymApp(free, SAFE_AREA, startAt = Screen.Class(ordered[300].id)) }
     shot(File(out, "today-unlock-$name.png")) { StreetGymApp(free, SAFE_AREA) }
-    shot(File(out, "offer-level-$name.png")) { StreetGymApp(free, SAFE_AREA, showing = Shown.Offer(4)) }
+    shot(File(out, "offer-level-$name.png")) { StreetGymApp(free, SAFE_AREA, showing = Shown.Offer(com.justdataplease.streetgym.app.data.Paywall.Level(4))) }
 
     shot(File(out, "settings-$name.png")) { StreetGymApp(athlete, SAFE_AREA, startAt = Screen.Settings) }
 }
@@ -445,6 +456,171 @@ private fun settingsShots(program: Program, theme: StreetTheme, out: File) {
     shot(File(out, "class-passed-$name.png")) { StreetGymApp(inspector, SAFE_AREA, startAt = Screen.Class(passed.id)) }
     inspector.skillSwitches = SkillSwitches()
     shot(File(out, "class-inspect-long-$name.png"), height = LONG_HEIGHT) { StreetGymApp(inspector, SAFE_AREA, startAt = Screen.Class(ordered[60].id)) }
+}
+
+/**
+ * Round 6, the strength test and the park, in [theme]: a new athlete's test, its counts typed, the start it gives with
+ * the skills step open and a test picked, a start held to Free; the park on Today's brand card at moments of the day's
+ * routine and on other days; the loading screen's two figures and the load error.
+ */
+private fun placementShots(program: Program, theme: StreetTheme, out: File) {
+    val name = theme.key
+    fun newcomer(tier: Tier = Tier.PRO, counts: List<Int>? = null, skill: Int = 0, shown: Boolean = false) = model(program, tier = tier).apply {
+        this.theme = theme
+        counts?.forEachIndexed { index, count -> placementForm.set(index, count) }
+        placementForm.skill = skill
+        placementForm.shown = shown
+    }
+    shot(File(out, "placement-$name.png")) { StreetGymApp(newcomer(), SAFE_AREA) }
+    shot(File(out, "placement-long-$name.png"), height = 6_000) { StreetGymApp(newcomer(), SAFE_AREA) }
+    shot(File(out, "placement-filled-$name.png")) { StreetGymApp(newcomer(counts = listOf(10, 30, 0)), SAFE_AREA) }
+    shot(File(out, "placement-result-long-$name.png"), height = 7_000) {
+        StreetGymApp(newcomer(counts = listOf(10, 30, 0), shown = true), SAFE_AREA)
+    }
+    shot(File(out, "placement-skills-long-$name.png"), height = 9_000) {
+        StreetGymApp(newcomer(counts = listOf(30, 60, 80), skill = 6, shown = true), SAFE_AREA)
+    }
+    shot(File(out, "placement-free-long-$name.png"), height = 9_000) {
+        StreetGymApp(newcomer(Tier.FREE, counts = listOf(30, 60, 80), skill = 6, shown = true), SAFE_AREA)
+    }
+
+    // The park: today's routine (squats, a muscle-up, a front lever) at five moments, then six other days at a moment
+    // of their own and at their final hold.
+    val athlete = athlete(program).apply { this.theme = theme }
+    shot(File(out, "park-today-$name.png"), height = 5 * PARK_CARD) {
+        CompositionLocalProvider(LocalMotionLibrary provides program.motions) {
+            StreetGymTheme(theme) { ParkSheet(listOf(20_775L to 2.2f, 20_775L to 5.5f, 20_775L to 9.4f, 20_775L to 12.6f, 20_775L to null)) }
+        }
+    }
+    shot(File(out, "park-days-$name.png"), height = 12 * PARK_CARD) {
+        CompositionLocalProvider(LocalMotionLibrary provides program.motions) {
+            StreetGymTheme(theme) {
+                ParkSheet(listOf(20_768L, 20_777L, 20_781L, 20_785L, 20_786L, 20_788L).flatMap { listOf(it to 7.5f, it to null) })
+            }
+        }
+    }
+    shot(File(out, "today-park-$name.png")) {
+        CompositionLocalProvider(LocalParkTime provides 6.5f) { StreetGymApp(athlete, SAFE_AREA) }
+    }
+    shot(File(out, "loading-walk-$name.png")) { CompositionLocalProvider(LocalMotionLibrary provides program.motions) { StreetGymTheme(theme) { LoadingScreen(pull = false) } } }
+    shot(File(out, "loading-pull-$name.png")) { CompositionLocalProvider(LocalMotionLibrary provides program.motions) { StreetGymTheme(theme) { LoadingScreen(pull = true) } } }
+    shot(File(out, "load-error-$name.png")) { StreetGymTheme(theme) { LoadErrorScreen(SAFE_AREA) {} } }
+}
+
+/** A brand card of the park sheets with its margin, in pixels. */
+private const val PARK_CARD = 760
+
+/**
+ * Round 7, My workouts, in [theme]: Free's with two saved days and its locked buttons; Pro's with two own workouts,
+ * saved days and lists, and a list open; a class page with its heart filled, and the lists picker over it; the builder
+ * with three exercises, its exercise picker and its sets dialog; an own workout's page, and Today while it runs; the
+ * offers for the saved days, own workouts and lists.
+ */
+private fun libraryShots(program: Program, theme: StreetTheme, out: File) {
+    val name = theme.key
+    val ordered = NextClass.ordered(program.catalog)
+    fun library(tier: Tier): AppModel {
+        val store = MemoryStore()
+        com.justdataplease.streetgym.app.data.AppSettings(store).placementDone = true
+        return AppModel(program, StoredProgress(store), tier = tier, now = { NOW }, zone = TimeZone.UTC,
+            settings = com.justdataplease.streetgym.app.data.AppSettings(store), library = LibraryStore(store)).apply { this.theme = theme }
+    }
+    fun own(model: AppModel, title: String, vararg queries: String): String {
+        val draft = model.newDraft()
+        model.draft = draft.copy(name = title, exercises = queries.map { query ->
+            val movement = model.exercises.search(query).first()
+            CustomExercise(movement.key, movement.name, movement.movementId, movement.category, movement.equipment, List(3) { movement.sample })
+        })
+        model.saveDraft()
+        return draft.id
+    }
+
+    val free = library(Tier.FREE)
+    free.setSaved(ordered[0].id, true)
+    free.setSaved(ordered[4].id, true)
+    shot(File(out, "my-workouts-free-$name.png")) { StreetGymApp(free, SAFE_AREA, startAt = Screen.Training, trainingTab = 1) }
+
+    val pro = library(Tier.PRO)
+    val push = own(pro, "Push at the park", "push-up", "dip", "pike")
+    own(pro, "Hotel room legs", "pistol", "squat")
+    listOf(0, 4, 9).forEach { pro.setSaved(ordered[it].id, true) }
+    val travel = pro.createList("Travel")
+    val rainy = pro.createList("Rainy days")
+    pro.saveToLists(ordered[4].id, setOf(travel.id))
+    pro.saveToLists(ordered[0].id, setOf(rainy.id))
+    pro.saveToLists(push, setOf(travel.id))
+    shot(File(out, "my-workouts-long-$name.png"), height = 6_000) { StreetGymApp(pro, SAFE_AREA, startAt = Screen.Training, trainingTab = 1) }
+    shot(File(out, "my-workouts-list-$name.png")) {
+        StreetGymApp(pro, SAFE_AREA, startAt = Screen.Training, trainingTab = 1, workoutList = travel.id)
+    }
+    // Today's class (the first: nothing is done yet), saved in Rainy days.
+    shot(File(out, "class-saved-$name.png")) { StreetGymApp(pro, SAFE_AREA, startAt = Screen.Class(ordered[0].id)) }
+    shot(File(out, "lists-picker-$name.png")) {
+        OverDialog(pro, Screen.Class(ordered[0].id)) { ListPickerDialog(pro, ordered[0].id, {}, {}, {}) {} }
+    }
+    shot(File(out, "own-workout-long-$name.png"), height = 7_000) { StreetGymApp(pro, SAFE_AREA, startAt = Screen.Class(push)) }
+
+    // The builder: the push workout open for editing.
+    pro.editDraft(push)
+    shot(File(out, "builder-$name.png")) { StreetGymApp(pro, SAFE_AREA, startAt = Screen.EditDay(push)) }
+    pro.editDraft(push)
+    shot(File(out, "builder-picker-$name.png")) {
+        OverDialog(pro, Screen.EditDay(push)) { com.justdataplease.streetgym.app.ui.ExercisePickerDialog(pro, {}) {} }
+    }
+    pro.editDraft(push)
+    val first = pro.customDay(push)!!.exercises.first()
+    shot(File(out, "builder-sets-$name.png")) {
+        OverDialog(pro, Screen.EditDay(push)) { com.justdataplease.streetgym.app.ui.SetsDialog(first.name, first.sets, {}) {} }
+    }
+
+    // Today while the own workout runs; the offers My workouts opens below Pro.
+    val running = library(Tier.PRO).also { model ->
+        val id = own(model, "Push at the park", "push-up", "dip", "pike")
+        model.start(id)
+    }
+    shot(File(out, "today-own-$name.png")) { StreetGymApp(running, SAFE_AREA) }
+    shot(File(out, "offer-saved-$name.png")) { StreetGymApp(free, SAFE_AREA, startAt = Screen.Training, trainingTab = 1,
+        showing = Shown.Offer(com.justdataplease.streetgym.app.data.Paywall.Saved(3))) }
+    shot(File(out, "offer-custom-$name.png")) { StreetGymApp(free, SAFE_AREA, startAt = Screen.Training, trainingTab = 1,
+        showing = Shown.Offer(com.justdataplease.streetgym.app.data.Paywall.Custom)) }
+    shot(File(out, "offer-lists-$name.png")) { StreetGymApp(free, SAFE_AREA, startAt = Screen.Training, trainingTab = 1,
+        showing = Shown.Offer(com.justdataplease.streetgym.app.data.Paywall.Lists(3))) }
+}
+
+/** [screen] of [model] with [dialog] over it, drawn as the shell draws its layers. */
+@Composable
+private fun OverDialog(model: AppModel, screen: Screen, dialog: @Composable () -> Unit) {
+    val overlay = remember { com.justdataplease.streetgym.app.ui.Overlay() }
+    androidx.compose.foundation.layout.Box(Modifier.fillMaxSize()) {
+        StreetGymApp(model, SAFE_AREA, startAt = screen)
+        CompositionLocalProvider(LocalMotionLibrary provides model.motions) {
+            StreetGymTheme(model.theme) {
+                CompositionLocalProvider(com.justdataplease.streetgym.app.ui.LocalOverlay provides overlay,
+                    com.justdataplease.streetgym.app.ui.LocalSafeArea provides SAFE_AREA) {
+                    dialog()
+                    com.justdataplease.streetgym.app.ui.OverlayLayers(overlay)
+                }
+            }
+        }
+    }
+}
+
+/** Brand cards with the park of each (day, story time); a null time holds the final skill. */
+@Composable
+private fun ParkSheet(frames: List<Pair<Long, Float?>>) {
+    val theme = Street.theme
+    val palette = theme.palette
+    Column(Modifier.fillMaxSize().pageBackground(theme).padding(20.dp)) {
+        for ((day, time) in frames) {
+            CompositionLocalProvider(LocalParkTime provides time) {
+                com.justdataplease.streetgym.app.ui.StreetCard(fill = palette.primaryDark, outlined = false, modifier = Modifier.padding(bottom = 12.dp)) {
+                    BodyText("day $day · ${ParkRoutine.forEpochDay(day).moves.joinToString(", ") { it.name.lowercase() }}" +
+                        (time?.let { " · $it s" } ?: " · final"), 12f, color = palette.heroKicker)
+                    ParkScene(day, 0, Modifier.padding(top = 4.dp).fillMaxWidth().height(180.dp))
+                }
+            }
+        }
+    }
 }
 
 /**

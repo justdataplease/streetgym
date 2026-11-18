@@ -32,6 +32,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import com.justdataplease.streetgym.app.data.AppModel
+import com.justdataplease.streetgym.app.data.Limit
+import com.justdataplease.streetgym.app.data.Paywall
 import com.justdataplease.streetgym.app.data.LevelCard
 import com.justdataplease.streetgym.app.data.LevelState
 import com.justdataplease.streetgym.app.data.Levels
@@ -62,13 +64,29 @@ private val TRAINING_TABS = listOf(Res.string.training_tab_levels, Res.string.tr
 /**
  * Training (android-streetgym, HomeActivity.renderLevels): the switch between its four tabs, kept while the app runs
  * ([tab], [onTab]), then Levels: the intro, the replay in effect, and the ten levels, dressed per theme. A level opens
- * its classes ([onOpenLevel]); returning from a replay goes back to Training ([onReturned]). My workouts, Library and
- * Parks come in later rounds.
+ * its classes ([onOpenLevel]); returning from a replay goes back to Training ([onReturned]). My workouts lists the saved
+ * and own days ([MyWorkouts]); the Library and Parks come in later rounds.
  */
 @Composable
-fun TrainingScreen(model: AppModel, tab: Int, onTab: (Int) -> Unit, onOpenLevel: (Int) -> Unit, onReturned: () -> Unit) {
+fun TrainingScreen(
+    model: AppModel,
+    tab: Int,
+    onTab: (Int) -> Unit,
+    onOpenLevel: (Int) -> Unit,
+    onReturned: () -> Unit,
+    workoutList: String? = null,
+    onOpenList: (String?) -> Unit = {},
+    onOpenDay: (String) -> Unit = {},
+    onCreate: () -> Unit = {},
+    onLimit: (Limit) -> Unit = {},
+    onPaywall: (Paywall) -> Unit = {},
+) {
     Page {
         SegmentedSwitch(TRAINING_TABS.map { stringResource(it) }, tab, Modifier.padding(bottom = 14.dp), compact = true, onSelect = onTab)
+        if (tab == 1) {
+            MyWorkouts(model, workoutList, onOpenList, onOpenDay, onCreate, onLimit, onPaywall)
+            return@Page
+        }
         if (tab != 0) {
             ToComeCard(stringResource(TRAINING_TABS[tab]))
             return@Page

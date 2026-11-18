@@ -3,6 +3,14 @@ package com.justdataplease.streetgym.app.ui
 import androidx.compose.runtime.Composable
 import com.justdataplease.streetgym.app.resources.Res
 import com.justdataplease.streetgym.app.resources.effort_item
+import com.justdataplease.streetgym.app.resources.custom_meta
+import com.justdataplease.streetgym.app.resources.custom_exercises
+import com.justdataplease.streetgym.app.resources.ready_grade_1
+import com.justdataplease.streetgym.app.resources.ready_grade_2
+import com.justdataplease.streetgym.app.resources.ready_grade_3
+import com.justdataplease.streetgym.app.resources.ready_grade_4
+import com.justdataplease.streetgym.app.resources.ready_grade_5
+import com.justdataplease.streetgym.app.resources.ready_meta
 import com.justdataplease.streetgym.app.resources.equipment_band_short
 import com.justdataplease.streetgym.app.resources.equipment_box_short
 import com.justdataplease.streetgym.app.resources.equipment_low_bar_short
@@ -125,14 +133,42 @@ private fun shortName(equipment: Equipment): StringResource = when (equipment) {
  * spot will do (Android: equipmentNeeds and equipmentText).
  */
 @Composable
-fun equipmentNeeds(tags: Collection<String>): String? {
+fun equipmentNeeds(tags: Collection<String>): String? = equipmentText(tags)?.let { stringResource(Res.string.equipment_needs, it) }
+
+/** "pull-up bar + box" or "box, low bar or parallel bars"; null when any spot will do (Android: equipmentText). */
+@Composable
+fun equipmentText(tags: Collection<String>): String? {
     val needs = EquipmentNeeds.of(tags).takeIf { it.isNotEmpty() } ?: return null
-    val text = needs.map { need ->
+    return needs.map { need ->
         val names = need.map { stringResource(shortName(it)) }
         if (names.size == 1) names[0] else stringResource(Res.string.equipment_or, names.dropLast(1).joinToString(", "), names.last())
     }.joinToString(" + ")
-    return stringResource(Res.string.equipment_needs, text)
 }
+
+/** A catalog id such as "static_stretch" as words: "Static stretch" (Android: humanize). */
+fun humanize(id: String): String = id.replace('_', ' ').trim().replaceFirstChar { it.uppercaseChar() }
+
+/** "Your workout · 5 exercises · About 20 min" (Android: customMeta). */
+@Composable
+fun customMeta(exercises: Int, minutes: Int): String =
+    stringResource(Res.string.custom_meta, pluralStringResource(Res.plurals.custom_exercises, exercises, exercises), minutes)
+
+/** "Intermediate · 6 exercises · About 30 min" (Android: readyMeta). */
+@Composable
+fun readyMeta(program: TrainingProgram): String = stringResource(Res.string.ready_meta,
+    readyGradeName(program.grade ?: 2),
+    pluralStringResource(Res.plurals.custom_exercises, program.exercises.size, program.exercises.size),
+    program.estimatedMinutes ?: 1)
+
+/** A ready workout's grade, Beginner to Elite (Android: readyGradeName). */
+@Composable
+fun readyGradeName(grade: Int): String = stringResource(when (grade) {
+    1 -> Res.string.ready_grade_1
+    3 -> Res.string.ready_grade_3
+    4 -> Res.string.ready_grade_4
+    5 -> Res.string.ready_grade_5
+    else -> Res.string.ready_grade_2
+})
 
 /** "Easy for you", "Moderate for you" or "Hard for you" (Android: EffortUi.effortText). */
 @Composable

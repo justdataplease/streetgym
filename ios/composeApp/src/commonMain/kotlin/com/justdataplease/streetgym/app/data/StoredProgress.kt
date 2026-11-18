@@ -1,6 +1,7 @@
 package com.justdataplease.streetgym.app.data
 
 import com.justdataplease.streetgym.data.epochMillisNow
+import com.justdataplease.streetgym.data.library.CustomDays
 import com.justdataplease.streetgym.data.progress.ActiveWorkout
 import com.justdataplease.streetgym.data.progress.ExamLog
 import com.justdataplease.streetgym.data.progress.ExamResult
@@ -116,8 +117,9 @@ class StoredProgress(private val store: KeyValueStore) : ProgressRepository {
         )
         store.set(KEY_HISTORY, encodeSessions(decodeSessions(store.get(KEY_HISTORY)) + session))
         store.set(KEY_ACTIVE, null)
-        // A repeat only adds its history entry: completed days and the level replay stay exactly as they were.
-        if (!active.repeat) {
+        // A repeat, an own workout or a ready workout only adds its history entry: completed days and the level replay
+        // stay exactly as they were.
+        if (!active.repeat && !CustomDays.offProgram(active.programId)) {
             store.set(KEY_COMPLETED, encodeIds(completedProgramIds() + active.programId))
             putRepeated(listOf(active.programId))
         }

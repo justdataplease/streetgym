@@ -25,12 +25,16 @@ import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
@@ -39,7 +43,9 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.Offset
@@ -48,6 +54,10 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
@@ -210,10 +220,11 @@ fun ChoiceRow(label: String, selected: Boolean, onSelect: () -> Unit) {
  * then [label], which may run over two lines.
  */
 @Composable
-fun CheckRow(label: String, checked: Boolean, onChange: (Boolean) -> Unit) {
+fun CheckRow(label: String, checked: Boolean, enabled: Boolean = true, onChange: (Boolean) -> Unit) {
     val palette = Street.colors
     Row(
-        Modifier.fillMaxWidth().heightIn(min = 48.dp).toggleable(checked, role = Role.Checkbox, onValueChange = onChange)
+        Modifier.fillMaxWidth().heightIn(min = 48.dp).alpha(if (enabled) 1f else 0.7f)
+            .toggleable(checked, enabled = enabled, role = Role.Checkbox, onValueChange = onChange)
             .padding(start = 20.dp, end = 24.dp, top = 4.dp, bottom = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -255,6 +266,67 @@ fun NumberField(value: TextFieldValue, hint: String, modifier: Modifier = Modifi
         },
     )
     LaunchedEffect(focus) { runCatching { focus.requestFocus() } }
+}
+
+/**
+ * A line of text to type, as Android's EditText draws it: [hint] while empty, a rule under it in the secondary colour,
+ * thicker and in the theme's colour while it has the focus, and [error] under it (Android: setError). [maxLength] caps
+ * it; [digits] takes digits only, on the number keyboard; [capitalize] starts sentences in capitals; [focusFirst] takes
+ * the focus when it shows. [imeAction] runs [onAction].
+ */
+@Composable
+fun EntryField(
+    value: TextFieldValue,
+    hint: String,
+    modifier: Modifier = Modifier,
+    size: Float = 18f,
+    maxLength: Int = Int.MAX_VALUE,
+    digits: Boolean = false,
+    capitalize: Boolean = false,
+    error: String? = null,
+    focusFirst: Boolean = false,
+    imeAction: ImeAction = ImeAction.Default,
+    onAction: () -> Unit = {},
+    onChange: (TextFieldValue) -> Unit,
+) {
+    val palette = Street.colors
+    val focus = remember { FocusRequester() }
+    var focused by remember { mutableStateOf(false) }
+    val style = TextStyle(color = palette.text, fontSize = size.sp, fontFamily = Street.type.body)
+    Column(modifier.fillMaxWidth()) {
+        BasicTextField(
+            value = value,
+            onValueChange = { next -> if (next.text.length <= maxLength && (!digits || next.text.all(Char::isDigit))) onChange(next) },
+            modifier = Modifier.fillMaxWidth().focusRequester(focus).onFocusChanged { focused = it.isFocused }
+                .semantics { contentDescription = hint },
+            textStyle = style,
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(
+                capitalization = if (capitalize) KeyboardCapitalization.Sentences else KeyboardCapitalization.None,
+                keyboardType = if (digits) KeyboardType.Number else KeyboardType.Text,
+                imeAction = imeAction,
+            ),
+            keyboardActions = KeyboardActions(onAny = { onAction() }),
+            cursorBrush = SolidColor(palette.primary),
+            decorationBox = { field ->
+                Box(
+                    Modifier.fillMaxWidth().heightIn(min = 48.dp).drawBehind {
+                        val rule = (if (focused) 2 else 1).dp.toPx()
+                        drawRect(if (focused) palette.primary else palette.textSecondary, Offset(0f, this.size.height - rule - 4.dp.toPx()),
+                            androidx.compose.ui.geometry.Size(this.size.width, rule))
+                    }.padding(start = 4.dp, top = 10.dp, end = 4.dp, bottom = 14.dp),
+                    contentAlignment = Alignment.CenterStart,
+                ) {
+                    if (value.text.isEmpty()) BasicText(hint, Modifier.fillMaxWidth(), style = style.copy(color = palette.textSecondary),
+                        maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    field()
+                }
+            },
+        )
+        if (error != null) BasicText(error, Modifier.padding(start = 4.dp, top = 2.dp),
+            style = TextStyle(color = palette.heart, fontSize = 13.sp, fontFamily = Street.type.body))
+    }
+    if (focusFirst) LaunchedEffect(focus) { runCatching { focus.requestFocus() } }
 }
 
 /**

@@ -8,6 +8,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.v2.runComposeUiTest
 import com.justdataplease.streetgym.app.data.AppModel
+import com.justdataplease.streetgym.app.data.AppSettings
 import com.justdataplease.streetgym.app.data.FocusPage
 import com.justdataplease.streetgym.app.data.MemoryStore
 import com.justdataplease.streetgym.app.data.Program
@@ -33,7 +34,11 @@ class FocusScreenTest {
     /** 18 Nov 2026, 12:00 UTC. */
     private var time = 20_775 * 86_400_000L + 12 * 3_600_000L
 
-    private fun model() = AppModel(program, StoredProgress(MemoryStore()), now = { time }, zone = TimeZone.UTC)
+    /** An athlete past the strength test, so Today offers the first class. */
+    private fun model() = MemoryStore().let { store ->
+        AppSettings(store).placementDone = true
+        AppModel(program, StoredProgress(store), now = { time }, zone = TimeZone.UTC, settings = AppSettings(store))
+    }
 
     @Test
     fun aClassTrainedByTapsIsSavedWithItsEffort() = runComposeUiTest {

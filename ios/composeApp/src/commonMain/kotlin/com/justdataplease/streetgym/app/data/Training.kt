@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.justdataplease.streetgym.data.library.CustomDays
 import com.justdataplease.streetgym.data.model.TrainingExercise
 import com.justdataplease.streetgym.data.model.TrainingProgram
 import com.justdataplease.streetgym.data.progress.ActiveWorkout
@@ -404,8 +405,11 @@ class Training internal constructor(
     fun reset() = forget()
 
     private fun open(active: ActiveWorkout): Pair<TrainingProgram, WorkoutFlow>? {
-        opened?.takeIf { it.first == active.programId && it.second == active.intensity }?.let { return it.third }
-        val program = programAt(active.programId, active.intensity) ?: return null
+        // An own workout can be edited while it is in progress: it is read again, and its sets follow the edit.
+        val own = if (CustomDays.isCustom(active.programId)) programAt(active.programId, active.intensity) ?: return null else null
+        opened?.takeIf { it.first == active.programId && it.second == active.intensity && (own == null || own == it.third.first) }
+            ?.let { return it.third }
+        val program = own ?: programAt(active.programId, active.intensity) ?: return null
         return (program to flow(program)).also { opened = Triple(active.programId, active.intensity, it) }
     }
 

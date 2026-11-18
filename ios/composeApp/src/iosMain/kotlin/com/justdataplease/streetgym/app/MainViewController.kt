@@ -1,6 +1,9 @@
 package com.justdataplease.streetgym.app
 
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.text.input.PlatformImeOptions
 import androidx.compose.ui.window.ComposeUIViewController
+import platform.UIKit.UIKeyboardTypeNumbersAndPunctuation
 import com.justdataplease.streetgym.app.data.Beep
 import com.justdataplease.streetgym.app.data.DEFAULT_VERSION
 import com.justdataplease.streetgym.app.data.KeyValueStore
@@ -68,8 +71,17 @@ fun MainViewController(): UIViewController {
     val version = NSBundle.mainBundle.objectForInfoDictionaryKey("CFBundleShortVersionString") as? String ?: DEFAULT_VERSION
     return ComposeUIViewController {
         App(UserDefaultsStore(), PhoneDevice, reduceMotion = UIAccessibilityIsReduceMotionEnabled(), firstWeekday = firstWeekday,
-            resumed = resumed, version = version)
+            resumed = resumed, version = version, countKeys = countKeys)
     }.also { PhoneDevice.screen = it }
+}
+
+/**
+ * The strength test's counters: digits with a return key, which reads Next and Done as Android's number keyboard does
+ * (the iPhone's number pad has no return key).
+ */
+@OptIn(ExperimentalComposeUiApi::class)
+private val countKeys = PlatformImeOptions {
+    keyboardType(UIKeyboardTypeNumbersAndPunctuation)
 }
 
 /** The athlete's progress in the app's UserDefaults: it stays on the phone and is part of its backups. */

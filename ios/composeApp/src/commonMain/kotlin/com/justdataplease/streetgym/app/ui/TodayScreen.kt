@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.justdataplease.streetgym.app.data.AppModel
 import com.justdataplease.streetgym.app.data.TodayLabel
+import com.justdataplease.streetgym.app.figure.ParkScene
 import com.justdataplease.streetgym.app.resources.Res
 import com.justdataplease.streetgym.app.resources.all_complete_body
 import com.justdataplease.streetgym.app.resources.all_complete_title
@@ -40,6 +42,7 @@ import com.justdataplease.streetgym.app.resources.start_today
 import com.justdataplease.streetgym.app.resources.today_section
 import com.justdataplease.streetgym.app.resources.workouts_completed_format
 import com.justdataplease.streetgym.app.theme.Street
+import com.justdataplease.streetgym.data.library.CustomDays
 import com.justdataplease.streetgym.data.progress.Intensity
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
@@ -87,10 +90,19 @@ fun TodayScreen(
         completing = false
         model.completeDay(next.id)
     }
-    Page {
+    // A new athlete first says where to start: the strength test brings its own header, in place of the brand card,
+    // the day's class and the progress card (Android: askPlacement). Answered, Today opens again at the top.
+    val placing = model.placementAsked()
+    if (placing) {
+        key(true) { Page { PlacementCard(model, onPlaced = {}) } }
+        return
+    }
+    key(false) { Page {
         StreetCard(fill = palette.primaryDark, modifier = Modifier.padding(bottom = 20.dp), outlined = false) {
             BodyText(stringResource(Res.string.brand_kicker), 12f, color = palette.heroKicker)
             TitleText(stringResource(Res.string.brand_line), 30f, Modifier.padding(top = 8.dp), color = palette.heroText)
+            // The day's routine in the park; a tap after midnight plays the new day's (Android: ParkSceneView).
+            ParkScene(model.day, model.resumes, Modifier.padding(top = 4.dp).fillMaxWidth().height(180.dp)) { model.refreshDay() }
         }
 
         val fontScale = LocalDensity.current.fontScale
@@ -124,7 +136,8 @@ fun TodayScreen(
                 UnlockButton(levelTierName(offer), Modifier.padding(top = 16.dp)) { onOffer(offer) }
                 return@StreetCard
             }
-            IntensityRow(model, Modifier.padding(top = 14.dp))
+            // An own or ready workout in progress runs as written: no intensity (Android: renderDashboard).
+            if (!CustomDays.offProgram(next.id)) IntensityRow(model, Modifier.padding(top = 14.dp))
             PrimaryButton(
                 stringResource(if (today.resume) Res.string.resume_workout else Res.string.start_today),
                 Modifier.padding(top = 16.dp),
@@ -141,7 +154,7 @@ fun TodayScreen(
             Spacer(Modifier.height(14.dp))
             ProgressBar(percentage(today.done, today.total))
         }
-    }
+    } }
 }
 
 /** The day's Easier, Normal or Harder over a class that can be started. */

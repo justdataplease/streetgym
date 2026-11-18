@@ -122,9 +122,10 @@ class SettingsTest {
         assertEquals(0, model.points())
         // Kept: the theme and the switches.
         keep.forEach { (key, value) -> assertEquals(value, store.get(key), key) }
-        // Today, with Android's note, on the first class.
+        // Today, with Android's note, asking the strength test again; the sequence is back at the first class.
         onNodeWithText("Progress reset. Choose where to start.").assertExists()
-        onNodeWithText("START WORKOUT").assertExists()
+        onNodeWithText("FIRST, A QUICK TEST").assertExists()
+        assertTrue(model.placementAsked())
         assertEquals(ordered[0].id, model.today().next!!.id)
     }
 
@@ -186,7 +187,7 @@ class SettingsTest {
 
     @Test
     fun aSwipeFromTheLeftEdgeGoesBack() = runComposeUiTest {
-        val model = model(MemoryStore())
+        val model = model(MemoryStore().apply { AppSettings(this).placementDone = true })
         val first = model.today().next!!
         setContent { StreetGymApp(model, PaddingValues(), startAt = Screen.Class(first.id)) }
         onNodeWithText("WORKOUT").assertExists()

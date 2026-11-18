@@ -28,6 +28,13 @@ import com.justdataplease.streetgym.app.resources.paywall_level
 import com.justdataplease.streetgym.app.resources.paywall_level_body
 import com.justdataplease.streetgym.app.resources.paywall_level_pro
 import com.justdataplease.streetgym.app.resources.paywall_level_pro_body
+import com.justdataplease.streetgym.app.resources.paywall_custom
+import com.justdataplease.streetgym.app.resources.paywall_lists
+import com.justdataplease.streetgym.app.resources.paywall_lists_full
+import com.justdataplease.streetgym.app.resources.paywall_ready
+import com.justdataplease.streetgym.app.resources.paywall_ready_body
+import com.justdataplease.streetgym.app.resources.paywall_saved
+import com.justdataplease.streetgym.app.data.Paywall
 import com.justdataplease.streetgym.billing.LevelAccess
 import com.justdataplease.streetgym.billing.Tier
 import com.justdataplease.streetgym.data.model.TrainingExercise
@@ -106,15 +113,29 @@ fun RepeatBlockDialog(missed: List<TrainingExercise>, first: TrainingProgram, co
 }
 
 /**
- * The offer for a level the tier doesn't open, until the plans can be bought on iPhone: the offer's heading and its
- * line in Android's words ("Level 4 is part of Plus"), and Cancel (Android: showPaywall with TiersPanel's Paywall.Level).
+ * The offer for what a higher tier gives, until the plans can be bought on iPhone (round 10): the offer's heading, its
+ * line where Android has one ("Level 4 is part of Plus" and the lever line), and Cancel (Android: showPaywall with
+ * TiersPanel's heading and body for [paywall]).
  */
 @Composable
-fun LevelOfferDialog(level: Int, onClose: () -> Unit) {
-    val pro = LevelAccess.tierFor(level) == Tier.PRO
+fun OfferDialog(paywall: Paywall, onClose: () -> Unit) {
+    val pro = paywall == Paywall.Ready || paywall is Paywall.Level && LevelAccess.tierFor(paywall.number) == Tier.PRO
+    val title = when (paywall) {
+        is Paywall.Level -> stringResource(if (pro) Res.string.paywall_level_pro else Res.string.paywall_level, paywall.number)
+        Paywall.Ready -> stringResource(Res.string.paywall_ready)
+        is Paywall.Saved -> stringResource(Res.string.paywall_saved, paywall.limit)
+        Paywall.Custom -> stringResource(Res.string.paywall_custom)
+        is Paywall.Lists -> if (paywall.limit == 0) stringResource(Res.string.paywall_lists)
+            else stringResource(Res.string.paywall_lists_full, paywall.limit)
+    }
+    val body = when (paywall) {
+        is Paywall.Level -> stringResource(if (pro) Res.string.paywall_level_pro_body else Res.string.paywall_level_body)
+        Paywall.Ready -> stringResource(Res.string.paywall_ready_body)
+        else -> null
+    }
     StreetDialog(
-        title = stringResource(if (pro) Res.string.paywall_level_pro else Res.string.paywall_level, level),
-        message = stringResource(if (pro) Res.string.paywall_level_pro_body else Res.string.paywall_level_body),
+        title = title,
+        message = body,
         onDismiss = onClose,
         confirm = DialogAction(stringResource(Res.string.cancel), onClose),
     )

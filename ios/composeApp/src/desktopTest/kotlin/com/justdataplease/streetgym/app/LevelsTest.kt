@@ -95,8 +95,10 @@ class LevelsTest {
 
         // The tab picked stays while the app runs.
         onNodeWithContentDescription("Training").performClick()
-        onNodeWithText("My workouts").performClick()
+        onNodeWithText("Library").performClick()
         onNodeWithText("Not on iPhone yet.").assertExists()
+        onNodeWithText("My workouts").performClick()
+        onNodeWithText("Save any day with the heart on its overview", substring = true).assertExists()
         onNodeWithContentDescription("Today").performClick()
         onNodeWithContentDescription("Training").performClick()
         onNodeWithText("My workouts").assertIsSelected()

@@ -2,22 +2,22 @@
 
 Every feature of the Android app (2.14.1, versionCode 58), one line each, in the order a user meets them: the iPhone app is done when every line is ticked.
 `[x]` is on iPhone now (in `ios-streetgym`, checked in its code), `[ ]` is to build. Pointers name the Android file under `android-streetgym/app/src/main/java/com/justdataplease/streetgym/` (→ the iPhone file where it is built); **engine**: the rule is already in `android-streetgym/shared/`; **iPhone API**: the Apple framework it needs; **owner**: it can't be finished without the owner.
-Written 18 Nov 2026; updated the same day after rounds 1 to 5.
+Written 18 Nov 2026; updated the same day after rounds 1 to 7.
 
 ## Count
 
 | Area | Features | On iPhone | To build | Waiting on the owner |
 |---|---:|---:|---:|---:|
-| 1. Opening the app | 8 | 6 | 2 | 0 |
-| 2. First launch: the strength test | 17 | 0 | 17 | 0 |
-| 3. Today | 23 | 19 | 4 | 1 |
+| 1. Opening the app | 8 | 8 | 0 | 0 |
+| 2. First launch: the strength test | 17 | 17 | 0 | 0 |
+| 3. Today | 23 | 22 | 1 | 1 |
 | 4. The class page | 11 | 11 | 0 | 0 |
 | 5. Line-man animations | 12 | 12 | 0 | 0 |
 | 6. Training a class: focus view | 18 | 18 | 0 | 0 |
 | 7. Training a class: list view | 13 | 13 | 0 | 0 |
 | 8. Finishing, repeats and exams | 15 | 15 | 0 | 0 |
 | 9. Training › Levels | 19 | 19 | 0 | 0 |
-| 10. Training › My workouts | 22 | 0 | 22 | 0 |
+| 10. Training › My workouts | 22 | 22 | 0 | 0 |
 | 11. Training › Library | 11 | 0 | 11 | 0 |
 | 12. Progress › History and the streak | 14 | 14 | 0 | 0 |
 | 13. Progress › Skills | 11 | 11 | 0 | 0 |
@@ -32,16 +32,16 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 5.
 | 22. Notifications and sounds | 6 | 2 | 4 | 0 |
 | 23. Home-screen widget | 10 | 0 | 10 | 7 |
 | 24. Sharing and progress analytics | 6 | 0 | 6 | 5 |
-| 25. Accessibility and languages | 12 | 8 | 4 | 0 |
+| 25. Accessibility and languages | 12 | 11 | 1 | 0 |
 | 26. Anything else | 2 | 0 | 2 | 0 |
-| **All** | **344** | **174** | **170** | **52** |
+| **All** | **344** | **221** | **123** | **52** |
 
 "Waiting on the owner" counts lines still to build whose last step needs the owner; most can be built and tested first with a test double (a `.storekit` file, Google's demo ad units, a made-up profile).
 
 ## 1. Opening the app
 
-- [ ] Loading screen: a figure walks (one time in three, does pull-ups) over "Loading your training…" (ui/HomeActivity.kt renderLoading, ui/ParkSceneView.kt WALK and PULL; iPhone shows an empty page)
-- [ ] Load error: the logo, "Training plan unavailable", its message and Try again (HomeActivity.renderLoadError; iPhone shows one plain line)
+- [x] Loading screen: a figure walks (one time in three, does pull-ups) over "Loading your training…" (ui/HomeActivity.kt renderLoading, ui/ParkSceneView.kt WALK and PULL → App.kt LoadingScreen, figure/ParkScene.kt LoadingFigure)
+- [x] Load error: the logo, "Training plan unavailable", its message and Try again (HomeActivity.renderLoadError → App.kt LoadErrorScreen, Shell.BrandTitleBar)
 - [x] Five tabs, Today, Training, Progress, Timer, Settings, with their icons, in each theme's tab bar (HomeActivity.rebuildBottomNavigation, ui/ThemeDecor.kt → Shell.kt TabBar)
 - [x] Title bar: the brand mark on a tab, ‹ Back on a nested screen, the title in the theme's display face (HomeActivity.buildShell, screenTitle → Shell.kt TitleBar)
 - [x] Screens keep clear of the Dynamic Island and the home indicator (HomeActivity.applySystemBarInsets → App.kt)
@@ -51,29 +51,29 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 5.
 
 ## 2. First launch: the strength test
 
-- [ ] Shown on Today, in place of the brand card and the day card, while nothing is done, no class is in progress and the test isn't answered; any progress settles it for good (HomeActivity.askPlacement; **engine** Placement.shouldAsk)
-- [ ] Header: "FIRST, A QUICK TEST", "How strong are you today?" and the warm-up prompt (ui/PlacementView.kt placementCard)
-- [ ] Three counters, Pull-ups, Push-ups, Squats: a big number to type (up to 3 digits) with − and + under it (PlacementView.countTile)
-- [ ] The keyboard's Next moves to the next counter; Done on the last runs Calculate (countTile)
-- [ ] Form line: "Strict: chin over the bar · chest to a fist above the floor · thighs below parallel, heels down." (placementCard)
-- [ ] Calculate, enabled once all three are filled; "Enter all three, then tap Calculate." until then (placementCard renderResult)
-- [ ] Changing a count hides the result until Calculate is tapped again (placementCard)
-- [ ] "Skip and start at Level 1" (placementCard)
-- [ ] The start on tape: "YOUR START", "Level 2, day 22 · Bar Strength", tilted in Concrete and Wheatpaste (PlacementView.startTape; **engine** Placement.starts, start)
-- [ ] Info card: From your skills, Opens with, Assumes you can do (the exam's targets), Closer to the next start ("3 more pull-ups → Level 2"), "Only a guide…" (placementCard; **engine** Placement.opening, assumed, better)
-- [ ] "Start at …", and "Start from scratch" when the start isn't Level 1, day 1 (placementCard)
-- [ ] "Already hold skills?" fold (+ / −): the level tests of Levels 3 to 9 the counts pass, each with its targets; a tap picks one, a second clears it (placementCard; **engine** Placement.SKILL_TESTS, meets, skillStart)
-- [ ] A start past the tier is held to its last level: "Level N needs Pro, so you start at Level M, the last one your plan opens." (placementCard; **engine** Placement.capped)
-- [ ] The page scrolls to the result after Calculate (placementCard)
-- [ ] Confirming marks every earlier class done as placed, with no points or ranks (HomeActivity.startPlacement; **engine** Placement.skipped)
-- [ ] Counts and the picked test kept while Today redraws (HomeActivity placementAnswers, placementSkill, placementShown)
-- [ ] "Share my progress" note and switch close the screen (ui/ShareProgressView.kt shareProgressNote)
+- [x] Shown on Today, in place of the brand card and the day card, while nothing is done, no class is in progress and the test isn't answered; any progress settles it for good (HomeActivity.askPlacement → AppModel.placementAsked, TodayScreen; **engine** Placement.shouldAsk)
+- [x] Header: "FIRST, A QUICK TEST", "How strong are you today?" and the warm-up prompt (ui/PlacementView.kt placementCard → PlacementScreen.kt PlacementCard)
+- [x] Three counters, Pull-ups, Push-ups, Squats: a big number to type (up to 3 digits) with − and + under it (PlacementView.countTile → PlacementScreen.CountTile)
+- [x] The keyboard's Next moves to the next counter; Done on the last runs Calculate (countTile → CountTile; **iPhone API**: the number keyboard with a return key, UIKeyboardTypeNumbersAndPunctuation through Compose's PlatformImeOptions, as the number pad has none)
+- [x] Form line: "Strict: chin over the bar · chest to a fist above the floor · thighs below parallel, heels down." (placementCard → PlacementCard)
+- [x] Calculate, enabled once all three are filled; "Enter all three, then tap Calculate." until then (placementCard renderResult → PlacementCard)
+- [x] Changing a count hides the result until Calculate is tapped again (placementCard → data/StrengthTest.kt PlacementForm)
+- [x] "Skip and start at Level 1" (placementCard → PlacementCard, Kit.LinkButton)
+- [x] The start on tape: "YOUR START", "Level 2, day 22 · Bar Strength", tilted in Concrete and Wheatpaste (PlacementView.startTape → PlacementScreen.StartTape, StrengthTest; **engine** Placement.starts, start)
+- [x] Info card: From your skills, Opens with, Assumes you can do (the exam's targets), Closer to the next start ("3 more pull-ups → Level 2"), "Only a guide…" (placementCard → PlacementResult; **engine** Placement.opening, assumed, better)
+- [x] "Start at …", and "Start from scratch" when the start isn't Level 1, day 1 (placementCard → PlacementResult)
+- [x] "Already hold skills?" fold (+ / −): the level tests of Levels 3 to 9 the counts pass, each with its targets; a tap picks one, a second clears it (placementCard → PlacementResult, SkillTestRow; **engine** Placement.SKILL_TESTS, meets, skillStart)
+- [x] A start past the tier is held to its last level: "Level N needs Pro, so you start at Level M, the last one your plan opens." (placementCard → StrengthTest.result; **engine** Placement.capped)
+- [x] The page scrolls to the result after Calculate (placementCard → PlacementResult, Compose's BringIntoViewRequester with 64 dp under the confirm)
+- [x] Confirming marks every earlier class done as placed, with no points or ranks (HomeActivity.startPlacement → AppModel.startPlacement, StoredProgress.completePrograms placed; **engine** Placement.skipped)
+- [x] Counts and the picked test kept while Today redraws (HomeActivity placementAnswers, placementSkill, placementShown → AppModel.placementForm)
+- [x] "Share my progress" note and switch close the screen (ui/ShareProgressView.kt shareProgressNote → PlacementScreen.ShareProgressNote, the bold first words from Android's `<b>` (Kit.boldMarkup); kept under Android's `share_progress`; the uploads it allows come with round 13)
 
 ## 3. Today
 
 - [x] Brand card: "DAILY CALISTHENICS" and "We choose the workout. You just train." (HomeActivity.renderDashboard → TodayScreen.kt)
-- [ ] Park scene in the brand card: the figure walks in and does the day's three movements, holds the final skill and fades; three friends cheer; a new routine each local day (ui/ParkSceneView.kt STORY, ui/ParkStory.kt, which uses java TimeZone: port it)
-- [ ] A tap on the park scene starts it again; so does coming back into view (ParkSceneView.replay, updateAnimationState)
+- [x] Park scene in the brand card: the figure walks in and does the day's three movements, holds the final skill and fades; three friends cheer; a new routine each local day (ui/ParkSceneView.kt STORY, ui/ParkStory.kt → figure/ParkStory.kt in common Kotlin on kotlinx-datetime, checked against frames Android's own code wrote; figure/ParkScene.kt)
+- [x] A tap on the park scene starts it again; so does coming back into view, and the app coming back (ParkSceneView.replay, updateAnimationState → ParkScene, AppModel.resumes)
 - [ ] With a username, "Well done, <name>!" rises in a cloud as the final skill lands (ParkSceneView.username, BubbleStyle.CLOUD; test with a made-up name; **owner**: a real profile needs Firebase)
 - [x] Today line: the section name, the streak's flame with its number, this week's seven days (HomeActivity.todayLine, ui/StreakUi.kt streakStrip → StreakViews.kt)
 - [x] Flame lit once today's workout is done, unlit with its number, a dashed 0 once ended; trained days filled, a carried rest day pale, today outlined and underlined (ui/StreakFlame.kt, StreakUi.StreakWeekView → StreakViews.kt; **engine** Streak)
@@ -86,7 +86,7 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 5.
 - [x] "How do you feel today?" Easier / Normal / Harder with its note (HomeActivity.intensityRow → TodayScreen.IntensityRow; **engine** Intensity)
 - [x] Today's pick survives a restart and is Normal again the next day (ui/AppSettings.kt intensityToday → data/AppSettings.kt, the same keys)
 - [x] Start workout, or Resume while the class is in progress (renderDashboard → TodayScreen)
-- [ ] A repeat, a Library workout or an own workout in progress takes Today's card until it is finished or ended (renderDashboard canRun, repeating; the repeat does on iPhone, the other two come with them in round 7)
+- [x] A repeat, a Library workout or an own workout in progress takes Today's card until it is finished or ended (renderDashboard canRun, repeating → AppModel.today, programById; an own or ready workout without the intensity row, and with Complete day as Android shows it)
 - [x] Complete day, with "Marks the day done without training. It earns no points or ranks." (renderDashboard → TodayScreen)
 - [x] Complete day asks first: "Complete this day?", the class name and the note, Cancel / Complete (HomeActivity.requestCompleteDay → ClassScreen.CompleteDayDialog, on Today, the class page and the list)
 - [x] A tap on the day card opens the class page (renderDashboard → TodayScreen)
@@ -119,7 +119,7 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 5.
 - [x] In the focus view's panel, for the set shown (FocusWorkoutView.setScreen → FocusScreen.SetPage)
 - [x] On every exercise card of the class page and the list view (HomeActivity.exerciseAnimation → ClassScreen.ExerciseAnimation)
 - [x] "Preview 1/3: <variation> - tap to change" under an exercise with no movement id and several variations (HomeActivity.exerciseAnimation → ClassScreen.ExerciseAnimation)
-- [x] Moving tile: the clip in a small rounded tile, framed on the whole cycle, for the exercise picker, level rows and workout cards (ExerciseAnimationView.setBadgeStyle moving, EffortUi.WorkoutTile → ExerciseFigure.WorkoutTile, on the level rows; the picker and cards come with their screens)
+- [x] Moving tile: the clip in a small rounded tile, framed on the whole cycle, for the exercise picker, level rows and workout cards (ExerciseAnimationView.setBadgeStyle moving, EffortUi.WorkoutTile → ExerciseFigure.WorkoutTile on the level rows and My workouts' cards; ExerciseFigure with a moving badge in the exercise picker)
 - [x] Still tile holding the end pose, for the skill medals (setBadgeStyle, ui/SkillMedals.kt skillFigure → ExerciseFigure with a badge, on Skills' medals: SkillMedals.SkillMedal)
 - [x] A workout's tile plays its hardest exercise, a moving one before a hold of the same grade, ringed in its effort colour (EffortUi.tileExercise → AppModel.tileOf; **engine** WorkoutEffort.hardest)
 - [x] Reduced motion: a still pose; nothing runs off screen (ExerciseAnimationView, UiKit.systemAnimationsEnabled → LocalReduceMotion; **iPhone API**: UIAccessibilityIsReduceMotionEnabled, read at launch)
@@ -206,34 +206,34 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 5.
 
 ## 10. Training › My workouts
 
-- [ ] Intro, "N of M saved and custom days" (3, 30 or 300 by tier), and the over-limit note (HomeActivity.renderMyWorkouts; **engine** Tier.savedDays, SavedLimit)
-- [ ] List chips: Favorites, the athlete's lists, "+ New list" (with a lock on Free); the row scrolls sideways (ui/WorkoutListsUi.kt listChips)
-- [ ] New list: a name dialog refusing a blank, too long or taken name; the new list opens (WorkoutListsUi.listNameDialog; **engine** WorkoutLists.nameProblem)
-- [ ] New list on Free opens the Plus offer, at Plus's 3 lists the Pro offer, at Pro's 10 "You've made the 10 lists of Pro…" (HomeActivity.roomForAnotherList; **engine** SavedLimit.canAddList)
-- [ ] An open list: Rename list, Delete list ("Only the list goes…"), its days, "No days in this list yet…" (renderMyWorkouts, listActions)
-- [ ] On Free the lists are kept but hidden, and come back with Plus (renderMyWorkouts; **engine** LibraryState)
-- [ ] Create a workout opens the builder; on Free it wears the Plus sticker and opens the offer (renderMyWorkouts, tierButton; **engine** Tier.customDays)
-- [ ] Your workouts and Saved days, each with "Nothing here yet." when empty (renderMyWorkouts)
-- [ ] Workout cards: tile, name, "Your workout · 5 exercises · About 20 min · Easy for you" (HomeActivity.libraryCard)
+- [x] Intro, "N of M saved and custom days" (3, 30 or 300 by tier), and the over-limit note (HomeActivity.renderMyWorkouts → MyWorkouts.kt; **engine** Tier.savedDays, SavedLimit)
+- [x] List chips: Favorites, the athlete's lists, "+ New list" (with a lock on Free); the row scrolls sideways (ui/WorkoutListsUi.kt listChips → MyWorkouts.ListChips, FilterChip)
+- [x] New list: a name dialog refusing a blank, too long or taken name; the new list opens (WorkoutListsUi.listNameDialog → MyWorkouts.ListNameDialog, Overlay.EntryField; **engine** WorkoutLists.nameProblem)
+- [x] New list on Free opens the Plus offer, at Plus's 3 lists the Pro offer, at Pro's 10 "You've made the 10 lists of Pro…" (HomeActivity.roomForAnotherList → AppModel.listLimit, Shell; the offers show their heading until round 10; **engine** SavedLimit.canAddList)
+- [x] An open list: Rename list, Delete list ("Only the list goes…"), its days, "No days in this list yet…" (renderMyWorkouts, listActions → MyWorkouts)
+- [x] On Free the lists are kept but hidden, and come back with Plus (renderMyWorkouts → AppModel.visibleLists; **engine** LibraryState)
+- [x] Create a workout opens the builder; on Free it wears the Plus sticker and opens the offer (renderMyWorkouts, tierButton → MyWorkouts, Kit.TierButton, Shell.create; **engine** Tier.customDays)
+- [x] Your workouts and Saved days, each with "Nothing here yet." when empty (renderMyWorkouts → MyWorkouts)
+- [x] Workout cards: tile, name, "Your workout · 5 exercises · About 20 min · Easy for you" (HomeActivity.libraryCard → MyWorkouts.LibraryCard)
 
 ### The heart
 
-- [ ] Heart at the top right of a class page: outline, or filled red with a pop when saved (HomeActivity.heartButton)
-- [ ] Free: a tap saves to Favorites ("Saved to Favorites") or removes ("Removed from My workouts") (heartButton)
-- [ ] At the limit: the Saved offer ("You've used all 3 saved and custom days"); on Pro "You've reached the 300…" (HomeActivity.roomForAnother)
-- [ ] Plus and Pro: "Save to lists": Favorites always ticked, each list with its day count, a full list refused with a note, a name field with Add, "Remove from My workouts" for a saved day, Save ("Saved to Favorites and Travel", "Lists saved") (WorkoutListsUi.showListPicker; **engine** SavedLimit.canAddToList)
-- [ ] An own workout's heart only picks lists, and Free shows none on it (renderOverview, heartButton)
+- [x] Heart at the top right of a class page: outline, or filled red with a pop when saved (HomeActivity.heartButton → Heart.kt HeartButton, Android's OvershootInterpolator(3) over 260 ms)
+- [x] Free: a tap saves to Favorites ("Saved to Favorites") or removes ("Removed from My workouts") (heartButton → HeartButton, AppModel.setSaved)
+- [x] At the limit: the Saved offer ("You've used all 3 saved and custom days"); on Pro "You've reached the 300…" (HomeActivity.roomForAnother → AppModel.savedLimit, Shell.limit)
+- [x] Plus and Pro: "Save to lists": Favorites always ticked, each list with its day count, a full list refused with a note, a name field with Add, "Remove from My workouts" for a saved day, Save ("Saved to Favorites and Travel", "Lists saved") (WorkoutListsUi.showListPicker → Heart.ListPickerDialog; **engine** SavedLimit.canAddToList)
+- [x] An own workout's heart only picks lists, and Free shows none on it (renderOverview, heartButton → ClassScreen, HeartButton)
 
 ### Own workouts
 
-- [ ] Builder "Your workout": a name field of up to 60 characters (HomeActivity.renderEditDay)
-- [ ] Exercise cards "1. Name", "3 × 8 reps · rest 60 s", with Up, Down, Sets and Remove (renderEditDay, prescription)
-- [ ] Add exercise: search every movement of the program; rows with a moving tile, category · equipment or "No equipment"; "No exercise matches." (HomeActivity.pickExercise, PickerRow; **engine** ExerciseLibrary.search)
-- [ ] Sets dialog: Sets, Reps / Seconds, the amount and the rest; 1–20 sets, 1–600, rest 0–600 (HomeActivity.editSets)
-- [ ] Save workout needs a name and one exercise, then opens the workout's page (renderEditDay)
-- [ ] Own workout page: "Your workout · N exercises · About N min", effort, safety line, Edit workout, Delete workout ("Delete this workout?"; its history stays; ends it if in progress) (renderOverview)
-- [ ] Starts any time, at Normal, with every skill and equipment on; never moves the program on (HomeActivity.canStart, intensityFor, leftOutBy; **engine** CustomDays)
-- [ ] A deleted one reads "Deleted workout" in History (HomeActivity.historyRow)
+- [x] Builder "Your workout": a name field of up to 60 characters (HomeActivity.renderEditDay → Builder.kt BuilderScreen, AppModel.draft)
+- [x] Exercise cards "1. Name", "3 × 8 reps · rest 60 s", with Up, Down, Sets and Remove (renderEditDay, prescription → BuilderScreen, Builder.prescription)
+- [x] Add exercise: search every movement of the program; rows with a moving tile, category · equipment or "No equipment"; "No exercise matches." (HomeActivity.pickExercise, PickerRow → Builder.ExercisePickerDialog; **engine** ExerciseLibrary.search)
+- [x] Sets dialog: Sets, Reps / Seconds, the amount and the rest; 1–20 sets, 1–600, rest 0–600 (HomeActivity.editSets → Builder.SetsDialog)
+- [x] Save workout needs a name and one exercise, then opens the workout's page (renderEditDay → AppModel.saveDraft, Shell)
+- [x] Own workout page: "Your workout · N exercises · About N min", effort, safety line, Edit workout, Delete workout ("Delete this workout?"; its history stays; ends it if in progress) (renderOverview → ClassScreen, AppModel.deleteCustom)
+- [x] Starts any time, at Normal, with every skill and equipment on; never moves the program on (HomeActivity.canStart, intensityFor, leftOutBy → AppModel.canStart, start, leftOutBy; StoredProgress.finishWorkout; **engine** CustomDays)
+- [x] A deleted one reads "Deleted workout" in History (HomeActivity.historyRow → HistoryScreen.HistoryRow, AppModel.programById)
 
 ## 11. Training › Library
 
@@ -357,7 +357,7 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 5.
 ### Start over, Train safely, About
 
 - [x] Start over: its text (with an account: "Your leaderboard points and any cloud copy reset too."), Reset progress, "Reset all progress?", Reset (HomeActivity.confirmReset → SettingsScreen, ResetDialog; the account's words come with the account, round 12)
-- [x] Reset erases classes, history, points, ranks and exams, keeps My workouts, the theme and purchases, says "Progress reset. Choose where to start." and brings the strength test back (confirmReset, SharedPreferencesProgressRepository.reset → AppModel.reset, StoredProgress.reset with "reset_at"; placement_done is cleared under Android's key, and the test itself shows once round 6 builds it)
+- [x] Reset erases classes, history, points, ranks and exams, keeps My workouts, the theme and purchases, says "Progress reset. Choose where to start." and brings the strength test back (confirmReset, SharedPreferencesProgressRepository.reset → AppModel.reset, StoredProgress.reset with "reset_at"; placement_done is cleared under Android's key, and Today asks the strength test again)
 - [x] Train safely card (renderSettings → SettingsScreen)
 - [x] About: "Street Gym: Daily Calisthenics", its text, "Version 1.0" (renderSettings → SettingsScreen; the version from the Info.plist's CFBundleShortVersionString)
 - [x] Ten taps on the version: "N taps to developer settings", then Developer settings with Inspect all days, Hide developer settings, Done (ui/DeveloperMenu.kt → SettingsScreen.VersionTaps, DeveloperDialog)
@@ -471,11 +471,11 @@ Android has no share sheet; its one sharing feature is Share my progress.
 - [x] Spoken labels in the list view: "Mark set 2 of Pull-Up complete", "Complete all Warm-up sets" with "3 of 8 sets" (renderActive → WorkoutList)
 - [x] Spoken calendar days: "November 5, today, 2 workouts, 1 repeat"; the month title read when it changes; the arrows named (HistoryCalendarView.describe → HistoryScreen.describe, a polite live region)
 - [x] Spoken medals ("Strict Pull-Up, Moderate skill, Rank 2"), points and ranks with "Double-tap for how…" (SkillsScreen.medalDescription → SkillCell, SkillsSection)
-- [ ] Spoken park scene with its three movements and a Replay action (ParkSceneView, park_scene_description)
+- [x] Spoken park scene with its three movements and a Replay action (ParkSceneView, park_scene_description → ParkScene's semantics)
 - [x] Spoken movement guide: "Line-figure movement guide for X…" (ExerciseAnimationView.bind → ExerciseFigure)
-- [ ] Spoken strength-test counters and their − and + ("One rep more, Strict pull-ups") (PlacementView.countTile)
+- [x] Spoken strength-test counters and their − and + ("One rep more, Strict pull-ups") (PlacementView.countTile → CountTile)
 - [x] Spoken theme rows with "selected", level cards with progress and tier, class rows with their state (ThemeDecor.themePicker, HomeActivity.levelCard, ProgramListAdapter → ThemePicker, TrainingScreen, LevelScreen)
-- [ ] Reduced motion also stills the park scene and the heart's pop (ParkSceneView, heartButton; **iPhone API**: UIAccessibility.isReduceMotionEnabled)
+- [x] Reduced motion also stills the park scene and the heart's pop (ParkSceneView, heartButton → ParkScene, LoadingFigure, HeartButton, LocalReduceMotion; **iPhone API**: UIAccessibilityIsReduceMotionEnabled, read at launch)
 - [ ] Large text keeps every control on screen: the focus view cuts its info first (FocusWorkoutView.screen)
 
 ## 26. Anything else
@@ -492,8 +492,8 @@ Thirteen rounds of about 20 to 28 lines, each one sitting's build and test, in t
 3. **Today and Training › Levels** (25): §9; from §3 the label over the title, the pick kept for the day, Complete day's question, the midnight redraw, the region's week and large text. Done 18 Nov 2026. Tier tags and Unlock show; until round 10 they open the offer's heading and line in Android's words, with Cancel.
 4. **Progress: History, the streak and Skills** (28): §12; §13; the streak tap on Today; spoken calendar days and medals. Done 18 Nov 2026, with "After finishing, Progress opens" from round 2. HistoryCalendar and StreakDays' local days are common Kotlin on kotlinx-datetime (`data/HistoryCalendar.kt`), checked against java.util.Calendar for eight zones over three years. The Leaderboard tab shows "Not on iPhone yet." until round 13.
 5. **Settings and themes** (23): §17 but During your workout and Simulate tier; §18; the back swipe (§1); spoken theme rows. Done 18 Nov 2026. The switches act where Android's do (the sequence, class rows and pages, both workout views, exams, Skills and so the points), kept under Android's keys; the theme, Start over, the developer settings and Inspect all days too. Settings leaves out what needs an account or a purchase (Profile, Plus and Pro, Your data, Ad privacy) until their rounds.
-6. **The strength test and the park scene** (24): §2; the park scene and its replay (§3); the loading screen and load error (§1); spoken park scene and counters; reduced motion for the park and the heart. Needs: round 1's figure rig; ParkStory off java TimeZone.
-7. **My workouts** (23): §10; a Library or own workout in progress taking Today's card. Needs: round 1 (picker tiles), round 2 (the class page); a library store on the phone (LibraryCodec is in the engine).
+6. **The strength test and the park scene** (24): §2; the park scene and its replay (§3); the loading screen and load error (§1); spoken park scene and counters; reduced motion for the park and the heart. Done 18 Nov 2026 (the heart's pop with round 7). ParkStory is common Kotlin on kotlinx-datetime (`figure/ParkStory.kt`), checked frame by frame against 24 days Android's own code wrote (`desktopTest/resources/park-android.json`, every one of the 21 routines). The share switch is kept; its uploads come with round 13.
+7. **My workouts** (23): §10; a Library or own workout in progress taking Today's card. Done 18 Nov 2026: the library is kept by the engine's LibraryCodec under Android's key (`data/LibraryStore.kt`, `streetgym_library.state`). The offers it opens (Saved, Custom, Lists) show their heading with Cancel until round 10, as the level offers do.
 8. **Library and Timer** (23): §11; §14; the timer and alarm alerts (§22). Needs: round 7 (the heart on a ready workout); UserNotifications, which the Simulator runs.
 9. **Parks** (18): §15; large text (§25); coming back after the phone closed the app, and landscape (§26). Needs: MapLibre iOS through Swift Package Manager in a UIKitView; CoreLocation; `spots.tsv` in the bundle (5 MB). The weekly refresh waits for the owner's Firebase setup.
 10. **Plans and purchases** (25): §19, with the plans in the offer that Unlock and the tier tags open (now its heading, line and Cancel); Simulate tier. Needs: StoreKit 2 in Swift behind a Kotlin `Store` interface, tested with a `.storekit` file; the owner's products for the sandbox check.

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -41,6 +42,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import com.justdataplease.streetgym.app.data.AppModel
+import com.justdataplease.streetgym.app.data.Limit
+import com.justdataplease.streetgym.app.data.Paywall
+import com.justdataplease.streetgym.app.resources.builder_title
+import com.justdataplease.streetgym.app.resources.lists_limit_pro
+import com.justdataplease.streetgym.app.resources.saved_limit_pro
 import com.justdataplease.streetgym.app.data.ExamQuestion
 import com.justdataplease.streetgym.app.data.HistoryCalendar
 import com.justdataplease.streetgym.app.resources.reset_done
@@ -104,8 +110,10 @@ sealed interface Screen {
     data class Class(val programId: String) : Screen
     /** The class in progress, set by set. [askEffort] opens it on the effort question (for the screenshots). */
     data class Workout(val programId: String, val askEffort: Boolean = false) : Screen
+    /** The builder, "Your workout", for the own workout [dayId] in [AppModel.draft]. */
+    data class EditDay(val dayId: String) : Screen
 
-    val nested: Boolean get() = this is Level || this is Class || this is Workout
+    val nested: Boolean get() = this is Level || this is Class || this is Workout || this is EditDay
 }
 
 /** A question or result the shell shows over every screen; the screenshots open the app on one. */
@@ -116,8 +124,8 @@ sealed interface Shown {
     data object ExamPassed : Shown
     /** "Not every target yet": the [missed] targets of [exam], and Repeat N classes. */
     data class RepeatBlock(val exam: TrainingProgram, val missed: List<TrainingExercise>) : Shown
-    /** The offer for [level], until purchases exist on iPhone. */
-    data class Offer(val level: Int) : Shown
+    /** The offer for what [paywall] locks, until purchases exist on iPhone. */
+    data class Offer(val paywall: Paywall) : Shown
     /** The streak's sheet; [history] adds See history (from Today). */
     data class Streak(val history: Boolean) : Shown
     /** A skill's sheet, by the skill's id. */
@@ -168,8 +176,9 @@ private val TABS = listOf(
 /**
  * The frame every screen sits in (android-streetgym, HomeActivity.buildShell): the page's grain behind everything, the
  * title bar, the screen, and the tab bar. [safeArea] keeps it clear of the Dynamic Island and the home indicator.
- * [showing] opens it with a question already up, [progressTab] on a tab of Progress and [historyDay] with a day picked
- * in History's calendar (for the screenshots). On a nested screen a swipe from the left edge goes back.
+ * [showing] opens it with a question already up, [progressTab] on a tab of Progress, [historyDay] with a day picked
+ * in History's calendar, [trainingTabAt] on a tab of Training and [workoutListAt] with a list of My workouts open (for
+ * the screenshots). On a nested screen a swipe from the left edge goes back.
  */
 @Composable
 fun Shell(
@@ -179,6 +188,8 @@ fun Shell(
     showing: Shown? = null,
     progressTab: Int = PROGRESS_SKILLS,
     historyDay: Int = 0,
+    trainingTabAt: Int = 0,
+    workoutListAt: String? = null,
 ) {
     val theme = Street.theme
     // The screens under the one showing; the first is always a tab. A level's page opens over Training, a class over Today.
@@ -191,7 +202,9 @@ fun Shell(
     var notice by remember { mutableStateOf<Notice?>(null) }
     var shown by remember { mutableStateOf(showing) }
     // Training's tab (Levels, My workouts, Library, Parks), kept while the app runs (Android: trainingTab).
-    var trainingTab by remember { mutableIntStateOf(0) }
+    var trainingTab by remember { mutableIntStateOf(trainingTabAt) }
+    // The list open in My workouts, null for Favorites (Android: workoutListId).
+    var workoutList by remember { mutableStateOf(workoutListAt) }
     // Progress's tab (Skills, History, Leaderboard) and History's month and day, kept while the app runs (Android:
     // progressTab, HistoryCalendarState).
     var progressShown by remember { mutableIntStateOf(progressTab) }
@@ -201,7 +214,20 @@ fun Shell(
     fun openTab(tab: Screen) { stack.clear(); stack.add(tab) }
     fun open(next: Screen) { stack.add(next) }
     fun back() { if (stack.size > 1) stack.removeAt(stack.lastIndex) }
-    fun offer(level: Int) { shown = Shown.Offer(level) }
+    fun offer(level: Int) { shown = Shown.Offer(Paywall.Level(level)) }
+    fun paywall(paywall: Paywall) { shown = Shown.Offer(paywall) }
+    // A limit of My workouts: the offer of a higher tier, or on Pro that it is full (Android: roomForAnother, roomForAnotherList).
+    fun limit(limit: Limit) {
+        when (limit) {
+            is Limit.Offer -> paywall(limit.paywall)
+            is Limit.ProFull -> notice = Notice.Text(if (limit.lists) Res.string.lists_limit_pro else Res.string.saved_limit_pro)
+        }
+    }
+    // "Create a workout": the builder on a new own workout, if one more fits (Android: requestNewDay).
+    fun create() {
+        val full = model.savedLimit()
+        if (full != null) limit(full) else open(Screen.EditDay(model.newDraft().id))
+    }
     // Start workout, Repeat this day and Resume (Android: requestStart).
     fun start(id: String, repeat: Boolean = false, replace: Boolean = false) {
         when (model.start(id, repeat = repeat, replace = replace)) {
@@ -225,13 +251,25 @@ fun Shell(
                             onStart = { id, repeat -> start(id, repeat) }, onOpenProgress = { openTab(Screen.Progress) }, onOffer = ::offer,
                             onStreak = { shown = Shown.Streak(history = true) })
                         Screen.Training -> TrainingScreen(model, trainingTab, onTab = { trainingTab = it },
-                            onOpenLevel = { open(Screen.Level(it)) }, onReturned = { openTab(Screen.Training) })
+                            onOpenLevel = { open(Screen.Level(it)) }, onReturned = { openTab(Screen.Training) },
+                            workoutList = workoutList, onOpenList = { workoutList = it }, onOpenDay = { open(Screen.Class(it)) },
+                            onCreate = ::create, onLimit = ::limit, onPaywall = ::paywall)
                         // Complete level returns to Training and Go back to Today, as Android opens them as the root.
                         is Screen.Level -> LevelScreen(model, screen.number, onOpenClass = { open(Screen.Class(it)) }, onOffer = ::offer,
                             onCompleted = { openTab(Screen.Training) }, onWentBack = { openTab(Screen.Today) })
                         // Complete day returns to Today, as Android's opens it as the root.
                         is Screen.Class -> ClassScreen(model, screen.programId, onStart = { start(it) },
-                            onRepeat = { start(it, repeat = true) }, onDone = { openTab(Screen.Today) }, onOffer = ::offer)
+                            onRepeat = { start(it, repeat = true) }, onDone = { openTab(Screen.Today) }, onOffer = ::offer,
+                            onPaywall = ::paywall, onLimit = ::limit,
+                            onNote = { notice = Notice.Plain(it) },
+                            onEdit = { id -> if (model.editDraft(id) != null) open(Screen.EditDay(id)) },
+                            onDeleted = ::back)
+                        // Save workout opens the workout's page in the builder's place (Android: showScreen without pushing).
+                        is Screen.EditDay -> BuilderScreen(model, screen.dayId, onSaved = { id ->
+                            stack.removeAt(stack.lastIndex)
+                            if (stack.lastOrNull() == Screen.Class(id)) stack.removeAt(stack.lastIndex)
+                            stack.add(Screen.Class(id))
+                        }, onNote = { notice = Notice.Plain(it) })
                         // Progress opens after a class, as on Android; an exam class then asks which targets were reached.
                         is Screen.Workout -> WorkoutScreen(
                             model, screen.askEffort,
@@ -298,7 +336,7 @@ fun Shell(
                         openTab(Screen.Today)
                     }) { shown = null }
                 }
-                is Shown.Offer -> LevelOfferDialog(open.level) { shown = null }
+                is Shown.Offer -> OfferDialog(open.paywall) { shown = null }
                 // Android: todayLine's sheet, whose See history opens Progress on History.
                 is Shown.Streak -> StreakSheet(model.streak(), onHistory = if (!open.history) null else ({
                     shown = null
@@ -331,6 +369,7 @@ private fun screenTitle(model: AppModel, screen: Screen): String = when (screen)
         Screen.Today -> Res.string.dashboard_title
         Screen.Training, is Screen.Level -> Res.string.levels_title
         is Screen.Class -> Res.string.workout_overview
+        is Screen.EditDay -> Res.string.builder_title
         is Screen.Workout -> if (model.training.active()?.repeat == true) Res.string.repeat_active_title else Res.string.active_workout
         Screen.Progress -> Res.string.progress_title
         Screen.Settings -> Res.string.settings_title
@@ -338,13 +377,38 @@ private fun screenTitle(model: AppModel, screen: Screen): String = when (screen)
     })
 }
 
+/** The title bar of a root screen with nothing else in it: the brand mark and [title] (Android: renderLoadError's). */
+@Composable
+fun BrandTitleBar(title: String) = TitleBarRow(title, nested = false, onBack = {}) {}
+
 @Composable
 private fun TitleBar(model: AppModel, screen: Screen, onBack: () -> Unit) {
+    val palette = Street.colors
+    TitleBarRow(screenTitle(model, screen), screen.nested, onBack) {
+        // During a workout, the other view: the list icon in Focus, the focus icon in the List (Android: toolbarAction).
+        if (screen is Screen.Workout) {
+            val focus = model.workoutView == WorkoutView.FOCUS
+            val switch = stringResource(if (focus) Res.string.switch_to_list else Res.string.switch_to_focus)
+            Image(
+                painterResource(if (focus) Res.drawable.ic_view_list else Res.drawable.ic_view_focus),
+                contentDescription = null,
+                colorFilter = ColorFilter.tint(palette.text),
+                modifier = Modifier.size(56.dp)
+                    .clickable(role = Role.Button) { model.workoutView = if (focus) WorkoutView.LIST else WorkoutView.FOCUS }
+                    .semantics { contentDescription = switch }
+                    .padding(16.dp),
+            )
+        }
+    }
+}
+
+/** The bar itself: ‹ Back on a nested screen or the brand mark, the title in the theme's display face, then [trailing]. */
+@Composable
+private fun TitleBarRow(title: String, nested: Boolean, onBack: () -> Unit, trailing: @Composable RowScope.() -> Unit) {
     val theme = Street.theme
     val palette = theme.palette
-    val title = screenTitle(model, screen)
     Row(Modifier.fillMaxWidth().height(56.dp).padding(end = 16.dp), verticalAlignment = Alignment.CenterVertically) {
-        if (screen.nested) {
+        if (nested) {
             val back = stringResource(Res.string.back)
             Box(Modifier.size(56.dp).clickable(role = Role.Button, onClick = onBack).semantics { contentDescription = back },
                 contentAlignment = Alignment.Center) {
@@ -362,20 +426,7 @@ private fun TitleBar(model: AppModel, screen: Screen, onBack: () -> Unit) {
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
-        // During a workout, the other view: the list icon in Focus, the focus icon in the List (Android: toolbarAction).
-        if (screen is Screen.Workout) {
-            val focus = model.workoutView == WorkoutView.FOCUS
-            val switch = stringResource(if (focus) Res.string.switch_to_list else Res.string.switch_to_focus)
-            Image(
-                painterResource(if (focus) Res.drawable.ic_view_list else Res.drawable.ic_view_focus),
-                contentDescription = null,
-                colorFilter = ColorFilter.tint(palette.text),
-                modifier = Modifier.size(56.dp)
-                    .clickable(role = Role.Button) { model.workoutView = if (focus) WorkoutView.LIST else WorkoutView.FOCUS }
-                    .semantics { contentDescription = switch }
-                    .padding(16.dp),
-            )
-        }
+        trailing()
     }
 }
 

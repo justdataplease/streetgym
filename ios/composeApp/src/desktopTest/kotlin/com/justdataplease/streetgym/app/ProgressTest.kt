@@ -198,9 +198,9 @@ class ProgressTest {
 
     @Test
     fun finishingAClassOpensProgress() = runComposeUiTest {
-        val model = model()
+        val model = model(MemoryStore().apply { AppSettings(this).placementDone = true })
         setContent { StreetGymApp(model, PaddingValues()) }
-        onNodeWithText("START WORKOUT").performClick()
+        onNodeWithText("START WORKOUT").performScrollTo().performClick()
         while (true) {
             val index = (model.training.state()!!.page as? FocusPage.Set)?.index ?: break
             time += 30_000L

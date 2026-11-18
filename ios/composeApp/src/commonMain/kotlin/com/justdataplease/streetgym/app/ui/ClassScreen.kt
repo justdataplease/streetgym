@@ -25,6 +25,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import com.justdataplease.streetgym.app.data.AppModel
+import com.justdataplease.streetgym.app.data.Limit
+import com.justdataplease.streetgym.app.data.Paywall
+import com.justdataplease.streetgym.app.resources.custom_delete
+import com.justdataplease.streetgym.app.resources.custom_delete_message
+import com.justdataplease.streetgym.app.resources.custom_delete_title
+import com.justdataplease.streetgym.app.resources.custom_edit
+import com.justdataplease.streetgym.app.resources.delete
+import com.justdataplease.streetgym.app.resources.tier_pro
+import com.justdataplease.streetgym.data.library.CustomDays
+import com.justdataplease.streetgym.data.library.ReadyWorkouts
 import com.justdataplease.streetgym.app.data.LeftOut
 import com.justdataplease.streetgym.app.data.Training
 import com.justdataplease.streetgym.app.data.WorkoutView
@@ -93,9 +103,16 @@ fun ClassScreen(
     onRepeat: (String) -> Unit,
     onDone: () -> Unit,
     onOffer: (Int) -> Unit = {},
+    onPaywall: (Paywall) -> Unit = {},
+    onLimit: (Limit) -> Unit = {},
+    onNote: (String) -> Unit = {},
+    onEdit: (String) -> Unit = {},
+    onDeleted: () -> Unit = {},
 ) {
     val program = model.program(programId) ?: return
     val completed = model.isCompleted(program.id)
+    val custom = CustomDays.isCustom(program.id)
+    val ready = ReadyWorkouts.isReady(program.id)
     // Developer inspection opens a class not reached yet, or behind a tier, read-only: nothing to start or complete.
     val inspecting = model.inspects(program.id)
     if (!inspecting && model.levelLocked(program.levelNumber) && !completed) {
@@ -110,7 +127,18 @@ fun ClassScreen(
         }
         return
     }
-    if (!inspecting && !model.canStart(program.id) && !completed) {
+    // Below Pro a ready workout stays closed: its name, its line and Unlock, none of its exercises.
+    if (!inspecting && model.readyLocked(program.id)) {
+        Page {
+            StreetCard(Modifier.padding(bottom = 14.dp)) {
+                TitleText(displayName(program), 25f)
+                BodyText(readyMeta(program), 14f, Modifier.padding(top = 4.dp))
+                UnlockButton(stringResource(Res.string.tier_pro), Modifier.padding(top = 16.dp)) { onPaywall(Paywall.Ready) }
+            }
+        }
+        return
+    }
+    if (!inspecting && !ready && !model.canStart(program.id) && !completed) {
         // Not reached yet: only its name, and that it comes later.
         Page {
             StreetCard {
@@ -124,28 +152,42 @@ fun ClassScreen(
     }
     val isToday = model.isToday(program.id)
     val active = model.training.active()
-    // Today's class starts as usual; any other completed class can be repeated (Android: repeatable).
-    val repeatable = !isToday && model.canRepeat(program.id)
+    // Today's class starts as usual; any other completed class can be repeated (Android: repeatable). An own or ready
+    // workout starts any time.
+    val repeatable = !custom && !ready && !isToday && model.canRepeat(program.id)
     val repeatResume = active?.programId == program.id && active.repeat
     var completing by remember { mutableStateOf(false) }
+    var deleting by remember { mutableStateOf(false) }
     Page {
         StreetCard(Modifier.padding(bottom = 14.dp)) {
             if (inspecting) Badge(stringResource(Res.string.inspect_only), Modifier.padding(bottom = 8.dp))
-            TitleText(displayName(program), 25f)
+            // The heart, but not to inspect, and not on Free's own workouts, which are always saved and have no lists.
+            if (inspecting || custom && !model.tier.lists) TitleText(displayName(program), 25f)
+            else Row {
+                TitleText(displayName(program), 25f, Modifier.weight(1f))
+                HeartButton(model, program.id, onNote = onNote, onLimit = onLimit)
+            }
             val intensity = model.intensity.takeIf { it != Intensity.NORMAL && !program.isExam && program.exercises.any(Intensity::scales) }
             BodyText(
-                listOfNotNull(stringResource(Res.string.level_number, program.levelNumber), programMeta(program),
-                    intensity?.let { intensityLabel(it) })
-                    .filter(String::isNotBlank).joinToString(" • "),
+                when {
+                    custom -> customMeta(program.exercises.size, program.estimatedMinutes ?: 1)
+                    ready -> readyMeta(program)
+                    else -> listOfNotNull(stringResource(Res.string.level_number, program.levelNumber), programMeta(program),
+                        intensity?.let { intensityLabel(it) }).filter(String::isNotBlank).joinToString(" • ")
+                },
                 14f, Modifier.padding(top = 4.dp),
             )
             // How hard the class is for this athlete, in its colour (Android: effortText and effortColor).
             model.effortOf(program.id)?.let { effort ->
                 Badge(effortText(effort), Modifier.padding(top = 8.dp), color = effortColor(effort))
             }
-            BodyText(program.description.resolve().ifBlank { stringResource(Res.string.empty_description) },
+            if (!custom) BodyText(program.description.resolve().ifBlank { stringResource(Res.string.empty_description) },
                 modifier = Modifier.padding(top = 12.dp))
             SafetyLine(program, Modifier.padding(top = 6.dp))
+            if (custom) {
+                SecondaryButton(stringResource(Res.string.custom_edit), Modifier.padding(top = 12.dp)) { onEdit(program.id) }
+                SecondaryButton(stringResource(Res.string.custom_delete), Modifier.padding(top = 8.dp)) { deleting = true }
+            }
             // Also at the top, so a completed class can be repeated without scrolling past every exercise.
             if (repeatable) {
                 BodyText(stringResource(Res.string.repeat_note), 13f, Modifier.padding(top = 12.dp), color = Street.colors.primary)
@@ -171,17 +213,20 @@ fun ClassScreen(
                 PrimaryButton(stringResource(Res.string.inspect_only), Modifier.padding(top = 8.dp), color = Street.colors.textSecondary,
                     enabled = false) {}
             }
-            isToday -> {
+            custom || ready || isToday -> {
                 val resume = active?.let { it.programId == program.id && !it.repeat } == true
                 WorkoutViewRow(model, Modifier.padding(top = 4.dp))
-                IntensityRow(model, Modifier.padding(top = 8.dp))
+                // An own or ready workout runs as written, any time: no intensity, and nothing to complete.
+                if (!custom && !ready) IntensityRow(model, Modifier.padding(top = 8.dp))
                 PrimaryButton(
                     stringResource(if (resume) Res.string.resume_workout else Res.string.start_workout),
                     Modifier.padding(top = 8.dp),
                     icon = painterResource(Res.drawable.ic_play_arrow_white_24dp),
                 ) { onStart(program.id) }
-                SecondaryButton(COMPLETE_DAY, Modifier.padding(top = 8.dp)) { completing = true }
-                BodyText(stringResource(Res.string.complete_day_no_points), 12f, Modifier.padding(top = 6.dp))
+                if (!custom && !ready) {
+                    SecondaryButton(COMPLETE_DAY, Modifier.padding(top = 8.dp)) { completing = true }
+                    BodyText(stringResource(Res.string.complete_day_no_points), 12f, Modifier.padding(top = 6.dp))
+                }
             }
             repeatable -> {
                 BodyText(stringResource(Res.string.sequence_completed_note), 14f, Modifier.padding(top = 8.dp))
@@ -204,6 +249,18 @@ fun ClassScreen(
         model.completeDay(program.id)
         onDone()
     }
+    // Android: renderOverview's Delete workout. Its history stays; it is ended if in progress.
+    if (deleting) StreetDialog(
+        title = stringResource(Res.string.custom_delete_title),
+        message = stringResource(Res.string.custom_delete_message, displayName(program)),
+        onDismiss = { deleting = false },
+        confirm = DialogAction(stringResource(Res.string.delete)) {
+            deleting = false
+            model.deleteCustom(program.id)
+            onDeleted()
+        },
+        dismiss = DialogAction(stringResource(Res.string.cancel)) { deleting = false },
+    )
 }
 
 /**

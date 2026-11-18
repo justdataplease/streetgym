@@ -2,6 +2,7 @@ package com.justdataplease.streetgym.app.data
 
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -12,7 +13,14 @@ import com.justdataplease.streetgym.billing.LevelAccess
 import com.justdataplease.streetgym.billing.Tier
 import com.justdataplease.streetgym.data.equipment.Equipment
 import com.justdataplease.streetgym.data.equipment.EquipmentSwitches
+import com.justdataplease.streetgym.billing.SavedLimit
+import com.justdataplease.streetgym.data.library.CustomDay
 import com.justdataplease.streetgym.data.library.CustomDays
+import com.justdataplease.streetgym.data.library.ExerciseLibrary
+import com.justdataplease.streetgym.data.library.LibraryState
+import com.justdataplease.streetgym.data.library.ReadyWorkouts
+import com.justdataplease.streetgym.data.library.WorkoutList
+import com.justdataplease.streetgym.data.library.WorkoutLists
 import com.justdataplease.streetgym.data.points.Points
 import com.justdataplease.streetgym.data.skills.SkillFamily
 import com.justdataplease.streetgym.data.skills.SkillLevel
@@ -35,6 +43,7 @@ import com.justdataplease.streetgym.data.progress.ExamResult
 import com.justdataplease.streetgym.data.progress.Intensity
 import com.justdataplease.streetgym.data.progress.LevelReplay
 import com.justdataplease.streetgym.data.progress.NextClass
+import com.justdataplease.streetgym.data.progress.Placement
 import com.justdataplease.streetgym.data.progress.Streak
 import com.justdataplease.streetgym.data.progress.WorkoutSession
 import com.justdataplease.streetgym.data.skills.SkillBook
@@ -164,6 +173,30 @@ sealed interface LeftOut {
     data class Gear(val equipment: Equipment) : LeftOut
 }
 
+/** What the athlete tried to open that a higher tier gives (Android: TiersPanel.Paywall). */
+sealed interface Paywall {
+    /** Level [number]: Plus opens 4 to 6, Pro 7 to 10. */
+    data class Level(val number: Int) : Paywall
+    /** The ready workouts of the Library: Pro. */
+    data object Ready : Paywall
+    /** All [limit] saved and own days are used. */
+    data class Saved(val limit: Int) : Paywall
+    /** Making own workouts: Plus. */
+    data object Custom : Paywall
+    /** Own lists: Plus, or more of them with Pro once Plus has made all of its [limit]. */
+    data class Lists(val limit: Int) : Paywall
+}
+
+/** A limit of My workouts reached: the [Offer] of a higher tier, or on Pro, nothing more to give. */
+sealed interface Limit {
+    data class Offer(val paywall: Paywall) : Limit
+    /** Pro's own limit, of [lists] or of saved and own days: nothing more to give. */
+    data class ProFull(val lists: Boolean) : Limit
+}
+
+/** What "Save workout" still needs: a name, or an exercise. */
+enum class DraftProblem { NAME, EXERCISE }
+
 /** A level's card on Training › Levels: [complete] of its classes passed; [locked] behind a tier. */
 class LevelCard(val level: TrainingLevel, val state: LevelState, val complete: Int, val locked: Boolean)
 
@@ -216,6 +249,8 @@ class AppModel(
     val motions: AnimationLibrary? = null,
     private val settings: AppSettings = AppSettings(MemoryStore()),
     val firstWeekday: Int = Streak.MONDAY,
+    /** My workouts: saved days, own workouts and their lists. */
+    private val library: LibraryStore = LibraryStore(MemoryStore()),
 ) {
     constructor(
         program: Program,
@@ -226,10 +261,13 @@ class AppModel(
         device: WorkoutDevice = WorkoutDevice.None,
         settings: AppSettings = AppSettings(MemoryStore()),
         firstWeekday: Int = Streak.MONDAY,
-    ) : this(program.catalog, progress, program.skills, tier, now, zone, device, program.motions, settings, firstWeekday)
+        library: LibraryStore = LibraryStore(MemoryStore()),
+    ) : this(program.catalog, progress, program.skills, tier, now, zone, device, program.motions, settings, firstWeekday, library)
 
     private val written: List<TrainingProgram> = NextClass.ordered(catalog)
     private val byId: Map<String, TrainingProgram> = written.associateBy(TrainingProgram::id)
+    /** The ready workouts of the Library, by id (Android: readyIndex), as written: they run at Normal. */
+    private val readyById: Map<String, TrainingProgram> = catalog.workouts.associateBy(TrainingProgram::id)
 
     private val saves = Saves()
 
@@ -252,7 +290,7 @@ class AppModel(
         sound = { sounds },
         leftOutOfExam = { exercise -> exercise.movementId?.let(skillSwitches::isOff) == true || equipment.isOff(exercise) },
         leftOut = { program, flow -> leftOutKeys(program, flow) },
-    ) { id, intensity -> byId[id]?.let(intensity::scale) }
+    ) { id, intensity -> programAt(id, intensity) }
 
     /** The look picked in Settings, kept on the phone (Android: AppSettings.theme); every screen follows at once. */
     /** The app's version, as Settings › About shows it ("Version 1.0"). */
@@ -308,6 +346,73 @@ class AppModel(
      */
     var day by mutableLongStateOf(LocalDays.epochDay(now(), zone))
         private set
+
+    /**
+     * How often the app came back to the screen; the park scene starts again each time, as Android's does when its
+     * window shows again.
+     */
+    var resumes by mutableIntStateOf(0)
+        private set
+
+    /** The app is on screen again: the park scene starts over and Today looks at the clock (Android: onResume). */
+    fun resumed() {
+        resumes++
+        refreshDay()
+    }
+
+    /** The strength test was answered or skipped (Android: AppSettings.placementDone); Start over asks it again. */
+    private var placed by mutableStateOf(settings.placementDone)
+
+    /** The strength test's rules over the program. */
+    val strengthTest = StrengthTest(written)
+
+    /** The strength test's answers while the app runs. */
+    val placementForm = PlacementForm()
+
+    /**
+     * True for a new athlete, who is asked the strength test on Today in place of the day's class: nothing answered or
+     * skipped, no class completed and none in progress. Any progress, even from before the test existed, settles it for
+     * good (Android: askPlacement and Placement.shouldAsk).
+     */
+    fun placementAsked(): Boolean {
+        saves.count
+        val ask = Placement.shouldAsk(placed, progress.completedProgramIds().size, progress.activeWorkout() != null)
+        // Kept on the phone only: what the screens show doesn't change, so nothing needs drawing again.
+        if (!ask && !placed && !settings.placementDone) settings.placementDone = true
+        return ask
+    }
+
+    /** The strength test's answer for the counts on the form, on this tier. */
+    fun placementResult(): StrengthResult? {
+        val form = placementForm
+        if (!form.ready) return null
+        val (pullUps, pushUps, squats) = form.counts.toList()
+        return strengthTest.result(pullUps, pushUps, squats, form.skill, tier)
+    }
+
+    /**
+     * "Start at …", "Start from scratch" or "Skip and start at Level 1" (Android: startPlacement): every class before
+     * [start] is marked done as placed, worth no points or ranks, and the test is settled.
+     */
+    fun startPlacement(start: Placement.Start) {
+        val skipped = strengthTest.skipped(start)
+        if (skipped.isNotEmpty()) progress.completePrograms(skipped, at = now(), placed = true)
+        settings.placementDone = true
+        placed = true
+        placementForm.clear()
+        training.skipRest()
+        saves.bump()
+    }
+
+    /** Share my progress, at the end of the strength test (Android: AppSettings.shareProgress). */
+    var shareProgress: Boolean
+        get() = sharing
+        set(value) {
+            sharing = value
+            settings.shareProgress = value
+        }
+
+    private var sharing by mutableStateOf(settings.shareProgress)
 
     /** Looks at the clock: true when a new local day began since the screens were drawn. */
     fun refreshDay(): Boolean {
@@ -369,8 +474,25 @@ class AppModel(
             }
         }
 
-    /** A class as it is trained today, at [intensity]. */
-    fun program(id: String): TrainingProgram? = byId[id]?.let(intensity::scale)
+    /** A class as it is trained today, at [intensity]; an own workout or a ready workout as written. */
+    fun program(id: String): TrainingProgram? = programAt(id, intensity)
+
+    /** A class at [intensity]; an own workout or a ready workout always runs as written (Android: intensityFor). */
+    private fun programAt(id: String, intensity: Intensity): TrainingProgram? =
+        if (CustomDays.offProgram(id)) programById(id) else byId[id]?.let(intensity::scale)
+
+    /**
+     * Any day by its id, as written: a class of the program, one of the athlete's own workouts while it exists, or a
+     * ready workout (Android: programById).
+     */
+    fun programById(id: String): TrainingProgram? {
+        saves.count
+        return when {
+            CustomDays.isCustom(id) -> library.customDay(id)?.let(CustomDays::toProgram)
+            ReadyWorkouts.isReady(id) -> readyById[id]
+            else -> byId[id]
+        }
+    }
 
     fun level(number: Int): TrainingLevel? = catalog.levels.firstOrNull { it.number == number }
 
@@ -394,11 +516,12 @@ class AppModel(
         val completed = progress.completedProgramIds()
         val active = progress.activeWorkout()
         // The class in progress, if it may run, else the sequence's (Android: renderDashboard).
-        val next = active?.takeIf(::canRun)?.programId?.let(byId::get) ?: assigned()
+        // An own or ready workout in progress takes the card too, until it is finished or ended.
+        val next = active?.takeIf(::canRun)?.programId?.let(::programById) ?: assigned()
         val repeating = active?.repeat == true && active.programId == next?.id
         val replay = levelReplay()
         return Today(
-            next = next?.let(intensity::scale),
+            next = next?.let { program(it.id) ?: it },
             level = next?.let { level(it.levelNumber) },
             resume = active != null && active.programId == next?.id,
             locked = next != null && levelLocked(next.levelNumber),
@@ -441,11 +564,23 @@ class AppModel(
     /** The first class never completed: where the athlete stopped, whatever they repeat (Android: furthestProgram). */
     private fun furthest(passed: Set<String> = passed()): TrainingProgram? = written.firstOrNull { it.id !in passed }
 
-    /** Today's class, in a level the tier opens (Android: canStart). */
-    fun canStart(id: String): Boolean = assigned()?.id == id && byId[id]?.levelNumber?.let(::levelLocked) == false
+    /**
+     * Today's class, one of the athlete's own workouts, or a ready workout the tier opens: those start any time; never in
+     * a level the tier doesn't open (Android: canStart).
+     */
+    fun canStart(id: String): Boolean =
+        (assigned()?.id == id || CustomDays.isCustom(id) && library.customDay(id) != null ||
+            ReadyWorkouts.isReady(id) && id in readyById && !readyLocked(id)) &&
+            programById(id)?.levelNumber?.let(::levelLocked) != true
 
     /** A completed class can be trained again, in a level the tier opens (Android: canRepeat). */
-    fun canRepeat(id: String): Boolean = progress.isProgramCompleted(id) && byId[id]?.levelNumber?.let(::levelLocked) == false
+    fun canRepeat(id: String): Boolean = progress.isProgramCompleted(id) && programById(id)?.levelNumber?.let(::levelLocked) == false
+
+    /**
+     * A ready workout on a tier without them, which shows only its name and the Pro offer; the free ones open on every
+     * tier (Android: readyLocked).
+     */
+    fun readyLocked(id: String): Boolean = ReadyWorkouts.isReady(id) && !tier.readyWorkouts && readyById[id]?.free != true
 
     /** The class in progress may go on: a repeat of a completed class, or today's (Android: canRun). */
     private fun canRun(active: ActiveWorkout): Boolean = if (active.repeat) canRepeat(active.programId) else canStart(active.programId)
@@ -463,7 +598,8 @@ class AppModel(
             if (!replace) return Start.ASK_REPLACE
             training.abandon()
         }
-        progress.startWorkout(id, now(), repeat = repeat, intensity = todayPick())
+        // An own day or a ready workout runs as written (Android: intensityFor).
+        progress.startWorkout(id, now(), repeat = repeat, intensity = if (CustomDays.offProgram(id)) Intensity.NORMAL else todayPick())
         saves.bump()
         return Start.STARTED
     }
@@ -593,7 +729,8 @@ class AppModel(
     /** "Easy / Moderate / Hard for you" for class [id] as it is trained today (Android: effortOf). */
     fun effortOf(id: String): Effort? {
         saves.count
-        return program(id)?.let { workoutEffort().rate(it) }
+        // A class of the ten levels also speaks for its own level by its RPE and exam (Android: effortOf's onProgram).
+        return program(id)?.let { workoutEffort().rate(it, onProgram = !CustomDays.offProgram(id)) }
     }
 
     /**
@@ -647,7 +784,7 @@ class AppModel(
 
     /** Developer inspection opens a class not reached yet, or behind a tier, read-only (Android: renderOverview's inspecting). */
     fun inspects(id: String): Boolean {
-        val program = byId[id] ?: return false
+        val program = programById(id) ?: return false
         return inspectAllDays && !isCompleted(id) && (levelLocked(program.levelNumber) || !canStart(id))
     }
 
@@ -670,8 +807,6 @@ class AppModel(
         return HistoryCalendar.dayKey(now(), zone)
     }
 
-    /** A class of the program by its id, as written (History's rows). */
-    fun programById(id: String): TrainingProgram? = byId[id]
 
     /** The athlete's skills: every ladder with each skill's rank, from trained classes only (Android: skillProgress). */
     fun skillProgress(): SkillProgress? {
@@ -696,6 +831,108 @@ class AppModel(
     fun skillOff(family: SkillFamily, status: SkillStatus): Boolean =
         skillSwitches.isRungOff(family.spec.id, status.skill.rung) || lacksEquipment(status.skill.id)
 
+    // ---- My workouts (Android: renderMyWorkouts, heartButton, showListPicker, renderEditDay; LibraryRepository)
+
+    /** Everything in My workouts. */
+    fun libraryState(): LibraryState {
+        saves.count
+        return library.state()
+    }
+
+    /** The day's heart is filled: an own workout always, a program or ready day once saved. */
+    fun isSaved(id: String): Boolean {
+        saves.count
+        return CustomDays.isCustom(id) || library.isSaved(id)
+    }
+
+    /** The lists Plus and Pro may see; Free keeps them, hidden, until Plus brings them back. */
+    fun visibleLists(): List<WorkoutList> = if (tier.lists) libraryState().activeLists else emptyList()
+
+    /** Null when one more saved or own day fits the tier; else the offer, or on Pro that it is full (Android: roomForAnother). */
+    fun savedLimit(): Limit? =
+        if (SavedLimit.canAdd(tier, libraryState().used)) null
+        else if (tier == Tier.PRO) Limit.ProFull(lists = false) else Limit.Offer(Paywall.Saved(tier.savedDays))
+
+    /** Null when one more list fits the tier; else the offer, or on Pro that it is full (Android: roomForAnotherList). */
+    fun listLimit(): Limit? =
+        if (SavedLimit.canAddList(tier, libraryState().activeLists.size)) null
+        else if (tier == Tier.PRO) Limit.ProFull(lists = true) else Limit.Offer(Paywall.Lists(tier.workoutLists))
+
+    /** Free's heart: saves [id] to Favorites, or takes it out of My workouts (Android: library.setSaved). */
+    fun setSaved(id: String, saved: Boolean) {
+        library.setSaved(id, saved, now())
+        saves.bump()
+    }
+
+    /** Plus and Pro's "Save to lists": [id] saved, in exactly [listIds]. */
+    fun saveToLists(id: String, listIds: Set<String>) {
+        val state = library.state()
+        library.saveToLists(id, listIds.filterTo(HashSet()) { state.lists[it]?.deleted == false }, now())
+        saves.bump()
+    }
+
+    /** Why [name] can't name a list, or null; [except] is the list being renamed; [favorites] the default list's name. */
+    fun listNameProblem(name: String, favorites: String, except: String? = null): WorkoutLists.NameProblem? =
+        WorkoutLists.nameProblem(name, library.state(), favorites, except)
+
+    fun createList(name: String): WorkoutList = library.createList(name, now()).also { saves.bump() }
+
+    fun renameList(id: String, name: String) {
+        library.renameList(id, name, now())
+        saves.bump()
+    }
+
+    fun deleteList(id: String) {
+        library.deleteList(id, now())
+        saves.bump()
+    }
+
+    /** One of the athlete's own workouts, while it exists. */
+    fun customDay(id: String): CustomDay? {
+        saves.count
+        return library.customDay(id)
+    }
+
+    /** Every movement of the program, for the builder's picker (Android: ExerciseLibrary.from). */
+    val exercises: ExerciseLibrary by lazy { ExerciseLibrary.from(catalog) }
+
+    /** The own workout being built or edited, until it is saved or the builder is left (Android: draft). */
+    var draft by mutableStateOf<CustomDay?>(null)
+
+    /** "Create a workout": a new, empty own workout in the builder (Android: requestNewDay, after its checks). */
+    fun newDraft(): CustomDay = CustomDay(CustomDays.newId(), "", emptyList(), now()).also { draft = it }
+
+    /** "Edit workout": the own workout [id] in the builder. */
+    fun editDraft(id: String): CustomDay? = library.customDay(id)?.also { draft = it }
+
+    /**
+     * "Save workout": the draft kept with its name trimmed, if it has a name and an exercise (Android: renderEditDay's
+     * Save). Returns what is missing, or null once saved.
+     */
+    fun saveDraft(): DraftProblem? {
+        val day = draft ?: return null
+        return when {
+            day.name.isBlank() -> DraftProblem.NAME
+            day.exercises.isEmpty() -> DraftProblem.EXERCISE
+            else -> {
+                library.saveDay(day.copy(name = day.name.trim(), updatedAt = now()))
+                draft = null
+                saves.bump()
+                null
+            }
+        }
+    }
+
+    /**
+     * "Delete workout": the own workout goes from My workouts and its lists; its history stays, and it is ended if in
+     * progress (Android: renderOverview's Delete).
+     */
+    fun deleteCustom(id: String) {
+        if (progress.activeWorkout()?.programId == id) training.abandon()
+        library.deleteDay(id, now())
+        saves.bump()
+    }
+
     /**
      * Settings' Start over (Android: confirmReset): every finished class, the history, points, ranks and exam results
      * go, with the class in progress; the strength test is asked again. My workouts, the theme and the purchases stay.
@@ -704,6 +941,8 @@ class AppModel(
         training.reset()
         progress.reset(now())
         settings.placementDone = false
+        placed = false
+        placementForm.clear()
         saves.bump()
     }
 }

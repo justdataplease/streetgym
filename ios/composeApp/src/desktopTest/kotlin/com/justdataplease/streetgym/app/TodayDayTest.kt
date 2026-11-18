@@ -129,8 +129,8 @@ class TodayDayTest {
         assertFalse(roomyStreak(400.dp, 1.3f))
 
         // The strip on Today at 130% text: Android's smaller sizes, a 29 dp flame (no shadow yet: no streak) and 20 dp
-        // boxes 3 dp apart after 8 + 7 dp, so 202 dp wide instead of 240.
-        val model = model()
+        // boxes 3 dp apart after 8 + 7 dp, so 202 dp wide instead of 240. The athlete is past the strength test.
+        val model = model(MemoryStore().apply { AppSettings(this).placementDone = true })
         setContent {
             val density = LocalDensity.current
             CompositionLocalProvider(LocalDensity provides Density(density.density, fontScale = 1.3f)) {

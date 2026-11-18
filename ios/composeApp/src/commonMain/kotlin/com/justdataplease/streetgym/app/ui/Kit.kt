@@ -56,8 +56,13 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Density
@@ -262,6 +267,56 @@ fun BodyText(
     )
 }
 
+/** Running text with its own styles, such as Android's `<b>` in a string ([boldMarkup]). */
+@Composable
+fun BodyText(
+    text: AnnotatedString,
+    size: Float = 15f,
+    modifier: Modifier = Modifier,
+    color: Color = Street.colors.textSecondary,
+    align: TextAlign = TextAlign.Unspecified,
+) {
+    BasicText(
+        text = text,
+        modifier = modifier,
+        style = TextStyle(color = color, fontSize = size.sp, lineHeight = BODY_LINE.em, fontFamily = Street.type.body, textAlign = align),
+    )
+}
+
+/**
+ * Android's `<b>…</b>` in a string, which the build keeps as written (composeApp/build.gradle.kts), as bold runs of
+ * [bold] in plain text; any other text is unchanged.
+ */
+fun boldMarkup(text: String, bold: SpanStyle): AnnotatedString = buildAnnotatedString {
+    var rest = text
+    while (true) {
+        val open = rest.indexOf("<b>")
+        val close = if (open < 0) -1 else rest.indexOf("</b>", open + 3)
+        if (open < 0 || close < 0) {
+            append(rest)
+            break
+        }
+        append(rest.substring(0, open))
+        withStyle(bold) { append(rest.substring(open + 3, close)) }
+        rest = rest.substring(close + 4)
+    }
+}
+
+/**
+ * A quiet way out, as underlined bold text in the theme's text colour, centred and at least 48 dp tall: skipping the
+ * strength test, or starting from scratch (Android: PlacementView.linkButton).
+ */
+@Composable
+fun LinkButton(text: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
+    Box(
+        modifier.fillMaxWidth().heightIn(min = 48.dp).clickable(role = Role.Button, onClick = onClick),
+        contentAlignment = Alignment.Center,
+    ) {
+        BasicText(text, style = TextStyle(color = Street.colors.text, fontSize = 14.sp, fontFamily = Street.type.bold,
+            textDecoration = TextDecoration.Underline, textAlign = TextAlign.Center))
+    }
+}
+
 /** The body face's own line height (1.2 em) with Android's 1.12 line spacing on top. */
 private const val BODY_LINE = 1.344f
 
@@ -359,14 +414,21 @@ private val STICKER_SIDE = 3.dp
  * sticker (Android: unlockButton and tierButton, fill). Both open the offer.
  */
 @Composable
-fun UnlockButton(tierName: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
-    val unlock = stringResource(Res.string.unlock)
+fun UnlockButton(tierName: String, modifier: Modifier = Modifier, onClick: () -> Unit) =
+    TierButton(stringResource(Res.string.unlock), tierName, modifier, onClick)
+
+/**
+ * [text] on the main button with the tier's tag stuck on its corner, like Unlock: My workouts' Create a workout on Free
+ * (Android: tierButton). Both open the offer.
+ */
+@Composable
+fun TierButton(text: String, tierName: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
     Box(modifier.fillMaxWidth()) {
         PrimaryButton(
-            unlock,
+            text,
             // The tilt lifts the tag's left corner above its box: the room above keeps the sticker whole.
             Modifier.padding(top = STICKER_ROOM + 12.dp, end = 14.dp + STICKER_SIDE),
-            description = "$unlock $tierName",
+            description = "$text $tierName",
             onClick = onClick,
         )
         LockBadge(
@@ -505,6 +567,7 @@ fun SecondaryButton(
     enabled: Boolean = true,
     side: Boolean = false,
     description: String? = null,
+    compact: Boolean = false,
     onClick: () -> Unit,
 ) {
     val theme = Street.theme
@@ -514,18 +577,25 @@ fun SecondaryButton(
         StreetTheme.WHEATPASTE -> Modifier.streetBackground(theme, Color.Transparent, 16.dp, palette.border, 2.dp, dash = 7.dp)
         StreetTheme.NIGHT_PARK -> Modifier.streetBackground(theme, palette.infoSurface, 16.dp)
     }
+    // [compact]: the builder's Up, Down, Sets and Remove, 44 dp tall with 10 dp at the sides (Android: renderEditDay).
+    val size = when {
+        compact -> Modifier.height(44.dp)
+        side -> Modifier.heightIn(min = 56.dp)
+        else -> Modifier.fillMaxWidth().heightIn(min = 52.dp)
+    }
     Box(
-        modifier.then(if (side) Modifier else Modifier.fillMaxWidth()).heightIn(min = if (side) 56.dp else 52.dp).then(face)
+        modifier.then(size).then(face)
             .clickable(enabled = enabled, role = Role.Button, onClick = onClick)
             .then(if (description != null) Modifier.semantics { contentDescription = description } else Modifier)
-            .padding(horizontal = if (side) 14.dp else 18.dp, vertical = if (side) 0.dp else 12.dp),
+            .padding(horizontal = if (compact) 10.dp else if (side) 14.dp else 18.dp, vertical = if (side || compact) 0.dp else 12.dp),
         contentAlignment = Alignment.Center,
     ) {
         BasicText(
             text = text.uppercase(),
             style = TextStyle(color = palette.text, fontSize = 13.sp, fontFamily = Street.type.label,
                 letterSpacing = if (theme == StreetTheme.WHEATPASTE) 0.04.em else 0.1.em, textAlign = TextAlign.Center),
-            maxLines = if (side) 1 else Int.MAX_VALUE,
+            maxLines = if (side || compact) 1 else Int.MAX_VALUE,
+            overflow = TextOverflow.Ellipsis,
         )
     }
 }
