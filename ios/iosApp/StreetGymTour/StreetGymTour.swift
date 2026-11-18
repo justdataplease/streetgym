@@ -137,10 +137,23 @@ final class StreetGymTour: XCTestCase {
         app.terminate()
         app.launchArguments = []
         app.launch()
-        let consent = app.descendants(matching: .any).matching(NSPredicate(format: "label ==[c] %@", "Consent")).firstMatch
-        if consent.waitForExistence(timeout: 30) {
-            snap("18-consent")
-            _ = tapHittable(app, label: "Consent")
+        // Google's message is "Consent" where the law asks for consent, and elsewhere (GitHub's Macs are in the USA) its
+        // note before Apple's tracking question, with "Continue". The tour answers that question with no.
+        let message = app.descendants(matching: .any).matching(
+            NSPredicate(format: "label ==[c] %@ OR label ==[c] %@", "Consent", "Continue")).firstMatch
+        if message.waitForExistence(timeout: 30) {
+            snap("18-google-message")
+            if message.isHittable {
+                message.tap()
+            } else if !tapHittable(app, label: "Continue") {
+                _ = tapHittable(app, label: "Consent")
+            }
+            let phone = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+            let noTracking = phone.buttons["Ask App Not to Track"]
+            if noTracking.waitForExistence(timeout: 15) {
+                snap("18-tracking-question")
+                noTracking.tap()
+            }
         }
         if today.waitForExistence(timeout: 30) {
             // The card is a native view at the end of the page: time for the test ad to arrive, then down to it.
