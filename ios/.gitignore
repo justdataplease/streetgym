@@ -1,0 +1,23 @@
+/.gradle/
+/.kotlin/
+/.idea/
+/build/
+/**/build/
+/local.properties
+*.iml
+
+# Xcode: the project is generated from iosApp/project.yml (XcodeGen), never edited by hand.
+*.xcodeproj/
+*.xcworkspace/
+xcuserdata/
+*.xcuserstate
+DerivedData/
+.DS_Store
+
+# App Store Connect keys and signing files never go in git.
+*.p8
+*.p12
+*.mobileprovision
+
+# Written by XcodeGen from iosApp/project.yml.
+/iosApp/StreetGym/Info.plist

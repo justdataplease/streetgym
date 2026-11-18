@@ -1,4 +1,4 @@
-"""The parks refresh without the network or Cloud Storage: python -m pytest streetgymnastics/tools/parks_job"""
+"""The parks refresh without the network or Cloud Storage: python -m pytest android-streetgym/tools/parks_job"""
 import osm_parks
 import refresh_parks as job
 

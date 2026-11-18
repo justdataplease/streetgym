@@ -18,7 +18,7 @@ fun nativeAdId(kind: String, release: Boolean): String {
     return if (release) providers.gradleProperty("admob.streetgymnastics.$kind").getOrElse(demo) else demo
 }
 
-// Play upload key: streetgymnastics/keystore.properties (git-ignored; storeFile is relative to that folder). Without
+// Play upload key: android-streetgym/keystore.properties (git-ignored; storeFile is relative to that folder). Without
 // it, release builds stay unsigned, so CI and other machines still build.
 val releaseKeystore: Pair<Properties, File>? = file("../keystore.properties").takeIf { it.isFile }?.let { propertiesFile ->
     val properties = Properties().apply { propertiesFile.inputStream().use { load(it) } }

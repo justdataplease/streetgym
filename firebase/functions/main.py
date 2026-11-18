@@ -4,7 +4,7 @@ daily deletion of progress analytics older than 24 months (expiry.py).
 Cost: a run with no new or removed score in the same month is three reads (the bookkeeping, one changed-score probe,
 one count) and stops. Otherwise, or on the first run of a month (the month boards start empty), it reads each score
 once, reads the boards' hashes, and writes only the boards that changed. Deploy with
-`firebase deploy --only functions,firestore` from streetgymnastics/firebase (docs/TIERS.md, "Pro account setup").
+`firebase deploy --only functions,firestore` from android-streetgym/firebase (docs/TIERS.md, "Pro account setup").
 """
 import datetime
 

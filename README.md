@@ -1,6 +1,6 @@
 # Street Gym: Daily Calisthenics
 
-**Street Gym** (on Google Play "Street Gym: Daily Calisthenics"; code, package and folders keep the earlier name: `streetgymnastics`, `com.justdataplease.streetgym`) is a dedicated Android app with 1,000 guided calisthenics workouts across ten levels, 40 belted skills and 181 movements in the current curriculum library. The ten-level curriculum and its supporting code are synchronized from the `sg-placement-points` worktree. The assigned daily workout is for an individual athlete.
+**Street Gym** (on Google Play "Street Gym: Daily Calisthenics"; code, package and folders keep the earlier name: `streetgymnastics`, `com.justdataplease.streetgym`) is a dedicated Android app with 1,000 guided calisthenics workouts across ten levels, 40 belted skills and 181 movements in the current curriculum library. The assigned daily workout is for an individual athlete.
 
 Settings > Theme picks one of three looks, all free:
 - Concrete & Tape: light, the default.
@@ -27,18 +27,18 @@ From `C:\MyDrive\jdp\android-apps`, using JDK 17+ (Android Studio JBR or `%USERP
 
 ```powershell
 .\gradlew.bat :streetgymnastics:assembleDebug :streetgymnastics:assembleDebugAndroidTest :streetgymnastics:testDebugUnitTest :streetgymnastics:lintDebug
-adb install -r streetgymnastics/app/build/outputs/apk/debug/streetgymnastics-debug.apk
-adb install -r streetgymnastics/app/build/outputs/apk/androidTest/debug/streetgymnastics-debug-androidTest.apk
+adb install -r android-streetgym/app/build/outputs/apk/debug/streetgymnastics-debug.apk
+adb install -r android-streetgym/app/build/outputs/apk/androidTest/debug/streetgymnastics-debug-androidTest.apk
 adb shell am instrument -w com.justdataplease.streetgym.debug.test/com.justdataplease.streetgym.TrainingInstrumentation
 ```
 
-The engine (curriculum and its readers, progress, placement, effort, points, skills and ranks, the tiers) is the Kotlin Multiplatform module `shared/` (`:streetgymnastics-shared` in the suite, `:shared` standalone), ready for the iPhone app: see [Street Gym on iPhone](docs/iphone-development.md). Its `commonMain` uses no Java or Android API; `compileCommonMainKotlinMetadata` checks that.
+The engine (curriculum and its readers, progress, placement, effort, points, skills and ranks, the tiers) is the Kotlin Multiplatform module `shared/` (`:streetgymnastics-shared` in the suite, `:shared` standalone), which the iPhone app runs on too: `ios-streetgym/` in the suite (`ios/` in the standalone repository), with its plan in `docs/iphone-development.md` there. Its `commonMain` uses no Java or Android API; `compileCommonMainKotlinMetadata` checks that.
 
 The nested project also retains its standalone Gradle wrapper (`gradlew.bat assembleDebug` inside this folder); standalone output names use `app-debug.apk`. The standalone toolchain matches the suite: AGP 8.13.2, Kotlin 2.3.21 and Gradle 8.14.6. Android 7.0/API 24 minimum (Play automatic protection needs it, since 2.8.0), compile/target SDK 36 (Android 16: predictive back through `OnBackInvokedCallback`, edge-to-edge insets). Production application ID: `com.justdataplease.streetgym`; debug adds `.debug`. [Latest signed development APK](https://github.com/justdataplease/streetgym/releases/latest). The GitHub downloads use the `.debug` package and Google test ad IDs; they are not production/Play builds.
 
 ### Release build
 
-`.\gradlew.bat :streetgymnastics:bundleRelease :streetgymnastics:assembleRelease` signs with the Play upload key when the git-ignored `streetgymnastics/keystore.properties` (`storeFile`, `storePassword`, `keyAlias`, `keyPassword`; `storeFile` is relative to this folder) and `streetgymnastics-release.keystore` are present. Without them the release is unsigned, so CI still builds. The key is backed up outside the Google Drive mirror, in `C:\Users\jason\keys\streetgymnastics`; losing it means a key-reset request to Google. Upload certificate SHA-256: `64:1A:1E:96:22:5B:85:0B:C0:A0:A8:E1:20:AB:94:B1:DA:36:43:C6:84:09:50:58:91:73:3E:7B:FE:6D:12:EB`. A release also needs the ignored `app/src/release/res/values/firebase.xml`. Check the bundle with `python -I tools\play\check_package.py <aab>` from the suite root.
+`.\gradlew.bat :streetgymnastics:bundleRelease :streetgymnastics:assembleRelease` signs with the Play upload key when the git-ignored `android-streetgym/keystore.properties` (`storeFile`, `storePassword`, `keyAlias`, `keyPassword`; `storeFile` is relative to this folder) and `streetgymnastics-release.keystore` are present. Without them the release is unsigned, so CI still builds. The key is backed up outside the Google Drive mirror, in `C:\Users\jason\keys\streetgymnastics`; losing it means a key-reset request to Google. Upload certificate SHA-256: `64:1A:1E:96:22:5B:85:0B:C0:A0:A8:E1:20:AB:94:B1:DA:36:43:C6:84:09:50:58:91:73:3E:7B:FE:6D:12:EB`. A release also needs the ignored `app/src/release/res/values/firebase.xml`. Check the bundle with `python -I tools\play\check_package.py <aab>` from the suite root.
 
 ## Ads and privacy
 

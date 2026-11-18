@@ -77,10 +77,10 @@ prints the `parks_url` to put in `firebase.xml`. An organization policy that for
 From the suite root, with any Python 3.10+ (no packages):
 
 ```powershell
-python streetgymnastics\tools\parks_job\osm_parks.py --out streetgymnastics\app\src\main\assets\spots.tsv --cache <dir>
-python streetgymnastics\tools\parks_job\osm_parks.py --box 37.8,23.5,38.2,24.0 --out athens.tsv   # one box, to try
-python streetgymnastics\tools\parks_job\refresh_parks.py --dry-run                                  # the job, publishing nothing
-python -m pytest streetgymnastics\tools\parks_job                                                   # no network
+python android-streetgym\tools\parks_job\osm_parks.py --out android-streetgym\app\src\main\assets\spots.tsv --cache <dir>
+python android-streetgym\tools\parks_job\osm_parks.py --box 37.8,23.5,38.2,24.0 --out athens.tsv   # one box, to try
+python android-streetgym\tools\parks_job\refresh_parks.py --dry-run                                  # the job, publishing nothing
+python -m pytest android-streetgym\tools\parks_job                                                   # no network
 ```
 
 `--cache` keeps every answer, so a second run (say, after changing the names) asks the server nothing.

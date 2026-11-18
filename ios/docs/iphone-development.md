@@ -1,6 +1,11 @@
 # Street Gym on iPhone: development plan
 
-Written 3 Nov 2026. **Phase 1 is done** (2.11.5): the engine lives in the shared Kotlin Multiplatform module `shared/`, the Android app runs on it, and its iPhone targets are declared. No iPhone code exists yet. For background on every suite app, see the suite's `IOS-PORTING-REPORT.md`.
+Written 3 Nov 2026, updated 18 Nov 2026.
+
+- **Phase 1 is done** (2.11.5): the engine lives in the shared Kotlin Multiplatform module `android-streetgym/shared/`, and the Android app runs on it.
+- **Phase 2 has started** (18 Nov 2026): this folder, `ios-streetgym/`, is the iPhone project. Today and the class page are built on the engine, in the three themes. They build, pass their tests and are drawn to pictures on Windows. **Nothing has been compiled for iPhone yet**: that needs a macOS runner (the CI file is written, `ci/ios-ci.yml`, and has not run).
+
+For background on every suite app, see the suite's `IOS-PORTING-REPORT.md`.
 
 ## Approach
 
@@ -11,9 +16,9 @@ Written 3 Nov 2026. **Phase 1 is done** (2.11.5): the engine lives in the shared
 - **Android keeps its Views.** Moving Android to the CMP screens is a separate decision for later.
 - **Swift only where Apple requires it:** StoreKit 2, Google ads, and the app entry point.
 
-## The engine today (`shared/`)
+## The engine today (`android-streetgym/shared/`)
 
-Module `:shared` in the standalone repo, `:streetgymnastics-shared` in the suite. Plugins: `org.jetbrains.kotlin.multiplatform` and `com.android.kotlin.multiplatform.library` (AGP 9.4.1, Kotlin 2.3.21). The targets are Android, `iosArm64` and `iosSimulatorArm64`. The iPhone targets compile only on a Mac; `kotlin.native.ignoreDisabledTargets=true` keeps Windows and Linux builds quiet about them.
+Module `:shared` in the standalone repo and in this project, `:streetgymnastics-shared` in the suite. Plugins: `org.jetbrains.kotlin.multiplatform` and `com.android.kotlin.multiplatform.library` (AGP 9.4.1, Kotlin 2.3.21). The targets are Android, `iosArm64`, `iosSimulatorArm64` and, since 18 Nov 2026, the JVM (`jvm()`), which lets the iPhone screens run in a window on Windows. The iPhone targets compile only on a Mac; `kotlin.native.ignoreDisabledTargets=true` keeps Windows and Linux builds quiet about them.
 
 **Everything is in `commonMain`, in the same packages as before**, so the Android app's imports didn't change:
 
@@ -31,10 +36,11 @@ Module `:shared` in the standalone repo, `:streetgymnastics-shared` in the suite
 | `data.effort` | `WorkoutEffort.kt` | Easy/Moderate/Hard "for you" |
 | `data.library` | `WorkoutLibrary.kt`, `ExerciseLibrary.kt` | Saved days, custom days, lists, ready workouts and their JSON codec |
 | `billing` | `Tier.kt`, `LevelAccess.kt` | Free / Plus / Pro and which levels each opens |
+| `ui` | `WorkoutFlow.kt` | A class as ordered sets with the keys both phones save, what counts (30% of the time), points per class, and the notes of a movement and a set. Moved from the Android app on 18 Nov 2026; a sorted map and `Map.merge` were rewritten in plain Kotlin |
 | `json` | `Json.kt` | The part of org.json the engine uses (same names and lenient reading), on kotlinx.serialization |
 
 **Rules for shared code:**
-- `commonMain` uses no Java or Android API. `./gradlew :streetgymnastics-shared:compileCommonMainKotlinMetadata` (suite) or `:shared:compileCommonMainKotlinMetadata` (standalone) checks it on Windows. The Android compile alone would let `java.*` through.
+- `commonMain` uses no Java or Android API. `./gradlew :streetgymnastics-shared:compileCommonMainKotlinMetadata` (suite) or `:shared:compileCommonMainKotlinMetadata` (standalone, and this project) checks it on Windows. The Android compile alone would let `java.*` through, and so does the desktop one: `WorkoutFlow.kt` compiled for the desktop window with two Java calls in it, and only this check caught them.
 - JSON goes through `com.justdataplease.streetgym.json`, never `org.json`. `SharedEngineTest` pins it to org.json both ways, so data stored before 2.11.5 reads back unchanged.
 - Times are epoch milliseconds; UTC dates come from `UtcDate` in `Points.kt`.
 - The 305 unit tests stay in the Android app (`app/src/test`) and test the shared classes from there. `DayIdsTest` must pass untouched.
@@ -48,7 +54,7 @@ Module `:shared` in the standalone repo, `:streetgymnastics-shared` in the suite
 | `timer/TimingState.kt` | Same, for the timer's day boundaries |
 | `ui/ParkStory.kt` | Pure logic for the park scene, but uses `TimeZone`; move with the park scene |
 | `ui/ExerciseAnimationView.kt`, `ui/FrontView.kt` | The line man: pose reading and projection maths are mixed with Canvas drawing; split them, move the maths, redraw in Compose `DrawScope` |
-| `data/progress/SharedPreferencesProgressRepository.kt`, `data/library/LibraryRepository.kt`, `data/CurriculumRepository.kt` | Storage and asset reading; the iPhone app writes its own (NSUserDefaults, the bundle) behind the same interfaces and codecs |
+| `data/progress/SharedPreferencesProgressRepository.kt`, `data/library/LibraryRepository.kt`, `data/CurriculumRepository.kt` | Storage and asset reading; the iPhone app writes its own (NSUserDefaults, the bundle) behind the same interfaces. Its progress store (`composeApp`, `data/StoredProgress.kt`) writes sessions, the class in progress and exams with the same JSON names as Android, pinned by a test. **Next engine step:** move that codec into `shared/` and have Android use it too, so one piece of code writes both; it needs an Android release with the stored data checked both ways |
 | `leaderboard/`, `analytics/`, `account/` | Firebase; they wait for the account (see below) |
 | `data/parks/` | Parks map; waits for MapLibre iOS |
 | `billing/Entitlement.kt`, `billing/TierBilling.kt` | Play Billing; StoreKit 2 on iPhone |
@@ -75,23 +81,47 @@ Module `:shared` in the standalone repo, `:streetgymnastics-shared` in the suite
 
 ## Project layout
 
-Everything sits under `streetgymnastics/`, so the existing `-p2` sync carries it to the standalone repo:
+Since 18 Nov 2026 the suite has one folder per phone (the owner: "ios versions in folder ios-…, rename existing to android"):
 
-| Folder | What it holds |
-|---|---|
-| `shared/` | The engine (done). |
-| `composeApp/` | To come: the CMP screens, with iOS framework targets and a desktop target for Windows previews; assets, fonts and strings as Compose resources. |
-| `iosApp/` | To come: `project.yml` for XcodeGen (no hand-edited `.pbxproj`), a Swift entry point hosting the Compose view controller, the StoreKit and ads bridges, `Info.plist`, `PrivacyInfo.xcprivacy` and the icon. |
-| `app/` | The Android app, on `shared/`. |
+| Suite folder | Standalone repo | What it holds |
+|---|---|---|
+| `android-streetgym/app/` | `app/` | The Android app, on the engine. |
+| `android-streetgym/shared/` | `shared/` | The engine, used by both. |
+| `ios-streetgym/composeApp/` | `ios/composeApp/` | The iPhone screens in Compose Multiplatform, with iPhone framework targets and a desktop target for Windows. |
+| `ios-streetgym/iosApp/` | `ios/iosApp/` | `project.yml` for XcodeGen (no hand-edited `.pbxproj`), the Swift entry point hosting the Compose view controller, `PrivacyInfo.xcprivacy`, the icon, and the Simulator tour. StoreKit and the ads bridges come here in phase 4. |
+| `ios-streetgym/ci/ios-ci.yml` | `.github/workflows/ios-ci.yml` | The checks on GitHub's runners. |
 
-Ignore `DerivedData`, `xcuserdata`, `*.xcuserstate` and the generated `.xcodeproj`.
+`ios-streetgym` is its own Gradle project (`settings.gradle.kts` finds the engine in `../android-streetgym/shared`, or `../shared` in the standalone repo).
+
+**One source for both phones.** The iPhone app keeps no copy of the Android app's files. At build time it reads from the Android app: `curriculum.json`, `workouts.json` and `exercise_animations.json`, the fonts, the tab icons, and every `strings*.xml` (as Compose resources; two things are rewritten on the way in, a bare `%d` to `%1$d` and Android's `\'` to `'`). A text or a class changed for Android is changed for iPhone.
+
+**On Windows** (JDK 21; `ANDROID_HOME` set, since the engine also has an Android target):
+
+```
+cd ios-streetgym
+.\gradlew.bat :composeApp:run            # the screens in a window, at iPhone size
+.\gradlew.bat :composeApp:screenshots    # a PNG of every screen in composeApp\build\screenshots
+.\gradlew.bat :composeApp:desktopTest :composeApp:compileCommonMainKotlinMetadata
+```
+
+Ignore `DerivedData`, `xcuserdata`, `*.xcuserstate`, the generated `.xcodeproj` and `iosApp/StreetGym/Info.plist` (XcodeGen writes it).
 
 ## Phase 2: iPhone shell and simulator CI
 
-- First CI step: compile `shared/` for `iosSimulatorArm64` on a macOS runner. It has never been compiled for iOS, so this is where any remaining JVM-only call shows up.
-- `composeApp` shows one real screen (Today) from the shared engine, and `iosApp` hosts it.
-- The `ios-ci.yml` workflow (below) builds for the simulator and runs a UI-test tour that saves screenshots. No Apple account is needed for any of this.
-- The desktop target renders the same screen on Windows. From here on, most checks happen on Windows and CI confirms on iOS.
+Done on 18 Nov 2026, checked on Windows:
+
+- `composeApp` shows **Today** from the engine (the brand card, the streak's flame and week, the class the sequence offers with its level header, Easier / Normal / Harder, Complete day, progress) and the **class page** (every exercise of the warm-up, skill practice, strength work and cool-down with its sets), in Concrete & Tape, Night Park and Wheatpaste. Sizes, colours, fonts and the per-theme shapes are ported from the Android views, including the room Android leaves round a headline (its font padding).
+- Progress is saved (UserDefaults on iPhone), so Complete day moves the sequence on and stays.
+- 10 tests: the progress store and the streak (common, so they also run on the Simulator), the Android texts as Compose reads them, Today and Complete day over the real program, Harder.
+- `iosApp` hosts it: the Swift entry point, the XcodeGen project, the privacy manifest, the 1024 px icon, and a Simulator tour that saves a picture of Today and of the class page.
+
+Still to do in this phase:
+
+- **The first macOS run.** Push `ios/` to the standalone repo and let `ios-ci.yml` run: it compiles `shared/` and `composeApp` for `iosSimulatorArm64` (never done so far; any call that is not there on iPhone shows up here), builds the app with Xcode and runs the tour. No Apple account is needed.
+- Not in the app yet: starting a class and training it (Start workout opens the class page for now), the park scene on the brand card, the strength test for a new athlete, the streak's sheet, and the other four tabs.
+- Weeks start on Monday until the phone's region is read; the Easier / Harder choice is forgotten when the app restarts.
+
+From here on, most checks happen on Windows and CI confirms on iPhone.
 
 ## Phase 3: screens
 
@@ -108,7 +138,7 @@ Ignore `DerivedData`, `xcuserdata`, `*.xcuserstate` and the generated `.xcodepro
 
 **Themes.** Concrete & Tape and the other two free themes become CMP colour tokens. Drawables and decorations (`ThemeDecor`, `ThemeDrawables`) are redrawn in `DrawScope`.
 
-**Strings.** A Gradle task copies `app/src/main/res/values/strings*.xml` into `composeApp`'s resources at build time, so the texts have one source. Check the `\'` escapes, plurals and `%1$d` formats there.
+**Strings.** Done in phase 2: a Gradle task copies `app/src/main/res/values/strings*.xml` into `composeApp`'s resources at build time, so the texts have one source (`AppOnDesktopTest` checks an apostrophe, a bare `%d`, numbered places, `&amp;` and a plural). Still to handle when their screens come: `%1$.1f` in one string, `%%` in one, and the `<b>` in `share_body`.
 
 **iPhone details:** keep the screen awake with `isIdleTimerDisabled`; play the rest-end sound with AVAudio in the foreground and a scheduled local notification in the background; respect safe areas; support the back swipe.
 
@@ -140,7 +170,7 @@ Ignore `DerivedData`, `xcuserdata`, `*.xcuserstate` and the generated `.xcodepro
 
 ## GitHub CI: `ios-ci.yml` in the standalone repo
 
-It lives next to `android-ci.yml` in `.github/workflows/` of the standalone repo, with actions pinned by SHA as there.
+Written on 18 Nov 2026 as `ios-streetgym/ci/ios-ci.yml`, with its first two jobs (`screens` on Linux, `simulator` on macOS 26); it has not run yet. It goes next to `android-ci.yml` in `.github/workflows/` of the standalone repo, with actions pinned by SHA as there. The `testflight` job below comes with the Apple account (phase 5).
 
 ```yaml
 on:
@@ -196,7 +226,7 @@ Claude does the rest, using Claude in Chrome for the web consoles as with Play: 
 | Phase | Work |
 |---|---|
 | 1 Shared engine | done, 2.11.5 |
-| 2 Shell and simulator CI | 2 days |
+| 2 Shell and simulator CI | built 18 Nov 2026; the first macOS run is left |
 | 3 Screens | 2–3 weeks |
 | 4 Purchases and ads | about 1 week |
 | 5 TestFlight, listing, review | a few days plus Apple's review |

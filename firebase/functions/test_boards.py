@@ -1,4 +1,4 @@
-"""The board builder without Firebase: python -m pytest streetgymnastics/firebase/functions"""
+"""The board builder without Firebase: python -m pytest android-streetgym/firebase/functions"""
 from boards import POINTS_MAX, TOP, VERSION, board_hash, build_boards
 
 MONTH = "2026-11"

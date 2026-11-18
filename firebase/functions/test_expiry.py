@@ -1,4 +1,4 @@
-"""The analytics expiry against a small in-memory Firestore: python -m pytest streetgymnastics/firebase/functions"""
+"""The analytics expiry against a small in-memory Firestore: python -m pytest android-streetgym/firebase/functions"""
 import datetime
 
 import expiry

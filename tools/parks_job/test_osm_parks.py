@@ -1,4 +1,4 @@
-"""The OSM parks generator without the network: python -m pytest streetgymnastics/tools/parks_job"""
+"""The OSM parks generator without the network: python -m pytest android-streetgym/tools/parks_job"""
 import random
 
 import osm_parks as osm

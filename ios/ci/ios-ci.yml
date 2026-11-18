@@ -1,0 +1,111 @@
+# Street Gym for iPhone: checks on every push, on GitHub's runners.
+#
+# This file belongs in the standalone repository (justdataplease/streetgym) as .github/workflows/ios-ci.yml. That
+# repository is public, so its macOS minutes are free; the private suite repository would be billed for them.
+# There this project is the ios/ folder, beside app/ (Android) and shared/ (the engine).
+name: iOS
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'ios/**'
+      - 'shared/**'
+      - 'app/src/main/assets/**'
+      - 'app/src/main/res/**'
+      - '.github/workflows/ios-ci.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  # The engine and the screens as plain Kotlin, the tests, and a PNG of every screen. No Mac needed.
+  screens:
+    name: Tests and screenshots
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    defaults:
+      run:
+        working-directory: ios
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@748248ddd2a24f49513d8f472f81c3a07d4d50e1 # v4.4.4, as the Android checks use (v6.4.0 restored a cache that hid downloads)
+        with:
+          validate-wrappers: true
+          dependency-graph: disabled
+      - name: Shared code is plain Kotlin, tests, screenshots
+        run: >-
+          bash ./gradlew :shared:compileCommonMainKotlinMetadata :composeApp:compileCommonMainKotlinMetadata
+          :composeApp:desktopTest :composeApp:screenshots --no-daemon --console=plain
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        if: always()
+        # The pictures are a convenience: a full artifact store (private repos have a quota) must not fail the checks.
+        continue-on-error: true
+        with:
+          name: screens-${{ github.sha }}
+          retention-days: 14
+          if-no-files-found: warn
+          path: |
+            ios/composeApp/build/screenshots/
+            ios/composeApp/build/reports/tests/
+
+  # The real thing: Kotlin compiled for iPhone, the app built by Xcode, opened in the Simulator and photographed.
+  simulator:
+    name: iPhone Simulator
+    runs-on: macos-26
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@748248ddd2a24f49513d8f472f81c3a07d4d50e1 # v4.4.4, as the Android checks use (v6.4.0 restored a cache that hid downloads)
+        with:
+          validate-wrappers: true
+          dependency-graph: disabled
+      # The Kotlin/Native compiler and Apple's platform libraries: about 1 GB, downloaded once.
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: ~/.konan
+          key: konan-${{ runner.os }}-${{ hashFiles('ios/build.gradle.kts') }}
+      - name: Compile the engine and the screens for iPhone, run the tests there
+        working-directory: ios
+        run: sh ./gradlew :shared:compileKotlinIosSimulatorArm64 :composeApp:iosSimulatorArm64Test --console=plain
+      - name: Generate the Xcode project
+        working-directory: ios/iosApp
+        run: |
+          brew install xcodegen
+          xcodegen generate
+      - name: Build the app and tour it in the Simulator
+        working-directory: ios/iosApp
+        run: |
+          set -euo pipefail
+          # The newest large iPhone this Xcode has.
+          DEVICE=$(xcrun simctl list devices available | grep -oE 'iPhone [0-9]+ Pro Max' | sort -t' ' -k2 -n | tail -1)
+          echo "Simulator: $DEVICE"
+          xcodebuild test -project StreetGym.xcodeproj -scheme StreetGym \
+            -destination "platform=iOS Simulator,name=$DEVICE" \
+            -resultBundlePath "$RUNNER_TEMP/tour.xcresult" \
+            CODE_SIGNING_ALLOWED=NO
+      - name: Take the pictures out of the test result
+        if: always()
+        run: xcrun xcresulttool export attachments --path "$RUNNER_TEMP/tour.xcresult" --output-path "$RUNNER_TEMP/tour"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        if: always()
+        # The pictures are a convenience: a full artifact store (private repos have a quota) must not fail the checks.
+        continue-on-error: true
+        with:
+          name: simulator-${{ github.sha }}
+          retention-days: 14
+          if-no-files-found: warn
+          path: ${{ runner.temp }}/tour/

@@ -104,7 +104,8 @@ class WorkoutFlow(val steps: List<WorkoutStep>) {
         val byKey = steps.associateBy(WorkoutStep::key)
         val spent = HashMap<String, Double>()
         var previous = startedAt
-        tickedAt.filterKeys { it in completed && it in byKey }.entries.groupBy({ it.value }, { it.key }).toSortedMap()
+        // In the order the sets were ticked. Plain Kotlin: no sorted map or Map.merge, which only the JVM has.
+        tickedAt.filterKeys { it in completed && it in byKey }.entries.groupBy({ it.value }, { it.key }).entries.sortedBy { it.key }
             .forEach { (at, keys) ->
                 val elapsed = (at - previous).coerceAtLeast(0L) / 1_000.0
                 previous = maxOf(previous, at)
@@ -112,7 +113,8 @@ class WorkoutFlow(val steps: List<WorkoutStep>) {
                 val total = planned.sum()
                 keys.forEachIndexed { index, key ->
                     val part = if (total > 0) elapsed * planned[index] / total else elapsed / keys.size
-                    spent.merge(byKey.getValue(key).exerciseKey, part, Double::plus)
+                    val exercise = byKey.getValue(key).exerciseKey
+                    spent[exercise] = (spent[exercise] ?: 0.0) + part
                 }
             }
         val ticked = steps.filter { it.key in completed }
