@@ -16,6 +16,7 @@ import com.justdataplease.streetgym.data.skills.SkillBook
 import com.justdataplease.streetgym.ui.SetMeasure
 import com.justdataplease.streetgym.ui.WorkoutFlow
 import com.justdataplease.streetgym.ui.WorkoutStep
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 
 /** What the focus workout shows: the set at [index] of the class, the rest before it, or the summary at the end. */
@@ -86,9 +87,40 @@ interface WorkoutDevice {
 
     /**
      * Asks to show alerts (Android: HomeActivity.enableTimingNotifications, which only the Timer's "Enable alerts"
-     * calls). Until alerts are allowed, [restAlert] schedules nothing the phone will show.
+     * calls), then calls [done] with the answer. Until alerts are allowed, [restAlert] and the Timer's alerts schedule
+     * nothing the phone will show.
      */
-    fun askAlerts() {}
+    fun askAlerts(done: (Boolean) -> Unit = {}) { done(true) }
+
+    /** Whether the phone shows the app's alerts, to [result] (Android: TimingAlerts.notifications); maybe later. */
+    fun alerts(result: (Alerts) -> Unit) { result(Alerts.ALLOWED) }
+
+    /** Alerts turned off for the app: the phone's settings for them open (Android: ACTION_APP_NOTIFICATION_SETTINGS). */
+    fun openAlertSettings() {}
+
+    /**
+     * The Timer runs out [inMillis] from now: an alert "Time’s up" with sound and Stop then, the app closed or not
+     * (Android: TimingAlerts.schedule and notify). Null takes it away; a new one replaces it.
+     */
+    fun timerAlert(inMillis: Long?) {}
+
+    /**
+     * The alarm at [at] on the phone's wall clock: an alert "Alarm" with sound and Stop then, following a change of the
+     * clock or the time zone. Null takes it away; a new one replaces it.
+     */
+    fun alarmAlert(at: LocalDateTime?) {}
+
+    /** Stop: the Timer's and the alarm's alerts already shown go (Android: TimingAlerts.stop's cancel). */
+    fun clearTimingAlerts() {}
+
+    /** A timer or alarm rang with the app open and alerts off: the beep (Android: TimingAlerts.tone). */
+    fun timingTone() {}
+
+    /**
+     * Where the app is ([com.justdataplease.streetgym.app.ui.Restore]), kept by the phone with its window, for when it
+     * closes the app in the background (Android: onSaveInstanceState). Called on every change.
+     */
+    fun saveScreens(state: String) {}
 
     /**
      * The status bar's colour follows the theme: light words on a [dark] theme (Night Park), dark ones on the light
@@ -426,6 +458,18 @@ class Training internal constructor(
     private fun hold(active: ActiveWorkout): Hold? = held?.takeIf { it.session == active.startedAtEpochMillis }?.value
 
     private fun restEnd(active: ActiveWorkout): Long? = rest?.takeIf { it.session == active.startedAtEpochMillis }?.value
+
+    /** The rest running and its class, kept for when the phone closes the app (Android: STATE_REST_END, STATE_REST_PROGRAM). */
+    fun runningRest(): Pair<String, Long>? {
+        val active = progress.activeWorkout() ?: return null
+        return restEnd(active)?.let { active.programId to it }
+    }
+
+    /** A rest kept that way runs on, if its class is still the one in progress and the rest hasn't ended. */
+    fun restoreRest(programId: String, end: Long) {
+        val active = progress.activeWorkout() ?: return
+        if (active.programId == programId && end > now()) rest = Owned(active.startedAtEpochMillis, end)
+    }
 
     /** The skill movement [exercise] trains, when the skills know it (Android: HomeActivity.skillMovement). */
     private fun skillMovement(exercise: TrainingExercise): String? =

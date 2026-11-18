@@ -58,17 +58,9 @@ final class StreetGymTour: XCTestCase {
         let level = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] %@", "of 100 complete")).firstMatch
         guard level.waitForExistence(timeout: 10) else { return }
         snap("05-training")
-        dump("05-training", app)
-
-        // Which screen stops the pictures? (18 Nov 2026: after Training the app went on but the screen stayed.)
-        // Settings draws no figure; a level's page draws a moving tile per class.
-        if tapHittable(app, label: "Settings") { snap("05b-settings-before-level") }
-        _ = tapHittable(app, label: "Training")
-        snap("05c-training-again")
         level.tap()
         _ = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] %@", "level 1 workouts")).firstMatch.waitForExistence(timeout: 10)
         snap("06-level")
-        dump("06-level", app)
 
         // Training › My workouts: the saved and own days, with Create a workout.
         guard tapHittable(app, label: "Training") else { return }
@@ -88,7 +80,6 @@ final class StreetGymTour: XCTestCase {
         guard tapHittable(app, label: "Progress") else { return }
         _ = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] %@", "points. Double-tap")).firstMatch.waitForExistence(timeout: 10)
         snap("09-skills")
-        dump("09-skills", app)
 
         // History: this month's calendar.
         guard tapHittable(app, label: "History") else { return }
@@ -105,6 +96,27 @@ final class StreetGymTour: XCTestCase {
         guard tapHittable(app, label: "Settings") else { return }
         _ = app.descendants(matching: .any).matching(NSPredicate(format: "label BEGINSWITH[c] %@", "Concrete & Tape")).firstMatch.waitForExistence(timeout: 10)
         snap("12-settings")
+
+        // Round 10: Plus and Pro under the themes. xcodebuild's test runs don't take the scheme's StoreKit file, so the
+        // prices may not come and nothing is bought: the pictures are of the plans and the offer only.
+        app.swipeUp()
+        snap("13-settings-plans")
+        dump("13-settings-plans", app)
+        // A fresh install is Free: Remove ads beside the title opens its offer, which Cancel closes.
+        if tapHittable(app, label: "Remove ads") {
+            _ = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] %@", "Plus ends the ads")).firstMatch.waitForExistence(timeout: 10)
+            snap("14-offer-remove-ads")
+            _ = tapHittable(app, label: "Cancel")
+        }
+
+        // Round 11: Google's test ad closing Today, once it has loaded (the Simulator skips Apple's tracking question).
+        if tapHittable(app, label: "Today") {
+            for _ in 0..<4 {
+                app.swipeUp()
+            }
+            snap("15-today-ad")
+            dump("15-today-ad", app)
+        }
     }
 
     /// Taps the first element labelled [label] that can be tapped: a tab's label can also be a title or a word on screen.
@@ -122,8 +134,7 @@ final class StreetGymTour: XCTestCase {
         return false
     }
 
-    /// Every label the app says is on screen goes into the log, between TOUR-SCREEN lines: the Mac run of 18 Nov 2026
-    /// photographed Training six times while these steps reported success.
+    /// Every label the app says is on screen goes into the log, between TOUR-SCREEN lines, for a step that needs it.
     private func dump(_ name: String, _ app: XCUIApplication) {
         print("TOUR-SCREEN-BEGIN " + name)
         print(app.debugDescription)
@@ -131,7 +142,8 @@ final class StreetGymTour: XCTestCase {
     }
 
     private func snap(_ name: String) {
-        // A moment for the frame to be drawn before the picture.
+        // The Simulator on GitHub's Macs draws slowly: without this pause a picture shows the screen before (on
+        // 18 Nov 2026 six pictures in a row showed Training while the app had moved on).
         Thread.sleep(forTimeInterval: 1.5)
         let picture = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
         picture.name = name

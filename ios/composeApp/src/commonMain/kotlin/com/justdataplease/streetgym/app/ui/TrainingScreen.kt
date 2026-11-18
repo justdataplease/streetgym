@@ -37,6 +37,7 @@ import com.justdataplease.streetgym.app.data.Paywall
 import com.justdataplease.streetgym.app.data.LevelCard
 import com.justdataplease.streetgym.app.data.LevelState
 import com.justdataplease.streetgym.app.data.Levels
+import com.justdataplease.streetgym.app.data.ReadyFilter
 import com.justdataplease.streetgym.app.resources.Res
 import com.justdataplease.streetgym.app.resources.empty_description
 import com.justdataplease.streetgym.app.resources.exam_replay_body
@@ -61,11 +62,17 @@ import org.jetbrains.compose.resources.stringResource
 private val TRAINING_TABS = listOf(Res.string.training_tab_levels, Res.string.training_tab_workouts,
     Res.string.training_tab_ready, Res.string.training_tab_parks)
 
+/** Training's tabs by number. */
+const val TRAINING_WORKOUTS = 1
+const val TRAINING_LIBRARY = 2
+const val TRAINING_PARKS = 3
+
 /**
  * Training (android-streetgym, HomeActivity.renderLevels): the switch between its four tabs, kept while the app runs
  * ([tab], [onTab]), then Levels: the intro, the replay in effect, and the ten levels, dressed per theme. A level opens
  * its classes ([onOpenLevel]); returning from a replay goes back to Training ([onReturned]). My workouts lists the saved
- * and own days ([MyWorkouts]); the Library and Parks come in later rounds.
+ * and own days ([MyWorkouts]), the Library the ready workouts with their filters ([readyFilter], [ReadyWorkouts]) and
+ * Parks the spots near the athlete ([ParksScreen]).
  */
 @Composable
 fun TrainingScreen(
@@ -80,16 +87,29 @@ fun TrainingScreen(
     onCreate: () -> Unit = {},
     onLimit: (Limit) -> Unit = {},
     onPaywall: (Paywall) -> Unit = {},
+    readyFilter: ReadyFilter = ReadyFilter(),
+    onReadyFilter: (ReadyFilter) -> Unit = {},
+    onNote: (String) -> Unit = {},
 ) {
+    val tabs: @Composable (Modifier) -> Unit = { modifier ->
+        SegmentedSwitch(TRAINING_TABS.map { stringResource(it) }, tab, modifier, compact = true, onSelect = onTab)
+    }
+    // The Parks map fills the screen instead of scrolling with the page (Android: renderLevels' setBody(page)).
+    if (tab == TRAINING_PARKS) {
+        ParksScreen(model, tabs, onPaywall = onPaywall, onNote = onNote)
+        return
+    }
     Page {
-        SegmentedSwitch(TRAINING_TABS.map { stringResource(it) }, tab, Modifier.padding(bottom = 14.dp), compact = true, onSelect = onTab)
-        if (tab == 1) {
-            MyWorkouts(model, workoutList, onOpenList, onOpenDay, onCreate, onLimit, onPaywall)
-            return@Page
-        }
-        if (tab != 0) {
-            ToComeCard(stringResource(TRAINING_TABS[tab]))
-            return@Page
+        tabs(Modifier.padding(bottom = 14.dp))
+        when (tab) {
+            1 -> {
+                MyWorkouts(model, workoutList, onOpenList, onOpenDay, onCreate, onLimit, onPaywall)
+                return@Page
+            }
+            2 -> {
+                ReadyWorkouts(model, readyFilter, onReadyFilter, onOpenDay, onPaywall)
+                return@Page
+            }
         }
         BodyText(stringResource(Res.string.empty_description), modifier = Modifier.padding(bottom = 16.dp))
         val levels = model.levels()

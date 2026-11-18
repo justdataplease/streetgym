@@ -38,6 +38,21 @@ import com.justdataplease.streetgym.app.data.Program
 import com.justdataplease.streetgym.app.data.StoredProgress
 import com.justdataplease.streetgym.app.data.WorkoutDevice
 import com.justdataplease.streetgym.app.data.loadProgram
+import com.justdataplease.streetgym.app.data.BundledParks
+import com.justdataplease.streetgym.app.data.ParksSource
+import com.justdataplease.streetgym.app.data.PhoneLocation
+import com.justdataplease.streetgym.app.data.ReadyFilter
+import com.justdataplease.streetgym.app.data.Timing
+import com.justdataplease.streetgym.app.data.TimingClock
+import com.justdataplease.streetgym.app.data.TimingStore
+import com.justdataplease.streetgym.app.data.WallClock
+import com.justdataplease.streetgym.app.ui.LocalParksMaps
+import com.justdataplease.streetgym.app.ui.ParksMapHost
+import com.justdataplease.streetgym.app.ui.Restore
+import com.justdataplease.streetgym.app.ui.Screens
+import com.justdataplease.streetgym.app.ui.StandInMaps
+import com.justdataplease.streetgym.data.epochMillisNow
+import kotlinx.datetime.TimeZone
 import com.justdataplease.streetgym.app.figure.LoadingFigure
 import com.justdataplease.streetgym.app.figure.LocalMotionLibrary
 import com.justdataplease.streetgym.app.figure.LocalMotionWords
@@ -81,6 +96,10 @@ import kotlin.random.Random
  * starts a week; [resumed] fires each time the app comes back to the screen, which redraws Today for a new day and
  * starts the park scene again (Android: onResume). [version] is the app's, shown in Settings › About. [countKeys]: the
  * phone's options for the strength test's number keyboard. [load] reads the program (tests make it fail).
+ *
+ * The Timer runs on [timingClock] (null: the wall clock) and shows times on a 24-hour clock with [hour24]; [events]
+ * brings what the phone tells the app (a tap on a Timer alert, a change of the clock or time zone). Parks reads its
+ * parks from [parks], the athlete's position from [location], and draws its map with [maps] (null: the list only).
  */
 @Composable
 fun App(
@@ -92,8 +111,17 @@ fun App(
     version: String = DEFAULT_VERSION,
     countKeys: PlatformImeOptions? = null,
     load: suspend () -> Program = ::loadProgram,
+    timingClock: TimingClock? = null,
+    hour24: Boolean = true,
+    events: Flow<PhoneEvent> = emptyFlow(),
+    location: PhoneLocation = PhoneLocation.Fixed(),
+    maps: ParksMapHost? = StandInMaps,
+    parks: ParksSource = BundledParks,
+    restored: String? = null,
 ) {
     var model by remember { mutableStateOf<AppModel?>(null) }
+    // Where the app was when the phone closed it in the background, read once the program is.
+    var screens by remember { mutableStateOf<Screens?>(null) }
     var failed by remember { mutableStateOf(false) }
     // Each Try again reads the files once more.
     var attempt by remember { mutableIntStateOf(0) }
@@ -103,20 +131,45 @@ fun App(
         failed = false
         runCatching { load() }
             .onSuccess {
-                model = AppModel(it, StoredProgress(store), device = device, settings = AppSettings(store), firstWeekday = firstWeekday,
-                    library = LibraryStore(store)).apply { this.version = version }
+                val timing = Timing(TimingStore(store, timingClock ?: WallClock(::epochMillisNow)), device,
+                    { TimeZone.currentSystemDefault() }, hour24)
+                val app = AppModel(it, StoredProgress(store), device = device, settings = AppSettings(store), firstWeekday = firstWeekday,
+                    library = LibraryStore(store), timing = timing, parksSource = parks, location = location)
+                    .apply { this.version = version }
+                screens = Restore.decode(restored, app)
+                model = app
+                // What ran out while the app was closed rings, and the alerts are scheduled again (Android: onResume).
+                timing.resumed()
             }
             .onFailure { failed = true }
     }
     val loaded = model
     LaunchedEffect(loaded, resumed) { loaded?.let { app -> resumed.collect { app.resumed() } } }
-    CompositionLocalProvider(LocalReduceMotion provides reduceMotion, LocalCountKeys provides countKeys) {
+    LaunchedEffect(loaded, events) {
+        loaded?.let { app ->
+            events.collect { event ->
+                when (event) {
+                    PhoneEvent.OpenTimer -> app.timing.openRequested = true
+                    PhoneEvent.TimeChanged -> app.timing.timeChanged()
+                }
+            }
+        }
+    }
+    CompositionLocalProvider(LocalReduceMotion provides reduceMotion, LocalCountKeys provides countKeys, LocalParksMaps provides maps) {
         when {
-            loaded != null -> StreetGymApp(loaded)
+            loaded != null -> StreetGymApp(loaded, restored = screens)
             failed -> StreetGymTheme(theme) { LoadErrorScreen { attempt++ } }
             else -> StreetGymTheme(theme) { LoadingScreen() }
         }
     }
+}
+
+/** What the phone tells the running app. */
+sealed interface PhoneEvent {
+    /** A Timer or alarm alert was tapped: the Timer tab opens (Android: TimingAlerts.OPEN_TIMER). */
+    data object OpenTimer : PhoneEvent
+    /** The clock or the time zone changed: a set alarm keeps to the wall clock (Android: TimingReceiver). */
+    data object TimeChanged : PhoneEvent
 }
 
 /**
@@ -177,11 +230,16 @@ fun StreetGymApp(
     historyDay: Int = 0,
     trainingTab: Int = 0,
     workoutList: String? = null,
+    readyFilter: ReadyFilter = ReadyFilter(),
+    maps: ParksMapHost? = LocalParksMaps.current,
+    restored: Screens? = null,
 ) {
     val dark = model.theme.dark
     LaunchedEffect(model, dark) { model.device.statusBar(dark) }
-    CompositionLocalProvider(LocalMotionLibrary provides model.motions) {
-        StreetGymTheme(model.theme) { Shell(model, safeArea, startAt, showing, progressTab, historyDay, trainingTab, workoutList) }
+    CompositionLocalProvider(LocalMotionLibrary provides model.motions, LocalParksMaps provides maps) {
+        StreetGymTheme(model.theme) {
+            Shell(model, safeArea, startAt, showing, progressTab, historyDay, trainingTab, workoutList, readyFilter, restored)
+        }
     }
 }
 

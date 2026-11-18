@@ -105,12 +105,12 @@ jobs:
         if: always()
         run: |
           xcrun xcresulttool export diagnostics --path "$RUNNER_TEMP/tour.xcresult" --output-path "$RUNNER_TEMP/diagnostics" || true
-          find "$RUNNER_TEMP/diagnostics" -type f -name 'StandardOutputAndStandardError*' 2>/dev/null | while read -r f; do
-            echo "APP-OUTPUT-BEGIN $f"; tail -n 250 "$f"; echo "APP-OUTPUT-END"
+          # The app's own file, without the test runner's talk about every label it reads.
+          find "$RUNNER_TEMP/diagnostics" -type f -name 'StandardOutputAndStandardError-*' 2>/dev/null | while read -r f; do
+            echo "APP-OUTPUT-BEGIN"
+            grep -v -E '\[Default\]|XC_kAX|^\}|^$' "$f" | tail -n 120 || true
+            echo "APP-OUTPUT-END"
           done
-          echo "APP-LOG-BEGIN"
-          xcrun simctl spawn booted log show --last 6m --style compact --predicate 'process CONTAINS "Street"' 2>/dev/null | grep -v -i "accessibility" | tail -n 200 || true
-          echo "APP-LOG-END"
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         if: always()
         # The pictures are a convenience: a full artifact store (private repos have a quota) must not fail the checks.

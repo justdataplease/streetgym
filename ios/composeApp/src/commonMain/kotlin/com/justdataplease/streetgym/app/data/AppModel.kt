@@ -179,6 +179,8 @@ sealed interface Paywall {
     data class Level(val number: Int) : Paywall
     /** The ready workouts of the Library: Pro. */
     data object Ready : Paywall
+    /** Training › Parks: Plus. */
+    data object Parks : Paywall
     /** All [limit] saved and own days are used. */
     data class Saved(val limit: Int) : Paywall
     /** Making own workouts: Plus. */
@@ -251,6 +253,11 @@ class AppModel(
     val firstWeekday: Int = Streak.MONDAY,
     /** My workouts: saved days, own workouts and their lists. */
     private val library: LibraryStore = LibraryStore(MemoryStore()),
+    /** The Timer tab's clocks and their alerts. */
+    val timing: Timing = Timing(TimingStore(MemoryStore(), WallClock(now)), device, { zone }),
+    /** Training › Parks: the parks, the athlete's location and the map. */
+    parksSource: ParksSource = BundledParks,
+    location: PhoneLocation = PhoneLocation.Fixed(),
 ) {
     constructor(
         program: Program,
@@ -262,7 +269,14 @@ class AppModel(
         settings: AppSettings = AppSettings(MemoryStore()),
         firstWeekday: Int = Streak.MONDAY,
         library: LibraryStore = LibraryStore(MemoryStore()),
-    ) : this(program.catalog, progress, program.skills, tier, now, zone, device, program.motions, settings, firstWeekday, library)
+        timing: Timing = Timing(TimingStore(MemoryStore(), WallClock(now)), device, { zone }),
+        parksSource: ParksSource = BundledParks,
+        location: PhoneLocation = PhoneLocation.Fixed(),
+    ) : this(program.catalog, progress, program.skills, tier, now, zone, device, program.motions, settings, firstWeekday, library,
+        timing, parksSource, location)
+
+    /** Training › Parks (Android: renderParks, its search and location, ParksUpdater). */
+    val parks = ParksState(parksSource, location, settings, now)
 
     private val written: List<TrainingProgram> = NextClass.ordered(catalog)
     private val byId: Map<String, TrainingProgram> = written.associateBy(TrainingProgram::id)
@@ -358,6 +372,7 @@ class AppModel(
     fun resumed() {
         resumes++
         refreshDay()
+        timing.resumed()
     }
 
     /** The strength test was answered or skipped (Android: AppSettings.placementDone); Start over asks it again. */
@@ -830,6 +845,20 @@ class AppModel(
     /** A skill switched off from its rung, or whose movement needs equipment switched off: its medal greys. */
     fun skillOff(family: SkillFamily, status: SkillStatus): Boolean =
         skillSwitches.isRungOff(family.spec.id, status.skill.rung) || lacksEquipment(status.skill.id)
+
+    // ---- Training › Library (Android: renderReadyWorkouts)
+
+    /** Every ready workout, as written in workouts.json. */
+    val readyWorkouts: List<TrainingProgram> get() = catalog.workouts
+
+    /** The Library's focus chips after Any focus: the groups and skill families some ready workout has. */
+    fun readyFocuses(): List<String> = ReadyLibrary.focuses(catalog.workouts)
+
+    /** The ready workouts [filter] lets through, in their order (Android: renderReadyWorkouts' shown). */
+    fun readyShown(filter: ReadyFilter): List<TrainingProgram> {
+        saves.count
+        return ReadyLibrary.shown(catalog.workouts, filter) { effortOf(it.id) }
+    }
 
     // ---- My workouts (Android: renderMyWorkouts, heartButton, showListPicker, renderEditDay; LibraryRepository)
 

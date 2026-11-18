@@ -15,9 +15,10 @@ val androidMain: File = listOf("../../android-streetgym/app", "../../app").map {
 val androidResources = tasks.register<Sync>("androidResources") {
     into(layout.buildDirectory.dir("androidResources"))
     // Gradle can't see a change to the rewriting rules below; raise this when one changes, so the copy runs again.
-    inputs.property("rules", 6)
+    inputs.property("rules", 7)
+    // The parks (about 5 MB, OpenStreetMap's), read when Training › Parks first opens on Plus and Pro.
     from(androidMain.resolve("assets")) {
-        include("curriculum.json", "workouts.json", "exercise_animations.json")
+        include("curriculum.json", "workouts.json", "exercise_animations.json", "spots.tsv")
         into("files")
     }
     from(androidMain.resolve("assets/fonts")) { into("font") }
@@ -27,14 +28,17 @@ val androidResources = tasks.register<Sync>("androidResources") {
         // Compose fills only numbered places (%1$d), and Android's texts with a single number write a bare %d.
         // Android also writes an apostrophe as \' and a quote as \" in its string files; Compose would show the backslash.
         // Its bold <b>…</b> is kept as written (escaped here, so Compose reads it as text), for ui/Kit.kt boldMarkup.
+        // Compose fills no decimals either: "%1$.1f km away" takes the number already written with one (ui/DisplayText.kt
+        // oneDecimal), and Android's "%%" is its percent sign.
         filter { line: String ->
-            line.replace("%d", "%1${'$'}d").replace("\\'", "'").replace("\\\"", "\"")
+            line.replace("%d", "%1${'$'}d").replace("%1${'$'}.1f", "%1${'$'}s").replace("%%", "%")
+                .replace("\\'", "'").replace("\\\"", "\"")
                 .replace("<b>", "&lt;b&gt;").replace("</b>", "&lt;/b&gt;")
         }
     }
     from(androidMain.resolve("res/drawable")) {
         include("ic_nav_*.xml", "ic_brand_mark.xml", "ic_lock.xml", "ic_view_list.xml", "ic_view_focus.xml",
-            "ic_heart.xml", "ic_heart_outline.xml", "logo.xml")
+            "ic_heart.xml", "ic_heart_outline.xml", "logo.xml", "ic_my_location.xml")
         into("drawable")
         // Compose reads Android's vector format, but not references to Android's own colours.
         filter { line: String -> line.replace("@android:color/transparent", "#00000000") }
@@ -110,6 +114,7 @@ tasks.register<JavaExec>("screenshots") {
     classpath = files(desktop.output.allOutputs, desktop.runtimeDependencyFiles)
     mainClass.set("com.justdataplease.streetgym.app.ScreenshotsKt")
     val out = providers.gradleProperty("shots").orElse(layout.buildDirectory.dir("screenshots").map { it.asFile.path })
-    args(out.get())
+    // `-Ponly=timer+parks` draws only those rounds' pictures (the names in Screenshots.kt's main), for a quick look.
+    args(listOf(out.get()) + providers.gradleProperty("only").orNull.let { listOfNotNull(it) })
     systemProperty("java.awt.headless", "true")
 }

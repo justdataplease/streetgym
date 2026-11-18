@@ -6,6 +6,11 @@ options:
   deploymentTarget:
     iOS: "16.0"
   createIntermediateGroups: true
+# The Parks map: MapLibre Native for iOS, as Android's MapLibre (6.x; checked 18 Nov 2026: 6.31.0 is the latest 6.x).
+packages:
+  MapLibre:
+    url: https://github.com/maplibre/maplibre-gl-native-distribution
+    from: 6.31.0
 settings:
   base:
     # Versions start at 1.0; CI passes the build number (CURRENT_PROJECT_VERSION) for TestFlight.
@@ -18,10 +23,17 @@ targets:
     platform: iOS
     sources:
       - path: StreetGym
+    dependencies:
+      - package: MapLibre
+        product: MapLibre
     info:
       path: StreetGym/Info.plist
       properties:
         CFBundleDisplayName: Street Gym
+        # Parks near me, in Android's words (parks_teaser, parks_credit); asked only when the athlete wants parks near
+        # them, approximate by default, as Android asks only for the coarse location.
+        NSLocationWhenInUseUsageDescription: To show the outdoor workout parks nearest you. Your location isn’t sent anywhere.
+        NSLocationDefaultAccuracyReduced: true
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         LSRequiresIPhoneOS: true
@@ -44,7 +56,7 @@ targets:
         FRAMEWORK_SEARCH_PATHS:
           - $(inherited)
           - $(SRCROOT)/../composeApp/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)
-        # The Kotlin framework is static, so the system frameworks its sounds and alerts use are linked here.
+        # The Kotlin framework is static, so the system frameworks its sounds, alerts and location use are linked here.
         OTHER_LDFLAGS:
           - $(inherited)
           - -framework
@@ -53,6 +65,8 @@ targets:
           - AudioToolbox
           - -framework
           - UserNotifications
+          - -framework
+          - CoreLocation
         # The script runs Gradle, which reads and writes outside Xcode's sandbox.
         ENABLE_USER_SCRIPT_SANDBOXING: false
         CODE_SIGN_STYLE: Automatic

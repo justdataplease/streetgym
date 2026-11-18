@@ -20,6 +20,15 @@
 				<string>CA92.1</string>
 			</array>
 		</dict>
+		<dict>
+			<!-- The Timer's clocks run on the time since the phone started (sysctl kern.boottime), as timers. -->
+			<key>NSPrivacyAccessedAPIType</key>
+			<string>NSPrivacyAccessedAPICategorySystemBootTime</string>
+			<key>NSPrivacyAccessedAPITypeReasons</key>
+			<array>
+				<string>35F9.1</string>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>

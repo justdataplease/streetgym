@@ -110,6 +110,49 @@ fun clockText(milliseconds: Long, roundUp: Boolean = false): String {
     else "${two(seconds / 60L)}:${two(seconds % 60L)}"
 }
 
+/**
+ * [value] with one decimal, as Android's "%.1f" writes it in English: the shortest decimal form of the number rounded
+ * half up at its first decimal ("2.4", "0.2" for 0.15, "-0.0"). Compose fills no decimals, so the build turns Android's
+ * "%1$.1f" into a plain place for this text.
+ */
+fun oneDecimal(value: Double): String {
+    if (value.isNaN() || value.isInfinite()) return value.toString()
+    val negative = value < 0 || (value == 0.0 && 1.0 / value < 0)
+    // The shortest decimal form, with any exponent written out.
+    val (whole, fraction) = plainDecimal(kotlin.math.abs(value).toString())
+    // Tenths, as one whole number of digits, rounded half up at the hundredths.
+    val digits = (whole + (fraction.getOrNull(0) ?: '0')).toCharArray()
+    var carry = (fraction.getOrNull(1) ?: '0') >= '5'
+    var at = digits.lastIndex
+    while (carry && at >= 0) {
+        if (digits[at] == '9') digits[at] = '0' else {
+            digits[at] = digits[at] + 1
+            carry = false
+        }
+        at--
+    }
+    val tenths = (if (carry) "1" else "") + digits.concatToString()
+    val integer = tenths.dropLast(1).trimStart('0').ifEmpty { "0" }
+    return (if (negative) "-" else "") + integer + "." + tenths.last()
+}
+
+/** "1.2345E7" as ("12345000", ""), "2.5E-4" as ("0", "00025"): a number's text without its exponent. */
+private fun plainDecimal(text: String): Pair<String, String> {
+    val mark = text.indexOfFirst { it == 'E' || it == 'e' }
+    val mantissa = if (mark < 0) text else text.substring(0, mark)
+    val exponent = if (mark < 0) 0 else text.substring(mark + 1).toInt()
+    val dot = mantissa.indexOf('.')
+    val intPart = if (dot < 0) mantissa else mantissa.substring(0, dot)
+    val fracPart = if (dot < 0) "" else mantissa.substring(dot + 1)
+    val all = intPart + fracPart
+    val point = intPart.length + exponent
+    return when {
+        point <= 0 -> "0" to "0".repeat(-point) + all
+        point >= all.length -> all + "0".repeat(point - all.length) to ""
+        else -> all.substring(0, point) to all.substring(point)
+    }
+}
+
 /** Points with thousands grouped, "12,480" (Android: pointsText, which the app shows in English). */
 fun pointsText(points: Int): String {
     val digits = kotlin.math.abs(points.toLong()).toString()

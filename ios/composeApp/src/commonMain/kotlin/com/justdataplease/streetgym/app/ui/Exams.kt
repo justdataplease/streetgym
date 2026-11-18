@@ -31,6 +31,7 @@ import com.justdataplease.streetgym.app.resources.paywall_level_pro_body
 import com.justdataplease.streetgym.app.resources.paywall_custom
 import com.justdataplease.streetgym.app.resources.paywall_lists
 import com.justdataplease.streetgym.app.resources.paywall_lists_full
+import com.justdataplease.streetgym.app.resources.paywall_parks
 import com.justdataplease.streetgym.app.resources.paywall_ready
 import com.justdataplease.streetgym.app.resources.paywall_ready_body
 import com.justdataplease.streetgym.app.resources.paywall_saved
@@ -123,6 +124,7 @@ fun OfferDialog(paywall: Paywall, onClose: () -> Unit) {
     val title = when (paywall) {
         is Paywall.Level -> stringResource(if (pro) Res.string.paywall_level_pro else Res.string.paywall_level, paywall.number)
         Paywall.Ready -> stringResource(Res.string.paywall_ready)
+        Paywall.Parks -> stringResource(Res.string.paywall_parks)
         is Paywall.Saved -> stringResource(Res.string.paywall_saved, paywall.limit)
         Paywall.Custom -> stringResource(Res.string.paywall_custom)
         is Paywall.Lists -> if (paywall.limit == 0) stringResource(Res.string.paywall_lists)

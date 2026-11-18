@@ -14,6 +14,7 @@ import com.justdataplease.streetgym.app.resources.unlock
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
@@ -414,21 +415,23 @@ private val STICKER_SIDE = 3.dp
  * sticker (Android: unlockButton and tierButton, fill). Both open the offer.
  */
 @Composable
-fun UnlockButton(tierName: String, modifier: Modifier = Modifier, onClick: () -> Unit) =
-    TierButton(stringResource(Res.string.unlock), tierName, modifier, onClick)
+fun UnlockButton(tierName: String, modifier: Modifier = Modifier, fill: Boolean = true, onClick: () -> Unit) =
+    TierButton(stringResource(Res.string.unlock), tierName, modifier, fill, onClick)
 
 /**
  * [text] on the main button with the tier's tag stuck on its corner, like Unlock: My workouts' Create a workout on Free
- * (Android: tierButton). Both open the offer.
+ * (Android: tierButton). Both open the offer. [fill] false: as wide as its words with 28 dp at the sides, the same room
+ * left of it as right, so it sits centred (Android: tierButton's fill).
  */
 @Composable
-fun TierButton(text: String, tierName: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
-    Box(modifier.fillMaxWidth()) {
+fun TierButton(text: String, tierName: String, modifier: Modifier = Modifier, fill: Boolean = true, onClick: () -> Unit) {
+    Box(if (fill) modifier.fillMaxWidth() else modifier.width(IntrinsicSize.Max)) {
         PrimaryButton(
             text,
             // The tilt lifts the tag's left corner above its box: the room above keeps the sticker whole.
-            Modifier.padding(top = STICKER_ROOM + 12.dp, end = 14.dp + STICKER_SIDE),
+            Modifier.padding(start = if (fill) 0.dp else 14.dp + STICKER_SIDE, top = STICKER_ROOM + 12.dp, end = 14.dp + STICKER_SIDE),
             description = "$text $tierName",
+            narrow = !fill,
             onClick = onClick,
         )
         LockBadge(
@@ -437,6 +440,22 @@ fun TierButton(text: String, tierName: String, modifier: Modifier = Modifier, on
                 .graphicsLayer { rotationZ = 6f }.clearAndSetSemantics {},
             onClick = onClick,
         )
+    }
+}
+
+/**
+ * A feature of a tier the athlete doesn't have, under a layer (Android: lockedLayer): [behind] dimmed by the page's
+ * colour, hidden from VoiceOver, and Unlock with the tier's sticker centred on it; a tap anywhere opens the offer.
+ */
+@Composable
+fun LockedLayer(tierName: String, modifier: Modifier = Modifier, onOffer: () -> Unit, behind: @Composable () -> Unit) {
+    val theme = Street.theme
+    Box(modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+        Box(Modifier.clearAndSetSemantics {}) { behind() }
+        // The dimming takes the size of what it covers.
+        Box(Modifier.matchParentSize().streetBackground(theme, theme.palette.background.copy(alpha = 0xB8 / 255f), 18.dp)
+            .clickable(onClick = onOffer).clearAndSetSemantics {})
+        UnlockButton(tierName, fill = false, onClick = onOffer)
     }
 }
 
@@ -508,16 +527,24 @@ fun PrimaryButton(
     thumb: Boolean = false,
     icon: Painter? = null,
     description: String? = null,
+    height: Dp? = null,
+    narrow: Boolean = false,
     onClick: () -> Unit,
 ) {
     val theme = Street.theme
     val palette = theme.palette
     val offset = theme.shape.shadowDp.dp
     val shadow = if (theme == StreetTheme.WHEATPASTE) palette.spot else palette.border
-    val padding = if (thumb) PaddingValues(horizontal = 12.dp)
-        else PaddingValues(start = 18.dp, top = 12.dp, end = 18.dp + offset, bottom = 12.dp + offset)
+    // [height]: a fixed one, with only the shadow's room below the label, which centres it on the face (Android:
+    // TimingPanel's 54 dp primary). [narrow]: 28 dp at the sides, for a button as wide as its words (Android: tierButton).
+    val side = if (narrow) 28.dp else 18.dp
+    val padding = when {
+        thumb -> PaddingValues(horizontal = 12.dp)
+        height != null -> PaddingValues(start = side, end = side + offset, bottom = offset)
+        else -> PaddingValues(start = side, top = 12.dp, end = side + offset, bottom = 12.dp + offset)
+    }
     Row(
-        modifier.fillMaxWidth().heightIn(min = if (thumb) 64.dp else 52.dp)
+        modifier.fillMaxWidth().then(if (height != null) Modifier.height(height) else Modifier.heightIn(min = if (thumb) 64.dp else 52.dp))
             .drawBehind {
                 val o = offset.toPx()
                 val face = Size(size.width - o, size.height - o)
@@ -568,6 +595,9 @@ fun SecondaryButton(
     side: Boolean = false,
     description: String? = null,
     compact: Boolean = false,
+    height: Dp? = null,
+    horizontalPadding: Dp? = null,
+    wrap: Boolean = false,
     onClick: () -> Unit,
 ) {
     val theme = Street.theme
@@ -578,23 +608,28 @@ fun SecondaryButton(
         StreetTheme.NIGHT_PARK -> Modifier.streetBackground(theme, palette.infoSurface, 16.dp)
     }
     // [compact]: the builder's Up, Down, Sets and Remove, 44 dp tall with 10 dp at the sides (Android: renderEditDay).
+    // [height]: a fixed height, as the Timer's buttons have, the label centred in it.
     val size = when {
         compact -> Modifier.height(44.dp)
+        height != null -> Modifier.fillMaxWidth().height(height)
         side -> Modifier.heightIn(min = 56.dp)
+        // [wrap]: as wide as its words, beside a field (Android: a secondaryButton at its own width).
+        wrap -> Modifier.heightIn(min = 52.dp)
         else -> Modifier.fillMaxWidth().heightIn(min = 52.dp)
     }
+    val fixed = side || compact || height != null
     Box(
         modifier.then(size).then(face)
             .clickable(enabled = enabled, role = Role.Button, onClick = onClick)
             .then(if (description != null) Modifier.semantics { contentDescription = description } else Modifier)
-            .padding(horizontal = if (compact) 10.dp else if (side) 14.dp else 18.dp, vertical = if (side || compact) 0.dp else 12.dp),
+            .padding(horizontal = horizontalPadding ?: if (compact) 10.dp else if (side) 14.dp else 18.dp, vertical = if (fixed) 0.dp else 12.dp),
         contentAlignment = Alignment.Center,
     ) {
         BasicText(
             text = text.uppercase(),
             style = TextStyle(color = palette.text, fontSize = 13.sp, fontFamily = Street.type.label,
                 letterSpacing = if (theme == StreetTheme.WHEATPASTE) 0.04.em else 0.1.em, textAlign = TextAlign.Center),
-            maxLines = if (side || compact) 1 else Int.MAX_VALUE,
+            maxLines = if (fixed) 1 else Int.MAX_VALUE,
             overflow = TextOverflow.Ellipsis,
         )
     }

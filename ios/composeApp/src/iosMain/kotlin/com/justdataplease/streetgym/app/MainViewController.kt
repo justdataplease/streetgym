@@ -9,7 +9,17 @@ import com.justdataplease.streetgym.app.data.DEFAULT_VERSION
 import com.justdataplease.streetgym.app.data.KeyValueStore
 import com.justdataplease.streetgym.app.data.LocalDays
 import com.justdataplease.streetgym.app.data.WorkoutDevice
+import com.justdataplease.streetgym.app.data.Alerts
+import com.justdataplease.streetgym.app.ui.RING_ALARM
+import com.justdataplease.streetgym.app.ui.TIMER_UP
 import com.justdataplease.streetgym.data.epochMillisNow
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.datetime.LocalDateTime
+import platform.Foundation.NSDateComponents
+import platform.UIKit.UIApplicationOpenNotificationSettingsURLString
+import platform.UserNotifications.UNAuthorizationStatusDenied
+import platform.UserNotifications.UNAuthorizationStatusNotDetermined
+import platform.UserNotifications.UNCalendarNotificationTrigger
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.alloc
@@ -56,24 +66,38 @@ import platform.UserNotifications.UNUserNotificationCenter
 /**
  * The whole app as one view controller; the Swift entry point (iosApp) puts it on screen. With Reduce Motion on, the
  * movement figures stand still (Android shows their still frame when the system's animations are off); the setting is
- * read when the app starts, and so is the first day of the week of the phone's region. Each return to the screen tells
- * the app, which redraws Today for a new day, and sets the status bar again. Settings › About shows the app's version
- * from its Info.plist.
+ * read when the app starts, and so is the first day of the week of the phone's region and whether it shows times on a
+ * 12- or 24-hour clock. Each return to the screen tells the app, which redraws Today for a new day, rings what ran out
+ * on the Timer and sets the status bar again. Settings › About shows the app's version from its Info.plist. [maps] are
+ * the Parks maps Swift makes (MapLibre); without them Parks shows its list. [restored] is where the app was when the
+ * phone closed it in the background, which [saver] keeps with the window (SwiftUI's scene storage) on every change.
  */
-fun MainViewController(): UIViewController {
+fun MainViewController(maps: NativeParksMaps?, restored: String?, saver: SceneSaver?): UIViewController {
+    PhoneDevice.saver = saver
     val resumed = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
     NSNotificationCenter.defaultCenter.addObserverForName(UIApplicationDidBecomeActiveNotification, null, NSOperationQueue.mainQueue) {
         resumed.tryEmit(Unit)
         PhoneDevice.applyStatusBar()
     }
+    watchClock()
     // NSCalendar numbers the weekdays 1 Sunday to 7 Saturday, as java.util.Calendar does.
     val firstWeekday = LocalDays.isoWeekday(NSCalendar.currentCalendar.firstWeekday.toInt())
     val version = NSBundle.mainBundle.objectForInfoDictionaryKey("CFBundleShortVersionString") as? String ?: DEFAULT_VERSION
+    val hosts = maps?.let(::IosParksMaps)
     return ComposeUIViewController {
-        App(UserDefaultsStore(), PhoneDevice, reduceMotion = UIAccessibilityIsReduceMotionEnabled(), firstWeekday = firstWeekday,
-            resumed = resumed, version = version, countKeys = countKeys)
+        App(phoneStore, PhoneDevice, reduceMotion = UIAccessibilityIsReduceMotionEnabled(), firstWeekday = firstWeekday,
+            resumed = resumed, version = version, countKeys = countKeys, timingClock = IosTimingClock, hour24 = hour24(),
+            events = phoneEvents.receiveAsFlow(), location = IosLocation, maps = hosts, restored = restored)
     }.also { PhoneDevice.screen = it }
 }
+
+/** Swift's keeper of where the app is (SwiftUI's @SceneStorage); Swift sees it as the protocol `SceneSaver`. */
+interface SceneSaver {
+    fun save(state: String)
+}
+
+/** Where the app keeps its progress and choices on this phone. */
+internal val phoneStore: KeyValueStore by lazy { UserDefaultsStore() }
 
 /**
  * The strength test's counters: digits with a return key, which reads Next and Done as Android's number keyboard does
@@ -100,14 +124,26 @@ private class UserDefaultsStore(private val defaults: NSUserDefaults = NSUserDef
  * while the app is in the background has a notification with the same beep.
  */
 @OptIn(ExperimentalForeignApi::class)
-private object PhoneDevice : WorkoutDevice {
-    private const val REST = "rest"
+internal object PhoneDevice : WorkoutDevice {
+    const val REST = "rest"
+    /** The Timer's and the alarm's alerts, and their Stop (Android: TimingAlerts' TIMER_ID, ALARM_ID and its Stop action). */
+    const val TIMER = "timer"
+    const val ALARM = "alarm"
+    const val TIMING = "timing"
+    const val STOP = "stop"
     private const val BEEP_FILE = "streetgym-beep.wav"
 
     private val center: UNUserNotificationCenter get() = UNUserNotificationCenter.currentNotificationCenter()
 
     /** The app's view controller, whose window carries the theme's light or dark look. */
     var screen: UIViewController? = null
+
+    /** Keeps where the app is with its window, for state restoration. */
+    var saver: SceneSaver? = null
+
+    override fun saveScreens(state: String) {
+        saver?.save(state)
+    }
 
     /** The look the theme asks for: dark on Night Park, which gives the status bar light words. */
     private var dark = false
@@ -160,8 +196,72 @@ private object PhoneDevice : WorkoutDevice {
         window.rootViewController?.setNeedsStatusBarAppearanceUpdate()
     }
 
-    override fun askAlerts() {
-        center.requestAuthorizationWithOptions(UNAuthorizationOptionAlert or UNAuthorizationOptionSound) { _, _ -> }
+    override fun askAlerts(done: (Boolean) -> Unit) {
+        center.requestAuthorizationWithOptions(UNAuthorizationOptionAlert or UNAuthorizationOptionSound) { granted, _ ->
+            onMain { done(granted) }
+        }
+    }
+
+    override fun alerts(result: (Alerts) -> Unit) {
+        center.getNotificationSettingsWithCompletionHandler { settings ->
+            val status = when (settings?.authorizationStatus) {
+                UNAuthorizationStatusNotDetermined -> Alerts.NOT_ASKED
+                UNAuthorizationStatusDenied -> Alerts.DENIED
+                else -> Alerts.ALLOWED
+            }
+            onMain { result(status) }
+        }
+    }
+
+    override fun openAlertSettings() {
+        val url = NSURL.URLWithString(UIApplicationOpenNotificationSettingsURLString) ?: return
+        UIApplication.sharedApplication.openURL(url, options = emptyMap<Any?, Any>(), completionHandler = null)
+    }
+
+    /**
+     * "Time’s up" with the phone's alert sound and Stop, [inMillis] from now, on the elapsed clock (a change of the wall
+     * clock doesn't move it). Shorter than a second, the app rings it itself.
+     */
+    override fun timerAlert(inMillis: Long?) {
+        center.removePendingNotificationRequestsWithIdentifiers(listOf(TIMER))
+        val seconds = (inMillis ?: return) / 1_000.0
+        if (seconds < 1.0) return
+        val trigger = UNTimeIntervalNotificationTrigger.triggerWithTimeInterval(seconds, repeats = false)
+        center.addNotificationRequest(UNNotificationRequest.requestWithIdentifier(TIMER, timingContent(TIMER_UP), trigger), withCompletionHandler = null)
+    }
+
+    /**
+     * "Alarm" at [at] on the phone's wall clock: date parts without a time zone, so the alert follows a change of the
+     * clock or the time zone by itself.
+     */
+    override fun alarmAlert(at: LocalDateTime?) {
+        center.removePendingNotificationRequestsWithIdentifiers(listOf(ALARM))
+        val local = at ?: return
+        val parts = NSDateComponents()
+        parts.year = local.year.toLong()
+        parts.month = (local.month.ordinal + 1).toLong()
+        parts.day = local.day.toLong()
+        parts.hour = local.hour.toLong()
+        parts.minute = local.minute.toLong()
+        parts.second = 0L
+        val trigger = UNCalendarNotificationTrigger.triggerWithDateMatchingComponents(parts, repeats = false)
+        center.addNotificationRequest(UNNotificationRequest.requestWithIdentifier(ALARM, timingContent(RING_ALARM), trigger), withCompletionHandler = null)
+    }
+
+    override fun clearTimingAlerts() {
+        center.removeDeliveredNotificationsWithIdentifiers(listOf(TIMER, ALARM))
+    }
+
+    override fun timingTone() {
+        beep?.let { AudioServicesPlaySystemSound(it) }
+    }
+
+    /** An alert's words as Android's: the title, and the app's name under it; the alert sound; Stop (Android: TimingAlerts.notify). */
+    private fun timingContent(title: String): UNMutableNotificationContent = UNMutableNotificationContent().apply {
+        setTitle(title)
+        setBody(NSBundle.mainBundle.objectForInfoDictionaryKey("CFBundleDisplayName") as? String ?: "Street Gym")
+        setSound(UNNotificationSound.defaultSound)
+        setCategoryIdentifier(TIMING)
     }
 
     private fun beepFile(): NSURL? {

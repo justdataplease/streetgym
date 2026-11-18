@@ -72,6 +72,16 @@ class AppSettings(private val store: KeyValueStore) {
         get() = flag(KEY_INSPECT_ALL_DAYS, default = false)
         set(value) = store.set(KEY_INSPECT_ALL_DAYS, value.toString())
 
+    /** Parks as a list rather than the map (Android: preferences "streetgym_parks", "show_list"). */
+    var parksList: Boolean
+        get() = flag(KEY_PARKS_LIST, default = false)
+        set(value) = store.set(KEY_PARKS_LIST, value.toString())
+
+    /** The Parks map asked for the location once; then only its button asks (Android: "streetgym_parks", "location_asked"). */
+    var parksLocationAsked: Boolean
+        get() = flag(KEY_PARKS_LOCATION_ASKED, default = false)
+        set(value) = store.set(KEY_PARKS_LOCATION_ASKED, value.toString())
+
     /** "How do you feel today?": the pick for today's classes, Normal again the next local day. */
     fun intensityToday(now: Long, zone: TimeZone): Intensity =
         if (store.get(KEY_INTENSITY_DAY)?.toLongOrNull() == LocalDays.epochDay(now, zone)) Intensity.fromName(store.get(KEY_INTENSITY))
@@ -98,5 +108,7 @@ class AppSettings(private val store: KeyValueStore) {
         const val KEY_SHARE_PROGRESS = "streetgym_settings.share_progress"
         const val KEY_DEVELOPER_UNLOCKED = "streetgym_settings.developer_unlocked"
         const val KEY_INSPECT_ALL_DAYS = "streetgym_settings.inspect_all_days"
+        const val KEY_PARKS_LIST = "streetgym_parks.show_list"
+        const val KEY_PARKS_LOCATION_ASKED = "streetgym_parks.location_asked"
     }
 }

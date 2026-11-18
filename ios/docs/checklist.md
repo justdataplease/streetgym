@@ -2,7 +2,7 @@
 
 Every feature of the Android app (2.14.1, versionCode 58), one line each, in the order a user meets them: the iPhone app is done when every line is ticked.
 `[x]` is on iPhone now (in `ios-streetgym`, checked in its code), `[ ]` is to build. Pointers name the Android file under `android-streetgym/app/src/main/java/com/justdataplease/streetgym/` (→ the iPhone file where it is built); **engine**: the rule is already in `android-streetgym/shared/`; **iPhone API**: the Apple framework it needs; **owner**: it can't be finished without the owner.
-Written 18 Nov 2026; updated the same day after rounds 1 to 7.
+Written 18 Nov 2026; updated the same day after rounds 1 to 9.
 
 ## Count
 
@@ -18,23 +18,23 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 7.
 | 8. Finishing, repeats and exams | 15 | 15 | 0 | 0 |
 | 9. Training › Levels | 19 | 19 | 0 | 0 |
 | 10. Training › My workouts | 22 | 22 | 0 | 0 |
-| 11. Training › Library | 11 | 0 | 11 | 0 |
+| 11. Training › Library | 11 | 11 | 0 | 0 |
 | 12. Progress › History and the streak | 14 | 14 | 0 | 0 |
 | 13. Progress › Skills | 11 | 11 | 0 | 0 |
-| 14. Timer | 8 | 0 | 8 | 0 |
-| 15. Training › Parks | 15 | 0 | 15 | 1 |
+| 14. Timer | 8 | 8 | 0 | 0 |
+| 15. Training › Parks | 15 | 14 | 1 | 1 |
 | 16. Progress › Leaderboard | 14 | 0 | 14 | 9 |
 | 17. Settings | 22 | 21 | 1 | 0 |
 | 18. Themes | 5 | 5 | 0 | 0 |
 | 19. Plans and purchases | 22 | 0 | 22 | 8 |
 | 20. Ads and consent | 11 | 0 | 11 | 4 |
 | 21. Account, sign-in, cloud backups and restore | 17 | 0 | 17 | 17 |
-| 22. Notifications and sounds | 6 | 2 | 4 | 0 |
+| 22. Notifications and sounds | 6 | 6 | 0 | 0 |
 | 23. Home-screen widget | 10 | 0 | 10 | 7 |
 | 24. Sharing and progress analytics | 6 | 0 | 6 | 5 |
-| 25. Accessibility and languages | 12 | 11 | 1 | 0 |
-| 26. Anything else | 2 | 0 | 2 | 0 |
-| **All** | **344** | **221** | **123** | **52** |
+| 25. Accessibility and languages | 12 | 12 | 0 | 0 |
+| 26. Anything else | 2 | 1 | 1 | 1 |
+| **All** | **344** | **260** | **84** | **53** |
 
 "Waiting on the owner" counts lines still to build whose last step needs the owner; most can be built and tested first with a test double (a `.storekit` file, Google's demo ad units, a made-up profile).
 
@@ -237,17 +237,17 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 7.
 
 ## 11. Training › Library
 
-- [ ] Intro: "Ready workouts for days off the program…" (HomeActivity.renderReadyWorkouts)
-- [ ] Effort chips: Any effort, Easy / Moderate / Hard for you, each in its colour when picked (renderReadyWorkouts, WorkoutListsUi.filterChips; **engine** WorkoutEffort)
-- [ ] Grade chips: All levels, Beginner, Intermediate, Advanced, Master, Elite (renderReadyWorkouts)
-- [ ] Focus chips: Any focus, the groups and the skill families that have workouts (renderReadyWorkouts, READY_FOCUS)
-- [ ] "N workouts" with Clear filters when filtered; "No workout matches. Try fewer filters." (renderReadyWorkouts)
-- [ ] Workouts under their group headings; Aches & posture opens with its doctor-first note (renderReadyWorkouts)
-- [ ] Cards: tile, name, the Pro tag below Pro, "Intermediate · 6 exercises · About 30 min · Moderate for you", the description (libraryCard, readyMeta)
-- [ ] Neck at the Desk, Upper Back Reset, Chest Opener and Low Back Basics open on every tier, untagged (HomeActivity.readyLocked; **engine** TrainingProgram.free)
-- [ ] Below Pro, a Pro workout opens the Ready offer, and its page shows only the name, meta and Unlock (libraryCard, renderOverview)
-- [ ] Ready workout page: meta, effort, description, safety line, exercises, heart, Start workout; no Complete day, no intensity row (renderOverview)
-- [ ] Runs as written, any time: Normal, every skill on; earns points and ranks; never completes a class (HomeActivity.canStart, switchesFor; **engine** ReadyWorkouts)
+- [x] Intro: "Ready workouts for days off the program…" (HomeActivity.renderReadyWorkouts → ReadyScreen.kt ReadyWorkouts)
+- [x] Effort chips: Any effort, Easy / Moderate / Hard for you, each in its colour when picked (renderReadyWorkouts, WorkoutListsUi.filterChips → ReadyScreen.ChipRow, MyWorkouts.FilterChip; **engine** WorkoutEffort)
+- [x] Grade chips: All levels, Beginner, Intermediate, Advanced, Master, Elite (renderReadyWorkouts → ReadyScreen)
+- [x] Focus chips: Any focus, the groups and the skill families that have workouts (renderReadyWorkouts, READY_FOCUS → data/ReadyLibrary.kt FOCUS, focuses)
+- [x] "N workouts" with Clear filters when filtered; "No workout matches. Try fewer filters." (renderReadyWorkouts → ReadyScreen; the filters kept while the app runs by Shell, ReadyFilter)
+- [x] Workouts under their group headings; Aches & posture opens with its doctor-first note (renderReadyWorkouts → ReadyLibrary.groups)
+- [x] Cards: tile, name, the Pro tag below Pro, "Intermediate · 6 exercises · About 30 min · Moderate for you", the description (libraryCard, readyMeta → MyWorkouts.LibraryCard)
+- [x] Neck at the Desk, Upper Back Reset, Chest Opener and Low Back Basics open on every tier, untagged (HomeActivity.readyLocked → AppModel.readyLocked; **engine** TrainingProgram.free)
+- [x] Below Pro, a Pro workout opens the Ready offer, and its page shows only the name, meta and Unlock (libraryCard, renderOverview → LibraryCard, ClassScreen; the offer shows its heading and line until round 10)
+- [x] Ready workout page: meta, effort, description, safety line, exercises, heart, Start workout; no Complete day, no intensity row (renderOverview → ClassScreen)
+- [x] Runs as written, any time: Normal, every skill on; earns points and ranks; never completes a class (HomeActivity.canStart, switchesFor → AppModel.canStart, start, leftOutBy; **engine** ReadyWorkouts, CustomDays.offProgram)
 
 ## 12. Progress › History and the streak
 
@@ -282,32 +282,32 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 7.
 
 ## 14. Timer
 
-- [ ] Timer / Stopwatch / Alarm, the last one kept (ui/TimingPanel.kt, timer/TimingStore.kt)
-- [ ] Timer: big digits of even width; a tap sets hours, minutes and seconds; "Choose a duration" for none (TimingPanel.durationPicker, tabular)
-- [ ] Timer: Start, Pause, Resume and Reset; the line under it says Counting down, Time's up, Paused or "Tap the time to change it" (TimingPanel.refresh; timer/TimingState.kt Countdown)
-- [ ] Presets 30 sec, 1 min, 3 min, greyed while it runs (TimingPanel.build)
-- [ ] A running timer or stopwatch carries on with the app closed (TimingStore)
-- [ ] Stopwatch: hundredths, Running / Paused / Ready, Start / Pause / Resume, Lap / Reset, laps newest first, up to 100 (TimingPanel; TimingState Stopwatch)
-- [ ] Alarm: the time in the phone's 12- or 24-hour format; a tap picks it; "Wed, 5 Nov · One time"; Set alarm / Turn off (TimingPanel.alarmPicker; TimingState.nextAlarm)
-- [ ] The alarm follows a change of clock or time zone (timer/TimingAlerts.kt TimingReceiver)
+- [x] Timer / Stopwatch / Alarm, the last one kept (ui/TimingPanel.kt, timer/TimingStore.kt → TimerScreen.kt, data/Timing.kt TimingStore, under Android's key and JSON names)
+- [x] Timer: big digits of even width; a tap sets hours, minutes and seconds; "Choose a duration" for none (TimingPanel.durationPicker, tabular → TimerScreen.ClockReadout, TabularText, DurationDialog's three wheels)
+- [x] Timer: Start, Pause, Resume and Reset; the line under it says Counting down, Time's up, Paused or "Tap the time to change it" (TimingPanel.refresh; timer/TimingState.kt Countdown → TimerScreen.TimerPanel, Timing.kt Countdown)
+- [x] Presets 30 sec, 1 min, 3 min, greyed while it runs (TimingPanel.build → TimerScreen; as on Android they stop answering while it runs, their look unchanged)
+- [x] A running timer or stopwatch carries on with the app closed (TimingStore → Timing.kt on an elapsed clock that runs through sleep, IosTiming.kt CLOCK_MONOTONIC, and the wall clock after a restart of the phone, kern.boottime)
+- [x] Stopwatch: hundredths, Running / Paused / Ready, Start / Pause / Resume, Lap / Reset, laps newest first, up to 100 (TimingPanel; TimingState Stopwatch → TimerScreen, Timing.kt Stopwatch)
+- [x] Alarm: the time in the phone's 12- or 24-hour format; a tap picks it; "Wed, 5 Nov · One time"; Set alarm / Turn off (TimingPanel.alarmPicker; TimingState.nextAlarm → AlarmTimeDialog, Timing.kt nextAlarm on kotlinx-datetime, pinned to Android's Calendar code by TimerTest in ten zones; the phone's clock from NSDateFormatter's "j")
+- [x] The alarm follows a change of clock or time zone (timer/TimingAlerts.kt TimingReceiver → Timing.timeChanged on NSSystemClockDidChange and NSSystemTimeZoneDidChange, and on each return to the app; the alert itself is a calendar trigger on the wall clock)
 
 ## 15. Training › Parks
 
-- [ ] Free: "More than 70,000 outdoor workout parks…", "Example: parks in Athens", a still map of 12 Athens parks under the layer with Plus and Unlock; a tap opens the Parks offer; a list of five where the map can't start (HomeActivity.renderParksExample; data/parks/Parks.kt EXAMPLE)
-- [ ] Plus: "Loading parks…", then a Map / List switch, kept (HomeActivity.renderParks)
-- [ ] Search: "City or park name" and Search; every word must match, nearest first once located (HomeActivity.searchParks, Parks.search)
-- [ ] Map: OpenFreeMap tiles, dark on Night Park; green pins in clusters with counts ("26k"); a tap on a cluster zooms in (ui/ParksMap.kt; **iPhone API**: MapLibre iOS)
-- [ ] A tap on a pin: a card with its name, distance and Directions (ParksMap.showCard)
-- [ ] Location button: a blue dot with the 5 nearest parks in view; the button is grey until located (ParksMap.showNearby; **iPhone API**: CoreLocation, approximate, with its Info.plist text)
-- [ ] The map opens on the athlete: location is asked once, then only from the button (renderParks)
-- [ ] A search on the map frames the matches; one match opens its card; none says "No park matches." (searchParks, ParksMap.focus)
-- [ ] Under the map: "© OpenStreetMap contributors. Your location isn't sent.", and the map's ⓘ credit (renderParks)
-- [ ] List: "73,303 workout parks worldwide…", Parks near me, "Nearest to you" or "Matches for “x”", "Tap a park for directions…", rows with "350 m away" or "2.4 km away", the OpenStreetMap credit (renderParks)
-- [ ] A tap on a park, or Directions, opens the phone's maps app at it (HomeActivity.openPark; iPhone: Apple Maps link)
-- [ ] "Finding your location…", "Couldn't get your location. Search by city instead.", "Location is off for Street Gym…" (HomeActivity.locateForParks)
-- [ ] The last known fix shows at once; a fresh one follows when it is over 10 minutes old (locateForParks)
-- [ ] Leaving the tab keeps the map, so coming back shows it at once (HomeActivity.setBody)
-- [ ] Parks ship with the app (assets/spots.tsv); a weekly check takes the quarterly file when it isn't far smaller (data/parks/ParksUpdater.kt; **owner**: parks_url comes with the Firebase iPhone setup)
+- [x] Free: "More than 70,000 outdoor workout parks…", "Example: parks in Athens", a still map of 12 Athens parks under the layer with Plus and Unlock; a tap opens the Parks offer; a list of five where the map can't start (HomeActivity.renderParksExample; data/parks/Parks.kt EXAMPLE → ParksScreen.ParksExample, Kit.LockedLayer, data/Parks.kt EXAMPLE)
+- [x] Plus: "Loading parks…", then a Map / List switch, kept (HomeActivity.renderParks → ParksScreen, AppSettings.parksList under Android's "streetgym_parks" "show_list")
+- [x] Search: "City or park name" and Search; every word must match, nearest first once located (HomeActivity.searchParks, Parks.search → ParksState.search, Parks.search, checked against Android's code)
+- [x] Map: OpenFreeMap tiles, dark on Night Park; pins in the theme's colour in clusters with counts ("26k"); a tap on a cluster zooms in (ui/ParksMap.kt; **iPhone API**: MapLibre iOS → iosApp/StreetGym/ParksMapLibre.swift through ParksMap and UIKitView; Swift, first compiled by the Mac CI)
+- [x] A tap on a pin: a card with its name, distance and Directions (ParksMap.showCard → ParksScreen.ParksMapFrame, drawn by Compose over the map)
+- [x] Location button: a blue dot with the 5 nearest parks in view; the button is grey until located (ParksMap.showNearby → ParksMapFrame, ParksMap.showNearby; **iPhone API**: CoreLocation, approximate, with its Info.plist text → IosLocation.kt)
+- [x] The map opens on the athlete: location is asked once, then only from the button (renderParks → ParksState.mapOpened, AppSettings.parksLocationAsked under Android's "location_asked")
+- [x] A search on the map frames the matches; one match opens its card; none says "No park matches." (searchParks, ParksMap.focus → ParksState.search)
+- [x] Under the map: "© OpenStreetMap contributors. Your location isn't sent.", and the map's ⓘ credit (renderParks → ParksScreen; MapLibre's own attribution button)
+- [x] List: "73,303 workout parks worldwide…", Parks near me, "Nearest to you" or "Matches for “x”", "Tap a park for directions…", rows with "350 m away" or "2.4 km away", the OpenStreetMap credit (renderParks → ParksScreen.ParksList, distanceText; Android's "%1$.1f" written by DisplayText.oneDecimal, checked against String.format)
+- [x] A tap on a park, or Directions, opens the phone's maps app at it (HomeActivity.openPark; iPhone: Apple Maps link → Parks.mapsLink, IosLocation.openDirections)
+- [x] "Finding your location…", "Couldn't get your location. Search by city instead.", "Location is off for Street Gym…" (HomeActivity.locateForParks → ParksState.locate, requestNearMe, ParksNote)
+- [x] The last known fix shows at once; a fresh one follows when it is over 10 minutes old (locateForParks → ParksState.locate; Core Location's last location, then requestLocation)
+- [x] Leaving the tab keeps the map, so coming back shows it at once (HomeActivity.setBody → ParksState.map, the same MapLibre view shown again)
+- [ ] Parks ship with the app (assets/spots.tsv); a weekly check takes the quarterly file when it isn't far smaller (data/parks/ParksUpdater.kt; **owner**: parks_url comes with the Firebase iPhone setup. The bundled file is in (read in at build time, data/Parks.kt BundledParks); the check waits behind ParksSource.update, with Android's ParksPolicy ported)
 
 ## 16. Progress › Leaderboard
 
@@ -434,10 +434,10 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 7.
 
 - [x] End of a rest: a beep when Rest timer sound is on (HomeActivity.onRestFinished → Training.tick, MainViewController's AudioToolbox system sound; a local notification with the same beep for a rest that ends with the app in the background, shown once alerts are allowed: Android asks only from the Timer's Enable alerts, so the iPhone asks there too, round 8)
 - [x] End of a timed set: a beep (Rest timer sound) and a vibration (FocusWorkoutView host.holdFinished, TimingAlerts.tone, vibrate → Training.tick, MainViewController: AudioToolbox and kSystemSoundID_Vibrate; the vibration is checked on a real iPhone, as the Simulator doesn't vibrate)
-- [ ] Timer's end and the alarm in the background: an alert "Time's up" or "Alarm" with sound, vibration and Stop (timer/TimingAlerts.kt notify; **iPhone API**: UserNotifications, or AlarmKit on iOS 26 to ring like an alarm)
-- [ ] In the app: a "Time's up" or "Alarm" dialog with Stop and a beep (HomeActivity.timingTick)
-- [ ] A tap on the alert opens the Timer tab (TimingAlerts.open, HomeActivity.onNewIntent)
-- [ ] Alerts off: "Background alerts are off. Enable alerts" under the Timer and Alarm, and "Enable alerts" on the alarm's button, ask for permission or open Settings (TimingPanel alertsHint, HomeActivity.enableTimingNotifications; iPhone has no exact-alarm switch, so "Enable alarms" goes)
+- [x] Timer's end and the alarm in the background: an alert "Time's up" or "Alarm" with sound, vibration and Stop (timer/TimingAlerts.kt notify → MainViewController.kt PhoneDevice.timerAlert, alarmAlert; **iPhone API**: UserNotifications, a time-interval trigger for the timer and a calendar trigger on the wall clock for the alarm, a "timing" category with Stop; it rings once with the phone's alert sound, as iPhone alerts can't loop like Android's insistent one; AlarmKit on iOS 26 could ring like an alarm)
+- [x] In the app: a "Time's up" or "Alarm" dialog with Stop and a beep (HomeActivity.timingTick → Shell, TimerScreen.RingingDialog; checked every second on any screen; the beep when alerts are off, else the alert shows over the app with its sound)
+- [x] A tap on the alert opens the Timer tab (TimingAlerts.open, HomeActivity.onNewIntent → IosTiming.kt's notification-centre delegate, PhoneEvent.OpenTimer; Stop or swiping the alert away stops it, the app running or not)
+- [x] Alerts off: "Background alerts are off. Enable alerts" under the Timer and Alarm, and "Enable alerts" on the alarm's button, ask for permission or open Settings (TimingPanel alertsHint, HomeActivity.enableTimingNotifications → Timing.enableAlerts: asks the first time, then opens the app's notification settings; iPhone has no exact-alarm switch, so "Enable alarms" goes)
 
 ## 23. Home-screen widget
 
@@ -476,12 +476,12 @@ Android has no share sheet; its one sharing feature is Share my progress.
 - [x] Spoken strength-test counters and their − and + ("One rep more, Strict pull-ups") (PlacementView.countTile → CountTile)
 - [x] Spoken theme rows with "selected", level cards with progress and tier, class rows with their state (ThemeDecor.themePicker, HomeActivity.levelCard, ProgramListAdapter → ThemePicker, TrainingScreen, LevelScreen)
 - [x] Reduced motion also stills the park scene and the heart's pop (ParkSceneView, heartButton → ParkScene, LoadingFigure, HeartButton, LocalReduceMotion; **iPhone API**: UIAccessibilityIsReduceMotionEnabled, read at launch)
-- [ ] Large text keeps every control on screen: the focus view cuts its info first (FocusWorkoutView.screen)
+- [x] Large text keeps every control on screen: the focus view cuts its info first (FocusWorkoutView.screen → FocusScreen: the figure gives way, names and labels end in "…"; the title bar grows and its ‹ keeps its size; seen at 160% and 220% in workout-set-text-*.png)
 
 ## 26. Anything else
 
-- [ ] Back after the phone closed the app in the background: the same screen and tabs, the unsaved builder, the strength test's counts and the running rest (HomeActivity.onSaveInstanceState; **iPhone API**: state restoration)
-- [ ] Landscape: the focus view and the Timer lay out side by side (FocusWorkoutView.screen, TimingPanel.build; the iPhone app is portrait-only in project.yml)
+- [x] Back after the phone closed the app in the background: the same screen and tabs, the unsaved builder, the strength test's counts and the running rest (HomeActivity.onSaveInstanceState → ui/Restore.kt, Shell; **iPhone API**: SwiftUI's @SceneStorage in StreetGymApp.swift, which iOS drops when the athlete closes the app, as Android drops its saved state)
+- [ ] Landscape: the focus view and the Timer lay out side by side (FocusWorkoutView.screen, TimingPanel.build; the iPhone app is portrait-only in project.yml. The Timer's side-by-side layout is built (TimerScreen, timer-landscape-*.png); the focus view's isn't, and turning landscape on is the owner's decision)
 
 ## Build order
 
@@ -494,8 +494,8 @@ Thirteen rounds of about 20 to 28 lines, each one sitting's build and test, in t
 5. **Settings and themes** (23): §17 but During your workout and Simulate tier; §18; the back swipe (§1); spoken theme rows. Done 18 Nov 2026. The switches act where Android's do (the sequence, class rows and pages, both workout views, exams, Skills and so the points), kept under Android's keys; the theme, Start over, the developer settings and Inspect all days too. Settings leaves out what needs an account or a purchase (Profile, Plus and Pro, Your data, Ad privacy) until their rounds.
 6. **The strength test and the park scene** (24): §2; the park scene and its replay (§3); the loading screen and load error (§1); spoken park scene and counters; reduced motion for the park and the heart. Done 18 Nov 2026 (the heart's pop with round 7). ParkStory is common Kotlin on kotlinx-datetime (`figure/ParkStory.kt`), checked frame by frame against 24 days Android's own code wrote (`desktopTest/resources/park-android.json`, every one of the 21 routines). The share switch is kept; its uploads come with round 13.
 7. **My workouts** (23): §10; a Library or own workout in progress taking Today's card. Done 18 Nov 2026: the library is kept by the engine's LibraryCodec under Android's key (`data/LibraryStore.kt`, `streetgym_library.state`). The offers it opens (Saved, Custom, Lists) show their heading with Cancel until round 10, as the level offers do.
-8. **Library and Timer** (23): §11; §14; the timer and alarm alerts (§22). Needs: round 7 (the heart on a ready workout); UserNotifications, which the Simulator runs.
-9. **Parks** (18): §15; large text (§25); coming back after the phone closed the app, and landscape (§26). Needs: MapLibre iOS through Swift Package Manager in a UIKitView; CoreLocation; `spots.tsv` in the bundle (5 MB). The weekly refresh waits for the owner's Firebase setup.
+8. **Library and Timer** (23): §11; §14; the timer and alarm alerts (§22). Done 18 Nov 2026. The Timer's clocks are kept under Android's key and JSON names (`data/Timing.kt`) on an elapsed clock that runs through sleep (CLOCK_MONOTONIC), the alarm's day on kotlinx-datetime, pinned to Android's java.util.Calendar code in ten zones. Its alerts go through UserNotifications (a "timing" category with Stop, a delegate set before launch ends); Enable alerts asks for them, which also lets the workout's background rest show.
+9. **Parks** (18): §15; large text (§25); coming back after the phone closed the app, and landscape (§26). Done 18 Nov 2026 but the weekly parks refresh (waits for the owner's Firebase setup; behind `ParksSource`) and landscape (the Timer's side-by-side layout is built; the focus view's and turning landscape on wait for the owner's decision). The map is MapLibre Native 6.31 in Swift (`iosApp/StreetGym/ParksMapLibre.swift`, unverified until the Mac build), shown through UIKitView; the desktop draws a stand-in with the parks as dots. Location through Core Location (`IosLocation.kt`), approximate. Coming back after the phone closed the app: SwiftUI's @SceneStorage holds `ui/Restore.kt`'s text.
 10. **Plans and purchases** (25): §19, with the plans in the offer that Unlock and the tier tags open (now its heading, line and Cancel); Simulate tier. Needs: StoreKit 2 in Swift behind a Kotlin `Store` interface, tested with a `.storekit` file; the owner's products for the sandbox check.
 11. **Widget and ads** (21): §23; §20. Needs: a WidgetKit extension and an App Group (owner); the Google Mobile Ads SDK and UMP with demo units, then the owner's AdMob app, units and consent message.
 12. **Account and cloud backups** (18): §21; the park's "Well done, <name>!". Needs: the owner's Firebase iPhone app; Firebase iOS SDK, GoogleSignIn and Sign in with Apple, bridged from Swift.

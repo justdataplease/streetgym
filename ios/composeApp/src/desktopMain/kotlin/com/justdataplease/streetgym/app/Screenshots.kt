@@ -69,6 +69,16 @@ import com.justdataplease.streetgym.app.ui.Screen
 import com.justdataplease.streetgym.app.ui.pageBackground
 import com.justdataplease.streetgym.data.progress.NextClass
 import com.justdataplease.streetgym.ui.WorkoutFlow
+import com.justdataplease.streetgym.app.data.Alerts
+import com.justdataplease.streetgym.app.data.Paywall
+import com.justdataplease.streetgym.app.data.PhoneLocation
+import com.justdataplease.streetgym.app.data.ReadyFilter
+import com.justdataplease.streetgym.app.data.Timing
+import com.justdataplease.streetgym.app.data.TimingStore
+import com.justdataplease.streetgym.app.data.WallClock
+import com.justdataplease.streetgym.app.data.WorkoutDevice
+import com.justdataplease.streetgym.app.ui.TRAINING_LIBRARY
+import com.justdataplease.streetgym.app.ui.TRAINING_PARKS
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.resources.painterResource
@@ -97,6 +107,18 @@ private class ShotClock(var time: Long = NOW)
 fun main(args: Array<String>) {
     val out = File(args.firstOrNull() ?: "build/screenshots").apply { mkdirs() }
     val program = runBlocking { loadProgram() }
+    // `-Ponly=ready+timer+parks`: only those rounds' pictures.
+    val only = args.getOrNull(1)?.split(',', '+')?.map(String::trim)?.toSet()
+    if (only != null) {
+        for (theme in StreetTheme.entries) {
+            if ("ready" in only) readyShots(program, theme, out)
+            if ("timer" in only) timerShots(program, theme, out)
+            if ("parks" in only) parksShots(program, theme, out)
+            if ("workout" in only) workoutShots(program, theme, out)
+        }
+        println("Screenshots in ${out.absolutePath}")
+        return
+    }
     val athlete = athlete(program)
     val nextId = athlete.today().next!!.id
     shot(File(out, "today.png")) { StreetGymApp(athlete, SAFE_AREA) }
@@ -117,6 +139,9 @@ fun main(args: Array<String>) {
     for (theme in StreetTheme.entries) settingsShots(program, theme, out)
     for (theme in StreetTheme.entries) placementShots(program, theme, out)
     for (theme in StreetTheme.entries) libraryShots(program, theme, out)
+    for (theme in StreetTheme.entries) readyShots(program, theme, out)
+    for (theme in StreetTheme.entries) timerShots(program, theme, out)
+    for (theme in StreetTheme.entries) parksShots(program, theme, out)
     shot(File(out, "start-buttons.png"), height = 1560) { StartButtons() }
     val names = movementNames()
     for (theme in StreetTheme.entries) FIGURE_SHEETS.forEachIndexed { index, ids ->
@@ -226,6 +251,12 @@ private fun workoutShots(program: Program, theme: StreetTheme, out: File) {
             ?: flow.steps.indices.first { flow[it].section == "main" }
     }
     shot(File(out, "workout-set-$name.png")) { StreetGymApp(set, SAFE_AREA, startAt = Screen.Workout(setId)) }
+    // The largest text sizes: every control stays on screen, the figure and the notes give way first.
+    for (scale in listOf(1.6f, 2.2f)) shot(File(out, "workout-set-text-${(scale * 100).toInt()}-$name.png")) {
+        CompositionLocalProvider(LocalDensity provides Density(DENSITY, fontScale = scale)) {
+            StreetGymApp(set, SAFE_AREA, startAt = Screen.Workout(setId))
+        }
+    }
 
     val (hold, holdId) = training { flow -> flow.steps.indices.first { flow[it].set.repetitions == null && (flow[it].set.durationSeconds ?: 0) > 0 } }
     (hold.training.state()!!.page as FocusPage.Set).let { page ->
@@ -585,6 +616,157 @@ private fun libraryShots(program: Program, theme: StreetTheme, out: File) {
         showing = Shown.Offer(com.justdataplease.streetgym.app.data.Paywall.Custom)) }
     shot(File(out, "offer-lists-$name.png")) { StreetGymApp(free, SAFE_AREA, startAt = Screen.Training, trainingTab = 1,
         showing = Shown.Offer(com.justdataplease.streetgym.app.data.Paywall.Lists(3))) }
+}
+
+/**
+ * Round 8, Training › Library, in [theme]: the top of the list and the whole of it, filtered, with nothing left, on Plus
+ * with the Pro tags and its offer, a ready workout's page, and a locked one's.
+ */
+private fun readyShots(program: Program, theme: StreetTheme, out: File) {
+    val name = theme.key
+    val athlete = athlete(program).apply { this.theme = theme }
+    val library = Screen.Training
+    shot(File(out, "library-$name.png")) { StreetGymApp(athlete, SAFE_AREA, startAt = library, trainingTab = TRAINING_LIBRARY) }
+    shot(File(out, "library-long-$name.png"), height = LONG_HEIGHT) {
+        StreetGymApp(athlete, SAFE_AREA, startAt = library, trainingTab = TRAINING_LIBRARY)
+    }
+    shot(File(out, "library-filtered-$name.png")) {
+        StreetGymApp(athlete, SAFE_AREA, startAt = library, trainingTab = TRAINING_LIBRARY, readyFilter = ReadyFilter(grade = 1, focus = "legs"))
+    }
+    shot(File(out, "library-none-$name.png")) {
+        StreetGymApp(athlete, SAFE_AREA, startAt = library, trainingTab = TRAINING_LIBRARY,
+            readyFilter = ReadyFilter(effort = Effort.HARD, grade = 1, focus = "mobility"))
+    }
+    val plus = athlete(program, tier = Tier.PLUS).apply { this.theme = theme }
+    shot(File(out, "library-plus-long-$name.png"), height = 9_000) {
+        StreetGymApp(plus, SAFE_AREA, startAt = library, trainingTab = TRAINING_LIBRARY, readyFilter = ReadyFilter(focus = "problems"))
+    }
+    shot(File(out, "offer-ready-$name.png")) {
+        StreetGymApp(plus, SAFE_AREA, startAt = library, trainingTab = TRAINING_LIBRARY, showing = Shown.Offer(Paywall.Ready))
+    }
+    val ready = program.catalog.workouts.first { !it.free && it.group == "full" }
+    shot(File(out, "ready-class-long-$name.png"), height = LONG_HEIGHT) { StreetGymApp(athlete, SAFE_AREA, startAt = Screen.Class(ready.id)) }
+    shot(File(out, "ready-locked-$name.png")) { StreetGymApp(plus, SAFE_AREA, startAt = Screen.Class(ready.id)) }
+}
+
+/** A Timer on the pictures' fixed clock, over [store], with alerts [alerts] as the phone says. */
+private fun shotTiming(store: MemoryStore, clock: ShotClock, alerts: Alerts = Alerts.ALLOWED, hour24: Boolean = true): Timing =
+    Timing(TimingStore(store, WallClock { clock.time }), object : WorkoutDevice {
+        override fun alerts(result: (Alerts) -> Unit) = result(alerts)
+    }, { TimeZone.UTC }, hour24)
+
+/**
+ * Round 8, the Timer tab, in [theme]: the timer as it opens and counting down, with alerts off, its duration's picker;
+ * the stopwatch with laps; the alarm set, on a 12-hour clock with alerts off, its time's picker; "Time's up" over Today;
+ * and the timer in landscape.
+ */
+private fun timerShots(program: Program, theme: StreetTheme, out: File) {
+    val name = theme.key
+    fun timer(alerts: Alerts = Alerts.ALLOWED, hour24: Boolean = true, setUp: (Timing, ShotClock) -> Unit = { _, _ -> }): AppModel {
+        val clock = ShotClock(NOW - 10 * MINUTE)
+        val store = MemoryStore()
+        val timing = shotTiming(store, clock, alerts, hour24)
+        timing.refreshAlerts()
+        setUp(timing, clock)
+        clock.time = NOW
+        timing.tick()
+        com.justdataplease.streetgym.app.data.AppSettings(store).placementDone = true
+        return AppModel(program, StoredProgress(store), now = { clock.time }, zone = TimeZone.UTC,
+            settings = com.justdataplease.streetgym.app.data.AppSettings(store), timing = timing).apply { this.theme = theme }
+    }
+    shot(File(out, "timer-$name.png")) { StreetGymApp(timer(), SAFE_AREA, startAt = Screen.Timer) }
+    val running = timer { timing, clock ->
+        clock.time = NOW - 18_300L
+        timing.timerPrimary()
+    }
+    shot(File(out, "timer-running-$name.png")) { StreetGymApp(running, SAFE_AREA, startAt = Screen.Timer) }
+    shot(File(out, "timer-alerts-off-$name.png")) { StreetGymApp(timer(Alerts.NOT_ASKED), SAFE_AREA, startAt = Screen.Timer) }
+    val picker = timer()
+    shot(File(out, "timer-picker-$name.png")) {
+        OverDialog(picker, Screen.Timer) { com.justdataplease.streetgym.app.ui.DurationDialog(90_000L, {}) {} }
+    }
+    val watch = timer { timing, clock ->
+        timing.selectTab(1)
+        clock.time = NOW - 95_420L
+        timing.stopwatchPrimary()
+        for (lap in listOf(31_220L, 30_480L, 29_950L)) {
+            clock.time += lap
+            timing.stopwatchSecondary()
+        }
+    }
+    shot(File(out, "stopwatch-$name.png")) { StreetGymApp(watch, SAFE_AREA, startAt = Screen.Timer) }
+    val alarm = timer { timing, _ ->
+        timing.selectTab(2)
+        timing.setAlarmTime(6, 30)
+        timing.alarmPrimary()
+    }
+    shot(File(out, "alarm-$name.png")) { StreetGymApp(alarm, SAFE_AREA, startAt = Screen.Timer) }
+    val twelve = timer(Alerts.NOT_ASKED, hour24 = false) { timing, _ -> timing.selectTab(2) }
+    shot(File(out, "alarm-12h-alerts-off-$name.png")) { StreetGymApp(twelve, SAFE_AREA, startAt = Screen.Timer) }
+    shot(File(out, "alarm-picker-$name.png")) {
+        OverDialog(twelve, Screen.Timer) { com.justdataplease.streetgym.app.ui.AlarmTimeDialog(18, 45, hour24 = false, onClose = {}) { _, _ -> } }
+    }
+    val rang = timer { timing, clock ->
+        timing.timerPrimary()
+        clock.time += 61_000L
+        timing.checkDue()
+    }
+    shot(File(out, "timer-ringing-$name.png")) { StreetGymApp(rang, SAFE_AREA) }
+    shot(File(out, "timer-landscape-$name.png"), width = HEIGHT, height = WIDTH) {
+        StreetGymApp(running, PaddingValues(start = 62.dp, end = 62.dp, bottom = 21.dp), startAt = Screen.Timer)
+    }
+}
+
+/**
+ * Round 9, Training › Parks, in [theme]: Free's example under its layer (the stand-in map, and the cards where no map
+ * starts) and its offer; Plus loading, the map on the athlete with a park's card, the nearest as a list, a search's
+ * matches, and with no position yet.
+ */
+private fun parksShots(program: Program, theme: StreetTheme, out: File) {
+    val name = theme.key
+    val free = athlete(program, tier = Tier.FREE).apply { this.theme = theme }
+    shot(File(out, "parks-free-$name.png")) { StreetGymApp(free, SAFE_AREA, startAt = Screen.Training, trainingTab = TRAINING_PARKS) }
+    shot(File(out, "parks-free-cards-$name.png")) {
+        StreetGymApp(free, SAFE_AREA, startAt = Screen.Training, trainingTab = TRAINING_PARKS, maps = null)
+    }
+    shot(File(out, "offer-parks-$name.png")) {
+        StreetGymApp(free, SAFE_AREA, startAt = Screen.Training, trainingTab = TRAINING_PARKS, showing = Shown.Offer(Paywall.Parks))
+    }
+
+    fun plus(list: Boolean, setUp: (AppModel) -> Unit = {}): AppModel {
+        val store = MemoryStore()
+        val settings = com.justdataplease.streetgym.app.data.AppSettings(store)
+        settings.placementDone = true
+        settings.parksList = list
+        return AppModel(program, StoredProgress(store), tier = Tier.PLUS, now = { NOW }, zone = TimeZone.UTC, settings = settings,
+            location = PhoneLocation.Fixed(PhoneLocation.ATHENS.copy(time = NOW))).apply {
+            this.theme = theme
+            runBlocking { parks.load() }
+            setUp(this)
+        }
+    }
+    val loading = AppModel(program, StoredProgress(MemoryStore()), tier = Tier.PLUS, now = { NOW }, zone = TimeZone.UTC,
+        parksSource = object : com.justdataplease.streetgym.app.data.ParksSource {
+            override suspend fun load() = kotlinx.coroutines.awaitCancellation()
+        }).apply { this.theme = theme }
+    shot(File(out, "parks-loading-$name.png")) { StreetGymApp(loading, SAFE_AREA, startAt = Screen.Training, trainingTab = TRAINING_PARKS) }
+
+    // The map opens, finds the athlete and frames the five nearest (Android: renderParks, locateForParks); then a pin's card.
+    val map = plus(list = false)
+    shot(File(out, "parks-map-$name.png")) { StreetGymApp(map, SAFE_AREA, startAt = Screen.Training, trainingTab = TRAINING_PARKS) }
+    map.parks.card = map.parks.results?.get(1)?.park
+    shot(File(out, "parks-map-card-$name.png")) { StreetGymApp(map, SAFE_AREA, startAt = Screen.Training, trainingTab = TRAINING_PARKS) }
+    val list = plus(list = true) { it.parks.locate() }
+    shot(File(out, "parks-list-long-$name.png"), height = 9_000) {
+        StreetGymApp(list, SAFE_AREA, startAt = Screen.Training, trainingTab = TRAINING_PARKS)
+    }
+    val search = plus(list = true) {
+        it.parks.typed = "Berlin Workout park"
+        it.parks.search("Berlin Workout park")
+    }
+    shot(File(out, "parks-search-$name.png")) { StreetGymApp(search, SAFE_AREA, startAt = Screen.Training, trainingTab = TRAINING_PARKS) }
+    val nowhere = plus(list = true)
+    shot(File(out, "parks-list-$name.png")) { StreetGymApp(nowhere, SAFE_AREA, startAt = Screen.Training, trainingTab = TRAINING_PARKS) }
 }
 
 /** [screen] of [model] with [dialog] over it, drawn as the shell draws its layers. */

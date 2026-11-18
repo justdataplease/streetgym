@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -19,6 +20,8 @@ import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
@@ -44,6 +47,8 @@ import androidx.compose.ui.unit.sp
 import com.justdataplease.streetgym.app.data.AppModel
 import com.justdataplease.streetgym.app.data.Limit
 import com.justdataplease.streetgym.app.data.Paywall
+import com.justdataplease.streetgym.app.data.ReadyFilter
+import kotlinx.coroutines.delay
 import com.justdataplease.streetgym.app.resources.builder_title
 import com.justdataplease.streetgym.app.resources.lists_limit_pro
 import com.justdataplease.streetgym.app.resources.saved_limit_pro
@@ -190,24 +195,30 @@ fun Shell(
     historyDay: Int = 0,
     trainingTabAt: Int = 0,
     workoutListAt: String? = null,
+    readyFilterAt: ReadyFilter = ReadyFilter(),
+    restored: Screens? = null,
 ) {
     val theme = Street.theme
     // The screens under the one showing; the first is always a tab. A level's page opens over Training, a class over Today.
+    // After the phone closed the app in the background, the screens it had (Android: restoredScreen).
     val stack = remember {
-        mutableStateListOf<Screen>(if (startAt.nested) (if (startAt is Screen.Level) Screen.Training else Screen.Today) else startAt)
-            .apply { if (startAt.nested) add(startAt) }
+        restored?.let { mutableStateListOf(*it.stack.toTypedArray()) }
+            ?: mutableStateListOf<Screen>(if (startAt.nested) (if (startAt is Screen.Level) Screen.Training else Screen.Today) else startAt)
+                .apply { if (startAt.nested) add(startAt) }
     }
     val screen = stack.last()
     val overlay = remember { Overlay() }
     var notice by remember { mutableStateOf<Notice?>(null) }
     var shown by remember { mutableStateOf(showing) }
     // Training's tab (Levels, My workouts, Library, Parks), kept while the app runs (Android: trainingTab).
-    var trainingTab by remember { mutableIntStateOf(trainingTabAt) }
+    var trainingTab by remember { mutableIntStateOf(restored?.trainingTab ?: trainingTabAt) }
     // The list open in My workouts, null for Favorites (Android: workoutListId).
-    var workoutList by remember { mutableStateOf(workoutListAt) }
+    var workoutList by remember { mutableStateOf(restored?.workoutList ?: workoutListAt) }
+    // The Library's filters, kept while the app runs (Android: readyEffort, readyGrade, readyFocus).
+    var readyFilter by remember { mutableStateOf(readyFilterAt) }
     // Progress's tab (Skills, History, Leaderboard) and History's month and day, kept while the app runs (Android:
     // progressTab, HistoryCalendarState).
-    var progressShown by remember { mutableIntStateOf(progressTab) }
+    var progressShown by remember { mutableIntStateOf(restored?.progressTab ?: progressTab) }
     val calendar = remember { HistoryCalendarState(month = historyDay.takeIf { it != 0 }?.let(HistoryCalendar::monthOf), day = historyDay) }
     // A class asked to start while another is in progress: starting it ends the other, so the athlete is asked.
     var replacing by remember { mutableStateOf<Pair<String, Boolean>?>(null) }
@@ -237,6 +248,25 @@ fun Shell(
         }
     }
     val listView = screen is Screen.Workout && model.workoutView == WorkoutView.LIST
+    // A Timer clock or the alarm that runs out rings on any screen; a second is soon enough to notice (Android:
+    // timingTick, every second off the Timer).
+    val timing = model.timing
+    LaunchedEffect(timing) {
+        while (true) {
+            timing.checkDue()
+            delay(1_000L)
+        }
+    }
+    // Where the app is, for the phone to keep in case it closes the app in the background (Android: onSaveInstanceState).
+    LaunchedEffect(model) {
+        snapshotFlow { Restore.encode(Screens(stack.toList(), trainingTab, workoutList, progressShown), model) }
+            .collect { model.device.saveScreens(it) }
+    }
+    // A tap on a Timer alert opens the Timer tab (Android: onNewIntent's OPEN_TIMER).
+    if (timing.openRequested) LaunchedEffect(Unit) {
+        timing.openRequested = false
+        openTab(Screen.Timer)
+    }
 
     CompositionLocalProvider(LocalOverlay provides overlay, LocalSafeArea provides safeArea) {
         Box(Modifier.fillMaxSize().backSwipe(enabled = screen.nested && !overlay.shown, onBack = ::back)) {
@@ -253,7 +283,8 @@ fun Shell(
                         Screen.Training -> TrainingScreen(model, trainingTab, onTab = { trainingTab = it },
                             onOpenLevel = { open(Screen.Level(it)) }, onReturned = { openTab(Screen.Training) },
                             workoutList = workoutList, onOpenList = { workoutList = it }, onOpenDay = { open(Screen.Class(it)) },
-                            onCreate = ::create, onLimit = ::limit, onPaywall = ::paywall)
+                            onCreate = ::create, onLimit = ::limit, onPaywall = ::paywall,
+                            readyFilter = readyFilter, onReadyFilter = { readyFilter = it }, onNote = { notice = Notice.Plain(it) })
                         // Complete level returns to Training and Go back to Today, as Android opens them as the root.
                         is Screen.Level -> LevelScreen(model, screen.number, onOpenClass = { open(Screen.Class(it)) }, onOffer = ::offer,
                             onCompleted = { openTab(Screen.Training) }, onWentBack = { openTab(Screen.Today) })
@@ -287,7 +318,7 @@ fun Shell(
                             onSkill = { shown = Shown.Skill(it) }, onHelp = { shown = Shown.SkillsHelp },
                             onOpenClass = { open(Screen.Class(it)) }, onStreak = { shown = Shown.Streak(history = false) },
                         )
-                        Screen.Timer -> ToCome(stringResource(Res.string.nav_timer))
+                        Screen.Timer -> TimerScreen(model) { notice = Notice.Plain(it) }
                         Screen.Settings -> SettingsScreen(
                             model, onSwitches = { shown = Shown.Switches(it) }, onReset = { shown = Shown.Reset },
                             onDeveloper = { shown = Shown.Developer }, onNote = { notice = Notice.Plain(it) },
@@ -356,6 +387,12 @@ fun Shell(
                 Shown.Developer -> DeveloperDialog(model) { shown = null }
                 null -> Unit
             }
+            // Over everything, as Android's dialog: the beep when the phone's alert stays silent.
+            val ringing = timing.state
+            if (ringing.ringing) {
+                LaunchedEffect(Unit) { if (!timing.alertsOn) model.device.timingTone() }
+                RingingDialog(alarm = ringing.alarmRinging, onStop = timing::stop)
+            }
             OverlayLayers(overlay)
             notice?.let { note -> Note(noticeText(note)) { if (notice == note) notice = null } }
         }
@@ -407,12 +444,15 @@ private fun TitleBar(model: AppModel, screen: Screen, onBack: () -> Unit) {
 private fun TitleBarRow(title: String, nested: Boolean, onBack: () -> Unit, trailing: @Composable RowScope.() -> Unit) {
     val theme = Street.theme
     val palette = theme.palette
-    Row(Modifier.fillMaxWidth().height(56.dp).padding(end = 16.dp), verticalAlignment = Alignment.CenterVertically) {
+    // At least 56 dp: with the largest text the title grows the bar rather than being cut.
+    Row(Modifier.fillMaxWidth().heightIn(min = 56.dp).padding(end = 16.dp), verticalAlignment = Alignment.CenterVertically) {
         if (nested) {
             val back = stringResource(Res.string.back)
             Box(Modifier.size(56.dp).clickable(role = Role.Button, onClick = onBack).semantics { contentDescription = back },
                 contentAlignment = Alignment.Center) {
-                BasicText("‹", style = TextStyle(color = palette.text, fontSize = 38.sp, fontFamily = Street.type.body))
+                // An arrow in its 56 dp box, as an icon: it keeps its size with large text.
+                val scale = androidx.compose.ui.platform.LocalDensity.current.fontScale
+                BasicText("‹", style = TextStyle(color = palette.text, fontSize = (38f / scale).sp, fontFamily = Street.type.body))
             }
         } else {
             Image(painterResource(Res.drawable.ic_brand_mark), contentDescription = null, colorFilter = ColorFilter.tint(palette.mark),
@@ -495,12 +535,6 @@ fun Page(content: @Composable ColumnScope.() -> Unit) {
         Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(start = 20.dp, top = 20.dp, end = 20.dp, bottom = 28.dp),
         content = content,
     )
-}
-
-/** A tab whose screen is not built on iPhone yet. */
-@Composable
-private fun ToCome(title: String) {
-    Page { ToComeCard(title) }
 }
 
 /** The card that stands in for a screen or a tab not built on iPhone yet. */
