@@ -23,7 +23,7 @@ final class GoogleAds: NSObject, AdsBridge, FullScreenContentDelegate {
     private var interstitial: InterstitialAd?
     private var activeObserver: NSObjectProtocol?
 
-    func attach(listener: AdsBridgeListener) {
+    func attachAds(listener: AdsBridgeListener) {
         self.listener = listener
     }
 

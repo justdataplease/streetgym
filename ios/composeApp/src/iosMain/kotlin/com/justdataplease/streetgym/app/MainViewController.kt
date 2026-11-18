@@ -114,7 +114,7 @@ fun MainViewController(
     val services = PhoneServices(
         widget = widget?.let(::IosWidget) ?: HomeWidget.None,
         account = account?.let(::IosAccount) ?: Account.None,
-        documents = cloud?.let { native -> IosCloud(native).also { native.attach(it) } },
+        documents = cloud?.let { native -> IosCloud(native).also { native.attachCloud(it) } },
         region = phoneRegion(),
         appSet = VendorId,
         versionCode = build,

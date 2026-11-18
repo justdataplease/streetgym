@@ -63,7 +63,7 @@ final class FirebaseAccount: NSObject, NativeAccount {
     private var appleCode: String?
     private let apple = AppleSignIn()
 
-    func start(listener: NativeAccountListener) {
+    func startAccount(listener: NativeAccountListener) {
         self.listener = listener
         let available = FirebaseSetup.configured
         listener.configured(available: available, google: FirebaseSetup.googleReady, apple: available)
@@ -285,7 +285,7 @@ final class AppleSignIn: NSObject, ASAuthorizationControllerDelegate, ASAuthoriz
 final class FirestoreDocuments: NSObject, NativeCloud {
     private var listener: NativeCloudListener?
 
-    func attach(listener: NativeCloudListener) {
+    func attachCloud(listener: NativeCloudListener) {
         self.listener = listener
     }
 

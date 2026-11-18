@@ -52,7 +52,7 @@ import kotlin.concurrent.AtomicReference
 /** What Swift's Firebase Auth does. Each request carries a number its answer comes back with. */
 interface NativeAccount {
     /** Hands over the listener, which hears at once whether Firebase is configured and who is signed in. */
-    fun start(listener: NativeAccountListener)
+    fun startAccount(listener: NativeAccountListener)
     fun signInAnonymously(request: Long)
     /** Google ("google.com") or Apple ("apple.com"): the sign-in sheet, then link or sign in. */
     fun link(request: Long, provider: String)
@@ -85,7 +85,7 @@ interface NativeAccountListener {
 /** What Swift's Firestore does: whole documents as JSON (common Kotlin's CloudJson). */
 interface NativeCloud {
     /** Hands over the listener its answers go to. */
-    fun attach(listener: NativeCloudListener)
+    fun attachCloud(listener: NativeCloudListener)
 
     /** Reads [paths] from the server. */
     fun read(request: Long, paths: List<String>)
@@ -126,7 +126,7 @@ internal class IosAccount(private val native: NativeAccount) : Account, NativeAc
     private val finishing = mutableMapOf<Long, (Boolean) -> Unit>()
 
     init {
-        native.start(this)
+        native.startAccount(this)
     }
 
     override fun signInAnonymously(done: (AccountUser?) -> Unit) {

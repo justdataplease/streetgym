@@ -16,7 +16,7 @@ final class StoreKitStore: NSObject, NativeStore {
     private var products: [String: Product] = [:]
     private var updates: Task<Void, Never>?
 
-    func start(listener: NativeStoreListener) {
+    func startStore(listener: NativeStoreListener) {
         self.listener = listener
         // What arrives outside a purchase: Ask to Buy approved, an offer code, a renewal, a refund, another device.
         updates = Task { @MainActor [weak self] in

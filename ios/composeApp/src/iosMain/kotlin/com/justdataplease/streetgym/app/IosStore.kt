@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
  */
 interface NativeStore {
     /** Starts listening to the App Store's transactions, then loads the products and reads what the athlete has. */
-    fun start(listener: NativeStoreListener)
+    fun startStore(listener: NativeStoreListener)
 
     /** Loads the products again if they didn't come, and reads what the athlete has again. */
     fun refresh()
@@ -73,7 +73,7 @@ internal class IosStore(private val native: NativeStore) : Store, NativeStoreLis
     override fun connect() {
         if (started) native.refresh() else {
             started = true
-            native.start(this)
+            native.startStore(this)
         }
     }
 

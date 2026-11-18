@@ -30,7 +30,7 @@ import platform.UIKit.UIView
  * sees this as the protocol `AdsBridge`, and answers on the main thread through [AdsBridgeListener].
  */
 interface AdsBridge {
-    fun attach(listener: AdsBridgeListener)
+    fun attachAds(listener: AdsBridgeListener)
 
     /** UMP: the consent information brought up to date, then its form where the region needs it. */
     fun askConsent()
@@ -93,7 +93,7 @@ internal class IosAds(private val bridge: AdsBridge) : Ads, AdsBridgeListener {
     private var privacyDone: ((AdPrivacy) -> Unit)? = null
 
     init {
-        bridge.attach(this)
+        bridge.attachAds(this)
     }
 
     override fun askConsent(done: (canRequestAds: Boolean, privacyOptions: Boolean) -> Unit) {
