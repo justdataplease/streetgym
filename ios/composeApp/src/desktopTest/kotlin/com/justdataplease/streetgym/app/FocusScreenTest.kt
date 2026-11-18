@@ -2,6 +2,7 @@ package com.justdataplease.streetgym.app
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
@@ -25,7 +26,7 @@ import kotlin.test.assertTrue
 
 /**
  * The focus workout driven by taps, as the athlete trains the first class: Start workout on Today, a timed set, a set
- * of reps, the rest after it, finishing early with the effort question, and ending a session from the summary.
+ * of reps, the rest after it, finishing early with the effort question, and ending a session from the list it opens.
  */
 @OptIn(ExperimentalTestApi::class)
 class FocusScreenTest {
@@ -83,11 +84,11 @@ class FocusScreenTest {
     }
 
     @Test
-    fun endSessionFromTheSummaryDropsTheClass() = runComposeUiTest {
+    fun endSessionFromTheListDropsTheClass() = runComposeUiTest {
         val model = model()
         val first = model.today().next!!
         model.start(first.id)
-        // Every set ticked: the summary.
+        // Every set ticked: the summary, which ends a class with Finish workout only, as on Android.
         while (true) {
             val index = (model.training.state()!!.page as? FocusPage.Set)?.index ?: break
             time += 30_000L
@@ -97,7 +98,10 @@ class FocusScreenTest {
         setContent { StreetGymApp(model, PaddingValues(), startAt = Screen.Workout(first.id)) }
 
         onNodeWithText("CLASS COMPLETE").assertExists()
-        onNodeWithText("END SESSION").performClick()
+        onNodeWithText("END SESSION").assertDoesNotExist()
+        // The title bar's list icon, then End session at the end of the list.
+        onNodeWithContentDescription("Switch to list view").performClick()
+        onNodeWithText("END SESSION").performScrollTo().performClick()
         onNodeWithText("End this session?").assertExists()
         // Only the dialog's own END SESSION: the screen behind a dialog is hidden from VoiceOver.
         onNodeWithText("END SESSION").performClick()

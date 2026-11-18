@@ -3,6 +3,15 @@ package com.justdataplease.streetgym.app.ui
 import androidx.compose.runtime.Composable
 import com.justdataplease.streetgym.app.resources.Res
 import com.justdataplease.streetgym.app.resources.effort_item
+import com.justdataplease.streetgym.app.resources.equipment_band_short
+import com.justdataplease.streetgym.app.resources.equipment_box_short
+import com.justdataplease.streetgym.app.resources.equipment_low_bar_short
+import com.justdataplease.streetgym.app.resources.equipment_needs
+import com.justdataplease.streetgym.app.resources.equipment_or
+import com.justdataplease.streetgym.app.resources.equipment_parallel_bars_short
+import com.justdataplease.streetgym.app.resources.equipment_pole_short
+import com.justdataplease.streetgym.app.resources.equipment_pullup_bar_short
+import com.justdataplease.streetgym.app.resources.equipment_wall_short
 import com.justdataplease.streetgym.app.resources.exercise_number
 import com.justdataplease.streetgym.app.resources.focus_details_easier
 import com.justdataplease.streetgym.app.resources.focus_details_safety
@@ -15,11 +24,14 @@ import com.justdataplease.streetgym.app.resources.seconds_format
 import com.justdataplease.streetgym.app.resources.set_number
 import com.justdataplease.streetgym.app.resources.workout_number
 import com.justdataplease.streetgym.app.resources.workout_sequence_position
+import com.justdataplease.streetgym.data.equipment.Equipment
+import com.justdataplease.streetgym.data.equipment.EquipmentNeeds
 import com.justdataplease.streetgym.data.model.TrainingExercise
 import com.justdataplease.streetgym.data.model.TrainingLevel
 import com.justdataplease.streetgym.data.model.TrainingProgram
 import com.justdataplease.streetgym.data.model.TrainingSet
 import com.justdataplease.streetgym.ui.ExerciseNotes
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -80,6 +92,31 @@ fun pointsText(points: Int): String {
     val digits = kotlin.math.abs(points.toLong()).toString()
     val grouped = digits.reversed().chunked(3).joinToString(",").reversed()
     return if (points < 0) "-$grouped" else grouped
+}
+
+/** The equipment's short name in "Needs: pull-up bar" (Android: EquipmentView.equipmentShort). */
+private fun shortName(equipment: Equipment): StringResource = when (equipment) {
+    Equipment.PULLUP_BAR -> Res.string.equipment_pullup_bar_short
+    Equipment.LOW_BAR -> Res.string.equipment_low_bar_short
+    Equipment.PARALLEL_BARS -> Res.string.equipment_parallel_bars_short
+    Equipment.BOX -> Res.string.equipment_box_short
+    Equipment.WALL -> Res.string.equipment_wall_short
+    Equipment.POLE -> Res.string.equipment_pole_short
+    Equipment.BAND -> Res.string.equipment_band_short
+}
+
+/**
+ * "Needs: pull-up bar", "Needs: low bar + box" or "Needs: box, low bar or parallel bars" under an exercise; null when any
+ * spot will do (Android: equipmentNeeds and equipmentText).
+ */
+@Composable
+fun equipmentNeeds(tags: Collection<String>): String? {
+    val needs = EquipmentNeeds.of(tags).takeIf { it.isNotEmpty() } ?: return null
+    val text = needs.map { need ->
+        val names = need.map { stringResource(shortName(it)) }
+        if (names.size == 1) names[0] else stringResource(Res.string.equipment_or, names.dropLast(1).joinToString(", "), names.last())
+    }.joinToString(" + ")
+    return stringResource(Res.string.equipment_needs, text)
 }
 
 /** A movement's description, then its safety note and easier option on their own lines. */

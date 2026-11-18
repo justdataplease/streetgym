@@ -2,15 +2,35 @@ package com.justdataplease.streetgym.app
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.ImageComposeScene
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
+import com.justdataplease.streetgym.app.figure.BadgeStyle
+import com.justdataplease.streetgym.app.figure.ExerciseFigure
+import com.justdataplease.streetgym.app.figure.FigureHold
+import com.justdataplease.streetgym.app.figure.LocalFigureHold
+import com.justdataplease.streetgym.app.figure.LocalMotionLibrary
+import com.justdataplease.streetgym.app.figure.WorkoutTile
+import com.justdataplease.streetgym.data.effort.Effort
+import com.justdataplease.streetgym.data.model.LocalizedText
+import com.justdataplease.streetgym.data.model.TrainingExercise
+import com.justdataplease.streetgym.app.theme.Street
+import com.justdataplease.streetgym.app.theme.blendColor
+import com.justdataplease.streetgym.app.ui.BodyText
+import com.justdataplease.streetgym.json.JSONObject
 import com.justdataplease.streetgym.app.data.AppModel
+import com.justdataplease.streetgym.app.data.WorkoutView
 import com.justdataplease.streetgym.app.data.FocusPage
 import com.justdataplease.streetgym.app.data.MemoryStore
 import com.justdataplease.streetgym.app.data.Program
@@ -58,6 +78,10 @@ fun main(args: Array<String>) {
     val nextId = athlete.today().next!!.id
     shot(File(out, "today.png")) { StreetGymApp(athlete, SAFE_AREA) }
     shot(File(out, "class.png")) { StreetGymApp(athlete, SAFE_AREA, startAt = Screen.Class(nextId)) }
+    // The whole page down to the workout view, Easier / Normal / Harder and Start; and a completed class to repeat.
+    shot(File(out, "class-long.png"), height = LONG_HEIGHT) { StreetGymApp(athlete, SAFE_AREA, startAt = Screen.Class(nextId)) }
+    val firstId = NextClass.ordered(program.catalog).first().id
+    shot(File(out, "class-repeat.png")) { StreetGymApp(athlete, SAFE_AREA, startAt = Screen.Class(firstId)) }
     shot(File(out, "today-new.png")) { StreetGymApp(model(program), SAFE_AREA) }
     for (theme in listOf(StreetTheme.NIGHT_PARK, StreetTheme.WHEATPASTE)) {
         val themed = athlete(program).apply { this.theme = theme }
@@ -65,7 +89,79 @@ fun main(args: Array<String>) {
     }
     for (theme in StreetTheme.entries) workoutShots(program, theme, out)
     shot(File(out, "start-buttons.png"), height = 1560) { StartButtons() }
+    val names = movementNames()
+    for (theme in StreetTheme.entries) FIGURE_SHEETS.forEachIndexed { index, ids ->
+        shot(File(out, "figures-${index + 1}-${theme.key}.png"), width = SHEET_WIDTH, height = SHEET_HEIGHT, density = SHEET_DENSITY) {
+            CompositionLocalProvider(LocalMotionLibrary provides program.motions) {
+                StreetGymTheme(theme) { FigureSheet(ids, names) }
+            }
+        }
+    }
     println("Screenshots in ${out.absolutePath}")
+}
+
+/**
+ * The movements on the review sheets: a hang, pull-ups (straight, archer), a lever; a push-up, a dip, a squat, a Cossack;
+ * a wall handstand, a one-arm handstand, a plank, a side plank; a jack, a stretch at a post, a push-up on a box and the
+ * band muscle-up. Together they use every layout (both views, projected, facing with a side clip and end-on).
+ */
+private val FIGURE_SHEETS = listOf(
+    listOf("dead_hang", "pullup", "archer_pullup", "tuck_front_hold"),
+    listOf("pushup", "parallel_dip", "squat", "cossack_squat"),
+    listOf("wall_handstand", "one_arm_handstand", "plank", "side_plank"),
+    listOf("low_jack", "hamstring_stretch", "incline_pushup", "band_muscleup"),
+)
+
+/** The moments of a loop Android's AnimationGallery draws (0, 0.12, 0.28, 0.6), then 0.28 of the next rep. */
+private val SHEET_FRAMES = listOf(0f to 0, 0.12f to 0, 0.28f to 0, 0.6f to 0, 0.28f to 1)
+private const val SHEET_DENSITY = 2f
+private const val SHEET_WIDTH = 4_160
+private const val SHEET_HEIGHT = 1_680
+/**
+ * The class page's guide on an iPhone 17 Pro Max: 440 points less the page's and the card's margins. Android's gallery
+ * draws 340 dp, its class page on a 411 dp phone; at 340 the captions "Side" and "Front" just miss Android's room rule
+ * here, as the app's bold face is a little wider than Android's system one.
+ */
+private val GUIDE_WIDTH = 368.dp
+
+/** The movement library's English names, by id, as the gallery labels its rows. */
+private fun movementNames(): Map<String, String> = runBlocking {
+    val library = JSONObject(Res.readBytes("files/curriculum.json").decodeToString()).getJSONArray("movement_library")
+    (0 until library.length()).associate { index ->
+        library.getJSONObject(index).let { it.getString("id") to it.getJSONObject("name").optString("en") }
+    }
+}
+
+/**
+ * One review sheet (Android: AnimationGallery): per movement, the class page's guide ([GUIDE_WIDTH] x 168 dp) at the gallery's
+ * moments and the next rep, then a skill badge holding still and a workout tile playing, at two moments.
+ */
+@Composable
+private fun FigureSheet(ids: List<String>, names: Map<String, String>) {
+    val theme = Street.theme
+    val palette = theme.palette
+    val badge = BadgeStyle(palette.infoSurface, palette.primary, blendColor(palette.primary, palette.infoSurface, 0.5f),
+        blendColor(palette.textSecondary, palette.infoSurface, 0.4f))
+    Column(Modifier.fillMaxSize().pageBackground(theme).padding(12.dp)) {
+        for (id in ids) {
+            val name = names[id] ?: id
+            BodyText("$name  [$id]", 14f, Modifier.padding(top = 8.dp, bottom = 2.dp), color = palette.text, bold = true)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                for ((phase, cycle) in SHEET_FRAMES) CompositionLocalProvider(LocalFigureHold provides FigureHold(phase, cycle)) {
+                    ExerciseFigure(id, name, Modifier.size(GUIDE_WIDTH, 168.dp))
+                }
+                Spacer(Modifier.width(12.dp))
+                ExerciseFigure(id, name, Modifier.size(64.dp), badge = badge)
+                // A class row's tile (Android: WorkoutTile), ringed as a Moderate workout.
+                val exercise = TrainingExercise(id, movementId = id, number = 1, name = LocalizedText(en = name),
+                    description = LocalizedText.EMPTY, sets = emptyList())
+                for (phase in listOf(0f, 0.28f)) CompositionLocalProvider(LocalFigureHold provides FigureHold(phase)) {
+                    Spacer(Modifier.width(10.dp))
+                    WorkoutTile(exercise, Effort.MODERATE, 52.dp)
+                }
+            }
+        }
+    }
 }
 
 /**
@@ -125,7 +221,20 @@ private fun workoutShots(program: Program, theme: StreetTheme, out: File) {
 
     val (effort, effortId) = training { null }
     shot(File(out, "workout-effort-$name.png")) { StreetGymApp(effort, SAFE_AREA, startAt = Screen.Workout(effortId, askEffort = true)) }
+
+    // The list view of the same class: the warm-up and practice ticked, the strength work's first set just ticked in
+    // the list and its rest running; then the whole list, top to bottom, in a tall picture.
+    val (list, listId) = training { flow ->
+        flow.steps.indices.first { flow[it].section == "main" && (flow[it].set.breakSeconds ?: 0) > 0 && flow.next(it) != null }
+    }
+    list.workoutView = WorkoutView.LIST
+    list.training.state()!!.let { state -> list.training.tick(state.flow[(state.page as FocusPage.Set).index].key, true) }
+    shot(File(out, "workout-list-$name.png")) { StreetGymApp(list, SAFE_AREA, startAt = Screen.Workout(listId)) }
+    shot(File(out, "workout-list-long-$name.png"), height = LONG_HEIGHT) { StreetGymApp(list, SAFE_AREA, startAt = Screen.Workout(listId)) }
 }
+
+/** A tall picture for a whole scrolling screen. */
+private const val LONG_HEIGHT = 15_000
 
 /** The class page's Start workout and Resume in each theme, with Android's play arrow. */
 @Composable
@@ -155,9 +264,15 @@ private fun athlete(program: Program, clock: ShotClock = ShotClock()): AppModel 
     }
 }
 
+/**
+ * Draws [content] to [file]. Every movement figure holds still at 0.28 of its loop (the top of a pull-up, the bottom of
+ * a push-up, where Android's gallery takes its main frame), so the pictures are the same on every run.
+ */
 @OptIn(ExperimentalComposeUiApi::class)
-private fun shot(file: File, width: Int = WIDTH, height: Int = HEIGHT, content: @Composable () -> Unit) {
-    val scene = ImageComposeScene(width, height, Density(DENSITY)) { content() }
+private fun shot(file: File, width: Int = WIDTH, height: Int = HEIGHT, density: Float = DENSITY, content: @Composable () -> Unit) {
+    val scene = ImageComposeScene(width, height, Density(density)) {
+        CompositionLocalProvider(LocalFigureHold provides (LocalFigureHold.current ?: FigureHold(0.28f))) { content() }
+    }
     try {
         // A few frames, so fonts, pictures and dialogs that come after the first one are in.
         var image = scene.render(0)

@@ -18,10 +18,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.justdataplease.streetgym.app.data.AppModel
+import com.justdataplease.streetgym.app.data.AppSettings
 import com.justdataplease.streetgym.app.data.KeyValueStore
 import com.justdataplease.streetgym.app.data.StoredProgress
 import com.justdataplease.streetgym.app.data.WorkoutDevice
 import com.justdataplease.streetgym.app.data.loadProgram
+import com.justdataplease.streetgym.app.figure.LocalMotionLibrary
+import com.justdataplease.streetgym.app.figure.LocalMotionWords
+import com.justdataplease.streetgym.app.figure.LocalReduceMotion
+import com.justdataplease.streetgym.app.figure.motionWords
 import com.justdataplease.streetgym.app.theme.LocalStreetTheme
 import com.justdataplease.streetgym.app.theme.LocalStreetType
 import com.justdataplease.streetgym.app.theme.StreetTheme
@@ -32,22 +37,25 @@ import com.justdataplease.streetgym.app.ui.Shell
 import com.justdataplease.streetgym.app.ui.pageBackground
 
 /**
- * The app from a cold start: reads the program from its files, then shows Today. [store] keeps the athlete's progress;
- * [device] keeps the screen on during a workout and cues the end of a rest.
+ * The app from a cold start: reads the program from its files, then shows Today. [store] keeps the athlete's progress
+ * and choices; [device] keeps the screen on during a workout and cues the end of a rest; [reduceMotion] holds the
+ * movement figures still, as the phone's Reduce Motion asks.
  */
 @Composable
-fun App(store: KeyValueStore, device: WorkoutDevice = WorkoutDevice.None) {
+fun App(store: KeyValueStore, device: WorkoutDevice = WorkoutDevice.None, reduceMotion: Boolean = false) {
     var model by remember { mutableStateOf<AppModel?>(null) }
     var failed by remember { mutableStateOf(false) }
     LaunchedEffect(store) {
         runCatching { loadProgram() }
-            .onSuccess { model = AppModel(it, StoredProgress(store), device = device) }
+            .onSuccess { model = AppModel(it, StoredProgress(store), device = device, settings = AppSettings(store)) }
             .onFailure { failed = true }
     }
     val loaded = model
-    if (loaded != null) StreetGymApp(loaded) else StreetGymTheme(StreetTheme.DEFAULT) {
-        Box(Modifier.fillMaxSize().pageBackground(StreetTheme.DEFAULT).padding(24.dp), contentAlignment = Alignment.Center) {
-            if (failed) BodyText("The program could not be read. Install the app again.")
+    CompositionLocalProvider(LocalReduceMotion provides reduceMotion) {
+        if (loaded != null) StreetGymApp(loaded) else StreetGymTheme(StreetTheme.DEFAULT) {
+            Box(Modifier.fillMaxSize().pageBackground(StreetTheme.DEFAULT).padding(24.dp), contentAlignment = Alignment.Center) {
+                if (failed) BodyText("The program could not be read. Install the app again.")
+            }
         }
     }
 }
@@ -62,10 +70,15 @@ fun StreetGymApp(
     safeArea: PaddingValues = WindowInsets.safeDrawing.asPaddingValues(),
     startAt: Screen = Screen.Today,
 ) {
-    StreetGymTheme(model.theme) { Shell(model, safeArea, startAt) }
+    CompositionLocalProvider(LocalMotionLibrary provides model.motions) {
+        StreetGymTheme(model.theme) { Shell(model, safeArea, startAt) }
+    }
 }
 
+/** A theme's colours, faces and the movement guides' words for what is drawn inside. */
 @Composable
 fun StreetGymTheme(theme: StreetTheme, content: @Composable () -> Unit) {
-    CompositionLocalProvider(LocalStreetTheme provides theme, LocalStreetType provides streetType(theme), content = content)
+    CompositionLocalProvider(LocalStreetTheme provides theme, LocalStreetType provides streetType(theme)) {
+        CompositionLocalProvider(LocalMotionWords provides motionWords(), content = content)
+    }
 }

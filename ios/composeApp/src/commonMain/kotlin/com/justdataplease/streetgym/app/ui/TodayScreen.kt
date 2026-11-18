@@ -8,6 +8,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -24,6 +28,7 @@ import com.justdataplease.streetgym.app.resources.intensity_normal
 import com.justdataplease.streetgym.app.resources.intensity_note
 import com.justdataplease.streetgym.app.resources.intensity_title
 import com.justdataplease.streetgym.app.resources.progress_title
+import com.justdataplease.streetgym.app.resources.repeat_note
 import com.justdataplease.streetgym.app.resources.resume_workout
 import com.justdataplease.streetgym.app.resources.start_today
 import com.justdataplease.streetgym.app.resources.tier_plus
@@ -45,10 +50,15 @@ internal const val COMPLETE_DAY = "Complete day"
  * workout, or Resume while it is in progress, opens its workout ([onStart]).
  */
 @Composable
-fun TodayScreen(model: AppModel, onOpenClass: (String) -> Unit, onStart: (String) -> Unit, onOpenProgress: () -> Unit) {
+fun TodayScreen(model: AppModel, onOpenClass: (String) -> Unit, onStart: (String, Boolean) -> Unit, onOpenProgress: () -> Unit) {
     val palette = Street.colors
     val today = model.today()
     val next = today.next
+    var completing by remember { mutableStateOf(false) }
+    if (completing && next != null) CompleteDayDialog(next, onClose = { completing = false }) {
+        completing = false
+        model.completeDay(next.id)
+    }
     Page {
         StreetCard(fill = palette.primaryDark, modifier = Modifier.padding(bottom = 20.dp), outlined = false) {
             BodyText(stringResource(Res.string.brand_kicker), 12f, color = palette.heroKicker)
@@ -70,6 +80,8 @@ fun TodayScreen(model: AppModel, onOpenClass: (String) -> Unit, onStart: (String
                 return@StreetCard
             }
             today.level?.let { level -> TodayHeader(level.number, displayName(level), next.number, level.programs.size) }
+            // A repeat in progress takes Today's card until it is finished or ended, as any class in progress does.
+            if (today.repeating) BodyText(stringResource(Res.string.repeat_note), 12f, Modifier.padding(bottom = 4.dp), color = palette.primary)
             TitleText(displayName(next), 23f)
             BodyText(programMeta(next), 13f, Modifier.padding(top = 6.dp))
             if (today.locked) {
@@ -82,9 +94,11 @@ fun TodayScreen(model: AppModel, onOpenClass: (String) -> Unit, onStart: (String
             PrimaryButton(
                 stringResource(if (today.resume) Res.string.resume_workout else Res.string.start_today),
                 Modifier.padding(top = 16.dp),
-            ) { onStart(next.id) }
-            SecondaryButton(COMPLETE_DAY, Modifier.padding(top = 8.dp)) { model.completeDay(next.id) }
-            BodyText(stringResource(Res.string.complete_day_no_points), 12f, Modifier.padding(top = 6.dp))
+            ) { onStart(next.id, today.repeating) }
+            if (!today.repeating) {
+                SecondaryButton(COMPLETE_DAY, Modifier.padding(top = 8.dp)) { completing = true }
+                BodyText(stringResource(Res.string.complete_day_no_points), 12f, Modifier.padding(top = 6.dp))
+            }
         }
 
         StreetCard(Modifier.padding(bottom = 12.dp), onClick = onOpenProgress) {

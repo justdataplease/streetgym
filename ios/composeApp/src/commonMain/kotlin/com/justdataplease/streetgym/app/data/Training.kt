@@ -27,7 +27,10 @@ sealed interface FocusPage {
 /** A timed set's countdown, [round] 1 or 2 (a per-side hold runs two). [cued]: its end was signalled. */
 data class Hold(val key: String, val round: Int, val endsAt: Long, val cued: Boolean = false)
 
-/** The class in training as the focus screen draws it, at [now]. [skipped] and [hold] last while the app runs. */
+/**
+ * The class in training as the focus screen and the list draw it, at [now]. [skipped] and [hold] last while the app
+ * runs. [restEndsAt]: when the rest that is running ends, null when none is (the list's rest line shows it).
+ */
 class FocusState(
     val program: TrainingProgram,
     val flow: WorkoutFlow,
@@ -36,6 +39,7 @@ class FocusState(
     val skipped: Set<String>,
     val hold: Hold?,
     val now: Long,
+    val restEndsAt: Long? = null,
 )
 
 /** What finishing a class saved. [streak]: the streak's days, when this class lit today's flame; else null. */
@@ -119,7 +123,7 @@ class Training internal constructor(
             restEnd != null && restEnd > at -> FocusPage.Rest(current, restEnd)
             else -> FocusPage.Set(current)
         }
-        return FocusState(program, flow, active, page, skipped, hold(active), at)
+        return FocusState(program, flow, active, page, skipped, hold(active), at, restEnd?.takeIf { it > at })
     }
 
     /** Moves the clock on: a rest that ran out ends with its cue, and so does a timed set that ran out just now. */
@@ -159,6 +163,41 @@ class Training internal constructor(
         val pause = step.set.breakSeconds?.takeIf { it > 0 }
         if (next == null) rest = null
         else if (pause != null) rest = Owned(active.startedAtEpochMillis, at + pause * 1_000L)
+        clock = at
+        saves.bump()
+    }
+
+    /**
+     * A set ticked or unticked in the list (Android: renderActive's set check). A tick starts the set's rest, or ends
+     * the one running when it was the class's last set; unticking leaves the rest as it is. Focus follows, since its
+     * position is the first set neither ticked nor skipped.
+     */
+    fun tick(key: String, completed: Boolean) {
+        val (active, flow) = current() ?: return
+        val at = now()
+        progress.setCompleted(listOf(key), completed, at = at)
+        if (completed) {
+            val done = flow.completedCount(active.completedSetIds + key)
+            val pause = flow.steps.firstOrNull { it.key == key }?.set?.breakSeconds?.takeIf { it > 0 }
+            if (done >= flow.size) rest = null
+            else if (pause != null) rest = Owned(active.startedAtEpochMillis, at + pause * 1_000L)
+        }
+        clock = at
+        saves.bump()
+    }
+
+    /**
+     * Every set of [section] ticked or unticked at once (Android: the section's check box). With the whole class ticked
+     * the rest ends.
+     */
+    fun tickSection(section: String, completed: Boolean) {
+        val (active, flow) = current() ?: return
+        val at = now()
+        val keys = flow.keys(section)
+        if (keys.isEmpty()) return
+        progress.setCompleted(keys, completed, at = at)
+        val ticked = if (completed) active.completedSetIds + keys else active.completedSetIds - keys.toSet()
+        if (flow.completedCount(ticked) == flow.size) rest = null
         clock = at
         saves.bump()
     }

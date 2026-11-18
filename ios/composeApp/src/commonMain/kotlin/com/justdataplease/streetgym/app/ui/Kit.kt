@@ -432,15 +432,48 @@ fun Chip(
     )
 }
 
-/** How much of something is done, as a bar. */
+/** How much of something is done, as a 4 dp bar centred in [height] (Android: horizontalProgress). */
 @Composable
-fun ProgressBar(percent: Int, modifier: Modifier = Modifier) {
+fun ProgressBar(percent: Int, modifier: Modifier = Modifier, height: Dp = 8.dp) {
     val palette = Street.colors
-    Box(modifier.fillMaxWidth().height(8.dp).drawBehind {
+    Box(modifier.fillMaxWidth().height(height).drawBehind {
         val bar = 4.dp.toPx()
         val top = (size.height - bar) / 2f
         drawRect(palette.infoSurface, Offset(0f, top), Size(size.width, bar))
         drawRect(palette.primary, Offset(0f, top), Size(size.width * percent.coerceIn(0, 100) / 100f, bar))
+    })
+}
+
+/**
+ * Android's check box (the platform Material one, tinted): an 18 dp rounded square, a 2 dp frame when unticked and
+ * filled with the tick cut out when ticked, on the left of its 48 dp box as Android draws its 32 dp button there. It
+ * only draws; the row around it takes the tap, as Android's rows pass theirs to the box.
+ */
+@Composable
+fun CheckMark(checked: Boolean, tint: Color, modifier: Modifier = Modifier) {
+    Box(modifier.size(48.dp).drawBehind {
+        val unit = 1.dp.toPx()
+        val center = Offset(16.dp.toPx(), size.height / 2f)
+        fun point(x: Float, y: Float) = Offset(center.x + x * unit, center.y + y * unit)
+        val corner = androidx.compose.ui.geometry.CornerRadius(2f * unit)
+        val box = androidx.compose.ui.geometry.RoundRect(point(-9f, -9f).x, point(-9f, -9f).y, point(9f, 9f).x, point(9f, 9f).y, corner)
+        val path = Path().apply {
+            fillType = androidx.compose.ui.graphics.PathFillType.EvenOdd
+            addRoundRect(box)
+            if (checked) {
+                // The tick, cut out of the box (btn_checkbox_checked_mtrl).
+                moveTo(point(-2f, 5f).x, point(-2f, 5f).y)
+                lineTo(point(-7f, 0f).x, point(-7f, 0f).y)
+                lineTo(point(-5.586f, -1.414f).x, point(-5.586f, -1.414f).y)
+                lineTo(point(-2f, 2.172f).x, point(-2f, 2.172f).y)
+                lineTo(point(5.586f, -5.414f).x, point(5.586f, -5.414f).y)
+                lineTo(point(7f, -4f).x, point(7f, -4f).y)
+                close()
+            } else {
+                addRect(Rect(point(-7f, -7f), point(7f, 7f)))
+            }
+        }
+        drawPath(path, tint)
     })
 }
 

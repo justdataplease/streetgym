@@ -28,8 +28,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.StrokeCap
@@ -48,11 +46,12 @@ import com.justdataplease.streetgym.app.data.Finished
 import com.justdataplease.streetgym.app.data.FocusPage
 import com.justdataplease.streetgym.app.data.FocusState
 import com.justdataplease.streetgym.app.data.Training
+import com.justdataplease.streetgym.app.data.WorkoutView
+import com.justdataplease.streetgym.app.figure.ExerciseFigure
 import com.justdataplease.streetgym.app.resources.Res
 import com.justdataplease.streetgym.app.resources.abandon
 import com.justdataplease.streetgym.app.resources.abandon_message
 import com.justdataplease.streetgym.app.resources.abandon_title
-import com.justdataplease.streetgym.app.resources.abandon_workout
 import com.justdataplease.streetgym.app.resources.active_sets_progress
 import com.justdataplease.streetgym.app.resources.back
 import com.justdataplease.streetgym.app.resources.cancel
@@ -140,27 +139,36 @@ import kotlin.math.min
 /** How often the screen looks at the clock, as Android's view does. */
 private const val TICK_MILLIS = 250L
 
-/** A question the focus workout asks over itself. */
-private sealed interface Ask {
+/** A question the workout asks over itself, in either view. */
+internal sealed interface Ask {
     /** The movement's notes, tempo, safety, easier option and start criteria. */
     data class Details(val index: Int) : Ask
-    /** What the athlete did in the set at [index]; [thenDone] ticks it after (Done · Next on a set without a number). */
-    data class Log(val index: Int, val thenDone: Boolean) : Ask
+    /**
+     * What the athlete did in the set at [index]; [thenDone] moves on after it (Done · Next on a set without a number),
+     * [thenTick] ticks it in the list when it isn't yet (Android: logDone).
+     */
+    data class Log(val index: Int, val thenDone: Boolean, val thenTick: Boolean = false) : Ask
     data object FinishEarly : Ask
     data object Effort : Ask
     data object End : Ask
+    /** "Complete day" from the list: the class marked done without training. */
+    data object CompleteDay : Ask
 }
 
 /**
- * The class in progress, set by set. [askEffort] opens it on the effort question (for the screenshots). [onFinished]
- * gets what finishing saved, [onEnded] follows "End session", and [onGone] leaves when no class is in progress.
+ * The class in progress, in the view the athlete picked (Android: HomeActivity's Screen.Active, renderFocus or
+ * renderActive): Focus, set by set, or the List of every set with its tick. Both read and change the same training, so
+ * switching keeps every tick, the rest and the position. [askEffort] opens it on the effort question (for the
+ * screenshots). [onFinished] gets what finishing saved, [onEnded] follows "End session", [onCompleted] follows
+ * "Complete day", and [onGone] leaves when no class is in progress.
  */
 @Composable
-fun FocusScreen(
+fun WorkoutScreen(
     model: AppModel,
     askEffort: Boolean = false,
     onFinished: (Finished) -> Unit,
     onEnded: () -> Unit,
+    onCompleted: () -> Unit,
     onGone: () -> Unit,
 ) {
     val training = model.training
@@ -187,11 +195,14 @@ fun FocusScreen(
         ask = if (now.flow.completedCount(now.active.completedSetIds) < now.flow.size) Ask.FinishEarly else Ask.Effort
     }
 
-    Box(Modifier.fillMaxSize().background(Street.colors.background)) {
+    if (model.workoutView == WorkoutView.LIST) {
+        // The list scrolls over the page's grain, as Android's does; the focus view paints its own flat background.
+        WorkoutList(state, training, onAsk = { ask = it }, onFinish = ::finish)
+    } else Box(Modifier.fillMaxSize().background(Street.colors.background)) {
         when (val page = state.page) {
             is FocusPage.Set -> SetPage(state, page.index, training, onAsk = { ask = it }, onFinish = ::finish)
             is FocusPage.Rest -> RestPage(state, page, training, onFinish = ::finish)
-            FocusPage.Summary -> SummaryPage(state, training, onFinish = ::finish, onEnd = { ask = Ask.End })
+            FocusPage.Summary -> SummaryPage(state, training, onFinish = ::finish)
         }
     }
 
@@ -202,6 +213,7 @@ fun FocusScreen(
             LogDialog(training.measure(step), state.active.done[step.key], onClose = ::close) { amount ->
                 training.setDone(step.key, amount)
                 if (open.thenDone) training.done(open.index)
+                else if (open.thenTick && step.key !in training.active()?.completedSetIds.orEmpty()) training.tick(step.key, true)
             }
         }
         Ask.FinishEarly -> StreetDialog(
@@ -226,6 +238,11 @@ fun FocusScreen(
             },
             dismiss = DialogAction(stringResource(Res.string.cancel), ::close),
         )
+        Ask.CompleteDay -> CompleteDayDialog(state.program, onClose = ::close) {
+            close()
+            model.completeDay(state.program.id)
+            onCompleted()
+        }
         null -> Unit
     }
 }
@@ -261,7 +278,13 @@ private fun SetPage(state: FocusState, index: Int, training: Training, onAsk: (A
 
     FocusFrame(
         strip = { Strip(sectionTitle(step.section), stringResource(Res.string.focus_set_of, index + 1, state.flow.size), state, index, onFinish) },
-        fill = { MovementPanel(it) },
+        // The exercise's line man, bound as Android's focus view binds it: the set's own name, else the movement's notes.
+        fill = { modifier ->
+            ExerciseFigure(
+                step.exercise.movementId, name, modifier, category = step.exercise.category, equipment = step.exercise.equipment,
+                descriptor = step.set.name.resolve().ifBlank { step.exercise.description.resolve() },
+            )
+        },
         info = {
             Column(Modifier.fillMaxWidth()) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -362,9 +385,12 @@ private fun RestPage(state: FocusState, page: FocusPage.Rest, training: Training
 /** "+15 s" on the rest screen. */
 private const val ADD_REST_SECONDS = 15
 
-/** The end of the class: how it went, Finish workout, Back to the last set, the skipped sets, End session. */
+/**
+ * The end of the class: how it went, Finish workout, Back to the last set and the skipped sets. As on Android a session
+ * is ended from the list view (the title bar's list icon), not from here.
+ */
 @Composable
-private fun SummaryPage(state: FocusState, training: Training, onFinish: () -> Unit, onEnd: () -> Unit) {
+private fun SummaryPage(state: FocusState, training: Training, onFinish: () -> Unit) {
     val completed = state.active.completedSetIds
     val done = state.flow.completedCount(completed)
     val missed = state.flow.keys.count { it in state.skipped && it !in completed }
@@ -392,8 +418,6 @@ private fun SummaryPage(state: FocusState, training: Training, onFinish: () -> U
                         training.doSkipped()
                     }
                 }
-                // Android ends a session from its list view; the iPhone has only this view so far, so it ends here.
-                SecondaryButton(stringResource(Res.string.abandon_workout), Modifier.padding(top = 8.dp), onClick = onEnd)
             }
         },
     )
@@ -430,21 +454,6 @@ private fun Strip(title: String, position: String, state: FocusState, current: I
             BodyText(position, 13f, Modifier.padding(start = 10.dp), bold = true, maxLines = 1)
         }
     }
-}
-
-/**
- * Where Android plays the exercise's line man (ExerciseAnimationView): its frame, the surface with a hairline and
- * round corners, left empty until the animations are ported, so the screen keeps its proportions.
- */
-@Composable
-private fun MovementPanel(modifier: Modifier) {
-    val palette = Street.colors
-    Box(modifier.drawBehind {
-        val corner = CornerRadius(12.dp.toPx())
-        val line = 1.dp.toPx()
-        drawRoundRect(palette.surface, cornerRadius = corner)
-        drawRoundRect(palette.divider, Offset(line / 2f, line / 2f), Size(size.width - line, size.height - line), corner, style = Stroke(line))
-    })
 }
 
 /** How tall the class's strip is in each theme, in dp (Android: SetProgressView.heightDp). */
@@ -634,7 +643,7 @@ private fun EffortDialog(target: Int?, onClose: () -> Unit, onFinish: (Int) -> U
 
 /** A section's name over its sets. */
 @Composable
-private fun sectionTitle(section: String): String = stringResource(when (section) {
+internal fun sectionTitle(section: String): String = stringResource(when (section) {
     Training.WARM_UP -> Res.string.warm_up
     Training.PRACTICE -> Res.string.skill_practice
     Training.COOL_DOWN -> Res.string.cool_down

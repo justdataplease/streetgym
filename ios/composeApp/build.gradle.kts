@@ -15,7 +15,7 @@ val androidMain: File = listOf("../../android-streetgym/app", "../../app").map {
 val androidResources = tasks.register<Sync>("androidResources") {
     into(layout.buildDirectory.dir("androidResources"))
     // Gradle can't see a change to the rewriting rules below; raise this when one changes, so the copy runs again.
-    inputs.property("rules", 3)
+    inputs.property("rules", 4)
     from(androidMain.resolve("assets")) {
         include("curriculum.json", "workouts.json", "exercise_animations.json")
         into("files")
@@ -29,7 +29,7 @@ val androidResources = tasks.register<Sync>("androidResources") {
         filter { line: String -> line.replace("%d", "%1${'$'}d").replace("\\'", "'") }
     }
     from(androidMain.resolve("res/drawable")) {
-        include("ic_nav_*.xml", "ic_brand_mark.xml", "ic_lock.xml")
+        include("ic_nav_*.xml", "ic_brand_mark.xml", "ic_lock.xml", "ic_view_list.xml", "ic_view_focus.xml")
         into("drawable")
         // Compose reads Android's vector format, but not references to Android's own colours.
         filter { line: String -> line.replace("@android:color/transparent", "#00000000") }
@@ -60,6 +60,8 @@ kotlin {
             implementation(project(":shared"))
             implementation("org.jetbrains.compose.runtime:runtime:$composeVersion")
             implementation("org.jetbrains.compose.foundation:foundation:$composeVersion")
+            // The movement figures' frame clock (withInfiniteAnimationFrameNanos), already under foundation.
+            implementation("org.jetbrains.compose.animation:animation-core:$composeVersion")
             implementation("org.jetbrains.compose.ui:ui:$composeVersion")
             implementation("org.jetbrains.compose.components:components-resources:$composeVersion")
             implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")

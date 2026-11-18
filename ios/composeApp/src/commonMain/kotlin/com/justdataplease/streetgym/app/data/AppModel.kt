@@ -4,6 +4,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.justdataplease.streetgym.app.figure.AnimationLibrary
 import com.justdataplease.streetgym.app.resources.Res
 import com.justdataplease.streetgym.app.theme.StreetTheme
 import com.justdataplease.streetgym.billing.LevelAccess
@@ -26,19 +27,26 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.offsetAt
 import kotlin.time.Instant
 
-/** The program, the ready workouts and the skills, read once from the app's files. */
-class Program(val catalog: CurriculumCatalog, val skills: SkillBook?)
+/** The program, the ready workouts, the skills and the line man's movements, read once from the app's files. */
+class Program(val catalog: CurriculumCatalog, val skills: SkillBook?, val motions: AnimationLibrary? = null)
 
 /**
  * The program and the ready workouts from the app's files: the same `curriculum.json` and `workouts.json` as Android,
  * and the skills from the same JSON (Android: HomeActivity.loadCatalog). Without the skills a class still trains; it
- * credits no skill.
+ * credits no skill. The movements (`exercise_animations.json`) are read with them, as Android preloads them with the
+ * catalog; without them every figure stands as Android's fallback.
  */
 suspend fun loadProgram(): Program = withContext(Dispatchers.Default) {
     val root = JSONObject(Res.readBytes("files/curriculum.json").decodeToString())
     val workouts = runCatching { JSONObject(Res.readBytes("files/workouts.json").decodeToString()).optJSONArray("workouts") }.getOrNull()
     val skills = runCatching { SkillCurriculumReader.read(root) }.getOrNull()
-    Program(CurriculumJsonParser.parse(root, workouts), skills)
+    val motions = runCatching { AnimationLibrary.read(Res.readBytes("files/exercise_animations.json").decodeToString()) }.getOrNull()
+    Program(CurriculumJsonParser.parse(root, workouts), skills, motions)
+}
+
+/** The line man's movements alone. */
+suspend fun loadMotions(): AnimationLibrary = withContext(Dispatchers.Default) {
+    AnimationLibrary.read(Res.readBytes("files/exercise_animations.json").decodeToString())
 }
 
 /** The program alone. */
@@ -70,7 +78,10 @@ object LocalDays {
     }
 }
 
-/** What Today shows. [next] is null once every class is complete. */
+/**
+ * What Today shows. [next] is null once every class is complete. [repeating]: the class in progress is a completed one
+ * trained again, which Today resumes as a repeat.
+ */
 class Today(
     val next: TrainingProgram?,
     val level: TrainingLevel?,
@@ -79,6 +90,7 @@ class Today(
     val done: Int,
     val total: Int,
     val streak: StreakSnapshot,
+    val repeating: Boolean = false,
 )
 
 /** What asking to start a class did. */
@@ -97,6 +109,7 @@ enum class Start {
  *
  * [tier]: every level is open until purchases exist on iPhone (StoreKit), as in Android's development builds.
  * [skills] credits a finished class's sets to skills. [device] keeps the screen on and cues the end of a rest.
+ * [motions] are the line man's movements; [settings] keeps the athlete's choices.
  */
 @Stable
 class AppModel(
@@ -107,6 +120,8 @@ class AppModel(
     private val now: () -> Long = ::epochMillisNow,
     private val zone: TimeZone = TimeZone.currentSystemDefault(),
     val device: WorkoutDevice = WorkoutDevice.None,
+    val motions: AnimationLibrary? = null,
+    private val settings: AppSettings = AppSettings(MemoryStore()),
 ) {
     constructor(
         program: Program,
@@ -115,7 +130,8 @@ class AppModel(
         now: () -> Long = ::epochMillisNow,
         zone: TimeZone = TimeZone.currentSystemDefault(),
         device: WorkoutDevice = WorkoutDevice.None,
-    ) : this(program.catalog, progress, program.skills, tier, now, zone, device)
+        settings: AppSettings = AppSettings(MemoryStore()),
+    ) : this(program.catalog, progress, program.skills, tier, now, zone, device, program.motions, settings)
 
     private val written: List<TrainingProgram> = NextClass.ordered(catalog)
     private val byId: Map<String, TrainingProgram> = written.associateBy(TrainingProgram::id)
@@ -128,6 +144,19 @@ class AppModel(
     }
 
     var theme by mutableStateOf(StreetTheme.DEFAULT)
+
+    private var view by mutableStateOf(settings.workoutView)
+
+    /**
+     * Focus or List, as the athlete last picked it on a class page or in the workout's title bar (Android:
+     * AppSettings.workoutView); both show the same class in progress, so switching keeps every tick and the rest.
+     */
+    var workoutView: WorkoutView
+        get() = view
+        set(value) {
+            view = value
+            settings.workoutView = value
+        }
 
     /** Today's pick in "How do you feel today?". Back to Normal when the app restarts. */
     private var picked by mutableStateOf(Intensity.NORMAL)
@@ -154,7 +183,11 @@ class AppModel(
     fun levelLocked(number: Int): Boolean = LevelAccess.locked(number, tier)
 
     /** Whether [id] is the class the sequence offers now: the one that can be started or marked complete. */
-    fun isToday(id: String): Boolean = today().next?.id == id
+    fun isToday(id: String): Boolean {
+        saves.count
+        // The sequence's class, whatever is in progress: a repeat in progress is not today's (Android: assignedProgram).
+        return assigned()?.id == id
+    }
 
     fun isCompleted(id: String): Boolean {
         saves.count
@@ -174,6 +207,7 @@ class AppModel(
             done = written.count { it.id in completed },
             total = written.size,
             streak = LocalDays.snapshot(progress.sessionHistory(), now(), zone),
+            repeating = active?.repeat == true && active.programId == next?.id,
         )
     }
 

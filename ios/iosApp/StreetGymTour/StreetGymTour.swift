@@ -18,10 +18,20 @@ final class StreetGymTour: XCTestCase {
         XCTAssertTrue(loaded, "Today did not show its Start workout button")
         guard loaded else { return }
 
-        // Start workout opens the class the sequence offers on its first set.
+        // Start workout opens the class the sequence offers on its first set, with its moving line man.
         start.tap()
         _ = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH[c] %@", "set 1 of")).firstMatch.waitForExistence(timeout: 10)
         snap("02-workout")
+
+        // The title bar's list icon shows the same class as a list of sets with their ticks.
+        let list = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Switch to list view")).firstMatch
+        guard list.waitForExistence(timeout: 10) else {
+            XCTFail("The workout has no Switch to list view button")
+            return
+        }
+        list.tap()
+        _ = app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", "ready for the next set")).firstMatch.waitForExistence(timeout: 10)
+        snap("03-list")
     }
 
     private func snap(_ name: String) {

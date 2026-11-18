@@ -41,6 +41,11 @@ import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import com.justdataplease.streetgym.app.data.AppModel
 import com.justdataplease.streetgym.app.data.Start
+import com.justdataplease.streetgym.app.data.WorkoutView
+import com.justdataplease.streetgym.app.resources.ic_view_focus
+import com.justdataplease.streetgym.app.resources.ic_view_list
+import com.justdataplease.streetgym.app.resources.switch_to_focus
+import com.justdataplease.streetgym.app.resources.switch_to_list
 import com.justdataplease.streetgym.app.resources.Res
 import com.justdataplease.streetgym.app.resources.active_workout
 import com.justdataplease.streetgym.app.resources.back
@@ -130,18 +135,19 @@ fun Shell(model: AppModel, safeArea: PaddingValues, startAt: Screen = Screen.Tod
     val overlay = remember { Overlay() }
     var notice by remember { mutableStateOf<Notice?>(null) }
     // A class asked to start while another is in progress: starting it ends the other, so the athlete is asked.
-    var replacing by remember { mutableStateOf<String?>(null) }
+    var replacing by remember { mutableStateOf<Pair<String, Boolean>?>(null) }
     fun openTab(tab: Screen) { stack.clear(); stack.add(tab) }
     fun open(next: Screen) { stack.add(next) }
     fun back() { if (stack.size > 1) stack.removeAt(stack.lastIndex) }
-    // Start workout and Resume (Android: requestStart).
-    fun start(id: String, replace: Boolean = false) {
-        when (model.start(id, replace = replace)) {
+    // Start workout, Repeat this day and Resume (Android: requestStart).
+    fun start(id: String, repeat: Boolean = false, replace: Boolean = false) {
+        when (model.start(id, repeat = repeat, replace = replace)) {
             Start.STARTED -> open(Screen.Workout(id))
-            Start.ASK_REPLACE -> replacing = id
+            Start.ASK_REPLACE -> replacing = id to repeat
             Start.LOCKED -> notice = Notice.Locked
         }
     }
+    val listView = screen is Screen.Workout && model.workoutView == WorkoutView.LIST
 
     CompositionLocalProvider(LocalOverlay provides overlay, LocalSafeArea provides safeArea) {
         Box(Modifier.fillMaxSize()) {
@@ -152,17 +158,20 @@ fun Shell(model: AppModel, safeArea: PaddingValues, startAt: Screen = Screen.Tod
                 TitleBar(model, screen, onBack = ::back)
                 Box(Modifier.weight(1f).fillMaxWidth()) {
                     when (screen) {
-                        Screen.Today -> TodayScreen(model, onOpenClass = { open(Screen.Class(it)) }, onStart = { start(it) },
-                            onOpenProgress = { openTab(Screen.Progress) })
-                        is Screen.Class -> ClassScreen(model, screen.programId, onStart = { start(it) }, onDone = ::back)
+                        Screen.Today -> TodayScreen(model, onOpenClass = { open(Screen.Class(it)) },
+                            onStart = { id, repeat -> start(id, repeat) }, onOpenProgress = { openTab(Screen.Progress) })
+                        // Complete day returns to Today, as Android's opens it as the root.
+                        is Screen.Class -> ClassScreen(model, screen.programId, onStart = { start(it) },
+                            onRepeat = { start(it, repeat = true) }, onDone = { openTab(Screen.Today) })
                         // Android opens Progress after a class; until Progress is built here, Today shows the lit streak.
-                        is Screen.Workout -> FocusScreen(
+                        is Screen.Workout -> WorkoutScreen(
                             model, screen.askEffort,
                             onFinished = { finished ->
                                 notice = Notice.Saved(finished.session.repeat, finished.points, finished.streak)
                                 openTab(Screen.Today)
                             },
                             onEnded = ::back,
+                            onCompleted = { openTab(Screen.Today) },
                             onGone = ::back,
                         )
                         Screen.Training -> ToCome(stringResource(Res.string.levels_title))
@@ -171,17 +180,17 @@ fun Shell(model: AppModel, safeArea: PaddingValues, startAt: Screen = Screen.Tod
                         Screen.Settings -> ToCome(stringResource(Res.string.settings_title))
                     }
                 }
-                // A workout in progress has the whole screen (Android hides its bottom navigation in the focus view).
-                if (screen !is Screen.Workout) TabBar(selected = stack.first(), onSelect = ::openTab)
+                // The focus view has the whole screen (Android hides its bottom navigation there); the list keeps it.
+                if (screen !is Screen.Workout || listView) TabBar(selected = stack.first(), onSelect = ::openTab)
             }
-            replacing?.let { id ->
+            replacing?.let { (id, repeat) ->
                 StreetDialog(
                     title = stringResource(Res.string.replace_workout_title),
                     message = stringResource(Res.string.replace_workout_message),
                     onDismiss = { replacing = null },
                     confirm = DialogAction(stringResource(Res.string.replace)) {
                         replacing = null
-                        start(id, replace = true)
+                        start(id, repeat, replace = true)
                     },
                     dismiss = DialogAction(stringResource(Res.string.cancel)) { replacing = null },
                 )
@@ -227,6 +236,20 @@ private fun TitleBar(model: AppModel, screen: Screen, onBack: () -> Unit) {
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
+        // During a workout, the other view: the list icon in Focus, the focus icon in the List (Android: toolbarAction).
+        if (screen is Screen.Workout) {
+            val focus = model.workoutView == WorkoutView.FOCUS
+            val switch = stringResource(if (focus) Res.string.switch_to_list else Res.string.switch_to_focus)
+            Image(
+                painterResource(if (focus) Res.drawable.ic_view_list else Res.drawable.ic_view_focus),
+                contentDescription = null,
+                colorFilter = ColorFilter.tint(palette.text),
+                modifier = Modifier.size(56.dp)
+                    .clickable(role = Role.Button) { model.workoutView = if (focus) WorkoutView.LIST else WorkoutView.FOCUS }
+                    .semantics { contentDescription = switch }
+                    .padding(16.dp),
+            )
+        }
     }
 }
 
