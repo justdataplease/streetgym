@@ -58,9 +58,11 @@ final class StreetGymTour: XCTestCase {
         let level = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] %@", "of 100 complete")).firstMatch
         guard level.waitForExistence(timeout: 10) else { return }
         snap("05-training")
+        dump("05-training", app)
         level.tap()
         _ = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] %@", "level 1 workouts")).firstMatch.waitForExistence(timeout: 10)
         snap("06-level")
+        dump("06-level", app)
 
         // Training › My workouts: the saved and own days, with Create a workout.
         guard tapHittable(app, label: "Training") else { return }
@@ -69,20 +71,34 @@ final class StreetGymTour: XCTestCase {
             snap("07-my-workouts")
         }
 
+        // Training › Library: the ready workouts with their filters. (Parks is left out: its map would ask for the
+        // location, a system dialog, and needs the network.)
+        if tapHittable(app, label: "Library") {
+            _ = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] %@", "ready workouts for days off")).firstMatch.waitForExistence(timeout: 10)
+            snap("08-library")
+        }
+
         // Progress opens on Skills: the points and the ladders of medals.
         guard tapHittable(app, label: "Progress") else { return }
         _ = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] %@", "points. Double-tap")).firstMatch.waitForExistence(timeout: 10)
-        snap("08-skills")
+        snap("09-skills")
+        dump("09-skills", app)
 
         // History: this month's calendar.
         guard tapHittable(app, label: "History") else { return }
         _ = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] %@", "this month")).firstMatch.waitForExistence(timeout: 10)
-        snap("09-history")
+        snap("10-history")
+
+        // The Timer tab: the timer's minute and its presets. Nothing here asks for alerts until Enable alerts is tapped.
+        if tapHittable(app, label: "Timer") {
+            _ = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] %@", "tap the time to change it")).firstMatch.waitForExistence(timeout: 10)
+            snap("11-timer")
+        }
 
         // Settings: the themes, the workout's choices, the skill and equipment switches.
         guard tapHittable(app, label: "Settings") else { return }
         _ = app.descendants(matching: .any).matching(NSPredicate(format: "label BEGINSWITH[c] %@", "Concrete & Tape")).firstMatch.waitForExistence(timeout: 10)
-        snap("10-settings")
+        snap("12-settings")
     }
 
     /// Taps the first element labelled [label] that can be tapped: a tab's label can also be a title or a word on screen.
@@ -100,7 +116,17 @@ final class StreetGymTour: XCTestCase {
         return false
     }
 
+    /// Every label the app says is on screen goes into the log, between TOUR-SCREEN lines: the Mac run of 18 Nov 2026
+    /// photographed Training six times while these steps reported success.
+    private func dump(_ name: String, _ app: XCUIApplication) {
+        print("TOUR-SCREEN-BEGIN " + name)
+        print(app.debugDescription)
+        print("TOUR-SCREEN-END " + name)
+    }
+
     private func snap(_ name: String) {
+        // A moment for the frame to be drawn before the picture.
+        Thread.sleep(forTimeInterval: 1.5)
         let picture = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
         picture.name = name
         picture.lifetime = .keepAlways
