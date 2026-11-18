@@ -54,7 +54,10 @@ import com.justdataplease.streetgym.app.resources.equipment_intro
 import com.justdataplease.streetgym.app.resources.equipment_section
 import com.justdataplease.streetgym.app.resources.equipment_switched_off
 import com.justdataplease.streetgym.app.resources.keep_screen_awake
+import com.justdataplease.streetgym.app.resources.profile_section
 import com.justdataplease.streetgym.app.resources.reset_body
+import com.justdataplease.streetgym.app.resources.reset_body_account
+import com.justdataplease.streetgym.app.resources.share_section
 import com.justdataplease.streetgym.app.resources.reset_button
 import com.justdataplease.streetgym.app.resources.reset_confirm
 import com.justdataplease.streetgym.app.resources.reset_confirm_message
@@ -94,9 +97,10 @@ import kotlinx.coroutines.launch
 import kotlin.math.min
 
 /**
- * Settings (android-streetgym, HomeActivity.renderSettings) in Android's order, without what needs an account (Profile,
- * Your data): Theme, Plus and Pro, During your workout, Skills in your classes, Equipment you have, Start over, Train
- * safely and About with Ad privacy, and on Free the ad card closing the page. A skill's row opens its steps ([onSwitches], with the family's id);
+ * Settings (android-streetgym, HomeActivity.renderSettings) in Android's order: Profile (in a build with Firebase),
+ * Theme, Plus and Pro, During your workout, Skills in your classes, Equipment you have, Your data, Start over, Train
+ * safely and About with Ad privacy, and on Free the ad card closing the page. The profile's dialogs open through
+ * [onProfile], [onDeleteProfile] and [onDeleteAccount]. A skill's row opens its steps ([onSwitches], with the family's id);
  * Reset progress asks first ([onReset]); ten taps on the version open the developer settings ([onDeveloper]), counting
  * down in a note ([onNote]).
  */
@@ -107,10 +111,20 @@ fun SettingsScreen(
     onReset: () -> Unit = {},
     onDeveloper: () -> Unit = {},
     onNote: (String) -> Unit = {},
+    onProfile: (String) -> Unit = {},
+    onDeleteProfile: () -> Unit = {},
+    onDeleteAccount: () -> Unit = {},
 ) {
     val palette = Street.colors
     val scope = rememberCoroutineScope()
     Page {
+        // The profile comes first, for every tier: a username without signing in, and an account below it to keep it.
+        // A build without Firebase shows none (Android: Cloud.available).
+        if (model.cloud.available) {
+            SectionLabel(stringResource(Res.string.profile_section))
+            ProfileCard(model, onEdit = onProfile, onDeleteProfile = onDeleteProfile, onDeleteAccount = onDeleteAccount,
+                modifier = Modifier.padding(bottom = 16.dp))
+        }
         SectionLabel(stringResource(Res.string.theme_section))
         ThemePicker(model.theme, Modifier.padding(bottom = 18.dp)) { model.theme = it }
 
@@ -141,10 +155,14 @@ fun SettingsScreen(
             Equipment.entries.forEach { EquipmentRow(model, it, Modifier.padding(top = 6.dp)) }
         }
 
+        SectionLabel(stringResource(Res.string.share_section))
+        ShareProgressCard(model, Modifier.padding(bottom = 16.dp))
+
         StreetCard(Modifier.padding(bottom = 16.dp)) {
             TitleText(stringResource(Res.string.reset_title), 19f)
-            // With an account Android adds that the leaderboard and the cloud copy reset too; the iPhone has none yet.
-            BodyText(stringResource(Res.string.reset_body), 14f, Modifier.padding(top = 7.dp))
+            // Signed in, the leaderboard and the cloud copy reset too.
+            BodyText(stringResource(if (model.cloud.signedIn() != null) Res.string.reset_body_account else Res.string.reset_body), 14f,
+                Modifier.padding(top = 7.dp))
             SecondaryButton(stringResource(Res.string.reset_button), Modifier.padding(top = 12.dp), onClick = onReset)
         }
 

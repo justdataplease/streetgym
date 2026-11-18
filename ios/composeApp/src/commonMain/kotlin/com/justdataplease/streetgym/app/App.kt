@@ -35,7 +35,9 @@ import com.justdataplease.streetgym.app.data.AppSettings
 import com.justdataplease.streetgym.app.data.DEFAULT_VERSION
 import com.justdataplease.streetgym.app.data.KeyValueStore
 import com.justdataplease.streetgym.app.data.LibraryStore
+import com.justdataplease.streetgym.app.data.PhoneServices
 import com.justdataplease.streetgym.app.data.Plans
+import com.justdataplease.streetgym.app.data.WidgetLinks
 import com.justdataplease.streetgym.app.data.Program
 import com.justdataplease.streetgym.app.data.Store
 import com.justdataplease.streetgym.app.data.StoredProgress
@@ -83,6 +85,10 @@ import com.justdataplease.streetgym.app.ui.Screen
 import com.justdataplease.streetgym.app.ui.Shell
 import com.justdataplease.streetgym.app.ui.Shown
 import com.justdataplease.streetgym.app.ui.TitleText
+import com.justdataplease.streetgym.app.ui.AppleButton
+import com.justdataplease.streetgym.app.ui.AppleButtonStandIn
+import com.justdataplease.streetgym.app.ui.LocalAppleButton
+import com.justdataplease.streetgym.app.ui.WidgetUpdates
 import com.justdataplease.streetgym.app.ui.pageBackground
 import com.justdataplease.streetgym.data.progress.Streak
 import kotlinx.coroutines.flow.Flow
@@ -107,7 +113,9 @@ import kotlin.random.Random
  *
  * Plus and Pro are bought from [purchases] (StoreKit on iPhone), what was bought cached in [store] so the app opens in
  * the right tier offline; [simulate]: a debug build, whose developer settings offer Simulate tier. Free's ads come
- * from [ads] (Google's on iPhone), their full-screen breaks timed on the Timer's elapsed clock.
+ * from [ads] (Google's on iPhone), their full-screen breaks timed on the Timer's elapsed clock. [services] are the
+ * home-screen widget, the account and the cloud's documents (WidgetKit and Firebase on iPhone); [appleButton] draws
+ * Sign in with Apple (Apple's own on iPhone).
  */
 @Composable
 fun App(
@@ -129,6 +137,8 @@ fun App(
     purchases: Store = Store.None,
     ads: Ads = Ads.None,
     simulate: Boolean = false,
+    services: PhoneServices = PhoneServices(),
+    appleButton: AppleButton = AppleButtonStandIn,
 ) {
     var model by remember { mutableStateOf<AppModel?>(null) }
     // Where the app was when the phone closed it in the background, read once the program is.
@@ -146,7 +156,8 @@ fun App(
                 val timing = Timing(TimingStore(store, clock), device, { TimeZone.currentSystemDefault() }, hour24)
                 val app = AppModel(it, StoredProgress(store), device = device, settings = AppSettings(store), firstWeekday = firstWeekday,
                     library = LibraryStore(store), timing = timing, parksSource = parks, location = location,
-                    plans = Plans(store, purchases, canSimulate = simulate), ads = ads, adStore = store, elapsed = clock::elapsed)
+                    plans = Plans(store, purchases, canSimulate = simulate), ads = ads, adStore = store, elapsed = clock::elapsed,
+                    services = services)
                     .apply { this.version = version }
                 screens = Restore.decode(restored, app)
                 model = app
@@ -164,11 +175,13 @@ fun App(
                     PhoneEvent.OpenTimer -> app.timing.openRequested = true
                     PhoneEvent.TimeChanged -> app.timing.timeChanged()
                     PhoneEvent.Away -> app.paused()
+                    is PhoneEvent.Open -> WidgetLinks.parse(event.url)?.let { app.opening = it }
                 }
             }
         }
     }
-    CompositionLocalProvider(LocalReduceMotion provides reduceMotion, LocalCountKeys provides countKeys, LocalParksMaps provides maps) {
+    CompositionLocalProvider(LocalReduceMotion provides reduceMotion, LocalCountKeys provides countKeys, LocalParksMaps provides maps,
+        LocalAppleButton provides appleButton) {
         when {
             loaded != null -> StreetGymApp(loaded, restored = screens)
             failed -> StreetGymTheme(theme) { LoadErrorScreen { attempt++ } }
@@ -185,6 +198,8 @@ sealed interface PhoneEvent {
     data object TimeChanged : PhoneEvent
     /** The app left the screen (Android: onPause): the full-screen ad's clock stops until it comes back. */
     data object Away : PhoneEvent
+    /** A link opened the app: the widget's tap, to a class's page or Today (Android: NextClassWidget.ACTION_OPEN). */
+    data class Open(val url: String) : PhoneEvent
 }
 
 /**
@@ -256,10 +271,16 @@ fun StreetGymApp(
     LaunchedEffect(model) {
         model.adBreaks.resume()
         model.plans.connect()
+        // The account and analytics catch up as the app opens (Android: onResume's sync and syncAnalytics).
+        model.opened()
         model.plans.follow()
     }
+    // Firebase's user, followed while the app runs (Android: AccountSettingsView's AuthStateListener).
+    LaunchedEffect(model) { model.cloud.follow() }
     CompositionLocalProvider(LocalMotionLibrary provides model.motions, LocalParksMaps provides maps) {
         StreetGymTheme(model.theme) {
+            // The home-screen widget follows progress, the tier and the theme from here on (Android: NextClassWidget.watch).
+            WidgetUpdates(model)
             Shell(model, safeArea, startAt, showing, progressTab, historyDay, trainingTab, workoutList, readyFilter, restored)
         }
     }

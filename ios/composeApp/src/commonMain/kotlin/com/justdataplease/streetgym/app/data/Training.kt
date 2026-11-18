@@ -196,6 +196,13 @@ class Training internal constructor(
      */
     var cues: ((Cue) -> Unit)? = null
 
+    /**
+     * Hears each class finished, with the class as it ran ([WorkoutFlow], every set), the workout as it was just before
+     * it finished, the set keys the switches left out and how an exercise names its movement: progress analytics and
+     * the cloud copy follow it (Android: askEffortAndFinish's cloudChanged and analytics.classFinished).
+     */
+    var finished: ((WorkoutSession, TrainingProgram, WorkoutFlow, ActiveWorkout, Set<String>, (TrainingExercise) -> String?) -> Unit)? = null
+
     /** The time [tick] last saw; reading it redraws a countdown as it runs. */
     var clock by mutableLongStateOf(now())
         private set
@@ -412,6 +419,7 @@ class Training internal constructor(
         val session = progress.finishWorkout(at, effort, credits, doses, points) ?: return null
         forget()
         saves.bump()
+        finished?.invoke(session, program, flow, active, leftOut(program, flow)) { exercise -> exercise.movementId ?: skillMovement(exercise) }
         val streak = LocalDays.snapshot(progress.sessionHistory(), at, zone).streak.takeIf { !litBefore && it.litToday }
         // An exam's targets, less those of skills or equipment switched off; a repeated exam offers no block repeat.
         val exam = if (!program.isExam) null else flow.examTests(active.completedSetIds, easier, active.done)

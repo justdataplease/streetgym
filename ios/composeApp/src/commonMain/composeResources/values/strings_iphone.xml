@@ -17,4 +17,24 @@
     <string name="privacy_policy">Privacy Policy</string>
     <!-- Developer settings › Simulate tier (Android: simulate_tier_note, whose debug builds can't buy). -->
     <string name="simulate_tier_note_ios">Debug builds only. Default is what this phone bought. Pick a tier to test its limits and ads.</string>
+
+    <!-- Settings › Profile: Sign in with Apple beside Connect Google (Apple 4.8); Android: account_intro, account_intro_plus,
+         profile_google, account_delete_message, which name Google alone. -->
+    <string name="account_intro_ios">Connect Google or Apple to keep your username, progress and My workouts on a new phone.</string>
+    <string name="account_intro_plus_ios">Connect Google or Apple to keep your username on a new phone. Cloud backups and restore are part of Pro.</string>
+    <string name="account_sign_in_apple">Sign in with Apple</string>
+    <string name="profile_apple">Apple: %1$s</string>
+    <string name="profile_apple_signed">Signed in with Apple.</string>
+    <string name="account_delete_message_apple">Deletes your cloud progress, username and leaderboard points for good. Everything on this phone stays. Apple asks you to confirm first.</string>
+
+    <!-- The leaderboard: report or block a name (Apple 1.2). Android has neither. -->
+    <string name="leaderboard_report_message">Report this name if it’s offensive, or block it to hide it on this phone.</string>
+    <string name="leaderboard_report">Report</string>
+    <string name="leaderboard_block">Block</string>
+    <string name="leaderboard_blocked">Blocked. This name is hidden on this phone.</string>
+    <string name="leaderboard_blocked_note">Names you blocked are hidden on this phone.</string>
+    <string name="leaderboard_unblock">Show them again</string>
+    <string name="leaderboard_report_subject">Street Gym: report a username</string>
+    <string name="leaderboard_report_body">Username: %1$s\nBoard: %2$s\n\nWhat’s wrong with it:\n</string>
+    <string name="leaderboard_report_no_mail">No mail app. Write to %1$s.</string>
 </resources>

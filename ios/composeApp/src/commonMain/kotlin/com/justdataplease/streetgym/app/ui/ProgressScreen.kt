@@ -16,11 +16,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.unit.dp
 import com.justdataplease.streetgym.app.data.AppModel
+import com.justdataplease.streetgym.app.data.BoardEntry
 import com.justdataplease.streetgym.app.data.Paywall
+import androidx.compose.runtime.remember
 import com.justdataplease.streetgym.app.resources.Res
 import com.justdataplease.streetgym.app.resources.leaderboard_intro
 import com.justdataplease.streetgym.app.resources.leaderboard_rank
-import com.justdataplease.streetgym.app.resources.leaderboard_unavailable
 import com.justdataplease.streetgym.app.resources.progress_tab_history
 import com.justdataplease.streetgym.app.resources.progress_tab_leaderboard
 import com.justdataplease.streetgym.app.resources.progress_tab_skills
@@ -38,8 +39,9 @@ const val PROGRESS_LEADERBOARD = 2
  * kept while the app runs ([tab], [onTab]), then the tab's content and, on Free, the ad card closing it. Skills open a
  * skill's sheet ([onSkill]) and the help ([onHelp]); History's rows open their class ([onOpenClass]) and its streak line
  * the streak's sheet ([onStreak]). The Leaderboard: its intro, then on Free a board's shape under the layer whose Unlock
- * opens the offer ([onPaywall]); Plus and Pro read that it isn't in this build, as Android's builds without Firebase say
- * (the boards come with the account, round 13).
+ * opens the offer ([onPaywall]); on Plus and Pro the boards ([LeaderboardSection], its switches kept in [leaderboard]),
+ * where another athlete's row offers to report or block the name ([onReport]); a build without Firebase says the
+ * leaderboard isn't in it, as Android's do.
  */
 @Composable
 fun ProgressScreen(
@@ -52,6 +54,8 @@ fun ProgressScreen(
     onOpenClass: (String) -> Unit,
     onStreak: () -> Unit,
     onPaywall: (Paywall) -> Unit = {},
+    leaderboard: LeaderboardState = remember { LeaderboardState() },
+    onReport: (BoardEntry, String) -> Unit = { _, _ -> },
 ) {
     // Without the skills (a program without them) Android shows History alone.
     val skills = model.skills != null
@@ -78,10 +82,7 @@ fun ProgressScreen(
         tabs()
         when (shown) {
             PROGRESS_SKILLS -> SkillsSection(model, onSkill, onHelp, Modifier.padding(top = 14.dp))
-            PROGRESS_LEADERBOARD -> {
-                BodyText(stringResource(Res.string.leaderboard_intro), 14f, Modifier.padding(top = 12.dp))
-                StreetCard(Modifier.padding(top = 12.dp)) { BodyText(stringResource(Res.string.leaderboard_unavailable)) }
-            }
+            PROGRESS_LEADERBOARD -> LeaderboardSection(model, leaderboard, onReport)
             else -> HistorySection(model, calendar, onOpenClass, onStreak, Modifier.padding(top = 14.dp))
         }
         EndAd(model)

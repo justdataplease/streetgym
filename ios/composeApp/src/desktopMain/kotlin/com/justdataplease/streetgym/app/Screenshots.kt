@@ -119,6 +119,8 @@ fun main(args: Array<String>) {
             if ("workout" in only) workoutShots(program, theme, out)
             if ("plans" in only) plansShots(program, theme, out)
             if ("ads" in only) adsShots(program, theme, out)
+            if ("widget" in only) widgetShots(program, theme, out)
+            if ("account" in only) accountShots(program, theme, out)
         }
         println("Screenshots in ${out.absolutePath}")
         return
@@ -148,6 +150,8 @@ fun main(args: Array<String>) {
     for (theme in StreetTheme.entries) parksShots(program, theme, out)
     for (theme in StreetTheme.entries) plansShots(program, theme, out)
     for (theme in StreetTheme.entries) adsShots(program, theme, out)
+    for (theme in StreetTheme.entries) widgetShots(program, theme, out)
+    for (theme in StreetTheme.entries) accountShots(program, theme, out)
     shot(File(out, "start-buttons.png"), height = 1560) { StartButtons() }
     val names = movementNames()
     for (theme in StreetTheme.entries) FIGURE_SHEETS.forEachIndexed { index, ids ->
@@ -1017,3 +1021,118 @@ private fun shot(file: File, width: Int = WIDTH, height: Int = HEIGHT, density: 
 
 private const val FRAMES = 6
 private const val FRAME_MILLIS = 50L
+
+
+/**
+ * Rounds 11 to 13's widget, in [theme]: the medium widget on the home screen, as the snapshot Swift draws it from, for
+ * the athlete of the pictures (today's flame lit, then tomorrow's unlit and its end), a new athlete, an exam, a class
+ * beyond Free and every class done.
+ */
+private fun widgetShots(program: Program, theme: StreetTheme, out: File) {
+    val name = theme.key
+    val ordered = NextClass.ordered(program.catalog)
+    val words = runBlocking { com.justdataplease.streetgym.app.data.WidgetWords.load() }
+    val athlete = athlete(program).apply { this.theme = theme }
+    val new = model(program).apply { this.theme = theme }
+    val exam = model(program).apply {
+        this.theme = theme
+        progress.completePrograms(ordered.take(ordered.indexOfFirst { it.isExam }).map { it.id }, at = NOW - 30 * DAY)
+    }
+    val locked = model(program, tier = Tier.FREE).apply {
+        this.theme = theme
+        progress.completePrograms(ordered.take(300).map { it.id }, at = NOW - 30 * DAY)
+    }
+    val done = model(program).apply {
+        this.theme = theme
+        progress.completePrograms(ordered.map { it.id }, at = NOW - 30 * DAY)
+    }
+    val lit = athlete.widgetSnapshot(words)
+    val rows = listOf(lit, lit, lit, new.widgetSnapshot(words), exam.widgetSnapshot(words), locked.widgetSnapshot(words), done.widgetSnapshot(words))
+    val flames = listOf(0, 1, lit.flames.lastIndex, 0, 0, 0, 0)
+    shot(File(out, "widget-$name.png"), width = 1_212, height = 4_020) {
+        CompositionLocalProvider(LocalMotionLibrary provides program.motions) {
+            val measurer = androidx.compose.ui.text.rememberTextMeasurer()
+            val pictures = rows.map { row ->
+                remember(row) {
+                    com.justdataplease.streetgym.app.ui.widgetFigure(row.card, row.theme, program.motions!!, emptyMap(), measurer,
+                        androidx.compose.ui.text.font.FontFamily.Default)
+                }
+            }
+            com.justdataplease.streetgym.app.ui.WidgetSheet(rows.zip(pictures), flames)
+        }
+    }
+}
+
+/**
+ * Rounds 12 and 13 in [theme], over a fake Firebase: Settings' profile before a username, with one kept without an
+ * account, connected on Pro with its last sync, the profile's dialog and Delete account's question, Your data, the
+ * leaderboard with its boards and the athlete's row, reporting or blocking a name, and Today's park greeting the name.
+ */
+private fun accountShots(program: Program, theme: StreetTheme, out: File) {
+    val name = theme.key
+    fun phone(tier: Tier): Pair<AppModel, FakeCloud> {
+        val clock = ShotClock()
+        val store = MemoryStore()
+        val account = FakeAccount()
+        val cloud = FakeCloud({ account.user.value }, { clock.time })
+        com.justdataplease.streetgym.app.data.AppSettings(store).placementDone = true
+        val model = AppModel(program, StoredProgress(store), now = { clock.time }, zone = TimeZone.UTC,
+            settings = com.justdataplease.streetgym.app.data.AppSettings(store), library = LibraryStore(store),
+            plans = shotPlans(store, tier), ads = FakeAds(), adStore = store,
+            services = com.justdataplease.streetgym.app.data.PhoneServices(account = account, documents = cloud, region = "GR"))
+        val ordered = NextClass.ordered(program.catalog)
+        listOf(17, 16, 14, 13, 11, 10, 8, 7, 4, 3, 2, 0).forEachIndexed { index, daysAgo ->
+            val finished = NOW - daysAgo * DAY - (if (daysAgo == 0) 8 * 60 * MINUTE else 0L)
+            model.progress.startWorkout(ordered[index].id, startedAtEpochMillis = finished - 40 * MINUTE)
+            model.progress.finishWorkout(completedAtEpochMillis = finished, effortRating = 6, points = 120)
+        }
+        model.theme = theme
+        return model to cloud
+    }
+    fun pick(model: AppModel, username: String): String {
+        var uid = ""
+        model.cloud.pickUsername { uid = it }
+        model.cloud.saveProfile(uid, com.justdataplease.streetgym.app.data.Profile(username, "GR"))
+        return uid
+    }
+
+    val (fresh, _) = phone(Tier.PLUS)
+    shot(File(out, "settings-profile-new-$name.png")) { StreetGymApp(fresh, SAFE_AREA, startAt = Screen.Settings) }
+    val (kept, _) = phone(Tier.FREE)
+    pick(kept, "Alexa_7")
+    shot(File(out, "settings-profile-$name.png")) { StreetGymApp(kept, SAFE_AREA, startAt = Screen.Settings) }
+    val (pro, _) = phone(Tier.PRO)
+    pick(pro, "Alexa_7")
+    pro.cloud.connect(com.justdataplease.streetgym.app.data.SignInProvider.APPLE)
+    shot(File(out, "settings-account-long-$name.png"), height = 13_500) { StreetGymApp(pro, SAFE_AREA, startAt = Screen.Settings) }
+    shot(File(out, "delete-account-$name.png")) { StreetGymApp(pro, SAFE_AREA, startAt = Screen.Settings, showing = Shown.DeleteAccount) }
+    val (editing, _) = phone(Tier.PLUS)
+    val uid = pick(editing, "Alexa_7")
+    shot(File(out, "profile-dialog-$name.png")) { StreetGymApp(editing, SAFE_AREA, startAt = Screen.Settings, showing = Shown.Profile(uid)) }
+    // Today's park, held on its final skill, says "Well done, Alexa_7!".
+    shot(File(out, "today-greeting-$name.png")) { StreetGymApp(editing, SAFE_AREA) }
+
+    val (board, cloud) = phone(Tier.PLUS)
+    pick(board, "Alexa_7")
+    val points = board.points()
+    val entries = listOf("Kalisthenis" to "GR", "maria.k" to "CY", "Bar_Wolf" to "DE", "Alexa_7" to "GR", "lena_runs" to "GR",
+        "tomas" to "ES", "H4ndstand" to "US", "ella.moves" to "GB", "Nikos" to "GR", "pullup_pat" to "IE")
+    val scores = listOf(48_200, 41_950, 33_400, points, points - 40, points - 120, points - 300, points - 500, points - 700, points - 900)
+    cloud.documents["boards/all_world"] = mapOf(
+        "entries" to entries.zip(scores).map { (who, score) -> mapOf("username" to who.first, "country" to who.second, "score" to score) },
+        "players" to 1_234, "updated_at" to com.justdataplease.streetgym.app.data.CloudTime(NOW - 2 * 3_600_000L),
+        "percentiles" to List(100) { 48_200 - it * 470 },
+    )
+    shot(File(out, "leaderboard-$name.png")) { StreetGymApp(board, SAFE_AREA, startAt = Screen.Progress, progressTab = PROGRESS_LEADERBOARD) }
+    shot(File(out, "leaderboard-long-$name.png"), height = 6_400) {
+        StreetGymApp(board, SAFE_AREA, startAt = Screen.Progress, progressTab = PROGRESS_LEADERBOARD)
+    }
+    shot(File(out, "leaderboard-report-$name.png")) {
+        StreetGymApp(board, SAFE_AREA, startAt = Screen.Progress, progressTab = PROGRESS_LEADERBOARD,
+            showing = Shown.Report(com.justdataplease.streetgym.app.data.BoardEntry("Bar_Wolf", "DE", 33_400), "all_world"))
+    }
+    board.cloud.block("Bar_Wolf")
+    shot(File(out, "leaderboard-blocked-long-$name.png"), height = 6_400) {
+        StreetGymApp(board, SAFE_AREA, startAt = Screen.Progress, progressTab = PROGRESS_LEADERBOARD)
+    }
+}

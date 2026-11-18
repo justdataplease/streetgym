@@ -119,6 +119,25 @@ final class StreetGymTour: XCTestCase {
             snap("15-today-ad")
             dump("15-today-ad", app)
         }
+
+        // Rounds 12 and 13: Settings › Your data and its sharing switch. A build without Firebase (CI has no
+        // GoogleService-Info.plist) shows no Profile, as Android's builds without Firebase don't.
+        if tapHittable(app, label: "Settings") {
+            let share = app.descendants(matching: .any).matching(NSPredicate(format: "label ==[c] %@", "Share my training progress")).firstMatch
+            var swipes = 0
+            while !(share.exists && share.isHittable) && swipes < 8 {
+                app.swipeUp()
+                swipes += 1
+            }
+            snap("16-settings-your-data")
+            dump("16-settings-your-data", app)
+        }
+
+        // Progress › Leaderboard: Free's board under its layer, whose Unlock opens the offer.
+        if tapHittable(app, label: "Progress"), tapHittable(app, label: "Leaderboard") {
+            _ = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] %@", "points from your training")).firstMatch.waitForExistence(timeout: 10)
+            snap("17-leaderboard")
+        }
     }
 
     /// Taps the first element labelled [label] that can be tapped: a tab's label can also be a title or a word on screen.

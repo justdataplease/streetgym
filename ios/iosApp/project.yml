@@ -19,6 +19,15 @@ packages:
   UserMessagingPlatform:
     url: https://github.com/googleads/swift-package-manager-google-user-messaging-platform
     from: 3.1.0
+  # The account, the leaderboard and progress analytics (FirebaseAccount.swift), the same Firebase project as Android's.
+  # Checked 18 Nov 2026: Firebase 13.2.0 (13 Nov 2026; iOS 15 or newer, Xcode 26.2 or newer) and Google Sign-In 10.1.0
+  # (23 Oct 2026, the release that lets Swift Package Manager apps use Firebase 13).
+  Firebase:
+    url: https://github.com/firebase/firebase-ios-sdk
+    from: 13.2.0
+  GoogleSignIn:
+    url: https://github.com/google/GoogleSignIn-iOS
+    from: 10.1.0
 # The StoreKit test file the scheme's Run uses: Android's products at Android's prices, bought in the Simulator without
 # an Apple account. Kept in the project but out of the app's bundle.
 fileGroups:
@@ -34,13 +43,34 @@ settings:
     ADMOB_APP_ID: ca-app-pub-3940256099942544~1458002511
     ADMOB_NATIVE_ID: ca-app-pub-3940256099942544/3986624511
     ADMOB_INTERSTITIAL_ID: ca-app-pub-3940256099942544/4411468910
+    # Google Sign-In comes back to the app on the reversed client id of the owner's GoogleService-Info.plist
+    # (REVERSED_CLIENT_ID), passed as this build setting like the AdMob ids; until then Google isn't offered.
+    GOOGLE_REVERSED_CLIENT_ID: streetgym-google-sign-in-not-set
 targets:
   StreetGym:
     type: application
     platform: iOS
     sources:
       - path: StreetGym
+        excludes:
+          - GoogleService-Info.plist
+      # Firebase's configuration: the owner's file, never in git; a build without it has no account (FirebaseSetup).
+      - path: StreetGym/GoogleService-Info.plist
+        optional: true
+        buildPhase: resources
     dependencies:
+      # The home-screen widget, embedded in the app.
+      - target: StreetGymWidget
+      - package: Firebase
+        product: FirebaseCore
+      - package: Firebase
+        product: FirebaseAuth
+      - package: Firebase
+        product: FirebaseFirestore
+      - package: Firebase
+        product: FirebaseAppCheck
+      - package: GoogleSignIn
+        product: GoogleSignIn
       - package: MapLibre
         product: MapLibre
       - package: GoogleMobileAds
@@ -112,6 +142,14 @@ targets:
           - SKAdNetworkIdentifier: 3rd42ekr43.skadnetwork
           - SKAdNetworkIdentifier: 97r2b46745.skadnetwork
           - SKAdNetworkIdentifier: 3qcr597p9d.skadnetwork
+        # The widget's tap (streetgym://class/<id>, streetgym://today), and Google Sign-In's way back to the app.
+        CFBundleURLTypes:
+          - CFBundleURLName: com.justdataplease.streetgym
+            CFBundleURLSchemes:
+              - streetgym
+          - CFBundleURLName: com.justdataplease.streetgym.google
+            CFBundleURLSchemes:
+              - $(GOOGLE_REVERSED_CLIENT_ID)
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         LSRequiresIPhoneOS: true
@@ -145,15 +183,54 @@ targets:
           - UserNotifications
           - -framework
           - CoreLocation
+          - -framework
+          - AuthenticationServices
         # The script runs Gradle, which reads and writes outside Xcode's sandbox.
         ENABLE_USER_SCRIPT_SANDBOXING: false
         CODE_SIGN_STYLE: Automatic
+    # The App Group the widget reads from, Sign in with Apple, and App Attest for App Check. A build without signing
+    # (the Simulator's CI) carries none of them: the app then writes no widget file and Apple's sign-in fails politely.
+    entitlements:
+      path: StreetGym/StreetGym.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.justdataplease.streetgym
+        com.apple.developer.applesignin:
+          - Default
+        com.apple.developer.devicecheck.appattest-environment: production
     preBuildScripts:
       - name: Build the Kotlin framework
         basedOnDependencyAnalysis: false
         script: |
           cd "$SRCROOT/.."
           sh ./gradlew :composeApp:embedAndSignAppleFrameworkForXcode
+  # The "Next class" home-screen widget (StreetGymWidget.swift): SwiftUI only, without the app's Kotlin; it reads the
+  # snapshot the app writes into the App Group's folder.
+  StreetGymWidget:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: StreetGymWidget
+    info:
+      path: StreetGymWidget/Info.plist
+      properties:
+        CFBundleDisplayName: Street Gym
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    entitlements:
+      path: StreetGymWidget/StreetGymWidget.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.justdataplease.streetgym
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.justdataplease.streetgym.widget
+        PRODUCT_NAME: StreetGymWidget
+        TARGETED_DEVICE_FAMILY: "1"
+        CODE_SIGN_STYLE: Automatic
+        SKIP_INSTALL: true
   # Opens the app in the Simulator and saves a picture of each screen, which CI uploads for review.
   StreetGymTour:
     type: bundle.ui-testing

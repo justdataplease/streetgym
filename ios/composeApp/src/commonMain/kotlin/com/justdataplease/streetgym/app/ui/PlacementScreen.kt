@@ -410,11 +410,21 @@ fun ShareProgressNote(model: AppModel, modifier: Modifier = Modifier) {
     val palette = Street.colors
     Column(modifier.fillMaxWidth()) {
         Box(Modifier.fillMaxWidth().height(2.dp).background(palette.divider))
-        Row(Modifier.padding(top = 12.dp).fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            BodyText(boldMarkup(stringResource(Res.string.share_body), SpanStyle(fontFamily = Street.type.bold)), 12.5f, Modifier.weight(1f))
-            SwitchToggle(model.shareProgress, stringResource(Res.string.share_switch), Modifier.padding(start = 14.dp)) {
-                model.shareProgress = it
-            }
+        ShareProgressRow(model, Modifier.padding(top = 12.dp))
+    }
+}
+
+/**
+ * The sharing line and its switch (Android: shareProgressNote's row): switched off, what this install shared is
+ * deleted ([AppModel.shareProgress]); [onChanged] follows.
+ */
+@Composable
+fun ShareProgressRow(model: AppModel, modifier: Modifier = Modifier, onChanged: (Boolean) -> Unit = {}) {
+    Row(modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        BodyText(boldMarkup(stringResource(Res.string.share_body), SpanStyle(fontFamily = Street.type.bold)), 12.5f, Modifier.weight(1f))
+        SwitchToggle(model.shareProgress, stringResource(Res.string.share_switch), Modifier.padding(start = 14.dp)) {
+            model.shareProgress = it
+            onChanged(it)
         }
     }
 }

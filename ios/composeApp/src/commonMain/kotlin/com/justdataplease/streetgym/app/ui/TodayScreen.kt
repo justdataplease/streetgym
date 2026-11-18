@@ -105,7 +105,7 @@ fun TodayScreen(
             BodyText(stringResource(Res.string.brand_kicker), 12f, color = palette.heroKicker)
             TitleText(stringResource(Res.string.brand_line), 30f, Modifier.padding(top = 8.dp), color = palette.heroText)
             // The day's routine in the park; a tap after midnight plays the new day's (Android: ParkSceneView).
-            ParkScene(model.day, model.resumes, Modifier.padding(top = 4.dp).fillMaxWidth().height(180.dp)) { model.refreshDay() }
+            ParkScene(model.day, model.resumes, Modifier.padding(top = 4.dp).fillMaxWidth().height(180.dp), username = model.greetedName()) { model.refreshDay() }
         }
 
         val fontScale = LocalDensity.current.fontScale

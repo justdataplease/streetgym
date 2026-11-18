@@ -70,6 +70,9 @@ class LibraryStore(private val store: KeyValueStore) {
         state.copy(lists = state.lists + (id to list.copy(dayIds = emptyList(), updatedAt = at, deleted = true)))
     }
 
+    /** The whole library at once: a cloud sync's merged copy (Android: LibraryRepository.replace). */
+    fun replace(state: LibraryState) = store.set(KEY, LibraryCodec.encode(state).toString())
+
     private fun update(change: (LibraryState) -> LibraryState) {
         store.set(KEY, LibraryCodec.encode(change(state())).toString())
     }

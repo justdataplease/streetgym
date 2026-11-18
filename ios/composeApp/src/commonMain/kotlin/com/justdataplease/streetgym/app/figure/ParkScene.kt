@@ -49,8 +49,23 @@ import com.justdataplease.streetgym.app.theme.Street
 import com.justdataplease.streetgym.app.theme.blendColor
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.RoundRect
+import androidx.compose.ui.graphics.PathOperation
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.withTransform
+import androidx.compose.ui.text.TextMeasurer
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.unit.sp
+import com.justdataplease.streetgym.app.resources.park_well_done
 import kotlin.math.cos
 import kotlin.math.floor
+import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.math.sin
@@ -58,7 +73,7 @@ import kotlin.math.sin
 /*
  * Today's park and the loading screen's figure: android-streetgym, ui/ParkSceneView.kt, drawn with Compose's Canvas
  * (the one under every DrawScope) and the movement guides' line man (drawLineFigure, FrontView), paint for paint.
- * The greeting with a username ("Well done, <name>!") waits for the account (round 12).
+ * With a username the park says "Well done, <name>!" in Android's cloud as the final skill lands (ParkGreeting).
  */
 
 /** What the scene plays (Android: ParkSceneView.Mode). */
@@ -98,11 +113,16 @@ internal fun ParkMove.label(): StringResource = when (this) {
  * ([onReplay] first, which may move the day on after midnight). Reduced motion holds the final skill still.
  */
 @Composable
-fun ParkScene(day: Long, resumes: Int, modifier: Modifier = Modifier, onReplay: () -> Unit = {}) {
+fun ParkScene(day: Long, resumes: Int, modifier: Modifier = Modifier, username: String? = null, onReplay: () -> Unit = {}) {
     val palette = Street.colors
     val library = LocalMotionLibrary.current ?: remember { AnimationLibrary.fallbackLibrary() }
     val routine = remember(day) { ParkRoutine.forEpochDay(day) }
-    val scene = remember(palette, library, routine) { ParkRenderer(ParkMode.STORY, palette, library, routine) }
+    val name = username?.trim()?.takeIf(String::isNotEmpty)
+    val scene = remember(palette, library, routine, name != null) { ParkRenderer(ParkMode.STORY, palette, library, routine, greets = name != null) }
+    // "Well done, <name>!" (Android: park_well_done), in the bold face at 12.5 sp.
+    val greeting = name?.let { stringResource(Res.string.park_well_done, "\u0000") }
+    val measurer = rememberTextMeasurer()
+    val bold = Street.type.bold
     val description = stringResource(Res.string.park_scene_description,
         stringResource(routine.opener.label()), stringResource(routine.middle.label()), stringResource(routine.finale.label()))
     val replayLabel = stringResource(Res.string.park_scene_replay)
@@ -142,7 +162,10 @@ fun ParkScene(day: Long, resumes: Int, modifier: Modifier = Modifier, onReplay: 
             },
     ) {
         scene.layout(size.width, size.height)
-        drawIntoCanvas { scene.draw(it, heldAt ?: if (holdFinale) scene.finaleAt else clock, still = reduced) }
+        val time = heldAt ?: if (holdFinale) scene.finaleAt else clock
+        drawIntoCanvas { scene.draw(it, time, still = reduced) }
+        // A held final frame (the review pictures) shows the greeting fully in, as reduced motion does.
+        if (name != null && greeting != null) scene.drawGreeting(this, measurer, bold, greeting, name, time, still = reduced || holdFinale)
     }
 }
 
@@ -185,6 +208,8 @@ internal class ParkRenderer(
     palette: Palette,
     library: AnimationLibrary?,
     routine: ParkRoutine?,
+    /** A username is greeted: the final skill holds longer, so the greeting can be read (Android: finaleHold). */
+    private val greets: Boolean = false,
 ) {
     private val rig = if (mode == ParkMode.STORY) library?.rig ?: Rig.DEFAULT else Rig.DEFAULT
     private val story: ParkStory? = if (mode == ParkMode.STORY && routine != null)
@@ -225,6 +250,8 @@ internal class ParkRenderer(
     private val groundPaint = strokePaint(groundColor).apply { strokeCap = StrokeCap.Butt }
     private val dashPaint = strokePaint(dashColor)
     private val pullInk = FrontInk(heroNear, heroHead, heroHand, barPaint, postPaint)
+    private val greetingInk = blendColor(Color.White, backdrop, 0.84f)
+    private val greetingText = palette.heroText
     private val pullFrame = FrontView.Frame()
 
     /** False when a clip is missing: the hero then only walks in. */
@@ -235,7 +262,7 @@ internal class ParkRenderer(
 
     /** When the loop starts over: the final skill holds, then the hero fades out. */
     val loopSeconds: Float get() = when (mode) {
-        ParkMode.STORY -> finaleAt + FINALE_HOLD_SECONDS + LOOP_FADE_SECONDS
+        ParkMode.STORY -> finaleAt + (if (greets) BUBBLE_HOLD_SECONDS else FINALE_HOLD_SECONDS) + LOOP_FADE_SECONDS
         ParkMode.WALK -> 2f * Gait.STEP_TIME
         ParkMode.PULL -> PULL_REP
     }
@@ -323,6 +350,108 @@ internal class ParkRenderer(
         )
     }
 
+    // ---- the greeting (Android: ParkSceneView.drawGreeting, BubbleStyle.CLOUD, the style Today uses)
+
+    /**
+     * "Well done, <name>!" in a line-art cloud rising over the hero, from just before the final skill lands until the
+     * loop fades, the cloud kept clear of the hero. [template] is the greeting with a place (\u0000) for [name], which is
+     * cut with "…" so the whole fits the scene. [still]: fully in and still (reduced motion).
+     */
+    fun drawGreeting(scope: DrawScope, measurer: TextMeasurer, face: FontFamily, template: String, name: String, clock: Float, still: Boolean) {
+        val story = story ?: return
+        if (!story.ready || width <= 0f) return
+        val t = if (still) story.end else clock
+        val since = if (still) GREETING_IN_FULL else t - (story.end - BUBBLE_LEAD_SECONDS)
+        val fadeOut = if (still) 1f else ((loopSeconds - clock) / LOOP_FADE_SECONDS).coerceIn(0f, 1f)
+        if (since <= 0f || fadeOut <= 0f) return
+        val density = scope.density
+        val style = TextStyle(fontFamily = face, fontSize = 12.5.sp)
+        val line = greetingLine(measurer, style, template, name, density) ?: return
+        val text = measurer.measure(line, style, maxLines = 1, softWrap = false)
+        heroBounds()
+        val padX = CLOUD_PAD_X * density
+        val padY = 6f * density
+        val w = text.size.width + 2f * padX
+        val h = text.size.height + 2f * padY
+        val appear = if (still) 1f else smoothstep((since / CLOUD_IN_SECONDS).coerceIn(0f, 1f))
+        if (appear <= 0.01f) return
+        val bob = if (still) 0f else sin(TAU * since / CLOUD_BOB_SECONDS) * 1.2f * density
+        // The puffs rise 0.44 of the body's height above it; the bob needs a little more.
+        val puffs = h * (CLOUD_TOP_R.max() - 0.12f)
+        val restTop = EDGE_DP * density + puffs + 1.5f * density
+        val top = restTop + (1f - appear) * 10f * density + bob
+        val centre = clearX(w + 8f * density, restTop - puffs, restTop + h + 4f * density, density)
+        // It puffs up from 80% as it rises, and turns solid early, so nothing behind shows through its words.
+        val grow = 0.8f + 0.2f * appear
+        val left = centre - w * 0.5f
+        val bottom = top + h
+        var cloud = Path().apply { addRoundRect(RoundRect(left, top, left + w, bottom, CornerRadius(h * 0.5f))) }
+        fun puff(x: Float, y: Float, r: Float) {
+            val circle = Path().apply { addOval(Rect(x - r, y - r, x + r, y + r)) }
+            cloud = Path().apply { op(cloud, circle, PathOperation.Union) }
+        }
+        for (i in CLOUD_TOP_X.indices) puff(left + w * CLOUD_TOP_X[i], top + h * 0.12f, h * CLOUD_TOP_R[i])
+        for (i in CLOUD_BOTTOM_X.indices) puff(left + w * CLOUD_BOTTOM_X[i], bottom - h * 0.1f, h * 0.36f)
+        val shown = (fadeOut * (appear / 0.3f).coerceAtMost(1f)).coerceIn(0f, 1f)
+        scope.withTransform({ scale(grow, grow, pivot = Offset(centre, top + h * 0.5f)) }) {
+            drawPath(cloud, greetingInk, alpha = shown)
+            drawPath(cloud, heroNear.color, alpha = shown, style = Stroke(1.3f * this@ParkRenderer.scale))
+            drawText(text, color = greetingText, topLeft = Offset(left + padX, top + padY), alpha = shown)
+        }
+    }
+
+    /** The greeting with the name cut with "…" so the whole fits the scene's width (Android: greetingLine). */
+    private fun greetingLine(measurer: TextMeasurer, style: TextStyle, template: String, name: String, density: Float): String? {
+        fun width(text: String) = measurer.measure(text, style, maxLines = 1, softWrap = false).size.width
+        val room = width - 2f * (EDGE_DP + CLOUD_PAD_X) * density - width(template.replace("\u0000", ""))
+        var shown = name
+        if (width(shown) > room) {
+            while (shown.isNotEmpty() && width("$shown…") > room) shown = shown.dropLast(1)
+            shown = if (shown.isEmpty()) "" else "$shown…"
+        }
+        if (shown.isEmpty()) return null
+        return template.replace("\u0000", shown)
+    }
+
+    /** The hero's outline this frame, in canvas pixels (Android: heroBounds). */
+    private fun heroBounds() {
+        var left = Float.MAX_VALUE
+        var top = Float.MAX_VALUE
+        var right = -Float.MAX_VALUE
+        var bottom = -Float.MAX_VALUE
+        for (joint in 0 until Rig.JOINT_COUNT) {
+            left = min(left, heroJoints[joint * 2])
+            right = max(right, heroJoints[joint * 2])
+            top = min(top, heroJoints[joint * 2 + 1])
+            bottom = max(bottom, heroJoints[joint * 2 + 1])
+        }
+        val pad = rig.headRadius
+        heroLeft = originX + (left - pad) * scale
+        heroTop = originY + (top - pad) * scale
+        heroRight = originX + (right + pad) * scale
+        heroBottom = originY + (bottom + pad) * scale
+    }
+
+    private var heroLeft = 0f
+    private var heroTop = 0f
+    private var heroRight = 0f
+    private var heroBottom = 0f
+
+    /**
+     * Where a shape [w] wide and spanning [top]..[bottom] goes: centred over the hero, or over the wider free side when
+     * the hero reaches up into that band, so the greeting never hides the skill (Android: clearX).
+     */
+    private fun clearX(w: Float, top: Float, bottom: Float, density: Float): Float {
+        val edge = EDGE_DP * density
+        var centre = (heroLeft + heroRight) * 0.5f
+        if (heroTop < bottom && heroBottom > top) {
+            val leftRoom = heroLeft
+            val rightRoom = width - heroRight
+            centre = if (leftRoom >= rightRoom) leftRoom * 0.5f else heroRight + rightRoom * 0.5f
+        }
+        return centre.coerceIn(edge + w * 0.5f, max(edge + w * 0.5f, width - edge - w * 0.5f))
+    }
+
     private fun drawFriend(canvas: Canvas, story: ParkStory, index: Int, t: Float) {
         val clapFlash = story.poseFriend(index, t, friend, friendJoints)
         val facing = story.friendFacing[index]
@@ -396,6 +525,20 @@ internal class ParkRenderer(
         const val FINALE_HOLD_SECONDS = 2f
         const val LOOP_FADE_SECONDS = 0.45f
         const val MAX_FRAME_SECONDS = 0.1f
+
+        // The greeting (Android: ParkSceneView's BUBBLE_* and CLOUD_*).
+        const val BUBBLE_HOLD_SECONDS = 3.4f
+        const val BUBBLE_LEAD_SECONDS = 0.35f
+        const val CLOUD_IN_SECONDS = 0.7f
+        const val CLOUD_BOB_SECONDS = 2.4f
+        const val GREETING_IN_FULL = 10f
+        const val EDGE_DP = 6f
+        const val CLOUD_PAD_X = 13f
+        val CLOUD_TOP_X = floatArrayOf(0.24f, 0.5f, 0.76f)
+        val CLOUD_TOP_R = floatArrayOf(0.42f, 0.56f, 0.4f)
+        val CLOUD_BOTTOM_X = floatArrayOf(0.34f, 0.68f)
+        const val TAU = 6.2831855f
+        fun smoothstep(x: Float) = x * x * (3f - 2f * x)
 
         const val SCENE_TOP = -9f
         const val SCENE_BOTTOM = 110f

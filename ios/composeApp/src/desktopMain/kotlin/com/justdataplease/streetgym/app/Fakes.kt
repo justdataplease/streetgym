@@ -254,3 +254,31 @@ fun AdCardStandIn(look: AdLook, modifier: Modifier = Modifier) {
 
 /** What VoiceOver hears on the stand-in card, and what tests find it by. */
 const val AD_STAND_IN = "Ad stand-in"
+
+/**
+ * The home-screen widget on the desktop and in tests, in place of WidgetKit: keeps every snapshot the app wrote, the
+ * last tile picture and face it was given, and how many of each.
+ */
+class FakeWidget : com.justdataplease.streetgym.app.data.HomeWidget {
+    val snapshots = mutableListOf<String>()
+    var figure: androidx.compose.ui.graphics.ImageBitmap? = null
+        private set
+    var figures = 0
+        private set
+    var fontFile: String? = null
+        private set
+    var fonts = 0
+        private set
+
+    override fun save(snapshot: String, figure: androidx.compose.ui.graphics.ImageBitmap?, fontFile: String?, font: ByteArray?) {
+        snapshots += snapshot
+        if (figure != null) {
+            this.figure = figure
+            figures++
+        }
+        if (font != null) {
+            this.fontFile = fontFile
+            fonts++
+        }
+    }
+}

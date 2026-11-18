@@ -50,6 +50,23 @@ val androidResources = tasks.register<Sync>("androidResources") {
     }
     // What only this app has.
     from("src/commonMain/composeResources")
+    // The app's contact address, for the leaderboard's report mail: `contact.address` in this project's
+    // local.properties (never in git: the repository is public), else STREETGYM_CONTACT_ADDRESS, else empty.
+    val contact = contactAddress()
+    inputs.property("contact", contact)
+    doLast {
+        val values = destinationDir.resolve("values").apply { mkdirs() }
+        values.resolve("strings_build.xml").writeText(
+            "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<resources>\n    <string name=\"contact_address\">$contact</string>\n</resources>\n")
+    }
+}
+
+fun contactAddress(): String {
+    val local = rootProject.file("local.properties")
+    // Read line by line: in a build script the name `java` is Gradle's Java extension, not the package.
+    val fromFile = if (local.isFile) local.readLines().map { it.trim() }
+        .firstOrNull { it.startsWith("contact.address=") }?.substringAfter("=") else null
+    return (fromFile ?: System.getenv("STREETGYM_CONTACT_ADDRESS") ?: "").trim()
 }
 
 kotlin {
@@ -103,6 +120,12 @@ compose.desktop {
     application {
         mainClass = "com.justdataplease.streetgym.app.PreviewKt"
     }
+}
+
+// The screens' tests draw whole screens and read the program in each class: Gradle's default 512 MB worker ran out
+// once rounds 11 to 13's tests came, and its test worker then hung instead of ending.
+tasks.withType<Test>().configureEach {
+    maxHeapSize = "2g"
 }
 
 // Renders each screen to a PNG without a window, for review: `gradlew :composeApp:screenshots` writes

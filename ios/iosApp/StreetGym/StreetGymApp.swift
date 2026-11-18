@@ -3,12 +3,17 @@ import StreetGymApp
 
 /// The iPhone app's entry point. Every screen is drawn by the Kotlin framework (composeApp); Swift holds only what
 /// Apple requires to be native: this entry point, the Parks map (MapLibre, ParksMapLibre.swift), Plus and Pro
-/// (StoreKit 2, StoreKitStore.swift) and Free's ads (Google's, GoogleAds.swift).
+/// (StoreKit 2, StoreKitStore.swift), Free's ads (Google's, GoogleAds.swift), the home-screen widget's files
+/// (WidgetBridge.swift; the widget itself is the StreetGymWidget extension) and Firebase (FirebaseAccount.swift).
 @main
 struct StreetGymIosApp: App {
     /// One store and one set of ads for the app's life: the store hears the App Store's transactions from its start.
     static let store = StoreKitStore()
     static let ads = GoogleAds()
+    static let widget = WidgetBridge()
+    /// Firebase starts only with the owner's GoogleService-Info.plist; without it these answer "not in this build".
+    static let account = FirebaseAccount()
+    static let documents = FirestoreDocuments()
 
     init() {
         // The Timer's alerts and their Stop, ready before the app has finished starting: a tap on an alert that opens
@@ -32,6 +37,12 @@ private struct RootView: View {
     var body: some View {
         // Edge to edge: the screens keep clear of the Dynamic Island and the home indicator themselves.
         ComposeScreen(screens: $screens).ignoresSafeArea()
+            // Google's sign-in coming back, else the widget's tap: a class's page or Today (streetgym://…).
+            .onOpenURL { url in
+                if !FirebaseAccount.handle(url) {
+                    MainViewControllerKt.openLink(url: url.absoluteString)
+                }
+            }
     }
 }
 
@@ -40,7 +51,9 @@ private struct ComposeScreen: UIViewControllerRepresentable {
 
     func makeUIViewController(context: Context) -> UIViewController {
         MainViewControllerKt.MainViewController(maps: MapLibreParks(), restored: screens, saver: BindingSaver(binding: $screens),
-                                                store: StreetGymIosApp.store, ads: StreetGymIosApp.ads, debug: ComposeScreen.debug)
+                                                store: StreetGymIosApp.store, ads: StreetGymIosApp.ads, debug: ComposeScreen.debug,
+                                                widget: StreetGymIosApp.widget, account: StreetGymIosApp.account,
+                                                cloud: StreetGymIosApp.documents)
     }
 
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}

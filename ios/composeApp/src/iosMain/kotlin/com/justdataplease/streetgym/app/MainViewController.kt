@@ -5,6 +5,9 @@ import androidx.compose.ui.text.input.PlatformImeOptions
 import androidx.compose.ui.window.ComposeUIViewController
 import platform.UIKit.UIKeyboardTypeNumbersAndPunctuation
 import com.justdataplease.streetgym.app.data.Ads
+import com.justdataplease.streetgym.app.data.Account
+import com.justdataplease.streetgym.app.data.HomeWidget
+import com.justdataplease.streetgym.app.data.PhoneServices
 import com.justdataplease.streetgym.app.data.Beep
 import com.justdataplease.streetgym.app.data.Store
 import com.justdataplease.streetgym.app.data.DEFAULT_VERSION
@@ -75,7 +78,9 @@ import platform.UserNotifications.UNUserNotificationCenter
  * the Parks maps Swift makes (MapLibre); without them Parks shows its list. [restored] is where the app was when the
  * phone closed it in the background, which [saver] keeps with the window (SwiftUI's scene storage) on every change.
  * [store] is Swift's StoreKit 2 store, [ads] Swift's Google ads (null: nothing to buy, no ads); [debug] is a debug
- * build (Swift's DEBUG), whose developer settings offer Simulate tier.
+ * build (Swift's DEBUG), whose developer settings offer Simulate tier. [widget] writes the home-screen widget's snapshot
+ * (null: no widget). [account] and [cloud] are Swift's Firebase Auth and Firestore (null, or without
+ * GoogleService-Info.plist: no account, as Android's builds without Firebase).
  */
 fun MainViewController(
     maps: NativeParksMaps?,
@@ -84,6 +89,9 @@ fun MainViewController(
     store: NativeStore?,
     ads: AdsBridge?,
     debug: Boolean,
+    widget: NativeWidget?,
+    account: NativeAccount?,
+    cloud: NativeCloud?,
 ): UIViewController {
     PhoneDevice.saver = saver
     val resumed = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
@@ -102,12 +110,29 @@ fun MainViewController(
     val hosts = maps?.let(::IosParksMaps)
     val purchases = store?.let(::IosStore) ?: Store.None
     val adverts = ads?.let(::IosAds) ?: Ads.None
+    val build = (NSBundle.mainBundle.objectForInfoDictionaryKey("CFBundleVersion") as? String)?.toIntOrNull() ?: 1
+    val services = PhoneServices(
+        widget = widget?.let(::IosWidget) ?: HomeWidget.None,
+        account = account?.let(::IosAccount) ?: Account.None,
+        documents = cloud?.let { native -> IosCloud(native).also { native.attach(it) } },
+        region = phoneRegion(),
+        appSet = VendorId,
+        versionCode = build,
+    )
     return ComposeUIViewController {
         App(phoneStore, PhoneDevice, reduceMotion = UIAccessibilityIsReduceMotionEnabled(), firstWeekday = firstWeekday,
             resumed = resumed, version = version, countKeys = countKeys, timingClock = IosTimingClock, hour24 = hour24(),
             events = phoneEvents.receiveAsFlow(), location = IosLocation, maps = hosts, restored = restored,
-            purchases = purchases, ads = adverts, simulate = debug)
+            purchases = purchases, ads = adverts, simulate = debug, services = services, appleButton = IosAppleButton)
     }.also { PhoneDevice.screen = it }
+}
+
+/**
+ * A link that opened the app or came to it (SwiftUI's onOpenURL): the widget's tap to a class or Today. Swift calls it as
+ * `MainViewControllerKt.openLink(url:)`; it waits until the app has read its program.
+ */
+fun openLink(url: String) {
+    phoneEvents.trySend(PhoneEvent.Open(url))
 }
 
 /** Swift's keeper of where the app is (SwiftUI's @SceneStorage); Swift sees it as the protocol `SceneSaver`. */

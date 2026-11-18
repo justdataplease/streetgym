@@ -22,6 +22,7 @@ import com.justdataplease.streetgym.data.library.ReadyWorkouts
 import com.justdataplease.streetgym.data.library.WorkoutList
 import com.justdataplease.streetgym.data.library.WorkoutLists
 import com.justdataplease.streetgym.data.points.Points
+import com.justdataplease.streetgym.data.points.PointsTotal
 import com.justdataplease.streetgym.data.skills.SkillFamily
 import com.justdataplease.streetgym.data.skills.SkillLevel
 import com.justdataplease.streetgym.data.skills.SkillProgress
@@ -114,14 +115,6 @@ object LocalDays {
      * 1 Monday to 7 Sunday (Android: StreakDays.isoWeekday).
      */
     fun isoWeekday(calendarDay: Int): Int = (calendarDay + 5) % 7 + 1
-}
-
-/** The classes that count for ranks and points: trained ones, never marked or placed (Android: Leaderboard.kt Scores.credits). */
-object Scores {
-    fun credits(sessions: List<WorkoutSession>): List<SkillCredit> = sessions
-        .filter { !it.manuallyCompleted }
-        .sortedBy { it.completedAtEpochMillis }
-        .map { session -> SkillCredit(session.programId, session.credits, session.doses) }
 }
 
 /** The words over the class's title on Today (Android: renderDashboard's label). */
@@ -291,6 +284,8 @@ class AppModel(
     val ads: Ads = Ads.None,
     adStore: KeyValueStore = MemoryStore(),
     elapsed: () -> Long = now,
+    /** The widget, the account, the cloud documents and what the phone says about itself. */
+    val services: PhoneServices = PhoneServices(),
 ) {
     constructor(
         program: Program,
@@ -309,8 +304,9 @@ class AppModel(
         ads: Ads = Ads.None,
         adStore: KeyValueStore = MemoryStore(),
         elapsed: () -> Long = now,
+        services: PhoneServices = PhoneServices(),
     ) : this(program.catalog, progress, program.skills, tier, now, zone, device, program.motions, settings, firstWeekday, library,
-        timing, parksSource, location, plans, ads, adStore, elapsed)
+        timing, parksSource, location, plans, ads, adStore, elapsed, services)
 
     /**
      * The tier every screen reads (Android: Entitlement.tier): from what was bought, so a purchase, a refund, a lapse or
@@ -355,6 +351,23 @@ class AppModel(
     /** The full-screen ad's breaks on Free (Android: WorkoutAdBreak and adBreakNow). */
     val adBreaks = AdBreaks(ads, adConsent, adStore, elapsed, adFree = { plans.adFree }, timingBusy = { timing.state.busy },
         resting = { training.resting() })
+
+    /**
+     * The account, the profile, Pro's cloud copy, the leaderboard and progress analytics (Android: account/,
+     * leaderboard/, analytics/), kept with the rest under Android's names. Without Firebase in the build it does nothing.
+     */
+    val cloud = CloudAccount(services.account, services.documents?.takeIf { services.account.available }, adStore, progress, library,
+        tier = { this.tier }, now = now, score = { pointsTotal()?.let(Scores::from) }, refresh = { saves.bump() },
+        sharing = { shareProgress }, appSet = services.appSet)
+
+    init {
+        // A finished class: the cloud copy and the score follow, and its sets go to progress analytics (Android: askEffortAndFinish).
+        training.finished = { session, program, flow, active, leftOut, movementOf ->
+            cloud.changed()
+            cloud.analytics.classFinished(AnalyticsPayload.sessionId(session),
+                AnalyticsPayload.session(session, program, flow, active, leftOut, movementOf), ::installSnapshot)
+        }
+    }
 
     /** The look picked in Settings, kept on the phone (Android: AppSettings.theme); every screen follows at once. */
     /** The app's version, as Settings › About shows it ("Version 1.0"). */
@@ -425,7 +438,46 @@ class AppModel(
         timing.resumed()
         plans.connect()
         adBreaks.resume()
+        opened()
     }
+
+    /**
+     * The app is on screen, at its start too (Android: onResume): Pro catches up with the cloud at most every six hours,
+     * and progress analytics writes the install's record at most every ten minutes.
+     */
+    fun opened() {
+        cloud.resumed()
+        syncAnalytics()
+    }
+
+    /** Progress analytics, once the first screen with its sharing note was answered (Android: syncAnalytics). */
+    fun syncAnalytics(force: Boolean = false) {
+        if (!settings.placementDone) return
+        cloud.analytics.sync(force, ::installSnapshot)
+    }
+
+    /** This install's training for progress analytics (Android: analyticsSnapshot). */
+    fun installSnapshot(): InstallSnapshot {
+        val history = progress.sessionHistory()
+        val at = furthest()
+        return InstallSnapshot(
+            versionName = version,
+            versionCode = services.versionCode,
+            tier = tier,
+            debug = plans.canSimulate,
+            skills = skillProgress()?.let(AnalyticsPayload::skills),
+            score = null,
+            switches = SkillSwitches.format(skillSwitches),
+            completedClasses = progress.completedProgramIds().size,
+            trainedClasses = history.count { !it.manuallyCompleted },
+            markedClasses = Scores.markedComplete(history),
+            atLevel = at?.levelNumber,
+            atDay = at?.number,
+        )
+    }
+
+    /** The username the park greets ("Well done, <name>!"), once a profile has one (Android: renderDashboard's ParkSceneView). */
+    fun greetedName(): String? = cloud.profile()?.username
 
     /** The app left the screen (Android: onPause): the ad clock stops. */
     fun paused() {
@@ -468,9 +520,17 @@ class AppModel(
      */
     fun startPlacement(start: Placement.Start) {
         val skipped = strengthTest.skipped(start)
-        if (skipped.isNotEmpty()) progress.completePrograms(skipped, at = now(), placed = true)
+        if (skipped.isNotEmpty()) {
+            progress.completePrograms(skipped, at = now(), placed = true)
+            cloud.changed()
+        }
         settings.placementDone = true
         placed = true
+        // The counts and the start go with the install's record from the next write on (Android: analytics.placed).
+        val counts = placementForm.counts.toList()
+        cloud.analytics.placed(PlacementRecord(counts.getOrNull(0)?.takeIf { it >= 0 }, counts.getOrNull(1)?.takeIf { it >= 0 },
+            counts.getOrNull(2)?.takeIf { it >= 0 }, placementForm.skill, start.level, start.day))
+        syncAnalytics(force = true)
         placementForm.clear()
         training.skipRest()
         saves.bump()
@@ -482,6 +542,8 @@ class AppModel(
         set(value) {
             sharing = value
             settings.shareProgress = value
+            // Off deletes what this install shared; on writes at the next sync (Android: Analytics.shareChanged).
+            cloud.analytics.shareChanged(value)
         }
 
     private var sharing by mutableStateOf(settings.shareProgress)
@@ -681,6 +743,7 @@ class AppModel(
         progress.completePrograms(listOf(id), at = now())
         training.skipRest()
         saves.bump()
+        cloud.changed()
     }
 
     /** Training › Levels: every level with how far the athlete is through it (Android: renderLevels and levelCard). */
@@ -733,6 +796,7 @@ class AppModel(
         progress.completePrograms(level.programs.map(TrainingProgram::id), at = now())
         training.skipRest()
         saves.bump()
+        cloud.changed()
     }
 
     /** "Go back to this level": Today starts again at its first class (Android: requestLevelReplay). */
@@ -765,6 +829,7 @@ class AppModel(
             ids.filterIndexed { index, _ -> !reached[index] })
         progress.recordExam(result)
         saves.bump()
+        cloud.changed()
         return result
     }
 
@@ -860,6 +925,34 @@ class AppModel(
         return inspectAllDays && !isCompleted(id) && (levelLocked(program.levelNumber) || !canStart(id))
     }
 
+    // ---- The home-screen widget (Android: widget/NextClassWidget.kt NextClassState)
+
+    /** Writes the widget's snapshot whenever what it shows changes (ui/WidgetCard.kt WidgetUpdates feeds it). */
+    val widgetFeed = WidgetFeed(services.widget)
+
+    /**
+     * The next class as Today works it out, with the tier's lock, for the widget; every class done gives the last
+     * class's lead and opens Today, and so does a class while the strength test waits (Android: NextClassState.card).
+     */
+    fun widgetCard(): NextClassCard {
+        saves.count
+        val moves = { exercise: TrainingExercise -> tiles.moves(exercise.movementId, exercise.name.resolve(), exercise.category, exercise.equipment) }
+        val next = assigned() ?: return NextClassCard.allDone(written.lastOrNull(), moves)
+        return NextClassCard.of(next, levelLocked(next.levelNumber), opens = !placementAsked(), moves = moves)
+    }
+
+    /** Everything the widget draws now, with [words] from Android's string files; read again on any change it shows. */
+    fun widgetSnapshot(words: WidgetWords): WidgetSnapshot {
+        val card = widgetCard()
+        day
+        val trained = LocalDays.trained(progress.sessionHistory(), zone)
+        return WidgetSnapshot(theme, card, WidgetText.of(card, words), WidgetLinks.of(card.programId),
+            WidgetSnapshot.flames(trained, now(), zone, card, words))
+    }
+
+    /** Where a tap on the widget asked to go, until the shell has gone there (Android: onNewIntent's NextClassWidget.opened). */
+    var opening by mutableStateOf<WidgetLinks.Opening?>(null)
+
     /** Every finished class and marked day, newest first. */
     fun history(): List<WorkoutSession> {
         saves.count
@@ -890,6 +983,21 @@ class AppModel(
     fun points(): Int {
         val history = history()
         return Points.classes(history) + (skillProgress()?.let { Points.chevrons(it.statuses) } ?: 0)
+    }
+
+    /**
+     * The athlete's points all time and this UTC month, as the leaderboard ranks them (Android: pointsTotal): this
+     * month's are its classes' and the ranks reached since it began. Null without the skills, as Android publishes
+     * nothing before its skill book is read.
+     */
+    fun pointsTotal(at: Long = now()): PointsTotal? {
+        val book = skills ?: return null
+        val history = progress.sessionHistory()
+        val start = Points.monthStart(at)
+        val (before, during) = history.partition { it.completedAtEpochMillis < start }
+        val ranks = Points.chevrons(book.progress(Scores.credits(history)).statuses)
+        val ranksBefore = if (during.isEmpty()) ranks else Points.chevrons(book.progress(Scores.credits(before)).statuses)
+        return PointsTotal(Points.classes(history) + ranks, Points.classes(during) + (ranks - ranksBefore).coerceAtLeast(0), Points.month(at))
     }
 
     /**
@@ -948,6 +1056,7 @@ class AppModel(
     fun setSaved(id: String, saved: Boolean) {
         library.setSaved(id, saved, now())
         saves.bump()
+        cloud.changed()
     }
 
     /** Plus and Pro's "Save to lists": [id] saved, in exactly [listIds]. */
@@ -955,22 +1064,28 @@ class AppModel(
         val state = library.state()
         library.saveToLists(id, listIds.filterTo(HashSet()) { state.lists[it]?.deleted == false }, now())
         saves.bump()
+        cloud.changed()
     }
 
     /** Why [name] can't name a list, or null; [except] is the list being renamed; [favorites] the default list's name. */
     fun listNameProblem(name: String, favorites: String, except: String? = null): WorkoutLists.NameProblem? =
         WorkoutLists.nameProblem(name, library.state(), favorites, except)
 
-    fun createList(name: String): WorkoutList = library.createList(name, now()).also { saves.bump() }
+    fun createList(name: String): WorkoutList = library.createList(name, now()).also {
+        saves.bump()
+        cloud.changed()
+    }
 
     fun renameList(id: String, name: String) {
         library.renameList(id, name, now())
         saves.bump()
+        cloud.changed()
     }
 
     fun deleteList(id: String) {
         library.deleteList(id, now())
         saves.bump()
+        cloud.changed()
     }
 
     /** One of the athlete's own workouts, while it exists. */
@@ -1004,6 +1119,7 @@ class AppModel(
                 library.saveDay(day.copy(name = day.name.trim(), updatedAt = now()))
                 draft = null
                 saves.bump()
+                cloud.changed()
                 null
             }
         }
@@ -1017,6 +1133,7 @@ class AppModel(
         if (progress.activeWorkout()?.programId == id) training.abandon()
         library.deleteDay(id, now())
         saves.bump()
+        cloud.changed()
     }
 
     /**
@@ -1030,5 +1147,6 @@ class AppModel(
         placed = false
         placementForm.clear()
         saves.bump()
+        cloud.progressReset()
     }
 }

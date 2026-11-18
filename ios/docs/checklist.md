@@ -2,7 +2,7 @@
 
 Every feature of the Android app (2.14.1, versionCode 58), one line each, in the order a user meets them: the iPhone app is done when every line is ticked.
 `[x]` is on iPhone now (in `ios-streetgym`, checked in its code), `[ ]` is to build. Pointers name the Android file under `android-streetgym/app/src/main/java/com/justdataplease/streetgym/` (→ the iPhone file where it is built); **engine**: the rule is already in `android-streetgym/shared/`; **iPhone API**: the Apple framework it needs; **owner**: it can't be finished without the owner.
-Written 18 Nov 2026; updated the same day after rounds 1 to 10 and the ads half of round 11.
+Written 18 Nov 2026; updated the same day after rounds 1 to 13 (what rounds 11 to 13 left is the owner's: the App Group, Firebase, AdMob).
 
 ## Count
 
@@ -23,20 +23,20 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 10 and the ads half 
 | 13. Progress › Skills | 11 | 11 | 0 | 0 |
 | 14. Timer | 8 | 8 | 0 | 0 |
 | 15. Training › Parks | 15 | 14 | 1 | 1 |
-| 16. Progress › Leaderboard | 14 | 3 | 11 | 9 |
+| 16. Progress › Leaderboard | 14 | 5 | 9 | 9 |
 | 17. Settings | 22 | 22 | 0 | 0 |
 | 18. Themes | 5 | 5 | 0 | 0 |
 | 19. Plans and purchases | 22 | 14 | 8 | 8 |
 | 20. Ads and consent | 11 | 7 | 4 | 4 |
 | 21. Account, sign-in, cloud backups and restore | 17 | 0 | 17 | 17 |
 | 22. Notifications and sounds | 6 | 6 | 0 | 0 |
-| 23. Home-screen widget | 10 | 0 | 10 | 7 |
-| 24. Sharing and progress analytics | 6 | 0 | 6 | 5 |
+| 23. Home-screen widget | 10 | 3 | 7 | 7 |
+| 24. Sharing and progress analytics | 6 | 1 | 5 | 5 |
 | 25. Accessibility and languages | 12 | 12 | 0 | 0 |
 | 26. Anything else | 2 | 1 | 1 | 1 |
-| **All** | **344** | **285** | **59** | **53** |
+| **All** | **344** | **291** | **53** | **53** |
 
-"Waiting on the owner" counts lines still to build whose last step needs the owner; most can be built and tested first with a test double (a `.storekit` file, Google's demo ad units, a made-up profile).
+"Waiting on the owner" counts lines still to tick whose last step needs the owner (every one of them is built now); most can be built and tested first with a test double (a `.storekit` file, Google's demo ad units, a made-up profile).
 
 ## 1. Opening the app
 
@@ -67,14 +67,14 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 10 and the ads half 
 - [x] The page scrolls to the result after Calculate (placementCard → PlacementResult, Compose's BringIntoViewRequester with 64 dp under the confirm)
 - [x] Confirming marks every earlier class done as placed, with no points or ranks (HomeActivity.startPlacement → AppModel.startPlacement, StoredProgress.completePrograms placed; **engine** Placement.skipped)
 - [x] Counts and the picked test kept while Today redraws (HomeActivity placementAnswers, placementSkill, placementShown → AppModel.placementForm)
-- [x] "Share my progress" note and switch close the screen (ui/ShareProgressView.kt shareProgressNote → PlacementScreen.ShareProgressNote, the bold first words from Android's `<b>` (Kit.boldMarkup); kept under Android's `share_progress`; the uploads it allows come with round 13)
+- [x] "Share my progress" note and switch close the screen (ui/ShareProgressView.kt shareProgressNote → PlacementScreen.ShareProgressNote, the bold first words from Android's `<b>` (Kit.boldMarkup); kept under Android's `share_progress`; switching it off deletes what was shared, round 13)
 
 ## 3. Today
 
 - [x] Brand card: "DAILY CALISTHENICS" and "We choose the workout. You just train." (HomeActivity.renderDashboard → TodayScreen.kt)
 - [x] Park scene in the brand card: the figure walks in and does the day's three movements, holds the final skill and fades; three friends cheer; a new routine each local day (ui/ParkSceneView.kt STORY, ui/ParkStory.kt → figure/ParkStory.kt in common Kotlin on kotlinx-datetime, checked against frames Android's own code wrote; figure/ParkScene.kt)
 - [x] A tap on the park scene starts it again; so does coming back into view, and the app coming back (ParkSceneView.replay, updateAnimationState → ParkScene, AppModel.resumes)
-- [ ] With a username, "Well done, <name>!" rises in a cloud as the final skill lands (ParkSceneView.username, BubbleStyle.CLOUD; test with a made-up name; **owner**: a real profile needs Firebase)
+- [ ] With a username, "Well done, <name>!" rises in a cloud as the final skill lands (ParkSceneView.username, BubbleStyle.CLOUD; **owner**: a real profile needs Firebase. Built: figure/ParkScene.kt ParkRenderer.drawGreeting, Android's cloud line for line, the final skill held 3.4 s; AppModel.greetedName; seen in today-greeting-*.png with a fake profile)
 - [x] Today line: the section name, the streak's flame with its number, this week's seven days (HomeActivity.todayLine, ui/StreakUi.kt streakStrip → StreakViews.kt)
 - [x] Flame lit once today's workout is done, unlit with its number, a dashed 0 once ended; trained days filled, a carried rest day pale, today outlined and underlined (ui/StreakFlame.kt, StreakUi.StreakWeekView → StreakViews.kt; **engine** Streak)
 - [x] The week row starts on the region's first weekday (data/progress/StreakDays.kt snapshot → AppModel.kt LocalDays, NSCalendar.firstWeekday read in MainViewController)
@@ -251,7 +251,7 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 10 and the ads half 
 
 ## 12. Progress › History and the streak
 
-- [x] Progress switch: Skills / History / Leaderboard, kept while the app runs (HomeActivity.renderProgress → ProgressScreen.kt; the Leaderboard tab waits for round 13)
+- [x] Progress switch: Skills / History / Leaderboard, kept while the app runs (HomeActivity.renderProgress → ProgressScreen.kt; the Leaderboard tab's boards since round 13)
 - [x] Month card: month and year, ‹ › and a sideways swipe, from the first month with history to this one (ui/HistoryCalendarView.kt → HistoryScreen.kt; data/progress/HistoryCalendar.kt → data/HistoryCalendar.kt on kotlinx-datetime, pinned to java.util.Calendar by HistoryCalendarTest)
 - [x] "8 workouts this month" or "5 workouts in October" (HistoryCalendarView.showMonth → HistoryScreen)
 - [x] This month's streak line: a small flame, "12 DAY STREAK" on tape and "Best 20", or "Best streak: N days"; a tap opens the sheet without See history (StreakUi.streakLine → StreakViews.StreakLine)
@@ -313,22 +313,22 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 10 and the ads half 
 
 - [x] Intro: "Points from your training, all time and this month, worldwide and by country." (HomeActivity.renderLeaderboard → ProgressScreen)
 - [x] Free: a board's shape (20 grey rows) under the layer with Plus and Unlock, filling the screen (HomeActivity.leaderboardSample, lockedLayer → ProgressScreen.LeaderboardSample, Kit.LockedLayer; round 10, as it opens the leaderboard's offer)
-- [x] A build without Firebase: "The leaderboard isn't available in this build." (renderLeaderboard → ProgressScreen: what Plus and Pro read on iPhone until the boards come with round 13)
-- [ ] All time / This month (renderLeaderboard; leaderboard/Leaderboard.kt Boards.id; **owner**: Firebase iPhone app, as for every board line)
-- [ ] World / 🇬🇷 Greece, when the profile or the phone's region gives a country (renderLeaderboard; **owner**: Firebase)
-- [ ] Own line: "You're #N · X points", "You're in the top N% · X points", "Train to earn points on this board." (renderLeaderboard, Boards.standing; **owner**: Firebase)
-- [ ] Own line without a visible profile: "Pick a username in Settings…", "Choose a username and a country…", "You're hidden from the leaderboard…" (renderLeaderboard; **owner**: Firebase)
-- [ ] Top 100 rows: "#1", flag and username, points; the athlete's own row highlighted (renderLeaderboard; Apple 1.2: a filter for usernames and a way to report and block one; **owner**: Firebase)
-- [ ] "No one is on this board yet." (renderLeaderboard; **owner**: Firebase)
-- [ ] "1,234 players · updated <date> · boards refresh every 6 hours" (renderLeaderboard; **owner**: Firebase)
-- [ ] "Loading the leaderboard…", "Couldn't load the leaderboard. Check your connection."; a board stays on the phone 6 hours (leaderboard/LeaderboardRepository.kt; Boards.fresh; **owner**: Firebase)
-- [ ] The line on how points are earned, under the board (renderLeaderboard)
-- [ ] Plus and Pro with a visible profile publish their score after a finished class, at most every 10 minutes; hiding takes it off; Reset publishes from zero (HomeActivity.publishScore; Scores.shouldPublish; **owner**: Firebase iPhone app)
-- [ ] This month's board starts again on the 1st, UTC (**engine** Points.month)
+- [x] A build without Firebase: "The leaderboard isn't available in this build." (renderLeaderboard → LeaderboardSection: what Plus and Pro read on iPhone in a build without GoogleService-Info.plist)
+- [ ] All time / This month (renderLeaderboard; leaderboard/Leaderboard.kt Boards.id; **owner**: Firebase iPhone app, as for every board line. Built: ui/LeaderboardScreen.kt LeaderboardSection, LeaderboardState kept by Shell; data/Leaderboard.kt Boards)
+- [ ] World / 🇬🇷 Greece, when the profile or the phone's region gives a country (renderLeaderboard; **owner**: Firebase. Built: the region from NSLocale's country code, IosAccount.kt phoneRegion; data/CountryNames.kt has Android's names from java.util.Locale)
+- [ ] Own line: "You're #N · X points", "You're in the top N% · X points", "Train to earn points on this board." (renderLeaderboard, Boards.standing; **owner**: Firebase. Built: Boards.standing, AppModel.pointsTotal, Android's month points)
+- [ ] Own line without a visible profile: "Pick a username in Settings…", "Choose a username and a country…", "You're hidden from the leaderboard…" (renderLeaderboard; **owner**: Firebase. Built)
+- [ ] Top 100 rows: "#1", flag and username, points; the athlete's own row highlighted (renderLeaderboard; Apple 1.2: a filter for usernames and a way to report and block one; **owner**: Firebase, and the decision on filtering and handling reports. Built: the rows; a tap on another athlete's row offers Report (a mail to the app's contact address (the build value `contact.address`) from the athlete's mail app, data/Leaderboard.kt NameReport) and Block (left out on this phone under `streetgym_boards.blocked`, BlockedNames), "Show them again"; no name filter yet)
+- [ ] "No one is on this board yet." (renderLeaderboard; **owner**: Firebase. Built)
+- [ ] "1,234 players · updated <date> · boards refresh every 6 hours" (renderLeaderboard; **owner**: Firebase. Built)
+- [ ] "Loading the leaderboard…", "Couldn't load the leaderboard. Check your connection."; a board stays on the phone 6 hours (leaderboard/LeaderboardRepository.kt; Boards.fresh; **owner**: Firebase. Built: data/Leaderboard.kt LeaderboardRepository under Android's `streetgym_boards` › `board_<id>`)
+- [x] The line on how points are earned, under the board (renderLeaderboard → LeaderboardSection; shown, as on Android, in a build with Firebase)
+- [ ] Plus and Pro with a visible profile publish their score after a finished class, at most every 10 minutes; hiding takes it off; Reset publishes from zero (HomeActivity.publishScore; Scores.shouldPublish; **owner**: Firebase iPhone app. Built: data/CloudAccount.kt publishScore, scores/{uid} version 4 field for field; hiding deletes the score document at once, which Android's code misses)
+- [x] This month's board starts again on the 1st, UTC (**engine** Points.month, Points.monthStart → AppModel.pointsTotal, the score's month and month_points)
 
 ## 17. Settings
 
-- [x] Order: Profile (§21), Theme (§18), Plus and Pro (§19), During your workout, Skills in your classes, Equipment you have, Your data (§24), Start over, Train safely, About (HomeActivity.renderSettings → SettingsScreen.kt; Plus and Pro since round 10 and About's Ad privacy since round 11; Profile and Your data take their places with rounds 12 and 13)
+- [x] Order: Profile (§21), Theme (§18), Plus and Pro (§19), During your workout, Skills in your classes, Equipment you have, Your data (§24), Start over, Train safely, About (HomeActivity.renderSettings → SettingsScreen.kt; Plus and Pro since round 10, About's Ad privacy since round 11, Profile (in a build with Firebase) and Your data since rounds 12 and 13)
 - [x] Simulate tier, debug builds only: Default / Free / Plus / Pro (renderSettings; billing/Entitlement.kt setSimulatedTier → SettingsScreen.DeveloperDialog, Plans.SimulateTier, data/Plans.kt under Android's `simulated_tier`; on iPhone in the developer settings, offered by builds with Swift's DEBUG; as debug builds can buy from the StoreKit file, Default is what was bought, not Pro)
 
 ### During your workout
@@ -356,7 +356,7 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 10 and the ads half 
 
 ### Start over, Train safely, About
 
-- [x] Start over: its text (with an account: "Your leaderboard points and any cloud copy reset too."), Reset progress, "Reset all progress?", Reset (HomeActivity.confirmReset → SettingsScreen, ResetDialog; the account's words come with the account, round 12)
+- [x] Start over: its text (with an account: "Your leaderboard points and any cloud copy reset too."), Reset progress, "Reset all progress?", Reset (HomeActivity.confirmReset → SettingsScreen, ResetDialog; signed in, reset_body_account, and the score goes up again from zero, CloudAccount.progressReset)
 - [x] Reset erases classes, history, points, ranks and exams, keeps My workouts, the theme and purchases, says "Progress reset. Choose where to start." and brings the strength test back (confirmReset, SharedPreferencesProgressRepository.reset → AppModel.reset, StoredProgress.reset with "reset_at"; placement_done is cleared under Android's key, and Today asks the strength test again)
 - [x] Train safely card (renderSettings → SettingsScreen)
 - [x] About: "Street Gym: Daily Calisthenics", its text, "Version 1.0" (renderSettings → SettingsScreen; the version from the Info.plist's CFBundleShortVersionString)
@@ -412,23 +412,23 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 10 and the ads half 
 
 ## 21. Account, sign-in, cloud backups and restore
 
-- [ ] Settings › Profile appears only in a build with Firebase (account/Cloud.kt available; **owner**: Firebase iPhone app and GoogleService-Info.plist)
-- [ ] No profile: "Pick a username for the leaderboard. No sign-in needed." and Choose a username, which signs in anonymously; "Couldn't reach the server…" offline (ui/AccountSettingsView.kt pickUsername; Cloud.signInAnonymously; **owner**: Firebase, as for every line here)
-- [ ] Profile dialog: username (3–20 letters, digits, _ or .), country with flags (the phone's region first), Save; "Use 3–20…", "That username is taken.", "Couldn't save…" (AccountSettingsView.editProfile; leaderboard/Leaderboard.kt Usernames, Countries; account/Profile.kt Profiles.save; Apple 1.2: filter names; **owner**: Firebase)
-- [ ] With a profile: flag and username, the country, "Show me on the leaderboard" switch, Edit profile (AccountSettingsView.render; **owner**: Firebase)
-- [ ] Free sees "The leaderboard shows Plus and Pro members." (render; **engine** Tier.account; **owner**: Firebase)
-- [ ] Connect Google with the tier's line (Pro: username, progress and My workouts; others: the username) (render, account/GoogleAccount.kt; **iPhone API**: GoogleSignIn, Firebase Auth; Apple 4.8: Sign in with Apple beside it; **owner**: iPhone OAuth client, Apple provider)
-- [ ] Connecting keeps the same user; a Google account that has its own takes over, releases this phone's profile and claims the name again if it has none (AccountSettingsView.connect; **owner**: Firebase)
-- [ ] Without Google: "Without Google, your username stays on this phone only." where sign-in isn't set up; Delete profile ("Delete your profile?"), which frees the name (AccountSettingsView.confirmDeleteProfile, Profiles.release; **owner**: Firebase)
-- [ ] Connected: "Google: name@gmail.com" (render; **owner**: Firebase)
-- [ ] Pro: "Progress saved to your account · synced <date>" or "Progress not synced yet.", Sync now, "Couldn't sync…" (render; account/CloudSync.kt; **owner**: Firebase)
-- [ ] Free and Plus, connected: "Your progress stays on this phone. Cloud backups and restore are part of Pro." (render; **owner**: Firebase)
-- [ ] Sign out, and "Signing out keeps everything on this phone." (GoogleAccount.signOut; **owner**: Firebase)
-- [ ] Delete account: "Delete your account?", sign in again, then cloud progress, the My workouts copy, score, username and the user go; "Account deleted." (AccountSettingsView.confirmDelete; Apple 5.1.1(v) requires it in the app; **owner**: Firebase)
-- [ ] Pro backup and restore: completed days, history with every set, exams and My workouts merge both ways with the account, so a new phone gets them (CloudSync; **engine** ProgressMerge, LibraryCodec; **iPhone API**: Firebase iOS SDK, Firestore; **owner**)
-- [ ] Sync a few seconds after a change and at most every 6 hours on opening; what arrives redraws Today, Training and Progress (HomeActivity.cloudChanged, afterSync; **owner**: Firebase)
-- [ ] A plan that ends keeps the profile; nothing syncs or publishes, and the cloud copy waits (HomeActivity.cloudChanged, publishScore; **owner**: Firebase)
-- [ ] App Check on every Firestore call (Cloud.firestore; iPhone: App Attest; **owner** registers it)
+- [ ] Settings › Profile appears only in a build with Firebase (account/Cloud.kt available; **owner**: Firebase iPhone app and GoogleService-Info.plist. Built: CloudAccount.available, FirebaseSetup in iosApp/StreetGym/FirebaseAccount.swift starts Firebase only when the file is there)
+- [ ] No profile: "Pick a username for the leaderboard. No sign-in needed." and Choose a username, which signs in anonymously; "Couldn't reach the server…" offline (ui/AccountSettingsView.kt pickUsername; Cloud.signInAnonymously; **owner**: Firebase, as for every line here. Built: ui/AccountSettings.kt ProfileCard, CloudAccount.pickUsername)
+- [ ] Profile dialog: username (3–20 letters, digits, _ or .), country with flags (the phone's region first), Save; "Use 3–20…", "That username is taken.", "Couldn't save…" (AccountSettingsView.editProfile; leaderboard/Leaderboard.kt Usernames, Countries; account/Profile.kt Profiles.save; Apple 1.2: filter names; **owner**: Firebase, and the filter's decision. Built: ProfileDialog with the countries in a list of their own, data/Profiles.kt Profiles.plan in a Firestore transaction)
+- [ ] With a profile: flag and username, the country, "Show me on the leaderboard" switch, Edit profile (AccountSettingsView.render; **owner**: Firebase. Built)
+- [ ] Free sees "The leaderboard shows Plus and Pro members." (render; **engine** Tier.account; **owner**: Firebase. Built)
+- [ ] Connect Google with the tier's line (Pro: username, progress and My workouts; others: the username) (render, account/GoogleAccount.kt; **iPhone API**: GoogleSignIn, Firebase Auth; Apple 4.8: Sign in with Apple beside it; **owner**: iPhone OAuth client, Apple provider. Built: Apple's own button (ASAuthorizationAppleIDButton, IosAccount.kt) over Connect Google, "Connect Google or Apple…")
+- [ ] Connecting keeps the same user; a Google account that has its own takes over, releases this phone's profile and claims the name again if it has none (AccountSettingsView.connect; **owner**: Firebase. Built: CloudAccount.connect, LinkResult.Collision, FirebaseAccount.swift link and takeOver)
+- [ ] Without Google: "Without Google, your username stays on this phone only." where sign-in isn't set up; Delete profile ("Delete your profile?"), which frees the name (AccountSettingsView.confirmDeleteProfile, Profiles.release; **owner**: Firebase. Built)
+- [ ] Connected: "Google: name@gmail.com", or "Apple: …" (render; **owner**: Firebase. Built)
+- [ ] Pro: "Progress saved to your account · synced <date>" or "Progress not synced yet.", Sync now, "Couldn't sync…" (render; account/CloudSync.kt; **owner**: Firebase. Built)
+- [ ] Free and Plus, connected: "Your progress stays on this phone. Cloud backups and restore are part of Pro." (render; **owner**: Firebase. Built)
+- [ ] Sign out, and "Signing out keeps everything on this phone." (GoogleAccount.signOut; **owner**: Firebase. Built)
+- [ ] Delete account: "Delete your account?", sign in again, then cloud progress, the My workouts copy, score, username and the user go; "Account deleted." (AccountSettingsView.confirmDelete; Apple 5.1.1(v) requires it in the app; **owner**: Firebase. Built: CloudAccount.deleteAccount; an Apple account's token is revoked first)
+- [ ] Pro backup and restore: completed days, history with every set, exams and My workouts merge both ways with the account, so a new phone gets them (CloudSync; **engine** ProgressMerge, LibraryCodec; **iPhone API**: Firebase iOS SDK, Firestore; **owner**. Built: data/CloudSync.kt line for line, the same documents and fields, StoredProgress.mergeCloud)
+- [ ] Sync a few seconds after a change and at most every 6 hours on opening; what arrives redraws Today, Training and Progress (HomeActivity.cloudChanged, afterSync; **owner**: Firebase. Built: CloudAccount.changed and tick, 3 s; resumed)
+- [ ] A plan that ends keeps the profile; nothing syncs or publishes, and the cloud copy waits (HomeActivity.cloudChanged, publishScore; **owner**: Firebase. Built)
+- [ ] App Check on every Firestore call (Cloud.firestore; iPhone: App Attest; **owner** registers it. Built: StreetGymAppCheck, App Attest or DeviceCheck, the debug provider in debug builds)
 
 ## 22. Notifications and sounds
 
@@ -441,27 +441,27 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 10 and the ads half 
 
 ## 23. Home-screen widget
 
-- [ ] "Next class" widget, four cells by one, resizable sideways; a compact card on short cells (res/xml/widget_next_class_info.xml, widget/WidgetRenderer.kt; **iPhone API**: WidgetKit)
-- [ ] Card: NEXT on tape, "LEVEL 4 · CLASS 20", the class's role as the headline in the theme's display face, the lead movement (a recovery day's theme, an exam's "N targets") and "44 min" (WidgetRenderer, widget/NextClassCard.kt; **owner**: an App Group, for every line that reads progress)
-- [ ] The lead movement's figure on a tile: a flip-book on Android; WidgetKit can't animate, so a still pose (WidgetRenderer.frames)
-- [ ] The streak's flame closes the card: lit, unlit or out (WidgetRenderer; **owner**: App Group)
-- [ ] A class beyond the tier keeps its lock: "locked for your tier" (NextClassCard locked, strings_widget.xml; **owner**: App Group)
-- [ ] Every class done: "Sequence complete", "Every class done" (WidgetRenderer.WidgetText; **owner**: App Group)
-- [ ] A tap opens the class's page; with every class done, or the strength test unanswered, it opens Today (widget/NextClassWidget.kt programToOpen; iPhone: widgetURL; **owner**: App Group)
-- [ ] It follows progress, the tier and the theme, and redraws as a new day starts and when the clock or time zone changes (NextClassWidget.watch, scheduleNewDay; iPhone: WidgetCenter reloads and a midnight timeline; **owner**: App Group in the Apple account)
-- [ ] Spoken as "Next class: Level 4, class 20, … Opens the class." (WidgetRenderer, widget_open_class; **owner**: App Group)
-- [ ] Gallery description and preview (widget_description, res/layout/widget_preview.xml)
+- [x] "Next class" widget, four cells by one, resizable sideways; a compact card on short cells (res/xml/widget_next_class_info.xml, widget/WidgetRenderer.kt; **iPhone API**: WidgetKit → iosApp/StreetGymWidget, the medium widget with Android's card across it: an iPhone has no one-row widget, so no compact card; Swift, first compiled by the Mac CI)
+- [ ] Card: NEXT on tape, "LEVEL 4 · CLASS 20", the class's role as the headline in the theme's display face, the lead movement (a recovery day's theme, an exam's "N targets") and "44 min" (WidgetRenderer, widget/NextClassCard.kt; **owner**: an App Group, for every line that reads progress. Built: data/Widget.kt NextClassCard and WidgetText line for line, the snapshot's JSON; StreetGymWidget.swift CardView, the face read from the App Group; ui/WidgetCard.kt draws the same on Windows, widget-*.png)
+- [x] The lead movement's figure on a tile: a flip-book on Android; WidgetKit can't animate, so a still pose (WidgetRenderer.frames → ui/WidgetCard.kt widgetFigure, the line man's still pose drawn at 3x into a PNG the widget shows)
+- [ ] The streak's flame closes the card: lit, unlit or out (WidgetRenderer; **owner**: App Group. Built: the flames of today and the next three days in the snapshot, WidgetSnapshot.flames, drawn by StreetGymWidget.swift FlameView with Android's paths and colours)
+- [ ] A class beyond the tier keeps its lock: "locked for your tier" (NextClassCard locked, strings_widget.xml; **owner**: App Group. Built)
+- [ ] Every class done: "Sequence complete", "Every class done" (WidgetRenderer.WidgetText; **owner**: App Group. Built)
+- [ ] A tap opens the class's page; with every class done, or the strength test unanswered, it opens Today (widget/NextClassWidget.kt programToOpen; iPhone: widgetURL; **owner**: App Group. Built: streetgym://class/<id> or streetgym://today, data/Widget.kt WidgetLinks, onOpenURL → MainViewControllerKt.openLink → Shell)
+- [ ] It follows progress, the tier and the theme, and redraws as a new day starts and when the clock or time zone changes (NextClassWidget.watch, scheduleNewDay; iPhone: WidgetCenter reloads and a midnight timeline; **owner**: App Group in the Apple account. Built: ui/WidgetCard.kt WidgetUpdates and data/Widget.kt WidgetFeed write on every change it shows, 600 ms after it settles; one timeline entry per local midnight; WidgetBridge.swift reloads)
+- [ ] Spoken as "Next class: Level 4, class 20, … Opens the class." (WidgetRenderer, widget_open_class; **owner**: App Group. Built: WidgetText.spoken)
+- [x] Gallery description and preview (widget_description, res/layout/widget_preview.xml → StreetGymWidget.swift: Android's words in Swift, the card the app last wrote, or its empty shape)
 
 ## 24. Sharing and progress analytics
 
 Android has no share sheet; its one sharing feature is Share my progress.
 
-- [ ] "Share my progress" switch, on by default, at the end of the strength test and in Settings › Your data (ui/ShareProgressView.kt; AppSettings.shareProgress)
-- [ ] The install's record goes up when the app opens (at most every 10 minutes, once the test is answered or skipped) and after the test (analytics/Analytics.kt sync, placed; **owner**: Firebase iPhone app)
-- [ ] Each finished class goes up with its sets, kept on the phone until the server confirms it (Analytics.classFinished, analytics/AnalyticsPayload.kt; **owner**: Firebase)
-- [ ] Switching it off stops the uploads and deletes this install's records (Analytics.shareChanged; **owner**: Firebase)
-- [ ] A deleted account's id is taken off the install's record (Analytics.accountDeleted; **owner**: Firebase)
-- [ ] The install's chain: a random install id and Google's App Set ID; on iPhone identifierForVendor in its place (analytics/FirestoreAnalytics.kt; **owner**: Firebase)
+- [x] "Share my progress" switch, on by default, at the end of the strength test and in Settings › Your data (ui/ShareProgressView.kt; AppSettings.shareProgress → PlacementScreen.ShareProgressRow, AccountSettings.ShareProgressCard)
+- [ ] The install's record goes up when the app opens (at most every 10 minutes, once the test is answered or skipped) and after the test (analytics/Analytics.kt sync, placed; **owner**: Firebase iPhone app. Built: data/Analytics.kt line for line, under Android's `streetgym_analytics` names)
+- [ ] Each finished class goes up with its sets, kept on the phone until the server confirms it (Analytics.classFinished, analytics/AnalyticsPayload.kt; **owner**: Firebase. Built: Training.finished → AnalyticsPayload.session)
+- [ ] Switching it off stops the uploads and deletes this install's records (Analytics.shareChanged; **owner**: Firebase. Built)
+- [ ] A deleted account's id is taken off the install's record (Analytics.accountDeleted; **owner**: Firebase. Built)
+- [ ] The install's chain: a random install id and Google's App Set ID; on iPhone identifierForVendor in its place (analytics/FirestoreAnalytics.kt; **owner**: Firebase. Built: IosAccount.kt VendorId, scope "developer"; nothing names the phone as an iPhone, as the rules allow no such field)
 
 ## 25. Accessibility and languages
 
@@ -497,9 +497,9 @@ Thirteen rounds of about 20 to 28 lines, each one sitting's build and test, in t
 8. **Library and Timer** (23): §11; §14; the timer and alarm alerts (§22). Done 18 Nov 2026. The Timer's clocks are kept under Android's key and JSON names (`data/Timing.kt`) on an elapsed clock that runs through sleep (CLOCK_MONOTONIC), the alarm's day on kotlinx-datetime, pinned to Android's java.util.Calendar code in ten zones. Its alerts go through UserNotifications (a "timing" category with Stop, a delegate set before launch ends); Enable alerts asks for them, which also lets the workout's background rest show.
 9. **Parks** (18): §15; large text (§25); coming back after the phone closed the app, and landscape (§26). Done 18 Nov 2026 but the weekly parks refresh (waits for the owner's Firebase setup; behind `ParksSource`) and landscape (the Timer's side-by-side layout is built; the focus view's and turning landscape on wait for the owner's decision). The map is MapLibre Native 6.31 in Swift (`iosApp/StreetGym/ParksMapLibre.swift`, unverified until the Mac build), shown through UIKitView; the desktop draws a stand-in with the parks as dots. Location through Core Location (`IosLocation.kt`), approximate. Coming back after the phone closed the app: SwiftUI's @SceneStorage holds `ui/Restore.kt`'s text.
 10. **Plans and purchases** (25): §19, with the plans in the offer that Unlock and the tier tags open; Simulate tier. Done 18 Nov 2026 but the eight lines whose last step is the owner's (the products in App Store Connect and the sandbox checks). The offers and the plans panel are `ui/Plans.kt` (Android's TiersPanel and showPaywall); the plan is `data/Plans.kt`, cached under Android's `streetgym_billing` keys so the app opens in the right tier offline, and every screen reads the tier from it; StoreKit 2 is Swift (`iosApp/StreetGym/StoreKitStore.swift`) behind the Kotlin `Store` (`data/Store.kt`, iosMain `IosStore.kt`), with Android's product ids and prices in `iosApp/Products.storekit` for the Simulator's Run. Free's leaderboard (its board under the layer) came with it, as it opens the leaderboard's offer. Android's review code is left out (Apple 2.3.1).
-11. **Widget and ads** (21): §23; §20. Needs: a WidgetKit extension and an App Group (owner); the Google Mobile Ads SDK and UMP with demo units, then the owner's AdMob app, units and consent message. The ads half done 18 Nov 2026 on Google's test units but the four lines waiting for the owner's AdMob app, units and consent message: the rules are common Kotlin (`data/AdRules.kt`: Android's AdBreakClock, AdBreakPolicy and WorkoutAdBreak, the consent order, the cards' places), the SDKs Swift (`iosApp/StreetGym/GoogleAds.swift`, unverified until the Mac build) behind the Kotlin `Ads`; the desktop draws labelled stand-in cards. The widget half is still to build.
-12. **Account and cloud backups** (18): §21; the park's "Well done, <name>!". Needs: the owner's Firebase iPhone app; Firebase iOS SDK, GoogleSignIn and Sign in with Apple, bridged from Swift.
-13. **Leaderboard and progress analytics** (20): §16; §24. Needs: round 12; the owner's decision on filtering, reporting and blocking usernames (Apple 1.2).
+11. **Widget and ads** (21): §23; §20. Needs: a WidgetKit extension and an App Group (owner); the Google Mobile Ads SDK and UMP with demo units, then the owner's AdMob app, units and consent message. The ads half done 18 Nov 2026 on Google's test units but the four lines waiting for the owner's AdMob app, units and consent message: the rules are common Kotlin (`data/AdRules.kt`: Android's AdBreakClock, AdBreakPolicy and WorkoutAdBreak, the consent order, the cards' places), the SDKs Swift (`iosApp/StreetGym/GoogleAds.swift`, unverified until the Mac build) behind the Kotlin `Ads`; the desktop draws labelled stand-in cards. The widget half built the same day: what it shows and when it is written are common Kotlin (`data/Widget.kt`: Android's NextClassCard and WidgetText, the snapshot with the coming days' flames, WidgetFeed; `ui/WidgetCard.kt` draws the tile's figure and, for Windows, the card); Swift writes the files into the App Group (`iosApp/StreetGym/WidgetBridge.swift`) and the `StreetGymWidget` extension draws them in SwiftUI. Seven lines wait for the App Group.
+12. **Account and cloud backups** (18): §21; the park's "Well done, <name>!". Needs: the owner's Firebase iPhone app; Firebase iOS SDK, GoogleSignIn and Sign in with Apple, bridged from Swift. Built 18 Nov 2026, every line waiting for Firebase: the rules are common Kotlin (`data/CloudAccount.kt` with Android's AccountSettingsView and HomeActivity's sync and score, `data/Profiles.kt`, `data/CloudSync.kt`, the documents as Android writes them), Firebase is Swift (`iosApp/StreetGym/FirebaseAccount.swift`: Auth, Google Sign-In, Sign in with Apple, Firestore, App Check) behind the Kotlin `Account` and `CloudDocuments`; on Windows a fake Firebase checks the writes against firestore.rules (`desktopMain/AccountFakes.kt`). Android has one cloud copy merged both ways ("Sync now"), not a list of backups, so the iPhone has the same.
+13. **Leaderboard and progress analytics** (20): §16; §24. Needs: round 12; the owner's decision on filtering, reporting and blocking usernames (Apple 1.2). Built 18 Nov 2026: the boards (`ui/LeaderboardScreen.kt`, `data/Leaderboard.kt`), report by mail and a block list on the phone, progress analytics (`data/Analytics.kt`) with Android's documents; all of it waits for Firebase, filtering for the owner's decision.
 
 ## Waiting on the owner
 
@@ -508,6 +508,7 @@ Thirteen rounds of about 20 to 28 lines, each one sitting's build and test, in t
 3. **App Store Connect API key** and its three GitHub secrets. Unblocks TestFlight uploads from CI.
 4. **A real iPhone** with TestFlight. Unblocks the vibration, background sounds and alerts, the widget and location on a device.
 5. **AdMob**: the iPhone app, a native and a full-screen unit, and the iPhone consent message. Unblocks §20.
-6. **Firebase** (`streetgym-8dc6d`): the iPhone app and its `GoogleService-Info.plist`, an iPhone OAuth client for Google, Sign in with Apple as a provider, App Attest for App Check, and `parks_url`. Unblocks §21, §16, §24, the park's greeting and the weekly parks refresh.
-7. **Decisions**: how usernames are filtered, reported and blocked (Apple 1.2); landscape or portrait only; whether Pro bought on Android opens on iPhone; iPhone only or iPad too.
+6. **Firebase** (`streetgym-8dc6d`): the iPhone app (bundle id `com.justdataplease.streetgym`) and its `GoogleService-Info.plist` in `iosApp/StreetGym/` (git ignores it; CI needs it from a secret), its `REVERSED_CLIENT_ID` as the build setting `GOOGLE_REVERSED_CLIENT_ID`, Sign in with Apple as a provider, App Attest for App Check (and the debug token of a debug build), and `parks_url`. Unblocks §21, §16, §24, the park's greeting and the weekly parks refresh.
+6a. **The App Group** `group.com.justdataplease.streetgym` and the App IDs' capabilities (App Groups on `com.justdataplease.streetgym` and `com.justdataplease.streetgym.widget`, Sign in with Apple and App Attest on the app). Unblocks §23's seven lines.
+7. **Decisions**: how usernames are filtered (Apple 1.2 asks for a filter: none is built), who reads the reports sent to the app's contact address (the build value `contact.address`) and how fast (Apple asks for timely responses), and how a name is taken down (delete its `scores/{uid}`, `usernames/{name}` and the profile in the console, or a reports collection and a function later); landscape or portrait only; whether Pro bought on Android opens on iPhone; iPhone only or iPad too.
 8. **App Privacy** answers and a privacy page that names the iPhone app, then **Submit for review**. Unblocks the App Store release.

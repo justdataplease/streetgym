@@ -3,6 +3,8 @@ package com.justdataplease.streetgym.app.data
 import com.justdataplease.streetgym.data.epochMillisNow
 import com.justdataplease.streetgym.data.library.CustomDays
 import com.justdataplease.streetgym.data.progress.ActiveWorkout
+import com.justdataplease.streetgym.data.progress.CloudProgress
+import com.justdataplease.streetgym.data.progress.ProgressMerge
 import com.justdataplease.streetgym.data.progress.ExamLog
 import com.justdataplease.streetgym.data.progress.ExamResult
 import com.justdataplease.streetgym.data.progress.Intensity
@@ -175,13 +177,29 @@ class StoredProgress(private val store: KeyValueStore) : ProgressRepository {
 
     /**
      * Starts over (Android: reset): completed days, the history, exam results, any level replay and the class in
-     * progress go. [at] is kept as "reset_at" (its number as text), so a cloud copy from before it can't bring anything
-     * back once backups come.
+     * progress go, unless [keepActiveWorkout]. [at] is kept as "reset_at" (its number as text), so a cloud copy from
+     * before it can't bring anything back ([CloudSync]).
      */
-    fun reset(at: Long) {
-        listOf(KEY_COMPLETED, KEY_HISTORY, KEY_ACTIVE, KEY_EXAMS, KEY_REPLAY_LEVEL, KEY_REPLAY_REPEATED, KEY_REPLAY_FROM)
+    fun reset(at: Long, keepActiveWorkout: Boolean = false) {
+        listOf(KEY_COMPLETED, KEY_HISTORY, KEY_EXAMS, KEY_REPLAY_LEVEL, KEY_REPLAY_REPEATED, KEY_REPLAY_FROM)
             .forEach { store.set(it, null) }
+        // A reset arriving from another phone mustn't pull a class from under the athlete (Android: keepActiveWorkout).
+        if (!keepActiveWorkout) store.set(KEY_ACTIVE, null)
         store.set(KEY_RESET_AT, at.toString())
+    }
+
+    /**
+     * Pro: merges the cloud copy into this phone ([ProgressMerge]: days united, every session either side has, once,
+     * exam results merged) and returns the merged copy to upload (Android: mergeCloud).
+     */
+    fun mergeCloud(completed: Collection<String>, sessionsJson: String?, examsJson: String? = null): CloudProgress {
+        val mergedCompleted = ProgressMerge.completed(completedProgramIds(), completed)
+        val merged = encodeSessions(ProgressMerge.sessions(decodeSessions(store.get(KEY_HISTORY)), decodeSessions(sessionsJson)))
+        val exams = examLog().merge(ExamLog.decode(examsJson)).encode()
+        store.set(KEY_COMPLETED, encodeIds(mergedCompleted))
+        store.set(KEY_HISTORY, merged)
+        store.set(KEY_EXAMS, exams)
+        return CloudProgress(mergedCompleted, merged, exams)
     }
 
     /** When progress was last reset, or 0. */

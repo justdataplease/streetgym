@@ -48,6 +48,13 @@ import com.justdataplease.streetgym.app.data.AppModel
 import com.justdataplease.streetgym.app.data.Limit
 import com.justdataplease.streetgym.app.data.Paywall
 import com.justdataplease.streetgym.app.data.ReadyFilter
+import com.justdataplease.streetgym.app.data.SignInProvider
+import com.justdataplease.streetgym.app.data.WidgetLinks
+import com.justdataplease.streetgym.app.resources.account_delete_failed
+import com.justdataplease.streetgym.app.resources.account_deleted
+import com.justdataplease.streetgym.app.resources.leaderboard_blocked
+import com.justdataplease.streetgym.app.resources.profile_delete_failed
+import com.justdataplease.streetgym.app.resources.profile_deleted
 import kotlinx.coroutines.delay
 import com.justdataplease.streetgym.app.resources.builder_title
 import com.justdataplease.streetgym.app.resources.lists_limit_pro
@@ -143,6 +150,14 @@ sealed interface Shown {
     data object Reset : Shown
     /** The developer settings. */
     data object Developer : Shown
+    /** "Your leaderboard profile" for the user [uid]. */
+    data class Profile(val uid: String) : Shown
+    /** "Delete your profile?" */
+    data object DeleteProfile : Shown
+    /** "Delete your account?" */
+    data object DeleteAccount : Shown
+    /** Report or block a name on the leaderboard [board] (Apple 1.2). */
+    data class Report(val entry: com.justdataplease.streetgym.app.data.BoardEntry, val board: String) : Shown
 }
 
 /** A short note after an action (Android: a Toast). */
@@ -220,6 +235,9 @@ fun Shell(
     // progressTab, HistoryCalendarState).
     var progressShown by remember { mutableIntStateOf(restored?.progressTab ?: progressTab) }
     val calendar = remember { HistoryCalendarState(month = historyDay.takeIf { it != 0 }?.let(HistoryCalendar::monthOf), day = historyDay) }
+    // The leaderboard's All time / This month and World / country, kept while the app runs (Android: boardMonth, boardInCountry).
+    val leaderboard = remember { LeaderboardState() }
+    val links = androidx.compose.ui.platform.LocalUriHandler.current
     // A class asked to start while another is in progress: starting it ends the other, so the athlete is asked.
     var replacing by remember { mutableStateOf<Pair<String, Boolean>?>(null) }
     // A change of screen or tab is a break for the full-screen ad on Free (Android: adBreakNow): never over an offer,
@@ -274,6 +292,8 @@ fun Shell(
             // a workout is a break once its rest is over (Android: FocusWorkoutView's breakPending).
             model.adBreaks.tick()
             if (model.training.takeSectionBreak()) adBreak()
+            // A change to save settles, then the cloud copy and the score follow (Android: cloudChanged's 3 s).
+            model.cloud.tick()
             delay(1_000L)
         }
     }
@@ -281,6 +301,14 @@ fun Shell(
     LaunchedEffect(model) {
         snapshotFlow { Restore.encode(Screens(stack.toList(), trainingTab, workoutList, progressShown), model) }
             .collect { model.device.saveScreens(it) }
+    }
+    // A tap on the widget opens its class's page over Today, or Today (Android: onNewIntent's NextClassWidget.opened).
+    model.opening?.let { opening ->
+        LaunchedEffect(opening) {
+            model.opening = null
+            openTab(Screen.Today)
+            if (opening is WidgetLinks.Opening.Class && model.programById(opening.programId) != null) open(Screen.Class(opening.programId))
+        }
     }
     // A tap on a Timer alert opens the Timer tab (Android: onNewIntent's OPEN_TIMER).
     if (timing.openRequested) LaunchedEffect(Unit) {
@@ -338,11 +366,15 @@ fun Shell(
                             onSkill = { shown = Shown.Skill(it) }, onHelp = { shown = Shown.SkillsHelp },
                             onOpenClass = { open(Screen.Class(it)) }, onStreak = { shown = Shown.Streak(history = false) },
                             onPaywall = ::paywall,
+                            leaderboard = leaderboard,
+                            onReport = { entry, board -> shown = Shown.Report(entry, board) },
                         )
                         Screen.Timer -> TimerScreen(model) { notice = Notice.Plain(it) }
                         Screen.Settings -> SettingsScreen(
                             model, onSwitches = { shown = Shown.Switches(it) }, onReset = { shown = Shown.Reset },
                             onDeveloper = { shown = Shown.Developer }, onNote = { notice = Notice.Plain(it) },
+                            onProfile = { shown = Shown.Profile(it) }, onDeleteProfile = { shown = Shown.DeleteProfile },
+                            onDeleteAccount = { shown = Shown.DeleteAccount },
                         )
                     }
                 }
@@ -406,6 +438,28 @@ fun Shell(
                     openTab(Screen.Today)
                 }
                 Shown.Developer -> DeveloperDialog(model) { shown = null }
+                is Shown.Profile -> ProfileDialog(model.cloud, open.uid, model.services.region) { shown = null }
+                // Android: confirmDeleteProfile and confirmDelete, with their notes.
+                Shown.DeleteProfile -> DeleteProfileDialog(onClose = { shown = null }) {
+                    shown = null
+                    model.cloud.deleteProfile { deleted ->
+                        notice = Notice.Text(if (deleted) Res.string.profile_deleted else Res.string.profile_delete_failed)
+                    }
+                }
+                Shown.DeleteAccount -> DeleteAccountDialog(model.cloud.signedIn()?.provider == SignInProvider.APPLE, onClose = { shown = null }) {
+                    shown = null
+                    model.cloud.deleteAccount { deleted ->
+                        notice = Notice.Text(if (deleted) Res.string.account_deleted else Res.string.account_delete_failed)
+                    }
+                }
+                is Shown.Report -> ReportNameDialog(open.entry, open.board, onBlock = {
+                    shown = null
+                    model.cloud.block(open.entry.username)
+                    notice = Notice.Text(Res.string.leaderboard_blocked)
+                }, onReport = { link, noMail ->
+                    shown = null
+                    if (runCatching { links.openUri(link) }.isFailure) notice = Notice.Plain(noMail)
+                }) { shown = null }
                 null -> Unit
             }
             // Over everything, as Android's dialog: the beep when the phone's alert stays silent.

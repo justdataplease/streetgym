@@ -21,3 +21,10 @@ DerivedData/
 
 # Written by XcodeGen from iosApp/project.yml.
 /iosApp/StreetGym/Info.plist
+
+# Firebase configuration (the owner's file): read if present, never in git.
+/iosApp/StreetGym/GoogleService-Info.plist
+# Written by XcodeGen from iosApp/project.yml.
+/iosApp/StreetGymWidget/Info.plist
+/iosApp/StreetGym/StreetGym.entitlements
+/iosApp/StreetGymWidget/StreetGymWidget.entitlements
