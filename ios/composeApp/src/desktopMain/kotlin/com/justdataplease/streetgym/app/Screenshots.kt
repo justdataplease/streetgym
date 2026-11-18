@@ -1011,11 +1011,16 @@ private fun shot(file: File, width: Int = WIDTH, height: Int = HEIGHT, density: 
         var image = scene.render(0)
         repeat(FRAMES) { frame ->
             Thread.sleep(FRAME_MILLIS)
+            // A frame is a picture in native memory, which Java's collector doesn't count: closed here, not left to it.
+            image.close()
             image = scene.render((frame + 1) * FRAME_MILLIS * 1_000_000)
         }
-        file.writeBytes(image.encodeToData(EncodedImageFormat.PNG)!!.bytes)
+        file.writeBytes(image.use { last -> last.encodeToData(EncodedImageFormat.PNG)!!.use { data -> data.bytes } })
     } finally {
         scene.close()
+        // Whatever else a screen drew is native too and goes with its Java object: collect now. (BoringTravel's
+        // screenshots filled a 7.7 GB Linux runner this way on 18 Nov 2026, and GitHub stopped the job.)
+        System.gc()
     }
 }
 
