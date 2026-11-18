@@ -4,6 +4,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
+import com.justdataplease.streetgym.app.data.LocalDays
 import com.justdataplease.streetgym.app.data.MemoryStore
 
 /**
@@ -16,6 +17,7 @@ fun main() = application {
         title = "Street Gym (iPhone screens)",
         state = rememberWindowState(width = 440.dp, height = 956.dp),
     ) {
-        App(MemoryStore())
+        // Weeks start where this computer's region starts them, as the iPhone reads its own.
+        App(MemoryStore(), firstWeekday = LocalDays.isoWeekday(java.util.Calendar.getInstance().firstDayOfWeek))
     }
 }

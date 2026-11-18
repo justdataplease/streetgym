@@ -34,23 +34,38 @@ import com.justdataplease.streetgym.app.theme.streetType
 import com.justdataplease.streetgym.app.ui.BodyText
 import com.justdataplease.streetgym.app.ui.Screen
 import com.justdataplease.streetgym.app.ui.Shell
+import com.justdataplease.streetgym.app.ui.Shown
 import com.justdataplease.streetgym.app.ui.pageBackground
+import com.justdataplease.streetgym.data.progress.Streak
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 
 /**
  * The app from a cold start: reads the program from its files, then shows Today. [store] keeps the athlete's progress
- * and choices; [device] keeps the screen on during a workout and cues the end of a rest; [reduceMotion] holds the
- * movement figures still, as the phone's Reduce Motion asks.
+ * and choices; [device] keeps the screen on during a workout, sounds and speaks its cues; [reduceMotion] holds the
+ * movement figures still, as the phone's Reduce Motion asks. [firstWeekday] (1 Monday to 7 Sunday) is where the
+ * phone's region starts a week; [resumed] fires each time the app comes back to the screen, which redraws Today for a
+ * new day (Android: onResume).
  */
 @Composable
-fun App(store: KeyValueStore, device: WorkoutDevice = WorkoutDevice.None, reduceMotion: Boolean = false) {
+fun App(
+    store: KeyValueStore,
+    device: WorkoutDevice = WorkoutDevice.None,
+    reduceMotion: Boolean = false,
+    firstWeekday: Int = Streak.MONDAY,
+    resumed: Flow<Unit> = emptyFlow(),
+) {
     var model by remember { mutableStateOf<AppModel?>(null) }
     var failed by remember { mutableStateOf(false) }
     LaunchedEffect(store) {
         runCatching { loadProgram() }
-            .onSuccess { model = AppModel(it, StoredProgress(store), device = device, settings = AppSettings(store)) }
+            .onSuccess {
+                model = AppModel(it, StoredProgress(store), device = device, settings = AppSettings(store), firstWeekday = firstWeekday)
+            }
             .onFailure { failed = true }
     }
     val loaded = model
+    LaunchedEffect(loaded, resumed) { loaded?.let { app -> resumed.collect { app.refreshDay() } } }
     CompositionLocalProvider(LocalReduceMotion provides reduceMotion) {
         if (loaded != null) StreetGymApp(loaded) else StreetGymTheme(StreetTheme.DEFAULT) {
             Box(Modifier.fillMaxSize().pageBackground(StreetTheme.DEFAULT).padding(24.dp), contentAlignment = Alignment.Center) {
@@ -62,16 +77,17 @@ fun App(store: KeyValueStore, device: WorkoutDevice = WorkoutDevice.None, reduce
 
 /**
  * The app over a loaded [model]. [safeArea] is the room the phone needs around the screen (the Dynamic Island, the
- * home indicator); previews pass an iPhone's.
+ * home indicator); previews pass an iPhone's. [startAt] and [showing] open it on a screen and a question (previews).
  */
 @Composable
 fun StreetGymApp(
     model: AppModel,
     safeArea: PaddingValues = WindowInsets.safeDrawing.asPaddingValues(),
     startAt: Screen = Screen.Today,
+    showing: Shown? = null,
 ) {
     CompositionLocalProvider(LocalMotionLibrary provides model.motions) {
-        StreetGymTheme(model.theme) { Shell(model, safeArea, startAt) }
+        StreetGymTheme(model.theme) { Shell(model, safeArea, startAt, showing) }
     }
 }
 

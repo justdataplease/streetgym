@@ -1,7 +1,18 @@
 package com.justdataplease.streetgym.app.ui
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.toggleable
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import com.justdataplease.streetgym.app.resources.Res
+import com.justdataplease.streetgym.app.resources.ic_lock
+import com.justdataplease.streetgym.app.resources.unlock
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -282,12 +293,119 @@ fun Badge(text: String, modifier: Modifier = Modifier, color: Color = Street.col
     )
 }
 
-/** A number in a filled box: an exercise's place in the class, a set's in the exercise. */
+/**
+ * A number in a filled box: an exercise's place in the class, a set's in the exercise, a level's number (Android:
+ * numberCircle). [fill] and [color] change on Wheatpaste's blue poster.
+ */
 @Composable
-fun NumberBox(number: String, box: Dp, textSize: Float, modifier: Modifier = Modifier, face: FontFamily = Street.type.numeral) {
+fun NumberBox(
+    number: String,
+    box: Dp,
+    textSize: Float,
+    modifier: Modifier = Modifier,
+    face: FontFamily = Street.type.numeral,
+    radius: Dp = box * 0.55f,
+    fill: Color = Street.colors.primary,
+    color: Color = Street.colors.onAccent,
+) {
     val theme = Street.theme
-    Box(modifier.size(box).streetBackground(theme, theme.palette.primary, box * 0.55f), contentAlignment = Alignment.Center) {
-        BasicText(number, style = TextStyle(color = theme.palette.onAccent, fontSize = textSize.sp, fontFamily = face), maxLines = 1)
+    Box(modifier.size(box).streetBackground(theme, fill, radius), contentAlignment = Alignment.Center) {
+        BasicText(number, style = TextStyle(color = color, fontSize = textSize.sp, fontFamily = face), maxLines = 1)
+    }
+}
+
+/**
+ * The tag of a tier the athlete doesn't have: Android's badge in the secondary text colour with the lock before the
+ * tier's name (Android: lockBadge). [fill] and [color] change on Wheatpaste's blue poster.
+ */
+@Composable
+fun LockBadge(
+    text: String,
+    modifier: Modifier = Modifier,
+    fill: Color = Street.colors.textSecondary,
+    color: Color = Street.colors.onAccent,
+    onClick: (() -> Unit)? = null,
+) {
+    val theme = Street.theme
+    Row(
+        modifier.streetBackground(theme, fill, 12.dp)
+            .then(if (onClick != null) Modifier.clickable(role = Role.Button, onClick = onClick) else Modifier)
+            .semantics(mergeDescendants = true) { contentDescription = text }
+            .padding(horizontal = 9.dp, vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Image(painterResource(Res.drawable.ic_lock), contentDescription = null, colorFilter = ColorFilter.tint(color),
+            modifier = Modifier.size(12.dp))
+        BasicText(
+            text = text.uppercase(),
+            modifier = Modifier.padding(start = 4.dp),
+            style = TextStyle(color = color, fontSize = 11.sp, fontFamily = Street.type.label, letterSpacing = 0.06.em,
+                textAlign = TextAlign.Center),
+            maxLines = 1,
+        )
+    }
+}
+
+/** Room above Unlock for its tilted sticker, and to its right (Android: STICKER_ROOM and STICKER_SIDE). */
+private val STICKER_ROOM = 6.dp
+private val STICKER_SIDE = 3.dp
+
+/**
+ * "Unlock" on the main button, as wide as its row, with the tier's tag stuck on its top-right corner, tilted like a
+ * sticker (Android: unlockButton and tierButton, fill). Both open the offer.
+ */
+@Composable
+fun UnlockButton(tierName: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
+    val unlock = stringResource(Res.string.unlock)
+    Box(modifier.fillMaxWidth()) {
+        PrimaryButton(
+            unlock,
+            // The tilt lifts the tag's left corner above its box: the room above keeps the sticker whole.
+            Modifier.padding(top = STICKER_ROOM + 12.dp, end = 14.dp + STICKER_SIDE),
+            description = "$unlock $tierName",
+            onClick = onClick,
+        )
+        LockBadge(
+            tierName,
+            Modifier.align(Alignment.TopEnd).padding(top = STICKER_ROOM, end = STICKER_SIDE)
+                .graphicsLayer { rotationZ = 6f }.clearAndSetSemantics {},
+            onClick = onClick,
+        )
+    }
+}
+
+/**
+ * A switch row of Settings (Android: settingSwitch, the platform Material switch in the theme's accent): the label at
+ * 15 sp, the switch on the right, at least 56 dp tall; a tap anywhere flips it.
+ */
+@Composable
+fun SettingSwitch(label: String, checked: Boolean, modifier: Modifier = Modifier, onChange: (Boolean) -> Unit) {
+    val theme = Street.theme
+    val palette = theme.palette
+    Row(
+        modifier.fillMaxWidth().heightIn(min = 56.dp)
+            .toggleable(checked, role = Role.Switch, onValueChange = onChange)
+            .padding(vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        BasicText(label, Modifier.weight(1f), style = TextStyle(color = palette.text, fontSize = 15.sp, fontFamily = Street.type.body))
+        // Material's switch: a 34 x 14 dp track, half see-through, and a 20 dp thumb in the accent when on, pale when off.
+        val accent = palette.primary
+        val track = if (checked) accent.copy(alpha = 0.5f) else (if (theme.dark) Color.White else Color.Black).copy(alpha = 0.3f)
+        val thumb = if (checked) accent else if (theme.dark) Color(0xFFBDBDBD) else Color(0xFFF1F1F1)
+        Canvas(Modifier.padding(start = 12.dp).size(48.dp, 40.dp)) {
+            val trackWidth = 34.dp.toPx()
+            val trackHeight = 14.dp.toPx()
+            val left = (size.width - trackWidth) / 2f
+            val middle = size.height / 2f
+            drawRoundRect(track, Offset(left, middle - trackHeight / 2f), Size(trackWidth, trackHeight),
+                androidx.compose.ui.geometry.CornerRadius(trackHeight / 2f))
+            val radius = 10.dp.toPx()
+            val centre = Offset(if (checked) left + trackWidth - radius + 3.dp.toPx() else left + radius - 3.dp.toPx(), middle)
+            // The thumb's soft shadow, as Material lifts it.
+            drawCircle(Color.Black.copy(alpha = 0.18f), radius + 0.8.dp.toPx(), centre + Offset(0f, 1.dp.toPx()))
+            drawCircle(thumb, radius, centre)
+        }
     }
 }
 
@@ -432,26 +550,39 @@ fun Chip(
     )
 }
 
-/** How much of something is done, as a 4 dp bar centred in [height] (Android: horizontalProgress). */
+/**
+ * How much of something is done, as a 4 dp bar centred in [height] (Android: horizontalProgress). The track is the
+ * info colour at Material's disabled alpha, as Android's progress drawable draws it (0.26 light, 0.3 dark: measured on
+ * the emulator, levels.png). [track] and [bar] change on Wheatpaste's blue poster.
+ */
 @Composable
-fun ProgressBar(percent: Int, modifier: Modifier = Modifier, height: Dp = 8.dp) {
-    val palette = Street.colors
+fun ProgressBar(
+    percent: Int,
+    modifier: Modifier = Modifier,
+    height: Dp = 8.dp,
+    track: Color = Street.colors.infoSurface.copy(alpha = if (Street.theme.dark) 0.3f else 0.26f),
+    bar: Color = Street.colors.primary,
+) {
     Box(modifier.fillMaxWidth().height(height).drawBehind {
-        val bar = 4.dp.toPx()
-        val top = (size.height - bar) / 2f
-        drawRect(palette.infoSurface, Offset(0f, top), Size(size.width, bar))
-        drawRect(palette.primary, Offset(0f, top), Size(size.width * percent.coerceIn(0, 100) / 100f, bar))
+        val thick = 4.dp.toPx()
+        val top = (size.height - thick) / 2f
+        drawRect(track, Offset(0f, top), Size(size.width, thick))
+        drawRect(bar, Offset(0f, top), Size(size.width * percent.coerceIn(0, 100) / 100f, thick))
     })
 }
 
+/** [part] of [whole] in whole percent, 0 to 100 (Android: percentage). */
+fun percentage(part: Int, whole: Int): Int = if (whole <= 0) 0 else (part * 100 / whole).coerceIn(0, 100)
+
 /**
  * Android's check box (the platform Material one, tinted): an 18 dp rounded square, a 2 dp frame when unticked and
- * filled with the tick cut out when ticked, on the left of its 48 dp box as Android draws its 32 dp button there. It
- * only draws; the row around it takes the tap, as Android's rows pass theirs to the box.
+ * filled with the tick cut out when ticked, 16 dp in from the left of its [box] (48 dp in a row, 32 dp in a dialog's
+ * list) as Android draws its 32 dp button there. It only draws; the row around it takes the tap, as Android's rows pass
+ * theirs to the box.
  */
 @Composable
-fun CheckMark(checked: Boolean, tint: Color, modifier: Modifier = Modifier) {
-    Box(modifier.size(48.dp).drawBehind {
+fun CheckMark(checked: Boolean, tint: Color, modifier: Modifier = Modifier, box: Dp = 48.dp) {
+    Box(modifier.size(box).drawBehind {
         val unit = 1.dp.toPx()
         val center = Offset(16.dp.toPx(), size.height / 2f)
         fun point(x: Float, y: Float) = Offset(center.x + x * unit, center.y + y * unit)
@@ -477,9 +608,12 @@ fun CheckMark(checked: Boolean, tint: Color, modifier: Modifier = Modifier) {
     })
 }
 
-/** A row of options with one selected: Easier, Normal, Harder; the tabs of Training and Progress. */
+/**
+ * A row of options with one selected: Easier, Normal, Harder; the tabs of Training and Progress. [compact] narrows
+ * each option, as Training's four tabs are (Android: segmentedSwitch).
+ */
 @Composable
-fun SegmentedSwitch(labels: List<String>, selected: Int, modifier: Modifier = Modifier, onSelect: (Int) -> Unit) {
+fun SegmentedSwitch(labels: List<String>, selected: Int, modifier: Modifier = Modifier, compact: Boolean = false, onSelect: (Int) -> Unit) {
     val theme = Street.theme
     val palette = theme.palette
     Row(modifier.streetBackground(theme, palette.infoSurface, 14.dp).padding(3.dp)) {
@@ -489,8 +623,8 @@ fun SegmentedSwitch(labels: List<String>, selected: Int, modifier: Modifier = Mo
                 text = label,
                 modifier = Modifier
                     .then(if (on) Modifier.streetBackground(theme, palette.surface, 11.dp) else Modifier)
-                    .clickable(role = Role.Tab) { if (!on) onSelect(index) }
-                    .padding(horizontal = 18.dp, vertical = 8.dp),
+                    .selectable(on, role = Role.Tab) { if (!on) onSelect(index) }
+                    .padding(horizontal = if (compact) 11.dp else 18.dp, vertical = 8.dp),
                 style = TextStyle(color = if (on) palette.primary else palette.textSecondary, fontSize = 14.sp,
                     fontFamily = Street.type.bold, textAlign = TextAlign.Center),
                 maxLines = 1,

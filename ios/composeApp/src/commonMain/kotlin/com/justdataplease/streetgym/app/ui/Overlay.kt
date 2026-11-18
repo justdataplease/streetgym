@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.BasicTextField
@@ -122,7 +123,8 @@ class DialogAction(val label: String, val onClick: () -> Unit)
  * A question over the screen, as Android's AlertDialog shows it in the app's theme: the surface with Concrete's and
  * Wheatpaste's ink outline or Night Park's round corners, 95% of the screen wide; the title, the message, any [content],
  * then the buttons in words in the theme's colour, [neutral] at the start, [dismiss] and [confirm] at the end.
- * Android draws its dialogs in the system face; here they keep the app's own.
+ * Android draws its dialogs in the system face; here they keep the app's own. [cancelable] false keeps it up when the
+ * dim is tapped (Android: setCancelable(false)).
  */
 @Composable
 fun StreetDialog(
@@ -132,12 +134,13 @@ fun StreetDialog(
     dismiss: DialogAction? = null,
     neutral: DialogAction? = null,
     message: String? = null,
+    cancelable: Boolean = true,
     content: (@Composable ColumnScope.() -> Unit)? = null,
 ) {
     Modal {
         val theme = Street.theme
         val palette = theme.palette
-        Scrim(onDismiss, Alignment.Center) {
+        Scrim(if (cancelable) onDismiss else ({}), Alignment.Center) {
             BoxWithConstraints(Modifier.fillMaxSize().padding(LocalSafeArea.current), contentAlignment = Alignment.Center) {
                 val card = if (theme == StreetTheme.NIGHT_PARK) Modifier.clip(RoundedCornerShape(24.dp)).background(palette.surface)
                     else Modifier.background(palette.surface).border(2.dp, palette.border)
@@ -199,6 +202,24 @@ fun ChoiceRow(label: String, selected: Boolean, onSelect: () -> Unit) {
         }
         BasicText(label, Modifier.padding(start = 20.dp), style = TextStyle(color = palette.text, fontSize = 18.sp,
             fontFamily = Street.type.body), maxLines = 1, overflow = TextOverflow.Ellipsis)
+    }
+}
+
+/**
+ * A row of a multiple-choice list in a dialog (Android: setMultiChoiceItems): the check box, ticked when [checked],
+ * then [label], which may run over two lines.
+ */
+@Composable
+fun CheckRow(label: String, checked: Boolean, onChange: (Boolean) -> Unit) {
+    val palette = Street.colors
+    Row(
+        Modifier.fillMaxWidth().heightIn(min = 48.dp).toggleable(checked, role = Role.Checkbox, onValueChange = onChange)
+            .padding(start = 20.dp, end = 24.dp, top = 4.dp, bottom = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        CheckMark(checked, if (checked) palette.primary else palette.textSecondary, box = 32.dp)
+        BasicText(label, Modifier.padding(start = 20.dp), style = TextStyle(color = palette.text, fontSize = 18.sp,
+            fontFamily = Street.type.body))
     }
 }
 

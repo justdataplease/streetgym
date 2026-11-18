@@ -23,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,6 +43,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.justdataplease.streetgym.app.data.AppModel
+import com.justdataplease.streetgym.app.data.Cue
 import com.justdataplease.streetgym.app.data.Finished
 import com.justdataplease.streetgym.app.data.FocusPage
 import com.justdataplease.streetgym.app.data.FocusState
@@ -78,7 +80,12 @@ import com.justdataplease.streetgym.app.resources.focus_easier
 import com.justdataplease.streetgym.app.resources.focus_easier_description
 import com.justdataplease.streetgym.app.resources.focus_easier_generic
 import com.justdataplease.streetgym.app.resources.focus_rest
+import com.justdataplease.streetgym.app.resources.focus_rest_left
 import com.justdataplease.streetgym.app.resources.focus_rest_next
+import com.justdataplease.streetgym.app.resources.focus_rest_over
+import com.justdataplease.streetgym.app.resources.focus_rest_started
+import com.justdataplease.streetgym.app.resources.focus_switch_sides
+import com.justdataplease.streetgym.app.resources.focus_time_up
 import com.justdataplease.streetgym.app.resources.focus_seconds
 import com.justdataplease.streetgym.app.resources.focus_set_of
 import com.justdataplease.streetgym.app.resources.focus_side
@@ -125,6 +132,8 @@ import com.justdataplease.streetgym.ui.SetNotes
 import com.justdataplease.streetgym.ui.WorkoutFlow
 import com.justdataplease.streetgym.ui.WorkoutStep
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.min
@@ -172,9 +181,14 @@ fun WorkoutScreen(
     onGone: () -> Unit,
 ) {
     val training = model.training
-    DisposableEffect(model) {
-        model.device.keepScreenOn(true)
-        onDispose { model.device.keepScreenOn(false) }
+    val device = model.device
+    val focus = model.workoutView == WorkoutView.FOCUS
+    // The focus view keeps the screen on whatever Settings says; the list only with Keep screen awake (Android:
+    // FocusWorkoutView.keepScreenOn and showScreen's FLAG_KEEP_SCREEN_ON).
+    val awake = focus || model.keepScreenAwake
+    DisposableEffect(device, awake) {
+        device.keepScreenOn(awake)
+        onDispose { device.keepScreenOn(false) }
     }
     LaunchedEffect(training) {
         while (true) {
@@ -182,11 +196,24 @@ fun WorkoutScreen(
             delay(TICK_MILLIS)
         }
     }
+    // Only the focus view speaks the rest and the timed sets, as on Android.
+    val scope = rememberCoroutineScope()
+    DisposableEffect(training, focus) {
+        training.cues = if (!focus) null else { cue -> scope.launch { device.announce(cueText(cue)) } }
+        onDispose { training.cues = null }
+    }
+    // Leaving the workout ends the rest's alert, as Android's rest timer stops beeping off the workout's screen.
+    DisposableEffect(device) { onDispose { device.restAlert(null) } }
     val state = training.state()
     if (state == null) {
         LaunchedEffect(Unit) { onGone() }
         return
     }
+    // The rest running, with the rest timer sound on: its notification, for an app in the background by its end.
+    val restStep = (state.page as? FocusPage.Rest)?.let { state.flow[it.index] }
+    val alertAt = state.restEndsAt?.takeIf { model.soundCues && restStep != null }
+    val alertText = restStep?.let { stringResource(Res.string.focus_rest_over, it.setNumber, it.setCount, displayName(it.exercise)) }.orEmpty()
+    LaunchedEffect(alertAt, alertText) { device.restAlert(alertAt, alertText) }
     var ask by remember { mutableStateOf<Ask?>(if (askEffort) Ask.Effort else null) }
     fun close() { ask = null }
     // Finishing early asks first; a fully ticked class goes straight to the effort question (Android: requestFinish).
@@ -245,6 +272,15 @@ fun WorkoutScreen(
         }
         null -> Unit
     }
+}
+
+/** What VoiceOver says for [cue], in Android's words (FocusWorkoutView: focus_rest_started, focus_rest_left…). */
+internal suspend fun cueText(cue: Cue): String = when (cue) {
+    is Cue.RestStarted -> getString(Res.string.focus_rest_started, cue.seconds, exerciseName(cue.next.exercise), cue.next.setNumber)
+    is Cue.RestLeft -> getString(Res.string.focus_rest_left, cue.seconds)
+    is Cue.RestOver -> getString(Res.string.focus_rest_over, cue.step.setNumber, cue.step.setCount, exerciseName(cue.step.exercise))
+    is Cue.TimeUp -> getString(Res.string.focus_time_up, cue.step.setNumber, cue.step.setCount, exerciseName(cue.step.exercise))
+    Cue.SwitchSides -> getString(Res.string.focus_switch_sides)
 }
 
 /** The set at [index]: the panel, the exercise and its dose, then Back, the main action and Skip. */

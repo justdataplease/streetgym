@@ -2,7 +2,7 @@
 
 The iPhone app, started on 18 Nov 2026. The Android app is `android-streetgym/`; both run on the same engine (`android-streetgym/shared/`) and the same program, texts, fonts and icons, which this project reads from the Android app at build time.
 
-**Where it stands:** Today, the class page (with Repeat this day for a completed class) and training a class are built, in the three themes, with progress saved. A class trains in Focus (set by set, with the rest timer, the effort question and finishing) or as a List of every set with its tick, switched from the class page or the workout's title bar. Every exercise shows the moving line man, side and front view, ported from Android. They build, pass their tests and are drawn to pictures on Windows; GitHub's Mac builds the app and runs it in the iPhone Simulator (`ci/ios-ci.yml`). The plan, what is done and what is next: [docs/iphone-development.md](docs/iphone-development.md).
+**Where it stands:** Today, the class page (with Repeat this day for a completed class), training a class, exams, Training › Levels with each level's classes, and Settings › During your workout are built, in the three themes, with progress and choices saved under Android's names. A class trains in Focus (set by set, with the rest timer, its beep and spoken cues, the effort question and finishing) or as a List of every set with its tick, switched from the class page, Settings or the workout's title bar. A rest that ends with the app in the background has a notification with the same beep. Every exercise shows the moving line man, side and front view, ported from Android. They build, pass their tests and are drawn to pictures on Windows; GitHub's Mac builds the app and runs it in the iPhone Simulator (`ci/ios-ci.yml`). The plan: [docs/iphone-development.md](docs/iphone-development.md); every Android feature and whether it is on iPhone: [docs/checklist.md](docs/checklist.md).
 
 | Folder | What it holds |
 |---|---|
@@ -21,7 +21,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File C:\MyDrive\jdp\android-apps\
 ```
 
 - `:composeApp:run` opens the screens in a window at iPhone size.
-- `:composeApp:screenshots` writes a PNG of every screen to `composeApp/build/screenshots` (an iPhone 17 Pro Max, 1320 × 2868), tall pictures of the class page and the list (`*-long*.png`), and the line man's review sheets (`figures-<n>-<theme>.png`, as Android's AnimationGallery draws them).
+- `:composeApp:screenshots` writes a PNG of every screen and state to `composeApp/build/screenshots` (an iPhone 17 Pro Max, 1320 × 2868), most in each theme (`*-concrete`, `*-night_park`, `*-wheatpaste`), tall pictures of whole scrolling screens (`*-long*.png`), and the line man's review sheets (`figures-<n>-<theme>.png`, as Android's AnimationGallery draws them).
 - `:composeApp:compileCommonMainKotlinMetadata` proves the shared code uses no Java or Android API. The desktop build alone lets Java calls through.
 - `:composeApp:compileIosMainKotlinMetadata` type-checks the iPhone-only Kotlin (`iosMain`) against Apple's APIs, on Windows.
 

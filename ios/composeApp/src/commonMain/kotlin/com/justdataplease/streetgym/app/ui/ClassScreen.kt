@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import com.justdataplease.streetgym.app.data.AppModel
 import com.justdataplease.streetgym.app.data.WorkoutView
 import com.justdataplease.streetgym.app.figure.ExerciseFigure
+import com.justdataplease.streetgym.app.figure.effortColor
 import com.justdataplease.streetgym.app.resources.Res
 import com.justdataplease.streetgym.app.resources.animation_variation
 import com.justdataplease.streetgym.app.resources.assigned_later
@@ -66,16 +67,52 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
+/** The words of a class not reached yet, written in Android's screen (renderOverview) rather than its string files. */
+internal const val DAILY_PLAN_LOCKED = "This daily plan is locked."
+
 /**
- * One class, read before training it (android-streetgym, HomeActivity.renderOverview): what it is for, then every
- * exercise of the warm-up, skill practice, strength work and cool-down with its line man and its sets. Today's class
- * ends with the workout view, Easier / Normal / Harder and Start workout, or Resume while it is in progress
- * ([onStart]); a completed one can be trained again ([onRepeat]), at the top and at the end. [onDone] follows Complete
- * day.
+ * One class, read before training it (android-streetgym, HomeActivity.renderOverview): what it is for and how hard it
+ * is for the athlete, an exam's card, then every exercise of the warm-up, skill practice, strength work and cool-down
+ * with its line man and its sets. Today's class ends with the workout view, Easier / Normal / Harder and Start workout,
+ * or Resume while it is in progress ([onStart]); a completed one can be trained again ([onRepeat]), at the top and at
+ * the end. [onDone] follows Complete day. A class not reached yet shows only its name; one in a level the tier doesn't
+ * open shows Unlock, which opens the offer ([onOffer], with the level).
  */
 @Composable
-fun ClassScreen(model: AppModel, programId: String, onStart: (String) -> Unit, onRepeat: (String) -> Unit, onDone: () -> Unit) {
+fun ClassScreen(
+    model: AppModel,
+    programId: String,
+    onStart: (String) -> Unit,
+    onRepeat: (String) -> Unit,
+    onDone: () -> Unit,
+    onOffer: (Int) -> Unit = {},
+) {
     val program = model.program(programId) ?: return
+    val completed = model.isCompleted(program.id)
+    if (model.levelLocked(program.levelNumber) && !completed) {
+        // A class of a level the tier doesn't open: its name, meta and Unlock, none of its exercises.
+        Page {
+            StreetCard(Modifier.padding(bottom = 14.dp)) {
+                TitleText(displayName(program), 25f)
+                BodyText(listOf(stringResource(Res.string.level_number, program.levelNumber), programMeta(program))
+                    .filter(String::isNotBlank).joinToString(" • "), 14f, Modifier.padding(top = 4.dp))
+                UnlockButton(levelTierName(program.levelNumber), Modifier.padding(top = 16.dp)) { onOffer(program.levelNumber) }
+            }
+        }
+        return
+    }
+    if (!model.canStart(program.id) && !completed) {
+        // Not reached yet: only its name, and that it comes later.
+        Page {
+            StreetCard {
+                TitleText(displayName(program), 25f)
+                BodyText(DAILY_PLAN_LOCKED, modifier = Modifier.padding(top = 12.dp))
+                PrimaryButton(stringResource(Res.string.assigned_later), Modifier.padding(top = 16.dp),
+                    color = Street.colors.textSecondary, enabled = false) {}
+            }
+        }
+        return
+    }
     val isToday = model.isToday(program.id)
     val active = model.training.active()
     // Today's class starts as usual; any other completed class can be repeated (Android: repeatable).
@@ -92,6 +129,10 @@ fun ClassScreen(model: AppModel, programId: String, onStart: (String) -> Unit, o
                     .filter(String::isNotBlank).joinToString(" • "),
                 14f, Modifier.padding(top = 4.dp),
             )
+            // How hard the class is for this athlete, in its colour (Android: effortText and effortColor).
+            model.effortOf(program.id)?.let { effort ->
+                Badge(effortText(effort), Modifier.padding(top = 8.dp), color = effortColor(effort))
+            }
             BodyText(program.description.resolve().ifBlank { stringResource(Res.string.empty_description) },
                 modifier = Modifier.padding(top = 12.dp))
             SafetyLine(program, Modifier.padding(top = 6.dp))
@@ -101,6 +142,7 @@ fun ClassScreen(model: AppModel, programId: String, onStart: (String) -> Unit, o
                 RepeatButton(repeatResume, Modifier.padding(top = 10.dp)) { onRepeat(program.id) }
             }
         }
+        if (program.isExam) ExamCard(model, program, Modifier.padding(bottom = 14.dp))
 
         val sections = listOf(
             Res.string.warm_up to program.warmup,

@@ -29,8 +29,13 @@ import com.justdataplease.streetgym.app.theme.Street
 import com.justdataplease.streetgym.app.theme.blendColor
 import com.justdataplease.streetgym.app.ui.BodyText
 import com.justdataplease.streetgym.json.JSONObject
+import androidx.compose.ui.platform.LocalDensity
 import com.justdataplease.streetgym.app.data.AppModel
+import com.justdataplease.streetgym.app.data.ExamQuestion
 import com.justdataplease.streetgym.app.data.WorkoutView
+import com.justdataplease.streetgym.app.ui.Shown
+import com.justdataplease.streetgym.billing.Tier
+import com.justdataplease.streetgym.data.progress.ExamResult
 import com.justdataplease.streetgym.app.data.FocusPage
 import com.justdataplease.streetgym.app.data.MemoryStore
 import com.justdataplease.streetgym.app.data.Program
@@ -88,6 +93,8 @@ fun main(args: Array<String>) {
         shot(File(out, "today-${theme.key}.png")) { StreetGymApp(themed, SAFE_AREA) }
     }
     for (theme in StreetTheme.entries) workoutShots(program, theme, out)
+    for (theme in StreetTheme.entries) loopShots(program, theme, out)
+    for (theme in StreetTheme.entries) levelShots(program, theme, out)
     shot(File(out, "start-buttons.png"), height = 1560) { StartButtons() }
     val names = movementNames()
     for (theme in StreetTheme.entries) FIGURE_SHEETS.forEachIndexed { index, ids ->
@@ -233,6 +240,90 @@ private fun workoutShots(program: Program, theme: StreetTheme, out: File) {
     shot(File(out, "workout-list-long-$name.png"), height = LONG_HEIGHT) { StreetGymApp(list, SAFE_AREA, startAt = Screen.Workout(listId)) }
 }
 
+/**
+ * Round 2, the workout loop, in [theme]: an exam class's page before and after an attempt, its question after the class,
+ * "Exam passed" and the block offered again, Today repeating the block, a class not reached, a class of a level the tier
+ * doesn't open with Unlock and its offer, Today with Unlock, and Settings › During your workout.
+ */
+private fun loopShots(program: Program, theme: StreetTheme, out: File) {
+    val name = theme.key
+    val ordered = NextClass.ordered(program.catalog)
+    val exam = ordered.first { it.isExam && it.headline != null }
+    val examIndex = ordered.indexOf(exam)
+    fun atExam(tier: Tier = Tier.PRO): AppModel = model(program, tier = tier).apply {
+        this.theme = theme
+        progress.completePrograms(ordered.take(examIndex).map { it.id }, at = NOW - DAY)
+    }
+
+    val untaken = atExam()
+    shot(File(out, "class-exam-$name.png")) { StreetGymApp(untaken, SAFE_AREA, startAt = Screen.Class(exam.id)) }
+    shot(File(out, "class-exam-long-$name.png"), height = LONG_HEIGHT) { StreetGymApp(untaken, SAFE_AREA, startAt = Screen.Class(exam.id)) }
+
+    // The question after the class: every target reached as ticked but the headline, logged short.
+    val tests = exam.tests.distinct().map { it to ((it.movementId ?: it.id) != exam.headline) }
+    val question = ExamQuestion(exam, tests, offerRepeat = true)
+    shot(File(out, "exam-ask-$name.png")) { StreetGymApp(atExam(), SAFE_AREA, showing = Shown.Exam(question)) }
+    shot(File(out, "exam-passed-$name.png")) { StreetGymApp(atExam(), SAFE_AREA, showing = Shown.ExamPassed) }
+    val missed = tests.filterNot { it.second }.map { it.first }
+    shot(File(out, "exam-repeat-$name.png")) { StreetGymApp(atExam(), SAFE_AREA, showing = Shown.RepeatBlock(exam, missed)) }
+
+    // After the attempt: its card on the exam's page, and Today going back through the block.
+    val taken = atExam()
+    taken.progress.completePrograms(listOf(exam.id), at = NOW - 60 * MINUTE)
+    taken.saveExam(question, tests.map { it.second })
+    taken.repeatBlock(exam)
+    shot(File(out, "class-exam-result-$name.png")) { StreetGymApp(taken, SAFE_AREA, startAt = Screen.Class(exam.id)) }
+    shot(File(out, "today-replay-exam-$name.png")) { StreetGymApp(taken, SAFE_AREA) }
+
+    // A class not reached yet, and one of a level Free doesn't open, with Unlock and the offer; Today on Unlock.
+    val athlete = athlete(program).apply { this.theme = theme }
+    shot(File(out, "class-later-$name.png")) { StreetGymApp(athlete, SAFE_AREA, startAt = Screen.Class(ordered[20].id)) }
+    val free = model(program, tier = Tier.FREE).apply {
+        this.theme = theme
+        progress.completePrograms(ordered.take(300).map { it.id }, at = NOW - DAY)
+    }
+    shot(File(out, "class-locked-$name.png")) { StreetGymApp(free, SAFE_AREA, startAt = Screen.Class(ordered[300].id)) }
+    shot(File(out, "today-unlock-$name.png")) { StreetGymApp(free, SAFE_AREA) }
+    shot(File(out, "offer-level-$name.png")) { StreetGymApp(free, SAFE_AREA, showing = Shown.Offer(4)) }
+
+    shot(File(out, "settings-$name.png")) { StreetGymApp(athlete, SAFE_AREA, startAt = Screen.Settings) }
+}
+
+/**
+ * Round 3, Training › Levels, in [theme]: the levels of an athlete in Level 3 on Free (two levels done and stamped,
+ * the current one, those ahead, the tier's tags), a replay's card, Level 1's classes as the current level and as an
+ * earlier one with its exams, a locked level's classes, and Today with large text.
+ */
+private fun levelShots(program: Program, theme: StreetTheme, out: File) {
+    val name = theme.key
+    val ordered = NextClass.ordered(program.catalog)
+    val veteran = athlete(program, skip = 200, tier = Tier.FREE).apply { this.theme = theme }
+    // Level 1's first exam passed, its second not yet.
+    val exams = ordered.filter { it.isExam && it.levelNumber == 1 }
+    veteran.progress.recordExam(ExamResult(exams[0].id, NOW - 30 * DAY, listOf("pullup"), emptyList()))
+    veteran.progress.recordExam(ExamResult(exams[1].id, NOW - 25 * DAY, emptyList(), listOf("pullup")))
+    shot(File(out, "training-$name.png")) { StreetGymApp(veteran, SAFE_AREA, startAt = Screen.Training) }
+    shot(File(out, "training-long-$name.png"), height = 9_000) { StreetGymApp(veteran, SAFE_AREA, startAt = Screen.Training) }
+    shot(File(out, "level-done-$name.png")) { StreetGymApp(veteran, SAFE_AREA, startAt = Screen.Level(1)) }
+    shot(File(out, "level-locked-$name.png")) { StreetGymApp(veteran, SAFE_AREA, startAt = Screen.Level(4)) }
+
+    val athlete = athlete(program).apply { this.theme = theme }
+    shot(File(out, "level-$name.png")) { StreetGymApp(athlete, SAFE_AREA, startAt = Screen.Level(1)) }
+    shot(File(out, "level-long-$name.png"), height = LONG_HEIGHT) { StreetGymApp(athlete, SAFE_AREA, startAt = Screen.Level(1)) }
+
+    val replaying = athlete(program, skip = 105).apply {
+        this.theme = theme
+        goBackTo(1)
+    }
+    shot(File(out, "training-replay-$name.png")) { StreetGymApp(replaying, SAFE_AREA, startAt = Screen.Training) }
+    shot(File(out, "today-replay-$name.png")) { StreetGymApp(replaying, SAFE_AREA) }
+
+    // 130% text: the streak's smaller flame and boxes.
+    shot(File(out, "today-large-text-$name.png")) {
+        CompositionLocalProvider(LocalDensity provides Density(DENSITY, fontScale = 1.3f)) { StreetGymApp(athlete, SAFE_AREA) }
+    }
+}
+
 /** A tall picture for a whole scrolling screen. */
 private const val LONG_HEIGHT = 15_000
 
@@ -250,13 +341,19 @@ private fun StartButtons() {
     }
 }
 
-private fun model(program: Program, clock: ShotClock = ShotClock()) =
-    AppModel(program, StoredProgress(MemoryStore()), now = { clock.time }, zone = TimeZone.UTC)
+private fun model(program: Program, clock: ShotClock = ShotClock(), tier: Tier = Tier.PRO) =
+    AppModel(program, StoredProgress(MemoryStore()), tier = tier, now = { clock.time }, zone = TimeZone.UTC)
 
-/** Twelve classes trained: one a day with a rest day here and there, the last four on Saturday, Sunday, Monday and today. */
-private fun athlete(program: Program, clock: ShotClock = ShotClock()): AppModel = model(program, clock).also { model ->
+/**
+ * Twelve classes trained: one a day with a rest day here and there, the last four on Saturday, Sunday, Monday and
+ * today. [skip]: the classes before them marked done a month ago, for an athlete further on.
+ */
+private fun athlete(program: Program, clock: ShotClock = ShotClock(), skip: Int = 0, tier: Tier = Tier.PRO): AppModel =
+    model(program, clock, tier).also { model ->
     val daysAgo = listOf(17, 16, 14, 13, 11, 10, 8, 7, 4, 3, 2, 0)
-    NextClass.ordered(program.catalog).take(daysAgo.size).forEachIndexed { index, day ->
+    val ordered = NextClass.ordered(program.catalog)
+    if (skip > 0) model.progress.completePrograms(ordered.take(skip).map { it.id }, at = NOW - 30 * DAY)
+    ordered.drop(skip).take(daysAgo.size).forEachIndexed { index, day ->
         // Today's class was trained in the morning; the one in the pictures comes after it.
         val finished = NOW - daysAgo[index] * DAY - (if (daysAgo[index] == 0) 8 * 60 * MINUTE else 0L)
         model.progress.startWorkout(day.id, startedAtEpochMillis = finished - 40 * MINUTE)

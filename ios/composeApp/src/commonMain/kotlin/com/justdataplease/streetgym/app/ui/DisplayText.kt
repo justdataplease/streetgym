@@ -24,6 +24,16 @@ import com.justdataplease.streetgym.app.resources.seconds_format
 import com.justdataplease.streetgym.app.resources.set_number
 import com.justdataplease.streetgym.app.resources.workout_number
 import com.justdataplease.streetgym.app.resources.workout_sequence_position
+import com.justdataplease.streetgym.app.resources.effort_easy
+import com.justdataplease.streetgym.app.resources.effort_for_you
+import com.justdataplease.streetgym.app.resources.effort_hard
+import com.justdataplease.streetgym.app.resources.effort_moderate
+import com.justdataplease.streetgym.app.resources.focus_seconds
+import com.justdataplease.streetgym.app.resources.tier_plus
+import com.justdataplease.streetgym.app.resources.tier_pro
+import com.justdataplease.streetgym.billing.LevelAccess
+import com.justdataplease.streetgym.billing.Tier
+import com.justdataplease.streetgym.data.effort.Effort
 import com.justdataplease.streetgym.data.equipment.Equipment
 import com.justdataplease.streetgym.data.equipment.EquipmentNeeds
 import com.justdataplease.streetgym.data.model.TrainingExercise
@@ -31,9 +41,14 @@ import com.justdataplease.streetgym.data.model.TrainingLevel
 import com.justdataplease.streetgym.data.model.TrainingProgram
 import com.justdataplease.streetgym.data.model.TrainingSet
 import com.justdataplease.streetgym.ui.ExerciseNotes
+import com.justdataplease.streetgym.ui.SetNotes
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
+import kotlin.time.Instant
 
 /* The program's names and doses as words, the way Android writes them (android-streetgym, ui/DisplayText.kt). */
 
@@ -118,6 +133,49 @@ fun equipmentNeeds(tags: Collection<String>): String? {
     }.joinToString(" + ")
     return stringResource(Res.string.equipment_needs, text)
 }
+
+/** "Easy for you", "Moderate for you" or "Hard for you" (Android: EffortUi.effortText). */
+@Composable
+fun effortText(effort: Effort): String = stringResource(Res.string.effort_for_you, stringResource(when (effort) {
+    Effort.EASY -> Res.string.effort_easy
+    Effort.MODERATE -> Res.string.effort_moderate
+    Effort.HARD -> Res.string.effort_hard
+}))
+
+/** An exam target as the exam's question lists it: "Strict Pull-Up · 5 reps", "L-Sit · 15 s · per side" (Android: examTarget). */
+@Composable
+fun examTarget(exercise: TrainingExercise): String {
+    val set = exercise.sets.firstOrNull()
+    val repetitions = set?.repetitions
+    val seconds = set?.durationSeconds
+    val dose = when {
+        repetitions != null -> pluralStringResource(Res.plurals.repetitions_format, repetitions, repetitions)
+        seconds != null -> stringResource(Res.string.focus_seconds, seconds)
+        else -> null
+    }
+    val sides = set?.let { SetNotes.parse(it.description.resolve()).sides }.orEmpty()
+    return (listOfNotNull(displayName(exercise), dose) + sides).joinToString(" · ")
+}
+
+/** "Plus" or "Pro": the tier that opens a level (Android: levelTierName). */
+@Composable
+fun levelTierName(levelNumber: Int): String =
+    stringResource(if (LevelAccess.tierFor(levelNumber) == Tier.PRO) Res.string.tier_pro else Res.string.tier_plus)
+
+private val MONTHS = listOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+
+/**
+ * A day as Android's medium date shows it in English, "Nov 18, 2026", in the phone's [zone] (Android:
+ * DateFormat.getDateInstance(MEDIUM)).
+ */
+fun mediumDate(millis: Long, zone: TimeZone): String {
+    val date = Instant.fromEpochMilliseconds(millis).toLocalDateTime(zone).date
+    return "${MONTHS[date.month.ordinal]} ${date.day}, ${date.year}"
+}
+
+/** An exercise's name outside a screen, for what is spoken (Android: displayName). */
+suspend fun exerciseName(exercise: TrainingExercise): String =
+    exercise.name.resolve().ifBlank { getString(Res.string.exercise_number, exercise.number) }
 
 /** A movement's description, then its safety note and easier option on their own lines. */
 @Composable

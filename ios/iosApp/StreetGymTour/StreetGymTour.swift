@@ -32,6 +32,17 @@ final class StreetGymTour: XCTestCase {
         list.tap()
         _ = app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", "ready for the next set")).firstMatch.waitForExistence(timeout: 10)
         snap("03-list")
+
+        // The list keeps the tab bar: Training shows the ten levels, and the first opens its classes.
+        let training = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Training")).firstMatch
+        guard training.waitForExistence(timeout: 10) else { return }
+        training.tap()
+        let level = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] %@", "of 100 complete")).firstMatch
+        guard level.waitForExistence(timeout: 10) else { return }
+        snap("04-training")
+        level.tap()
+        _ = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] %@", "level 1 workouts")).firstMatch.waitForExistence(timeout: 10)
+        snap("05-level")
     }
 
     private func snap(_ name: String) {

@@ -43,7 +43,7 @@ class TrainingTest {
         var rests = 0
         var holds = 0
         override fun restOver() { rests++ }
-        override fun holdOver() { holds++ }
+        override fun holdOver(sound: Boolean) { holds++ }
     }
 
     private fun model(clock: Clock, store: KeyValueStore = MemoryStore(), phone: WorkoutDevice = Phone()) =

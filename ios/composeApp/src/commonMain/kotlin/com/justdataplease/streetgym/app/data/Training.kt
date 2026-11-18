@@ -42,20 +42,64 @@ class FocusState(
     val restEndsAt: Long? = null,
 )
 
-/** What finishing a class saved. [streak]: the streak's days, when this class lit today's flame; else null. */
-class Finished(val session: WorkoutSession, val points: Int, val streak: Int?)
+/**
+ * What finishing a class saved. [streak]: the streak's days, when this class lit today's flame; else null. [exam]: an
+ * exam class's targets, to tick the ones reached (Android: askExam after askEffortAndFinish); null for any other class.
+ */
+class Finished(val session: WorkoutSession, val points: Int, val streak: Int?, val exam: ExamQuestion? = null)
 
 /**
- * What a workout asks of the phone itself: the screen kept on while it shows, and a cue when a rest or a timed set ends
- * (Android: FLAG_KEEP_SCREEN_ON, the rest's beep and TimingAlerts.tone with a vibration).
+ * "Exam: tick the targets you reached": the [exam] class's [tests], each with whether it looks reached (every set
+ * ticked, none easier, no number short of the plan: WorkoutFlow.examTests), less those of switched-off skills or
+ * equipment. [offerRepeat]: a block repeat may be offered for misses, which a repeated exam never does.
+ */
+class ExamQuestion(val exam: TrainingProgram, val tests: List<Pair<TrainingExercise, Boolean>>, val offerRepeat: Boolean)
+
+/**
+ * What a workout asks of the phone itself (Android: FLAG_KEEP_SCREEN_ON, onRestFinished's beep, TimingAlerts.tone and
+ * vibrate, announceForAccessibility). The iPhone's is in iosMain; the desktop window stays silent; tests record calls.
  */
 interface WorkoutDevice {
+    /** The screen stays on while a workout shows. */
     fun keepScreenOn(on: Boolean) {}
+
+    /** A rest ran out on screen with the rest timer sound on: the short beep. */
     fun restOver() {}
-    fun holdOver() {}
+
+    /** A timed set ran out on screen: the beep when [sound] (the rest timer sound) is on, and a vibration. */
+    fun holdOver(sound: Boolean) {}
+
+    /** Says [text] to VoiceOver, as Android's focus view announces the rest and the timed sets. */
+    fun announce(text: String) {}
+
+    /**
+     * The rest running ends at [at] (epoch ms): a notification with the beep then, saying [text], in case the app is in
+     * the background by then (Android's rest timer beeps there too). Null cancels it; a new one replaces it.
+     */
+    fun restAlert(at: Long?, text: String = "") {}
+
+    /**
+     * Asks to show alerts (Android: HomeActivity.enableTimingNotifications, which only the Timer's "Enable alerts"
+     * calls). Until alerts are allowed, [restAlert] schedules nothing the phone will show.
+     */
+    fun askAlerts() {}
 
     /** Does nothing: previews, tests, and the desktop window. */
     object None : WorkoutDevice
+}
+
+/** What the focus view says to VoiceOver as the workout goes (Android: FocusWorkoutView.update and done). */
+sealed interface Cue {
+    /** A rest of [seconds] started; [next] is the set after it. */
+    data class RestStarted(val seconds: Int, val next: WorkoutStep) : Cue
+    /** Every 15 seconds of a rest: [seconds] left. */
+    data class RestLeft(val seconds: Int) : Cue
+    /** The rest ran out; [step] is the set now. */
+    data class RestOver(val step: WorkoutStep) : Cue
+    /** The timed set's countdown ran out. */
+    data class TimeUp(val step: WorkoutStep) : Cue
+    /** The first side of a per-side hold ran out. */
+    data object SwitchSides : Cue
 }
 
 /** Counts the saves of the progress, so whatever read it is drawn again after one. */
@@ -72,12 +116,13 @@ private data class Owned<T>(val session: Long, val value: T)
 
 /**
  * Training a class (android-streetgym: HomeActivity's start, rest timer, finish and abandon, and FocusWorkoutView's
- * position, skips and timed sets). The position is always the first set neither ticked nor skipped, so leaving the
- * workout and coming back, or closing the app, lands on the same set.
+ * position, skips, timed sets and spoken cues). The position is always the first set neither ticked nor skipped, so
+ * leaving the workout and coming back, or closing the app, lands on the same set.
  *
  * Ticks, logged amounts and easier options are saved at once ([StoredProgress], with the time of each tick). Skips, a
  * timed set's countdown and the rest last while the app runs, as on Android. Every time comes from [now], so tests step
- * it; [tick] is what the screen calls a few times a second.
+ * it; [tick] is what the screen calls a few times a second. [sound] is the rest timer sound switch; [leftOutOfExam]
+ * tells the exam targets of switched-off skills or equipment.
  */
 @Stable
 class Training internal constructor(
@@ -88,6 +133,8 @@ class Training internal constructor(
     private val zone: TimeZone,
     private val device: WorkoutDevice,
     private val saves: Saves,
+    private val sound: () -> Boolean = { true },
+    private val leftOutOfExam: (TrainingExercise) -> Boolean = { false },
     private val programAt: (String, Intensity) -> TrainingProgram?,
 ) {
     private var skips by mutableStateOf<Owned<Set<String>>?>(null)
@@ -95,6 +142,13 @@ class Training internal constructor(
     private var rest by mutableStateOf<Owned<Long>?>(null)
     /** The last class opened, by id and intensity: the program never changes while the app runs. */
     private var opened: Triple<String, Intensity, Pair<TrainingProgram, WorkoutFlow>>? = null
+    /** The seconds of rest last announced, so each 15-second mark is said once (Android: announcedRest). */
+    private var announcedRest = 0L
+
+    /**
+     * Hears the [Cue]s while the focus view shows, as only Android's focus view announces them; null in the list.
+     */
+    var cues: ((Cue) -> Unit)? = null
 
     /** The time [tick] last saw; reading it redraws a countdown as it runs. */
     var clock by mutableLongStateOf(now())
@@ -126,20 +180,37 @@ class Training internal constructor(
         return FocusState(program, flow, active, page, skipped, hold(active), at, restEnd?.takeIf { it > at })
     }
 
-    /** Moves the clock on: a rest that ran out ends with its cue, and so does a timed set that ran out just now. */
+    /**
+     * Moves the clock on: a rest that ran out ends with its beep, and a timed set that ran out with its tone and
+     * vibration; only one seen ending sounds, not one that ended while the app was away (a rest in the background had
+     * its notification). The focus view's [cues] hear the rest's 15-second marks and the ends.
+     */
     fun tick() {
         val at = now()
         clock = at
         val active = progress.activeWorkout() ?: return
-        restEnd(active)?.takeIf { it <= at }?.let {
-            rest = null
-            device.restOver()
+        restEnd(active)?.let { end ->
+            if (end > at) {
+                val seconds = (end - at + 999L) / 1_000L
+                if (seconds % REST_MARK_SECONDS == 0L && seconds != announcedRest) {
+                    announcedRest = seconds
+                    cues?.invoke(Cue.RestLeft(seconds.toInt()))
+                }
+            } else {
+                rest = null
+                if (at - end < CUE_WINDOW_MILLIS && sound()) device.restOver()
+                open(active)?.second?.let { flow ->
+                    flow.firstIncomplete(active.completedSetIds, skipped(active))?.let { cues?.invoke(Cue.RestOver(flow[it])) }
+                }
+            }
         }
         val hold = hold(active) ?: return
         if (hold.endsAt > at || hold.cued) return
         held = Owned(active.startedAtEpochMillis, hold.copy(cued = true))
-        // Only a countdown seen ending sounds, not one that ended while the screen was away.
-        if (at - hold.endsAt < CUE_WINDOW_MILLIS) device.holdOver()
+        if (at - hold.endsAt < CUE_WINDOW_MILLIS) device.holdOver(sound())
+        val (_, flow) = current() ?: return
+        val step = flow.steps.firstOrNull { it.key == hold.key } ?: return
+        cues?.invoke(if (hold.round < step.sides) Cue.SwitchSides else Cue.TimeUp(step))
     }
 
     /** Starts round [round] of the timed set at [index], [seconds] long. */
@@ -162,7 +233,11 @@ class Training internal constructor(
         val next = flow.firstIncomplete(active.completedSetIds + step.key, skipped)
         val pause = step.set.breakSeconds?.takeIf { it > 0 }
         if (next == null) rest = null
-        else if (pause != null) rest = Owned(active.startedAtEpochMillis, at + pause * 1_000L)
+        else if (pause != null) {
+            rest = Owned(active.startedAtEpochMillis, at + pause * 1_000L)
+            announcedRest = pause.toLong()
+            cues?.invoke(Cue.RestStarted(pause, flow[next]))
+        }
         clock = at
         saves.bump()
     }
@@ -180,7 +255,10 @@ class Training internal constructor(
             val done = flow.completedCount(active.completedSetIds + key)
             val pause = flow.steps.firstOrNull { it.key == key }?.set?.breakSeconds?.takeIf { it > 0 }
             if (done >= flow.size) rest = null
-            else if (pause != null) rest = Owned(active.startedAtEpochMillis, at + pause * 1_000L)
+            else if (pause != null) {
+                rest = Owned(active.startedAtEpochMillis, at + pause * 1_000L)
+                announcedRest = pause.toLong()
+            }
         }
         clock = at
         saves.bump()
@@ -268,7 +346,8 @@ class Training internal constructor(
      * finished today lights the streak.
      */
     fun finish(effort: Int): Finished? {
-        val (active, flow) = current() ?: return null
+        val active = progress.activeWorkout() ?: return null
+        val (program, flow) = open(active) ?: return null
         val at = now()
         val easier = active.easierExercises
         val counted = flow.counted(active.completedSetIds, active.tickedAt, active.startedAtEpochMillis)
@@ -282,7 +361,12 @@ class Training internal constructor(
         forget()
         saves.bump()
         val streak = LocalDays.snapshot(progress.sessionHistory(), at, zone).streak.takeIf { !litBefore && it.litToday }
-        return Finished(session, points, streak?.days)
+        // An exam's targets, less those of skills or equipment switched off; a repeated exam offers no block repeat.
+        val exam = if (!program.isExam) null else flow.examTests(active.completedSetIds, easier, active.done)
+            .filterNot { (exercise, _) -> leftOutOfExam(exercise) }
+            .takeIf { it.isNotEmpty() }
+            ?.let { ExamQuestion(program, it, offerRepeat = !session.repeat) }
+        return Finished(session, points, streak?.days, exam)
     }
 
     /** "End session": the class in progress is dropped with its ticks; nothing is saved to the history. */
@@ -323,8 +407,11 @@ class Training internal constructor(
         skills?.movementOf(exercise.movementId, exercise.name.resolve(), exercise.description.resolve())
 
     companion object {
-        /** A timed set's end sounds only when it is seen within this long of it. */
+        /** A rest's or a timed set's end sounds only when it is seen within this long of it (Android: holdFinished). */
         private const val CUE_WINDOW_MILLIS = 2_000L
+
+        /** The rest's time left is spoken at every multiple of this (Android: FocusWorkoutView.update). */
+        private const val REST_MARK_SECONDS = 15L
 
         /** A class's sets in training order, with the keys Android saves. */
         fun flow(program: TrainingProgram): WorkoutFlow = WorkoutFlow.of(program.id, sections(program))

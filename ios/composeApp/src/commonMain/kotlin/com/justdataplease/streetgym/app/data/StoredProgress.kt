@@ -5,6 +5,7 @@ import com.justdataplease.streetgym.data.progress.ActiveWorkout
 import com.justdataplease.streetgym.data.progress.ExamLog
 import com.justdataplease.streetgym.data.progress.ExamResult
 import com.justdataplease.streetgym.data.progress.Intensity
+import com.justdataplease.streetgym.data.progress.LevelReplay
 import com.justdataplease.streetgym.data.progress.ProgressRepository
 import com.justdataplease.streetgym.data.progress.WorkoutSession
 import com.justdataplease.streetgym.json.JSONArray
@@ -24,18 +25,24 @@ class MemoryStore : KeyValueStore {
 }
 
 /**
- * The athlete's progress on this phone: completed days, the history of finished classes, the class in progress and
- * the exam results. Sessions, the active workout and exams are written as the Android app writes them (the same JSON
- * names, SharedPreferencesProgressRepository), so a backup made on one phone reads on the other. Completed days, a
- * string set on Android, are a JSON array here.
+ * The athlete's progress on this phone: completed days, the history of finished classes, the class in progress, the
+ * exam results and the level replay. Sessions, the active workout and exams are written as the Android app writes them
+ * (the same JSON names, SharedPreferencesProgressRepository), so a backup made on one phone reads on the other. The
+ * keys are Android's, with its preferences' name in front. Completed days and a replay's repeated days, string sets on
+ * Android, are JSON arrays here; the replay's level, an int there, is its number as text.
  *
  * Called from the screen's thread only.
  */
 class StoredProgress(private val store: KeyValueStore) : ProgressRepository {
     // The last decoded history and the saved text it came from: Today and Progress ask for it often.
     private var history: Pair<String?, List<WorkoutSession>>? = null
+    // The same for the completed days: every screen asks which classes are done, a thousand ids each time.
+    private var completed: Pair<String?, Set<String>>? = null
 
-    override fun completedProgramIds(): Set<String> = decodeIds(store.get(KEY_COMPLETED))
+    override fun completedProgramIds(): Set<String> {
+        val raw = store.get(KEY_COMPLETED)
+        return completed?.takeIf { it.first == raw }?.second ?: decodeIds(raw).also { completed = raw to it }
+    }
 
     override fun isProgramCompleted(programId: String): Boolean = programId in completedProgramIds()
 
@@ -109,26 +116,59 @@ class StoredProgress(private val store: KeyValueStore) : ProgressRepository {
         )
         store.set(KEY_HISTORY, encodeSessions(decodeSessions(store.get(KEY_HISTORY)) + session))
         store.set(KEY_ACTIVE, null)
-        // A repeat only adds its history entry: completed days stay exactly as they were.
-        if (!active.repeat) store.set(KEY_COMPLETED, encodeIds(completedProgramIds() + active.programId))
+        // A repeat only adds its history entry: completed days and the level replay stay exactly as they were.
+        if (!active.repeat) {
+            store.set(KEY_COMPLETED, encodeIds(completedProgramIds() + active.programId))
+            putRepeated(listOf(active.programId))
+        }
         return session
     }
 
     /**
-     * Marks days done without training ("Complete day"): no invented effort or duration, and they count for nothing
-     * in points, ranks or the streak.
+     * Marks days done without training ("Complete day", "Complete level"): no invented effort or duration, and they
+     * count for nothing in points, ranks or the streak. During a level replay the days count as repeated, already
+     * completed ones too, so Today moves on (Android: putRepeated).
      */
     fun completePrograms(programIds: Collection<String>, at: Long, placed: Boolean = false) {
         require(programIds.all(String::isNotBlank))
         val completed = completedProgramIds()
         val newIds = programIds.filter { it !in completed }.distinct()
-        if (newIds.isEmpty()) return
         val active = activeWorkout()
-        store.set(KEY_HISTORY, encodeSessions(decodeSessions(store.get(KEY_HISTORY)) +
-            newIds.map { WorkoutSession(it, at, at, 0L, manuallyCompleted = true, placed = placed) }))
-        store.set(KEY_COMPLETED, encodeIds(completed + newIds))
+        if (newIds.isNotEmpty()) {
+            store.set(KEY_HISTORY, encodeSessions(decodeSessions(store.get(KEY_HISTORY)) +
+                newIds.map { WorkoutSession(it, at, at, 0L, manuallyCompleted = true, placed = placed) }))
+            store.set(KEY_COMPLETED, encodeIds(completed + newIds))
+        }
+        putRepeated(programIds)
         // A repeat in progress is of a day already completed, so completing days leaves it running.
         if (active != null && !active.repeat && active.programId in programIds) store.set(KEY_ACTIVE, null)
+    }
+
+    /** The level the athlete went back to, or null (Android: levelReplay). Completed days and history are never touched by it. */
+    fun levelReplay(): LevelReplay? {
+        val level = store.get(KEY_REPLAY_LEVEL)?.toIntOrNull() ?: 0
+        return if (level <= 0) null
+        else LevelReplay(level, decodeIds(store.get(KEY_REPLAY_REPEATED)), store.get(KEY_REPLAY_FROM)?.takeIf(String::isNotBlank))
+    }
+
+    /** Goes back to [levelNumber]'s first day, or to [fromProgramId] in it (an exam's block). */
+    fun startLevelReplay(levelNumber: Int, fromProgramId: String? = null) {
+        require(levelNumber > 0)
+        store.set(KEY_REPLAY_LEVEL, levelNumber.toString())
+        store.set(KEY_REPLAY_REPEATED, null)
+        store.set(KEY_REPLAY_FROM, fromProgramId)
+    }
+
+    fun endLevelReplay() {
+        store.set(KEY_REPLAY_LEVEL, null)
+        store.set(KEY_REPLAY_REPEATED, null)
+        store.set(KEY_REPLAY_FROM, null)
+    }
+
+    /** During a replay, also records [programIds] as repeated, so Today moves on. */
+    private fun putRepeated(programIds: Collection<String>) {
+        val replay = levelReplay() ?: return
+        store.set(KEY_REPLAY_REPEATED, encodeIds(replay.repeatedIds + programIds))
     }
 
     override fun examLog(): ExamLog = ExamLog.decode(store.get(KEY_EXAMS))
@@ -149,6 +189,9 @@ class StoredProgress(private val store: KeyValueStore) : ProgressRepository {
         private const val KEY_HISTORY = "streetgym_progress.session_history"
         private const val KEY_ACTIVE = "streetgym_progress.active_workout"
         private const val KEY_EXAMS = "streetgym_progress.exam_results"
+        private const val KEY_REPLAY_LEVEL = "streetgym_progress.replay_level"
+        private const val KEY_REPLAY_REPEATED = "streetgym_progress.replay_repeated_ids"
+        private const val KEY_REPLAY_FROM = "streetgym_progress.replay_from_program_id"
 
         private fun encodeIds(ids: Set<String>): String = JSONArray(ids.sorted()).toString()
 

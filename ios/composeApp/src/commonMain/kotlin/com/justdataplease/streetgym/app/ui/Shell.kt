@@ -19,6 +19,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,8 +41,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import com.justdataplease.streetgym.app.data.AppModel
+import com.justdataplease.streetgym.app.data.ExamQuestion
 import com.justdataplease.streetgym.app.data.Start
 import com.justdataplease.streetgym.app.data.WorkoutView
+import com.justdataplease.streetgym.app.resources.exam_saved_not_yet
+import com.justdataplease.streetgym.app.resources.workouts_title
+import com.justdataplease.streetgym.data.model.TrainingExercise
+import com.justdataplease.streetgym.data.model.TrainingProgram
 import com.justdataplease.streetgym.app.resources.ic_view_focus
 import com.justdataplease.streetgym.app.resources.ic_view_list
 import com.justdataplease.streetgym.app.resources.switch_to_focus
@@ -81,18 +87,35 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
-/** Where the app can be. The five tabs are roots; a class opens over Today or Training, and its workout over that. */
+/**
+ * Where the app can be. The five tabs are roots; a level's classes open over Training, a class over Today or a level,
+ * and its workout over that.
+ */
 sealed interface Screen {
     data object Today : Screen
     data object Training : Screen
     data object Progress : Screen
     data object Timer : Screen
     data object Settings : Screen
+    /** A level's classes, "Level N workouts". */
+    data class Level(val number: Int) : Screen
     data class Class(val programId: String) : Screen
     /** The class in progress, set by set. [askEffort] opens it on the effort question (for the screenshots). */
     data class Workout(val programId: String, val askEffort: Boolean = false) : Screen
 
-    val nested: Boolean get() = this is Class || this is Workout
+    val nested: Boolean get() = this is Level || this is Class || this is Workout
+}
+
+/** A question or result the shell shows over every screen; the screenshots open the app on one. */
+sealed interface Shown {
+    /** "Exam: tick the targets you reached", after an exam class. */
+    data class Exam(val question: ExamQuestion) : Shown
+    /** "Exam passed". */
+    data object ExamPassed : Shown
+    /** "Not every target yet": the [missed] targets of [exam], and Repeat N classes. */
+    data class RepeatBlock(val exam: TrainingProgram, val missed: List<TrainingExercise>) : Shown
+    /** The offer for [level], until purchases exist on iPhone. */
+    data class Offer(val level: Int) : Shown
 }
 
 /** A short note after an action (Android: a Toast). */
@@ -101,6 +124,8 @@ private sealed interface Notice {
     data class Saved(val repeat: Boolean, val points: Int, val streak: Int?) : Notice
     /** A class that can't start now. */
     data object Locked : Notice
+    /** One of Android's notes, word for word. */
+    data class Text(val resource: StringResource) : Notice
 }
 
 @Composable
@@ -110,6 +135,7 @@ private fun noticeText(notice: Notice): String = when (notice) {
         notice.streak?.let { "$saved · ${stringResource(Res.string.streak_days, it)}" } ?: saved
     }
     Notice.Locked -> stringResource(Res.string.sequence_locked_note)
+    is Notice.Text -> stringResource(notice.resource)
 }
 
 private class Tab(val screen: Screen, val label: StringResource, val icon: DrawableResource)
@@ -125,20 +151,28 @@ private val TABS = listOf(
 /**
  * The frame every screen sits in (android-streetgym, HomeActivity.buildShell): the page's grain behind everything, the
  * title bar, the screen, and the tab bar. [safeArea] keeps it clear of the Dynamic Island and the home indicator.
+ * [showing] opens it with a question already up (for the screenshots).
  */
 @Composable
-fun Shell(model: AppModel, safeArea: PaddingValues, startAt: Screen = Screen.Today) {
+fun Shell(model: AppModel, safeArea: PaddingValues, startAt: Screen = Screen.Today, showing: Shown? = null) {
     val theme = Street.theme
-    // The screens under the one showing; the first is always a tab.
-    val stack = remember { mutableStateListOf(if (startAt.nested) Screen.Today else startAt).apply { if (startAt.nested) add(startAt) } }
+    // The screens under the one showing; the first is always a tab. A level's page opens over Training, a class over Today.
+    val stack = remember {
+        mutableStateListOf<Screen>(if (startAt.nested) (if (startAt is Screen.Level) Screen.Training else Screen.Today) else startAt)
+            .apply { if (startAt.nested) add(startAt) }
+    }
     val screen = stack.last()
     val overlay = remember { Overlay() }
     var notice by remember { mutableStateOf<Notice?>(null) }
+    var shown by remember { mutableStateOf(showing) }
+    // Training's tab (Levels, My workouts, Library, Parks), kept while the app runs (Android: trainingTab).
+    var trainingTab by remember { mutableIntStateOf(0) }
     // A class asked to start while another is in progress: starting it ends the other, so the athlete is asked.
     var replacing by remember { mutableStateOf<Pair<String, Boolean>?>(null) }
     fun openTab(tab: Screen) { stack.clear(); stack.add(tab) }
     fun open(next: Screen) { stack.add(next) }
     fun back() { if (stack.size > 1) stack.removeAt(stack.lastIndex) }
+    fun offer(level: Int) { shown = Shown.Offer(level) }
     // Start workout, Repeat this day and Resume (Android: requestStart).
     fun start(id: String, repeat: Boolean = false, replace: Boolean = false) {
         when (model.start(id, repeat = repeat, replace = replace)) {
@@ -159,29 +193,38 @@ fun Shell(model: AppModel, safeArea: PaddingValues, startAt: Screen = Screen.Tod
                 Box(Modifier.weight(1f).fillMaxWidth()) {
                     when (screen) {
                         Screen.Today -> TodayScreen(model, onOpenClass = { open(Screen.Class(it)) },
-                            onStart = { id, repeat -> start(id, repeat) }, onOpenProgress = { openTab(Screen.Progress) })
+                            onStart = { id, repeat -> start(id, repeat) }, onOpenProgress = { openTab(Screen.Progress) }, onOffer = ::offer)
+                        Screen.Training -> TrainingScreen(model, trainingTab, onTab = { trainingTab = it },
+                            onOpenLevel = { open(Screen.Level(it)) }, onReturned = { openTab(Screen.Training) })
+                        // Complete level returns to Training and Go back to Today, as Android opens them as the root.
+                        is Screen.Level -> LevelScreen(model, screen.number, onOpenClass = { open(Screen.Class(it)) }, onOffer = ::offer,
+                            onCompleted = { openTab(Screen.Training) }, onWentBack = { openTab(Screen.Today) })
                         // Complete day returns to Today, as Android's opens it as the root.
                         is Screen.Class -> ClassScreen(model, screen.programId, onStart = { start(it) },
-                            onRepeat = { start(it, repeat = true) }, onDone = { openTab(Screen.Today) })
+                            onRepeat = { start(it, repeat = true) }, onDone = { openTab(Screen.Today) }, onOffer = ::offer)
                         // Android opens Progress after a class; until Progress is built here, Today shows the lit streak.
+                        // An exam class then asks which targets were reached.
                         is Screen.Workout -> WorkoutScreen(
                             model, screen.askEffort,
                             onFinished = { finished ->
                                 notice = Notice.Saved(finished.session.repeat, finished.points, finished.streak)
                                 openTab(Screen.Today)
+                                finished.exam?.let { shown = Shown.Exam(it) }
                             },
                             onEnded = ::back,
                             onCompleted = { openTab(Screen.Today) },
                             onGone = ::back,
                         )
-                        Screen.Training -> ToCome(stringResource(Res.string.levels_title))
                         Screen.Progress -> ToCome(stringResource(Res.string.progress_title))
                         Screen.Timer -> ToCome(stringResource(Res.string.nav_timer))
-                        Screen.Settings -> ToCome(stringResource(Res.string.settings_title))
+                        Screen.Settings -> SettingsScreen(model)
                     }
                 }
                 // The focus view has the whole screen (Android hides its bottom navigation there); the list keeps it.
-                if (screen !is Screen.Workout || listView) TabBar(selected = stack.first(), onSelect = ::openTab)
+                // A level, a class and a workout belong to Training, as on Android (rootFor).
+                if (screen !is Screen.Workout || listView) {
+                    TabBar(selected = if (screen.nested) Screen.Training else stack.first(), onSelect = ::openTab)
+                }
             }
             replacing?.let { (id, repeat) ->
                 StreetDialog(
@@ -195,22 +238,52 @@ fun Shell(model: AppModel, safeArea: PaddingValues, startAt: Screen = Screen.Tod
                     dismiss = DialogAction(stringResource(Res.string.cancel)) { replacing = null },
                 )
             }
+            when (val open = shown) {
+                // Android: askExam. A full pass says so; a missed headline, or three or more, offers the block again
+                // (not after a repeated exam); anything else is tested again at the next exam.
+                is Shown.Exam -> ExamDialog(open.question) { reached ->
+                    val question = open.question
+                    val result = model.saveExam(question, reached)
+                    shown = when {
+                        result.passed -> Shown.ExamPassed
+                        question.offerRepeat && result.offersRepeat(question.exam.headline) ->
+                            Shown.RepeatBlock(question.exam, question.tests.filterIndexed { index, _ -> !reached[index] }.map { it.first })
+                        else -> {
+                            notice = Notice.Text(Res.string.exam_saved_not_yet)
+                            null
+                        }
+                    }
+                }
+                Shown.ExamPassed -> ExamPassedDialog { shown = null }
+                is Shown.RepeatBlock -> model.examBlock(open.exam)?.let { (first, count) ->
+                    RepeatBlockDialog(open.missed, first, count, onRepeat = {
+                        shown = null
+                        model.repeatBlock(open.exam)
+                        openTab(Screen.Today)
+                    }) { shown = null }
+                }
+                is Shown.Offer -> LevelOfferDialog(open.level) { shown = null }
+                null -> Unit
+            }
             OverlayLayers(overlay)
-            notice?.let { shown -> Note(noticeText(shown)) { if (notice == shown) notice = null } }
+            notice?.let { note -> Note(noticeText(note)) { if (notice == note) notice = null } }
         }
     }
 }
 
 @Composable
-private fun screenTitle(model: AppModel, screen: Screen): String = stringResource(when (screen) {
-    Screen.Today -> Res.string.dashboard_title
-    Screen.Training -> Res.string.levels_title
-    is Screen.Class -> Res.string.workout_overview
-    is Screen.Workout -> if (model.training.active()?.repeat == true) Res.string.repeat_active_title else Res.string.active_workout
-    Screen.Progress -> Res.string.progress_title
-    Screen.Settings -> Res.string.settings_title
-    Screen.Timer -> Res.string.nav_timer
-})
+private fun screenTitle(model: AppModel, screen: Screen): String = when (screen) {
+    is Screen.Level -> stringResource(Res.string.workouts_title, screen.number)
+    else -> stringResource(when (screen) {
+        Screen.Today -> Res.string.dashboard_title
+        Screen.Training, is Screen.Level -> Res.string.levels_title
+        is Screen.Class -> Res.string.workout_overview
+        is Screen.Workout -> if (model.training.active()?.repeat == true) Res.string.repeat_active_title else Res.string.active_workout
+        Screen.Progress -> Res.string.progress_title
+        Screen.Settings -> Res.string.settings_title
+        Screen.Timer -> Res.string.nav_timer
+    })
+}
 
 @Composable
 private fun TitleBar(model: AppModel, screen: Screen, onBack: () -> Unit) {
@@ -323,10 +396,14 @@ fun Page(content: @Composable ColumnScope.() -> Unit) {
 /** A tab whose screen is not built on iPhone yet. */
 @Composable
 private fun ToCome(title: String) {
-    Page {
-        StreetCard {
-            TitleText(title, 22f)
-            BodyText("Not on iPhone yet.", modifier = Modifier.padding(top = 8.dp))
-        }
+    Page { ToComeCard(title) }
+}
+
+/** The card that stands in for a screen or a tab not built on iPhone yet. */
+@Composable
+internal fun ToComeCard(title: String) {
+    StreetCard {
+        TitleText(title, 22f)
+        BodyText("Not on iPhone yet.", modifier = Modifier.padding(top = 8.dp))
     }
 }
