@@ -30,9 +30,12 @@ final class GoogleAds: NSObject, AdsBridge, FullScreenContentDelegate {
     /// Google's consent, brought up to date, then its form where the region needs it. An update that fails keeps the
     /// answer given before (Android: "respecting cached consent").
     func askConsent() {
+        // The Simulator tour starts the app with "-tour": Google's message would cover the first screen and the tour
+        // can't answer it (the Mac run of 18 Nov 2026 stopped there). Consent is still brought up to date.
+        let tour = ProcessInfo.processInfo.arguments.contains("-tour")
         ConsentInformation.shared.requestConsentInfoUpdate(with: RequestParameters()) { [weak self] error in
             Task { @MainActor in
-                if error == nil, let root = GoogleAds.topController() {
+                if error == nil, !tour, let root = GoogleAds.topController() {
                     try? await ConsentForm.loadAndPresentIfRequired(from: root)
                 }
                 self?.consentEnded()

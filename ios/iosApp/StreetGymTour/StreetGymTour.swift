@@ -9,6 +9,8 @@ final class StreetGymTour: XCTestCase {
 
     func testTour() {
         let app = XCUIApplication()
+        // "-tour": the app leaves Google's consent message out, which would cover the first screen (GoogleAds.swift).
+        app.launchArguments += ["-tour"]
         app.launch()
 
         // A fresh install opens on the strength test, once the program has been read from the app's files: its picture,
