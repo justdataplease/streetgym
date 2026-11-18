@@ -56,6 +56,10 @@ class JSONObject private constructor(private val map: LinkedHashMap<String, Any?
 
     companion object {
         /** org.json's JSONObject.NULL: a key that is there with a null value. */
+        // Objective-C defines NULL as a macro, so the iPhone framework's header names this one jsonNull (found by the
+        // first Mac build that exported it, 18 Nov 2026). Kotlin code on both phones still says JSONObject.NULL.
+        @OptIn(kotlin.experimental.ExperimentalObjCName::class)
+        @kotlin.native.ObjCName("jsonNull")
         val NULL: Any = Null
     }
 
