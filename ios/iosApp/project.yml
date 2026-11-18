@@ -54,10 +54,6 @@ targets:
       - path: StreetGym
         excludes:
           - GoogleService-Info.plist
-      # Firebase's configuration: the owner's file, never in git; a build without it has no account (FirebaseSetup).
-      - path: StreetGym/GoogleService-Info.plist
-        optional: true
-        buildPhase: resources
     dependencies:
       # The home-screen widget, embedded in the app.
       - target: StreetGymWidget
@@ -204,6 +200,15 @@ targets:
         script: |
           cd "$SRCROOT/.."
           sh ./gradlew :composeApp:embedAndSignAppleFrameworkForXcode
+    # Firebase's configuration: the owner's file, never in git. Copied into the app only when it is there: a file the
+    # project names must exist (the Mac build of 18 Nov 2026 stopped on "Build input file cannot be found"), so it is
+    # not one of the project's resources. A build without it has no account (FirebaseAccount.swift).
+    postBuildScripts:
+      - name: Copy Firebase's configuration when it is there
+        basedOnDependencyAnalysis: false
+        script: |
+          FILE="$SRCROOT/StreetGym/GoogleService-Info.plist"
+          if [ -f "$FILE" ]; then cp "$FILE" "$BUILT_PRODUCTS_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/"; fi
   # The "Next class" home-screen widget (StreetGymWidget.swift): SwiftUI only, without the app's Kotlin; it reads the
   # snapshot the app writes into the App Group's folder.
   StreetGymWidget:
