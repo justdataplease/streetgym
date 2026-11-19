@@ -248,12 +248,12 @@ final class GoogleAdCard: NSObject, AdCardBridge, NativeAdLoaderDelegate {
         container.addSubview(adView)
 
         badgeLabel.text = "Ad"
-        badgeLabel.font = .boldSystemFont(ofSize: 12)
+        badgeLabel.font = roboto(12, bold: true)
         badgeLabel.translatesAutoresizingMaskIntoConstraints = false
         badge.layer.cornerRadius = 5
         badge.layer.borderWidth = 1
         badge.addSubview(badgeLabel)
-        advertiser.font = .systemFont(ofSize: 12)
+        advertiser.font = roboto(12)
         advertiser.numberOfLines = 0
         let attribution = UIStackView(arrangedSubviews: [badge, advertiser])
         attribution.axis = .horizontal
@@ -266,16 +266,16 @@ final class GoogleAdCard: NSObject, AdCardBridge, NativeAdLoaderDelegate {
         attributionRow.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 32)
 
         icon.contentMode = .scaleAspectFit
-        headline.font = .boldSystemFont(ofSize: 18)
+        headline.font = roboto(18, bold: true)
         headline.numberOfLines = 0
         let titleRow = UIStackView(arrangedSubviews: [icon, headline])
         titleRow.axis = .horizontal
         titleRow.alignment = .center
         titleRow.spacing = 10
 
-        body.font = .systemFont(ofSize: 14)
+        body.font = roboto(14)
         body.numberOfLines = 0
-        action.font = .systemFont(ofSize: 14)
+        action.font = roboto(14)
         action.textAlignment = .center
         action.layer.cornerRadius = 16
         action.clipsToBounds = true
@@ -324,4 +324,11 @@ final class GoogleAdCard: NSObject, AdCardBridge, NativeAdLoaderDelegate {
         UIColor(red: CGFloat((argb >> 16) & 0xFF) / 255, green: CGFloat((argb >> 8) & 0xFF) / 255,
                 blue: CGFloat(argb & 0xFF) / 255, alpha: CGFloat((argb >> 24) & 0xFF) / 255)
     }
+}
+
+/// Android's system face, Roboto, in which the Android app's ad card draws its words (NativeAds.kt sets no face): the
+/// app bundles it (project.yml, UIAppFonts). San Francisco only if the font were missing.
+private func roboto(_ size: CGFloat, bold: Bool = false) -> UIFont {
+    UIFont(name: bold ? "Roboto-Bold" : "Roboto-Regular", size: size)
+        ?? (bold ? .boldSystemFont(ofSize: size) : .systemFont(ofSize: size))
 }

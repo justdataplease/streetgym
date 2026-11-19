@@ -527,9 +527,10 @@ private fun TitleBarRow(title: String, nested: Boolean, onBack: () -> Unit, trai
             val back = stringResource(Res.string.back)
             Box(Modifier.size(56.dp).clickable(role = Role.Button, onClick = onBack).semantics { contentDescription = back },
                 contentAlignment = Alignment.Center) {
-                // An arrow in its 56 dp box, as an icon: it keeps its size with large text.
+                // An arrow in its 56 dp box, as an icon: it keeps its size with large text. Roboto, as Android's title bar
+                // is never restyled to the theme's faces.
                 val scale = androidx.compose.ui.platform.LocalDensity.current.fontScale
-                BasicText("‹", style = TextStyle(color = palette.text, fontSize = (38f / scale).sp, fontFamily = Street.type.body))
+                BasicText("‹", style = TextStyle(color = palette.text, fontSize = (38f / scale).sp, fontFamily = Street.type.system))
             }
         } else {
             Image(painterResource(Res.drawable.ic_brand_mark), contentDescription = null, colorFilter = ColorFilter.tint(palette.mark),

@@ -54,6 +54,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -257,12 +258,13 @@ fun BodyText(
     bold: Boolean = false,
     maxLines: Int = Int.MAX_VALUE,
     align: TextAlign = TextAlign.Unspecified,
+    family: FontFamily? = null,
 ) {
     BasicText(
         text = text,
         modifier = modifier,
         style = TextStyle(color = color, fontSize = size.sp, lineHeight = BODY_LINE.em,
-            fontFamily = if (bold) Street.type.bold else Street.type.body, textAlign = align),
+            fontFamily = family ?: if (bold) Street.type.bold else Street.type.body, textAlign = align),
         maxLines = maxLines,
         overflow = TextOverflow.Ellipsis,
     )
@@ -464,7 +466,13 @@ fun LockedLayer(tierName: String, modifier: Modifier = Modifier, onOffer: () -> 
  * 15 sp, the switch on the right, at least 56 dp tall; a tap anywhere flips it.
  */
 @Composable
-fun SettingSwitch(label: String, checked: Boolean, modifier: Modifier = Modifier, onChange: (Boolean) -> Unit) {
+fun SettingSwitch(
+    label: String,
+    checked: Boolean,
+    modifier: Modifier = Modifier,
+    family: FontFamily = Street.type.body,
+    onChange: (Boolean) -> Unit,
+) {
     val theme = Street.theme
     val palette = theme.palette
     Row(
@@ -473,7 +481,7 @@ fun SettingSwitch(label: String, checked: Boolean, modifier: Modifier = Modifier
             .padding(vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        BasicText(label, Modifier.weight(1f), style = TextStyle(color = palette.text, fontSize = 15.sp, fontFamily = Street.type.body))
+        BasicText(label, Modifier.weight(1f), style = TextStyle(color = palette.text, fontSize = 15.sp, fontFamily = family))
         SwitchMark(checked, Modifier.padding(start = 12.dp))
     }
 }
@@ -698,6 +706,20 @@ fun ProgressBar(
     })
 }
 
+/**
+ * The screen is wider than tall, as Android's Configuration.ORIENTATION_LANDSCAPE: the window as laid out now, so the
+ * layout follows the phone as it turns.
+ */
+@Composable
+fun isLandscape(): Boolean = LocalWindowInfo.current.containerSize.let { it.width > it.height }
+
+/**
+ * How tall the window is in dp (Android's Configuration.screenHeightDp, which from Android 15 on counts the system bars
+ * too): under 480 only on a phone turned sideways.
+ */
+@Composable
+fun screenHeightDp(): Float = with(LocalDensity.current) { LocalWindowInfo.current.containerSize.height.toDp() }.value
+
 /** [part] of [whole] in whole percent, 0 to 100 (Android: percentage). */
 fun percentage(part: Int, whole: Int): Int = if (whole <= 0) 0 else (part * 100 / whole).coerceIn(0, 100)
 
@@ -740,7 +762,14 @@ fun CheckMark(checked: Boolean, tint: Color, modifier: Modifier = Modifier, box:
  * each option, as Training's four tabs are (Android: segmentedSwitch).
  */
 @Composable
-fun SegmentedSwitch(labels: List<String>, selected: Int, modifier: Modifier = Modifier, compact: Boolean = false, onSelect: (Int) -> Unit) {
+fun SegmentedSwitch(
+    labels: List<String>,
+    selected: Int,
+    modifier: Modifier = Modifier,
+    compact: Boolean = false,
+    family: FontFamily = Street.type.bold,
+    onSelect: (Int) -> Unit,
+) {
     val theme = Street.theme
     val palette = theme.palette
     Row(modifier.streetBackground(theme, palette.infoSurface, 14.dp).padding(3.dp)) {
@@ -753,7 +782,7 @@ fun SegmentedSwitch(labels: List<String>, selected: Int, modifier: Modifier = Mo
                     .selectable(on, role = Role.Tab) { if (!on) onSelect(index) }
                     .padding(horizontal = if (compact) 11.dp else 18.dp, vertical = 8.dp),
                 style = TextStyle(color = if (on) palette.primary else palette.textSecondary, fontSize = 14.sp,
-                    fontFamily = Street.type.bold, textAlign = TextAlign.Center),
+                    fontFamily = family, textAlign = TextAlign.Center),
                 maxLines = 1,
             )
         }

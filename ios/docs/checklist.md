@@ -2,7 +2,7 @@
 
 Every feature of the Android app (2.14.1, versionCode 58), one line each, in the order a user meets them: the iPhone app is done when every line is ticked.
 `[x]` is on iPhone now (in `ios-streetgym`, checked in its code), `[ ]` is to build. Pointers name the Android file under `android-streetgym/app/src/main/java/com/justdataplease/streetgym/` (→ the iPhone file where it is built); **engine**: the rule is already in `android-streetgym/shared/`; **iPhone API**: the Apple framework it needs; **owner**: it can't be finished without the owner.
-Written 18 Nov 2026; updated the same day after rounds 1 to 13 (what rounds 11 to 13 left is the owner's: the App Group, Firebase, AdMob).
+Written 18 Nov 2026; updated the same day after rounds 1 to 13 (what rounds 11 to 13 left is the owner's: the App Group, Firebase, AdMob), and on 19 Nov 2026 after the parity round (the owner: "we need to be ios and android exactly the same"; what still differs, and why, is under "Where the iPhone still differs" at the end).
 
 ## Count
 
@@ -33,8 +33,8 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 13 (what rounds 11 t
 | 23. Home-screen widget | 10 | 3 | 7 | 7 |
 | 24. Sharing and progress analytics | 6 | 1 | 5 | 5 |
 | 25. Accessibility and languages | 12 | 12 | 0 | 0 |
-| 26. Anything else | 2 | 1 | 1 | 1 |
-| **All** | **344** | **291** | **53** | **53** |
+| 26. Anything else | 2 | 2 | 0 | 0 |
+| **All** | **344** | **292** | **52** | **52** |
 
 "Waiting on the owner" counts lines still to tick whose last step needs the owner (every one of them is built now); most can be built and tested first with a test double (a `.storekit` file, Google's demo ad units, a made-up profile).
 
@@ -112,7 +112,7 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 13 (what rounds 11 t
 ## 5. Line-man animations
 
 - [x] Side-view line figure from exercise_animations.json: fixed bone lengths, hands or feet pinned, a smooth coached rep (ui/ExerciseAnimationView.kt, MotionCurve → figure/Motion.kt, FigureDraw.kt, FigureRenderer.kt)
-- [x] Front view beside the side view at one scale, captioned SIDE and FRONT, or END for a body seen end-on (ui/FrontView.kt, ExerciseAnimationView → figure/FrontView.kt, FigureRenderer.kt)
+- [x] Front view beside the side view at one scale, captioned SIDE and FRONT, or END for a body seen end-on (ui/FrontView.kt, ExerciseAnimationView → figure/FrontView.kt, FigureRenderer.kt; the captions, the phase label and the range line's words in Roboto Bold, as Android paints them with Typeface.DEFAULT_BOLD, so a caption fits or is left out at the same widths: ExerciseFigure, FigureText)
 - [x] Bar, parallel bars, posts, wall and floor drawn with the figure; the hands in tape yellow on Concrete, the theme's light colour elsewhere (ExerciseAnimationView, FrontView, ui/UiKit.kt AppColors → figure/)
 - [x] Phase label in the corner (Pull, Hold, Lower, Hang… "Hold · breathe", "Lower 3–5 s") and a progress strip (ExerciseAnimationView, res/values/strings_motion.xml → figure/)
 - [x] Range marker that lights when the movement reaches it ("Chin over bar", "Chest to bar"…, 21 in all) (ExerciseAnimationView → figure/)
@@ -122,7 +122,7 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 13 (what rounds 11 t
 - [x] Moving tile: the clip in a small rounded tile, framed on the whole cycle, for the exercise picker, level rows and workout cards (ExerciseAnimationView.setBadgeStyle moving, EffortUi.WorkoutTile → ExerciseFigure.WorkoutTile on the level rows and My workouts' cards; ExerciseFigure with a moving badge in the exercise picker)
 - [x] Still tile holding the end pose, for the skill medals (setBadgeStyle, ui/SkillMedals.kt skillFigure → ExerciseFigure with a badge, on Skills' medals: SkillMedals.SkillMedal)
 - [x] A workout's tile plays its hardest exercise, a moving one before a hold of the same grade, ringed in its effort colour (EffortUi.tileExercise → AppModel.tileOf; **engine** WorkoutEffort.hardest)
-- [x] Reduced motion: a still pose; nothing runs off screen (ExerciseAnimationView, UiKit.systemAnimationsEnabled → LocalReduceMotion; **iPhone API**: UIAccessibilityIsReduceMotionEnabled, read at launch)
+- [x] Reduced motion: a still pose; nothing runs off screen (ExerciseAnimationView, UiKit.systemAnimationsEnabled → LocalReduceMotion; **iPhone API**: UIAccessibilityIsReduceMotionEnabled, followed while the app runs through UIAccessibilityReduceMotionStatusDidChangeNotification, as Android reads it each time a view is built)
 
 ## 6. Training a class: focus view
 
@@ -283,12 +283,12 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 13 (what rounds 11 t
 ## 14. Timer
 
 - [x] Timer / Stopwatch / Alarm, the last one kept (ui/TimingPanel.kt, timer/TimingStore.kt → TimerScreen.kt, data/Timing.kt TimingStore, under Android's key and JSON names)
-- [x] Timer: big digits of even width; a tap sets hours, minutes and seconds; "Choose a duration" for none (TimingPanel.durationPicker, tabular → TimerScreen.ClockReadout, TabularText, DurationDialog's three wheels)
+- [x] Timer: big digits of even width; a tap sets hours, minutes and seconds; "Choose a duration" for none (TimingPanel.durationPicker, tabular → TimerScreen.ClockReadout, TabularText, DurationDialog's three wheels, their numbers in Roboto as Android's NumberPickers)
 - [x] Timer: Start, Pause, Resume and Reset; the line under it says Counting down, Time's up, Paused or "Tap the time to change it" (TimingPanel.refresh; timer/TimingState.kt Countdown → TimerScreen.TimerPanel, Timing.kt Countdown)
 - [x] Presets 30 sec, 1 min, 3 min, greyed while it runs (TimingPanel.build → TimerScreen; as on Android they stop answering while it runs, their look unchanged)
 - [x] A running timer or stopwatch carries on with the app closed (TimingStore → Timing.kt on an elapsed clock that runs through sleep, IosTiming.kt CLOCK_MONOTONIC, and the wall clock after a restart of the phone, kern.boottime)
 - [x] Stopwatch: hundredths, Running / Paused / Ready, Start / Pause / Resume, Lap / Reset, laps newest first, up to 100 (TimingPanel; TimingState Stopwatch → TimerScreen, Timing.kt Stopwatch)
-- [x] Alarm: the time in the phone's 12- or 24-hour format; a tap picks it; "Wed, 5 Nov · One time"; Set alarm / Turn off (TimingPanel.alarmPicker; TimingState.nextAlarm → AlarmTimeDialog, Timing.kt nextAlarm on kotlinx-datetime, pinned to Android's Calendar code by TimerTest in ten zones; the phone's clock from NSDateFormatter's "j")
+- [x] Alarm: the time in the phone's 12- or 24-hour format; a tap picks it on Android's clock face, the keyboard toggle types it ("Type in time"), Cancel and OK, the time beside the face in landscape; "Wed, 5 Nov · One time"; Set alarm / Turn off (TimingPanel.alarmPicker, TimePickerDialog in Theme.Material's clock mode; TimingState.nextAlarm → AlarmTimeDialog, Material 3's TimePicker and TimeInput in the app's dialog and colours, in Roboto; Timing.kt nextAlarm on kotlinx-datetime, pinned to Android's Calendar code by TimerTest in ten zones; the phone's clock from NSDateFormatter's "j")
 - [x] The alarm follows a change of clock or time zone (timer/TimingAlerts.kt TimingReceiver → Timing.timeChanged on NSSystemClockDidChange and NSSystemTimeZoneDidChange, and on each return to the app; the alert itself is a calendar trigger on the wall clock)
 
 ## 15. Training › Parks
@@ -303,7 +303,7 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 13 (what rounds 11 t
 - [x] A search on the map frames the matches; one match opens its card; none says "No park matches." (searchParks, ParksMap.focus → ParksState.search)
 - [x] Under the map: "© OpenStreetMap contributors. Your location isn't sent.", and the map's ⓘ credit (renderParks → ParksScreen; MapLibre's own attribution button)
 - [x] List: "73,303 workout parks worldwide…", Parks near me, "Nearest to you" or "Matches for “x”", "Tap a park for directions…", rows with "350 m away" or "2.4 km away", the OpenStreetMap credit (renderParks → ParksScreen.ParksList, distanceText; Android's "%1$.1f" written by DisplayText.oneDecimal, checked against String.format)
-- [x] A tap on a park, or Directions, opens the phone's maps app at it (HomeActivity.openPark; iPhone: Apple Maps link → Parks.mapsLink, IosLocation.openDirections)
+- [x] A tap on a park, or Directions, opens Google Maps at it (HomeActivity.openPark's geo: link, Google Maps on most phones, and its fallback link → Parks.mapsLink, Android's own `https://www.google.com/maps/search/?api=1&query=lat,lng`, which opens the Google Maps app when it is installed and the web otherwise; never Apple Maps; IosLocation.openDirections)
 - [x] "Finding your location…", "Couldn't get your location. Search by city instead.", "Location is off for Street Gym…" (HomeActivity.locateForParks → ParksState.locate, requestNearMe, ParksNote)
 - [x] The last known fix shows at once; a fresh one follows when it is over 10 minutes old (locateForParks → ParksState.locate; Core Location's last location, then requestLocation)
 - [x] Leaving the tab keeps the map, so coming back shows it at once (HomeActivity.setBody → ParksState.map, the same MapLibre view shown again)
@@ -359,14 +359,14 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 13 (what rounds 11 t
 - [x] Start over: its text (with an account: "Your leaderboard points and any cloud copy reset too."), Reset progress, "Reset all progress?", Reset (HomeActivity.confirmReset → SettingsScreen, ResetDialog; signed in, reset_body_account, and the score goes up again from zero, CloudAccount.progressReset)
 - [x] Reset erases classes, history, points, ranks and exams, keeps My workouts, the theme and purchases, says "Progress reset. Choose where to start." and brings the strength test back (confirmReset, SharedPreferencesProgressRepository.reset → AppModel.reset, StoredProgress.reset with "reset_at"; placement_done is cleared under Android's key, and Today asks the strength test again)
 - [x] Train safely card (renderSettings → SettingsScreen)
-- [x] About: "Street Gym: Daily Calisthenics", its text, "Version 1.0" (renderSettings → SettingsScreen; the version from the Info.plist's CFBundleShortVersionString)
+- [x] About: "Street Gym: Daily Calisthenics", its text, "Version 2.14.1", and "Version 2.14.1-debug" in a debug build (renderSettings → SettingsScreen; Android's versionName and versionNameSuffix, read from android-streetgym/app/build.gradle.kts at build time into the resources, composeApp/build.gradle.kts; MARKETING_VERSION in iosApp/project.yml is the same number, checked by ParityTest)
 - [x] Ten taps on the version: "N taps to developer settings", then Developer settings with Inspect all days, Hide developer settings, Done (ui/DeveloperMenu.kt → SettingsScreen.VersionTaps, DeveloperDialog)
 - [x] Inspect all days: any class opens read-only with the "Inspect only" badge and note, nothing to start or complete (HomeActivity.renderOverview, renderWorkouts → ClassScreen, LevelScreen, AppModel.inspects)
 
 ## 18. Themes
 
 - [x] Concrete & Tape (the default), Night Park (dark) and Wheatpaste, with their colours, fonts, corners, outlines and page grain on the screens built so far (ui/StreetTheme.kt, ThemeDecor.kt, ThemeDrawables.kt → theme/StreetTheme.kt, Kit.kt)
-- [x] Dialogs, sheets and notes in each theme's style (Android AlertDialog themes → Overlay.kt)
+- [x] Dialogs, sheets and notes in each theme's style (Android AlertDialog themes → Overlay.kt); as on Android their own words (title, message, buttons, list rows, fields), the notes (Toast), the number wheels, the title bar's ‹ and what Android paints in the system face (the calendar's day numbers, the line man's words) are in Roboto, Regular or Bold, never in San Francisco; what Android restyles stays in the theme's faces (theme/StreetTheme.kt StreetType.system, systemBold; the native ad card and the widget's lines in Roboto from the app's bundle, UIAppFonts)
 - [x] Settings › Theme: three rows, each with a swatch, its name in its own face, a summary, and the one selected (ThemeDecor.themePicker → SettingsScreen.ThemePicker)
 - [x] The picked theme is saved and every screen follows at once (AppSettings.theme → data/AppSettings.kt, "streetgym_settings.theme"; an old backup's dark switch opens on Night Park)
 - [x] Status bar dark on the light themes, light on Night Park (HomeActivity.configureWindow → WorkoutDevice.statusBar, MainViewController: the window's overrideUserInterfaceStyle; type-checked on Windows, seen only on the Mac)
@@ -433,9 +433,9 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 13 (what rounds 11 t
 ## 22. Notifications and sounds
 
 - [x] End of a rest: a beep when Rest timer sound is on (HomeActivity.onRestFinished → Training.tick, MainViewController's AudioToolbox system sound; a local notification with the same beep for a rest that ends with the app in the background, shown once alerts are allowed: Android asks only from the Timer's Enable alerts, so the iPhone asks there too, round 8)
-- [x] End of a timed set: a beep (Rest timer sound) and a vibration (FocusWorkoutView host.holdFinished, TimingAlerts.tone, vibrate → Training.tick, MainViewController: AudioToolbox and kSystemSoundID_Vibrate; the vibration is checked on a real iPhone, as the Simulator doesn't vibrate)
+- [x] End of a timed set: a beep (Rest timer sound) and a vibration (FocusWorkoutView host.holdFinished, TimingAlerts.tone on the alarm stream, which sounds on silent, and vibrate's 400-200-400 ms → Training.tick, MainViewController: the same beep through AVAudioPlayer in the playback category, mixed with other audio, at Android's volume 80 (-10 dB), heard with the silent switch on; kSystemSoundID_Vibrate twice, 600 ms apart; the vibration is checked on a real iPhone, as the Simulator doesn't vibrate)
 - [x] Timer's end and the alarm in the background: an alert "Time's up" or "Alarm" with sound, vibration and Stop (timer/TimingAlerts.kt notify → MainViewController.kt PhoneDevice.timerAlert, alarmAlert; **iPhone API**: UserNotifications, a time-interval trigger for the timer and a calendar trigger on the wall clock for the alarm, a "timing" category with Stop; it rings once with the phone's alert sound, as iPhone alerts can't loop like Android's insistent one; AlarmKit on iOS 26 could ring like an alarm)
-- [x] In the app: a "Time's up" or "Alarm" dialog with Stop and a beep (HomeActivity.timingTick → Shell, TimerScreen.RingingDialog; checked every second on any screen; the beep when alerts are off, else the alert shows over the app with its sound)
+- [x] In the app: a "Time's up" or "Alarm" dialog with Stop and a beep (HomeActivity.timingTick → Shell, TimerScreen.RingingDialog; checked every second on any screen; the beep when alerts are off, Android's alarm-stream beep as at a timed set's end, heard on silent; else the alert shows over the app with its sound)
 - [x] A tap on the alert opens the Timer tab (TimingAlerts.open, HomeActivity.onNewIntent → IosTiming.kt's notification-centre delegate, PhoneEvent.OpenTimer; Stop or swiping the alert away stops it, the app running or not)
 - [x] Alerts off: "Background alerts are off. Enable alerts" under the Timer and Alarm, and "Enable alerts" on the alarm's button, ask for permission or open Settings (TimingPanel alertsHint, HomeActivity.enableTimingNotifications → Timing.enableAlerts: asks the first time, then opens the app's notification settings; iPhone has no exact-alarm switch, so "Enable alarms" goes)
 
@@ -475,13 +475,13 @@ Android has no share sheet; its one sharing feature is Share my progress.
 - [x] Spoken movement guide: "Line-figure movement guide for X…" (ExerciseAnimationView.bind → ExerciseFigure)
 - [x] Spoken strength-test counters and their − and + ("One rep more, Strict pull-ups") (PlacementView.countTile → CountTile)
 - [x] Spoken theme rows with "selected", level cards with progress and tier, class rows with their state (ThemeDecor.themePicker, HomeActivity.levelCard, ProgramListAdapter → ThemePicker, TrainingScreen, LevelScreen)
-- [x] Reduced motion also stills the park scene and the heart's pop (ParkSceneView, heartButton → ParkScene, LoadingFigure, HeartButton, LocalReduceMotion; **iPhone API**: UIAccessibilityIsReduceMotionEnabled, read at launch)
+- [x] Reduced motion also stills the park scene and the heart's pop (ParkSceneView, heartButton → ParkScene, LoadingFigure, HeartButton, LocalReduceMotion; **iPhone API**: UIAccessibilityIsReduceMotionEnabled, followed while the app runs)
 - [x] Large text keeps every control on screen: the focus view cuts its info first (FocusWorkoutView.screen → FocusScreen: the figure gives way, names and labels end in "…"; the title bar grows and its ‹ keeps its size; seen at 160% and 220% in workout-set-text-*.png)
 
 ## 26. Anything else
 
 - [x] Back after the phone closed the app in the background: the same screen and tabs, the unsaved builder, the strength test's counts and the running rest (HomeActivity.onSaveInstanceState → ui/Restore.kt, Shell; **iPhone API**: SwiftUI's @SceneStorage in StreetGymApp.swift, which iOS drops when the athlete closes the app, as Android drops its saved state)
-- [ ] Landscape: the focus view and the Timer lay out side by side (FocusWorkoutView.screen, TimingPanel.build; the iPhone app is portrait-only in project.yml. The Timer's side-by-side layout is built (TimerScreen, timer-landscape-*.png); the focus view's isn't, and turning landscape on is the owner's decision)
+- [x] Landscape: the app turns as Android's does (no screenOrientation: upright and either way sideways, iosApp/project.yml); the focus view lays out side by side (strip and line man left, the set and its buttons right, the name 18 sp and the dose from 30 sp), the Timer too, Today keeps to the day's class below 480 dp of height, dialogs take 65% of the width and the alarm's clock face sits beside its time; every other screen simply stretches, as on Android (FocusWorkoutView.screen, largeSize, TimingPanel.build, renderDashboard's compact, Theme.Material.Dialog's windowMinWidthMajor → FocusScreen.FocusFrame, TimerScreen, TodayScreen, Overlay.StreetDialog, Kit.isLandscape; *-landscape-*.png; iOS hides the status bar sideways, which Android shows)
 
 ## Build order
 
@@ -510,5 +510,15 @@ Thirteen rounds of about 20 to 28 lines, each one sitting's build and test, in t
 5. **AdMob**: the iPhone app, a native and a full-screen unit, and the iPhone consent message. Unblocks §20.
 6. **Firebase** (`streetgym-8dc6d`): the iPhone app (bundle id `com.justdataplease.streetgym`) and its `GoogleService-Info.plist` in `iosApp/StreetGym/` (git ignores it; CI needs it from a secret), its `REVERSED_CLIENT_ID` as the build setting `GOOGLE_REVERSED_CLIENT_ID`, Sign in with Apple as a provider, App Attest for App Check (and the debug token of a debug build), and `parks_url`. Unblocks §21, §16, §24, the park's greeting and the weekly parks refresh.
 6a. **The App Group** `group.com.justdataplease.streetgym` and the App IDs' capabilities (App Groups on `com.justdataplease.streetgym` and `com.justdataplease.streetgym.widget`, Sign in with Apple and App Attest on the app). Unblocks §23's seven lines.
-7. **Decisions**: how usernames are filtered (Apple 1.2 asks for a filter: none is built), who reads the reports sent to the app's contact address (the build value `contact.address`) and how fast (Apple asks for timely responses), and how a name is taken down (delete its `scores/{uid}`, `usernames/{name}` and the profile in the console, or a reports collection and a function later); landscape or portrait only; whether Pro bought on Android opens on iPhone; iPhone only or iPad too.
+7. **Decisions**: how usernames are filtered (Apple 1.2 asks for a filter: none is built), who reads the reports sent to the app's contact address (the build value `contact.address`) and how fast (Apple asks for timely responses), and how a name is taken down (delete its `scores/{uid}`, `usernames/{name}` and the profile in the console, or a reports collection and a function later); whether Pro bought on Android opens on iPhone; iPhone only or iPad too.
 8. **App Privacy** answers and a privacy page that names the iPhone app, then **Submit for review**. Unblocks the App Store release.
+
+## Where the iPhone still differs from Android
+
+After the parity round of 19 Nov 2026 the iPhone is built to look and behave as Android does wherever iOS allows it. What still differs:
+
+- **Forced by iOS or Apple's rules:** purchases through StoreKit's sheets and Apple's terms (§19), no review code (Apple 2.3.1), Apple's tracking question after Google's consent (§20), Sign in with Apple beside Google (Apple 4.8), Report and Block on the boards (Apple 1.2, §16), a medium widget and no one-row card (§23), a one-time alert where Android's alarm rings until stopped (§22), the identifier for vendor in the App Set ID's place (§24), the status bar hidden in landscape, Apple's own sheets, prompts, notifications and copy menu in San Francisco.
+- **Not a difference:** the rest's beep stays quiet on silent on both phones (Android plays it on the notification stream, which silent mode mutes; the iPhone as a system sound); the timed set's and the Timer's beep sound on silent on both (the alarm stream; the playback category).
+- **Glyphs no bundled face has** (✓ on done classes and reached ranges, ♥ on Remove ads, the countries' flags) come from each phone's own fallback fonts and emoji, so they are drawn a little differently.
+- **The alarm's clock face** is Material 3's (two boxes for the time over the dial) where Android 2014's Material draws the time on a coloured header; the words, buttons, colours, keyboard mode and layout sideways follow Android. In its keyboard mode Material 3 labels the fields "Hour" and "Minute" where Android writes "hour" and "minute".
+- **Android's own inconsistencies are not copied:** a few views Android builds again after a tap lose the theme's face there (History's "All of November ›" after a day is picked, the Focus · List switch and the list workout's easier toggle after a tap); the iPhone keeps them in the theme's face, as Android first draws them.

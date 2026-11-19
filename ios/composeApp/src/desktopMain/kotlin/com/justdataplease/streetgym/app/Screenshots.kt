@@ -94,6 +94,12 @@ private const val HEIGHT = 2868
 private const val DENSITY = 3f
 private val SAFE_AREA = PaddingValues(top = 62.dp, bottom = 34.dp)
 
+/**
+ * The same iPhone turned sideways (2868 x 1320 pixels, 956 x 440 points): the Dynamic Island's side kept clear on both
+ * sides, as iOS reports it, and the home indicator's room; iOS hides the status bar there.
+ */
+private val LANDSCAPE_SAFE_AREA = PaddingValues(start = 62.dp, end = 62.dp, bottom = 21.dp)
+
 private const val DAY = 86_400_000L
 private const val MINUTE = 60_000L
 /** Wednesday 18 November 2026, 18:00 UTC: a fixed "now", so the pictures are the same on every run. */
@@ -121,6 +127,7 @@ fun main(args: Array<String>) {
             if ("ads" in only) adsShots(program, theme, out)
             if ("widget" in only) widgetShots(program, theme, out)
             if ("account" in only) accountShots(program, theme, out)
+            if ("parity" in only) parityShots(program, theme, out)
         }
         println("Screenshots in ${out.absolutePath}")
         return
@@ -148,6 +155,7 @@ fun main(args: Array<String>) {
     for (theme in StreetTheme.entries) readyShots(program, theme, out)
     for (theme in StreetTheme.entries) timerShots(program, theme, out)
     for (theme in StreetTheme.entries) parksShots(program, theme, out)
+    for (theme in StreetTheme.entries) parityShots(program, theme, out)
     for (theme in StreetTheme.entries) plansShots(program, theme, out)
     for (theme in StreetTheme.entries) adsShots(program, theme, out)
     for (theme in StreetTheme.entries) widgetShots(program, theme, out)
@@ -261,6 +269,10 @@ private fun workoutShots(program: Program, theme: StreetTheme, out: File) {
             ?: flow.steps.indices.first { flow[it].section == "main" }
     }
     shot(File(out, "workout-set-$name.png")) { StreetGymApp(set, SAFE_AREA, startAt = Screen.Workout(setId)) }
+    // Sideways, as Android lays its focus view out: the strip and the line man left, the set and its buttons right.
+    shot(File(out, "workout-set-landscape-$name.png"), width = HEIGHT, height = WIDTH) {
+        StreetGymApp(set, LANDSCAPE_SAFE_AREA, startAt = Screen.Workout(setId))
+    }
     // The largest text sizes: every control stays on screen, the figure and the notes give way first.
     for (scale in listOf(1.6f, 2.2f)) shot(File(out, "workout-set-text-${(scale * 100).toInt()}-$name.png")) {
         CompositionLocalProvider(LocalDensity provides Density(DENSITY, fontScale = scale)) {
@@ -273,6 +285,9 @@ private fun workoutShots(program: Program, theme: StreetTheme, out: File) {
         hold.training.startHold(page.index, 1, hold.training.state()!!.flow[page.index].set.durationSeconds!!)
     }
     shot(File(out, "workout-hold-$name.png")) { StreetGymApp(hold, SAFE_AREA, startAt = Screen.Workout(holdId)) }
+    shot(File(out, "workout-hold-landscape-$name.png"), width = HEIGHT, height = WIDTH) {
+        StreetGymApp(hold, LANDSCAPE_SAFE_AREA, startAt = Screen.Workout(holdId))
+    }
 
     // The rest: the strength work's first set with a rest after it was just ticked.
     val (rest, restId) = training { flow ->
@@ -280,6 +295,9 @@ private fun workoutShots(program: Program, theme: StreetTheme, out: File) {
     }
     rest.training.state()!!.let { state -> rest.training.done((state.page as FocusPage.Set).index) }
     shot(File(out, "workout-rest-$name.png")) { StreetGymApp(rest, SAFE_AREA, startAt = Screen.Workout(restId)) }
+    shot(File(out, "workout-rest-landscape-$name.png"), width = HEIGHT, height = WIDTH) {
+        StreetGymApp(rest, LANDSCAPE_SAFE_AREA, startAt = Screen.Workout(restId))
+    }
 
     val (last, lastId) = training { flow -> flow.size - 1 }
     shot(File(out, "workout-last-$name.png")) { StreetGymApp(last, SAFE_AREA, startAt = Screen.Workout(lastId)) }
@@ -288,6 +306,9 @@ private fun workoutShots(program: Program, theme: StreetTheme, out: File) {
     val (summary, summaryId) = training { flow -> flow.size - 1 }
     (summary.training.state()!!.page as FocusPage.Set).let { summary.training.skip(it.index) }
     shot(File(out, "workout-summary-$name.png")) { StreetGymApp(summary, SAFE_AREA, startAt = Screen.Workout(summaryId)) }
+    shot(File(out, "workout-summary-landscape-$name.png"), width = HEIGHT, height = WIDTH) {
+        StreetGymApp(summary, LANDSCAPE_SAFE_AREA, startAt = Screen.Workout(summaryId))
+    }
 
     val (effort, effortId) = training { null }
     shot(File(out, "workout-effort-$name.png")) { StreetGymApp(effort, SAFE_AREA, startAt = Screen.Workout(effortId, askEffort = true)) }
@@ -714,8 +735,23 @@ private fun timerShots(program: Program, theme: StreetTheme, out: File) {
     shot(File(out, "alarm-$name.png")) { StreetGymApp(alarm, SAFE_AREA, startAt = Screen.Timer) }
     val twelve = timer(Alerts.NOT_ASKED, hour24 = false) { timing, _ -> timing.selectTab(2) }
     shot(File(out, "alarm-12h-alerts-off-$name.png")) { StreetGymApp(twelve, SAFE_AREA, startAt = Screen.Timer) }
+    // The alarm's time on Android's clock face: on a 12-hour clock, on a 24-hour one, typed after the keyboard toggle,
+    // and sideways, with the time beside the face.
     shot(File(out, "alarm-picker-$name.png")) {
         OverDialog(twelve, Screen.Timer) { com.justdataplease.streetgym.app.ui.AlarmTimeDialog(18, 45, hour24 = false, onClose = {}) { _, _ -> } }
+    }
+    shot(File(out, "alarm-picker-24h-$name.png")) {
+        OverDialog(alarm, Screen.Timer) { com.justdataplease.streetgym.app.ui.AlarmTimeDialog(6, 30, hour24 = true, onClose = {}) { _, _ -> } }
+    }
+    shot(File(out, "alarm-picker-typing-$name.png")) {
+        OverDialog(twelve, Screen.Timer) {
+            com.justdataplease.streetgym.app.ui.AlarmTimeDialog(18, 45, hour24 = false, typingFirst = true, onClose = {}) { _, _ -> }
+        }
+    }
+    shot(File(out, "alarm-picker-landscape-$name.png"), width = HEIGHT, height = WIDTH) {
+        OverDialog(twelve, Screen.Timer, LANDSCAPE_SAFE_AREA) {
+            com.justdataplease.streetgym.app.ui.AlarmTimeDialog(18, 45, hour24 = false, onClose = {}) { _, _ -> }
+        }
     }
     val rang = timer { timing, clock ->
         timing.timerPrimary()
@@ -724,7 +760,10 @@ private fun timerShots(program: Program, theme: StreetTheme, out: File) {
     }
     shot(File(out, "timer-ringing-$name.png")) { StreetGymApp(rang, SAFE_AREA) }
     shot(File(out, "timer-landscape-$name.png"), width = HEIGHT, height = WIDTH) {
-        StreetGymApp(running, PaddingValues(start = 62.dp, end = 62.dp, bottom = 21.dp), startAt = Screen.Timer)
+        StreetGymApp(running, LANDSCAPE_SAFE_AREA, startAt = Screen.Timer)
+    }
+    shot(File(out, "alarm-landscape-$name.png"), width = HEIGHT, height = WIDTH) {
+        StreetGymApp(alarm, LANDSCAPE_SAFE_AREA, startAt = Screen.Timer)
     }
 }
 
@@ -869,20 +908,48 @@ private fun adsShots(program: Program, theme: StreetTheme, out: File) {
 
 /** [screen] of [model] with [dialog] over it, drawn as the shell draws its layers. */
 @Composable
-private fun OverDialog(model: AppModel, screen: Screen, dialog: @Composable () -> Unit) {
+private fun OverDialog(model: AppModel, screen: Screen, safeArea: PaddingValues = SAFE_AREA, dialog: @Composable () -> Unit) {
     val overlay = remember { com.justdataplease.streetgym.app.ui.Overlay() }
     androidx.compose.foundation.layout.Box(Modifier.fillMaxSize()) {
-        StreetGymApp(model, SAFE_AREA, startAt = screen)
+        StreetGymApp(model, safeArea, startAt = screen)
         CompositionLocalProvider(LocalMotionLibrary provides model.motions) {
             StreetGymTheme(model.theme) {
                 CompositionLocalProvider(com.justdataplease.streetgym.app.ui.LocalOverlay provides overlay,
-                    com.justdataplease.streetgym.app.ui.LocalSafeArea provides SAFE_AREA) {
+                    com.justdataplease.streetgym.app.ui.LocalSafeArea provides safeArea) {
                     dialog()
                     com.justdataplease.streetgym.app.ui.OverlayLayers(overlay)
                 }
             }
         }
     }
+}
+
+/**
+ * The parity round (19 Nov 2026), in [theme]: the iPhone turned sideways as Android turns (Today keeping to the day's
+ * class; the class page, Training, Skills, History and Settings simply stretched, as on Android; a dialog at 65% of the
+ * width), and a class page on a 375-point iPhone, its line man's SIDE and FRONT in Roboto Bold where Android shows them.
+ */
+private fun parityShots(program: Program, theme: StreetTheme, out: File) {
+    val name = theme.key
+    val athlete = athlete(program).apply { this.theme = theme }
+    val next = athlete.today().next!!.id
+    fun sideways(screen: String, content: @Composable () -> Unit) =
+        shot(File(out, "$screen-landscape-$name.png"), width = HEIGHT, height = WIDTH, content = content)
+    sideways("today") { StreetGymApp(athlete, LANDSCAPE_SAFE_AREA) }
+    sideways("class") { StreetGymApp(athlete, LANDSCAPE_SAFE_AREA, startAt = Screen.Class(next)) }
+    sideways("training") { StreetGymApp(athlete, LANDSCAPE_SAFE_AREA, startAt = Screen.Training) }
+    sideways("skills") { StreetGymApp(athlete, LANDSCAPE_SAFE_AREA, startAt = Screen.Progress) }
+    sideways("history") {
+        StreetGymApp(athlete, LANDSCAPE_SAFE_AREA, startAt = Screen.Progress, progressTab = com.justdataplease.streetgym.app.ui.PROGRESS_HISTORY)
+    }
+    sideways("settings") { StreetGymApp(athlete, LANDSCAPE_SAFE_AREA, startAt = Screen.Settings) }
+    sideways("dialog") { StreetGymApp(athlete, LANDSCAPE_SAFE_AREA, startAt = Screen.Settings, showing = Shown.Reset) }
+    // An iPhone 13 mini's 375 x 812 points (Android's 360 dp phones are about as wide).
+    shot(File(out, "class-375-$name.png"), width = 1_125, height = 2_436) { StreetGymApp(athlete, SAFE_AREA, startAt = Screen.Class(next)) }
+    val training = athlete(program).apply { this.theme = theme }
+    val classId = training.today().next!!.id
+    training.start(classId)
+    shot(File(out, "workout-375-$name.png"), width = 1_125, height = 2_436) { StreetGymApp(training, SAFE_AREA, startAt = Screen.Workout(classId)) }
 }
 
 /** Brand cards with the park of each (day, story time); a null time holds the final skill. */

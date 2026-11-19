@@ -8,11 +8,14 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
@@ -149,7 +152,8 @@ import kotlin.math.min
  * The focus workout (android-streetgym, ui/FocusWorkoutView.kt): one set per screen, a full-screen rest after it, and
  * a summary that leads into finishing. Every screen is strip, fill, info and controls: the controls are never pushed
  * off, the fill (the exercise's panel, or the rest's countdown) takes the height that is left, and the info is cut
- * from its bottom before anything else gives way.
+ * from its bottom before anything else gives way. In landscape the strip and the fill sit on the left, the info
+ * (centred) and the controls on the right, as on Android.
  */
 
 /** How often the screen looks at the clock, as Android's view does. */
@@ -350,6 +354,7 @@ private fun SetPage(state: FocusState, index: Int, training: Training, onAsk: (A
         side?.let { stringResource(Res.string.focus_side, it) },
     ).joinToString(" · ")
     val big = current?.let { clockText(it.endsAt - state.now, roundUp = true) } ?: dose
+    val landscape = isLandscape()
 
     FocusFrame(
         strip = { Strip(sectionTitle(step.section), stringResource(Res.string.focus_set_of, index + 1, state.flow.size), state, index, onFinish) },
@@ -363,14 +368,14 @@ private fun SetPage(state: FocusState, index: Int, training: Training, onAsk: (A
         info = {
             Column(Modifier.fillMaxWidth()) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    TitleText(name, 20f, Modifier.weight(1f), maxLines = 2)
+                    TitleText(name, if (landscape) 18f else 20f, Modifier.weight(1f), maxLines = 2)
                     TextAction(stringResource(Res.string.focus_details)) { onAsk(Ask.Details(index)) }
                 }
                 BodyText(setLine, 14f, maxLines = 1)
                 // Night Park stencils the dose in its light colour; a running countdown is in the timer face.
                 val nightPark = theme == StreetTheme.NIGHT_PARK
                 TitleText(
-                    big, largeSize(big), Modifier.padding(top = 4.dp),
+                    big, largeSize(big, landscape), Modifier.padding(top = 4.dp),
                     color = if (nightPark) palette.primary else palette.text,
                     maxLines = 2,
                     face = when {
@@ -504,7 +509,10 @@ private fun SummaryPage(state: FocusState, training: Training, onFinish: () -> U
     )
 }
 
-/** Strip, fill, info and controls (Android: FocusWorkoutView.screen, portrait). */
+/**
+ * Strip, fill, info and controls (Android: FocusWorkoutView.screen). Portrait: one above the other. Landscape: the strip
+ * and the fill in the left five twelfths, then 16 dp, the info centred in the room over the controls in the right seven.
+ */
 @Composable
 private fun FocusFrame(
     strip: @Composable () -> Unit,
@@ -512,13 +520,27 @@ private fun FocusFrame(
     info: (@Composable () -> Unit)?,
     controls: @Composable () -> Unit,
 ) {
-    Column(Modifier.fillMaxSize().padding(start = 16.dp, top = 4.dp, end = 16.dp, bottom = 8.dp)) {
+    if (!isLandscape()) Column(Modifier.fillMaxSize().padding(start = 16.dp, top = 4.dp, end = 16.dp, bottom = 8.dp)) {
         strip()
         Column(Modifier.weight(1f).fillMaxWidth()) {
             fill(Modifier.padding(top = 8.dp).weight(1f).fillMaxWidth())
             if (info != null) Box(Modifier.padding(top = 10.dp).fillMaxWidth().clipToBounds()) { info() }
         }
         Box(Modifier.padding(top = 10.dp).fillMaxWidth()) { controls() }
+    } else Row(Modifier.fillMaxSize().padding(start = 16.dp, top = 4.dp, end = 16.dp, bottom = 8.dp)) {
+        Column(Modifier.weight(5f).fillMaxHeight()) {
+            strip()
+            fill(Modifier.padding(top = 8.dp).weight(1f).fillMaxWidth())
+        }
+        Spacer(Modifier.width(16.dp))
+        Column(Modifier.weight(7f).fillMaxHeight()) {
+            Column(Modifier.weight(1f).fillMaxWidth().clipToBounds()) {
+                Spacer(Modifier.weight(1f))
+                if (info != null) info()
+                Spacer(Modifier.weight(1f))
+            }
+            Box(Modifier.padding(top = 8.dp).fillMaxWidth()) { controls() }
+        }
     }
 }
 
@@ -753,11 +775,14 @@ private fun prescription(step: WorkoutStep): Pair<String, List<String>> {
 private fun holdSeconds(step: WorkoutStep): Int? =
     step.set.durationSeconds?.takeIf { it > 0 && step.set.repetitions == null && !step.set.repetitionsMax }
 
-/** The dose's size: smaller as the text gets longer. */
-private fun largeSize(text: String): Float = when {
-    text.length <= 10 -> 36f
-    text.length <= 16 -> 27f
-    else -> 21.6f
+/** The dose's size: smaller as the text gets longer, from 36 sp, or 30 sp in landscape (Android: largeSize). */
+private fun largeSize(text: String, landscape: Boolean): Float {
+    val base = if (landscape) 30f else 36f
+    return when {
+        text.length <= 10 -> base
+        text.length <= 16 -> base * 0.75f
+        else -> base * 0.6f
+    }
 }
 
 /**

@@ -1,5 +1,6 @@
 package com.justdataplease.streetgym.app
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.text.input.PlatformImeOptions
 import androidx.compose.ui.window.ComposeUIViewController
@@ -10,7 +11,6 @@ import com.justdataplease.streetgym.app.data.HomeWidget
 import com.justdataplease.streetgym.app.data.PhoneServices
 import com.justdataplease.streetgym.app.data.Beep
 import com.justdataplease.streetgym.app.data.Store
-import com.justdataplease.streetgym.app.data.DEFAULT_VERSION
 import com.justdataplease.streetgym.app.data.KeyValueStore
 import com.justdataplease.streetgym.app.data.LocalDays
 import com.justdataplease.streetgym.app.data.WorkoutDevice
@@ -34,6 +34,15 @@ import kotlinx.cinterop.reinterpret
 import kotlinx.cinterop.usePinned
 import kotlinx.cinterop.value
 import kotlinx.coroutines.flow.MutableSharedFlow
+import platform.AVFAudio.AVAudioPlayer
+import platform.AVFAudio.AVAudioSession
+import platform.AVFAudio.AVAudioSessionCategoryOptionMixWithOthers
+import platform.AVFAudio.AVAudioSessionCategoryPlayback
+import platform.AVFAudio.setActive
+import platform.darwin.DISPATCH_TIME_NOW
+import platform.darwin.dispatch_after
+import platform.darwin.dispatch_get_main_queue
+import platform.darwin.dispatch_time
 import platform.AudioToolbox.AudioServicesCreateSystemSoundID
 import platform.AudioToolbox.AudioServicesPlaySystemSound
 import platform.AudioToolbox.SystemSoundIDVar
@@ -56,6 +65,7 @@ import platform.Foundation.writeToFile
 import platform.UIKit.UIAccessibilityAnnouncementNotification
 import platform.UIKit.UIAccessibilityIsReduceMotionEnabled
 import platform.UIKit.UIAccessibilityPostNotification
+import platform.UIKit.UIAccessibilityReduceMotionStatusDidChangeNotification
 import platform.UIKit.UIApplication
 import platform.UIKit.UIApplicationDidBecomeActiveNotification
 import platform.UIKit.UIApplicationWillResignActiveNotification
@@ -71,12 +81,13 @@ import platform.UserNotifications.UNUserNotificationCenter
 
 /**
  * The whole app as one view controller; the Swift entry point (iosApp) puts it on screen. With Reduce Motion on, the
- * movement figures stand still (Android shows their still frame when the system's animations are off); the setting is
- * read when the app starts, and so is the first day of the week of the phone's region and whether it shows times on a
- * 12- or 24-hour clock. Each return to the screen tells the app, which redraws Today for a new day, rings what ran out
- * on the Timer and sets the status bar again. Settings › About shows the app's version from its Info.plist. [maps] are
- * the Parks maps Swift makes (MapLibre); without them Parks shows its list. [restored] is where the app was when the
- * phone closed it in the background, which [saver] keeps with the window (SwiftUI's scene storage) on every change.
+ * movement figures stand still (Android shows their still frame when the system's animations are off); a change of the
+ * setting while the app runs reaches every figure at once (Android reads it each time a view is built). The first day
+ * of the week of the phone's region and whether it shows times on a 12- or 24-hour clock are read when the app starts.
+ * Each return to the screen tells the app, which redraws Today for a new day, rings what ran out on the Timer and sets
+ * the status bar again. Settings › About shows the Android app's version, written into the resources at build time.
+ * [maps] are the Parks maps Swift makes (MapLibre); without them Parks shows its list. [restored] is where the app was
+ * when the phone closed it in the background, which [saver] keeps with the window (SwiftUI's scene storage) on every change.
  * [store] is Swift's StoreKit 2 store, [ads] Swift's Google ads (null: nothing to buy, no ads); [debug] is a debug
  * build (Swift's DEBUG), whose developer settings offer Simulate tier. [widget] writes the home-screen widget's snapshot
  * (null: no widget). [account] and [cloud] are Swift's Firebase Auth and Firestore (null, or without
@@ -104,9 +115,13 @@ fun MainViewController(
         phoneEvents.trySend(PhoneEvent.Away)
     }
     watchClock()
+    // Reduce Motion switched on or off while the app runs: the figures follow at once.
+    val reduceMotion = mutableStateOf(UIAccessibilityIsReduceMotionEnabled())
+    NSNotificationCenter.defaultCenter.addObserverForName(UIAccessibilityReduceMotionStatusDidChangeNotification, null, NSOperationQueue.mainQueue) {
+        reduceMotion.value = UIAccessibilityIsReduceMotionEnabled()
+    }
     // NSCalendar numbers the weekdays 1 Sunday to 7 Saturday, as java.util.Calendar does.
     val firstWeekday = LocalDays.isoWeekday(NSCalendar.currentCalendar.firstWeekday.toInt())
-    val version = NSBundle.mainBundle.objectForInfoDictionaryKey("CFBundleShortVersionString") as? String ?: DEFAULT_VERSION
     val hosts = maps?.let(::IosParksMaps)
     val purchases = store?.let(::IosStore) ?: Store.None
     val adverts = ads?.let(::IosAds) ?: Ads.None
@@ -120,8 +135,8 @@ fun MainViewController(
         versionCode = build,
     )
     return ComposeUIViewController {
-        App(phoneStore, PhoneDevice, reduceMotion = UIAccessibilityIsReduceMotionEnabled(), firstWeekday = firstWeekday,
-            resumed = resumed, version = version, countKeys = countKeys, timingClock = IosTimingClock, hour24 = hour24(),
+        App(phoneStore, PhoneDevice, reduceMotion = reduceMotion.value, firstWeekday = firstWeekday,
+            resumed = resumed, countKeys = countKeys, timingClock = IosTimingClock, hour24 = hour24(),
             events = phoneEvents.receiveAsFlow(), location = IosLocation, maps = hosts, restored = restored,
             purchases = purchases, ads = adverts, simulate = debug, services = services, appleButton = IosAppleButton)
     }.also { PhoneDevice.screen = it }
@@ -163,9 +178,10 @@ private class UserDefaultsStore(private val defaults: NSUserDefaults = NSUserDef
 
 /**
  * The iPhone during a workout (Android: FLAG_KEEP_SCREEN_ON, the rest's ToneGenerator beep, TimingAlerts.tone and
- * vibrate, announceForAccessibility): the screen stays on, Android's beep plays as a system sound, which mixes with the
- * athlete's music and keeps quiet on silent, a timed set's end vibrates, VoiceOver speaks the cues, and a rest that ends
- * while the app is in the background has a notification with the same beep.
+ * vibrate, announceForAccessibility): the screen stays on; the rest's beep (Android's notification stream) plays as a
+ * system sound, which mixes with the athlete's music and keeps quiet on silent; a timed set's end and the in-app "Time's
+ * up" play the beep as Android's alarm stream does, heard on silent too; a timed set's end vibrates; VoiceOver speaks
+ * the cues; and a rest that ends while the app is in the background has a notification with the same beep.
  */
 @OptIn(ExperimentalForeignApi::class)
 internal object PhoneDevice : WorkoutDevice {
@@ -199,13 +215,47 @@ internal object PhoneDevice : WorkoutDevice {
         UIApplication.sharedApplication.idleTimerDisabled = on
     }
 
+    /** The rest's beep: Android plays it on the notification stream, which the phone's silent mode mutes, as a system sound is. */
     override fun restOver() {
         beep?.let { AudioServicesPlaySystemSound(it) }
     }
 
+    /**
+     * A timed set's end: the beep on the alarm stream (Android: TimingAlerts.tone), which sounds on silent too, and the
+     * alert's vibration, twice (Android: TimingAlerts.vibrate, 400 ms on, 200 off, 400 on).
+     */
     override fun holdOver(sound: Boolean) {
-        if (sound) beep?.let { AudioServicesPlaySystemSound(it) }
+        if (sound) alarmBeep()
         AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, VIBRATION_GAP_NANOS), dispatch_get_main_queue()) {
+            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+        }
+    }
+
+    /** One buzz (about 400 ms) and Android's 200 ms pause: the second buzz starts 600 ms after the first. */
+    private const val VIBRATION_GAP_NANOS = 600_000_000L
+
+    /** The player of the alarm stream's beep, kept while it plays. */
+    private var alarmPlayer: AVAudioPlayer? = null
+
+    /**
+     * Android's alarm-stream beep (ToneGenerator on STREAM_ALARM at 80): the same samples, played as media in the
+     * playback category, which the silent switch doesn't mute, mixed with the athlete's music rather than stopping it
+     * (Android's tone takes no audio focus), at the gain Android gives volume 80. The category is set again on each beep,
+     * as Google's ads may change it while a video ad plays.
+     */
+    private fun alarmBeep() {
+        val session = AVAudioSession.sharedInstance()
+        session.setCategory(AVAudioSessionCategoryPlayback, withOptions = AVAudioSessionCategoryOptionMixWithOthers, error = null)
+        session.setActive(true, error = null)
+        val player = alarmPlayer ?: run {
+            val bytes = Beep.wav()
+            val data = bytes.usePinned { NSData.dataWithBytes(it.addressOf(0), bytes.size.toULong()) }
+            AVAudioPlayer(data = data, error = null).also { alarmPlayer = it }
+        }
+        player.volume = Beep.gain(Beep.ALARM_VOLUME)
+        player.currentTime = 0.0
+        player.play()
     }
 
     override fun announce(text: String) {
@@ -296,8 +346,9 @@ internal object PhoneDevice : WorkoutDevice {
         center.removeDeliveredNotificationsWithIdentifiers(listOf(TIMER, ALARM))
     }
 
+    /** "Time's up" or "Alarm" on screen with alerts off: Android's alarm-stream beep (timingTick's TimingAlerts.tone). */
     override fun timingTone() {
-        beep?.let { AudioServicesPlaySystemSound(it) }
+        alarmBeep()
     }
 
     /** An alert's words as Android's: the title, and the app's name under it; the alert sound; Stop (Android: TimingAlerts.notify). */

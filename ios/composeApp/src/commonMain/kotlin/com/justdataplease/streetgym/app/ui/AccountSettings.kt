@@ -138,7 +138,10 @@ fun ProfileCard(model: AppModel, onEdit: (String) -> Unit, onDeleteProfile: () -
         } else {
             TitleText("${Countries.flag(profile.country)} ${profile.username}", 18f)
             BodyText(Countries.name(profile.country), 13f, Modifier.padding(top = 2.dp))
-            SettingSwitch(stringResource(Res.string.account_visible), profile.visible, Modifier.padding(top = 6.dp)) { cloud.setVisible(it) }
+            // Android rebuilds this card whenever the account changes (from the moment it is shown), after its page was
+            // restyled, so its Switch keeps the system face: Roboto.
+            SettingSwitch(stringResource(Res.string.account_visible), profile.visible, Modifier.padding(top = 6.dp),
+                family = Street.type.system) { cloud.setVisible(it) }
             SecondaryButton(stringResource(Res.string.account_edit_profile), Modifier.padding(top = 4.dp)) { onEdit(user.uid) }
         }
         if (!tier.account) BodyText(stringResource(Res.string.profile_board_note), 12f, Modifier.padding(top = 8.dp))
@@ -230,6 +233,7 @@ fun ProfileDialog(cloud: CloudAccount, uid: String, region: String?, onClose: ()
         Column(Modifier.fillMaxWidth().padding(start = 20.dp, top = 8.dp, end = 20.dp)) {
             EntryField(
                 name, stringResource(Res.string.profile_username), maxLength = 40, focusFirst = previous == null,
+                family = Street.type.system,
                 error = when (error) {
                     ProfileProblem.INVALID -> stringResource(Res.string.profile_invalid)
                     ProfileProblem.TAKEN -> stringResource(Res.string.profile_taken)
@@ -247,7 +251,8 @@ fun ProfileDialog(cloud: CloudAccount, uid: String, region: String?, onClose: ()
                     .semantics { contentDescription = label }.padding(start = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                BasicText(label, Modifier.weight(1f), style = TextStyle(color = palette.text, fontSize = 18.sp, fontFamily = Street.type.body), maxLines = 1)
+                // Android's country Spinner in its dialog: the system face.
+                BasicText(label, Modifier.weight(1f), style = TextStyle(color = palette.text, fontSize = 18.sp, fontFamily = Street.type.system), maxLines = 1)
                 BodyText("▾", 18f)
             }
         }

@@ -34,8 +34,9 @@ fileGroups:
   - Products.storekit
 settings:
   base:
-    # Versions start at 1.0; CI passes the build number (CURRENT_PROJECT_VERSION) for TestFlight.
-    MARKETING_VERSION: "1.0"
+    # The Android app's versionName (android-streetgym/app/build.gradle.kts), which About shows on both phones; raise
+    # it with Android's (VersionTest checks the two agree). CI passes the build number (CURRENT_PROJECT_VERSION) for TestFlight.
+    MARKETING_VERSION: "2.14.1"
     CURRENT_PROJECT_VERSION: "1"
     SWIFT_VERSION: "5.0"
     # AdMob: Google's published test app and units (https://developers.google.com/admob/ios/test-ads). The owner's own
@@ -54,6 +55,12 @@ targets:
       - path: StreetGym
         excludes:
           - GoogleService-Info.plist
+      # Roboto, Android's system face, for the native ad card's words (GoogleAds.swift): the same files the Compose
+      # screens read, kept once in git (composeApp's resources, with their Apache 2.0 licence beside them in files/licenses).
+      - path: ../composeApp/src/commonMain/composeResources/font/roboto_regular.ttf
+        buildPhase: resources
+      - path: ../composeApp/src/commonMain/composeResources/font/roboto_bold.ttf
+        buildPhase: resources
     dependencies:
       # The home-screen widget, embedded in the app.
       - target: StreetGymWidget
@@ -148,11 +155,19 @@ targets:
               - $(GOOGLE_REVERSED_CLIENT_ID)
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        # Roboto for UIKit (the ad card); Compose loads its own copy from its resources.
+        UIAppFonts:
+          - roboto_regular.ttf
+          - roboto_bold.ttf
         LSRequiresIPhoneOS: true
         UILaunchScreen:
           UIColorName: LaunchBackground
+        # As Android's activity (no screenOrientation): upright and either way sideways, not upside down (Android phones
+        # don't turn there either). The focus view, the Timer, Today and the dialogs have Android's landscape layouts.
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
         # Compose draws at the screen's full refresh rate.
         CADisableMinimumFrameDurationOnPhone: true
         # Only HTTPS and Apple's own encryption: no export paperwork.
@@ -181,6 +196,9 @@ targets:
           - CoreLocation
           - -framework
           - AuthenticationServices
+          # The alarm-stream beep (AVAudioPlayer, AVAudioSession).
+          - -framework
+          - AVFAudio
         # The script runs Gradle, which reads and writes outside Xcode's sandbox.
         ENABLE_USER_SCRIPT_SANDBOXING: false
         CODE_SIGN_STYLE: Automatic
@@ -216,12 +234,20 @@ targets:
     platform: iOS
     sources:
       - path: StreetGymWidget
+      # Roboto for the card's level line and detail line, sans-serif in Android's widget layout.
+      - path: ../composeApp/src/commonMain/composeResources/font/roboto_regular.ttf
+        buildPhase: resources
+      - path: ../composeApp/src/commonMain/composeResources/font/roboto_bold.ttf
+        buildPhase: resources
     info:
       path: StreetGymWidget/Info.plist
       properties:
         CFBundleDisplayName: Street Gym
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        UIAppFonts:
+          - roboto_regular.ttf
+          - roboto_bold.ttf
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
     entitlements:

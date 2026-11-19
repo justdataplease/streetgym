@@ -16,7 +16,22 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicText
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TimeInput
+import androidx.compose.material3.TimePicker
+import androidx.compose.material3.TimePickerColors
+import androidx.compose.material3.TimePickerDefaults
+import androidx.compose.material3.TimePickerDialogDefaults
+import androidx.compose.material3.TimePickerDisplayMode
+import androidx.compose.material3.TimePickerLayoutType
+import androidx.compose.material3.Typography
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -27,13 +42,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.progressBarRangeInfo
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.selected
@@ -43,6 +59,7 @@ import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -114,8 +131,8 @@ fun TimerScreen(model: AppModel, onNote: (String) -> Unit) {
         }
     }
     val state = timing.state
-    val window = LocalWindowInfo.current.containerSize
-    val compact = window.width > window.height
+    // Android: TimingPanel.build's landscape layout.
+    val compact = isLandscape()
     var picking by remember { mutableStateOf(false) }
     Page {
         Row(Modifier.fillMaxWidth().padding(bottom = 16.dp)) {
@@ -382,30 +399,133 @@ internal fun DurationDialog(total: Long, onClose: () -> Unit, onSet: (Long) -> U
     }
 }
 
+/** Android's TimePickerDialog's words in its keyboard mode (the framework's time_picker_prompt_label). */
+internal const val PICK_TYPE_TIME = "Type in time"
+/** What its toggle says to a screen reader (the framework's time_picker_text_input_mode_description and radial one). */
+internal const val PICK_TEXT_MODE = "Switch to text input mode for the time input."
+internal const val PICK_CLOCK_MODE = "Switch to clock mode for the time input."
+
 /**
- * The alarm's time on wheels, on the phone's 12- or 24-hour clock, Cancel and OK (Android: TimePickerDialog). [onSet]
- * gets the hour (0 to 23) and the minute.
+ * The alarm's time as Android's TimePickerDialog shows it in the app's theme (Theme.Material's TimePicker, in its clock
+ * mode): the time picked on a clock face, on the phone's 12- or 24-hour clock, its time beside the face in landscape;
+ * the keyboard at the bottom left switches to typing the time ("Type in time") and back, as Android 8 and later offer;
+ * Cancel and OK. Drawn with Material 3's TimePicker and TimeInput in the app's dialog, in the theme's colours, the
+ * numbers in Roboto. [onSet] gets the hour (0 to 23) and the minute.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun AlarmTimeDialog(hour: Int, minute: Int, hour24: Boolean, onClose: () -> Unit, onSet: (Int, Int) -> Unit) {
-    var hours by remember { mutableIntStateOf(hour) }
-    var minutes by remember { mutableIntStateOf(minute) }
+internal fun AlarmTimeDialog(
+    hour: Int,
+    minute: Int,
+    hour24: Boolean,
+    typingFirst: Boolean = false,
+    onClose: () -> Unit,
+    onSet: (Int, Int) -> Unit,
+) {
+    val state = rememberTimePickerState(hour, minute, hour24)
+    var typing by remember { mutableStateOf(typingFirst) }
+    val landscape = isLandscape()
+    val palette = Street.colors
     StreetDialog(
         title = null,
         onDismiss = onClose,
-        confirm = DialogAction(OK) { onSet(hours, minutes) },
+        confirm = DialogAction(OK) { onSet(state.hour, state.minute) },
         dismiss = DialogAction(stringResource(Res.string.cancel), onClose),
-    ) {
-        Row(Modifier.fillMaxWidth().padding(start = 12.dp, top = 18.dp, end = 12.dp)) {
-            if (hour24) WheelColumn(PICK_HOURS, hours, 23, Modifier.weight(1f), label = false) { hours = it }
-            else WheelColumn(PICK_HOURS, (hours + 11) % 12 + 1, 12, Modifier.weight(1f), label = false, min = 1, pad = false) {
-                hours = it % 12 + if (hours >= 12) 12 else 0
+        leading = {
+            StreetMaterial {
+                CompositionLocalProvider(LocalContentColor provides palette.textSecondary) {
+                    // Material 3 1.9.0 draws the keyboard on the clock face, as Android, but names it for the clock
+                    // mode: Android's words for what the button does.
+                    val words = if (typing) PICK_CLOCK_MODE else PICK_TEXT_MODE
+                    TimePickerDialogDefaults.DisplayModeToggle(
+                        onDisplayModeChange = { typing = !typing },
+                        displayMode = if (typing) TimePickerDisplayMode.Input else TimePickerDisplayMode.Picker,
+                        modifier = Modifier.clearAndSetSemantics {
+                            contentDescription = words
+                            role = Role.Button
+                            onClick { typing = !typing; true }
+                        },
+                    )
+                }
             }
-            WheelColumn(PICK_MINUTES, minutes, 59, Modifier.weight(1f), label = false) { minutes = it }
-            if (!hour24) WheelColumn("AM/PM", if (hours >= 12) 1 else 0, 1, Modifier.weight(1f), label = false, wrap = false,
-                names = listOf("AM", "PM")) { hours = hours % 12 + it * 12 }
+        },
+    ) {
+        StreetMaterial {
+            val colors = timePickerColors()
+            Column(Modifier.fillMaxWidth().padding(start = 12.dp, top = 18.dp, end = 12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                if (typing) {
+                    BasicText(PICK_TYPE_TIME, Modifier.fillMaxWidth().padding(start = 12.dp, bottom = 16.dp),
+                        style = TextStyle(color = palette.textSecondary, fontSize = 14.sp, fontFamily = Street.type.system))
+                    TimeInput(state, colors = colors)
+                } else TimePicker(state, colors = colors,
+                    layoutType = if (landscape) TimePickerLayoutType.Horizontal else TimePickerLayoutType.Vertical)
+            }
         }
     }
+}
+
+/**
+ * The clock face in the theme's colours, as Theme.Material colours Android's: the face on the theme's pale surface, the
+ * hand and the picked number in its accent (colorAccent), the time and AM/PM picked in it too.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun timePickerColors(): TimePickerColors {
+    val palette = Street.colors
+    return TimePickerDefaults.colors(
+        clockDialColor = palette.infoSurface,
+        clockDialSelectedContentColor = palette.onAccent,
+        clockDialUnselectedContentColor = palette.text,
+        selectorColor = palette.primary,
+        containerColor = palette.surface,
+        periodSelectorBorderColor = palette.divider,
+        periodSelectorSelectedContainerColor = palette.primary,
+        periodSelectorUnselectedContainerColor = Color.Transparent,
+        periodSelectorSelectedContentColor = palette.onAccent,
+        periodSelectorUnselectedContentColor = palette.textSecondary,
+        timeSelectorSelectedContainerColor = palette.primary,
+        timeSelectorUnselectedContainerColor = palette.infoSurface,
+        timeSelectorSelectedContentColor = palette.onAccent,
+        timeSelectorUnselectedContentColor = palette.text,
+    )
+}
+
+/**
+ * Material 3 in the app's theme, for its pieces the app uses (the alarm's clock face): the theme's colours and every
+ * Material type style in Roboto Regular, as Android's framework time picker draws under the themes' fontFamily "sans".
+ */
+@Composable
+internal fun StreetMaterial(content: @Composable () -> Unit) {
+    val theme = Street.theme
+    val palette = theme.palette
+    val system = Street.type.system
+    val scheme = remember(theme) {
+        if (theme.dark) darkColorScheme(
+            primary = palette.primary, onPrimary = palette.onAccent, primaryContainer = palette.primary, onPrimaryContainer = palette.onAccent,
+            surface = palette.surface, onSurface = palette.text, onSurfaceVariant = palette.textSecondary,
+            surfaceContainerHighest = palette.infoSurface, background = palette.background, onBackground = palette.text,
+            outline = palette.divider, error = palette.heart,
+        ) else lightColorScheme(
+            primary = palette.primary, onPrimary = palette.onAccent, primaryContainer = palette.primary, onPrimaryContainer = palette.onAccent,
+            surface = palette.surface, onSurface = palette.text, onSurfaceVariant = palette.textSecondary,
+            surfaceContainerHighest = palette.infoSurface, background = palette.background, onBackground = palette.text,
+            outline = palette.divider, error = palette.heart,
+        )
+    }
+    val typography = remember(system) {
+        val base = Typography()
+        Typography(
+            displayLarge = base.displayLarge.copy(fontFamily = system, fontWeight = FontWeight.Normal), displayMedium = base.displayMedium.copy(fontFamily = system, fontWeight = FontWeight.Normal),
+            displaySmall = base.displaySmall.copy(fontFamily = system, fontWeight = FontWeight.Normal), headlineLarge = base.headlineLarge.copy(fontFamily = system, fontWeight = FontWeight.Normal),
+            headlineMedium = base.headlineMedium.copy(fontFamily = system, fontWeight = FontWeight.Normal), headlineSmall = base.headlineSmall.copy(fontFamily = system, fontWeight = FontWeight.Normal),
+            titleLarge = base.titleLarge.copy(fontFamily = system, fontWeight = FontWeight.Normal), titleMedium = base.titleMedium.copy(fontFamily = system, fontWeight = FontWeight.Normal),
+            titleSmall = base.titleSmall.copy(fontFamily = system, fontWeight = FontWeight.Normal), bodyLarge = base.bodyLarge.copy(fontFamily = system, fontWeight = FontWeight.Normal),
+            bodyMedium = base.bodyMedium.copy(fontFamily = system, fontWeight = FontWeight.Normal), bodySmall = base.bodySmall.copy(fontFamily = system, fontWeight = FontWeight.Normal),
+            labelLarge = base.labelLarge.copy(fontFamily = system, fontWeight = FontWeight.Normal), labelMedium = base.labelMedium.copy(fontFamily = system, fontWeight = FontWeight.Normal),
+            labelSmall = base.labelSmall.copy(fontFamily = system, fontWeight = FontWeight.Normal),
+        )
+    }
+    MaterialTheme(colorScheme = scheme, typography = typography, content = content)
 }
 
 /**
@@ -480,12 +600,13 @@ private fun WheelColumn(
     }
 }
 
+/** A wheel's number in Roboto, as Android's NumberPicker draws it in its dialog's system face. */
 @Composable
 private fun WheelValue(text: String, height: Dp, faded: Boolean, onTap: () -> Unit) {
     val palette = Street.colors
     Box(Modifier.fillMaxWidth().height(height).pointerInput(text) { detectTapGestures { onTap() } }, contentAlignment = Alignment.Center) {
         BasicText(text, style = TextStyle(color = if (faded) palette.textSecondary.copy(alpha = 0.6f) else palette.text,
-            fontSize = if (faded) 16.sp else 20.sp, fontFamily = Street.type.body, textAlign = TextAlign.Center), maxLines = 1)
+            fontSize = if (faded) 16.sp else 20.sp, fontFamily = Street.type.system, textAlign = TextAlign.Center), maxLines = 1)
     }
 }
 

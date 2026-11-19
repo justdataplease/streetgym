@@ -94,22 +94,11 @@ object Parks {
     }
 
     /**
-     * The phone's maps app at a park (Android: openPark's "geo:lat,lng?q=lat,lng(name)"): Apple Maps' link, a pin at
-     * [lat], [lng] labelled [name], from which the app gives directions.
+     * Google Maps at a park (Android: openPark's "geo:lat,lng?q=lat,lng(name)", which Android phones open in Google
+     * Maps, and the link Android falls back to without a maps app): a pin at [lat], [lng], with Google Maps' Directions.
+     * Opened on iPhone, the link opens the Google Maps app when it is installed, and Google Maps on the web otherwise.
      */
-    fun mapsLink(name: String, lat: Double, lng: Double): String = "https://maps.apple.com/?ll=$lat,$lng&q=${queryText(name)}"
-
-    /** [text] for a link's query: UTF-8, every byte but letters, digits and - . _ ~ written as %XX. */
-    fun queryText(text: String): String = buildString {
-        for (byte in text.encodeToByteArray()) {
-            val code = byte.toInt() and 0xFF
-            val char = code.toChar()
-            if (char in 'A'..'Z' || char in 'a'..'z' || char in '0'..'9' || char in "-._~") append(char)
-            else append('%').append(HEX[code shr 4]).append(HEX[code and 0xF])
-        }
-    }
-
-    private const val HEX = "0123456789ABCDEF"
+    fun mapsLink(lat: Double, lng: Double): String = "https://www.google.com/maps/search/?api=1&query=$lat,$lng"
 
     /** The parks as a GeoJSON FeatureCollection for the map; each point's "i" is its index in [parks]. */
     fun geoJson(parks: List<Park>): String = buildString(parks.size * 80) {

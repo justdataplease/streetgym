@@ -305,7 +305,7 @@ fun ListNameDialog(
         dismiss = DialogAction(stringResource(Res.string.cancel), onClose),
     ) {
         EntryField(field, stringResource(Res.string.lists_name_hint), Modifier.padding(horizontal = 20.dp), maxLength = WorkoutLists.MAX_NAME_LENGTH,
-            capitalize = true, error = error, focusFirst = true, imeAction = ImeAction.Done, onAction = ::submit) {
+            capitalize = true, error = error, focusFirst = true, imeAction = ImeAction.Done, onAction = ::submit, family = Street.type.system) {
             field = it
             problem = null
         }

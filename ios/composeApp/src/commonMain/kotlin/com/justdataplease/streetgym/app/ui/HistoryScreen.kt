@@ -41,6 +41,7 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
@@ -358,8 +359,10 @@ private fun DayCell(day: Int, marks: DayMarks?, today: Boolean, open: Boolean, s
             !open -> colors.future
             else -> colors.number
         }
-        val text = measurer.measure(day.toString(), TextStyle(color = color, fontSize = textSize,
-            fontFamily = if (trained || today) type.bold else type.body), maxLines = 1)
+        // Android paints the numbers in the system face (HistoryCalendarView: Typeface.DEFAULT_BOLD on trained days and
+        // today, DEFAULT otherwise): Roboto.
+        val text = measurer.measure(day.toString(), TextStyle(color = color, fontSize = textSize, fontFamily = type.system,
+            fontWeight = if (trained || today) FontWeight.Bold else FontWeight.Normal), maxLines = 1)
         drawText(text, topLeft = Offset(x - text.size.width / 2f, y - text.size.height / 2f))
         if (marks == null) return@Canvas
         val repeat = marks.repeats > 0

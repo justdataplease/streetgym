@@ -45,6 +45,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PlatformImeOptions
@@ -421,7 +422,8 @@ fun ShareProgressNote(model: AppModel, modifier: Modifier = Modifier) {
 @Composable
 fun ShareProgressRow(model: AppModel, modifier: Modifier = Modifier, onChanged: (Boolean) -> Unit = {}) {
     Row(modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        BodyText(boldMarkup(stringResource(Res.string.share_body), SpanStyle(fontFamily = Street.type.bold)), 12.5f, Modifier.weight(1f))
+        // Android's <b> over the body face: a synthesized bold of Albert Sans Regular, as on Android.
+        BodyText(boldMarkup(stringResource(Res.string.share_body), SpanStyle(fontWeight = FontWeight.Bold)), 12.5f, Modifier.weight(1f))
         SwitchToggle(model.shareProgress, stringResource(Res.string.share_switch), Modifier.padding(start = 14.dp)) {
             model.shareProgress = it
             onChanged(it)

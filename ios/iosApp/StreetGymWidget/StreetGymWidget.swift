@@ -188,7 +188,7 @@ struct CardView: View {
                         .lineLimit(1)
                     if !s.detail.isEmpty {
                         Text(s.detail)
-                            .font(.system(size: 12.5))
+                            .font(.custom("Roboto-Regular", fixedSize: 12.5))
                             .foregroundColor(s.color("muted"))
                             .lineLimit(1)
                     }
@@ -235,16 +235,17 @@ struct CardView: View {
 
     private func meta(_ s: Snapshot) -> some View {
         Text(s.meta)
-            .font(.system(size: 12, weight: .bold))
+            .font(.custom("Roboto-Bold", fixedSize: 12))
             .tracking(12 * 0.06)
             .foregroundColor(s.color("muted"))
             .lineLimit(1)
             .minimumScaleFactor(0.75)
     }
 
+    /// The theme's display face from the app; without it, Roboto Bold, as Android falls back to Typeface.DEFAULT_BOLD.
     private func display(_ size: Double) -> Font {
         if let face = card.face { return .custom(face, fixedSize: size) }
-        return .system(size: size, weight: .black)
+        return .custom("Roboto-Bold", fixedSize: size)
     }
 }
 
@@ -318,7 +319,7 @@ struct FlameView: View {
             // The days fill the belly: as tall as it allows, narrower when the digits need it.
             let numberSize = 34 * scale / CGFloat(max(digits, 0.5))
             Text("\(flame.days)")
-                .font(face.map { Font.custom($0, fixedSize: numberSize) } ?? .system(size: numberSize, weight: .black))
+                .font(.custom(face ?? "Roboto-Bold", fixedSize: numberSize))
                 .foregroundColor(Color(argb: flame.number))
                 .lineLimit(1)
                 .minimumScaleFactor(0.3)

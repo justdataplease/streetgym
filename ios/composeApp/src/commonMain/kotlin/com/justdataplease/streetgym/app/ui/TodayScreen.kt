@@ -59,12 +59,16 @@ private const val DAY_CHECK_MILLIS = 30_000L
  */
 fun roomyStreak(rowWidth: Dp, fontScale: Float): Boolean = rowWidth >= 320.dp && fontScale <= 1.15f
 
+/** Below this window height in dp (a phone turned sideways), Today keeps to the day's class (Android: renderDashboard). */
+private const val COMPACT_HEIGHT_DP = 480f
+
 /**
  * Today (android-streetgym, HomeActivity.renderDashboard): the brand card, the streak, the class the sequence offers
  * next, and how far through the program the athlete is. The card opens the class's page ([onOpenClass]); Start
  * workout, or Resume while it is in progress, opens its workout ([onStart]). A class in a level the tier doesn't open
  * shows Unlock, and the card and Unlock open the offer ([onOffer], with the level). A tap on the streak opens its sheet
- * ([onStreak]).
+ * ([onStreak]). On a window less than 480 dp tall (landscape) the brand card, the streak's line and the day card's head
+ * are left out and the class's name is smaller, as on Android.
  */
 @Composable
 fun TodayScreen(
@@ -100,8 +104,10 @@ fun TodayScreen(
         } }
         return
     }
+    // Android: renderDashboard's compact, screenHeightDp < 480.
+    val compact = screenHeightDp() < COMPACT_HEIGHT_DP
     key(false) { Page {
-        StreetCard(fill = palette.primaryDark, modifier = Modifier.padding(bottom = 20.dp), outlined = false) {
+        if (!compact) StreetCard(fill = palette.primaryDark, modifier = Modifier.padding(bottom = 20.dp), outlined = false) {
             BodyText(stringResource(Res.string.brand_kicker), 12f, color = palette.heroKicker)
             TitleText(stringResource(Res.string.brand_line), 30f, Modifier.padding(top = 8.dp), color = palette.heroText)
             // The day's routine in the park; a tap after midnight plays the new day's (Android: ParkSceneView).
@@ -109,7 +115,7 @@ fun TodayScreen(
         }
 
         val fontScale = LocalDensity.current.fontScale
-        BoxWithConstraints(Modifier.fillMaxWidth().padding(bottom = 6.dp)) {
+        if (!compact) BoxWithConstraints(Modifier.fillMaxWidth().padding(bottom = 6.dp)) {
             val roomy = roomyStreak(maxWidth, fontScale)
             Row(verticalAlignment = Alignment.CenterVertically) {
                 SectionLabel(stringResource(Res.string.today_section), Modifier.weight(1f))
@@ -124,7 +130,7 @@ fun TodayScreen(
                 BodyText(stringResource(Res.string.all_complete_body), modifier = Modifier.padding(top = 8.dp))
                 return@StreetCard
             }
-            today.level?.let { level -> TodayHeader(level.number, displayName(level), next.number, level.programs.size) }
+            if (!compact) today.level?.let { level -> TodayHeader(level.number, displayName(level), next.number, level.programs.size) }
             // A repeat in progress, or a replay, says so over the title (Android: renderDashboard's label).
             when (val label = today.label) {
                 TodayLabel.Repeat -> stringResource(Res.string.repeat_note)
@@ -132,7 +138,7 @@ fun TodayScreen(
                 is TodayLabel.Replay -> stringResource(Res.string.replay_today, label.level)
                 null -> null
             }?.let { BodyText(it, 12f, Modifier.padding(bottom = 4.dp), color = palette.primary) }
-            TitleText(displayName(next), 23f)
+            TitleText(displayName(next), if (compact) 20f else 23f)
             BodyText(programMeta(next), 13f, Modifier.padding(top = 6.dp))
             if (offer != null) {
                 // A class of a level the tier doesn't open: Unlock with the tier's sticker, which opens the offer.

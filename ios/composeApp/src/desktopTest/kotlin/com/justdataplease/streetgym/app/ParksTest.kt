@@ -135,9 +135,10 @@ class ParksTest {
 
     @Test
     fun theMapsLinkAndTheRefreshRules() {
-        assertEquals("https://maps.apple.com/?ll=37.97851,23.71266&q=Athens%20-%20Workout%20park%20-%20Gkazi%20-%20Greece",
-            Parks.mapsLink("Athens - Workout park - Gkazi - Greece", 37.97851, 23.71266))
-        assertEquals("%CE%91%CE%B8%CE%AE%CE%BD%CE%B1%20%26%20Park%2BA.b_c~", Parks.queryText("Αθήνα & Park+A.b_c~"))
+        // Google Maps at the park, as Android's geo: link opens it on most phones, and Android's own fallback link
+        // (HomeActivity.openPark) word for word; Apple Maps is never opened.
+        assertEquals("https://www.google.com/maps/search/?api=1&query=37.97851,23.71266", Parks.mapsLink(37.97851, 23.71266))
+        assertEquals("https://www.google.com/maps/search/?api=1&query=-33.8688,151.2093", Parks.mapsLink(-33.8688, 151.2093))
         // Android's ParksPolicy, kept for the weekly refresh that waits for the owner's Firebase setup.
         assertTrue(ParksPolicy.dueForCheck(0L, ParksPolicy.CHECK_MILLIS))
         assertFalse(ParksPolicy.dueForCheck(1_000L, ParksPolicy.CHECK_MILLIS))

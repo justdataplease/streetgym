@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.dp
 import com.justdataplease.streetgym.app.data.Ads
 import com.justdataplease.streetgym.app.data.AppModel
 import com.justdataplease.streetgym.app.data.AppSettings
-import com.justdataplease.streetgym.app.data.DEFAULT_VERSION
 import com.justdataplease.streetgym.app.data.KeyValueStore
 import com.justdataplease.streetgym.app.data.LibraryStore
 import com.justdataplease.streetgym.app.data.PhoneServices
@@ -65,6 +64,8 @@ import com.justdataplease.streetgym.app.figure.LocalReduceMotion
 import com.justdataplease.streetgym.app.figure.motionWords
 import com.justdataplease.streetgym.app.resources.Res
 import com.justdataplease.streetgym.app.resources.app_name
+import com.justdataplease.streetgym.app.resources.app_version_debug_suffix
+import com.justdataplease.streetgym.app.resources.app_version_name
 import com.justdataplease.streetgym.app.resources.load_error_message
 import com.justdataplease.streetgym.app.resources.load_error_title
 import com.justdataplease.streetgym.app.resources.loading_catalog
@@ -93,6 +94,7 @@ import com.justdataplease.streetgym.app.ui.pageBackground
 import com.justdataplease.streetgym.data.progress.Streak
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.random.Random
@@ -103,7 +105,8 @@ import kotlin.random.Random
  * keeps the screen on during a workout, sounds and speaks its cues; [reduceMotion] holds the movement figures and the
  * park still, as the phone's Reduce Motion asks. [firstWeekday] (1 Monday to 7 Sunday) is where the phone's region
  * starts a week; [resumed] fires each time the app comes back to the screen, which redraws Today for a new day and
- * starts the park scene again (Android: onResume). [version] is the app's, shown in Settings › About. [countKeys]: the
+ * starts the park scene again (Android: onResume). [version] is the app's, shown in Settings › About (null: the Android
+ * app's versionName, written into the resources at build time, with its debug suffix when [simulate]). [countKeys]: the
  * phone's options for the strength test's number keyboard. [load] reads the program (tests make it fail).
  *
  * The Timer runs on [timingClock] (null: the wall clock) and shows times on a 24-hour clock with [hour24]; [events]
@@ -124,7 +127,7 @@ fun App(
     reduceMotion: Boolean = false,
     firstWeekday: Int = Streak.MONDAY,
     resumed: Flow<Unit> = emptyFlow(),
-    version: String = DEFAULT_VERSION,
+    version: String? = null,
     countKeys: PlatformImeOptions? = null,
     load: suspend () -> Program = ::loadProgram,
     timingClock: TimingClock? = null,
@@ -158,7 +161,7 @@ fun App(
                     library = LibraryStore(store), timing = timing, parksSource = parks, location = location,
                     plans = Plans(store, purchases, canSimulate = simulate), ads = ads, adStore = store, elapsed = clock::elapsed,
                     services = services)
-                    .apply { this.version = version }
+                    .apply { this.version = version ?: buildVersion(debug = simulate) }
                 screens = Restore.decode(restored, app)
                 model = app
                 // What ran out while the app was closed rings, and the alerts are scheduled again (Android: onResume).
@@ -189,6 +192,13 @@ fun App(
         }
     }
 }
+
+/**
+ * The Android app's version as Android shows it (versionName, and in a debug build its versionNameSuffix, "-debug"), from
+ * the values the build reads from the Android app's build file.
+ */
+suspend fun buildVersion(debug: Boolean): String =
+    getString(Res.string.app_version_name) + if (debug) getString(Res.string.app_version_debug_suffix) else ""
 
 /** What the phone tells the running app. */
 sealed interface PhoneEvent {

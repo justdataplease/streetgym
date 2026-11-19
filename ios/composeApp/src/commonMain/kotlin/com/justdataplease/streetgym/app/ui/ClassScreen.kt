@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -385,7 +386,9 @@ fun SafetyLine(program: TrainingProgram, modifier: Modifier = Modifier) {
     val text = buildAnnotatedString {
         append(stringResource(Res.string.safety_line))
         append(' ')
-        withStyle(SpanStyle(color = palette.primary, fontFamily = Street.type.bold)) { append(link) }
+        // Android's StyleSpan(BOLD) over the body face, which has no bold of its own there: a synthesized bold of
+        // Albert Sans Regular, as Compose makes it from the same family.
+        withStyle(SpanStyle(color = palette.primary, fontWeight = FontWeight.Bold)) { append(link) }
     }
     BasicText(
         text,

@@ -7,6 +7,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import com.justdataplease.streetgym.app.resources.Res
 import com.justdataplease.streetgym.app.resources.albert_sans_bold
 import com.justdataplease.streetgym.app.resources.albert_sans_extrabold
@@ -15,6 +16,8 @@ import com.justdataplease.streetgym.app.resources.anton_regular
 import com.justdataplease.streetgym.app.resources.archivo_black_regular
 import com.justdataplease.streetgym.app.resources.big_shoulders_black
 import com.justdataplease.streetgym.app.resources.big_shoulders_stencil_black
+import com.justdataplease.streetgym.app.resources.roboto_bold
+import com.justdataplease.streetgym.app.resources.roboto_regular
 import com.justdataplease.streetgym.app.resources.space_mono_bold
 import com.justdataplease.streetgym.app.resources.theme_concrete
 import com.justdataplease.streetgym.app.resources.theme_concrete_summary
@@ -187,7 +190,14 @@ enum class StreetTheme(
     }
 }
 
-/** The active theme's faces, loaded. */
+/**
+ * The active theme's faces, loaded. [system] is Android's own face, Roboto, at the two weights the Android app draws it
+ * (Regular, and Bold for Typeface.DEFAULT_BOLD; a FontWeight picks one), [systemBold] its Bold alone: wherever the
+ * Android app draws in the system face rather than the theme's (its dialogs' own words and fields, notes, number wheels,
+ * the title bar's back arrow, and what it paints on a canvas with Typeface.DEFAULT or DEFAULT_BOLD), the iPhone draws in
+ * Roboto too, never in the iPhone's own San Francisco. The app's themes set `android:fontFamily="sans"`, which outranks
+ * the framework's medium weight for dialog titles and buttons, so Android draws those in Regular as well.
+ */
 class StreetType(
     val body: FontFamily,
     val bold: FontFamily,
@@ -195,6 +205,8 @@ class StreetType(
     val numeral: FontFamily,
     val label: FontFamily,
     val timer: FontFamily,
+    val system: FontFamily,
+    val systemBold: FontFamily,
 )
 
 @Composable
@@ -206,8 +218,11 @@ fun streetType(theme: StreetTheme): StreetType {
     val numeral = Font(fonts.numeral)
     val label = Font(fonts.label)
     val timer = Font(fonts.timer)
-    return remember(body, bold, display, numeral, label, timer) {
-        StreetType(FontFamily(body), FontFamily(bold), FontFamily(display), FontFamily(numeral), FontFamily(label), FontFamily(timer))
+    val regular = Font(Res.font.roboto_regular, FontWeight.Normal)
+    val heavy = Font(Res.font.roboto_bold, FontWeight.Bold)
+    return remember(body, bold, display, numeral, label, timer, regular, heavy) {
+        StreetType(FontFamily(body), FontFamily(bold), FontFamily(display), FontFamily(numeral), FontFamily(label), FontFamily(timer),
+            system = FontFamily(regular, heavy), systemBold = FontFamily(heavy))
     }
 }
 

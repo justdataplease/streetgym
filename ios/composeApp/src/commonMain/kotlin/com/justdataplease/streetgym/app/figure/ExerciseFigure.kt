@@ -203,7 +203,9 @@ fun ExerciseFigure(
         }
     }
     val measurer = rememberTextMeasurer(cacheSize = 16)
-    val family = Street.type.bold
+    // The phase label, the range line's words and the SIDE / FRONT captions: Roboto Bold, as Android paints them with
+    // Typeface.DEFAULT_BOLD.
+    val family = Street.type.systemBold
     val text = remember(measurer, family, density) { FigureText(measurer, family, density) }
     val hold = LocalFigureHold.current
     val still = LocalReduceMotion.current

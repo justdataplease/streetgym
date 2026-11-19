@@ -15,7 +15,7 @@ val androidMain: File = listOf("../../android-streetgym/app", "../../app").map {
 val androidResources = tasks.register<Sync>("androidResources") {
     into(layout.buildDirectory.dir("androidResources"))
     // Gradle can't see a change to the rewriting rules below; raise this when one changes, so the copy runs again.
-    inputs.property("rules", 7)
+    inputs.property("rules", 8)
     // The parks (about 5 MB, OpenStreetMap's), read when Training › Parks first opens on Plus and Pro.
     from(androidMain.resolve("assets")) {
         include("curriculum.json", "workouts.json", "exercise_animations.json", "spots.tsv")
@@ -48,17 +48,39 @@ val androidResources = tasks.register<Sync>("androidResources") {
         include("ic_play_arrow_white_24dp.png")
         into("drawable")
     }
-    // What only this app has.
+    // The licences of Android's bundled fonts, shipped with them as Android ships them (assets/licenses).
+    from(androidMain.resolve("assets/licenses")) { into("files/licenses") }
+    // What only this app has: Roboto, Android's system face, where Android draws in it (font/), and its licence.
     from("src/commonMain/composeResources")
     // The app's contact address, for the leaderboard's report mail: `contact.address` in this project's
     // local.properties (never in git: the repository is public), else STREETGYM_CONTACT_ADDRESS, else empty.
     val contact = contactAddress()
     inputs.property("contact", contact)
+    // The Android app's version, shown in Settings › About as Android shows its own: versionName, and in a debug build
+    // with its debug suffix (Android's versionNameSuffix).
+    val version = androidVersion()
+    inputs.property("version", version)
     doLast {
         val values = destinationDir.resolve("values").apply { mkdirs() }
         values.resolve("strings_build.xml").writeText(
-            "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<resources>\n    <string name=\"contact_address\">$contact</string>\n</resources>\n")
+            "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<resources>\n" +
+                "    <string name=\"contact_address\">$contact</string>\n" +
+                "    <string name=\"app_version_name\">${version.first}</string>\n" +
+                "    <string name=\"app_version_debug_suffix\">${version.second}</string>\n" +
+                "</resources>\n")
     }
+}
+
+/**
+ * The Android app's versionName and its debug build's versionNameSuffix, read from its build file (`versionName =
+ * "2.14.1"`, `versionNameSuffix = "-debug"`). The iPhone app's MARKETING_VERSION in iosApp/project.yml is the same
+ * number; a desktop test checks the two agree.
+ */
+fun androidVersion(): Pair<String, String> {
+    val script = androidMain.resolve("../../build.gradle.kts").readText()
+    fun value(name: String): String? = Regex("""\b$name\s*=\s*"([^"]*)"""").find(script)?.groupValues?.get(1)
+    val name = value("versionName") ?: error("No versionName in the Android app's build.gradle.kts")
+    return name to value("versionNameSuffix").orEmpty()
 }
 
 fun contactAddress(): String {
@@ -89,6 +111,9 @@ kotlin {
             // The movement figures' frame clock (withInfiniteAnimationFrameNanos), already under foundation.
             implementation("org.jetbrains.compose.animation:animation-core:$composeVersion")
             implementation("org.jetbrains.compose.ui:ui:$composeVersion")
+            // The alarm's time picker: Material 3's clock face, as Android's TimePickerDialog shows one (1.9.0 is the
+            // Material 3 this suite already builds with Compose 1.12.2 for iPhone, in ios-boringtravel).
+            implementation("org.jetbrains.compose.material3:material3:1.9.0")
             implementation("org.jetbrains.compose.components:components-resources:$composeVersion")
             implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
             implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")

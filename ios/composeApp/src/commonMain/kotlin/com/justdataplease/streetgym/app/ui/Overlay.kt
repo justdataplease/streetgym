@@ -59,6 +59,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
@@ -131,10 +132,12 @@ class DialogAction(val label: String, val onClick: () -> Unit)
 
 /**
  * A question over the screen, as Android's AlertDialog shows it in the app's theme: the surface with Concrete's and
- * Wheatpaste's ink outline or Night Park's round corners, 95% of the screen wide; the title, the message, any [content],
- * then the buttons in words in the theme's colour, [neutral] at the start, [dismiss] and [confirm] at the end.
- * Android draws its dialogs in the system face; here they keep the app's own. [cancelable] false keeps it up when the
- * dim is tapped (Android: setCancelable(false)).
+ * Wheatpaste's ink outline or Night Park's round corners, 95% of the screen wide, or 65% in landscape (Theme.Material's
+ * windowMinWidthMinor and windowMinWidthMajor); the title, the message, any [content], then the buttons in words in the
+ * theme's colour, [neutral] (or [leading], drawn in its place) at the start, [dismiss] and [confirm] at the end. As on
+ * Android the dialog's own words are in the system face, Roboto Regular (the app's themes set fontFamily "sans", which
+ * outranks Theme.Material's medium title and buttons); what [content] draws keeps the face it picks.
+ * [cancelable] false keeps it up when the dim is tapped (Android: setCancelable(false)).
  */
 @Composable
 fun StreetDialog(
@@ -145,34 +148,38 @@ fun StreetDialog(
     neutral: DialogAction? = null,
     message: String? = null,
     cancelable: Boolean = true,
+    leading: (@Composable () -> Unit)? = null,
     content: (@Composable ColumnScope.() -> Unit)? = null,
 ) {
     Modal {
         val theme = Street.theme
         val palette = theme.palette
+        val system = Street.type.system
         Scrim(if (cancelable) onDismiss else ({}), Alignment.Center) {
             BoxWithConstraints(Modifier.fillMaxSize().padding(LocalSafeArea.current), contentAlignment = Alignment.Center) {
                 val card = if (theme == StreetTheme.NIGHT_PARK) Modifier.clip(RoundedCornerShape(24.dp)).background(palette.surface)
                     else Modifier.background(palette.surface).border(2.dp, palette.border)
+                // Android measures the share against the whole screen; the safe area's sides are a few points of it.
+                val share = if (maxWidth > maxHeight) LANDSCAPE_DIALOG else PORTRAIT_DIALOG
                 Column(
-                    Modifier.fillMaxWidth(0.95f).heightIn(max = maxHeight - 32.dp).then(card).keepTaps().padding(8.dp),
+                    Modifier.fillMaxWidth(share).heightIn(max = maxHeight - 32.dp).then(card).keepTaps().padding(8.dp),
                 ) {
                     if (title != null) BasicText(
                         title,
                         Modifier.padding(start = 24.dp, top = 18.dp, end = 24.dp, bottom = 8.dp),
-                        style = TextStyle(color = palette.text, fontSize = 20.sp, fontFamily = Street.type.bold),
+                        style = TextStyle(color = palette.text, fontSize = 20.sp, fontFamily = system),
                     )
                     Column(Modifier.weight(1f, fill = false).verticalScroll(rememberScrollState())) {
                         if (message != null) BasicText(
                             message,
                             Modifier.padding(start = 24.dp, top = if (title == null) 18.dp else 4.dp, end = 24.dp, bottom = 8.dp),
-                            style = TextStyle(color = palette.textSecondary, fontSize = 16.sp, fontFamily = Street.type.body),
+                            style = TextStyle(color = palette.textSecondary, fontSize = 16.sp, fontFamily = system),
                         )
                         content?.invoke(this)
                     }
                     Row(Modifier.fillMaxWidth().padding(start = 12.dp, top = 12.dp, end = 12.dp, bottom = 4.dp),
                         verticalAlignment = Alignment.CenterVertically) {
-                        neutral?.let { DialogButton(it) }
+                        if (leading != null) leading() else neutral?.let { DialogButton(it) }
                         Spacer(Modifier.weight(1f))
                         dismiss?.let { DialogButton(it) }
                         DialogButton(confirm)
@@ -183,6 +190,11 @@ fun StreetDialog(
     }
 }
 
+/** How much of the screen's width an AlertDialog takes (Theme.Material.Dialog: windowMinWidthMinor 95%, windowMinWidthMajor 65%). */
+private const val PORTRAIT_DIALOG = 0.95f
+private const val LANDSCAPE_DIALOG = 0.65f
+
+/** A dialog's button: its label in capitals, Roboto Regular 14 sp, in the theme's colour (Theme.Material's ButtonBar.AlertDialog). */
 @Composable
 private fun DialogButton(action: DialogAction) {
     Box(
@@ -191,11 +203,11 @@ private fun DialogButton(action: DialogAction) {
         contentAlignment = Alignment.Center,
     ) {
         BasicText(action.label.uppercase(), style = TextStyle(color = Street.colors.primary, fontSize = 14.sp,
-            fontFamily = Street.type.bold, textAlign = TextAlign.Center), maxLines = 1)
+            fontFamily = Street.type.system, textAlign = TextAlign.Center), maxLines = 1)
     }
 }
 
-/** A row of a single-choice list in a dialog: the radio ring, filled when [selected], then [label]. */
+/** A row of a single-choice list in a dialog: the radio ring, filled when [selected], then [label] in Roboto, as Android's list item. */
 @Composable
 fun ChoiceRow(label: String, selected: Boolean, onSelect: () -> Unit) {
     val palette = Street.colors
@@ -211,16 +223,16 @@ fun ChoiceRow(label: String, selected: Boolean, onSelect: () -> Unit) {
             if (selected) drawCircle(ring, radius = 5.dp.toPx(), center = centre)
         }
         BasicText(label, Modifier.padding(start = 20.dp), style = TextStyle(color = palette.text, fontSize = 18.sp,
-            fontFamily = Street.type.body), maxLines = 1, overflow = TextOverflow.Ellipsis)
+            fontFamily = Street.type.system), maxLines = 1, overflow = TextOverflow.Ellipsis)
     }
 }
 
 /**
  * A row of a multiple-choice list in a dialog (Android: setMultiChoiceItems): the check box, ticked when [checked],
- * then [label], which may run over two lines.
+ * then [label] in Roboto, which may run over two lines.
  */
 @Composable
-fun CheckRow(label: String, checked: Boolean, enabled: Boolean = true, onChange: (Boolean) -> Unit) {
+fun CheckRow(label: String, checked: Boolean, enabled: Boolean = true, size: Float = 18f, onChange: (Boolean) -> Unit) {
     val palette = Street.colors
     Row(
         Modifier.fillMaxWidth().heightIn(min = 48.dp).alpha(if (enabled) 1f else 0.7f)
@@ -229,20 +241,20 @@ fun CheckRow(label: String, checked: Boolean, enabled: Boolean = true, onChange:
         verticalAlignment = Alignment.CenterVertically,
     ) {
         CheckMark(checked, if (checked) palette.primary else palette.textSecondary, box = 32.dp)
-        BasicText(label, Modifier.padding(start = 20.dp), style = TextStyle(color = palette.text, fontSize = 18.sp,
-            fontFamily = Street.type.body))
+        BasicText(label, Modifier.padding(start = 20.dp), style = TextStyle(color = palette.text, fontSize = size.sp,
+            fontFamily = Street.type.system))
     }
 }
 
 /**
- * A number of up to three digits, centred over a rule in the theme's colour, with [hint] while it is empty; it takes
- * the focus, so the phone shows its number pad (Android: askSetDone's EditText).
+ * A number of up to three digits in Roboto, centred over a rule in the theme's colour, with [hint] while it is empty; it
+ * takes the focus, so the phone shows its number pad (Android: askSetDone's EditText, in its dialog's system face).
  */
 @Composable
 fun NumberField(value: TextFieldValue, hint: String, modifier: Modifier = Modifier, onChange: (TextFieldValue) -> Unit) {
     val palette = Street.colors
     val focus = remember { FocusRequester() }
-    val style = TextStyle(color = palette.text, fontSize = 18.sp, fontFamily = Street.type.body, textAlign = TextAlign.Center)
+    val style = TextStyle(color = palette.text, fontSize = 18.sp, fontFamily = Street.type.system, textAlign = TextAlign.Center)
     BasicTextField(
         value = value,
         onValueChange = { next -> if (next.text.length <= 3 && next.text.all(Char::isDigit)) onChange(next) },
@@ -272,7 +284,8 @@ fun NumberField(value: TextFieldValue, hint: String, modifier: Modifier = Modifi
  * A line of text to type, as Android's EditText draws it: [hint] while empty, a rule under it in the secondary colour,
  * thicker and in the theme's colour while it has the focus, and [error] under it (Android: setError). [maxLength] caps
  * it; [digits] takes digits only, on the number keyboard; [capitalize] starts sentences in capitals; [focusFirst] takes
- * the focus when it shows. [imeAction] runs [onAction].
+ * the focus when it shows. [imeAction] runs [onAction]. [family]: the theme's body face on a screen, Roboto in a dialog
+ * (Android restyles a screen's fields, never a dialog's).
  */
 @Composable
 fun EntryField(
@@ -287,12 +300,13 @@ fun EntryField(
     focusFirst: Boolean = false,
     imeAction: ImeAction = ImeAction.Default,
     onAction: () -> Unit = {},
+    family: FontFamily = Street.type.body,
     onChange: (TextFieldValue) -> Unit,
 ) {
     val palette = Street.colors
     val focus = remember { FocusRequester() }
     var focused by remember { mutableStateOf(false) }
-    val style = TextStyle(color = palette.text, fontSize = size.sp, fontFamily = Street.type.body)
+    val style = TextStyle(color = palette.text, fontSize = size.sp, fontFamily = family)
     Column(modifier.fillMaxWidth()) {
         BasicTextField(
             value = value,
@@ -324,7 +338,7 @@ fun EntryField(
             },
         )
         if (error != null) BasicText(error, Modifier.padding(start = 4.dp, top = 2.dp),
-            style = TextStyle(color = palette.heart, fontSize = 13.sp, fontFamily = Street.type.body))
+            style = TextStyle(color = palette.heart, fontSize = 13.sp, fontFamily = family))
     }
     if (focusFirst) LaunchedEffect(focus) { runCatching { focus.requestFocus() } }
 }
@@ -354,7 +368,8 @@ private const val NOTE_MILLIS = 2_000L
 
 /**
  * A short note at the bottom of the screen after an action, gone after two seconds (Android: Toast). It takes no
- * taps. Drawn in the theme's text colour with the surface's on it, so it stands out in every theme.
+ * taps. Drawn in the theme's text colour with the surface's on it, so it stands out in every theme; its words in
+ * Roboto, as Android's toast is in the system face.
  */
 @Composable
 fun Note(text: String, onGone: () -> Unit) {
@@ -370,7 +385,7 @@ fun Note(text: String, onGone: () -> Unit) {
         BasicText(
             text,
             Modifier.streetBackground(theme, palette.text, 24.dp).padding(horizontal = 16.dp, vertical = 10.dp),
-            style = TextStyle(color = palette.surface, fontSize = 14.sp, fontFamily = Street.type.body, textAlign = TextAlign.Center),
+            style = TextStyle(color = palette.surface, fontSize = 14.sp, fontFamily = Street.type.system, textAlign = TextAlign.Center),
         )
     }
 }

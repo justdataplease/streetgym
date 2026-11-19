@@ -193,12 +193,13 @@ internal fun ListPickerDialog(
         BodyText(stringResource(if (custom) Res.string.lists_picker_custom else Res.string.lists_picker_favorites), 13f,
             Modifier.padding(start = 24.dp, end = 20.dp, top = 4.dp))
         Column(Modifier.padding(top = 6.dp)) {
-            CheckRow(favorites, checked = true, enabled = false) {}
+            // Android's list picker: CheckBoxes at 16 sp in the system face (WorkoutListsUi.showListPicker).
+            CheckRow(favorites, checked = true, enabled = false, size = LIST_ROW) {}
             state.activeLists.forEach { list ->
                 val days = state.daysIn(list).size
                 val full = if (tier == Tier.PRO) stringResource(Res.string.lists_full, list.name, tier.daysPerList)
                     else stringResource(Res.string.lists_full_plus, list.name, tier.daysPerList, Tier.PRO.daysPerList)
-                CheckRow("${list.name} · ${pluralStringResource(Res.plurals.lists_days, days, days)}", list.id in checked) { ticked ->
+                CheckRow("${list.name} · ${pluralStringResource(Res.plurals.lists_days, days, days)}", list.id in checked, size = LIST_ROW) { ticked ->
                     when {
                         !ticked -> checked = checked - list.id
                         dayId in list.dayIds || SavedLimit.canAddToList(tier, days) -> checked = checked + list.id
@@ -209,7 +210,8 @@ internal fun ListPickerDialog(
         }
         Row(Modifier.fillMaxWidth().padding(start = 20.dp, top = 6.dp, end = 20.dp), verticalAlignment = Alignment.CenterVertically) {
             EntryField(field, stringResource(Res.string.lists_name_hint), Modifier.weight(1f), maxLength = WorkoutLists.MAX_NAME_LENGTH,
-                capitalize = true, error = listNameError(problem, field.text, model, favorites), imeAction = ImeAction.Done, onAction = ::addList) {
+                capitalize = true, error = listNameError(problem, field.text, model, favorites), imeAction = ImeAction.Done, onAction = ::addList,
+                family = Street.type.system) {
                 field = it
                 problem = null
             }
@@ -225,3 +227,6 @@ internal fun ListPickerDialog(
         }
     }
 }
+
+/** The list picker's rows, as Android's CheckBoxes there: 16 sp. */
+private const val LIST_ROW = 16f

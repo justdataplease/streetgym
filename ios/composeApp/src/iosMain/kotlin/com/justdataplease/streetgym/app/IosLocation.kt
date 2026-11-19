@@ -61,7 +61,7 @@ internal object IosLocation : PhoneLocation {
     }
 
     override fun openDirections(name: String, lat: Double, lng: Double) {
-        val url = NSURL.URLWithString(Parks.mapsLink(name, lat, lng)) ?: return
+        val url = NSURL.URLWithString(Parks.mapsLink(lat, lng)) ?: return
         UIApplication.sharedApplication.openURL(url, options = emptyMap<Any?, Any>(), completionHandler = null)
     }
 

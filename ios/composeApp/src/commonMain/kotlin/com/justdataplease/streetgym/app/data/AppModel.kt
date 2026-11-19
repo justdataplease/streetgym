@@ -57,9 +57,6 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.offsetAt
 import kotlin.time.Instant
 
-/** The version shown where the phone gives none (previews, tests). */
-const val DEFAULT_VERSION = "1.0"
-
 /** The program, the ready workouts, the skills and the line man's movements, read once from the app's files. */
 class Program(val catalog: CurriculumCatalog, val skills: SkillBook?, val motions: AnimationLibrary? = null)
 
@@ -370,8 +367,12 @@ class AppModel(
     }
 
     /** The look picked in Settings, kept on the phone (Android: AppSettings.theme); every screen follows at once. */
-    /** The app's version, as Settings › About shows it ("Version 1.0"). */
-    var version: String = DEFAULT_VERSION
+    /**
+     * The app's version, as Settings › About shows it and progress analytics sends it: the Android app's versionName
+     * ("Version 2.14.1"), with Android's debug suffix in a debug build (App sets it). Null: Settings reads the build's
+     * versionName itself (previews, tests).
+     */
+    var version: String? by mutableStateOf(null)
 
     /** The taps on the version line toward the developer settings, while the app runs. */
     val versionTaps = com.justdataplease.streetgym.app.ui.VersionTaps()
@@ -461,7 +462,7 @@ class AppModel(
         val history = progress.sessionHistory()
         val at = furthest()
         return InstallSnapshot(
-            versionName = version,
+            versionName = version.orEmpty(),
             versionCode = services.versionCode,
             tier = tier,
             debug = plans.canSimulate,

@@ -34,7 +34,8 @@ internal class TextPen(val sizePx: Float, val letterSpacing: Float, var color: C
 
 /**
  * The guide's words on the canvas: Android's Paint.measureText, ascent, descent and drawText(text, x, baseline), through
- * Compose's text measurer in [family] (the theme's bold face; Android draws them in the system's bold).
+ * Compose's text measurer in [family]: Roboto Bold, the system's bold face Android paints them in (Typeface.DEFAULT_BOLD),
+ * so a caption fits, or is left out, at the same widths as on Android.
  */
 class FigureText(private val measurer: TextMeasurer, private val family: FontFamily, private val density: Density) {
     internal fun layout(text: String, pen: TextPen): TextLayoutResult = measurer.measure(

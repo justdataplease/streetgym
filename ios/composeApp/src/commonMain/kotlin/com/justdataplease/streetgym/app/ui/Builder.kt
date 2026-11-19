@@ -175,7 +175,7 @@ fun ExercisePickerDialog(model: AppModel, onClose: () -> Unit, onPick: (LibraryM
         confirm = DialogAction(stringResource(Res.string.cancel), onClose),
     ) {
         Column(Modifier.padding(start = 20.dp, top = 8.dp, end = 20.dp)) {
-            EntryField(query, stringResource(Res.string.picker_hint), size = 16f) { query = it }
+            EntryField(query, stringResource(Res.string.picker_hint), size = 16f, family = Street.type.system) { query = it }
             if (shown.isEmpty()) BodyText(stringResource(Res.string.picker_empty), 14f, Modifier.padding(top = 12.dp))
             LazyColumn(Modifier.fillMaxWidth().height(380.dp)) {
                 itemsIndexed(shown, key = { _, movement -> movement.key }) { index, movement ->
@@ -226,15 +226,16 @@ fun SetsDialog(name: String, sets: List<CustomSet>, onClose: () -> Unit, onApply
         Column(Modifier.padding(start = 20.dp, top = 8.dp, end = 20.dp)) {
             val countLabel = stringResource(Res.string.sets_count)
             BodyText(countLabel, 13f)
-            EntryField(count, countLabel, digits = true, maxLength = 3) { count = it }
+            EntryField(count, countLabel, digits = true, maxLength = 3, family = Street.type.system) { count = it }
+            // In Android's dialog the switch is never restyled: Roboto Bold (Typeface.DEFAULT_BOLD).
             SegmentedSwitch(listOf(stringResource(Res.string.sets_reps), stringResource(Res.string.sets_seconds)), if (timed) 1 else 0,
-                Modifier.padding(top = 8.dp, bottom = 4.dp)) { timed = it == 1 }
+                Modifier.padding(top = 8.dp, bottom = 4.dp), family = Street.type.systemBold) { timed = it == 1 }
             val amountLabel = stringResource(Res.string.sets_amount)
             BodyText(amountLabel, 13f)
-            EntryField(amount, amountLabel, digits = true, maxLength = 3) { amount = it }
+            EntryField(amount, amountLabel, digits = true, maxLength = 3, family = Street.type.system) { amount = it }
             val restLabel = stringResource(Res.string.sets_rest)
             BodyText(restLabel, 13f)
-            EntryField(rest, restLabel, digits = true, maxLength = 3) { rest = it }
+            EntryField(rest, restLabel, digits = true, maxLength = 3, family = Street.type.system) { rest = it }
         }
     }
 }

@@ -108,7 +108,8 @@ private const val SETTLE_MS = 600L
 internal fun WidgetUpdates(model: AppModel) {
     val words by produceState<WidgetWords?>(null) { value = runCatching { WidgetWords.load() }.getOrNull() }
     val measurer = rememberTextMeasurer()
-    val family = Street.type.bold
+    // The line man's own face (Roboto Bold), as on every other figure; the widget's still tile draws no words.
+    val family = Street.type.systemBold
     val library = LocalMotionLibrary.current
     val guideWords = LocalMotionWords.current
     LaunchedEffect(model, words, family) {
@@ -173,7 +174,8 @@ fun NextClassWidgetCard(snapshot: WidgetSnapshot, figure: ImageBitmap?, flame: I
               Column(Modifier.fillMaxWidth()) {
                 val tapeStyle = TextStyle(color = palette.contentOn(palette.accent), fontSize = (11f / scale).sp,
                     fontFamily = Street.type.display, letterSpacing = theme.shape.labelSpacing.em)
-                val metaStyle = TextStyle(color = palette.textSecondary, fontSize = 12.sp, fontFamily = Street.type.bold, letterSpacing = 0.06.em)
+                // The meta and detail lines are sans-serif in Android's widget layout: Roboto Bold and Regular.
+                val metaStyle = TextStyle(color = palette.textSecondary, fontSize = 12.sp, fontFamily = Street.type.systemBold, letterSpacing = 0.06.em)
                 // "LEVEL 10 · CLASS 100" keeps its numbers: the tape steps aside first, then the line gets smaller
                 // (Android: WidgetLayout.fitMeta); SwiftUI's ViewThatFits does the same on the phone.
                 val measurer = rememberTextMeasurer()
@@ -210,7 +212,7 @@ fun NextClassWidgetCard(snapshot: WidgetSnapshot, figure: ImageBitmap?, flame: I
                 if (snapshot.text.detail.isNotEmpty()) BasicText(
                     snapshot.text.detail,
                     Modifier.padding(top = 3.dp),
-                    style = TextStyle(color = palette.textSecondary, fontSize = 12.5.sp, fontFamily = Street.type.body),
+                    style = TextStyle(color = palette.textSecondary, fontSize = 12.5.sp, fontFamily = Street.type.system),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )

@@ -22,6 +22,7 @@ import com.justdataplease.streetgym.app.data.WorkoutDevice
 import com.justdataplease.streetgym.app.data.loadProgram
 import com.justdataplease.streetgym.app.resources.Res
 import com.justdataplease.streetgym.app.resources.about_body
+import com.justdataplease.streetgym.app.resources.app_version_name
 import com.justdataplease.streetgym.app.resources.brand_kicker
 import com.justdataplease.streetgym.app.resources.inspect_only_note
 import com.justdataplease.streetgym.app.resources.reset_body
@@ -54,6 +55,9 @@ class SettingsTest {
     private val time = 20_775 * 86_400_000L + 12 * 3_600_000L
 
     private fun text(resource: org.jetbrains.compose.resources.StringResource, vararg args: Any) = runBlocking { getString(resource, *args) }
+
+    /** About's line: the Android app's versionName, which the build writes into the resources. */
+    private fun aboutVersion() = "Version ${text(Res.string.app_version_name)}"
 
     private class Phone : WorkoutDevice {
         val bars = mutableListOf<Boolean>()
@@ -137,7 +141,7 @@ class SettingsTest {
         onNodeWithText(text(Res.string.safety_body)).assertExists()
         onNodeWithText("STREET GYM: DAILY CALISTHENICS").performScrollTo().assertExists()
         onNodeWithText(text(Res.string.about_body)).assertExists()
-        onNodeWithText("Version 1.0").assertExists()
+        onNodeWithText(aboutVersion()).assertExists()
         // Android's order of what the iPhone has: Theme, During your workout, Skills, Equipment, Start over, Train safely, About.
         val order = listOf("THEME", "DURING YOUR WORKOUT", "SKILLS IN YOUR CLASSES", "EQUIPMENT YOU HAVE", "START OVER", "TRAIN SAFELY",
             "STREET GYM: DAILY CALISTHENICS").map { onNodeWithText(it).fetchSemanticsNode().positionInRoot.y }
@@ -149,7 +153,7 @@ class SettingsTest {
         val store = MemoryStore()
         val model = model(store)
         setContent { StreetGymApp(model, PaddingValues(), startAt = Screen.Settings) }
-        val version = onNodeWithText("Version 1.0").performScrollTo()
+        val version = onNodeWithText(aboutVersion()).performScrollTo()
         repeat(3) { version.performClick() }
         onNodeWithText("tap to developer settings", substring = true).assertDoesNotExist()
         version.performClick()
@@ -165,7 +169,7 @@ class SettingsTest {
         assertTrue(model.inspectAllDays)
         onNodeWithText("DONE").performClick()
         // Unlocked, one tap opens them again; hiding them switches inspecting off.
-        onNodeWithText("Version 1.0").performClick()
+        onNodeWithText(aboutVersion()).performClick()
         onNodeWithText("HIDE DEVELOPER SETTINGS").performClick()
         assertFalse(model.inspectAllDays)
         assertEquals("false", store.get("streetgym_settings.developer_unlocked"))

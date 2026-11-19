@@ -1,6 +1,8 @@
 package com.justdataplease.streetgym.app.data
 
 import kotlin.math.PI
+import kotlin.math.exp
+import kotlin.math.ln
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.math.sin
@@ -14,8 +16,21 @@ object Beep {
     const val SAMPLE_RATE = 44_100
     const val MILLIS = 35
     private val TONES = doubleArrayOf(400.0, 1_200.0)
-    /** Each tone's share of full scale: together they peak just under it. */
+    /** Each tone's share of full scale: together they peak just under it (ToneGenerator's TONEGEN_GAIN 0.9, split per tone). */
     private const val LEVEL = 0.45
+
+    /**
+     * The volume Android's TimingAlerts.tone gives its ToneGenerator on the alarm stream (the timed set's end and the
+     * in-app "Time's up"), which plays with the phone on silent.
+     */
+    const val ALARM_VOLUME = 80
+
+    /**
+     * A ToneGenerator volume (0 to 100) as the gain Android plays it at (AudioSystem.linearToLog: half a decibel a step
+     * below 100, nothing at 0): 80 is -10 dB, about 0.32 of the stream's own volume.
+     */
+    fun gain(volume: Int): Float =
+        if (volume <= 0) 0f else exp((100 - volume.coerceAtMost(100)) * (-0.5 * ln(10.0) / 20.0)).toFloat()
     /** A few milliseconds in and out, so the beep doesn't click. */
     private const val RAMP_MILLIS = 3
 

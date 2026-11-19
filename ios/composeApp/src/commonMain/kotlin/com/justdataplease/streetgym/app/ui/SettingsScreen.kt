@@ -81,6 +81,7 @@ import com.justdataplease.streetgym.app.resources.theme_section
 import com.justdataplease.streetgym.app.resources.theme_selected
 import com.justdataplease.streetgym.app.resources.training_preferences
 import com.justdataplease.streetgym.app.resources.version_format
+import com.justdataplease.streetgym.app.resources.app_version_name
 import com.justdataplease.streetgym.app.theme.Corner
 import com.justdataplease.streetgym.app.theme.Street
 import com.justdataplease.streetgym.app.theme.StreetTheme
@@ -175,7 +176,7 @@ fun SettingsScreen(
             TitleText(stringResource(Res.string.about_title), 19f)
             BodyText(stringResource(Res.string.about_body), 14f, Modifier.padding(top = 7.dp))
             BodyText(
-                stringResource(Res.string.version_format, model.version), 12f,
+                stringResource(Res.string.version_format, model.version ?: stringResource(Res.string.app_version_name)), 12f,
                 Modifier.padding(top = 10.dp).clickable {
                     if (model.developerUnlocked) onDeveloper()
                     else when (val step = model.versionTaps.tap()) {
@@ -369,7 +370,9 @@ fun FamilySwitchesSheet(model: AppModel, familyId: String, onClose: () -> Unit) 
                 Column(Modifier.fillMaxWidth().alpha(if (toggled && !on) 0.5f else 1f).padding(top = 10.dp, bottom = 4.dp)) {
                     Row(Modifier.fillMaxWidth().heightIn(min = 48.dp), verticalAlignment = Alignment.CenterVertically) {
                         Column(Modifier.weight(1f)) {
-                            BodyText(stringResource(Res.string.switches_rung, rung + 1), 12f, color = palette.primary, bold = true)
+                            // "Step N": Typeface.DEFAULT_BOLD in Android's dialog, never restyled: Roboto Bold.
+                            BodyText(stringResource(Res.string.switches_rung, rung + 1), 12f, color = palette.primary,
+                                family = Street.type.systemBold)
                             TitleText(skill.name, 16f)
                         }
                         if (!toggled) BodyText(stringResource(Res.string.switches_always_on), 12f)
@@ -415,7 +418,10 @@ fun DeveloperDialog(model: AppModel, onClose: () -> Unit) {
         },
     ) {
         Column(Modifier.fillMaxWidth().padding(start = 24.dp, end = 24.dp)) {
-            SettingSwitch(stringResource(Res.string.developer_inspect_all), model.inspectAllDays) { model.inspectAllDays = it }
+            // A plain Switch in Android's dialog: its label in the system face.
+            SettingSwitch(stringResource(Res.string.developer_inspect_all), model.inspectAllDays, family = Street.type.system) {
+                model.inspectAllDays = it
+            }
             BodyText(stringResource(Res.string.developer_inspect_note), 13f)
             // Debug builds only, as on Android (Settings' Simulate tier card there).
             if (model.plans.canSimulate) SimulateTier(model, Modifier.padding(top = 16.dp))

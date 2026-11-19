@@ -329,7 +329,7 @@ class TimerTest {
         onNodeWithText("Thu, 19 Nov · One time").assertExists()
         onNodeWithText("TURN OFF").assertExists()
 
-        // The time's picker: hours and minutes on wheels.
+        // The time's picker: Android's clock face, Cancel and OK.
         onNodeWithContentDescription("Change alarm time").performClick()
         onNodeWithText("OK").performClick()
 

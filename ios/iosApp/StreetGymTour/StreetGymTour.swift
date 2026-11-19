@@ -44,6 +44,8 @@ final class StreetGymTour: XCTestCase {
         start.tap()
         _ = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH[c] %@", "set 1 of")).firstMatch.waitForExistence(timeout: 10)
         snap("03-workout")
+        // Turned sideways, as Android's focus view: the strip and the line man on the left, the set and its buttons on the right.
+        landscape("03-workout-landscape")
 
         // The title bar's list icon shows the same class as a list of sets with their ticks.
         let list = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Switch to list view")).firstMatch
@@ -92,6 +94,8 @@ final class StreetGymTour: XCTestCase {
         if tapHittable(app, label: "Timer") {
             _ = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] %@", "tap the time to change it")).firstMatch.waitForExistence(timeout: 10)
             snap("11-timer")
+            // Sideways the time and its buttons sit side by side, as Android's Timer does.
+            landscape("11-timer-landscape")
         }
 
         // Settings: the themes, the workout's choices, the skill and equipment switches.
@@ -181,6 +185,14 @@ final class StreetGymTour: XCTestCase {
             }
         }
         return false
+    }
+
+    /// Turns the Simulator sideways, keeps a picture, and turns it upright again (the app turns as Android's does).
+    private func landscape(_ name: String) {
+        XCUIDevice.shared.orientation = .landscapeLeft
+        snap(name)
+        XCUIDevice.shared.orientation = .portrait
+        Thread.sleep(forTimeInterval: 1)
     }
 
     /// Every label the app says is on screen goes into the log, between TOUR-SCREEN lines, for a step that needs it.
