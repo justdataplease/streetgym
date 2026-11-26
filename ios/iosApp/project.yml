@@ -36,7 +36,7 @@ settings:
   base:
     # The Android app's versionName (android-streetgym/app/build.gradle.kts), which About shows on both phones; raise
     # it with Android's (VersionTest checks the two agree). CI passes the build number (CURRENT_PROJECT_VERSION) for TestFlight.
-    MARKETING_VERSION: "2.14.1"
+    MARKETING_VERSION: "2.15.0"
     CURRENT_PROJECT_VERSION: "1"
     SWIFT_VERSION: "5.0"
     # AdMob: Google's published test app and units (https://developers.google.com/admob/ios/test-ads). The owner's own

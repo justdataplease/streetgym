@@ -1,6 +1,6 @@
 # Street Gym for iPhone: full-functionality checklist
 
-Every feature of the Android app (2.14.1, versionCode 58), one line each, in the order a user meets them: the iPhone app is done when every line is ticked.
+Every feature of the Android app (2.15.0, versionCode 59), one line each, in the order a user meets them: the iPhone app is done when every line is ticked.
 `[x]` is on iPhone now (in `ios-streetgym`, checked in its code), `[ ]` is to build. Pointers name the Android file under `android-streetgym/app/src/main/java/com/justdataplease/streetgym/` (→ the iPhone file where it is built); **engine**: the rule is already in `android-streetgym/shared/`; **iPhone API**: the Apple framework it needs; **owner**: it can't be finished without the owner.
 Written 18 Nov 2026; updated the same day after rounds 1 to 13 (what rounds 11 to 13 left is the owner's: the App Group, Firebase, AdMob), and on 19 Nov 2026 after the parity round (the owner: "we need to be ios and android exactly the same"; what still differs, and why, is under "Where the iPhone still differs" at the end).
 
@@ -31,12 +31,12 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 13 (what rounds 11 t
 | 21. Account, sign-in, cloud backups and restore | 17 | 0 | 17 | 17 |
 | 22. Notifications and sounds | 6 | 6 | 0 | 0 |
 | 23. Home-screen widget | 10 | 3 | 7 | 7 |
-| 24. Sharing and progress analytics | 6 | 1 | 5 | 5 |
+| 24. Sharing and progress analytics | 7 | 1 | 6 | 6 |
 | 25. Accessibility and languages | 12 | 12 | 0 | 0 |
 | 26. Anything else | 2 | 2 | 0 | 0 |
-| **All** | **344** | **292** | **52** | **52** |
+| **All** | **345** | **292** | **53** | **53** |
 
-"Waiting on the owner" counts lines still to tick whose last step needs the owner (every one of them is built now); most can be built and tested first with a test double (a `.storekit` file, Google's demo ad units, a made-up profile).
+"Waiting on the owner" counts lines still to tick whose last step needs the owner (every one of them is built now, except Google Analytics in the app, §24, new in Android 2.15.0); most can be built and tested first with a test double (a `.storekit` file, Google's demo ad units, a made-up profile).
 
 ## 1. Opening the app
 
@@ -359,7 +359,7 @@ Written 18 Nov 2026; updated the same day after rounds 1 to 13 (what rounds 11 t
 - [x] Start over: its text (with an account: "Your leaderboard points and any cloud copy reset too."), Reset progress, "Reset all progress?", Reset (HomeActivity.confirmReset → SettingsScreen, ResetDialog; signed in, reset_body_account, and the score goes up again from zero, CloudAccount.progressReset)
 - [x] Reset erases classes, history, points, ranks and exams, keeps My workouts, the theme and purchases, says "Progress reset. Choose where to start." and brings the strength test back (confirmReset, SharedPreferencesProgressRepository.reset → AppModel.reset, StoredProgress.reset with "reset_at"; placement_done is cleared under Android's key, and Today asks the strength test again)
 - [x] Train safely card (renderSettings → SettingsScreen)
-- [x] About: "Street Gym: Daily Calisthenics", its text, "Version 2.14.1", and "Version 2.14.1-debug" in a debug build (renderSettings → SettingsScreen; Android's versionName and versionNameSuffix, read from android-streetgym/app/build.gradle.kts at build time into the resources, composeApp/build.gradle.kts; MARKETING_VERSION in iosApp/project.yml is the same number, checked by ParityTest)
+- [x] About: "Street Gym: Daily Calisthenics", its text, "Version 2.15.0", and "Version 2.15.0-debug" in a debug build (renderSettings → SettingsScreen; Android's versionName and versionNameSuffix, read from android-streetgym/app/build.gradle.kts at build time into the resources, composeApp/build.gradle.kts; MARKETING_VERSION in iosApp/project.yml is the same number, checked by ParityTest)
 - [x] Ten taps on the version: "N taps to developer settings", then Developer settings with Inspect all days, Hide developer settings, Done (ui/DeveloperMenu.kt → SettingsScreen.VersionTaps, DeveloperDialog)
 - [x] Inspect all days: any class opens read-only with the "Inspect only" badge and note, nothing to start or complete (HomeActivity.renderOverview, renderWorkouts → ClassScreen, LevelScreen, AppModel.inspects)
 
@@ -462,6 +462,7 @@ Android has no share sheet; its one sharing feature is Share my progress.
 - [ ] Switching it off stops the uploads and deletes this install's records (Analytics.shareChanged; **owner**: Firebase. Built)
 - [ ] A deleted account's id is taken off the install's record (Analytics.accountDeleted; **owner**: Firebase. Built)
 - [ ] The install's chain: a random install id and Google's App Set ID; on iPhone identifierForVendor in its place (analytics/FirestoreAnalytics.kt; **owner**: Firebase. Built: IosAccount.kt VendorId, scope "developer"; nothing names the phone as an iPhone, as the rules allow no such field)
+- [ ] Google Analytics in the app (2.15.0): screen_view, tutorial_begin/complete, class_start/complete, exam_complete, skill_rank_up, paywall_view/tap; user properties tier, level, theme; no user ID; collection only while Share my progress is on and analytics consent is granted (in the EEA, UK and Switzerland from the UMP form's UMP_consentModeValues) (analytics/GoogleAnalytics.kt, analytics/AnalyticsConsent.kt; **iPhone API**: FirebaseAnalytics; **owner**: Firebase iPhone app. Not built yet)
 
 ## 25. Accessibility and languages
 

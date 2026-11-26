@@ -265,10 +265,10 @@ class PlacementTest {
     @Test
     fun androidsBoldIsKeptAndDrawnBold() = runBlocking {
         val body = getString(Res.string.share_body)
-        assertTrue(body.startsWith("<b>Share my progress.</b> Only training progress"), body)
+        assertTrue(body.startsWith("<b>Share my progress.</b> Your training progress"), body)
         val bold = SpanStyle(fontWeight = FontWeight.Bold)
         val styled = boldMarkup(body, bold)
-        assertTrue(styled.text.startsWith("Share my progress. Only training progress"))
+        assertTrue(styled.text.startsWith("Share my progress. Your training progress"))
         assertEquals(listOf(0 to "Share my progress.".length), styled.spanStyles.map { it.start to it.end })
         assertEquals(bold, styled.spanStyles.single().item)
         assertEquals("plain", boldMarkup("plain", bold).text)
