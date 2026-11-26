@@ -25,6 +25,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StreetConcrete">
         <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="${admobAppId}" />
+        <!-- Google Analytics (Firebase), basic consent mode: nothing is collected until the consent state is known.
+             Collection starts off and every consent type starts denied; analytics/GoogleAnalytics.kt turns collection on
+             once analytics_storage is granted (Google's consent form in Europe, granted elsewhere) and only while "Share my
+             progress" is on. Sources: developers.google.com/tag-platform/security/guides/app-consent?platform=android and
+             firebase.google.com/docs/analytics/configure-data-collection?platform=android. -->
+        <meta-data android:name="firebase_analytics_collection_enabled" android:value="false" />
+        <meta-data android:name="google_analytics_default_allow_analytics_storage" android:value="false" />
+        <meta-data android:name="google_analytics_default_allow_ad_storage" android:value="false" />
+        <meta-data android:name="google_analytics_default_allow_ad_user_data" android:value="false" />
+        <meta-data android:name="google_analytics_default_allow_ad_personalization_signals" android:value="false" />
+        <!-- One activity draws every screen: the app logs screen_view itself (firebase.google.com/docs/analytics/screenviews). -->
+        <meta-data android:name="google_analytics_automatic_screen_reporting_enabled" android:value="false" />
 
         <!-- Predictive back: HomeActivity registers an OnBackInvokedCallback while a screen can go back, and Today
              leaves with the system's back-to-home. On by default on Android 16 at targetSdk 36; set here so Android

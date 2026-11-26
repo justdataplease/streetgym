@@ -69,6 +69,8 @@ import com.justdataplease.streetgym.ads.ManagedNativePlacement
 import com.justdataplease.streetgym.ads.WorkoutAdBreak
 import com.justdataplease.streetgym.analytics.Analytics
 import com.justdataplease.streetgym.analytics.AnalyticsPayload
+import com.justdataplease.streetgym.analytics.ConsentWatcher
+import com.justdataplease.streetgym.analytics.GoogleAnalytics
 import com.justdataplease.streetgym.analytics.InstallSnapshot
 import com.justdataplease.streetgym.analytics.PlacementRecord
 import com.justdataplease.streetgym.billing.Entitlement
@@ -256,6 +258,7 @@ open class HomeActivity : Activity() {
             tier = access
             currentScreen?.takeIf { it != Screen.Settings && it != Screen.Progress && it != Screen.Timing }
                 ?.let { showScreen(it, pushCurrent = false) }
+            syncUserProperties()
         }
     }
     private lateinit var adBreak: WorkoutAdBreak
@@ -300,6 +303,9 @@ open class HomeActivity : Activity() {
         accountStore = AccountStore(this)
         cloudSync = CloudSync(this, progressRepository, library)
         analytics = Analytics.get(this)
+        // Google Analytics first: Google's consent SDK, which the ads start from the first screen, needs Firebase before it.
+        GoogleAnalytics.install(this)
+        ConsentWatcher.get(this)?.refresh(this)
         leaderboard = LeaderboardRepository(this)
         library.onChange = ::cloudChanged
         draft = savedInstanceState?.getString(STATE_DRAFT)?.let { runCatching { LibraryCodec.decodeDay(JSONObject(it)) }.getOrNull() }
@@ -334,6 +340,8 @@ open class HomeActivity : Activity() {
         // Pro: catch up with other devices at most every six hours; nothing at all without the account.
         cloudSync.sync(done = ::afterSync)
         syncAnalytics()
+        // A choice changed in the consent form or Settings › Ad privacy while away.
+        ConsentWatcher.get(this)?.update()
         adBreak.resume()
         TimingAlerts.schedule(this)
         timingHandler.removeCallbacks(timingTick)
@@ -602,6 +610,7 @@ open class HomeActivity : Activity() {
                 val result = ExamResult(exam.id, System.currentTimeMillis(),
                     ids.filterIndexed { index, _ -> reached[index] }, ids.filterIndexed { index, _ -> !reached[index] })
                 progressRepository.recordExam(result)
+                GoogleAnalytics.get().examComplete(exam, result.passed)
                 cloudChanged()
                 val missed = tests.filterIndexed { index, _ -> !reached[index] }.map { displayName(it.first, locale) }
                 when {
@@ -1024,6 +1033,39 @@ open class HomeActivity : Activity() {
                 if (activityResumed) { timingHandler.removeCallbacks(timingTick); timingHandler.post(timingTick) }
             }
         }
+        // The screen now on view: a render that sent the athlete elsewhere (openRoot) has already counted that one.
+        trackScreen()
+    }
+
+    /**
+     * Google Analytics' screen_view for [screen] and its tab, from this one place (and the two tab switches); a redraw
+     * of the same screen isn't counted again. The user properties follow on the way.
+     */
+    private fun trackScreen(screen: Screen? = currentScreen) {
+        screen ?: return
+        val tab = when (screen) { Screen.Levels -> trainingTab; Screen.Progress -> progressTab; else -> null }
+        GoogleAnalytics.get().screen(screenName(screen), screen to tab)
+        syncUserProperties()
+    }
+
+    /** The screen's name in Google Analytics: short, fixed and in English. */
+    private fun screenName(screen: Screen): String = when (screen) {
+        Screen.Dashboard -> if (settings.placementDone) "today" else "strength_test"
+        Screen.Levels -> when (trainingTab) { 1 -> "my_workouts"; 2 -> "library"; 3 -> "parks"; else -> "levels" }
+        is Screen.Workouts -> "level_classes"
+        is Screen.Overview -> "class_overview"
+        is Screen.Active -> "workout"
+        is Screen.EditDay -> "workout_editor"
+        // Without Skills (they failed to load) Progress shows History only.
+        Screen.Progress -> if (skillBook == null) "history" else when (progressTab) { 1 -> "history"; 2 -> "leaderboard"; else -> "skills" }
+        Screen.Settings -> "settings"
+        Screen.Timing -> "timer"
+    }
+
+    /** Google Analytics' user properties: the tier, the next class's level and the theme. */
+    private fun syncUserProperties() {
+        if (catalog == null) return
+        GoogleAnalytics.get().userProperties(Entitlement.tier(this), assignedProgram()?.levelNumber, settings.theme.key)
     }
 
     private fun openRoot(screen: Screen) {
@@ -1198,6 +1240,11 @@ open class HomeActivity : Activity() {
         settings.placementDone = true
         analytics.placed(PlacementRecord(placementAnswers[0].takeIf { it >= 0 }, placementAnswers[1].takeIf { it >= 0 },
             placementAnswers[2].takeIf { it >= 0 }, placementSkill[0], start.level, start.day))
+        GoogleAnalytics.get().tutorialComplete(start.level, start.day, when {
+            placementSkill[0] > 0 -> GoogleAnalytics.METHOD_SKILL
+            placementShown[0] -> GoogleAnalytics.METHOD_TEST
+            else -> GoogleAnalytics.METHOD_SKIP
+        })
         syncAnalytics(force = true)
         placementAnswers.fill(-1)
         placementSkill[0] = 0
@@ -1248,6 +1295,7 @@ open class HomeActivity : Activity() {
             trainingTab, compact = true) { index ->
             trainingTab = index
             renderLevels()
+            trackScreen()
             adBreakNow()
         }, width = ViewGroup.LayoutParams.WRAP_CONTENT, bottomDp = 14)
         if (trainingTab != 0) {
@@ -1711,6 +1759,7 @@ open class HomeActivity : Activity() {
     }
 
     private fun showPaywall(paywall: Paywall) {
+        GoogleAnalytics.get().paywallView(paywall.analyticsSource, offeredTier(paywall, Entitlement.tier(this)))
         paywallDialog = AlertDialog.Builder(this).setView(scroll(LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dp(12), dp(12), dp(12), dp(4))
@@ -2468,14 +2517,21 @@ open class HomeActivity : Activity() {
                 .setPositiveButton(R.string.replace) { _, _ ->
                     clearRest()
                     progressRepository.abandonWorkout()
-                    progressRepository.startWorkout(program.id, repeat = repeat, intensity = intensityFor(program))
+                    startWorkout(program, repeat)
                     navigate(Screen.Active(program.id))
                 }
                 .show()
             return
         }
-        if (current == null) progressRepository.startWorkout(program.id, repeat = repeat, intensity = intensityFor(program))
+        if (current == null) startWorkout(program, repeat)
         navigate(Screen.Active(program.id))
+    }
+
+    /** A new workout of [program] (not a resumed one), counted in Google Analytics as class_start. */
+    private fun startWorkout(program: TrainingProgram, repeat: Boolean) {
+        val intensity = intensityFor(program)
+        progressRepository.startWorkout(program.id, repeat = repeat, intensity = intensity)
+        GoogleAnalytics.get().classStart(program, intensity, repeat)
     }
 
     /** Today's pick for a program day; an own day runs as the athlete wrote it. */
@@ -2854,12 +2910,22 @@ open class HomeActivity : Activity() {
                 val points = flow.points(counted, easier, active?.done.orEmpty(), ::skillMovement, { id -> book?.skill(id)?.standard },
                     { id -> id?.let(grades::get) ?: 1 })
                 val litBefore = StreakDays.snapshot(progressRepository.sessionHistory()).streak.litToday
+                val ga = GoogleAnalytics.get()
+                // Each skill's rank before this class, for Google Analytics' skill_rank_up (only while it collects).
+                val ranksBefore = book?.takeIf { ga.collecting }?.let { skillProgress(it).statuses.associate { s -> s.skill.id to s.level } }
                 // A repeat's rating is kept on its own history entry only; see WorkoutSession.
                 val session = progressRepository.finishWorkout(effortRating = values[selected], credits = credits, doses = doses,
                     points = points)
                 cloudChanged()
                 if (session != null) analytics.classFinished(AnalyticsPayload.sessionId(session),
                     AnalyticsPayload.session(session, program, flow, active, leftOutKeys(program, flow), ::analyticsMovement), ::analyticsSnapshot)
+                if (session != null) {
+                    ga.classComplete(program, session.intensity, session.repeat, session.durationSeconds)
+                    // A rank a harder rung carries isn't a rank of its own: only the rung that earned it counts.
+                    if (book != null && ranksBefore != null) skillProgress(book).statuses
+                        .filter { it.carriedBy == null && it.level > (ranksBefore[it.skill.id] ?: it.level) }
+                        .forEach { ga.skillRankUp(it.skill.id, it.level) }
+                }
                 clearRest()
                 // The day's first workout lights the flame: the streak joins the points.
                 val streak = StreakDays.snapshot(progressRepository.sessionHistory()).streak.takeIf { session != null && !litBefore && it.litToday }
@@ -2953,6 +3019,7 @@ open class HomeActivity : Activity() {
                 ) { index ->
                     progressTab = index
                     renderProgress()
+                    trackScreen()
                     adBreakNow()
                 },
                 width = ViewGroup.LayoutParams.WRAP_CONTENT,

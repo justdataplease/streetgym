@@ -34,8 +34,8 @@ android {
         applicationId = "com.justdataplease.streetgym"
         minSdk = 24
         targetSdk = 36
-        versionCode = 58
-        versionName = "2.14.1"
+        versionCode = 59
+        versionName = "2.15.0"
         testInstrumentationRunner = "com.justdataplease.streetgym.TrainingInstrumentation"
 
         vectorDrawables.useSupportLibrary = false
@@ -119,6 +119,8 @@ dependencies {
     debugImplementation("com.google.firebase:firebase-appcheck-debug")
     // Progress analytics (every tier, while "Share my progress" is on): Google's App Set ID chains a phone's installs.
     implementation("com.google.android.gms:play-services-appset:16.1.0")
+    // Google Analytics 4 (analytics/GoogleAnalytics.kt): while "Share my progress" is on and consent allows it.
+    implementation("com.google.firebase:firebase-analytics")
     // Sign in with Google through Credential Manager (Pro only).
     implementation("androidx.credentials:credentials:1.5.0")
     implementation("androidx.credentials:credentials-play-services-auth:1.5.0")

@@ -16,6 +16,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.justdataplease.streetgym.R
+import com.justdataplease.streetgym.analytics.GoogleAnalytics
 import com.justdataplease.streetgym.billing.LevelAccess
 import com.justdataplease.streetgym.billing.Tier
 import com.justdataplease.streetgym.data.model.TrainingLevel
@@ -182,6 +183,8 @@ fun Context.placementCard(
         Placement.Test.entries.forEachIndexed { index, test ->
             val last = index == Placement.Test.entries.lastIndex
             addView(countTile(getString(test.short()), getString(test.title()), answers[index], last, ::calculate) { count ->
+                // The first count typed starts the test for Google Analytics (tutorial_begin).
+                if (count >= 0 && answers.all { it < 0 }) GoogleAnalytics.get().tutorialBegin()
                 answers[index] = count
                 shown[0] = false
                 renderResult(false)

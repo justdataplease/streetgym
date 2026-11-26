@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.justdataplease.streetgym.R
+import com.justdataplease.streetgym.analytics.GoogleAnalytics
 import com.justdataplease.streetgym.billing.Entitlement
 import com.justdataplease.streetgym.billing.LevelAccess
 import com.justdataplease.streetgym.billing.Tier
@@ -36,6 +37,26 @@ sealed interface Paywall {
     data object Ads : Paywall
 }
 
+/** Only Pro opens it: the ready workouts, and Levels 7 to 10. */
+private fun onlyProOpens(paywall: Paywall?): Boolean =
+    paywall == Paywall.Ready || paywall is Paywall.Level && LevelAccess.tierFor(paywall.number) == Tier.PRO
+
+/** The plan an offer leads with, as its badge shows it: Pro when only Pro opens it or the athlete has Plus, else Plus. */
+fun offeredTier(paywall: Paywall?, current: Tier): Tier = if (onlyProOpens(paywall) || current >= Tier.PLUS) Tier.PRO else Tier.PLUS
+
+/** What opened the offer, as Google Analytics names it ([GoogleAnalytics.paywallView]); Settings' panel for null. */
+val Paywall?.analyticsSource: String get() = when (this) {
+    null -> GoogleAnalytics.SOURCE_SETTINGS
+    is Paywall.Level -> "level"
+    Paywall.Parks -> "parks"
+    Paywall.Leaderboard -> "leaderboard"
+    Paywall.Ready -> "library"
+    is Paywall.Saved -> "saved_limit"
+    Paywall.Custom -> "own_workouts"
+    is Paywall.Lists -> "lists"
+    Paywall.Ads -> "remove_ads"
+}
+
 /** The Plus and Pro offers: in Settings, or as the card that replaces a locked feature. */
 private const val PROMO_MAX = 30
 private const val PLAY_STORE = "com.android.vending"
@@ -46,7 +67,7 @@ class TiersPanel(
     private val paywall: Paywall? = null,
 ) : LinearLayout(activity) {
     /** Only Pro opens it: the ready workouts, and Levels 7 to 10. */
-    private val proOnly = paywall == Paywall.Ready || paywall is Paywall.Level && LevelAccess.tierFor(paywall.number) == Tier.PRO
+    private val proOnly = onlyProOpens(paywall)
     private val heading = activity.titleText(activity.getString(when (paywall) {
         null -> R.string.tiers_title
         is Paywall.Level -> if (proOnly) R.string.paywall_level_pro else R.string.paywall_level
@@ -64,6 +85,7 @@ class TiersPanel(
     private val plusTerms = termsText()
     private val plusNote = activity.bodyText("", 13f)
     private val plusBuy = activity.primaryButton(activity.getString(R.string.plus_buy)) {
+        GoogleAnalytics.get().paywallTap(paywall.analyticsSource, GoogleAnalytics.PLAN_PLUS)
         if (!billing.buyPlus(activity)) showMessage(activity.getString(R.string.purchase_unavailable_retry))
     }
     /** Pro for life is the offer; the yearly plan is the smaller way in under it. */
@@ -72,9 +94,11 @@ class TiersPanel(
     private val proTerms = termsText()
     private val proNote = activity.bodyText("", 13f)
     private val proLifeBuy = activity.primaryButton(activity.getString(R.string.pro_life_buy)) {
+        GoogleAnalytics.get().paywallTap(paywall.analyticsSource, GoogleAnalytics.PLAN_PRO_LIFE)
         if (!billing.buyProLife(activity)) showMessage(activity.getString(R.string.purchase_unavailable_retry))
     }
     private val proYearlyBuy = activity.secondaryButton(activity.getString(R.string.pro_yearly_buy)) {
+        GoogleAnalytics.get().paywallTap(paywall.analyticsSource, GoogleAnalytics.PLAN_PRO_YEARLY)
         if (!billing.buyPro(activity)) showMessage(activity.getString(R.string.purchase_unavailable_retry))
     }
     private val proYearlyNote = activity.bodyText(activity.getString(R.string.pro_yearly_note), 12f).apply {
