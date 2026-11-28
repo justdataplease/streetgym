@@ -50,6 +50,18 @@ interface Ads {
     /** Google's privacy choices (Settings › About › Ad privacy); [done] hears whether they showed. */
     fun showPrivacyOptions(done: (AdPrivacy) -> Unit) = done(AdPrivacy.NONE)
 
+    /**
+     * What Google's consent SDK knows now, for Google Analytics' consent ([ConsentWatcher]; Android: ConsentWatcher.update):
+     * UMP's status and the consent mode and TCF keys it stored. Nothing is asked.
+     */
+    fun consentState(): UmpState = UmpState.UNKNOWN
+
+    /**
+     * Google's consent information brought up to date without its form, on every tier, for Google Analytics' consent
+     * (Android: ConsentWatcher.refresh's requestConsentInfoUpdate); [done] once it answered, either way.
+     */
+    fun updateConsentInfo(done: () -> Unit) = done()
+
     /** No ads at all: previews, and tests that don't look at ads. */
     object None : Ads
 }
@@ -68,10 +80,12 @@ enum class AdPrivacy {
  * Consent first (Android: NativeAdOwner.advance): Google's form where the region needs it, then Apple's tracking
  * question, then the SDK starts; nothing is requested before. Asked once while the app runs, by the first page that ends
  * in a card outside a workout; a workout's cards wait for consent instead of raising the form (Android:
- * ManagedNativePlacement's training). [adFree]: Plus and Pro ask nothing.
+ * ManagedNativePlacement's training). [adFree]: Plus and Pro ask nothing. [answered] hears each answer of Google's
+ * consent, after its form or the privacy choices: Google Analytics' consent follows it (Android: ConsentWatcher's
+ * listener on UMP's keys).
  */
 @Stable
-class AdConsent(private val ads: Ads, private val adFree: () -> Boolean) {
+class AdConsent(private val ads: Ads, private val answered: () -> Unit = {}, private val adFree: () -> Boolean) {
     /** Ads may be requested (UMP's canRequestAds). */
     var canRequest by mutableStateOf(false)
         private set
@@ -98,6 +112,7 @@ class AdConsent(private val ads: Ads, private val adFree: () -> Boolean) {
         ads.askConsent { can, privacy ->
             canRequest = can
             privacyOptions = privacy
+            answered()
             if (!can) {
                 asking = false
                 return@askConsent
@@ -120,6 +135,7 @@ class AdConsent(private val ads: Ads, private val adFree: () -> Boolean) {
             if (result == AdPrivacy.SHOWN) ads.askConsent { can, privacy ->
                 canRequest = can
                 privacyOptions = privacy
+                answered()
             }
             done(result)
         }

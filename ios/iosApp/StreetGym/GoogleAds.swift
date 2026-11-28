@@ -121,6 +121,30 @@ final class GoogleAds: NSObject, AdsBridge, FullScreenContentDelegate {
         }
     }
 
+    /// Google Analytics' consent (Kotlin's AnalyticsConsent.status): UMP's status in Android's numbering, 0 unknown,
+    /// 1 not required, 2 required, 3 obtained, read by its cases rather than its raw values (iOS numbers them otherwise).
+    func consentStatus() -> Int32 {
+        switch ConsentInformation.shared.consentStatus {
+        case .notRequired: return 1
+        case .required: return 2
+        case .obtained: return 3
+        default: return 0
+        }
+    }
+
+    /// Google's consent information brought up to date without its form, on every tier, for Google Analytics' consent
+    /// (Android: analytics/AnalyticsConsent.kt ConsentWatcher.refresh). UMP then keeps `UMP_consentModeValues` and the
+    /// IABTCF_ keys in the standard defaults, which the app reads (IosAds.kt consentState). It never shows the form:
+    /// askConsent does, on Free, as before. The Simulator tour ("-tour") leaves Google's consent out, as askConsent does:
+    /// on iOS 27 (Mac run of 28 Nov 2026) this request alone left UMP's form loaded unseen behind the screens, which
+    /// slowed every query of the tour to minutes and sent its Start workout tap to Complete day.
+    func updateConsentInfo() {
+        if ProcessInfo.processInfo.arguments.contains("-tour") { return }
+        ConsentInformation.shared.requestConsentInfoUpdate(with: RequestParameters()) { [weak self] _ in
+            DispatchQueue.main.async { self?.listener?.consentInfoUpdated() }
+        }
+    }
+
     func adDidDismissFullScreenContent(_ ad: FullScreenPresentingAd) {
         listener?.fullScreenClosed()
     }

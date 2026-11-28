@@ -29,11 +29,15 @@ import androidx.compose.ui.unit.sp
 import com.justdataplease.streetgym.app.data.AdLook
 import com.justdataplease.streetgym.app.data.AdPrivacy
 import com.justdataplease.streetgym.app.data.Ads
+import com.justdataplease.streetgym.app.data.AnalyticsSink
 import com.justdataplease.streetgym.app.data.Bought
+import com.justdataplease.streetgym.app.data.ConsentKind
+import com.justdataplease.streetgym.app.data.GoogleAnalytics
 import com.justdataplease.streetgym.app.data.Products
 import com.justdataplease.streetgym.app.data.Store
 import com.justdataplease.streetgym.app.data.StoreEntitlements
 import com.justdataplease.streetgym.app.data.StoreStatus
+import com.justdataplease.streetgym.app.data.UmpState
 import com.justdataplease.streetgym.app.theme.Street
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -134,9 +138,18 @@ class FakeStore(private val catalog: Map<String, String> = ANDROID_PRICES, var r
  * [privacy] isn't NONE; the native card is a labelled stand-in drawn as Android's NativeAdSlot lays out its card; the
  * full-screen ad loads when [fills] and is counted when shown, until [close]. [steps] records the order of consent,
  * tracking and the SDK's start.
+ *
+ * For Google Analytics' consent, [ump] is what Google's consent SDK has stored ([consentState]); [answered] is what an
+ * answer of the form stores ([askConsent]), [updated] what a consent-information update brings ([updateConsentInfo],
+ * counted in [consentInfoUpdates]); null leaves it as it is.
  */
 class FakeAds(var consent: Boolean = true, var privacy: AdPrivacy = AdPrivacy.NONE, var fills: Boolean = true) : Ads {
     val steps = mutableListOf<String>()
+    var ump: UmpState = UmpState.UNKNOWN
+    var answered: UmpState? = null
+    var updated: UmpState? = null
+    var consentInfoUpdates = 0
+        private set
     var loads = 0
         private set
     var shows = 0
@@ -154,7 +167,16 @@ class FakeAds(var consent: Boolean = true, var privacy: AdPrivacy = AdPrivacy.NO
 
     override fun askConsent(done: (canRequestAds: Boolean, privacyOptions: Boolean) -> Unit) {
         steps += "consent"
+        answered?.let { ump = it }
         done(consent, privacy != AdPrivacy.NONE)
+    }
+
+    override fun consentState(): UmpState = ump
+
+    override fun updateConsentInfo(done: () -> Unit) {
+        consentInfoUpdates++
+        updated?.let { ump = it }
+        done()
     }
 
     override fun askTracking(done: () -> Unit) {
@@ -201,6 +223,28 @@ class FakeAds(var consent: Boolean = true, var privacy: AdPrivacy = AdPrivacy.NO
         privacyShown++
         done(privacy)
     }
+}
+
+/**
+ * Google Analytics on the desktop and in tests, in place of Firebase Analytics (Android's GoogleAnalyticsTest FakeSink):
+ * every call kept in order.
+ */
+class FakeAnalyticsSink : AnalyticsSink {
+    val consents = mutableListOf<Map<ConsentKind, Boolean>>()
+    val collection = mutableListOf<Boolean>()
+    val events = mutableListOf<Pair<String, Map<String, Any>>>()
+    val properties = mutableListOf<Pair<String, String?>>()
+
+    /** The events' names, in order. */
+    val names: List<String> get() = events.map { it.first }
+
+    /** The screen_view events' screen names, in order. */
+    val screens: List<Any?> get() = events.filter { it.first == GoogleAnalytics.SCREEN_VIEW }.map { it.second[GoogleAnalytics.SCREEN_NAME] }
+
+    override fun setConsent(consent: Map<ConsentKind, Boolean>) { consents += consent }
+    override fun setCollectionEnabled(enabled: Boolean) { collection += enabled }
+    override fun log(event: String, params: Map<String, Any>) { events += event to params }
+    override fun userProperty(name: String, value: String?) { properties += name to value }
 }
 
 /**

@@ -19,7 +19,8 @@ packages:
   UserMessagingPlatform:
     url: https://github.com/googleads/swift-package-manager-google-user-messaging-platform
     from: 3.1.0
-  # The account, the leaderboard and progress analytics (FirebaseAccount.swift), the same Firebase project as Android's.
+  # The account, the leaderboard and progress analytics (FirebaseAccount.swift), and Google Analytics
+  # (GoogleAnalyticsBridge.swift), the same Firebase project as Android's.
   # Checked 18 Nov 2026: Firebase 13.2.0 (13 Nov 2026; iOS 15 or newer, Xcode 26.2 or newer) and Google Sign-In 10.1.0
   # (23 Oct 2026, the release that lets Swift Package Manager apps use Firebase 13).
   Firebase:
@@ -72,6 +73,9 @@ targets:
         product: FirebaseFirestore
       - package: Firebase
         product: FirebaseAppCheck
+      # Google Analytics in the app (GoogleAnalyticsBridge.swift; Android 2.15.0's firebase-analytics).
+      - package: Firebase
+        product: FirebaseAnalytics
       - package: GoogleSignIn
         product: GoogleSignIn
       - package: MapLibre
@@ -155,6 +159,18 @@ targets:
               - $(GOOGLE_REVERSED_CLIENT_ID)
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        # Google Analytics (Firebase), basic consent mode, as Android's manifest: nothing is collected until the consent
+        # state is known. Collection starts off and every consent type starts denied; composeApp's data/GoogleAnalytics.kt
+        # turns collection on once analytics_storage is granted (Google's consent form in Europe, granted elsewhere) and
+        # only while "Share my progress" is on. Compose draws every screen, so the app logs screen_view itself. Sources:
+        # developers.google.com/tag-platform/security/guides/app-consent?platform=ios and
+        # firebase.google.com/docs/analytics/configure-data-collection?platform=ios.
+        FIREBASE_ANALYTICS_COLLECTION_ENABLED: false
+        GOOGLE_ANALYTICS_DEFAULT_ALLOW_ANALYTICS_STORAGE: false
+        GOOGLE_ANALYTICS_DEFAULT_ALLOW_AD_STORAGE: false
+        GOOGLE_ANALYTICS_DEFAULT_ALLOW_AD_USER_DATA: false
+        GOOGLE_ANALYTICS_DEFAULT_ALLOW_AD_PERSONALIZATION_SIGNALS: false
+        FirebaseAutomaticScreenReportingEnabled: false
         # Roboto for UIKit (the ad card); Compose loads its own copy from its resources.
         UIAppFonts:
           - roboto_regular.ttf

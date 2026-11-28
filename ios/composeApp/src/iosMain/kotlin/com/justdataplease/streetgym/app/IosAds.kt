@@ -21,6 +21,9 @@ import androidx.compose.ui.viewinterop.UIKitView
 import com.justdataplease.streetgym.app.data.AdLook
 import com.justdataplease.streetgym.app.data.AdPrivacy
 import com.justdataplease.streetgym.app.data.Ads
+import com.justdataplease.streetgym.app.data.AnalyticsConsent
+import com.justdataplease.streetgym.app.data.UmpState
+import platform.Foundation.NSUserDefaults
 import platform.UIKit.UIView
 
 /**
@@ -53,6 +56,18 @@ interface AdsBridge {
 
     /** UMP's privacy options form, when Google requires one. */
     fun showPrivacyOptions()
+
+    /**
+     * UMP's consent status now, in Android's numbering (AnalyticsConsent.status: 0 unknown, 1 not required, 2 required,
+     * 3 obtained), for Google Analytics' consent. Nothing is asked.
+     */
+    fun consentStatus(): Int
+
+    /**
+     * UMP's consent information brought up to date without its form, on every tier, for Google Analytics' consent
+     * (Android: ConsentWatcher.refresh); [AdsBridgeListener.consentInfoUpdated] follows, either way.
+     */
+    fun updateConsentInfo()
 }
 
 /** What Swift's ads tell the app; Swift sees it as the protocol `AdsBridgeListener`. */
@@ -65,6 +80,9 @@ interface AdsBridgeListener {
 
     /** [result]: 0 the form showed, 1 none is required now, 2 it couldn't show. */
     fun privacyEnded(result: Int)
+
+    /** [AdsBridge.updateConsentInfo] ended, whether or not UMP could be reached. */
+    fun consentInfoUpdated()
 }
 
 /** A native card made in Swift: its view, its theme colours (ARGB), loading its ad, and letting it go. */
@@ -91,6 +109,7 @@ internal class IosAds(private val bridge: AdsBridge) : Ads, AdsBridgeListener {
     private var loadDone: ((Boolean) -> Unit)? = null
     private var closeDone: (() -> Unit)? = null
     private var privacyDone: ((AdPrivacy) -> Unit)? = null
+    private var consentInfoDone: (() -> Unit)? = null
 
     init {
         bridge.attachAds(this)
@@ -162,6 +181,28 @@ internal class IosAds(private val bridge: AdsBridge) : Ads, AdsBridgeListener {
     override fun showPrivacyOptions(done: (AdPrivacy) -> Unit) {
         privacyDone = done
         bridge.showPrivacyOptions()
+    }
+
+    /**
+     * UMP's status from Swift, and the two keys UMP keeps in the app's standard defaults (Google's samples read
+     * `UMP_consentModeValues` with stringForKey; IABTCF_gdprApplies, a number by the TCF spec, comes as its digits).
+     */
+    override fun consentState(): UmpState {
+        val defaults = NSUserDefaults.standardUserDefaults
+        return UmpState(
+            status = AnalyticsConsent.status(bridge.consentStatus()),
+            consentModeValues = defaults.stringForKey(AnalyticsConsent.CONSENT_MODE_VALUES),
+            gdprApplies = AnalyticsConsent.gdprApplies(defaults.stringForKey(AnalyticsConsent.GDPR_APPLIES)),
+        )
+    }
+
+    override fun updateConsentInfo(done: () -> Unit) {
+        consentInfoDone = done
+        bridge.updateConsentInfo()
+    }
+
+    override fun consentInfoUpdated() {
+        consentInfoDone?.also { consentInfoDone = null }?.invoke()
     }
 
     override fun consentEnded(canRequestAds: Boolean, privacyOptions: Boolean) {

@@ -203,6 +203,12 @@ class Training internal constructor(
      */
     var finished: ((WorkoutSession, TrainingProgram, WorkoutFlow, ActiveWorkout, Set<String>, (TrainingExercise) -> String?) -> Unit)? = null
 
+    /**
+     * Hears a class about to finish, just before its session is saved: Google Analytics notes each skill's rank, to tell
+     * the ranks the class raised (Android: askEffortAndFinish's ranksBefore).
+     */
+    var finishing: (() -> Unit)? = null
+
     /** The time [tick] last saw; reading it redraws a countdown as it runs. */
     var clock by mutableLongStateOf(now())
         private set
@@ -416,6 +422,7 @@ class Training internal constructor(
         val points = flow.points(counted, easier, active.done, ::skillMovement, { id -> book?.skill(id)?.standard },
             { id -> id?.let(grades::get) ?: 1 })
         val litBefore = LocalDays.snapshot(progress.sessionHistory(), at, zone).streak.litToday
+        finishing?.invoke()
         val session = progress.finishWorkout(at, effort, credits, doses, points) ?: return null
         forget()
         saves.bump()

@@ -204,6 +204,12 @@ object Offers {
 
     /** The Pro plan shows: always in Settings; in an offer, until Pro is owned. */
     fun showsPro(paywall: Paywall?, tier: Tier): Boolean = !(paywall != null && tier == Tier.PRO)
+
+    /**
+     * The plan an offer leads with, as Google Analytics' paywall_view tells it: Pro when only Pro opens it or the athlete
+     * has Plus, else Plus (Android: TiersPanel.offeredTier).
+     */
+    fun offered(paywall: Paywall?, tier: Tier): Tier = if (proOnly(paywall) || tier >= Tier.PLUS) Tier.PRO else Tier.PLUS
 }
 
 /** A limit of My workouts reached: the [Offer] of a higher tier, or on Pro, nothing more to give. */
@@ -311,8 +317,21 @@ class AppModel(
      */
     val tier: Tier get() = plans.tier
 
-    /** Consent first: Google's form, Apple's tracking question, then the ad SDK (Android: NativeAdOwner). */
-    val adConsent = AdConsent(ads) { plans.adFree }
+    /**
+     * Google Analytics 4 (Android: analytics/GoogleAnalytics.kt, set up in onCreate): Firebase Analytics when the build
+     * has Firebase ([PhoneServices.analytics]), else nothing at all. Collection follows the saved consent and Share my
+     * progress from the start; kept under Android's names with the rest.
+     */
+    val googleAnalytics = GoogleAnalytics(services.analytics, adStore) { settings.shareProgress }.also { it.start() }
+
+    /** Google Analytics' consent, from Google's consent form (Android: ConsentWatcher). */
+    val analyticsConsent = ConsentWatcher(ads, googleAnalytics)
+
+    /**
+     * Consent first: Google's form, Apple's tracking question, then the ad SDK (Android: NativeAdOwner). Each answer of
+     * Google's decides Google Analytics' consent again.
+     */
+    val adConsent = AdConsent(ads, analyticsConsent::update) { plans.adFree }
 
     /** Training › Parks (Android: renderParks, its search and location, ParksUpdater). */
     val parks = ParksState(parksSource, location, settings, now)
@@ -357,12 +376,26 @@ class AppModel(
         tier = { this.tier }, now = now, score = { pointsTotal()?.let(Scores::from) }, refresh = { saves.bump() },
         sharing = { shareProgress }, appSet = services.appSet)
 
+    /** Each skill's rank before the class finishing now, for Google Analytics' skill_rank_up (only while it collects). */
+    private var ranksBefore: Map<String, SkillLevel>? = null
+
     init {
-        // A finished class: the cloud copy and the score follow, and its sets go to progress analytics (Android: askEffortAndFinish).
+        training.finishing = {
+            ranksBefore = skillProgress()?.takeIf { googleAnalytics.collecting }?.statuses?.associate { it.skill.id to it.level }
+        }
+        // A finished class: the cloud copy and the score follow, its sets go to progress analytics, and Google Analytics
+        // counts it with the ranks it raised (Android: askEffortAndFinish).
         training.finished = { session, program, flow, active, leftOut, movementOf ->
             cloud.changed()
             cloud.analytics.classFinished(AnalyticsPayload.sessionId(session),
                 AnalyticsPayload.session(session, program, flow, active, leftOut, movementOf), ::installSnapshot)
+            googleAnalytics.classComplete(program, session.intensity, session.repeat, session.durationSeconds)
+            val before = ranksBefore
+            ranksBefore = null
+            // A rank a harder rung carries isn't a rank of its own: only the rung that earned it counts.
+            if (before != null) skillProgress()?.statuses
+                ?.filter { it.carriedBy == null && it.level > (before[it.skill.id] ?: it.level) }
+                ?.forEach { googleAnalytics.skillRankUp(it.skill.id, it.level) }
         }
     }
 
@@ -444,12 +477,30 @@ class AppModel(
 
     /**
      * The app is on screen, at its start too (Android: onResume): Pro catches up with the cloud at most every six hours,
-     * and progress analytics writes the install's record at most every ten minutes.
+     * progress analytics writes the install's record at most every ten minutes, and Google Analytics' consent is decided
+     * again from what Google's consent SDK knows, asked once per launch (Android: onCreate's ConsentWatcher.refresh and
+     * onResume's update).
      */
     fun opened() {
         cloud.resumed()
         syncAnalytics()
+        analyticsConsent.refresh()
     }
+
+    /**
+     * Google Analytics' screen_view for the screen [name] now on view, [key] telling a redraw from a new screen, and the
+     * user properties on the way (Android: trackScreen); ui/Shell.kt calls it as the screen, its tab or the tier changes.
+     */
+    fun trackScreen(name: String, key: Any) {
+        googleAnalytics.screen(name, key)
+        syncUserProperties()
+    }
+
+    /** Google Analytics' user properties: the tier, the next class's level and the theme (Android: syncUserProperties). */
+    fun syncUserProperties() = googleAnalytics.userProperties(tier, assigned()?.levelNumber, theme.key)
+
+    /** The offer for [paywall] opened (Android: showPaywall's paywall_view), with the plan it leads with. */
+    fun offerShown(paywall: Paywall) = googleAnalytics.paywallView(paywall.analyticsSource, Offers.offered(paywall, tier))
 
     /** Progress analytics, once the first screen with its sharing note was answered (Android: syncAnalytics). */
     fun syncAnalytics(force: Boolean = false) {
@@ -531,6 +582,12 @@ class AppModel(
         val counts = placementForm.counts.toList()
         cloud.analytics.placed(PlacementRecord(counts.getOrNull(0)?.takeIf { it >= 0 }, counts.getOrNull(1)?.takeIf { it >= 0 },
             counts.getOrNull(2)?.takeIf { it >= 0 }, placementForm.skill, start.level, start.day))
+        // tutorial_complete: a level test picked, the counts' start (Calculate), or skipped (Android: startPlacement).
+        googleAnalytics.tutorialComplete(start.level, start.day, when {
+            placementForm.skill > 0 -> GoogleAnalytics.METHOD_SKILL
+            placementForm.shown -> GoogleAnalytics.METHOD_TEST
+            else -> GoogleAnalytics.METHOD_SKIP
+        })
         syncAnalytics(force = true)
         placementForm.clear()
         training.skipRest()
@@ -543,8 +600,10 @@ class AppModel(
         set(value) {
             sharing = value
             settings.shareProgress = value
-            // Off deletes what this install shared; on writes at the next sync (Android: Analytics.shareChanged).
+            // Off deletes what this install shared; on writes at the next sync (Android: Analytics.shareChanged). Google
+            // Analytics stops or starts with it (Android: ShareProgressView's GoogleAnalytics.sharingChanged).
             cloud.analytics.shareChanged(value)
+            googleAnalytics.sharingChanged(value)
         }
 
     private var sharing by mutableStateOf(settings.shareProgress)
@@ -734,7 +793,10 @@ class AppModel(
             training.abandon()
         }
         // An own day or a ready workout runs as written (Android: intensityFor).
-        progress.startWorkout(id, now(), repeat = repeat, intensity = if (CustomDays.offProgram(id)) Intensity.NORMAL else todayPick())
+        val picked = if (CustomDays.offProgram(id)) Intensity.NORMAL else todayPick()
+        progress.startWorkout(id, now(), repeat = repeat, intensity = picked)
+        // A new workout, not a resumed one, counts as class_start (Android: startWorkout).
+        programById(id)?.let { googleAnalytics.classStart(it, picked, repeat) }
         saves.bump()
         return Start.STARTED
     }
@@ -829,6 +891,7 @@ class AppModel(
         val result = ExamResult(question.exam.id, now(), ids.filterIndexed { index, _ -> reached[index] },
             ids.filterIndexed { index, _ -> !reached[index] })
         progress.recordExam(result)
+        googleAnalytics.examComplete(question.exam, result.passed)
         saves.bump()
         cloud.changed()
         return result

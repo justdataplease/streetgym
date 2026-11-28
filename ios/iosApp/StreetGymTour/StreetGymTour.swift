@@ -38,8 +38,10 @@ final class StreetGymTour: XCTestCase {
         var swipes = 0
         while !(start.exists && start.isHittable) && swipes < 4 {
             app.swipeUp()
+            settle(start)
             swipes += 1
         }
+        settle(start)
         guard start.exists, start.isHittable else { return }
         start.tap()
         _ = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH[c] %@", "set 1 of")).firstMatch.waitForExistence(timeout: 10)
@@ -153,7 +155,8 @@ final class StreetGymTour: XCTestCase {
                 _ = tapHittable(app, label: "Consent")
             }
             let phone = XCUIApplication(bundleIdentifier: "com.apple.springboard")
-            let noTracking = phone.buttons["Ask App Not to Track"]
+            // The first of them: iOS 27's alert holds two buttons with this label (the Mac run of 28 Nov 2026).
+            let noTracking = phone.buttons.matching(identifier: "Ask App Not to Track").firstMatch
             if noTracking.waitForExistence(timeout: 15) {
                 snap("18-tracking-question")
                 noTracking.tap()
@@ -179,12 +182,26 @@ final class StreetGymTour: XCTestCase {
         guard matches.firstMatch.waitForExistence(timeout: 10) else { return false }
         for index in 0..<matches.count {
             let element = matches.element(boundBy: index)
+            settle(element)
             if element.isHittable {
                 element.tap()
                 return true
             }
         }
         return false
+    }
+
+    /// Waits until [element] stops moving (at most 3 s). On iOS 27 (the Mac run of 28 Nov 2026) the test no longer waits
+    /// for Compose's scroll to coast to a stop after a swipe: a tap then only stopped the scroll, or landed on what had
+    /// moved under it (Complete day in Start workout's place).
+    private func settle(_ element: XCUIElement) {
+        var last = element.frame
+        for _ in 0..<15 {
+            Thread.sleep(forTimeInterval: 0.2)
+            let now = element.frame
+            if now == last { return }
+            last = now
+        }
     }
 
     /// Turns the Simulator sideways, keeps a picture, and turns it upright again (the app turns as Android's does).

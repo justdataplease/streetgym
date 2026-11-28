@@ -302,6 +302,18 @@ fun Shell(
         snapshotFlow { Restore.encode(Screens(stack.toList(), trainingTab, workoutList, progressShown), model) }
             .collect { model.device.saveScreens(it) }
     }
+    // Google Analytics' screen_view for the screen and tab on view, from this one place: a redraw of the same screen isn't
+    // counted again, and the user properties follow the tier (Android: showScreen's and the tab switches' trackScreen,
+    // entitlementChanged's syncUserProperties).
+    LaunchedEffect(model) {
+        snapshotFlow {
+            val on = stack.last()
+            val tab = when (on) { Screen.Training -> trainingTab; Screen.Progress -> progressShown; else -> null }
+            val name = analyticsScreenName(on, placing = on == Screen.Today && model.placementAsked(), skills = model.skills != null,
+                trainingTab = trainingTab, progressTab = progressShown)
+            Triple(name, on to tab, model.tier)
+        }.collect { (name, key, _) -> model.trackScreen(name, key) }
+    }
     // A tap on the widget opens its class's page over Today, or Today (Android: onNewIntent's NextClassWidget.opened).
     model.opening?.let { opening ->
         LaunchedEffect(opening) {
@@ -473,6 +485,28 @@ fun Shell(
         }
     }
 }
+
+/**
+ * The screen's name in Google Analytics: short, fixed and in English, Android's exactly (HomeActivity.screenName), so
+ * both phones' screens count together. [placing]: Today shows the strength test; [skills]: Progress has Skills (without
+ * them it shows History only); [trainingTab] and [progressTab] are those screens' tabs, in Android's order.
+ */
+internal fun analyticsScreenName(screen: Screen, placing: Boolean, skills: Boolean, trainingTab: Int, progressTab: Int): String =
+    when (screen) {
+        Screen.Today -> if (placing) "strength_test" else "today"
+        Screen.Training -> when (trainingTab) { 1 -> "my_workouts"; 2 -> "library"; 3 -> "parks"; else -> "levels" }
+        is Screen.Level -> "level_classes"
+        is Screen.Class -> "class_overview"
+        is Screen.Workout -> "workout"
+        is Screen.EditDay -> "workout_editor"
+        Screen.Progress -> if (!skills) "history" else when (progressTab) {
+            PROGRESS_HISTORY -> "history"
+            PROGRESS_LEADERBOARD -> "leaderboard"
+            else -> "skills"
+        }
+        Screen.Settings -> "settings"
+        Screen.Timer -> "timer"
+    }
 
 @Composable
 private fun screenTitle(model: AppModel, screen: Screen): String = when (screen) {

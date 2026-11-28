@@ -186,7 +186,11 @@ fun ColumnScope.PlacementCard(model: AppModel, onPlaced: () -> Unit) {
                 onNext = { requesters.getOrNull(index + 1)?.requestFocus() },
                 onDone = ::calculate,
                 modifier = Modifier.weight(1f).padding(start = if (index > 0) 10.dp else 0.dp),
-            ) { form.set(index, it) }
+            ) { count ->
+                // The first count typed starts the test for Google Analytics (Android: PlacementView's tutorial_begin).
+                if (count >= 0 && form.counts.all { it < 0 }) model.googleAnalytics.tutorialBegin()
+                form.set(index, count)
+            }
         }
     }
     BodyText(stringResource(Res.string.placement_how), 12.5f, Modifier.padding(start = 2.dp, top = 10.dp))
@@ -417,7 +421,7 @@ fun ShareProgressNote(model: AppModel, modifier: Modifier = Modifier) {
 
 /**
  * The sharing line and its switch (Android: shareProgressNote's row): switched off, what this install shared is
- * deleted ([AppModel.shareProgress]); [onChanged] follows.
+ * deleted and Google Analytics stops ([AppModel.shareProgress]); [onChanged] follows.
  */
 @Composable
 fun ShareProgressRow(model: AppModel, modifier: Modifier = Modifier, onChanged: (Boolean) -> Unit = {}) {

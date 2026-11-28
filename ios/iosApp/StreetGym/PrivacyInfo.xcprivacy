@@ -2,13 +2,31 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<!-- No tracking and no data collected: progress stays on the phone. Ads (later) add their own entries. -->
+	<!-- No tracking by the app's own code. Google's and Firebase's SDKs bring their own manifests, which Xcode adds to
+	     the app's privacy report. -->
 	<key>NSPrivacyTracking</key>
 	<false/>
 	<key>NSPrivacyTrackingDomains</key>
 	<array/>
 	<key>NSPrivacyCollectedDataTypes</key>
-	<array/>
+	<array>
+		<dict>
+			<!-- Google Analytics in the app (Android 2.15.0, composeApp data/GoogleAnalytics.kt): the screens seen, the
+			     strength test begun and done, classes started and finished, exams, skill ranks and the Plus and Pro
+			     offers, with the tier, the level and the theme; no user ID. Only with Share my progress on and analytics
+			     consent granted. -->
+			<key>NSPrivacyCollectedDataType</key>
+			<string>NSPrivacyCollectedDataTypeProductInteraction</string>
+			<key>NSPrivacyCollectedDataTypeLinked</key>
+			<false/>
+			<key>NSPrivacyCollectedDataTypeTracking</key>
+			<false/>
+			<key>NSPrivacyCollectedDataTypePurposes</key>
+			<array>
+				<string>NSPrivacyCollectedDataTypePurposeAnalytics</string>
+			</array>
+		</dict>
+	</array>
 	<key>NSPrivacyAccessedAPITypes</key>
 	<array>
 		<dict>

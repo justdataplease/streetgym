@@ -29,9 +29,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.justdataplease.streetgym.app.data.AppModel
 import com.justdataplease.streetgym.app.data.Bought
+import com.justdataplease.streetgym.app.data.GoogleAnalytics
 import com.justdataplease.streetgym.app.data.Offers
 import com.justdataplease.streetgym.app.data.Paywall
 import com.justdataplease.streetgym.app.data.Products
+import com.justdataplease.streetgym.app.data.analyticsSource
 import com.justdataplease.streetgym.app.data.Restored
 import com.justdataplease.streetgym.app.data.StoreStatus
 import com.justdataplease.streetgym.app.resources.Res
@@ -110,6 +112,8 @@ const val PRIVACY_URL = "https://justdataplease.com/apps/streetgymnastics/privac
  */
 @Composable
 fun OfferDialog(model: AppModel, paywall: Paywall, onClose: () -> Unit) {
+    // Google Analytics' paywall_view, once each time the offer opens (Android: showPaywall).
+    LaunchedEffect(model, paywall) { model.offerShown(paywall) }
     StreetDialog(title = null, onDismiss = onClose, confirm = DialogAction(stringResource(Res.string.cancel), onClose)) {
         PlansPanel(model, paywall, Modifier.padding(start = 12.dp, top = 12.dp, end = 12.dp, bottom = 4.dp))
     }
@@ -167,6 +171,12 @@ fun PlansPanel(model: AppModel, paywall: Paywall?, modifier: Modifier = Modifier
     val unreachable = stringResource(Res.string.store_unreachable)
     val retry = stringResource(Res.string.store_unavailable_retry)
     val buyEnded: (Bought) -> Unit = { result -> if (result == Bought.FAILED) said = retry }
+    // A buy button tapped: Google Analytics' paywall_tap with what opened the offer, Settings' for its plans (Android:
+    // TiersPanel's buttons), then the store.
+    fun buy(product: String, plan: String) {
+        model.googleAnalytics.paywallTap(paywall.analyticsSource, plan)
+        plans.buy(product, buyEnded)
+    }
     val ready = status == StoreStatus.READY
     val plusPrice = prices[Products.PLUS]
     val proLifePrice = prices[Products.PRO_LIFE]
@@ -200,7 +210,7 @@ fun PlansPanel(model: AppModel, paywall: Paywall?, modifier: Modifier = Modifier
             if (tier < Tier.PLUS) {
                 val enabled = ready && plusPrice != null
                 PrimaryButton(stringResource(Res.string.plus_buy), Modifier.padding(top = 12.dp).alpha(if (enabled) 1f else DISABLED),
-                    enabled = enabled) { plans.buy(Products.PLUS, buyEnded) }
+                    enabled = enabled) { buy(Products.PLUS, GoogleAnalytics.PLAN_PLUS) }
             }
         }
 
@@ -217,13 +227,13 @@ fun PlansPanel(model: AppModel, paywall: Paywall?, modifier: Modifier = Modifier
             if (tier != Tier.PRO) {
                 val lifeEnabled = ready && proLifePrice != null
                 PrimaryButton(stringResource(Res.string.pro_life_buy), Modifier.padding(top = 12.dp).alpha(if (lifeEnabled) 1f else DISABLED),
-                    enabled = lifeEnabled) { plans.buy(Products.PRO_LIFE, buyEnded) }
+                    enabled = lifeEnabled) { buy(Products.PRO_LIFE, GoogleAnalytics.PLAN_PRO_LIFE) }
                 val yearlyEnabled = ready && proPrice != null
                 SecondaryButton(
                     proPrice?.let { stringResource(Res.string.pro_yearly_buy_price, it) } ?: stringResource(Res.string.pro_yearly_buy),
                     Modifier.padding(top = 8.dp).alpha(if (yearlyEnabled) 1f else DISABLED),
                     enabled = yearlyEnabled,
-                ) { plans.buy(Products.PRO, buyEnded) }
+                ) { buy(Products.PRO, GoogleAnalytics.PLAN_PRO_YEARLY) }
                 BodyText(stringResource(Res.string.store_yearly_note), 12f, Modifier.fillMaxWidth().padding(top = 6.dp), align = TextAlign.Center)
             }
             // Apple 3.1.2: the subscription's terms and the privacy policy, beside it.

@@ -4,7 +4,8 @@ import StreetGymApp
 /// The iPhone app's entry point. Every screen is drawn by the Kotlin framework (composeApp); Swift holds only what
 /// Apple requires to be native: this entry point, the Parks map (MapLibre, ParksMapLibre.swift), Plus and Pro
 /// (StoreKit 2, StoreKitStore.swift), Free's ads (Google's, GoogleAds.swift), the home-screen widget's files
-/// (WidgetBridge.swift; the widget itself is the StreetGymWidget extension) and Firebase (FirebaseAccount.swift).
+/// (WidgetBridge.swift; the widget itself is the StreetGymWidget extension) and Firebase (FirebaseAccount.swift, and
+/// Google Analytics in GoogleAnalyticsBridge.swift).
 @main
 struct StreetGymIosApp: App {
     /// One store and one set of ads for the app's life: the store hears the App Store's transactions from its start.
@@ -14,6 +15,7 @@ struct StreetGymIosApp: App {
     /// Firebase starts only with the owner's GoogleService-Info.plist; without it these answer "not in this build".
     static let account = FirebaseAccount()
     static let documents = FirestoreDocuments()
+    static let analytics = FirebaseAnalyticsSink()
 
     init() {
         // The Timer's alerts and their Stop, ready before the app has finished starting: a tap on an alert that opens
@@ -53,7 +55,7 @@ private struct ComposeScreen: UIViewControllerRepresentable {
         MainViewControllerKt.MainViewController(maps: MapLibreParks(), restored: screens, saver: BindingSaver(binding: $screens),
                                                 store: StreetGymIosApp.store, ads: StreetGymIosApp.ads, debug: ComposeScreen.debug,
                                                 widget: StreetGymIosApp.widget, account: StreetGymIosApp.account,
-                                                cloud: StreetGymIosApp.documents)
+                                                cloud: StreetGymIosApp.documents, analytics: StreetGymIosApp.analytics)
     }
 
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}

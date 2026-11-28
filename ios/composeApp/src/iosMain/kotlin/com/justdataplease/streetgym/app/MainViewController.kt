@@ -91,7 +91,9 @@ import platform.UserNotifications.UNUserNotificationCenter
  * [store] is Swift's StoreKit 2 store, [ads] Swift's Google ads (null: nothing to buy, no ads); [debug] is a debug
  * build (Swift's DEBUG), whose developer settings offer Simulate tier. [widget] writes the home-screen widget's snapshot
  * (null: no widget). [account] and [cloud] are Swift's Firebase Auth and Firestore (null, or without
- * GoogleService-Info.plist: no account, as Android's builds without Firebase).
+ * GoogleService-Info.plist: no account, as Android's builds without Firebase). [analytics] is Swift's Firebase Analytics
+ * for Google Analytics (null, or not configured: none at all); asking it configures Firebase here, before Google's
+ * consent SDK starts, as Google's consent mode needs.
  */
 fun MainViewController(
     maps: NativeParksMaps?,
@@ -103,6 +105,7 @@ fun MainViewController(
     widget: NativeWidget?,
     account: NativeAccount?,
     cloud: NativeCloud?,
+    analytics: NativeAnalytics?,
 ): UIViewController {
     PhoneDevice.saver = saver
     val resumed = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
@@ -133,6 +136,7 @@ fun MainViewController(
         region = phoneRegion(),
         appSet = VendorId,
         versionCode = build,
+        analytics = analytics?.takeIf { it.configured() }?.let(::IosAnalytics),
     )
     return ComposeUIViewController {
         App(phoneStore, PhoneDevice, reduceMotion = reduceMotion.value, firstWeekday = firstWeekday,
