@@ -104,7 +104,7 @@ import org.jetbrains.compose.resources.stringResource
 const val TERMS_URL = "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/"
 
 /** Street Gym's privacy policy, as the Play listing links it (docs/play/streetgymnastics/listing.md). */
-const val PRIVACY_URL = "https://justdataplease.com/apps/streetgymnastics/privacy.html"
+const val PRIVACY_URL = "https://streetgym.app/privacy"
 
 /**
  * The offer for what [paywall] locks (Android: showPaywall): the plans panel in a dialog, with Cancel. It stays up after a
