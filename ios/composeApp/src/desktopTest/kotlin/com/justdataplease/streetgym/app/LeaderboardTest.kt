@@ -239,6 +239,40 @@ class LeaderboardTest {
     }
 
     @Test
+    fun theTopListLeavesOutNamesTheFilterRefusesAndKeepsEveryRank() {
+        // Android's LeaderboardTest has the same board and the same answers.
+        val board = Board("all_world", listOf(BoardEntry("ana", "GR", 900), BoardEntry("Sh1t_Head", "DE", 850),
+            BoardEntry("ben", "DE", 800), BoardEntry("admin", "US", 700), BoardEntry("cara", "IE", 600)),
+            players = 200, updatedAt = 1, percentiles = (0 until 100).map { 1000 - it * 10 })
+        assertEquals(listOf(1 to "ana", 3 to "ben", 5 to "cara"), Boards.rows(board, "ben").map { it.index + 1 to it.value.username })
+        assertEquals(listOf(1 to "ana", 3 to "ben", 5 to "cara"), Boards.rows(board, null).map { it.index + 1 to it.value.username })
+        // The athlete's own row shows to them whatever its name, and their own line is the board's rank as before.
+        assertEquals(listOf(1, 2, 3, 5), Boards.rows(board, "Sh1t_Head").map { it.index + 1 })
+        assertEquals(Standing.Rank(2), Boards.standing(board, "Sh1t_Head", 850))
+        assertEquals(Standing.Rank(5), Boards.standing(board, "cara", 600))
+    }
+
+    @Test
+    fun theBoardLeavesOutNamesTheFilterRefuses() = runComposeUiTest {
+        val phone = Phone()
+        phone.cloud.documents["boards/all_world"] = boardDocument() + ("entries" to listOf(
+            mapOf("username" to "alpha", "country" to "GR", "score" to 4_200),
+            mapOf("username" to "Malakas_GR", "country" to "GR", "score" to 3_100),
+            mapOf("username" to "charlie", "country" to "GR", "score" to 2_050),
+            mapOf("username" to "admin", "country" to "US", "score" to 1_200),
+        ))
+        phone.trained(3, 150)
+        phone.pick("charlie")
+        setContent { StreetGymApp(phone.model, PaddingValues(), startAt = Screen.Progress, progressTab = PROGRESS_LEADERBOARD) }
+        waitForIdle()
+        onNodeWithContentDescription("#1, alpha, 4,200").assertExists()
+        assertTrue(onAllNodesWithContentDescription("#2, Malakas_GR, 3,100").fetchSemanticsNodes().isEmpty())
+        onNodeWithContentDescription("#3, charlie, 2,050").assertExists()
+        assertTrue(onAllNodesWithContentDescription("#4, admin, 1,200").fetchSemanticsNodes().isEmpty())
+        onNodeWithText("You’re #3 · ${com.justdataplease.streetgym.app.ui.pointsText(phone.model.points())} points", ignoreCase = true).assertExists()
+    }
+
+    @Test
     fun withoutAUsernameTheLineSaysWhatToDo() = runComposeUiTest {
         // Sharing progress signs in anonymously as the app opens (Android: analytics' writer), so a user and no name.
         val sharing = Phone()

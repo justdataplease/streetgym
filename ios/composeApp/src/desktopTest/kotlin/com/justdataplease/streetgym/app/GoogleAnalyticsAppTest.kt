@@ -318,7 +318,8 @@ class GoogleAnalyticsAppTest {
         val android = Regex("""<meta-data android:name="((?:firebase|google)_analytics_[a-z_]+)" android:value="(true|false)" />""")
             .findAll(manifest).associate { it.groupValues[1] to it.groupValues[2] }
         assertEquals(6, android.size)
-        val plist = File("../iosApp/project.yml").readText()
+        // Git for Windows checks the file out with CRLF line ends; read it as the Mac does.
+        val plist = File("../iosApp/project.yml").readText().replace("\r\n", "\n")
         android.forEach { (key, value) ->
             // The same names in capitals on iPhone; automatic screen reporting has Firebase's own iPhone key.
             val ios = if (key == "google_analytics_automatic_screen_reporting_enabled") "FirebaseAutomaticScreenReportingEnabled" else key.uppercase()

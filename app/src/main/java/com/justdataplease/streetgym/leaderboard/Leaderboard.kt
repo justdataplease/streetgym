@@ -1,5 +1,7 @@
 package com.justdataplease.streetgym.leaderboard
 
+import com.justdataplease.streetgym.R
+import com.justdataplease.streetgym.data.leaderboard.UsernameFilter
 import com.justdataplease.streetgym.data.library.CustomDays
 import com.justdataplease.streetgym.data.points.PointsTotal
 import com.justdataplease.streetgym.data.progress.WorkoutSession
@@ -60,6 +62,14 @@ object Boards {
         return Standing.TopPercent(if (step < 0) 100 else step + 1)
     }
 
+    /**
+     * The top list's rows to draw, each with its place on the board: a name the username filter refuses (one chosen
+     * before the filter came) is left out and the others keep their ranks; the athlete's own row always shows. The
+     * iPhone's Boards.rows is the same.
+     */
+    fun rows(board: Board, username: String?): List<IndexedValue<BoardEntry>> =
+        board.entries.withIndex().filter { (_, entry) -> entry.username == username || Usernames.allowed(entry.username) }
+
     fun encode(board: Board): JSONObject = JSONObject().put("id", board.id).put("players", board.players)
         .put("updated_at", board.updatedAt).put("percentiles", JSONArray(board.percentiles))
         .put("entries", JSONArray().apply {
@@ -108,6 +118,20 @@ object Scores {
 object Usernames {
     private val pattern = Regex("^[A-Za-z0-9_.]{3,20}$")
     fun valid(name: String): Boolean = pattern.matches(name)
+
+    /**
+     * Not refused by the engine's word list (Apple 1.2: offensive words, and names that pass for the app or its staff),
+     * which the iPhone app uses too, so both phones refuse the same names.
+     */
+    fun allowed(name: String): Boolean = UsernameFilter.allowed(name)
+
+    /** What the profile dialog says before saving [name]: the format's rule, else that it isn't allowed; null to save. */
+    fun problem(name: String): Int? = when {
+        !valid(name) -> R.string.profile_invalid
+        !allowed(name) -> R.string.profile_not_allowed
+        else -> null
+    }
+
     /** Usernames are unique ignoring case. */
     fun key(name: String): String = name.lowercase(Locale.ROOT)
 }

@@ -10,8 +10,8 @@ import com.justdataplease.streetgym.billing.Tier
 /** The line under Settings › Profile's buttons while something runs or after it failed (Android: its status TextView). */
 enum class AccountStatus { WORKING, OFFLINE, SIGN_IN_FAILED, SYNC_FAILED }
 
-/** Why a profile wasn't saved (Android: saveProfile's reasons). */
-enum class ProfileProblem { INVALID, TAKEN, FAILED }
+/** Why a profile wasn't saved (Android: Usernames.problem and saveProfile's reasons). */
+enum class ProfileProblem { INVALID, NOT_ALLOWED, TAKEN, FAILED }
 
 /**
  * The account, the profile, Pro's cloud copy, the score on the leaderboard and progress analytics, as the screens use
@@ -177,11 +177,18 @@ class CloudAccount(
     }
 
     /**
-     * Saves [profile] for [uid]; [done] gets null once saved, else the problem to show. A saved profile republishes the
-     * score under it (Android: editProfile's Save and saveProfile).
+     * Saves [profile] for [uid]; [done] gets null once saved, else the problem to show: the format, a name the
+     * engine's filter refuses, taken, or couldn't save. A saved profile republishes the score under it (Android:
+     * editProfile's Save, Usernames.problem, and saveProfile).
      */
     fun saveProfile(uid: String, profile: Profile, done: (ProfileProblem?) -> Unit = {}) {
         if (!Usernames.valid(profile.username)) return done(ProfileProblem.INVALID)
+        if (!Usernames.allowed(profile.username)) return done(ProfileProblem.NOT_ALLOWED)
+        save(uid, profile, done)
+    }
+
+    /** Android's saveProfile: the claim and what follows it, without the dialog's checks. */
+    private fun save(uid: String, profile: Profile, done: (ProfileProblem?) -> Unit) {
         profiles.save(uid, profile) { claim ->
             when (claim) {
                 Profiles.Claim.Saved -> {
@@ -201,11 +208,14 @@ class CloudAccount(
         }
     }
 
-    /** "Show me on the leaderboard": the profile saved with [visible]. */
+    /**
+     * "Show me on the leaderboard": the profile saved with [visible]. Android's switch saves without the dialog's
+     * checks, so a name chosen before the filter can still be hidden; the iPhone's does the same.
+     */
     fun setVisible(visible: Boolean) {
         val uid = user?.uid ?: return
         val profile = store.profile(uid) ?: return
-        saveProfile(uid, profile.copy(visible = visible))
+        save(uid, profile.copy(visible = visible)) {}
     }
 
     /** "Delete profile" of a profile kept without an account: its username, profile and score go, then the anonymous user. */

@@ -130,11 +130,53 @@ class AccountTest {
         var problem: ProfileProblem? = null
         phone.state.saveProfile(uid, Profile("no", "GR")) { problem = it }
         assertEquals(ProfileProblem.INVALID, problem)
+        // A name the engine's filter refuses (Android: Usernames.problem): nothing is claimed or saved.
+        listOf("Malakas_7", "Sh1tHead", "admin", "Street_Gym").forEach { name ->
+            problem = null
+            phone.state.saveProfile(uid, Profile(name, "GR")) { problem = it }
+            assertEquals(ProfileProblem.NOT_ALLOWED, problem, name)
+            assertFalse(Usernames.allowed(name), name)
+            assertNull(phone.cloud.documents["usernames/${Usernames.key(name)}"], name)
+        }
         phone.state.saveProfile(uid, Profile("RUNNER", "GR")) { problem = it }
         assertEquals(ProfileProblem.TAKEN, problem)
         phone.cloud.online = false
         phone.state.saveProfile(uid, Profile("Fresh", "GR")) { problem = it }
         assertEquals(ProfileProblem.FAILED, problem)
+        assertNull(phone.state.profile())
+    }
+
+    @Test
+    fun aNameChosenBeforeTheFilterCanBeHiddenButNotSavedAgain() {
+        val phone = Phone()
+        val uid = phone.pick("Old_Name")
+        // As if "Sh1t_Head" had been picked before the filter came: its claim and profile on the server and the phone.
+        phone.cloud.documents.remove("usernames/old_name")
+        phone.cloud.documents["usernames/sh1t_head"] = mapOf("uid" to uid)
+        phone.cloud.documents["users/$uid"] = phone.cloud.documents["users/$uid"]!! + ("username" to "Sh1t_Head")
+        AccountStore(phone.store).saveProfile(uid, Profile("Sh1t_Head", "GR"))
+        // The switch saves without the dialog's checks, as Android's does, so the name can be taken off the boards.
+        phone.state.setVisible(false)
+        assertEquals(false, phone.cloud.documents["users/$uid"]!!["visible"])
+        assertEquals(Profile("Sh1t_Head", "GR", visible = false), phone.state.profile())
+        // Saving it from the dialog again is refused, as Android's dialog refuses it.
+        var problem: ProfileProblem? = null
+        phone.state.saveProfile(uid, Profile("Sh1t_Head", "CY")) { problem = it }
+        assertEquals(ProfileProblem.NOT_ALLOWED, problem)
+        assertEquals("GR", phone.cloud.documents["users/$uid"]!!["country"])
+    }
+
+    @Test
+    fun theDialogSaysWhenANameIsntAllowed() = runComposeUiTest {
+        val phone = Phone()
+        setContent { StreetGymApp(phone.model, PaddingValues(), startAt = Screen.Settings) }
+        onNodeWithText("CHOOSE A USERNAME").performClick()
+        waitForIdle()
+        onNodeWithContentDescription("Username (3–20 letters, digits, _ or .)").performTextInput("Admin")
+        onNodeWithText("SAVE").performClick()
+        waitForIdle()
+        // Android's text, from its strings_account.xml.
+        onNodeWithText("That username isn’t allowed. Try another.").assertExists()
         assertNull(phone.state.profile())
     }
 

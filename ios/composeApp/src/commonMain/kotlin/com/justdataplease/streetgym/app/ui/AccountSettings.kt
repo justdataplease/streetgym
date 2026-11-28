@@ -77,6 +77,7 @@ import com.justdataplease.streetgym.app.resources.profile_google
 import com.justdataplease.streetgym.app.resources.profile_intro
 import com.justdataplease.streetgym.app.resources.profile_invalid
 import com.justdataplease.streetgym.app.resources.profile_keep_note
+import com.justdataplease.streetgym.app.resources.profile_not_allowed
 import com.justdataplease.streetgym.app.resources.profile_offline
 import com.justdataplease.streetgym.app.resources.profile_save
 import com.justdataplease.streetgym.app.resources.profile_taken
@@ -203,7 +204,8 @@ private fun StatusLine(status: AccountStatus?, modifier: Modifier) {
 
 /**
  * "Your leaderboard profile" (Android: editProfile): the username (3–20 letters, digits, _ or .) and the country, the
- * phone's region first picked; Save checks the name, then claims it ("That username is taken.", "Couldn't save…").
+ * phone's region first picked; Save checks the name ("Use 3–20…", "That username isn't allowed.", the engine's filter),
+ * then claims it ("That username is taken.", "Couldn't save…").
  * The countries open in a list of their own, as Android's spinner drops its list down.
  */
 @Composable
@@ -236,6 +238,7 @@ fun ProfileDialog(cloud: CloudAccount, uid: String, region: String?, onClose: ()
                 family = Street.type.system,
                 error = when (error) {
                     ProfileProblem.INVALID -> stringResource(Res.string.profile_invalid)
+                    ProfileProblem.NOT_ALLOWED -> stringResource(Res.string.profile_not_allowed)
                     ProfileProblem.TAKEN -> stringResource(Res.string.profile_taken)
                     ProfileProblem.FAILED -> stringResource(Res.string.profile_failed)
                     null -> null

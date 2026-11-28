@@ -49,6 +49,14 @@ object Boards {
         return Standing.TopPercent(if (step < 0) 100 else step + 1)
     }
 
+    /**
+     * The top list's rows to draw, each with its place on the board (Android: Boards.rows): a name the username filter
+     * refuses (one chosen before the filter came) is left out and the others keep their ranks; the athlete's own row
+     * always shows.
+     */
+    fun rows(board: Board, username: String?): List<IndexedValue<BoardEntry>> =
+        board.entries.withIndex().filter { (_, entry) -> entry.username == username || Usernames.allowed(entry.username) }
+
     fun encode(board: Board): JSONObject = JSONObject().put("id", board.id).put("players", board.players)
         .put("updated_at", board.updatedAt).put("percentiles", JSONArray(board.percentiles))
         .put("entries", JSONArray().apply {

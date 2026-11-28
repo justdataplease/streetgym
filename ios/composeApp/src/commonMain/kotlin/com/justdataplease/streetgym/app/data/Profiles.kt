@@ -1,5 +1,6 @@
 package com.justdataplease.streetgym.app.data
 
+import com.justdataplease.streetgym.data.leaderboard.UsernameFilter
 import com.justdataplease.streetgym.json.JSONArray
 import com.justdataplease.streetgym.json.JSONObject
 
@@ -84,10 +85,17 @@ class AccountStore(private val store: KeyValueStore) {
     }
 }
 
-/** Usernames (Android: leaderboard/Leaderboard.kt Usernames): 3 to 20 letters, digits, _ or ., unique ignoring case. */
+/**
+ * Usernames (Android: leaderboard/Leaderboard.kt Usernames): 3 to 20 letters, digits, _ or ., unique ignoring case, and
+ * not refused by the engine's word list, the one Android uses.
+ */
 object Usernames {
     private val pattern = Regex("^[A-Za-z0-9_.]{3,20}$")
     fun valid(name: String): Boolean = pattern.matches(name)
+
+    /** Not refused by the engine's filter (Apple 1.2: offensive words, and names that pass for the app or its staff). */
+    fun allowed(name: String): Boolean = UsernameFilter.allowed(name)
+
     fun key(name: String): String = name.lowercase()
 }
 

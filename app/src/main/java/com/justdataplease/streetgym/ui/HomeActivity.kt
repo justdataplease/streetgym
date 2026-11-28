@@ -467,7 +467,7 @@ open class HomeActivity : Activity() {
                 }
             }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { bottomMargin = dp(10) })
             if (board.entries.isEmpty()) { holder.addView(bodyText(getString(R.string.leaderboard_empty), 14f)); return }
-            board.entries.forEachIndexed { index, entry ->
+            Boards.rows(board, profile?.username).forEach { (index, entry) ->
                 val mine = profile != null && entry.username == profile.username
                 holder.addView(LinearLayout(this).apply {
                     orientation = LinearLayout.HORIZONTAL

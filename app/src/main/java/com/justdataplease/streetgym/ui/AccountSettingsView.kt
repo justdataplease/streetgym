@@ -180,7 +180,7 @@ class AccountSettingsView(
             .setNegativeButton(R.string.cancel, null).setPositiveButton(R.string.profile_save, null).show()
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
             val username = name.text.toString().trim()
-            if (!Usernames.valid(username)) { name.error = context.getString(R.string.profile_invalid); return@setOnClickListener }
+            Usernames.problem(username)?.let { name.error = context.getString(it); return@setOnClickListener }
             val profile = Profile(username, countries[country.selectedItemPosition].first, previous?.visible ?: true)
             saveProfile(uid, profile) { error -> if (error == null) dialog.dismiss() else name.error = error }
         }

@@ -25,5 +25,10 @@ kotlin {
         commonMain.dependencies {
             implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
         }
+        // The engine's own tests (the username filter's) on the desktop JVM: `:shared:jvmTest`. Not in commonTest, which
+        // the Android target would want host tests for.
+        jvmTest.dependencies {
+            implementation(kotlin("test"))
+        }
     }
 }

@@ -73,8 +73,9 @@ class LeaderboardState {
  * Progress › Leaderboard on Plus and Pro (android-streetgym, HomeActivity.renderLeaderboard): the intro, All time / This
  * month, World / the athlete's country (the profile's, else the phone's region), the athlete's own line, the top 100
  * with the athlete's row highlighted, "1,234 players · updated …", and the line on how points are earned. A board is one
- * cached document, read at most every six hours. On iPhone a tap on another athlete's row offers to report or block the
- * name ([onReport], Apple 1.2); blocked names are left out on this phone. A build without Firebase says so.
+ * cached document, read at most every six hours. Names the engine's username filter refuses are left out, as on Android
+ * (Boards.rows). On iPhone a tap on another athlete's row offers to report or block the name ([onReport], Apple 1.2);
+ * blocked names are left out on this phone. A build without Firebase says so.
  */
 @Composable
 fun ColumnScope.LeaderboardSection(model: AppModel, state: LeaderboardState, onReport: (BoardEntry, String) -> Unit) {
@@ -143,10 +144,11 @@ private fun BoardHolder(
     }
     cloud.revision
     val blocked = cloud.blocked.all()
-    board.entries.forEachIndexed { index, entry ->
+    val rows = remember(board, username) { Boards.rows(board, username) }
+    rows.forEach { (index, entry) ->
         val mine = username != null && entry.username == username
         // A name blocked on this phone is left out; the others keep their places.
-        if (!mine && entry.username.lowercase() in blocked) return@forEachIndexed
+        if (!mine && entry.username.lowercase() in blocked) return@forEach
         val rank = stringResource(Res.string.leaderboard_rank, index + 1)
         val name = "${Countries.flag(entry.country)} ${entry.username}"
         val points = pointsText(entry.score)

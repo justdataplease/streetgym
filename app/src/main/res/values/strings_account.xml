@@ -26,6 +26,7 @@
     <string name="profile_country">Country</string>
     <string name="profile_invalid">Use 3–20 letters, digits, _ or .</string>
     <string name="profile_taken">That username is taken. Try another.</string>
+    <string name="profile_not_allowed">That username isn’t allowed. Try another.</string>
     <string name="profile_failed">Couldn’t save the profile. Try again.</string>
     <string name="profile_save">Save</string>
     <string name="training_preferences">During your workout</string>

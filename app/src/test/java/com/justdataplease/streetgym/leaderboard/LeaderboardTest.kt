@@ -1,11 +1,13 @@
 package com.justdataplease.streetgym.leaderboard
 
+import com.justdataplease.streetgym.R
 import com.justdataplease.streetgym.data.progress.Intensity
 import com.justdataplease.streetgym.data.progress.ProgressMerge
 import com.justdataplease.streetgym.data.progress.WorkoutSession
 import com.justdataplease.streetgym.data.skills.SkillCredit
 import org.junit.Assert.*
 import org.junit.Test
+import java.io.File
 
 class LeaderboardTest {
     private fun session(id: String, at: Long = 1, manual: Boolean = false, repeat: Boolean = false) =
@@ -83,6 +85,33 @@ class LeaderboardTest {
         listOf("ana", "Street_Gym.7", "a".repeat(20)).forEach { assertTrue(it, Usernames.valid(it)) }
         listOf("ab", "a".repeat(21), "has space", "emoji😀", "slash/").forEach { assertFalse(it, Usernames.valid(it)) }
         assertEquals("street_gym.7", Usernames.key("Street_Gym.7"))
+    }
+
+    @Test fun theProfileDialogRefusesANameTheFilterRefusesWithItsOwnMessage() {
+        // Save checks the format first, then the engine's filter (the iPhone's saveProfile does the same).
+        assertEquals(R.string.profile_invalid, Usernames.problem("ab"))
+        assertEquals(R.string.profile_invalid, Usernames.problem("f*ck"))
+        listOf("fuck_you", "Sh1tHead", "malakas", "BigDick69", "admin", "Street_Gym", "hitler").forEach {
+            assertEquals(it, R.string.profile_not_allowed, Usernames.problem(it))
+            assertFalse(it, Usernames.allowed(it))
+        }
+        listOf("ana", "Dickson", "Scunthorpe", "class_act", "Alexa_7").forEach { assertNull(it, Usernames.problem(it)) }
+        // The text both phones show: the iPhone app reads this file at build time.
+        assertTrue(File("src/main/res/values/strings_account.xml").readText()
+            .contains("<string name=\"profile_not_allowed\">That username isn’t allowed. Try another.</string>"))
+    }
+
+    @Test fun theTopListLeavesOutNamesTheFilterRefusesAndKeepsEveryRank() {
+        val board = Board("all_world", listOf(BoardEntry("ana", "GR", 900), BoardEntry("Sh1t_Head", "DE", 850),
+            BoardEntry("ben", "DE", 800), BoardEntry("admin", "US", 700), BoardEntry("cara", "IE", 600)),
+            players = 200, updatedAt = 1, percentiles = (0 until 100).map { 1000 - it * 10 })
+        // Names chosen before the filter are left out; the others keep their places on the board.
+        assertEquals(listOf(1 to "ana", 3 to "ben", 5 to "cara"), Boards.rows(board, "ben").map { it.index + 1 to it.value.username })
+        assertEquals(listOf(1 to "ana", 3 to "ben", 5 to "cara"), Boards.rows(board, null).map { it.index + 1 to it.value.username })
+        // The athlete's own row shows to them whatever its name, and their own line is the board's rank as before.
+        assertEquals(listOf(1, 2, 3, 5), Boards.rows(board, "Sh1t_Head").map { it.index + 1 })
+        assertEquals(Standing.Rank(2), Boards.standing(board, "Sh1t_Head", 850))
+        assertEquals(Standing.Rank(5), Boards.standing(board, "cara", 600))
     }
 
     @Test fun countriesHaveNamesAndFlags() {
